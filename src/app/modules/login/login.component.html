@@ -1,0 +1,48 @@
+<div class="table-struct full-width">
+    <div class="table-cell vertical-align-middle auth-form-wrap">
+        <div class="auth-form">
+            <div class="row m-0">
+                <div class="col-md-12 col-height">
+                    <div class="login-right">
+                        <div class="log-form">
+                            <h3>LOG <span>IN</span></h3>
+                            <form #loginForm="ngForm">
+                                <div class="form-group">
+                                    <div class="user"> <span class="fa fa-user-alt"></span>
+                                        <input type="email" class="form-control" [(ngModel)]="username" #usernameField="ngModel"
+                                            required id="exampleInputEmail_2" name="usrename" placeholder="Username" style="font-size: 13px">
+                                    </div>
+                                    <span *ngIf="(usernameField.dirty || usernameField.touched || loginForm.submitted) && usernameField.errors?.required" class="field-error">
+                                        Username required!
+                                    </span>
+                                </div>
+                                <div class="form-group">
+                                    <div class="clearfix"></div>
+                                    <div class="pass"> <span class="fa fa-unlock"></span>
+                                        <input type="password" class="form-control" required id="exampleInputpwd_2" name="password"
+                                            [(ngModel)]="password" #passwordField="ngModel" placeholder="Password" style="font-size: 13px">
+                                    </div>
+                                    <span *ngIf="(passwordField.dirty || passwordField.touched || loginForm.submitted) && passwordField.errors?.required" class="field-error">
+                                        Password required!
+                                    </span>
+                                </div>
+
+                                <h2 class="login-error" *ngIf="apiError">
+                                    {{apiError}}
+                                </h2>
+                                <div class="form-group mb-0">
+                                    <button *ngIf="!loading" type="submit" (click)="login(loginForm)" class="btn btn-info btn-login">LOG <span>IN</span></button>
+                                    <button *ngIf="loading" class="btn btn-info btn-login" disabled>
+                                        <div class="spinner-border text-light" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

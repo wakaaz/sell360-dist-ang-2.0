@@ -1,0 +1,12 @@
+@import './styles/bootstrap.min.css';
+/* @import './styles/catalogue.css'; */
+@import './styles/datatables.min.css';
+@import './styles/datepicker.css';
+/* @import './styles/dropify.min.css';
+@import './styles/dropzone.css';
+@import './styles/lightbox.css';
+@import './styles/lightbox.min.css'; */
+@import './styles/style.css';
+@import './styles/menu.css';
+@import './styles/fontawesome-free/css/all.css';
+@import "~@ng-select/ng-select/themes/default.theme.css";

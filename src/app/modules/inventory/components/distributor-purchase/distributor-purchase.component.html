@@ -1,0 +1,323 @@
+<!-- Add Products Drawer -->
+<div id="product-cl-sec" [ngClass]="addNewProducts ? 'active show' : ''" (clickOutside)="clickOutSide($event)">
+    <a (click)="closeNewProducts()" id="pl-close" class="close-btn-pl"></a>
+    <div class="pro-header-text">Add <span>Product</span></div>
+    <div class="se_cus-type form-wrap p-15">
+        <div class="row">
+            <div class="col-12">
+                <div class="productSearch"><i class="fa fa-search"></i>
+                    <input type="text" class="form-control" id="" (keyup)="searchProducts($event.target.value)"
+                        placeholder="Search">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pc-cartlist">
+        <div class="overflow-plist">
+            <div class="plist-content">
+                <div class="_left-filter pt-0">
+                    <div class="container">
+                        <div class="row">
+                            <div *ngIf="!loadingProducts" class="col-12">
+                                <div class="card top_border p-15">
+                                    <table class="AddProductTable" width="100%">
+                                        <tbody>
+                                            <tr *ngFor="let product of productsDispList">
+                                                <td>
+                                                    <div class="ProListDiv"><img class="PrList_img"
+                                                            src="{{product.thumbnail}}" alt="" />
+                                                        <div class="PR_Name">{{product.item_name}}</div>
+                                                    </div>
+                                                </td>
+                                                <td *ngIf="!isInTheArray(product.item_id)"><button data-toggle="modal"
+                                                        (click)="$event.stopPropagation();addSelectedProduct(product)"
+                                                        class="btn btn-default mb-0">Add</button></td>
+                                                <td *ngIf="isInTheArray(product.item_id)"><button data-toggle="modal"
+                                                        (click)="$event.stopPropagation();removeSelectedProduct(product)"
+                                                        class="btn btn-default red-bg mb-0">Remove</button></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-12 loader" *ngIf="loadingProducts">
+                                <h2 class="loading">Loading products!</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="_cl-bottom">
+        <button id="pl-close" (click)="closeNewProducts()" class="btn btn-cancel mr-2">Close</button>
+    </div>
+</div>
+
+<!-- Purchase List -->
+<div class="container" id="purchase-list">
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Distributor <span>Purchase</span></h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a href="#"><span>Distributor Purchase</span></a></li>
+                <li><span>Create</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-30">
+            <div class="card mb-30">
+                <div class="header">
+                    <h2>Create <span> Order</span></h2>
+                </div>
+                <div class="body PT-15">
+                    <div id="floating-label">
+                        <div class="form-wrap p-0">
+                            <div class="row">
+
+                                <div class="col-2 pr-0">
+                                    <div class="form-group mb-5">
+                                        <label class="control-label mb-0">Received No.</label>
+                                        <input type="text" id="received_no" (focus)="focused($event)"
+                                            [(ngModel)]="distributorPurchase.receivedNo" required (blur)="left($event)"
+                                            class="form-control" name="received_no" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-2 pr-0">
+                                    <div class="form-group mb-5">
+                                        <label class="control-label mb-0">Receive Date</label>
+                                        <input type="date" id="received_date" (focus)="focused($event)"
+                                            [(ngModel)]="distributorPurchase.receivedDate" required
+                                            (blur)="left($event)" class="form-control" name="received_date"
+                                            placeholder="" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-2 pr-0">
+                                    <div class="form-group mb-5">
+                                        <label class="control-label mb-0">Inv. No.</label>
+                                        <input type="text" id="inv_no" (focus)="focused($event)" (blur)="left($event)"
+                                            [(ngModel)]="distributorPurchase.invoiceNo" required class="form-control"
+                                            name="inv_no" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-2 pr-0">
+                                    <div class="form-group mb-5">
+                                        <label class="control-label mb-0">P.O No.</label>
+                                        <input type="text" id="p_o_no" (focus)="focused($event)" (blur)="left($event)"
+                                            [(ngModel)]="distributorPurchase.poNo" required class="form-control"
+                                            name="p_o_no" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-2 pr-0">
+                                    <div class="form-group mb-5">
+                                        <label class="control-label mb-0">D.C No.</label>
+                                        <input type="text" id="d_c_no" (focus)="focused($event)" (blur)="left($event)"
+                                            [(ngModel)]="distributorPurchase.dcNo" required class="form-control"
+                                            name="d_c_no" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-2">
+                                    <div class="form-group mb-5">
+                                        <label class="control-label mb-0">Inv. Date</label>
+                                        <input type="date" id="inv_date" (focus)="focused($event)" (blur)="left($event)"
+                                            [(ngModel)]="distributorPurchase.invoiceDate" required class="form-control"
+                                            name="inv_date" placeholder="" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-6 pr-0">
+                                    <div class="form-group mb-5">
+                                        <label class="control-label mb-0">Remarks</label>
+                                        <input type="text" id="remark" (focus)="focused($event)" (blur)="left($event)"
+                                            [(ngModel)]="distributorPurchase.remark" required class="form-control"
+                                            name="remark" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-2 pr-0">
+                                    <div class="form-group mb-5">
+                                        <label class="control-label mb-0">P.O Date</label>
+                                        <input type="date" id="p_o_date" (focus)="focused($event)" (blur)="left($event)"
+                                            [(ngModel)]="distributorPurchase.poDate" required class="form-control"
+                                            name="p_o_date" placeholder="" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-2 pr-0">
+                                    <div class="form-group mb-5">
+                                        <label class="control-label mb-0">D.C Date</label>
+                                        <input type="date" id="d_c_date" (focus)="focused($event)" (blur)="left($event)"
+                                            [(ngModel)]="distributorPurchase.dcDate" required class="form-control"
+                                            name="d_c_date" placeholder="" autocomplete="off">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 PT-20">
+                                    <div class="header-tabs" style="box-shadow:none; border-bottom:solid 1px #e2e9fb;">
+                                        <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                                            <li class="nav-item" (click)="showFreeProducts=false;rerenderPurchasedProducts()"> <a class="nav-link"
+                                                    [ngClass]="showFreeProducts===false ? 'active' : ''"
+                                                    id="pills-home-tab">
+                                                    <span>Product List</span> <span *ngIf="purchasedProducts?.length"
+                                                        class="_cus-val">{{purchasedProducts?.length}}</span></a>
+                                            </li>
+                                            <li class="nav-item" (click)="showFreeProducts=true;rerenderPurchasedProducts()"> <a class="nav-link"
+                                                    [ngClass]="showFreeProducts===true ? 'active' : ''"
+                                                    id="pills-profile-tab">
+                                                    <span>Free Product List</span> <span *ngIf="freeProducts?.length"
+                                                        class="_cus-val">{{freeProducts?.length}}</span></a>
+                                            </li>
+                                        </ul>
+                                        <button id="productlist01" type="submit" (click)="openNewProducts($event)"
+                                            class="btn add_button"><i class="fa fa-plus"
+                                                style="padding-right: 3px;"></i> <span>Add Product</span></button>
+                                    </div>
+
+                                    <div class="tab-content" id="pills-tabContent">
+                                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                                            aria-labelledby="pills-home-tab">
+                                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
+                                                class="table table-hover dt-responsive nowrap dis-pr-list"
+                                                id="purchase-table" style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>SKU</th>
+                                                        <th>Item Name</th>
+                                                        <th [hidden]="showFreeProducts">Select Unit</th>
+                                                        <th [hidden]="showFreeProducts">Qty</th>
+                                                        <th [hidden]="!showFreeProducts">Select Free Unit</th>
+                                                        <th [hidden]="!showFreeProducts">Free Qty</th>
+                                                        <th [hidden]="showFreeProducts">Margin</th>
+                                                        <th [hidden]="showFreeProducts">Net Amount</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tfoot [hidden]="showFreeProducts">
+                                                    <tr>
+                                                        <th>Total items</th>
+                                                        <th>{{purchasedProducts?.length}}</th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th>Subtotal PKR.</th>
+                                                        <th>{{distributorPurchase.original_amount | number: '1.0-1'}}</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th></th>
+                                                        <th>Distribution Discount.</th>
+                                                        <th>{{distributorPurchase.discount | number: '1.0-1'}}</th>
+                                                        <th></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th></th>
+                                                        <th>GST</th>
+                                                        <th><input placeholder="0.0" (keydown)="isNumber($event)"
+                                                            [(ngModel)]="distributorPurchase.gst" (keyup)="calculateTotal()" class="itemQTY"></th>
+                                                        <th></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th></th>
+                                                        <th>Freight Charges.</th>
+                                                        <th><input placeholder="0.0" (keydown)="isNumber($event)" (keyup)="calculateTotal()"
+                                                            [(ngModel)]="distributorPurchase.fare" class="itemQTY"></th>
+                                                        <th></th>
+                                                    </tr>
+                                                    <tr>
+                                                        <th></th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th [hidden]="!showFreeProducts"></th>
+                                                        <th></th>
+                                                        <th>Total PKR..</th>
+                                                        <th>{{distributorPurchase.net_amount | number: '1.0-1'}}</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </tfoot>
+                                                <tbody>
+                                                    <tr *ngFor="let product of getArray()">
+                                                        <td>{{product.item_sku}}</td>
+                                                        <td>
+                                                            <div class="ProListDiv"><img class="PrList_img"
+                                                                    src="{{product.thumbnail}}" alt="">
+                                                                <div class="PR_Name">{{product.item_name}}</div>
+                                                            </div>
+                                                        </td>
+                                                        <td [hidden]="showFreeProducts">
+                                                            <select class="custom-select custom-select-sm" id=""
+                                                                #preferenceUnit
+                                                                (change)="setPreference(product, $event.target.value, showFreeProducts)">
+                                                                <option disabled="" selected="">Select Unit</option>
+                                                                <option *ngFor="let pref of getUnits(product.item_id)"
+                                                                    [value]="pref.pref_id">{{pref.unit_name}}</option>
+                                                            </select>
+                                                        </td>
+                                                        <td [hidden]="!showFreeProducts">
+                                                            <select class="custom-select custom-select-sm" id=""
+                                                                #preferenceUnit
+                                                                (change)="setPreference(product, $event.target.value, showFreeProducts)">
+                                                                <option disabled="" selected="">Select Unit</option>
+                                                                <option *ngFor="let pref of getUnits(product.item_id)"
+                                                                    [value]="pref.pref_id">{{pref.unit_name}}</option>
+                                                            </select>
+                                                        </td>
+                                                        <td [hidden]="showFreeProducts"><input placeholder="0" class="itemQTY"
+                                                                (keydown)="isNumber($event)" name="purchase-qty"
+                                                                (keyup)="getUnitPrice(product)"
+                                                                [(ngModel)]="product.quantity"></td>
+                                                        <td [hidden]="!showFreeProducts"><input placeholder="0" class="itemQTY"
+                                                                (keydown)="isNumber($event)" name="free-qty"
+                                                                (keyup)="getUnitPrice(product, true)"
+                                                                [(ngModel)]="product.quantity"></td>
+                                                        <td [hidden]="showFreeProducts">{{product.discount_type_value}}</td>
+                                                        <td [hidden]="showFreeProducts">{{product.net_amount | number: '1.0-1'}}
+                                                        </td>
+                                                        <td><button class="btn smBTN red-bg mb-0"
+                                                                (click)="removeSelectedProduct(product)">Delete</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 p-0">
+                                        <div class="action-ord">
+                                            <button *ngIf="loading" type="submit"
+                                                class="btn btn-primary mr-2" disabled>
+                                                <div class="spinner-border text-light" role="status">
+                                                    <span class="sr-only">Loading...</span>
+                                                </div></button>
+                                            <button *ngIf="!loading" type="submit"
+                                                class="btn btn-primary mr-2" (click)="placeOrder()">Order</button>
+                                            <button *ngIf="!loading" id="pl-close" [routerLink]="'/inventory/gallery'"
+                                                class="btn btn-cancel mr-2">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

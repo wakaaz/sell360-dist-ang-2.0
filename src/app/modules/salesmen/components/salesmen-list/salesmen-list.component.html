@@ -1,0 +1,186 @@
+<!-- Add new Employee -->
+<div id="product-cl-sec" #empForm (clickOutside)="clickOutSide($event)" [ngClass]="newEmployee ? 'active' : ''"> <a
+        (click)="closeNewEmployeeForm()" id="pl-close" class="close-btn-pl"></a>
+    <div class="pro-header-text">New <span>Sales Man</span></div>
+    <div class="pc-cartlist">
+        <div class="overflow-plist">
+            <div class="plist-content">
+                <div class="_left-filter pt-0">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div id="floating-label" class="card p-20 top_border mb-3">
+                                    <h2 class="_head03">Sales <span> Man Detail</span></h2>
+                                    <div class="form-wrap p-0 pt-5">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-10">Name*</label>
+                                                    <input type="text" pattern="^(?:[A-Za-z]+)(?:[A-Za-z0-9 _]*)$"
+                                                        [(ngModel)]="name" name="saleman-name" (focus)="focused($event)"
+                                                        (blur)="left($event)" id="saleman-name" #nameInput="ngModel"
+                                                        class="form-control" placeholder="" required>
+                                                </div>
+                                                <div *ngIf="nameInput.errors && submitted"
+                                                    class="input-error">
+                                                    <span *ngIf="nameInput.errors.required">
+                                                        Name is required
+                                                    </span>
+                                                    <span *ngIf="nameInput.errors.pattern">
+                                                        Name can only have alphabets
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-10">CNIC*</label>
+                                                    <input type="text" pattern="^\d+$"
+                                                        (focus)="focused($event)" (blur)="left($event)"
+                                                        name="saleman-cnic" [(ngModel)]="cnic" #cnicInput="ngModel"
+                                                        id="saleman-cnic" class="form-control" placeholder="" required>
+                                                </div>
+                                                <div *ngIf="cnicInput.errors && submitted"
+                                                    class="input-error">
+                                                    <span *ngIf="cnicInput.errors.required">
+                                                        CNIC is required
+                                                    </span>
+                                                    <span *ngIf="cnicInput.errors.pattern">
+                                                        CNIC is not valid
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-10">Phone*</label>
+                                                    <input type="text"
+                                                        pattern="^\d+$"
+                                                        (focus)="focused($event)" (blur)="left($event)"
+                                                        name="saleman-phone" [(ngModel)]="phone" #phoneInput="ngModel"
+                                                        id="saleman-phone" class="form-control" placeholder="" required>
+                                                </div>
+                                                <div *ngIf="phoneInput.errors && submitted"
+                                                    class="input-error">
+                                                    <span *ngIf="phoneInput.errors.required">
+                                                        Phone number is required
+                                                    </span>
+                                                    <span *ngIf="phoneInput.errors.pattern">
+                                                        Phone number is not valid
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label mb-10">Salary*</label>
+                                                    <input type="text" (focus)="focused($event)" (blur)="left($event)"
+                                                        name="saleman-salary" [(ngModel)]="salary" pattern="^(?!0+(?:\.0+)?$)[0-9]+(?:\.[0-9]+)?$"
+                                                        #salaryInput="ngModel" id="saleman-salary" class="form-control"
+                                                        placeholder="" required>
+                                                </div>
+                                                <div *ngIf="salaryInput.errors && submitted"
+                                                    class="input-error">
+                                                    <span *ngIf="salaryInput.errors.required">
+                                                        Salary is required
+                                                    </span>
+                                                    <span *ngIf="salaryInput.errors.pattern">
+                                                        Salary is not valid
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="font12 mb-5">Select Segment*</label>
+                                                <div class="form-s2">
+                                                    <ng-select class="formselect" [multiple]="true" id="saleman-segment"
+                                                        name="saleman-segment" [(ngModel)]="selectedSegments"
+                                                        #segmentInput="ngModel" required>
+                                                        <ng-option *ngFor="let segment of segments" [value]="segment.id">
+                                                            {{segment.name}}
+                                                        </ng-option>
+                                                    </ng-select>
+                                                </div>
+                                                <div *ngIf="segmentInput.errors && submitted"
+                                                    class="input-error">
+                                                    <span *ngIf="segmentInput.errors.required">
+                                                        Please select atleast one segment
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="_cl-bottom">
+        <button [hidden]="!isSalemanChanging" class="btn btn-primary mr-2" disabled>
+            <div class="spinner-border text-light" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </button>
+        <button [hidden]="isSalemanChanging" type="submit" class="btn btn-primary mr-2" (click)="selectedSaleman ? updateSaleman() : addNewSaleman()">Save</button>
+        <button [hidden]="isSalemanChanging" id="pl-close" (click)="closeNewEmployeeForm()" class="btn btn-cancel mr-2">Cancel</button>
+    </div>
+</div>
+
+<div class="container" id="emp-list">
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Sales <span> Man</span></h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a routerLink="/salesmen"><span>Sales Man</span></a></li>
+                <li><span>List</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- Salesmen list -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <a id="productlist01" #newSaleMan (click)="openNewEmployeeForm($event)" class="btn add_button">
+                        <i class="fa fa-plus"></i> New Sales Man
+                    </a>
+                    <h2>Sales Man <span> List</span>
+                        <div class="_list-total" *ngIf="salesMen && salesMen.length">{{salesMen.length}}</div>
+                    </h2>
+                </div>
+                <div class="body">
+                        <table *ngIf="salesMen && salesMen.length && !loading" id="saleman-table" [dtTrigger]="dtTrigger"
+                        datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example"
+                            style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let saleman of salesMen; let i=index">
+                                    <td>{{saleman.id}}</td>
+                                    <td>{{saleman.name}}</td>
+                                    <td>{{saleman.phone}} </td>
+                                    <td><button (click)="openNewEmployeeForm($event, saleman)"
+                                            class="btn btn-default btn-line m-0">Edit</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="alert alert-danger" *ngIf="salemenError">
+                            Something went wrong please check your internet connection and try again!
+                        </div>
+                        <div *ngIf="loading">
+                            <app-loader-white></app-loader-white>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>

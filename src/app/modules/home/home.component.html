@@ -1,0 +1,136 @@
+<div class="container" *ngIf="!loading">
+    <div *ngIf="distributor" class="row _user-TS">
+        <div class="col-md-12 _dashTOP"> <img class="_user_Pimage" onError="this.src='assets/images/avatar.svg'"
+            [src]="distributor.distributor_image ? distributor.distributor_image : 'assets/images/avatar.svg'" alt="">
+            <h2 class="_head01">Good Morning, {{distributor.distributor_name}}</h2>
+            <p>Here’s what’s happening at Sell360 today.</p>
+        </div>
+    </div>
+    <div *ngIf="false" class="row">
+        <div class="col-12 PB-15">
+            <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                <button class="btn btn-primary ml-2">Open Page</button>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                <a href="#" class="ml-2">Open Page</a>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="seabinReport">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card mt-0">
+                    <h4>Total <span>Booking</span></h4>
+                    <h2 class="digit"><small>Rs.</small> 45,000</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mt-0">
+                    <h4>New <span>Orders</span></h4>
+                    <h2 class="digit">1450</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mt-0">
+                    <h4>Today <span>Sale</span></h4>
+                    <h2 class="digit"><small>Rs.</small> 34,000</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 PB-10">
+            <h2 class="_head01 HomeHead">Top 5 <span>Products</span></h2>
+        </div>
+        <div class="col-md-12">
+            <div class="row pro-list">
+                <div class="col">
+                    <div class="product-card">
+                        <h3>Chilli Chips Without Zooplay</h3>
+                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                        <div class="row pr-st">
+                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="product-card">
+                        <h3>Chilli Chips Without Zooplay </h3>
+                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                        <div class="row pr-st">
+                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="product-card">
+                        <h3>Chilli Chips Without Zooplay </h3>
+                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                        <div class="row pr-st">
+                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="product-card">
+                        <h3>Chilli Chips Without Zooplay </h3>
+                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                        <div class="row pr-st">
+                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="product-card">
+                        <h3>Chilli Chips Without Zooplay </h3>
+                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                        <div class="row pr-st">
+                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-0">
+        <div class="col-lg-12 p-0">
+            <h2 class="_head01 HomeHead">Creat <span>New</span></h2>
+        </div>
+
+        <div class="col-12 h_dash">
+            <div class="row">
+                <div class="col-4"><a href="#"><img src="assets/images/add-stock-01.svg" alt="" />
+                        <h2 class="HD-title">Add New <span class="f-light"> Stock</span></h2>
+                    </a> </div>
+                <div class="col-4"><a href="#"><img src="assets/images/add-order.svg" alt="" />
+                        <h2 class="HD-title">Create New <span class="f-light"> Order</span></h2>
+                    </a> </div>
+                <div class="col-4"><a href="#"><img src="assets/images/dispatch-order.svg" alt="" />
+                        <h2 class="HD-title">Dispatch<span class="f-light">Order</span></h2>
+                    </a> </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" *ngIf="loading">
+    <app-loader-white></app-loader-white>
+</div>

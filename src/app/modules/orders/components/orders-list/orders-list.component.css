@@ -1,0 +1,134 @@
+.OrderLogo {text-align: left;padding-left: 0}
+.OrderLogo img {width: auto;height: 46px}
+._cust_filter {padding-left: 0 !important;padding-top: 0 !important;}
+._cust_filter .form-s2 .ng-select {padding: 0 !important;height: 30px !important;}
+._cust_filter .form-s2 .ng-select .ng-select-container {width: 100%; font-size: 14px;border: none;border-radius: 0;min-height: 30px !important;height: 30px !important;}
+.nav-item {cursor: pointer;text-transform: capitalize !important;}
+.CL-Product {padding-top: 0 !important;margin-left: 0 !important;}
+.OrderInfo {font-size: 14px}
+.OrderInfo span {width: 105px;float: left}
+.Order-Detail-table table td {border: solid 1px #333333;padding: 5px!important;font-size: 12px}
+.Order-Detail-table table th {border: solid 1px #333333!important;background-color: #ededed!important;color: #000;padding: 5px!important;font-size: 12px}
+.button-list .btn-primary {font-size: 14px!important;letter-spacing: 1px}
+.button-list .btn-primary .fa {padding-right: 3px}
+.ord-no {padding-top: 17px;font-size: 14px;text-align: right}
+.table .select2-container--default .select2-selection--single {border-radius: 0;border-color: #dddddd;}
+.table .select2-container--default .select2-selection--single .select2-selection__rendered, .select2-container .select2-selection--single {height: 26px;}
+.table .select2-container--default .select2-selection--single .select2-selection__arrow {height: 24px;}
+.cus-che-table .custom-control-label::before, .cus-che-table .custom-control-label::after {top: -7px;left: 0}
+.cus-che-table {padding: 0;margin: 0;width: 22px}
+.btn-primary {padding-top: 4px;padding-bottom: 4px;letter-spacing: 1px}
+.bottom-gray {background-color: #f6f6f6; padding: 10px; margin-top: 20px;}
+.active { display: block;}
+#example2 .ng-select .ng-select-container {width: 100%;font-size: 14px;border-radius: 0;min-height: 25px !important;height: 25px !important;}
+#example2 .ng-select .ng-select-container div.ng-input { top: 0 !important; }
+
+.Product-Filter {
+    background-color: #f3f2f2;
+    padding: 15px 15px 0px 15px;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+    margin-bottom: 15px;
+    border-bottom: solid 2px #0038ba
+}
+.Product-Filter .nav-link {
+    padding: 6px 8px 0px 8px;
+    cursor: pointer;
+}
+.Product-Filter .nav {
+    width: 74px;
+    float: right
+}
+.Product-Filter .nav .fa {
+    color: #a6a5a5;
+    font-size: 20px
+}
+.Product-Filter .active .fa {
+    color: #0038ba
+}
+.CL-Product {
+    width: 230px;
+    position: relative;
+    float: left;
+    padding-right: 15px
+}
+.CL-Product input {
+    height: 32px;
+    border: solid 1px #dedede;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    padding-left: 30px;
+    font-size: 13px;
+    letter-spacing: 1px
+}
+._cust_filter .select2-container .select2-selection--single {
+    background-color: #fff;
+    border-color: #e4e4e4;
+    font-size: 14px;
+    border-radius: 0px;
+    height: 32px;
+}
+._cust_filter .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 32px;
+}
+.Product-Filter .btn-primary {
+    color: #fff !important;
+    cursor: pointer;
+    float: left;
+    margin-left: 15px;
+    padding-top: 4px;
+    padding-bottom: 4px
+}
+.CL-Product .fa {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    color: #b5b5b5
+}
+._cust_filter {
+    width: 170px;
+    float: left;
+    margin-bottom: 15px
+}
+._cust_filter select {
+    border-radius: 0;
+    height: 32px;
+    border: solid 1px #dedede
+}
+
+@media (max-width: 1300px) {
+    .header-tabs .nav-tabs .nav-item.show .nav-link, .header-tabs .nav-tabs .nav-link, .header-tabs .nav-tabs .nav-link.active {
+        font-size: 14px;
+        padding: 12px 12px;
+        letter-spacing: 0.5px;
+    }
+}
+._cust_filter {
+    width: 230px;
+    padding-right: 10px;
+}
+._cust_filter .select2-container .select2-selection--single {
+    height: 32px!important;
+}
+._cust_filter .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 30px;
+}
+._cust_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 32px;
+}
+.CL-Product {
+    padding-right: 10px
+}
+.Product-Filter .btn-primary {
+    margin: 0px;
+    letter-spacing: 1px;
+    float: left;
+    box-shadow: none
+}
+@media (max-width: 1170px) {
+    .header-tabs .nav-tabs .nav-item.show .nav-link, .header-tabs .nav-tabs .nav-link, .header-tabs .nav-tabs .nav-link.active {
+        padding: 12px 10px;
+        letter-spacing: normal;
+    }
+}
+

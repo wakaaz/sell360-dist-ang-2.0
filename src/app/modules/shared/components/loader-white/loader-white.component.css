@@ -1,0 +1,153 @@
+.loader-sell360 {
+    height: 75vh;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    position: relative;
+}
+
+.loader-sell360 .loader {
+    width: 90px;
+    height: 110px;
+    position: relative;
+    margin-top: -60px;
+}
+
+.loader-sell360 .loader::before, .loader-sell360 .loader::after {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    bottom: 30px;
+    left: 15px;
+    z-index: 1;
+    transform: scale(0);
+    transition: all 0.2s ease;
+}
+
+.loader-sell360 .loader .txt {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: -23px;
+    left: 5px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #282828;
+}
+
+.loader-sell360 .loader .txt span {
+    font-family: 'Rationale', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    color: #0038ba
+}
+
+.loader-sell360 .loader .loader-img {
+    position: absolute;
+    z-index: 99;
+    bottom: 3px;
+    -webkit-animation-name: spaceboots;
+    -webkit-animation-duration: 1s;
+    -webkit-transform-origin: 50% 50%;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+}
+
+.loader-sell360 .loader .loader-img img {
+    width: 85px;
+    height: auto;
+    margin-left: 5px
+}
+
+.loader-sell360 .loader .box-icon {
+    width: 100%;
+    height: 80px;
+    display: block;
+    color: white;
+    position: absolute;
+    top: 0px;
+    left: 0;
+    z-index: 2;
+    overflow: hidden;
+}
+
+.loader-sell360 .loader .box-icon::before, .loader-sell360 .loader .box-icon::after {
+    display: inline-block;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    background-image: url(/assets/images/dashboard-icon.svg);
+    background-repeat: no-repeat;
+    width: 18px;
+    height: 18px;
+    filter: invert(60%);
+}
+
+.loader-sell360 .loader .box-icon:nth-child(1)::before {
+    content: "";
+    animation: a 1.1s linear infinite;
+    background-image: url(/assets/images/search-icon.svg);
+}
+
+.loader-sell360 .loader .box-icon:nth-child(1)::after {
+    content: "";
+    animation: b 1.3s linear infinite;
+    background-image: url(/assets/images/activity-icon.svg);
+}
+
+.loader-sell360 .loader .box-icon:nth-child(2)::before {
+    content: "";
+    animation: c 0.9s linear infinite;
+    background-image: url(/assets/images/geography-icon.svg);
+}
+
+.loader-sell360 .loader .box-icon:nth-child(2)::after {
+    content: " ";
+    animation: d 0.7s linear infinite;
+    background-image: url(/assets/images/reports-icon.svg);
+}
+
+.loader-sell360 .loader.amit::before, .loader.amit::after {
+    transform: scale(1);
+}
+
+@keyframes a {
+    0% {
+        transform: translate(30px, 0) rotate(30deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(30px, 150px) rotate(-50deg);
+        opacity: 1;
+    }
+}
+
+@keyframes b {
+    0% {
+        transform: translate(50px, 0) rotate(-40deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(40px, 150px) rotate(80deg);
+        opacity: 1;
+    }
+}
+
+@keyframes c {
+    0% {
+        transform: translate(70px, 0) rotate(10deg);
+        opacity: 0;
+    }
+    100% {
+        transform: translate(60px, 150px) rotate(70deg);
+        opacity: 1;
+    }
+}

@@ -1,0 +1,175 @@
+<div class="container">
+
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Gallery</h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a><span>Inventory </span></a></li>
+                <li><span>Gallery</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="Product-Filter">
+                <div class="row">
+                    <div class="col pr-0">
+                        <div class="CL-Product"><i class="fa fa-search"></i>
+                            <input type="text" class="form-control" id="search-product" [(ngModel)]="searchText"
+                                (keyup)="filterProducts()" (keydown)="resetTimer()" placeholder="Search">
+                        </div>
+                        <div class="_cust_filter">
+                            <select class="custom-select custom-select-sm" (change)="filterProducts()"
+                                [(ngModel)]="selectedBrand">
+                                <option selected>All Brands</option>
+                                <option *ngFor="let brand of brands" [value]="brand.name">
+                                    {{brand.name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="_cust_filter">
+                            <select class="custom-select custom-select-sm" (change)="filterProducts()"
+                                [(ngModel)]="selectedCategory">
+                                <option selected>All Categories</option>
+                                <option *ngFor="let category of categories" [value]="category.sub_category_name">
+                                    {{category.sub_category_name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="_cust_filter">
+                            <select class="custom-select custom-select-sm" [(ngModel)]="sortFilter" (change)="sortProducts()">
+                                <option value="0" disabled> Sort By Any</option>
+                                <option value="asc"> Name (ASC)</option>
+                                <option value="desc"> Name (DESC)</option>
+                                <option value="latest">Latest to Oldest</option>
+                                <option value="oldest">Oldest to Latest</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <div class="nav" id="nav-tab" role="tablist">
+                            <a class="nav-item nav-link" [ngClass]="!showList ? 'active' : ''" id="productthumb-tab"
+                                data-toggle="tab" (click)="showList=false;" role="tab" aria-controls="productthumb"
+                                aria-selected="false"><i class="fa fa-th-large"></i></a>
+                            <a class="nav-item nav-link" [ngClass]="showList ? 'active' : ''" id="productList-tab"
+                                data-toggle="tab" (click)="showList=true;" role="tab" aria-controls="productList"
+                                aria-selected="true"><i class="fa fa-th-list"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="!loading" class="row">
+        <div class="col-md-12">
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade" [ngClass]="showList ? 'show active' : ''" id="productList" role="tabpanel"
+                    aria-labelledby="productList-tab">
+                    <div class="Product-row-title">
+                        <div class="row">
+                            <div class="col _SNO h-auto">S.No</div>
+                            <div class="col _ITEMSKU h-auto">ITEM SKU</div>
+                            <div class="col _ITEMNAME h-auto">ITEM NAME</div>
+                            <div class="col _ITEMBRAND h-auto">ITEM BRAND</div>
+                        </div>
+                    </div>
+
+                    <div class="Product-row" *ngFor="let product of productDispList">
+                        <a [routerLink]="['/product/' + product.item_id]">
+                            <div class="row">
+                                <div class="col _SNO">
+                                    <div class="middle">{{product.item_id}}</div>
+                                </div>
+                                <div class="col _ITEMSKU">
+                                    <div class="middle">{{product.item_sku}}</div>
+                                </div>
+                                <div class="col _ITEMNAME">
+                                    <div class="Product-IMG"><img [src]="product.thumbnail"
+                                            alt="{{product.item_name}}" /></div>
+                                    <div class="Product-Name">{{product.item_name}}</div>
+                                </div>
+                                <div class="col _ITEMBRAND">
+                                    <div class="middle">{{product.brand_name}}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" [ngClass]="!showList ? 'show active' : ''" id="productthumb" role="tabpanel"
+                    aria-labelledby="productthumb-tab">
+                    <div class="row PT-15">
+
+                        <div class="col-lg-3 col-md-4" *ngFor="let product of productDispList">
+                            <div class="_product-card">
+                                <a [routerLink]="['/product/' + product.item_id]">
+                                    <h2>{{product.item_name}}</h2>
+                                    <div class="PR-Thumb">
+                                        <div class="middle"><img [src]="product.thumbnail" alt="" />
+                                        </div>
+                                    </div>
+                                    <!-- Hidden for the time being -->
+                                    <!-- <div class="p-stock">QTY: <span>4587 <small>CTNs</small></span></div>
+                                    <div class="p-Scheme">Scheme: <span>12+1</span></div> -->
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pagination Start -->
+            <div class="ProductPageNav" *ngIf="pageCount > 1 && !loading">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" [ngClass]="{'disabled': pageNum === 1 }"
+                        (click)="pageNum > 1 && getProductsByPageID(pageNum-1, $event)">
+                        <a class="page-link" [ngClass]="{'disabled': pageNum === 1 }" tabindex="-1">Previous</a>
+                    </li>
+                    <ng-container *ngFor="let page of getRange(1, pageCount).reverse()">
+                        <li *ngIf="pageNum > page" class="page-item">
+                            <a class="page-link" (click)="getProductsByPageID(pageNum - page, $event)">{{pageNum
+                                -
+                                page}}</a>
+                        </li>
+                    </ng-container>
+
+                    <li class="page-item active">
+                        <a class="page-link">{{pageNum}}</a>
+                    </li>
+                    <ng-container *ngFor="let page of getRange(1, pageCount)">
+                        <li *ngIf="pageNum != getRange(1, pageCount).length && (page + pageNum) <= pageCount"
+                            class="page-item">
+                            <a class="page-link" (click)="getProductsByPageID(page + pageNum, $event)">{{page +
+                                pageNum}}</a>
+                        </li>
+                    </ng-container>
+                    <li class="page-item" [ngClass]="{'disabled': pageNum === pageCount }"
+                        (click)="pageNum < pageCount && getProductsByPageID(pageNum+1, $event)">
+                        <a class="page-link" [ngClass]="{'disabled': pageNum === pageCount }">Next</a>
+                    </li>
+                </ul>
+            </div>
+            <!-- Pagination End -->
+
+        </div>
+    </div>
+    <div *ngIf="loading" class="row">
+        <div class="col-md-12">
+            <app-loader-white></app-loader-white>
+        </div>
+    </div>
+    <div *ngIf="loadingError" class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger">
+                Something went wrong, please check your internet connection and try again!
+            </div>
+        </div>
+    </div>
+</div>

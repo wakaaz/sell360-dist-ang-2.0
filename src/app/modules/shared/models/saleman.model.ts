@@ -4,6 +4,6 @@ export interface SalemanModel {
     cnic: string;
     phone: string;
     salary: number;
-    segements_id: Array<number>;
+    segments_id: Array<number>;
     distributor_id: number;
 }

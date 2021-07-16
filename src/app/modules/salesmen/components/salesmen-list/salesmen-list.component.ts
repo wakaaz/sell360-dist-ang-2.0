@@ -81,8 +81,6 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        // if (!this.loading && this.salesMen?.length) {
-        // }
     }
 
     getAllSalemen(): void {
@@ -94,7 +92,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.store.dispatch(addSalemens(res.data));
                 setTimeout(() => {
                     this.dtTrigger.next();
-                }, 500);
+                }, 200);
             }
         }, error => {
             this.loading = false;
@@ -286,7 +284,6 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.dtTrigger.unsubscribe();
     }
 
 }

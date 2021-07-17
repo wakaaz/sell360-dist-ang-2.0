@@ -75,12 +75,12 @@
                                                 <td>{{dt.item_id}}</td>
                                                 <td>{{dt.item_name}}</td>
                                                 <td>{{dt.type === 'regular' ? dt.unit_name : ''}}</td>
-                                                <td>{{dt.type === 'regular' ?  dt.quantity : ''}}</td>
+                                                <td>{{dt.type === 'regular' ?  dt.quantity : 0 | number}}</td>
                                                 <td>{{dt.type === 'free' ? dt.unit_name : dt.type === 'regular' && dt.free ? dt.free.unit_name : ''}}</td>
-                                                <td>{{dt.type === 'free' ? dt.free_quantity : dt.type === 'regular' && dt.free ? dt.free.quantity : '' }}</td>
-                                                <td>{{dt.discount}}</td>
-                                                <td>{{dt.original_amount  | number: '1.2-2'}}</td>
-                                                <td>{{dt.net_amount  | number: '1.2-2'}}</td>
+                                                <td>{{dt.type === 'free' ? dt.free_quantity : dt.type === 'regular' && dt.free ? dt.free.quantity : '' | number }}</td>
+                                                <td>{{dt.discount | number: '1.2-2'}}</td>
+                                                <td>{{dt.original_amount | number: '1.2-2'}}</td>
+                                                <td>{{dt.net_amount | number: '1.2-2'}}</td>
                                             </tr>
                                             <tr>
                                                 <td class="border-0"></td>

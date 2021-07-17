@@ -17,6 +17,7 @@ export const API_URLS = {
     CATEGORIES: '/categories',
     BRANDS: '/brands',
     PRODUCTS: '/products',
+    PRODUCT: '/product',
     DISTRIBUTOR_PURCHASE_DATA: '/distributorPurchaseData',
     ADD_DISTRIBUTOR_PURCHASE: '/addDistributorPurchase',
 

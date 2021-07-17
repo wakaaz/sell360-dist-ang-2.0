@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { ReportsService } from '../../services/reports.service';
 

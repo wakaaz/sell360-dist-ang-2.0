@@ -10,7 +10,6 @@ import { addSalemens, addSaleman, updateSaleman } from '../../reducers/salesmen.
 import { getSalemenState } from '../../selectors/base.selector';
 
 import { SalesmenService } from '../../services/salesmen.service';
-declare var jQuery: any;
 
 @Component({
     selector: 'app-salesmenlist-component',

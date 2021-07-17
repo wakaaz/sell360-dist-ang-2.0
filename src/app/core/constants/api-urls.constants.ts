@@ -23,6 +23,8 @@ export const API_URLS = {
     // Retailers
 
     // Reports
+    DISTRIBUTOR_PURCHASE_HISTORY: '/distributorPurchaseHistory',
+    PURCHASE_DETAIL: '/distributorPurchaseDetail'
 
     // Payments
 };

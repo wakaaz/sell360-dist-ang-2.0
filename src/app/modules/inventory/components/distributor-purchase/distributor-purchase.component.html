@@ -202,7 +202,7 @@
                                                         <th [hidden]="!showFreeProducts"></th>
                                                         <th [hidden]="!showFreeProducts"></th>
                                                         <th>Subtotal PKR.</th>
-                                                        <th>{{distributorPurchase.original_amount | number: '1.0-1'}}</th>
+                                                        <th>{{distributorPurchase.original_amount | number: '1.2-2'}}</th>
                                                         <th></th>
                                                     </tr>
                                                     <tr>
@@ -213,7 +213,7 @@
                                                         <th [hidden]="!showFreeProducts"></th>
                                                         <th></th>
                                                         <th>Distribution Discount.</th>
-                                                        <th>{{distributorPurchase.discount | number: '1.0-1'}}</th>
+                                                        <th>{{distributorPurchase.discount | number: '1.2-2'}}</th>
                                                         <th></th>
                                                     </tr>
                                                     <tr>
@@ -248,7 +248,7 @@
                                                         <th [hidden]="!showFreeProducts"></th>
                                                         <th></th>
                                                         <th>Total PKR..</th>
-                                                        <th>{{distributorPurchase.net_amount | number: '1.0-1'}}</th>
+                                                        <th>{{distributorPurchase.net_amount | number: '1.2-2'}}</th>
                                                         <th></th>
                                                     </tr>
                                                 </tfoot>
@@ -273,7 +273,7 @@
                                                         <td [hidden]="!showFreeProducts">
                                                             <select class="custom-select custom-select-sm" id=""
                                                                 #preferenceUnit
-                                                                (change)="setPreference(product, $event.target.value, showFreeProducts)">
+                                                                (change)="setPreference(product, $event.target.value, true)">
                                                                 <option disabled="" selected="">Select Unit</option>
                                                                 <option *ngFor="let pref of getUnits(product.item_id)"
                                                                     [value]="pref.pref_id">{{pref.unit_name}}</option>
@@ -288,7 +288,7 @@
                                                                 (keyup)="getUnitPrice(product, true)"
                                                                 [(ngModel)]="product.quantity"></td>
                                                         <td [hidden]="showFreeProducts">{{product.discount_type_value}}</td>
-                                                        <td [hidden]="showFreeProducts">{{product.net_amount | number: '1.0-1'}}
+                                                        <td [hidden]="showFreeProducts">{{product.net_amount | number: '1.2-2'}}
                                                         </td>
                                                         <td><button class="btn smBTN red-bg mb-0"
                                                                 (click)="removeSelectedProduct(product)">Delete</button>

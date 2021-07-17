@@ -93,7 +93,7 @@ export const reportsSubMenu = {
     subMenu: [
         {
             title: 'DSR',
-            link: '/reports',
+            link: '/reports/dsr',
             icon: '/assets/images/reports-icon.svg'
         },
         {
@@ -113,7 +113,7 @@ export const reportsSubMenu = {
         },
         {
             title: 'Purchase History',
-            link: '/reports',
+            link: '/reports/purchase-history',
             icon: '/assets/images/reports-icon.svg'
         },
         {

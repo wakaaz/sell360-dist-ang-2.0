@@ -1,0 +1,48 @@
+<div class="container">
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Distributor <span> Purchase</span></h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a><span>Reports</span></a></li>
+                <li><span>Purchase History</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="body">
+                    <table datatable *ngIf="!loading && purchasesHistory" [dtTrigger]="dtTrigger"
+                        [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example"
+                        style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Purchase Date</th>
+                                <th>Received No.</th>
+                                <th>Inv. No.</th>
+                                <th>P.O No.</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let history of purchasesHistory; let i=index">
+                                <td>{{history.payload.poDate}}</td>
+                                <td>{{history.payload.receivedNo}}</td>
+                                <td>{{history.payload.invoiceNo}}</td>
+                                <td>{{history.payload.poNo}}</td>
+                                <td><button class="btn btn-default m-0" [routerLink]="['/reports/purchase', history.id]">Details</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="loading">
+                        <app-loader-white></app-loader-white>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

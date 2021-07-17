@@ -265,9 +265,9 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         this.submitted = true;
         if (this.validateForm()) {
             this.loading = true;
-            this.distributorPurchase.discount = Number(this.distributorPurchase.discount.toFixed(1));
-            this.distributorPurchase.net_amount = Number(this.distributorPurchase.net_amount.toFixed(1));
-            this.distributorPurchase.original_amount = Number(this.distributorPurchase.original_amount.toFixed(1));
+            this.distributorPurchase.discount = Number(this.distributorPurchase.discount.toFixed(2));
+            this.distributorPurchase.net_amount = Number(this.distributorPurchase.net_amount.toFixed(2));
+            this.distributorPurchase.original_amount = Number(this.distributorPurchase.original_amount.toFixed(2));
             this.distributorPurchase.items = this.purchasedProducts.map(product => {
                 const regularProduct = {
                     type: 'regular',
@@ -277,11 +277,11 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     item_name: product.item_name,
                     unit_name: product.unit_name,
                     quantity: product.quantity,
-                    original_amount: product.original_amount.toFixed(1),
-                    discount: product.discount.toFixed(1),
+                    original_amount: product.original_amount.toFixed(2),
+                    discount: product.discount.toFixed(2),
                     discount_type: 'percentage',
                     discount_type_value: product.discount_type_value,
-                    net_amount: product.net_amount.toFixed(1),
+                    net_amount: product.net_amount.toFixed(2),
                 };
                 return regularProduct;
             });
@@ -294,7 +294,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     item_name: product.item_name,
                     unit_name: product.unit_name,
                     quantity: product.quantity,
-                    original_amount: product.original_amount.toFixed(1),
+                    original_amount: product.original_amount.toFixed(2),
                     discount: product.original_amount,
                     discount_type: 'percentage',
                     discount_type_value: 100,

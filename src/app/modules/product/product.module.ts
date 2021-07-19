@@ -6,6 +6,8 @@ import { DataTablesModule } from 'angular-datatables';
 import { ProductComponent } from './product.component';
 import { ProductDetailsComponent } from './product-detail/product-detail.component';
 
+import { ProductService } from './product.service';
+
 @NgModule({
     imports: [
         CommonModule,
@@ -16,6 +18,8 @@ import { ProductDetailsComponent } from './product-detail/product-detail.compone
         ProductComponent,
         ProductDetailsComponent,
     ],
-    providers: [],
+    providers: [
+        ProductService,
+    ],
 })
 export class ProductModule { }

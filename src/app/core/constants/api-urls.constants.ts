@@ -20,6 +20,8 @@ export const API_URLS = {
     PRODUCT: '/product',
     DISTRIBUTOR_PURCHASE_DATA: '/distributorPurchaseData',
     ADD_DISTRIBUTOR_PURCHASE: '/addDistributorPurchase',
+    PRODUCT: '/product',
+    PRODUCTS_WITH_STOCK: '/productsWithStock',
 
     // Retailers
 

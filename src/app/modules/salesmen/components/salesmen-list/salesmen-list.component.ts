@@ -188,7 +188,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.store.dispatch(addSaleman(res.data));
                 this.toastService.showToaster({
                     title: 'Saleman Added:',
-                    message: this.name + ' added succesfuly.',
+                    message: this.name + ' added successfully.',
                     type: 'success'
                 });
                 this.resetValues();
@@ -228,7 +228,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.store.dispatch(updateSaleman(res.data));
                 this.toastService.showToaster({
                     title: 'Update Saleman:',
-                    message: res.data.name + ' updated succesfuly.',
+                    message: res.data.name + ' updated successfully.',
                     type: 'success'
                 });
                 this.resetValues();

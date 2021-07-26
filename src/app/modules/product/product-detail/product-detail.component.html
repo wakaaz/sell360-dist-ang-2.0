@@ -6,44 +6,41 @@
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
             <ol class="breadcrumb">
-                <li><a href="#"><span>Product Management</span></a></li>
+                <li><a><span>Product Management</span></a></li>
                 <li><span>Product Detail</span></li>
             </ol>
         </div>
     </div>
 
-    <div class="row">
+    <div *ngIf="!loader && product" class="row">
         <div class="col-12 mb-30">
             <div class="card top_border _product-D">
                 <div class="row">
                     <div class="col-md-4">
                         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                             <ol class="carousel-indicators">
-                                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                <li *ngFor="let img of product.images; let ind=index" (click)="slideTo(ind)" [ngClass]="activeSlide === ind ? 'active' : ''"></li>
                             </ol>
                             <div class="carousel-inner">
-                                <div class="carousel-item active">
-                                    <img class="d-block w-100" src="https://shahi.sell360.app./storage/product_thumbnails/Dal_Chana_1594102079.jpg" alt="">
+                                <div *ngFor="let img of product.images; let ind=index" class="carousel-item" [ngClass]="activeSlide === ind ? 'active' : ''">
+                                    <img class="d-block w-100" [src]="img.picture" alt="">
                                 </div>
                             </div>
-
-
                         </div>
                     </div>
                     <div class="col-md-8 _product-RS">
 
-                        <h2>Big Beans Box 24 Pcs
+                        <h2>{{product.item_name}}
                             <!--<a href="#" class="btn add_button" style="top:0;right:15px;letter-spacing:1px"><i class="fa fa-pencil"></i> <span>Edit</span></a>-->
                         </h2>
-                        <span class="_Cat"><strong>SKU: </strong>0215432 </span>
-                        <span class="_Cat"><strong>Category: </strong>Chocalate </span>
-                        <span class="_Cat"><strong>Sub Category: </strong>Chocalate </span>
-                        <span class="_Cat"><strong>Brand Name: </strong>Baly Baly </span>
-                        <span class="_Cat"><strong>Description: </strong>Lorem Ipsum is simply dummy text of the
-                            printing and typesetting industry. </span>
+                        <span class="_Cat"><strong>SKU: </strong>{{product.item_sku}} </span>
+                        <span class="_Cat"><strong>Category: </strong>{{product.main_cat}}</span>
+                        <span class="_Cat"><strong>Sub Category: </strong>{{product.sub_cat}}</span>
+                        <span class="_Cat"><strong>Brand Name: </strong>{{product.brand_name}} </span>
+                        <span class="_Cat"><strong>Description: </strong>{{product.item_main_description}}</span>
 
 
-                        <div class="items-available">
+                        <div *ngIf="product.packaging" class="items-available">
 
                             <h3>Packaging</h3>
 
@@ -196,7 +193,7 @@
             </div>
         </div>
 
-        <div class="col-12">
+        <div *ngIf="product.stock" class="col-12">
             <div class="card distTabs">
                 <div class="row">
                     <div class="col-md-12">
@@ -206,7 +203,7 @@
                                     <div class="nav nav-tabs" id="nav-tab" role="tablist"> <a
                                             class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
                                             href="#nav-home" role="tab" aria-controls="nav-home"
-                                            aria-selected="true">Stock Distributor <span class="_cus-val"> 4 </span></a>
+                                            aria-selected="true">Stock Distributor <span class="_cus-val"> {{productStock.stock || 0}} </span></a>
                                     </div>
                                 </div>
                                 <div class="tab-content" id="nav-tabContent">
@@ -256,6 +253,12 @@
         </div>
 
 
+    </div>
+
+    <div class="row" *ngIf="loader">
+        <div class="col-md-12">
+            <app-loader-white></app-loader-white>
+        </div>
     </div>
 
 </div>

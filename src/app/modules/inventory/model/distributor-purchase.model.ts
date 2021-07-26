@@ -2,6 +2,7 @@ export interface ItemModel {
     type: string;
     pref_id: number;
     unit_id: number;
+    item_sku: number;
     item_id: number;
     item_name: string;
     unit_name: string;

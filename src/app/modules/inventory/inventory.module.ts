@@ -10,6 +10,7 @@ import { SharedModule } from '../shared/shared.module';
 import { InventoryComponent } from './inventory.component';
 import { GalleryComponent } from './components/gallery/gallery.component';
 import { DistributorPurchaseComponent } from './components/distributor-purchase/distributor-purchase.component';
+import { StockComponent } from './components/stock/stock.component';
 
 import { InventoryService } from './services/inventory.service';
 
@@ -27,6 +28,7 @@ import { InventoryService } from './services/inventory.service';
     declarations: [
         InventoryComponent,
         GalleryComponent,
+        StockComponent,
         DistributorPurchaseComponent,
     ],
     providers: [

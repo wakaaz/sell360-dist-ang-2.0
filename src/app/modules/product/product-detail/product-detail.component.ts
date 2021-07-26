@@ -29,7 +29,6 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
         this.dtOptions = {
             pagingType: 'simple_numbers'
         };
-        console.log('this.route.snapshot.queryParamMap.get :>> ', this.route.snapshot.paramMap.get('id'));
         this.productId = +this.route.snapshot.paramMap.get('id');
         this.getProduct();
     }

@@ -16,8 +16,4 @@ export class ProductService {
         return this.httpService.get(url);
     }
 
-    getProductsWithStock(): Observable<any> {
-        const url = API_URLS.PRODUCTS_WITH_STOCK;
-        return this.httpService.get(url);
-    }
 }

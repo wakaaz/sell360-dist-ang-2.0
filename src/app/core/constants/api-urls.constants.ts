@@ -21,6 +21,7 @@ export const API_URLS = {
     DISTRIBUTOR_PURCHASE_DATA: '/distributorPurchaseData',
     ADD_DISTRIBUTOR_PURCHASE: '/addDistributorPurchase',
     PRODUCTS_WITH_STOCK: '/productsWithStock',
+    PRODUCT_STOCK_DETAIL: '/stockDetailProductWise',
 
     // Retailers
 

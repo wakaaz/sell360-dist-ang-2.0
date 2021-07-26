@@ -37,4 +37,14 @@ export class InventoryService {
         return this.httpService.post(url, data);
     }
 
+    getProductsWithStock(): Observable<any> {
+        const url = API_URLS.PRODUCTS_WITH_STOCK;
+        return this.httpService.get(url);
+    }
+
+    getProductStockHistory(itemId: number, filter: string, value: string): Observable<any> {
+        const url = `${API_URLS.PRODUCT_STOCK_DETAIL}/${itemId}/${filter}?${value}`;
+        return this.httpService.get(url);
+    }
+
 }

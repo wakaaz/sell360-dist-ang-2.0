@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { InventoryComponent } from './inventory.component';
 import { GalleryComponent } from './components/gallery/gallery.component';
 import { DistributorPurchaseComponent } from './components/distributor-purchase/distributor-purchase.component';
+import { StockComponent } from './components/stock/stock.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,11 @@ const routes: Routes = [
             path: 'distributor-purchase',
             pathMatch: 'full',
             component: DistributorPurchaseComponent,
+        },
+        {
+            path: 'stock',
+            pathMatch: 'full',
+            component: StockComponent,
         },
     ]
   }

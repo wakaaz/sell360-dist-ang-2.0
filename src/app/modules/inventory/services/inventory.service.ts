@@ -47,4 +47,9 @@ export class InventoryService {
         return this.httpService.get(url);
     }
 
+    addDistributorOpeningStock(stock: Array<any>): Observable<any> {
+        const url = `${API_URLS.ADD_OPENING_STOCK}`;
+        return this.httpService.post(url, stock);
+    }
+
 }

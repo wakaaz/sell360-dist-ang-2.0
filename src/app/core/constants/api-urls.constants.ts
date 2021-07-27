@@ -22,6 +22,7 @@ export const API_URLS = {
     ADD_DISTRIBUTOR_PURCHASE: '/addDistributorPurchase',
     PRODUCTS_WITH_STOCK: '/productsWithStock',
     PRODUCT_STOCK_DETAIL: '/stockDetailProductWise',
+    ADD_OPENING_STOCK: '/addDistributorOpeningStock',
 
     // Retailers
 

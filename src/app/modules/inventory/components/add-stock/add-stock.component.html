@@ -1,0 +1,104 @@
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 mb-30">
+            <div class="card PB-20">
+
+                <div class="col-12 p-0">
+                    <div class="header addPR-head mb-10">
+                        <h2>Add <span> Stock</span> </h2>
+                        <div class="_PR_filter w-auto pl-15">
+                            <button class="btn btn-primary btn-bulk"><i class="fa fa-upload"></i> <span>Bulk
+                                    Upload</span></button>
+                        </div>
+
+                        <div class="_PR_filter pr-15">
+                            <div class="form-s2">
+                                <select class="form-control formselect" placeholder="select Brand"
+                                    style="width: 100%!important">
+                                    <option value="0" selected="">All Unit</option>
+                                    <option>Piece</option>
+                                    <option>Box</option>
+                                    <option>Carton</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="_PR_filter pr-15">
+                            <div class="form-s2">
+                                <select class="form-control formselect" placeholder="select Brand"
+                                    style="width: 100%!important">
+                                    <option value="0" selected=""> All Brand</option>
+                                    <option value="1"> Brand</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="_PR_filter pr-15">
+                            <div class="form-s2">
+                                <select class="form-control formselect" placeholder="select Brand"
+                                    style="width: 100%!important">
+                                    <option value="0" selected=""> All Category</option>
+                                    <option value="1"> Category</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-12 retailerTable">
+                        <table *ngIf="!loading" datatable [dtOptions]="dtOptions"
+                            class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <th>ITEM SKU</th>
+                                    <th style="min-width: 240px;">ITEM NAME</th>
+                                    <th>ITEM BRAND</th>
+                                    <th>UNITS</th>
+                                    <th>ADD STOCK</th>
+                                    <th>ACTIONS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let product of products">
+                                    <td>{{product.item_sku}}</td>
+                                    <td><img [src]="product.thumbnail" alt="" /> {{product.item_name}}</td>
+                                    <td>{{product.brand_name}}</td>
+                                    <td>{{product.unit_name}}</td>
+                                    <td><input type="text" class="form-control add-stock-input"
+                                            [(ngModel)]="product.quantity" required></td>
+                                    <td *ngIf="!product.isAdded"><button [disabled]="!product.quantity" (click)="addProduct(product)"
+                                            class="btn btn-default btn-line mb-0">Add</button></td>
+                                    <td *ngIf="product.isAdded"><button (click)="removeProduct(product)"
+                                            class="btn btn-default red-bg btn-line mb-0">Remove</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div *ngIf="loading" class="col-md-12">
+                            <app-loader-white></app-loader-white>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="noProducts" class="col-md-12 mt-10">
+                    <div class="alert alert-danger">
+                        Please select products to add in Opening Stock!
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="action-ord">
+                        <button *ngIf="submitted" type="submit" class="btn btn-primary mr-2" disabled>
+                            <div class="spinner-border text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                        <button *ngIf="!submitted" data-toggle="modal" data-target="#exampleModal" type="submit"
+                            class="btn btn-primary mr-2" (click)="addOpeningStock()">Save</button>
+                        <button *ngIf="!submitted" [routerLink]="['/inventory', 'gallery']"
+                            class="btn btn-cancel">Cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

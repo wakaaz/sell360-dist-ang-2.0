@@ -332,7 +332,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     message: 'Your order is placed successfully.',
                     type: 'success'
                 });
-                this.router.navigateByUrl('/inventory/gallery');
+                this.router.navigateByUrl('/inventory/stock');
             }, error => {
                 this.loading = false;
                 if (error.status !== 401 && error.status !== 1) {

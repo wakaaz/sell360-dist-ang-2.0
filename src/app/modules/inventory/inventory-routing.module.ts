@@ -5,6 +5,7 @@ import { InventoryComponent } from './inventory.component';
 import { GalleryComponent } from './components/gallery/gallery.component';
 import { DistributorPurchaseComponent } from './components/distributor-purchase/distributor-purchase.component';
 import { StockComponent } from './components/stock/stock.component';
+import { AddStockComponent } from './components/add-stock/add-stock.component';
 
 const routes: Routes = [
   {
@@ -25,6 +26,11 @@ const routes: Routes = [
             path: 'stock',
             pathMatch: 'full',
             component: StockComponent,
+        },
+        {
+            path: 'add-stock',
+            pathMatch: 'full',
+            component: AddStockComponent,
         },
     ]
   }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ClickOutsideModule } from 'ng-click-outside';
 import { DataTablesModule } from 'angular-datatables';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { InvenotryRoutingModule } from './inventory-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
@@ -11,6 +12,7 @@ import { InventoryComponent } from './inventory.component';
 import { GalleryComponent } from './components/gallery/gallery.component';
 import { DistributorPurchaseComponent } from './components/distributor-purchase/distributor-purchase.component';
 import { StockComponent } from './components/stock/stock.component';
+import { AddStockComponent } from './components/add-stock/add-stock.component';
 
 import { InventoryService } from './services/inventory.service';
 
@@ -20,6 +22,7 @@ import { InventoryService } from './services/inventory.service';
         FormsModule,
         ClickOutsideModule,
         DataTablesModule,
+        NgSelectModule,
         InvenotryRoutingModule,
         SharedModule,
     ],
@@ -30,6 +33,7 @@ import { InventoryService } from './services/inventory.service';
         GalleryComponent,
         StockComponent,
         DistributorPurchaseComponent,
+        AddStockComponent
     ],
     providers: [
         InventoryService,

@@ -1,0 +1,27 @@
+._PR_filter{margin-top: -4px; width: 210px!important;}
+._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 30px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
+._PR_filter .form-s2 .select2-container .select2-selection--single, ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__arrow{height: 31px!important;}
+#wrapper #content-wrapper {padding-left: 0!important;}
+.container {max-width: 1280px;}
+.add-stock-input{font-size: 13px; width: 80px; height: 25px; box-shadow: none; border-color:#dddddd; padding: 0px 5px 0 8px;}	
+.retailerTable .dataTable td, .retailerTable .dataTable th {vertical-align: middle;}
+.CP-name{letter-spacing: 1px;}
+.CP-name span{letter-spacing:1px; display: block; margin-top: 4px;}	
+.ProList-div .table img{margin-top: -2px; margin-bottom: -2px; margin-left: 4px;}
+._selectProList .header .add_button {padding: 4px 8px 3px 8px; right: 15px;}
+.ProList-div .Pr_imgV {border-radius: 50%}
+.ProList-div .table img {margin-top: -2px;margin-bottom: -2px;margin-left: 4px;}
+._selectProList .header .add_button {padding: 4px 8px 3px 8px;right: 15px;}
+.action-ord {background-color: #f6f6f6;padding: 10px;margin-top: 15px;text-align: center;} 
+.dataTable .red-bg{color: #fff !important; border-color: #f12300 !important}
+.w-auto{width: 200px !important; text-align: right}
+.btn-bulk{font-size: 12px; padding: 5px 16px; box-shadow: none}
+.btn-bulk i {margin-right: 5px;}
+._PR_filter {width: 245px;float: right;padding-right: 0px;}
+._PR_filter .custom-select-sm {	border-radius: 0;	border: solid 1px #eae9e9;}
+._PR_filter .select2-container .select2-selection--single {	background-color: #fff;	border-color: #e4e4e4;	font-size: 14px; border-radius: 0;}
+.retailerTable .table img, .ProList-div .table img {width: 35px;	height: 35px;	border: solid 1px #e0e0e0;	margin-top: -5px;	margin-bottom: -5px;margin-right: 5px;	float: left}
+.retailerTable .table td, .table th {	padding: 8px}
+.retailerTable .custom-select-tab {	border-radius: 0;	height: 22px;	padding: 0px 5px;	font-size: 12px;	border: none}
+.retailerTable .table thead th {	border-bottom: solid 1px #0038ba !important}
+.table thead th {	border: none !important;	background-color: #f6f6f6;}

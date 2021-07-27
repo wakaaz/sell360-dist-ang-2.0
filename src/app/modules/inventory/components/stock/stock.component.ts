@@ -19,6 +19,7 @@ export class StockComponent implements OnInit {
     historyDateFrom: string;
     historyDateTo: string;
     selectedProductId: number;
+    timer: any;
 
     stockHistory: Array<any> = [];
 
@@ -72,6 +73,7 @@ export class StockComponent implements OnInit {
     }
 
     dateChanged(): void {
+        this.resetTimer();
         if (((this.historyFilter === 'monthly' || this.historyFilter === 'daily') && this.historyDateFrom) ||
         (this.historyFilter === 'range' && this.historyDateFrom && this.historyDateTo)) {
             this.getStockHistory();
@@ -79,31 +81,43 @@ export class StockComponent implements OnInit {
     }
 
     getStockHistory(): void {
-        let value = '';
-        this.historyLoading = true;
-        if (this.historyFilter === 'monthly') {
-            value = `month=${new Date(this.historyDateFrom).getMonth() + 1}&year=${new Date(this.historyDateFrom).getFullYear()}`;
-        } else if (this.historyFilter === 'daily') {
-            value = `date=${this.historyDateFrom}`;
-        } else {
-            value = `to=${this.historyDateFrom}&to=${this.historyDateTo}`;
+        if (!this.timer) {
+            let value = '';
+            this.stockHistory = null;
+            this.historyLoading = true;
+            if (this.historyFilter === 'monthly') {
+                value = `month=${new Date(this.historyDateFrom).getMonth() + 1}&year=${new Date(this.historyDateFrom).getFullYear()}`;
+            } else if (this.historyFilter === 'daily') {
+                value = `date=${this.historyDateFrom}`;
+            } else {
+                value = `to=${this.historyDateFrom}&to=${this.historyDateTo}`;
+            }
+            this.timer = setTimeout(() => {
+                this.inventoryService.getProductStockHistory(this.selectedProductId, this.historyFilter, value).subscribe(res => {
+                    this.historyLoading = false;
+                    if (res.status === 200) {
+                        this.stockHistory = res.data.history;
+                    }
+                    this.resetTimer();
+                }, error => {
+                    this.historyLoading = false;
+                    this.resetTimer();
+                    if (error.status !== 1 && error.status !== 401) {
+                        const toast: Toaster = {
+                            title: 'Error:',
+                            message: 'Something went wrong while getting stock history please try again!',
+                            type: 'error'
+                        };
+                        this.toasterService.showToaster(toast);
+                    }
+                });
+            }, 2000);
         }
-        this.inventoryService.getProductStockHistory(this.selectedProductId, this.historyFilter, value).subscribe(res => {
-            this.historyLoading = false;
-            if (res.status === 200) {
-                this.stockHistory = res.data.history;
-            }
-        }, error => {
-            this.historyLoading = false;
-            if (error.status !== 1 && error.status !== 401) {
-                const toast: Toaster = {
-                    title: 'Error:',
-                    message: 'Something went wrong while getting stock history please try again!',
-                    type: 'error'
-                };
-                this.toasterService.showToaster(toast);
-            }
-        });
+    }
+
+    resetTimer(): void {
+        clearTimeout(this.timer);
+        this.timer = undefined;
     }
 
     clickOutSide(event: Event): void {
@@ -113,13 +127,15 @@ export class StockComponent implements OnInit {
     }
 
     closeHistory(): void {
-        this.showHistory = false;
-        this.historyFilter = 'monthly';
-        this.historyDateTo = '';
-        this.historyDateFrom = '';
-        document.body.classList.remove('modal-open');
-        const backDrop = document.getElementById('modal-backdrop');
-        document.body.removeChild(backDrop);
+        if (this.showHistory) {
+            this.showHistory = false;
+            this.historyFilter = 'monthly';
+            this.historyDateTo = '';
+            this.historyDateFrom = '';
+            document.body.classList.remove('modal-open');
+            const backDrop = document.getElementById('modal-backdrop');
+            document.body.removeChild(backDrop);
+        }
     }
 
 }

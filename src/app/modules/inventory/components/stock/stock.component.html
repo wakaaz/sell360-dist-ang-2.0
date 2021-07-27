@@ -35,7 +35,7 @@
                     <div class="col-12">
 
                         <table *ngIf="stockHistory && !historyLoading" class="table table-hover dt-responsive nowrap" datatable [dtOptions]="dtOptions"
-                            id="example2" style="width:100%">
+                            id="history-table" style="width:100%">
                             <thead>
                                 <tr>
                                     <th>ITEM</th>
@@ -48,7 +48,7 @@
                             <tbody>
                                 <tr *ngFor="let hs of stockHistory; let in=index">
                                     <td>{{hs.item_name}}</td>
-                                    <td>{{hs.quantity}}</td>
+                                    <td>{{hs.quantity | number}}</td>
                                     <td>{{hs.status}}</td>
                                     <td>{{hs.created_at}}</td>
                                     <td>{{hs.addedBy}}</td>
@@ -95,7 +95,7 @@
                 <div class="col-12 p-0">
                     <div class="topstats">
                         <div class="row m-0">
-                            <div class="col-12">
+                            <div class="col-4">
                                 <div class="gary-box"><strong>Total Products:</strong>
                                     <span>{{productsStock?.length}}</span>
                                 </div>
@@ -127,6 +127,7 @@
                             <tr>
                                 <th>ITEM</th>
                                 <th>CURRENT STOCK</th>
+                                <th>STOCK DETAILS</th>
                                 <th>STATE</th>
                                 <th>LAST ADDED ON</th>
                                 <th>ACTION</th>
@@ -135,8 +136,13 @@
                         <tbody>
                             <tr *ngFor="let product of productsStock; let i=index">
                                 <td>{{product.item_name}}</td>
-                                <td>{{product.stock || 0}}</td>
-                                <td>{{product.state}} </td>
+                                <td>{{product.stock || 0 | number}}</td>
+                                <td>
+                                    <span *ngFor="let dt of product.stockDetail; let in=index">
+                                        {{dt.type}}: {{dt.exact | number}}{{in!==product.stockDetail.length -1 ? ',' : ''}}
+                                    </span>
+                                </td>
+                                <td>{{product.state}}</td>
                                 <td>{{product.created_at}}</td>
                                 <td><button class="btn btn-default mb-0"
                                         (click)="getHistory(product.item_id, $event)">View History</button>

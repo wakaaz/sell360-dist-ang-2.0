@@ -20,4 +20,5 @@
     padding: 5px 14px; 
 }
 .table thead th{border: solid 1px #fff !important}
+.table td, .table td span{text-transform: capitalize;}
 .show {display: block;}

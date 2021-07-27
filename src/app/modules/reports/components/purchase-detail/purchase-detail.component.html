@@ -4,12 +4,12 @@
             <h2 class="_head01">Distributor <span> Purchase Detail</span></h2>
         </div>
 
-        <!-- <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="col-lg-6 col-md-6 col-sm-6">
             <ol class="breadcrumb">
                 <li><a><span>Reports</span></a></li>
                 <li><span>Purchase History</span></li>
             </ol>
-        </div> -->
+        </div>
     </div>
 
     <div class="row">
@@ -75,9 +75,11 @@
                                                 <td>{{dt.item_id}}</td>
                                                 <td>{{dt.item_name}}</td>
                                                 <td>{{dt.type === 'regular' ? dt.unit_name : ''}}</td>
-                                                <td>{{dt.type === 'regular' ?  dt.quantity : 0 | number}}</td>
-                                                <td>{{dt.type === 'free' ? dt.unit_name : dt.type === 'regular' && dt.free ? dt.free.unit_name : ''}}</td>
-                                                <td>{{dt.type === 'free' ? dt.free_quantity : dt.type === 'regular' && dt.free ? dt.free.quantity : '' | number }}</td>
+                                                <td>{{dt.type === 'regular' ? dt.quantity : 0 | number}}</td>
+                                                <td>{{dt.type === 'free' ? dt.unit_name : dt.type === 'regular' &&
+                                                    dt.free ? dt.free.unit_name : ''}}</td>
+                                                <td>{{dt.type === 'free' ? dt.free_quantity : dt.type === 'regular' &&
+                                                    dt.free ? dt.free.quantity : '' | number }}</td>
                                                 <td>{{dt.discount | number: '1.2-2'}}</td>
                                                 <td>{{dt.original_amount | number: '1.2-2'}}</td>
                                                 <td>{{dt.net_amount | number: '1.2-2'}}</td>
@@ -91,7 +93,7 @@
                                                 <td class="border-0"></td>
                                                 <td class="border-0"></td>
                                                 <td><strong>Subtotal PKR.</strong></td>
-                                                <td><strong>{{order.total_amount | number: '1.2-2'}}</strong></td>
+                                                <td><strong>{{order.original_amount | number: '1.2-2'}}</strong></td>
                                             </tr>
                                             <tr>
                                                 <td class="border-0"></td>
@@ -138,7 +140,8 @@
                                                 <td class="border-0"></td>
                                                 <td
                                                     style="border: solid 1px #333333!important;background-color: #ededed!important;color: #000;">
-                                                    <strong>Total PKR.</strong></td>
+                                                    <strong>Total PKR.</strong>
+                                                </td>
                                                 <td
                                                     style="border: solid 1px #333333!important;background-color: #ededed!important;color: #000;">
                                                     <strong>{{order.net_amount | number: '1.2-2'}}</strong>

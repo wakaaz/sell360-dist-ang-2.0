@@ -126,6 +126,13 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
 
     addSelectedProduct(product: any): void {
         if (this.showFreeProducts) {
+            // Free products discount and payable amount
+            product.original_amount = product.original_amount.toFixed(2);
+            product.discount = product.original_amount;
+            product.discount_type = 'percentage';
+            product.discount_type_value = 100;
+            product.net_amount = 0;
+
             this.freeProducts.push(JSON.parse(JSON.stringify(product)));
             this.freeProductsIds.push(product.item_id);
             this.rerenderPurchasedProducts();
@@ -224,9 +231,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             item.discount = this.dataService.calculateDiscount(item.discount_type_value,
                 item.discount_type, item.original_amount);
             item.net_amount = item.original_amount - item.discount;
-            if (!isFree) {
-                this.calculateSubTotal();
-            }
+            this.calculatePurchasedSubTotal();
         }
     }
 
@@ -237,22 +242,38 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             item.discount = this.dataService.calculateDiscount(item.discount_type_value,
                 item.discount_type, item.original_amount);
             item.net_amount = item.original_amount - item.discount;
-            if (!isFree) {
-                this.calculateSubTotal();
-            }
+            this.calculatePurchasedSubTotal();
         }
     }
 
-    calculateSubTotal(): void {
+    calculatePurchasedSubTotal(): void {
         const prices = [];
         this.distributorPurchase.discount = 0;
-        this.purchasedProducts.forEach(product => {
-            this.distributorPurchase.discount += product.discount;
-            prices.push(product.original_amount);
-            if (prices.length === this.purchasedProducts.length) {
-                this.distributorPurchase.original_amount = this.dataService.calculateItemsBill(prices);
-            }
-        });
+        if (this.purchasedProducts.length) {
+            this.purchasedProducts.forEach(product => {
+                this.distributorPurchase.discount += product.discount;
+                prices.push(product.original_amount);
+                if (prices.length === this.purchasedProducts.length) {
+                    this.calculateFreeSubTotal(prices);
+                }
+            });
+        } else {
+            this.calculateFreeSubTotal(prices);
+        }
+    }
+
+    calculateFreeSubTotal(prices: Array<number>): void {
+        if (this.freeProducts.length) {
+            this.freeProducts.forEach((product, index) => {
+                this.distributorPurchase.discount += product.discount;
+                prices.push(product.original_amount);
+                if (index === this.purchasedProducts.length - 1) {
+                    this.distributorPurchase.original_amount = this.dataService.calculateItemsBill(prices);
+                }
+            });
+        } else {
+            this.distributorPurchase.original_amount = this.dataService.calculateItemsBill(prices);
+        }
         this.calculateTotal();
     }
 

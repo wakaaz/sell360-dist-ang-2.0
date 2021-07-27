@@ -61,15 +61,9 @@ export class StockComponent implements OnInit {
         event.stopPropagation();
         this.selectedProductId = itemId;
         this.showHistory = true;
-        document.body.classList.add('modal-open');
-        const backDrop = document.createElement('div');
-        backDrop.id = 'modal-backdrop';
-        backDrop.classList.add('modal-backdrop');
-        backDrop.classList.add('fade');
-        backDrop.classList.add('show');
-        document.body.appendChild(backDrop);
         this.historyDateFrom = new Date().toISOString().split('T')[0];
         this.getStockHistory();
+        document.getElementById('open-history').click();
     }
 
     dateChanged(): void {
@@ -132,9 +126,6 @@ export class StockComponent implements OnInit {
             this.historyFilter = 'monthly';
             this.historyDateTo = '';
             this.historyDateFrom = '';
-            document.body.classList.remove('modal-open');
-            const backDrop = document.getElementById('modal-backdrop');
-            document.body.removeChild(backDrop);
         }
     }
 

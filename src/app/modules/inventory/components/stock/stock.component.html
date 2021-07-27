@@ -1,5 +1,5 @@
 <!-- History Modal -->
-<div class="modal" [ngClass]="showHistory ? 'show' : ''" id="historyModal" tabindex="-1" role="dialog"
+<div class="modal fade" id="historyModal" tabindex="-1" role="dialog"
     aria-labelledby="historyModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document" (clickOutside)="clickOutSide($event)">
         <div class="modal-content  top_border">
@@ -153,6 +153,9 @@
                     <div *ngIf="loading">
                         <app-loader-white></app-loader-white>
                     </div>
+                    <button hidden id="open-history" data-toggle="modal" data-target="#historyModal">
+                        Open History
+                    </button>
                 </div>
             </div>
         </div>

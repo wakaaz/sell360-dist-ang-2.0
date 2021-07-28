@@ -8,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
 
 export class DSReportComponent implements OnInit {
 
-    constructor() { }
+    dtOptions: DataTables.Settings = {};
+
+    constructor() {
+        this.dtOptions = {
+            pagingType: 'simple_numbers'
+        };
+    }
 
     ngOnInit(): void { }
 

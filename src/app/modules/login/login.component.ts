@@ -13,6 +13,7 @@ import { LoginService } from './services/login.service';
 export class LoginComponent implements OnInit {
     username: string;
     password: string;
+    captcha: string;
     apiError: string;
 
     loading: boolean;
@@ -35,7 +36,7 @@ export class LoginComponent implements OnInit {
     }
 
     login(loginForm: NgForm): void {
-        if (loginForm.valid) {
+        if (loginForm.valid && this.captcha) {
             this.loading = true;
             this.apiError = '';
             this.loginService.login({ distributor_username: this.username, distributor_password: this.password }).subscribe((res: any) => {

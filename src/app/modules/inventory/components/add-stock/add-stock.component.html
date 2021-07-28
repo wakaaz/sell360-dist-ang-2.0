@@ -13,33 +13,38 @@
 
                         <div class="_PR_filter pr-15">
                             <div class="form-s2">
-                                <select class="form-control formselect" placeholder="select Brand"
-                                    style="width: 100%!important">
-                                    <option value="0" selected="">All Unit</option>
-                                    <option>Piece</option>
-                                    <option>Box</option>
-                                    <option>Carton</option>
-                                </select>
+                                <ng-select class="formselect" [multiple]="false" id="unit" (change)="filterProducts()"
+                                    name="units" [(ngModel)]="selectedUnit">
+                                    <ng-option *ngFor="let unit of units" [value]="unit">
+                                        {{unit}}
+                                    </ng-option>
+                                </ng-select>
                             </div>
                         </div>
 
 
                         <div class="_PR_filter pr-15">
                             <div class="form-s2">
-                                <select class="form-control formselect" placeholder="select Brand"
-                                    style="width: 100%!important">
-                                    <option value="0" selected=""> All Brand</option>
-                                    <option value="1"> Brand</option>
-                                </select>
+                                <ng-select class="formselect" [multiple]="false" id="brand" (change)="filterProducts()"
+                                    name="brands" [(ngModel)]="selectedBrand">
+                                    <ng-option value="all">All Brands</ng-option>
+                                    <ng-option *ngFor="let brand of brands" [value]="brand.name">
+                                        {{brand.name}}
+                                    </ng-option>
+                                </ng-select>
                             </div>
                         </div>
                         <div class="_PR_filter pr-15">
                             <div class="form-s2">
-                                <select class="form-control formselect" placeholder="select Brand"
-                                    style="width: 100%!important">
-                                    <option value="0" selected=""> All Category</option>
-                                    <option value="1"> Category</option>
-                                </select>
+                                <ng-select class="formselect" [multiple]="false" id="category"
+                                    (change)="filterProducts()" name="cateogires" [(ngModel)]="selectedCategory">
+                                    <ng-option value="all">
+                                        All Categories
+                                    </ng-option>
+                                    <ng-option *ngFor="let category of categories" [value]="category.sub_category_name">
+                                        {{category.sub_category_name}}
+                                    </ng-option>
+                                </ng-select>
                             </div>
                         </div>
 
@@ -58,14 +63,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr *ngFor="let product of products">
+                                <tr *ngFor="let product of dispProducts">
                                     <td>{{product.item_sku}}</td>
                                     <td><img [src]="product.thumbnail" alt="" /> {{product.item_name}}</td>
                                     <td>{{product.brand_name}}</td>
                                     <td>{{product.unit_name}}</td>
                                     <td><input type="text" class="form-control add-stock-input"
                                             [(ngModel)]="product.quantity" required></td>
-                                    <td *ngIf="!product.isAdded"><button [disabled]="!product.quantity" (click)="addProduct(product)"
+                                    <td *ngIf="!product.isAdded"><button [disabled]="!product.quantity"
+                                            (click)="addProduct(product)"
                                             class="btn btn-default btn-line mb-0">Add</button></td>
                                     <td *ngIf="product.isAdded"><button (click)="removeProduct(product)"
                                             class="btn btn-default red-bg btn-line mb-0">Remove</button></td>
@@ -90,10 +96,10 @@
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </button>
-                        <button *ngIf="!submitted" data-toggle="modal" data-target="#exampleModal" type="submit"
-                            class="btn btn-primary mr-2" (click)="addOpeningStock()">Save</button>
-                        <button *ngIf="!submitted" [routerLink]="['/inventory', 'gallery']"
-                            class="btn btn-cancel">Cancel</button>
+                        <button *ngIf="!submitted" type="submit" class="btn btn-primary mr-2"
+                            (click)="addOpeningStock()">Save</button>
+                        <button *ngIf="!submitted" [routerLink]="['/retailer', 'opening-balance']" class="btn btn-cancel">Add Opening
+                            Balance</button>
                     </div>
                 </div>
 

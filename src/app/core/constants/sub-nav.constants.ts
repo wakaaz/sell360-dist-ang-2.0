@@ -83,7 +83,7 @@ export const retailerSubMenu = {
         },
         {
             title: 'Opening Balance',
-            link: '/retailer',
+            link: '/retailer/opening-balance',
             icon: '/assets/images/opening-balance.svg'
         }
     ]

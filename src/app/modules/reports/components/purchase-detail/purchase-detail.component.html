@@ -72,7 +72,7 @@
                                         </thead>
                                         <tbody class="order_items_body">
                                             <tr *ngFor="let dt of order.detail">
-                                                <td>{{dt.item_id}}</td>
+                                                <td>{{dt.item_sku}}</td>
                                                 <td>{{dt.item_name}}</td>
                                                 <td>{{dt.type === 'regular' ? dt.unit_name : ''}}</td>
                                                 <td>{{dt.type === 'regular' ? dt.quantity : 0 | number}}</td>

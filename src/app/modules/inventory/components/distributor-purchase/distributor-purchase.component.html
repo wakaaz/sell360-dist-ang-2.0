@@ -262,19 +262,19 @@
                                                             </div>
                                                         </td>
                                                         <td [hidden]="showFreeProducts">
-                                                            <select class="custom-select custom-select-sm" id=""
-                                                                #preferenceUnit
+                                                            <select class="custom-select custom-select-sm" id="" name="purchased-unit"
+                                                                #preferenceUnit [(ngModel)]="product.pref_id"
                                                                 (change)="setPreference(product, $event.target.value, showFreeProducts)">
-                                                                <option disabled="" selected="">Select Unit</option>
+                                                                <option disabled value="0">Select Unit</option>
                                                                 <option *ngFor="let pref of getUnits(product.item_id)"
                                                                     [value]="pref.pref_id">{{pref.unit_name}}</option>
                                                             </select>
                                                         </td>
                                                         <td [hidden]="!showFreeProducts">
-                                                            <select class="custom-select custom-select-sm" id=""
-                                                                #preferenceUnit
+                                                            <select class="custom-select custom-select-sm" id="" name="free-unit"
+                                                                #preferenceUnit [(ngModel)]="product.pref_id"
                                                                 (change)="setPreference(product, $event.target.value, true)">
-                                                                <option disabled="" selected="">Select Unit</option>
+                                                                <option disabled value="0">Select Unit</option>
                                                                 <option *ngFor="let pref of getUnits(product.item_id)"
                                                                     [value]="pref.pref_id">{{pref.unit_name}}</option>
                                                             </select>

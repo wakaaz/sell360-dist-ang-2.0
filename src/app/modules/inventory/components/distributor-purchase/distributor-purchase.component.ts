@@ -107,6 +107,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     x.net_amount = 0;
                     x.quantity = 0;
                     x.original_amount = 0;
+                    x.pref_id = '0';
                     return x;
                 });
                 this.productsDispList = JSON.parse(JSON.stringify(this.products));
@@ -267,7 +268,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             this.freeProducts.forEach((product, index) => {
                 this.distributorPurchase.discount += product.discount;
                 prices.push(product.original_amount);
-                if (index === this.purchasedProducts.length - 1) {
+                if (index === this.freeProducts.length - 1) {
                     this.distributorPurchase.original_amount = this.dataService.calculateItemsBill(prices);
                 }
             });

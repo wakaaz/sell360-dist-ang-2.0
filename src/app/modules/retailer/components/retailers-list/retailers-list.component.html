@@ -1,5 +1,5 @@
 <!-- Saleman Ledger -->
-<div id="product-cl-sec"> <a href="#" id="pl-close" class="close-btn-pl"></a>
+<div id="product-cl-sec" (clickOutside)="clickedOutSide($event)" [ngClass]="shwoSaleManLedger ? 'active' : ''"> <a id="pl-close" (click)="closeSalemanLedger()" class="close-btn-pl"></a>
     <div class="pro-header-text">Leadger <span> SalesMan</span></div>
     <div class="pc-cartlist">
         <div class="overflow-plist">
@@ -26,7 +26,7 @@
                                 <div class="card p-20 top_border mb-3">
                                     <h2 class="_head03 mb-10">Transaction <span>List</span></h2>
 
-                                    <table class="table table-hover dt-responsive nowrap" id="example"
+                                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example"
                                         style="width:100%">
                                         <thead>
                                             <tr>
@@ -94,13 +94,12 @@
         </div>
     </div>
     <div class="_cl-bottom">
-        <!--    <button type="submit" class="btn btn-primary mr-2">Save</button>-->
-        <button id="pl-close" type="submit" class="btn btn-cancel mr-2">Close</button>
+        <button id="pl-close" (click)="closeSalemanLedger()" type="submit" class="btn btn-cancel mr-2">Close</button>
     </div>
 </div>
 
 <!-- Retailers List -->
-<div class="container">
+<div class="container" id="retailer-list">
 
     <div class="row mt-2 mb-2">
         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -176,8 +175,8 @@
                                 <td>03211234567</td>
                                 <td>G.T.-C Class</td>
                                 <td>Kiryana Store</td>
-                                <td><a id="productlist01" href="#" class="btn btn-default mb-0">View Leadger</a>
-                                    <a href="#" class="btn btn-default mb-0">View Profile</a>
+                                <td><a id="productlist01" (click)="openSalemanLedger($event)" class="btn btn-default mb-0">View Leadger</a>
+                                    <a (click)="goToProfile()" class="btn btn-default mb-0">View Profile</a>
                                 </td>
                             </tr>
                         </tbody>

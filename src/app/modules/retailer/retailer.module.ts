@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DataTablesModule } from 'angular-datatables';
+import { ClickOutsideModule } from 'ng-click-outside';
 
 import { SharedModule } from '../shared/shared.module';
 import { RetalersListComponent } from './components/retailers-list/retailers-list.component';
@@ -14,6 +15,7 @@ import { RetailerComponent } from './retailer.component';
         CommonModule,
         SharedModule,
         DataTablesModule,
+        ClickOutsideModule,
         NgSelectModule,
         RetailerRoutingModule,
     ],

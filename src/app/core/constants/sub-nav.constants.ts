@@ -78,7 +78,7 @@ export const retailerSubMenu = {
     subMenu: [
         {
             title: 'Retailer',
-            link: '/retailer',
+            link: '/retailer/list',
             icon: '/assets/images/retailar-list-icon.svg'
         },
         {

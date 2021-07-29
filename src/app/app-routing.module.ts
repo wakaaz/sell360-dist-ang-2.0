@@ -33,6 +33,11 @@ const routes: Routes = [
     loadChildren: () => import('./modules/reports/reports.module').then(m => m.ReportsModule)
   },
   {
+    path: 'retailer',
+    canActivate: [AuthGuard],
+    loadChildren: () => import('./modules/retailer/retailer.module').then(m => m.RetailerModule)
+  },
+  {
     path: 'inventory',
     canActivate: [AuthGuard],
     loadChildren: () => import('./modules/inventory/inventory.module').then(m => m.InventoryModule)

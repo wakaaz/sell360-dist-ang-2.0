@@ -29,3 +29,7 @@
 .retailerTable .custom-select-tab {	border-radius: 0; height: 22px; padding: 0px 5px; font-size: 12px; border: none}
 .retailerTable .table thead th {border-bottom: solid 1px #0038ba !important}
 .table thead th {border: none !important; background-color: #f6f6f6;}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
+/* Firefox */
+input[type=number] {-moz-appearance: textfield;}

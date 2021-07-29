@@ -68,8 +68,9 @@
                                     <td><img [src]="product.thumbnail" alt="" /> {{product.item_name}}</td>
                                     <td>{{product.brand_name}}</td>
                                     <td>{{product.unit_name}}</td>
-                                    <td><input type="text" class="form-control add-stock-input"
-                                            [(ngModel)]="product.quantity" required></td>
+                                    <td><input type="number" class="form-control add-stock-input" min="0"
+                                        (keydown)="isNumber($event)"
+                                            [(ngModel)]="product.quantity" required name="qty"></td>
                                     <td *ngIf="!product.isAdded"><button [disabled]="!product.quantity"
                                             (click)="addProduct(product)"
                                             class="btn btn-default btn-line mb-0">Add</button></td>

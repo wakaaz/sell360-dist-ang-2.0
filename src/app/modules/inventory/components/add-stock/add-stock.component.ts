@@ -55,6 +55,7 @@ export class AddStockComponent implements OnInit {
                 this.products = res.data.prefs.map(x => {
                     const product = res.data.inventory.find(p => p.item_id === x.item_id);
                     product.isAdded = false;
+                    product.quantity = 0;
                     return { ...x, ...product };
                 });
                 this.dispProducts = JSON.parse(JSON.stringify(this.products));
@@ -65,6 +66,13 @@ export class AddStockComponent implements OnInit {
                 this.toastService.showToaster({ title: 'Error:', message: 'Something went wrong while fetching products!', type: 'error' });
             }
         });
+    }
+
+    isNumber(event: KeyboardEvent): boolean {
+        if (event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') || event.key.includes('.')) {
+            return true;
+        }
+        return !isNaN(Number(event.key));
     }
 
     getBrands(): void {
@@ -146,4 +154,5 @@ export class AddStockComponent implements OnInit {
             }, 3000);
         }
     }
+
 }

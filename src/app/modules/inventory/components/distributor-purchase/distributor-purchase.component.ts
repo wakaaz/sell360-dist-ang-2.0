@@ -126,6 +126,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
     }
 
     addSelectedProduct(product: any): void {
+        product.quantity = 1;
         if (this.showFreeProducts) {
             // Free products discount and payable amount
             product.original_amount = product.original_amount.toFixed(2);
@@ -328,6 +329,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             });
             this.inventoryService.addDistributorPurchase(this.distributorPurchase).subscribe(res => {
                 this.loading = false;
+                this.submitted = false;
                 this.toastService.showToaster({
                     title: 'Order Placed:',
                     message: 'Your order is placed successfully.',

@@ -83,74 +83,101 @@
                                     <div class="form-group mb-5">
                                         <label class="control-label mb-0">Received No.</label>
                                         <input type="text" id="received_no" (focus)="focused($event)"
-                                            [(ngModel)]="distributorPurchase.receivedNo" required (blur)="left($event)"
+                                            [(ngModel)]="distributorPurchase.receivedNo" #rcvNo="ngModel" required (blur)="left($event)"
                                             class="form-control" name="received_no" placeholder="">
-                                    </div>
+                                        </div>
+                                        <span *ngIf="submitted && rcvNo.errors?.required" class="input-error">
+                                            Add Received No.
+                                        </span>
                                 </div>
                                 <div class="col-2 pr-0">
                                     <div class="form-group mb-5">
                                         <label class="control-label mb-0">Receive Date</label>
                                         <input type="date" id="received_date" (focus)="focused($event)"
-                                            [(ngModel)]="distributorPurchase.receivedDate" required
+                                            [(ngModel)]="distributorPurchase.receivedDate" #rcvDate="ngModel" required
                                             (blur)="left($event)" class="form-control" name="received_date"
                                             placeholder="" autocomplete="off">
-                                    </div>
+                                        </div>
+                                        <span *ngIf="submitted && distributorPurchase.receivedDate === '  '" class="input-error">
+                                            Add Received Date
+                                        </span>
                                 </div>
                                 <div class="col-2 pr-0">
                                     <div class="form-group mb-5">
                                         <label class="control-label mb-0">Inv. No.</label>
                                         <input type="text" id="inv_no" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.invoiceNo" required class="form-control"
+                                            [(ngModel)]="distributorPurchase.invoiceNo" #invNo="ngModel" required class="form-control"
                                             name="inv_no" placeholder="">
-                                    </div>
+                                        </div>
+                                        <span *ngIf="submitted && invNo.errors?.required" class="input-error">
+                                            Add Invoice No.
+                                        </span>
                                 </div>
                                 <div class="col-2 pr-0">
                                     <div class="form-group mb-5">
                                         <label class="control-label mb-0">P.O No.</label>
                                         <input type="text" id="p_o_no" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.poNo" required class="form-control"
+                                            [(ngModel)]="distributorPurchase.poNo" #poNo="ngModel" required class="form-control"
                                             name="p_o_no" placeholder="">
-                                    </div>
+                                        </div>
+                                        <span *ngIf="submitted && poNo.errors?.required" class="input-error">
+                                            Add P.O no.
+                                        </span>
                                 </div>
                                 <div class="col-2 pr-0">
                                     <div class="form-group mb-5">
                                         <label class="control-label mb-0">D.C No.</label>
                                         <input type="text" id="d_c_no" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.dcNo" required class="form-control"
+                                            [(ngModel)]="distributorPurchase.dcNo" #dcNo="ngModel" required class="form-control"
                                             name="d_c_no" placeholder="">
-                                    </div>
+                                        </div>
+                                        <span *ngIf="submitted && dcNo.errors?.required" class="input-error">
+                                            Add D.C No.
+                                        </span>
                                 </div>
                                 <div class="col-2">
                                     <div class="form-group mb-5">
                                         <label class="control-label mb-0">Inv. Date</label>
                                         <input type="date" id="inv_date" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.invoiceDate" required class="form-control"
+                                            [(ngModel)]="distributorPurchase.invoiceDate" #invcDate="ngModel" required class="form-control"
                                             name="inv_date" placeholder="" autocomplete="off">
-                                    </div>
+                                        </div>
+                                        <span *ngIf="submitted && distributorPurchase.receivedDate === '  '" class="input-error">
+                                            Add Invoice Date
+                                        </span>
                                 </div>
                                 <div class="col-6 pr-0">
                                     <div class="form-group mb-5">
                                         <label class="control-label mb-0">Remarks</label>
                                         <input type="text" id="remark" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.remark" required class="form-control"
+                                            [(ngModel)]="distributorPurchase.remark" #remark="ngModel" required class="form-control"
                                             name="remark" placeholder="">
-                                    </div>
+                                        </div>
+                                        <span *ngIf="submitted && remark.errors?.required" class="input-error">
+                                            Add Remarks
+                                        </span>
                                 </div>
                                 <div class="col-2 pr-0">
                                     <div class="form-group mb-5">
                                         <label class="control-label mb-0">P.O Date</label>
                                         <input type="date" id="p_o_date" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.poDate" required class="form-control"
+                                            [(ngModel)]="distributorPurchase.poDate" #poDate="ngModel" required class="form-control"
                                             name="p_o_date" placeholder="" autocomplete="off">
-                                    </div>
+                                        </div>
+                                        <span *ngIf="submitted && distributorPurchase.poDate === '  '" class="input-error">
+                                            Add P.O Date
+                                        </span>
                                 </div>
                                 <div class="col-2 pr-0">
                                     <div class="form-group mb-5">
                                         <label class="control-label mb-0">D.C Date</label>
                                         <input type="date" id="d_c_date" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.dcDate" required class="form-control"
+                                            [(ngModel)]="distributorPurchase.dcDate" #dcDate="ngModel" required class="form-control"
                                             name="d_c_date" placeholder="" autocomplete="off">
-                                    </div>
+                                        </div>
+                                        <span *ngIf="submitted && distributorPurchase.dcDate === '  '" class="input-error">
+                                            Add D.C Date
+                                        </span>
                                 </div>
 
                                 <div class="col-md-12 PT-20">
@@ -280,11 +307,11 @@
                                                             </select>
                                                         </td>
                                                         <td [hidden]="showFreeProducts"><input placeholder="0" class="itemQTY"
-                                                                (keydown)="isNumber($event)" name="purchase-qty"
+                                                                (keydown)="isNumber($event)" name="purchase-qty" type="number" min="1"
                                                                 (keyup)="getUnitPrice(product)"
                                                                 [(ngModel)]="product.quantity"></td>
                                                         <td [hidden]="!showFreeProducts"><input placeholder="0" class="itemQTY"
-                                                                (keydown)="isNumber($event)" name="free-qty"
+                                                                (keydown)="isNumber($event)" name="free-qty" type="number" min="1"
                                                                 (keyup)="getUnitPrice(product, true)"
                                                                 [(ngModel)]="product.quantity"></td>
                                                         <td [hidden]="showFreeProducts">{{product.discount_type_value}}</td>

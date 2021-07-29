@@ -536,7 +536,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child, table.
 	-khtml-border-radius: 0;
 	text-transform: capitalize;
 	background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%);
-	color: #fff !important;
+	color: #fff;
 	text-align: center;
 	margin: 0px 5px 5px 0px;
 	

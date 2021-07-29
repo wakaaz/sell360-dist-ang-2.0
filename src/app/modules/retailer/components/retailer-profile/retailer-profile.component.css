@@ -1,0 +1,153 @@
+.close-btn-pl{top: 10px; right: 10px; background-color: #0038ba}  
+.close-btn-pl:after, .close-btn-pl:before{background-color: #fff; height: 20px; top: 5px}
+#product-cl-sec{right: -860px; opacity: 1; box-shadow: 0 1px 5px 0 rgba(45,62,80,.12); width: 900px}
+#product-cl-sec.active{right: 0px; opacity: 1; box-shadow: 0px 0px 100px 0px rgba(0, 0, 0, 0.5)} 
+.R-Heading{-webkit-transform: rotate(90deg); -moz-transform: rotate(90deg); -ms-transform: rotate(90deg); -o-transform: rotate(90deg); font-size: 22px; letter-spacing: 15px; padding-left: 10px; line-height: 1}
+.open-Report, .open-ReportHOVER{font-size: 18px; text-align: center; color: #fff!important; padding: 10px 8px 18px 8px; display: block}
+.RB_bar{color: #fff; height: 100vh; width: 40px; background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%); position: absolute}	  
+.close-btn-pl:after, .close-btn-pl:before { background-color: #888888; height: 20px; top: 0px;}
+._left-filter{padding-top:0}.FU-history{margin-top: 0}
+.align-center { text-align: center;}
+.POCDetail { padding-top: 15px; padding-bottom: 15px; border-bottom: solid 1px #e0e0e0; font-size: 16px; line-height: 24px}
+.pocPic img {position: relative;width: 110px;height: 110px;height: auto;border-radius: 50%;-webkit-box-shadow: 0 0 20px 0 rgba(103,92,139,.35);box-shadow: 0 0 20px 0 rgba(103,92,139,.35);}
+.border-bottomNone {border-bottom: none;}
+.POCDetail h2 {color: #282828;	font-size:18px;	margin-bottom: 0px;	margin-top: 0px; line-height: normal;}
+.POCDetail p{margin-bottom: 0}
+.POCDetail .view-report {font-size: 11px;margin-left: 10px;padding: 5px 8px 5px 8px;letter-spacing: 1.5px;border-radius: 4px;text-transform: uppercase;background-color: #5f5f5f;color: #fff!important; display: inline-block;text-align: center;white-space: nowrap;margin-bottom: 0px; line-height: 1}
+.POCDetail .view-report:HOVER, .POCDetail .view-report:focus {
+    background-color: #0038ba;
+    color: #fff;
+}
+ .DistName {
+	color: #282828;
+	font-size: 20px;
+	margin-bottom: 10px;
+	margin-top: 0px
+}
+.Warehouse-img {
+	height: 365px!important;
+	width: 100%!important
+}
+.btn-blue {
+	color: #fff !important;
+	background: #0038ba;
+	border: 1px solid #0038ba;
+	padding: 8px 10px 8px 10px;
+	letter-spacing: 1px;
+	font-size: 14px; line-height: 1;  width: 100%; border-radius: 0;
+}
+.btn-blue-Line {
+	color: #0038ba;
+	background: #fff;
+	border: 1px solid #0038ba;
+	padding: 8px 10px 8px 10px;
+	letter-spacing: 1px;
+	font-size: 14px; line-height: 1; margin-bottom: 15px; width: 100%; border-radius: 0;
+}
+.btn-blue-Line .fa {
+	color: #0038ba
+}
+.btn-blue-Line:HOVER .fa {
+	color: #fff
+}
+.btn-blue-Line:HOVER {
+	color: #fff;
+	background: #0038ba;
+	border: 1px solid #0038ba
+}
+.carousel-indicators .active {
+    background-color: #0038ba;
+}
+.carousel-indicators li {
+    height: 5px;
+    background-color: #282828;
+}
+.distTabs{margin-bottom: 30px; padding: 10px 20px 10px 20px}	
+.distTabs .header-tabs {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    margin-bottom: 20px;
+    border: none;    border-bottom: solid 1px #d9dde1;
+}
+.distTabs .header-tabs .nav-tabs .nav-item a:hover {cursor: pointer;}	
+.distTabs .header-tabs .nav-tabs .nav-link{ border-bottom: solid 1px #d9dde1;}
+.distTabs .header-tabs .nav-tabs .nav-item.show, .distTabs .header-tabs .nav-tabs .nav-link.active, .distTabs .header-tabs .nav-tabs .nav-link:HOVER {
+    border-bottom: solid 2px #0038ba;
+    color: #0038ba;
+}
+.cnicCardimg { width: 430px; max-height: 300px; display: block; margin: 15px auto;}
+.Visit-img{width: 100%;height: auto;max-height: 350px;display: block}
+._report-Head h3 {font-size: 20px;padding: 0px;margin: 0;color: #282828;padding: 15px 0px 15px 5px}
+.DistributorReport {padding: 10px 20px 10px 20px;	padding-bottom: 15px; margin-top: 0;}
+.DistributorReport .card {
+	background-color: #fff;
+	border: none;
+	padding: 10px 15px;
+	margin: 15px 0px;
+	border-radius: 0px;
+	position: relative;
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.2);
+	background-image: url(/assets/images/bg-for-states-g.jpg);
+	background-position: bottom left;
+	background-repeat: no-repeat;
+	background-size: auto;
+}
+.DistributorReport h2 {
+	font-size: 18px;
+	padding-top: 15px;
+	margin-bottom: 15px;
+	display: block
+}
+.DistributorReport h4 {
+	font-size: 16px;
+	padding: 0;
+	margin: 0
+}
+.DistributorReport .digit {
+	font-size: 28px;
+	font-weight: normal;
+	line-height: normal;
+	color: #0038ba;
+	margin-bottom: 0;
+	padding-bottom: 0;
+	line-height: 1;
+	font-family: 'Rationale', sans-serif!important;
+}
+.DistributorReport .head-font {font-size: 16px;}
+.DistributorReport .progressValue {
+	font-size: 20px;
+	margin-top: -2px;
+	float: right;
+	color: #0038ba;
+	font-family: 'Rationale', sans-serif!important;
+}
+.DistributorReport .card .cardicon { width: 50px;position: absolute;top: 20px;right: 15px}
+.progress {
+    -webkit-box-shadow: none!important;
+    background-color: rgba(120, 130, 140, .13);
+    box-shadow: none!important;
+    height: 6px;
+    border-radius: 50px;
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+.card-report .digit {
+    font-size: 24px;
+    color: #0038ba;
+    font-family: 'Rationale', sans-serif!important;
+    position: absolute;
+    bottom: 16px;
+    margin-bottom: 0;
+}   
+.rav-bg {background-image: url(/assets/images/rav-bg-light.jpg)}
+.card-report h4, .TopProductList h4 {font-size: 15px;}
+.card-report .Rev-pos { position: relative; bottom: auto; padding-top: 32px; font-size: 30px;}
+._report-Head ._more-action h3{margin-bottom: 8px;}
+.CH50{height: 95px;}
+.gra-icon { position: absolute;top: 24px;right: 20px;width: 48px;}
+#sales-products:hover {cursor: pointer;}
+.dateLPR {margin-top: -8px; color: #282828;}
+.report-state ._head01{margin-bottom:0;}
+.bottomRED{border-bottom: solid 2px #f12300;}

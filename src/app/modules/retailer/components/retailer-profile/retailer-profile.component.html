@@ -1,0 +1,522 @@
+<!-- Report of Sales and Products -->
+<div id="product-cl-sec" [ngClass]="openReport ? 'active' : ''" (clickOutside)="clickedOutSide($event)" class="width_950">
+    <div class="RB_bar">
+        <a *ngIf="!openReport" id="sales-products" (click)="openSalesAndProductsReport($event)" class="open-Report"><i class="fa fa-arrow-left"></i></a>
+        <a *ngIf="openReport" id="sales-products" (click)="closeSalesAndProductsReport()" class="open-Report"><i class="fa fa-arrow-right"></i></a>
+        <h1 class="R-Heading">Reports</h1>
+    </div>
+    <div class="pc-cartlist pb-0">
+        <div class="overflow-plist">
+            <div class="plist-content">
+                <div class="_left-filter _reportSide">
+
+                    <div class="_report-DIV">
+                        <div class="_report-Head">
+                            <div class="row m-0">
+
+                                <div class="col-12">
+                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" id="pills-home-tab" data-toggle="pill"
+                                                data-target="#pills-home" role="tab" aria-controls="pills-home"
+                                                aria-selected="true">Sales</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-contact-tab" data-toggle="pill"
+                                                data-target="#pills-contact" role="tab" aria-controls="pills-contact"
+                                                aria-selected="false">Products</a>
+                                        </li>
+                                    </ul>
+
+                                    <a class="report-filters" href="#" id="dropdownMenuButton" data-toggle="dropdown"
+                                        aria-haspopup="true" aria-expanded="false"><img src="/assets/images/report-filters.svg"
+                                            alt="" /></a>
+                                    <div class="_more-action">
+                                        <div class="dropdown">
+                                            <form class="dropdown-menu dropdown-menu-right"
+                                                aria-labelledby="dropdownMenuButton">
+                                                <div class="col-12">
+                                                    <select class="custom-select">
+                                                        <option selected="">Current Month</option>
+                                                        <option value="1">Last Month</option>
+                                                        <option value="2">Overall</option>
+                                                        <option value="2">Custom</option>
+                                                    </select>
+                                                </div>
+                                                <div class="row m-0 mt-15">
+                                                    <div class="col-12">
+                                                        <h3 class="p-0 border-0">Select Date</h3>
+                                                    </div>
+                                                    <div class="col-6 pr-5"><input type="text" id="datepicker2"
+                                                            class="form-control" placeholder="" style="font-size: 13px">
+                                                    </div>
+                                                    <div class="col-6 pl-5"><input type="text" id="datepicker2"
+                                                            class="form-control" placeholder="" style="font-size: 13px">
+                                                    </div>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="report-state">
+                            <div class="col-12">
+                                <div class="tab-content" id="pills-tabContent">
+                                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                                        aria-labelledby="pills-home-tab">
+                                        <h2 class="_head01">Overall <span>Revenue</span></h2>
+
+                                        <div class="row mb-10">
+
+                                            <div class="col-12">
+                                                <div class="card card-report rav-bg">
+                                                    <h4>Total <span>Revenue</span></h4>
+                                                    <h2 class="digit Rev-pos">PKR. 5,222,542 </h2>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <div class="card card-report CH50">
+                                                            <h4>Current <span>Month</span></h4>
+                                                            <h2 class="digit">PKR. 5,432 </h2>
+                                                            <img class="gra-icon" src="/assets/images/gra-month-icon.svg"
+                                                                alt="" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <div class="card card-report CH50">
+                                                            <h4>Avg. <span>Rev/Month</span></h4>
+                                                            <h2 class="digit">PKR. 8,692 </h2>
+                                                            <img class="gra-icon" src="/assets/images/quarter-icon.svg"
+                                                                alt="" />
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <h2 class="_head01">Payments History <span></span></h2>
+
+
+
+                                        <div class="row m-0">
+
+                                            <div class="col p-0">
+                                                <div class="card card-report CH50 bottomBG bg-states">
+                                                    <h4>Total<span> Outstanding Payment</span></h4>
+                                                    <h2 class="digit">5425 </h2>
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="card card-report CH50 bottomBB bg-states"
+                                                    style="background-position:bottom center">
+                                                    <h4>AVG <span> Payment Days</span></h4>
+                                                    <h2 class="digit">35 </h2>
+                                                </div>
+                                            </div>
+
+                                            <div class="col p-0">
+                                                <div class="card card-report CH50 bottomBGR bg-states"
+                                                    style="background-position:top right">
+                                                    <h4>Last <span> Payment Received</span></h4>
+                                                    <!--<span class="dateLPR">12/11/2019</span>-->
+                                                    <h2 class="digit">PKR.8,692 </h2>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+
+                                        <div class="row mb-10">
+
+
+                                            <div class="col-6">
+                                                <div class="card card-report">
+                                                    <h4>Payment <span>Mode</span></h4>
+                                                    <div class="PaymentMode-graph"><canvas id="PaymentMode"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-6">
+                                                <div class="card card-report">
+                                                    <h4>Invoices<span></span></h4>
+                                                    <h2 class="digit text-right" style="right: 20px"><span
+                                                            class="TI-head">Total:</span><br>710 </h2>
+                                                    <div>
+                                                        <div id="chart"><canvas id="invoicechart"></canvas></div>
+                                                        <div id="legend"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <h2 class="_head01">Order History <span></span></h2>
+
+                                        <div class="row m-0">
+
+                                            <div class="col p-0">
+                                                <div class="card card-report CH50 bottomBB bg-states">
+                                                    <h4>Total<span> Orders</span></h4>
+                                                    <h2 class="digit">87982 </h2>
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="card card-report CH50 bottomRED bg-states"
+                                                    style="background-position:bottom center">
+                                                    <h4>Cancel <span> Orders</span></h4>
+                                                    <h2 class="digit">4574 </h2>
+                                                </div>
+                                            </div>
+
+                                            <div class="col p-0">
+                                                <div class="card card-report CH50 bottomBO bg-states"
+                                                    style="background-position:top right">
+                                                    <h4>Pending <span> Orders</span></h4>
+                                                    <h2 class="digit">1245 </h2>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="row m-0">
+                                            <div class="col p-0">
+                                                <div class="card card-report CH50">
+                                                    <h4>Avg. <span> Orders Value</span></h4>
+                                                    <h2 class="digit">PKR. 5782 </h2>
+                                                    <img class="gra-icon" src="/assets/images/ord-ord-value-icon.svg" alt="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="card card-report CH50">
+                                                    <h4>AVG.<span> Products/Orders</span></h4>
+                                                    <h2 class="digit">457 </h2>
+                                                    <img class="gra-icon" src="/assets/images/ord-products-ord-icon.svg" alt="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col p-0">
+                                                <div class="card card-report CH50">
+                                                    <h4>AVG.<span> QTY./Orders</span></h4>
+                                                    <h2 class="digit">4574 CTNS </h2>
+                                                    <img class="gra-icon" src="/assets/images/ord-qty-ord-icon.svg" alt="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row m-0">
+
+                                            <div class="col p-0">
+                                                <div class="card card-report CH50">
+                                                    <h4>AVG<span> Orders/Month</span></h4>
+                                                    <h2 class="digit">457 </h2>
+                                                    <img class="gra-icon" src="/assets/images/ord-month-ord-icon.svg" alt="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col">
+                                                <div class="card card-report CH50">
+                                                    <h4>AVG<span> Visits/Month</span></h4>
+                                                    <h2 class="digit">4574 </h2>
+                                                    <img class="gra-icon" src="/assets/images/visit-month-icon.svg" alt="">
+                                                </div>
+                                            </div>
+
+                                            <div class="col p-0">
+                                                <div class="card card-report CH50">
+                                                    <h4>Productivity <span> Ratio</span></h4>
+                                                    <h2 class="digit">25</h2>
+                                                    <img class="gra-icon" src="/assets/images/ord-dispatch-ord-icon.svg" alt="">
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="tab-pane fade" id="pills-contact" role="tabpanel"
+                                        aria-labelledby="pills-contact-tab">
+                                        <h2 class="_head01">Product <span>Wise </span></h2>
+                                        <div id="e_chart_1" class="e_chart"></div>
+
+
+                                        <h2 class="_head01">Category <span>Wise </span></h2>
+                                        <canvas id="myChart" class="CategoryChart"></canvas>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Track Retailer on Map -->
+<div class="modal fade" id="DistributorOnmap" tabindex="-1" role="dialog" aria-labelledby="DetailModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content top_border">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetailModalLabel">Distributors <span> Location</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                        aria-hidden="true">&times;</span> </button>
+            </div>
+            <div id="floating-label" class="modal-body">
+                <div class="row">
+                    <div class="col-md-12"> <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        Map Here<br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View Retailer CNIC -->
+<div class="modal fade" id="ViewCNICimg" tabindex="-1" role="dialog" aria-labelledby="DetailModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content top_border">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetailModalLabel">Saif Ali Khan <span> CNIC Image</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                        aria-hidden="true">&times;</span> </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12"> <strong>Frontside</strong> <img class="cnicCardimg" src="/assets/images/idcard.jpg"
+                        alt="" /> <strong>Backside</strong> <img class="cnicCardimg mb-0" src="/assets/images/idcard.jpg"
+                        alt="" /> </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- View visit image -->
+<div class="modal fade" id="ViewVISITimg" tabindex="-1" role="dialog" aria-labelledby="DetailModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content top_border">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetailModalLabel">Visit <span> Picture</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                        aria-hidden="true">&times;</span> </button>
+            </div>
+            <div id="floating-label" class="modal-body">
+                <div class="row">
+                    <div class="col-md-12"> <img class="Visit-img" src="/assets/images/store-img.jpg" alt="" /> </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Retailer Details -->
+<div class="container" id="profile">
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Retailer <span> Profile</span></h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a><span>Retailer Management </span></a></li>
+                <li><span>Profile</span></li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-30">
+                <div class="body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12 POCDetail pt-0">
+                                    <h2 class="DistName">Bismillah Farmaan Store</h2>
+
+                                </div>
+                                <div class="col-md-12 POCDetail">
+                                    <p><strong>Phone:</strong> 03111111111</p>
+                                    <p><strong>Email:</strong> info@gmail.com</p>
+                                    <p><strong>Location:</strong> Main Bazar Khanpur mehar</p>
+                                    <p><strong>Channel Type </strong> Type Here</p>
+                                </div>
+                                <div class="col-md-12 POCDetail border-bottomNone">
+                                    <p><strong>Territory:</strong> Samnaabad</p>
+                                    <p><strong>Neighborhood:</strong> Here... neighborhood</p>
+                                    <p><strong>Area:</strong> Lahore</p>
+                                    <p><strong>Region:</strong> Central </p>
+                                </div>
+                                <div class="col-12">
+                                    <button class="btn btn-blue-Line mr-5"><i class="fa fa-pencil-alt"></i> Edit
+                                        Profile</button>
+                                    <button data-toggle="modal" data-target="#DistributorOnmap" class="btn btn-blue"><i
+                                            class="fa fa-map-marker-alt"></i> View On Map</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col">
+                                </div>
+                                <div class="col-md-12">
+                                    <img class="Warehouse-img" src="/assets/images/mHelnQotSu_1546423434.jpg" alt="" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="card distTabs">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="header-tabs">
+                                    <div class="nav nav-tabs" id="nav-tab" role="tablist"> <a
+                                            class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
+                                            href="#nav-home" role="tab" aria-controls="nav-home"
+                                            aria-selected="true">VISITS <span class="_cus-val"> 4 </span></a> <a
+                                            class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab"
+                                            href="#nav-profile" role="tab" aria-controls="nav-profile"
+                                            aria-selected="false">ORDERS<span class="_cus-val"> 4 </span></a> </div>
+                                </div>
+                                <div class="tab-content" id="nav-tabContent">
+                                    <div class="tab-pane fade show active body_sales_agants" id="nav-home"
+                                        role="tabpanel" aria-labelledby="nav-home-tab">
+                                        <table class="table table-hover dt-responsive nowrap" id="example"
+                                            style="width:100%">
+                                            <thead>
+                                                <tr>
+                                                    <th>Time</th>
+                                                    <th>Date</th>
+                                                    <th>Employee Name</th>
+                                                    <th>Picture</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>12:45 PM </td>
+                                                    <td> 2018-07-23 </td>
+                                                    <td>Shareef Khan</td>
+                                                    <td><img style="cursor: pointer" data-toggle="modal"
+                                                            data-target="#ViewVISITimg" alt="Bismillah Farmaan Store"
+                                                            src="/assets/images/store-img.jpg" width="50" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>12:45 PM </td>
+                                                    <td> 2018-07-23 </td>
+                                                    <td>Shareef Khan</td>
+                                                    <td><img style="cursor: pointer" data-toggle="modal"
+                                                            data-target="#ViewVISITimg" alt="Bismillah Farmaan Store"
+                                                            src="/assets/images/store-img.jpg" width="50" /></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>12:45 PM </td>
+                                                    <td> 2018-07-23 </td>
+                                                    <td>Shareef Khan</td>
+                                                    <td><img style="cursor: pointer" data-toggle="modal"
+                                                            data-target="#ViewVISITimg" alt="Bismillah Farmaan Store"
+                                                            src="/assets/images/store-img.jpg" width="50" /></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane fade body_emp_staff" id="nav-profile" role="tabpanel"
+                                        aria-labelledby="nav-profile-tab">
+                                        <div class="tblLoader">
+                                            <table class="table table-hover dt-responsive nowrap" id="example2"
+                                                style="width:100%">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Date</th>
+                                                        <th>Employee Id</th>
+                                                        <th>Employee Name</th>
+                                                        <th>Total Orders</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr>
+                                                        <td> 2018-07-23 </td>
+                                                        <td> 72 </td>
+                                                        <td>Candy Chocolate</td>
+                                                        <td> 5 </td>
+                                                        <td><span class="bluetext">Pending</span></td>
+                                                        <td><button class="btn btn-default">View Orders List</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> 2018-08-1 </td>
+                                                        <td> 72 </td>
+                                                        <td>Chocolate bar</td>
+                                                        <td> 15 </td>
+                                                        <td><span class="greentext">Complete</span></td>
+                                                        <td><button class="btn btn-default">View Orders List</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> 2018-08-1 </td>
+                                                        <td> 72 </td>
+                                                        <td>Banta Chocolate</td>
+                                                        <td> 15 </td>
+                                                        <td><span class="redtext">Cancel</span></td>
+                                                        <td><button class="btn btn-default">View Orders List</button>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td> 2018-08-10 </td>
+                                                        <td> 72 </td>
+                                                        <td>Banta Chocolate</td>
+                                                        <td> 8 </td>
+                                                        <td><span class="greentext">Complete</span></td>
+                                                        <td><button class="btn btn-default">View Orders List</button>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

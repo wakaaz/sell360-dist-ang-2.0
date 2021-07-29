@@ -176,7 +176,7 @@
                                 <td>G.T.-C Class</td>
                                 <td>Kiryana Store</td>
                                 <td><a id="productlist01" (click)="openSalemanLedger($event)" class="btn btn-default mb-0">View Leadger</a>
-                                    <a (click)="goToProfile()" class="btn btn-default mb-0">View Profile</a>
+                                    <a [routerLink]="['/retailer','profile',1]" class="btn btn-default mb-0">View Profile</a>
                                 </td>
                             </tr>
                         </tbody>

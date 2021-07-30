@@ -126,21 +126,29 @@
 
                             <div class="_cust_filter">
                                 <div class="form-s2">
-                                    <select class="form-control formselect" placeholder="Select Order Booker">
-                                        <option>Select Order Booker </option>
-                                        <option>Asif Ali</option>
-                                        <option>Utba Aziz</option>
-                                    </select>
+                                    <ng-select class="formselect" [multiple]="false" id="order-booker" placeholder="Select Order Booker"
+                                        name="order-booker" [(ngModel)]="orderBooker" required>
+                                        <ng-option value="Asif Ali">
+                                            Asif Ali
+                                        </ng-option>
+                                        <ng-option value="Utba Aziz">
+                                            Utba Aziz
+                                        </ng-option>
+                                    </ng-select>
                                 </div>
                             </div>
 
                             <div class="_cust_filter">
                                 <div class="form-s2">
-                                    <select class="form-control formselect" placeholder="Select Route">
-                                        <option>Select Route </option>
-                                        <option>Route 1</option>
-                                        <option>Route 2</option>
-                                    </select>
+                                    <ng-select class="formselect" [multiple]="false" id="route" placeholder="Select Order Booker"
+                                        name="route" [(ngModel)]="route" required>
+                                        <ng-option value="1">
+                                            Route 1
+                                        </ng-option>
+                                        <ng-option value="2">
+                                            Route 2
+                                        </ng-option>
+                                    </ng-select>
                                 </div>
                             </div>
 

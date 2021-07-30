@@ -1,8 +1,11 @@
 <!-- Report of Sales and Products -->
-<div id="product-cl-sec" [ngClass]="openReport ? 'active' : ''" (clickOutside)="clickedOutSide($event)" class="width_950">
+<div id="product-cl-sec" [ngClass]="openReport ? 'active' : ''" (clickOutside)="clickedOutSide($event)"
+    class="width_950">
     <div class="RB_bar">
-        <a *ngIf="!openReport" id="sales-products" (click)="openSalesAndProductsReport($event)" class="open-Report"><i class="fa fa-arrow-left"></i></a>
-        <a *ngIf="openReport" id="sales-products" (click)="closeSalesAndProductsReport()" class="open-Report"><i class="fa fa-arrow-right"></i></a>
+        <a *ngIf="!openReport" id="sales-products" (click)="openSalesAndProductsReport($event)" class="open-Report"><i
+                class="fa fa-arrow-left"></i></a>
+        <a *ngIf="openReport" id="sales-products" (click)="closeSalesAndProductsReport()" class="open-Report"><i
+                class="fa fa-arrow-right"></i></a>
         <h1 class="R-Heading">Reports</h1>
     </div>
     <div class="pc-cartlist pb-0">
@@ -29,8 +32,8 @@
                                     </ul>
 
                                     <a class="report-filters" href="#" id="dropdownMenuButton" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false"><img src="/assets/images/report-filters.svg"
-                                            alt="" /></a>
+                                        aria-haspopup="true" aria-expanded="false"><img
+                                            src="/assets/images/report-filters.svg" alt="" /></a>
                                     <div class="_more-action">
                                         <div class="dropdown">
                                             <form class="dropdown-menu dropdown-menu-right"
@@ -84,8 +87,8 @@
                                                         <div class="card card-report CH50">
                                                             <h4>Current <span>Month</span></h4>
                                                             <h2 class="digit">PKR. 5,432 </h2>
-                                                            <img class="gra-icon" src="/assets/images/gra-month-icon.svg"
-                                                                alt="" />
+                                                            <img class="gra-icon"
+                                                                src="/assets/images/gra-month-icon.svg" alt="" />
                                                         </div>
                                                     </div>
                                                     <div class="col-6">
@@ -102,9 +105,6 @@
 
                                         </div>
                                         <h2 class="_head01">Payments History <span></span></h2>
-
-
-
                                         <div class="row m-0">
 
                                             <div class="col p-0">
@@ -132,11 +132,7 @@
                                             </div>
 
                                         </div>
-
-
                                         <div class="row mb-10">
-
-
                                             <div class="col-6">
                                                 <div class="card card-report">
                                                     <h4>Payment <span>Mode</span></h4>
@@ -158,11 +154,8 @@
                                             </div>
 
                                         </div>
-
                                         <h2 class="_head01">Order History <span></span></h2>
-
                                         <div class="row m-0">
-
                                             <div class="col p-0">
                                                 <div class="card card-report CH50 bottomBB bg-states">
                                                     <h4>Total<span> Orders</span></h4>
@@ -185,7 +178,6 @@
                                                     <h2 class="digit">1245 </h2>
                                                 </div>
                                             </div>
-
                                         </div>
 
                                         <div class="row m-0">
@@ -193,7 +185,8 @@
                                                 <div class="card card-report CH50">
                                                     <h4>Avg. <span> Orders Value</span></h4>
                                                     <h2 class="digit">PKR. 5782 </h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-ord-value-icon.svg" alt="">
+                                                    <img class="gra-icon" src="/assets/images/ord-ord-value-icon.svg"
+                                                        alt="">
                                                 </div>
                                             </div>
 
@@ -201,7 +194,8 @@
                                                 <div class="card card-report CH50">
                                                     <h4>AVG.<span> Products/Orders</span></h4>
                                                     <h2 class="digit">457 </h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-products-ord-icon.svg" alt="">
+                                                    <img class="gra-icon" src="/assets/images/ord-products-ord-icon.svg"
+                                                        alt="">
                                                 </div>
                                             </div>
 
@@ -209,7 +203,8 @@
                                                 <div class="card card-report CH50">
                                                     <h4>AVG.<span> QTY./Orders</span></h4>
                                                     <h2 class="digit">4574 CTNS </h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-qty-ord-icon.svg" alt="">
+                                                    <img class="gra-icon" src="/assets/images/ord-qty-ord-icon.svg"
+                                                        alt="">
                                                 </div>
                                             </div>
                                         </div>
@@ -219,7 +214,8 @@
                                                 <div class="card card-report CH50">
                                                     <h4>AVG<span> Orders/Month</span></h4>
                                                     <h2 class="digit">457 </h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-month-ord-icon.svg" alt="">
+                                                    <img class="gra-icon" src="/assets/images/ord-month-ord-icon.svg"
+                                                        alt="">
                                                 </div>
                                             </div>
 
@@ -227,7 +223,8 @@
                                                 <div class="card card-report CH50">
                                                     <h4>AVG<span> Visits/Month</span></h4>
                                                     <h2 class="digit">4574 </h2>
-                                                    <img class="gra-icon" src="/assets/images/visit-month-icon.svg" alt="">
+                                                    <img class="gra-icon" src="/assets/images/visit-month-icon.svg"
+                                                        alt="">
                                                 </div>
                                             </div>
 
@@ -235,12 +232,11 @@
                                                 <div class="card card-report CH50">
                                                     <h4>Productivity <span> Ratio</span></h4>
                                                     <h2 class="digit">25</h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-dispatch-ord-icon.svg" alt="">
+                                                    <img class="gra-icon" src="/assets/images/ord-dispatch-ord-icon.svg"
+                                                        alt="">
                                                 </div>
                                             </div>
-
                                         </div>
-
                                     </div>
 
                                     <div class="tab-pane fade" id="pills-contact" role="tabpanel"
@@ -277,17 +273,16 @@
             </div>
             <div id="floating-label" class="modal-body">
                 <div class="row">
-                    <div class="col-md-12"> <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        Map Here<br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
-                        <br>
+                    <div class="col-md-12">
+                        <!-- Map Start -->
+                        <div class="mapouter">
+                            <div class="gmap_canvas">
+                                <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0"
+                                    marginwidth="0"
+                                    src="https://maps.google.com/maps?&amp;hl=en&amp;q=mochipuralahorepunjabpakistan&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                            </div>
+                        </div>
+                        <!-- Map End -->
                     </div>
                 </div>
             </div>
@@ -309,9 +304,9 @@
                         aria-hidden="true">&times;</span> </button>
             </div>
             <div class="modal-body">
-                <div class="col-md-12"> <strong>Frontside</strong> <img class="cnicCardimg" src="/assets/images/idcard.jpg"
-                        alt="" /> <strong>Backside</strong> <img class="cnicCardimg mb-0" src="/assets/images/idcard.jpg"
-                        alt="" /> </div>
+                <div class="col-md-12"> <strong>Frontside</strong> <img class="cnicCardimg"
+                        src="/assets/images/idcard.jpg" alt="" /> <strong>Backside</strong> <img
+                        class="cnicCardimg mb-0" src="/assets/images/idcard.jpg" alt="" /> </div>
             </div>
             <div class="modal-footer border-0 pt-0">
                 <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">Close</button>
@@ -369,7 +364,7 @@
                                 <div class="col-md-12 POCDetail">
                                     <p><strong>Phone:</strong> 03111111111</p>
                                     <p><strong>Email:</strong> info@gmail.com</p>
-                                    <p><strong>Location:</strong> Main Bazar Khanpur mehar</p>
+                                    <p><strong>Location:</strong> Anarkali Bazar Lahore</p>
                                     <p><strong>Channel Type </strong> Type Here</p>
                                 </div>
                                 <div class="col-md-12 POCDetail border-bottomNone">
@@ -417,7 +412,8 @@
                                 <div class="tab-content" id="nav-tabContent">
                                     <div class="tab-pane fade show active body_sales_agants" id="nav-home"
                                         role="tabpanel" aria-labelledby="nav-home-tab">
-                                        <table class="table table-hover dt-responsive nowrap" id="example"
+                                        <table datatable [dtOptions]="dtOptions"
+                                            class="table table-hover dt-responsive nowrap" id="example"
                                             style="width:100%">
                                             <thead>
                                                 <tr>
@@ -458,7 +454,8 @@
                                     <div class="tab-pane fade body_emp_staff" id="nav-profile" role="tabpanel"
                                         aria-labelledby="nav-profile-tab">
                                         <div class="tblLoader">
-                                            <table class="table table-hover dt-responsive nowrap" id="example2"
+                                            <table datatable [dtOptions]="dtOptions"
+                                                class="table table-hover dt-responsive nowrap" id="example2"
                                                 style="width:100%">
                                                 <thead>
                                                     <tr>

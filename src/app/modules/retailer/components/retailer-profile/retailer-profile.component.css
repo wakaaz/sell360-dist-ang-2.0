@@ -94,53 +94,14 @@
 	background-repeat: no-repeat;
 	background-size: auto;
 }
-.DistributorReport h2 {
-	font-size: 18px;
-	padding-top: 15px;
-	margin-bottom: 15px;
-	display: block
-}
-.DistributorReport h4 {
-	font-size: 16px;
-	padding: 0;
-	margin: 0
-}
-.DistributorReport .digit {
-	font-size: 28px;
-	font-weight: normal;
-	line-height: normal;
-	color: #0038ba;
-	margin-bottom: 0;
-	padding-bottom: 0;
-	line-height: 1;
-	font-family: 'Rationale', sans-serif!important;
-}
+.DistributorReport h2 {font-size: 18px;	padding-top: 15px;	margin-bottom: 15px; display: block}
+.DistributorReport h4 {	font-size: 16px;	padding: 0;	margin: 0}
+.DistributorReport .digit {	font-size: 28px;	font-weight: normal;	line-height: normal;	color: #0038ba;	margin-bottom: 0;	padding-bottom: 0;	line-height: 1;	font-family: 'Rationale', sans-serif!important;}
 .DistributorReport .head-font {font-size: 16px;}
-.DistributorReport .progressValue {
-	font-size: 20px;
-	margin-top: -2px;
-	float: right;
-	color: #0038ba;
-	font-family: 'Rationale', sans-serif!important;
-}
+.DistributorReport .progressValue {	font-size: 20px;	margin-top: -2px;	float: right;	color: #0038ba;	font-family: 'Rationale', sans-serif!important;}
 .DistributorReport .card .cardicon { width: 50px;position: absolute;top: 20px;right: 15px}
-.progress {
-    -webkit-box-shadow: none!important;
-    background-color: rgba(120, 130, 140, .13);
-    box-shadow: none!important;
-    height: 6px;
-    border-radius: 50px;
-    margin-bottom: 18px;
-    overflow: hidden;
-}
-.card-report .digit {
-    font-size: 24px;
-    color: #0038ba;
-    font-family: 'Rationale', sans-serif!important;
-    position: absolute;
-    bottom: 16px;
-    margin-bottom: 0;
-}   
+.progress {    -webkit-box-shadow: none!important;    background-color: rgba(120, 130, 140, .13);    box-shadow: none!important;    height: 6px;    border-radius: 50px;    margin-bottom: 18px;    overflow: hidden;}
+.card-report .digit {    font-size: 24px;    color: #0038ba;    font-family: 'Rationale', sans-serif!important;    position: absolute;    bottom: 16px;    margin-bottom: 0;}   
 .rav-bg {background-image: url(/assets/images/rav-bg-light.jpg)}
 .card-report h4, .TopProductList h4 {font-size: 15px;}
 .card-report .Rev-pos { position: relative; bottom: auto; padding-top: 32px; font-size: 30px;}
@@ -151,3 +112,6 @@
 .dateLPR {margin-top: -8px; color: #282828;}
 .report-state ._head01{margin-bottom:0;}
 .bottomRED{border-bottom: solid 2px #f12300;}
+.mapouter{position:relative;text-align:right;width:100%;height:400px;}
+.gmap_canvas {overflow:hidden;background:none!important;width:100%;height:400px;}
+.gmap_iframe {width:100%!important;height:400px!important;}

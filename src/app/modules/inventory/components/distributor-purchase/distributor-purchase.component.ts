@@ -169,6 +169,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             this.purchasedProductsIds.splice(ind, 1);
             this.distributionDiscount -= product.discount;
         }
+        this.calculatePurchasedSubTotal();
         this.rerenderPurchasedProducts();
     }
 

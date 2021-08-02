@@ -71,7 +71,7 @@
     margin-bottom: 20px;
     border: none;    border-bottom: solid 1px #d9dde1;
 }
-.distTabs .header-tabs .nav-tabs .nav-item a:hover {cursor: pointer;}	
+.nav-item a:hover {cursor: pointer;}	
 .distTabs .header-tabs .nav-tabs .nav-link{ border-bottom: solid 1px #d9dde1;}
 .distTabs .header-tabs .nav-tabs .nav-item.show, .distTabs .header-tabs .nav-tabs .nav-link.active, .distTabs .header-tabs .nav-tabs .nav-link:HOVER {
     border-bottom: solid 2px #0038ba;

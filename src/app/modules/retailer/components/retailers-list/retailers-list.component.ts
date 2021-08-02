@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'app-retailers-list',
     templateUrl: 'retailers-list.component.html',
-    styleUrls: ['./retailers-list.component.css']
+    styleUrls: ['./retailers-list.component.css'],
+    encapsulation: ViewEncapsulation.None
 })
 
 export class RetalersListComponent implements OnInit {
 
     dtOptions: DataTables.Settings = {};
+    orderBooker: string;
+    route: string;
     shwoSaleManLedger: boolean;
 
     constructor() {

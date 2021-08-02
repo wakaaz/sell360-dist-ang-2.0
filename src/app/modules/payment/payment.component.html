@@ -1,0 +1,205 @@
+<!-- Confirm Bounce -->
+<div class="modal fade" id="confirmation" tabindex="-1" role="dialog" aria-labelledby="DetailModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content top-borderRed">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetailModalLabel">Bounce Check</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
+                        aria-hidden="true">&times;</span> </button>
+            </div>
+            <div id="floating-label" class="modal-body">
+                <div class="row">
+                    <div class="col-md-12">
+                        <p>Amount will be added to credit</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0 pt-0">
+                <button type="submit" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Yes</button>
+                <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Manage <span>Cheques</span></h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a><span>Manage</span></a></li>
+                <li><span>Cheques</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="header-tabs">
+                <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
+                            aria-controls="pills-home" aria-selected="true"><span>Pending Cheques</span> <span
+                                class="_cus-val">24 </span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
+                            aria-controls="pills-profile" aria-selected="false"><span>Bounce Cheques</span> <span
+                                class="_cus-val"> 10 </span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="pills-Territory-tab" data-toggle="pill" href="#pills-Territory"
+                            role="tab" aria-controls="pills-Territory" aria-selected="false"><span>Realize
+                                Cheques</span> <span class="_cus-val">40</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="body">
+                    <div class="tab-content" id="pills-tabContent">
+
+                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                            aria-labelledby="pills-home-tab">
+                            <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Retailer Name</th>
+                                        <th>Date</th>
+                                        <th>Cheque#</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>zulfi store 2021-05-04</td>
+                                        <td>2021-05-04</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td><a href="#" data-target="#confirmation" data-toggle="modal" class="btn btn-default m-0">Bounce</a>&nbsp;
+                                            <a href="#" class="btn btn-default m-0">Realizes</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>zulfi store 2021-05-04</td>
+                                        <td>2021-05-04</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td><a href="#" data-target="#confirmation" data-toggle="modal" class="btn btn-default m-0">Bounce</a>&nbsp;
+                                            <a href="#" class="btn btn-default m-0">Realizes</a>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>zulfi store 2021-05-04</td>
+                                        <td>2021-05-04</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td><a href="#" data-target="#confirmation" data-toggle="modal" class="btn btn-default m-0">Bounce</a>&nbsp;
+                                            <a href="#" class="btn btn-default m-0">Realizes</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane fade" id="pills-profile" role="tabpanel"
+                            aria-labelledby="pills-profile-tab">
+                            <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example2" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Retailer Name</th>
+                                        <th>Date</th>
+                                        <th>Cheque#</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>zulfi store 2021-05-04</td>
+                                        <td>2021-05-04</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>zulfi store 2021-05-04</td>
+                                        <td>2021-05-04</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>zulfi store 2021-05-04</td>
+                                        <td>2021-05-04</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="tab-pane fade" id="pills-Territory" role="tabpanel"
+                            aria-labelledby="pills-Territory-tab">
+                            <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example3" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Retailer Name</th>
+                                        <th>Date</th>
+                                        <th>Cheque#</th>
+                                        <th>Amount</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>zulfi store 2021-05-04</td>
+                                        <td>2021-05-04</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>zulfi store 2021-05-04</td>
+                                        <td>2021-05-04</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td>22</td>
+                                        <td>zulfi store 2021-05-04</td>
+                                        <td>2021-05-04</td>
+                                        <td>0</td>
+                                        <td>0</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

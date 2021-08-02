@@ -1,0 +1,5 @@
+.top-borderRed {
+    border: solid 1px #f0f0f0;
+    border-top: solid 3px #e20000;
+    box-shadow: 0px 0px 20px 0px rgb(0 0 0 / 8%);
+}

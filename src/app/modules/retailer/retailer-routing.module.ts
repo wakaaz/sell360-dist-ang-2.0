@@ -4,6 +4,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { RetailerComponent } from './retailer.component';
 import { RetalersListComponent } from './components/retailers-list/retailers-list.component';
 import { RetailerProfileComponent } from './components/retailer-profile/retailer-profile.component';
+import { OpeningBalanceComponent } from './components/opening-balance/opening-balance.component';
 
 const routes: Routes = [
   {
@@ -19,6 +20,11 @@ const routes: Routes = [
         path: 'profile/:id',
         pathMatch: 'full',
         component: RetailerProfileComponent,
+      },
+      {
+        path: 'opening-balance',
+        pathMatch: 'full',
+        component: OpeningBalanceComponent,
       },
     ]
   }

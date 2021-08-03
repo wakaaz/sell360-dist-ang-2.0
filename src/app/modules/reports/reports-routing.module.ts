@@ -7,6 +7,7 @@ import { DSReportComponent } from './components/dsr/dsr.component';
 import { PurchasedDetailComponent } from './components/purchase-detail/purchase-detail.component';
 import { CashSummaryComponent } from './components/cash-summary/cash-summary.component';
 import { RateListComponent } from './components/export-rate-list/export-rate-list.component';
+import { SpotSaleComponent } from './components/spot-sale/spot-sale.component';
 
 const routes: Routes = [
   {
@@ -34,6 +35,10 @@ const routes: Routes = [
       {
         path: 'export-rate-list',
         component: RateListComponent,
+      },
+      {
+        path: 'spot-sale',
+        component: SpotSaleComponent,
       },
       {
         path: 'dsr',

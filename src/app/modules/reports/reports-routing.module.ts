@@ -6,6 +6,7 @@ import { PurchaseHisotryComponent } from './components/purchase-history/purchase
 import { DSReportComponent } from './components/dsr/dsr.component';
 import { PurchasedDetailComponent } from './components/purchase-detail/purchase-detail.component';
 import { CashSummaryComponent } from './components/cash-summary/cash-summary.component';
+import { RateListComponent } from './components/export-rate-list/export-rate-list.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,10 @@ const routes: Routes = [
       {
         path: 'cash-summary',
         component: CashSummaryComponent,
+      },
+      {
+        path: 'export-rate-list',
+        component: RateListComponent,
       },
       {
         path: 'dsr',

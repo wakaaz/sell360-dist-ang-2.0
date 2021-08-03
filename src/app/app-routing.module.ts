@@ -47,6 +47,10 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     loadChildren: () => import('./modules/payment/payment.module').then(m => m.PaymentModule)
   },
+  {
+    path: '**',
+    redirectTo: 'home'
+  }
 ];
 
 @NgModule({

@@ -6,10 +6,10 @@
                 <div class="col-12 p-0">
                     <div class="header addPR-head mb-10">
                         <h2>Add <span> Stock</span> </h2>
-                        <div class="_PR_filter w-auto pl-15">
+                        <!-- <div class="_PR_filter w-auto pl-15">
                             <button class="btn btn-primary btn-bulk"><i class="fa fa-upload"></i> <span>Bulk
                                     Upload</span></button>
-                        </div>
+                        </div> -->
 
                         <div class="_PR_filter pr-15">
                             <div class="form-s2">
@@ -99,7 +99,7 @@
                         </button>
                         <button *ngIf="!submitted" type="submit" class="btn btn-primary mr-2"
                             (click)="addOpeningStock()">Save</button>
-                        <button *ngIf="!submitted" [routerLink]="['/retailer', 'opening-balance']" class="btn btn-cancel">Add Opening
+                        <button *ngIf="!submitted" [routerLink]="['/retailer', 'opening-balance']" class="btn btn-cancel">Opening
                             Balance</button>
                     </div>
                 </div>

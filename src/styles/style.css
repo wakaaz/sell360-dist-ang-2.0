@@ -546,7 +546,7 @@ table.dataTable.dtr-inline.collapsed>tbody>tr[role="row"]>td:first-child, table.
 }
 .dataTable .btn-line, .btn-line {
 	background: linear-gradient(90deg, #fff 0%, #fff 100%);
-	color: #0038ba;
+	color: #0038ba !important;
 	border: solid 1px #0038ba
 }
 .dataTable .btn-default:HOVER, .dataTable .btn-line:HOVER, .smBTN:HOVER {

@@ -5,27 +5,36 @@ import { ReportsComponent } from './reports.component';
 import { PurchaseHisotryComponent } from './components/purchase-history/purchase-history.component';
 import { DSReportComponent } from './components/dsr/dsr.component';
 import { PurchasedDetailComponent } from './components/purchase-detail/purchase-detail.component';
+import { CashSummaryComponent } from './components/cash-summary/cash-summary.component';
 
 const routes: Routes = [
   {
     path: '',
     component: ReportsComponent,
     children: [
-        {
-            path: 'purchase-history',
-            pathMatch: 'full',
-            component: PurchaseHisotryComponent
-        },
-        {
-            path: 'purchase/:id',
-            pathMatch: 'full',
-            component: PurchasedDetailComponent
-        },
-        {
-            path: 'dsr',
-            pathMatch: 'full',
-            component: DSReportComponent
-        }
+      {
+        path: '',
+        redirectTo: 'dsr',
+      },
+      {
+        path: 'purchase-history',
+        pathMatch: 'full',
+        component: PurchaseHisotryComponent
+      },
+      {
+        path: 'purchase/:id',
+        pathMatch: 'full',
+        component: PurchasedDetailComponent
+      },
+      {
+        path: 'cash-summary',
+        component: CashSummaryComponent,
+      },
+      {
+        path: 'dsr',
+        pathMatch: 'full',
+        component: DSReportComponent
+      }
     ]
   }
 ];

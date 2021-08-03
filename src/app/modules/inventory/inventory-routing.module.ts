@@ -12,26 +12,30 @@ const routes: Routes = [
     path: '',
     component: InventoryComponent,
     children: [
-        {
-            path: 'gallery',
-            pathMatch: 'full',
-            component: GalleryComponent,
-        },
-        {
-            path: 'distributor-purchase',
-            pathMatch: 'full',
-            component: DistributorPurchaseComponent,
-        },
-        {
-            path: 'stock',
-            pathMatch: 'full',
-            component: StockComponent,
-        },
-        {
-            path: 'add-stock',
-            pathMatch: 'full',
-            component: AddStockComponent,
-        },
+      {
+        path: '',
+        redirectTo: 'gallery'
+      },
+      {
+        path: 'gallery',
+        pathMatch: 'full',
+        component: GalleryComponent,
+      },
+      {
+        path: 'distributor-purchase',
+        pathMatch: 'full',
+        component: DistributorPurchaseComponent,
+      },
+      {
+        path: 'stock',
+        pathMatch: 'full',
+        component: StockComponent,
+      },
+      {
+        path: 'add-stock',
+        pathMatch: 'full',
+        component: AddStockComponent,
+      },
     ]
   }
 ];

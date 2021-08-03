@@ -12,6 +12,10 @@ const routes: Routes = [
     component: RetailerComponent,
     children: [
       {
+        path: '',
+        redirectTo: 'list'
+      },
+      {
         path: 'list',
         pathMatch: 'full',
         component: RetalersListComponent,

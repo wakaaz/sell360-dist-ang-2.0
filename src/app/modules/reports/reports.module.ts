@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 import { DataTablesModule } from 'angular-datatables';
 import { ReportsRoutingModule } from './reports-routing.module';
@@ -10,10 +11,12 @@ import { PurchaseHisotryComponent } from './components/purchase-history/purchase
 import { DSReportComponent } from './components/dsr/dsr.component';
 import { ReportsService } from './services/reports.service';
 import { PurchasedDetailComponent } from './components/purchase-detail/purchase-detail.component';
+import { CashSummaryComponent } from './components/cash-summary/cash-summary.component';
 
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
         DataTablesModule,
         SharedModule,
         ReportsRoutingModule,
@@ -23,6 +26,7 @@ import { PurchasedDetailComponent } from './components/purchase-detail/purchase-
         PurchaseHisotryComponent,
         PurchasedDetailComponent,
         DSReportComponent,
+        CashSummaryComponent,
     ],
     providers: [
         ReportsService,

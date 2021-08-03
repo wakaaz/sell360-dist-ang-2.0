@@ -1,0 +1,11 @@
+._PR_filter{margin-top: -2px; width: 300px!important; float: left}
+._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 30px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
+._PR_filter .form-s2 .select2-container .select2-selection--single, ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__arrow{height: 31px!important;}
+._PR_filter .select2-container .select2-selection--single {background-color: #fff;border-color: #eae9e9;font-size: 14px;border-radius: 0;}
+.addPR-head h3{font-size: 14px; padding-right: 10px; line-height: 2; margin: 0}
+._PR_filter input {box-shadow: none;font-size: 13px;height: 31px;width: 165px;border-color: #eae9e9;}
+.report_value {background-color: #fff;font-size: 14px;position: relative;padding: 10px 0px;letter-spacing: 0.5px;margin-bottom: 0px;margin-top: 0px;line-height: 1; border-bottom: solid 1px #eae9e9}
+.report_value span {font-family: 'Rationale', sans-serif;line-height: 1;font-size: 18px;float: right;margin-top: -2px;}
+.addPR-head {font-size: 16px;padding: 15px 15px 15px 20px !important;}
+.gen-act{float: right}
+.gen-act .btn-primary{color:#fff !important; margin-top:-2px; padding-top:7px; padding-bottom:7px; line-height:1}

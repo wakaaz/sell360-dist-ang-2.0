@@ -6,7 +6,7 @@
 ._PR_filter .form-s2 .ng-select .ng-select-container {border-radius: 0 !important;}
 ._PR_filter .form-s2 .ng-select .ng-clear-wrapper {display: none !important;}
 #wrapper #content-wrapper {padding-left: 0!important;}
-/* .container {max-width: 1280px;} */
+.container {max-width: 1280px;}
 .add-stock-input{font-size: 13px; width: 80px; height: 25px; box-shadow: none; border-color:#dddddd; padding: 0px 5px 0 8px;}	
 .retailerTable .dataTable td, .retailerTable .dataTable th {vertical-align: middle;}
 .CP-name{letter-spacing: 1px;}

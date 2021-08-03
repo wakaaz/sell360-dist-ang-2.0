@@ -317,18 +317,18 @@ footer.sticky-footer .copyright {
 	background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%);
 }
 .btn-primary:HOVER, .btn-primary:focus, .lgray-btn:HOVER, .btn-outline:HOVER {
-	color: #fff;
+	color: #fff !important;
 	border: solid 1px #003db6;
 	background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%);
 }
 .btn-cancel, .btn-outline {
-	color: #0038ba;
+	color: #0038ba !important;
 	border: solid 1px #0038ba;
 	background: rgba(255, 255, 255, 0);
 	box-shadow: none;
 }
 .btn-cancel:HOVER, .btn-cancel:focus {
-	color: #fff;
+	color: #fff !important;
 	background: linear-gradient(90deg, #f12300 0%, #ff0000 100%);
 	border: solid 1px #f12300;
 }

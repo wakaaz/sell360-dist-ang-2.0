@@ -31,7 +31,7 @@
 	font-family: 'Poppins', sans-serif;
     line-height: 1;
     font-size: 35px;
-    font-weight: 800;
+    font-weight: 800; padding-top: 0;
     color: #ececec;  position: absolute; right:80px; top: 7px}	
 .addPR-head { padding: 15px 15px 0px 20px !important; background:none!important }
 #orderList-id{flex: 0 0 300px; max-width: 300px; width: 300px;}

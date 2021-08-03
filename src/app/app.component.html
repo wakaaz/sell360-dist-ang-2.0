@@ -29,7 +29,7 @@
   </div>
 </div>
   
-<div *ngIf="isLoggedIn" class="sidebarblue">
+<div *ngIf="isLoggedIn && !isSideNavHidden" class="sidebarblue">
   <div class="aside-primary">
     <div class="sell360"><a routerLink="/home"><img alt="Sell360" src="/assets/images/logo-w.svg"></a></div>
     <div class="main-links">

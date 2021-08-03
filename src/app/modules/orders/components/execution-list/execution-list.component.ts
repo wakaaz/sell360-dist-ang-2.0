@@ -21,7 +21,6 @@ export class OrderExecutionListComponent implements OnInit {
     }
 
     executeOrder(): void {
-        console.log('Execute Order!!!');
         this.showExecuteOrder = true;
         document.body.classList.add('no-scroll');
     }

@@ -1,0 +1,4 @@
+.rate-act{margin-top: 26px}
+.rate-act .btn-primary{padding-left: 25px; padding-right: 25px; font-size: 14px}
+.dataTable .btn-line, .btn-line {background: linear-gradient(90deg, #fff 0%, #fff 100%);color: #0038ba !important;border: solid 1px #0038ba;}
+.btn-primary:HOVER, .btn-primary:focus, .lgray-btn:HOVER, .btn-outline:HOVER {color: #fff !important;border: solid 1px #003db6;background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%);}

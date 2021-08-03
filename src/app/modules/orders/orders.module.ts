@@ -12,6 +12,7 @@ import { OrdersListDetailsComponent } from './components/orders-list-details/ord
 import { CreateDispatchedComponent } from './components/create-dispatched/create-dispatched.component';
 import { OrderExecutionListComponent } from './components/execution-list/execution-list.component';
 import { ExecuteOrderComponent } from './components/execute-order/execute-order.component';
+import { CompletedOrdersComponent } from './components/completed-orders/completed-orders.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import { ExecuteOrderComponent } from './components/execute-order/execute-order.
       CreateDispatchedComponent,
       OrderExecutionListComponent,
       ExecuteOrderComponent,
+      CompletedOrdersComponent,
     ]
 })
 export class OrderModule { }

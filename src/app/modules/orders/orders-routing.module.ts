@@ -7,6 +7,7 @@ import { OrdersListDetailsComponent } from './components/orders-list-details/ord
 import { CreateDispatchedComponent } from './components/create-dispatched/create-dispatched.component';
 import { OrderExecutionListComponent } from './components/execution-list/execution-list.component';
 import { ExecuteOrderComponent } from './components/execute-order/execute-order.component';
+import { CompletedOrdersComponent } from './components/completed-orders/completed-orders.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,11 @@ const routes: Routes = [
             path: 'execute-order',
             pathMatch: 'full',
             component: ExecuteOrderComponent
+        },
+        {
+            path: 'completed-orders',
+            pathMatch: 'full',
+            component: CompletedOrdersComponent
         },
     ]
   }

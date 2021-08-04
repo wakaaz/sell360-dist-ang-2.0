@@ -65,7 +65,7 @@ footer.sticky-footer .copyright {
 	line-height: 1;
 	font-size: 0.8rem;
 }
-.left_Info h2 span, .orderTop h2 span, .dataTable td, .modal-body table th, .modal-body table td, .dataTables_wrapper .dataTables_length label, .dataTables_wrapper .dataTables_info, .con_info p, .card .header h2 span, ._head01 span, .login-right h3 span, .btn-login span, .modal-title span, ._customerP-card .btn-primary, .card ._head03 span, ._head04 span, ._head05 span, ._add-secon, .card-report h4 span, .TopProductList h4 span, ._pillsTabs .nav-pills .nav-link, .cp-stats h5, .cus-ass-list, .Log_footer, .dropzone {
+.left_Info h2 span, .orderTop h2 span, .dataTable td, .modal-body table th, .modal-body table td, .dataTables_wrapper .dataTables_length label, .dataTables_wrapper .dataTables_info, .con_info p, .card .header h2 span, ._head01 span, .login-right h3 span, .btn-login span, .modal-title span, ._customerP-card .btn-primary, .card ._head03 span, ._head04 span, ._add-secon, .card-report h4 span, .TopProductList h4 span, ._pillsTabs .nav-pills .nav-link, .cp-stats h5, .cus-ass-list, .Log_footer, .dropzone {
 	font-family: 'proximanova-light', sans-serif !important;
 	font-weight: normal
 }
@@ -99,7 +99,7 @@ ul, ol {
 	display: flex;
 	height: 100%;
 }
-h1, h2, h3, h4, h5, h6, ._head01, ._head02, .dataTable.nowrap th, .btn, .modal-order-detail .modal-title, .MT-font, ._inv-status, .modal-order-detail .modal-title, .nam-title, .con_info, .text-muted, .cp-stats, .nav-tabs .nav-link, .tab-style .tab-pane, .alert-color, .modal-title, .login-right, .login-right h3, .login-left h4, .viewAssign, .card .header h2, .modal-title, .card ._head03, ._head04, ._head05, .dataTable .btn-default, .add_button, .in-btn, .con_info ._st-t, .con_info .btn-primary, .pro-header-text, ._cl-bottom .btn, .page-item .page-link, .dataTables_wrapper .dataTables_filter label, .dropify-wrapper .dropify-clear, .dropify-wrapper .dropify-clear:HOVER, .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message, .dropify-wrapper .dropify-message p, .nav-pills .nav-link.active, .nav-pills .show>.nav-link, .nav-pills .nav-link, .plus_button, .cb_nav li a, .CB-account-tab .nav-link, ._CP-detail strong, .add-product-line, ._ord-rightside h2, ._ord-rightLink ._ord-head, ._more-action .dropdown-item, .pr_text, b, strong, ._BC-btn, ._order-price, .dataTable th, .st_boxgray span, .topActins, .assignedDate, .TaskTitle, .box-sec span, .Order-Cust-detail strong, .progress, .AssSupplier span, .OrderValue, .taskDetailL, .follow_action span, ._report-Head .nav-pills, .TI-head, ._amState p, .selectPri, .SP_flag {
+h1, h2, h3, h4, h5, h6, ._head01, ._head02, .dataTable.nowrap th, .btn, .modal-order-detail .modal-title, .MT-font, ._inv-status, .modal-order-detail .modal-title, .nam-title, .con_info, .text-muted, .cp-stats, .nav-tabs .nav-link, .tab-style .tab-pane, .alert-color, .modal-title, .login-right, .login-right h3, .login-left h4, .viewAssign, .card .header h2, .modal-title, .card ._head03, ._head04, .dataTable .btn-default, .add_button, .in-btn, .con_info ._st-t, .con_info .btn-primary, .pro-header-text, ._cl-bottom .btn, .page-item .page-link, .dataTables_wrapper .dataTables_filter label, .dropify-wrapper .dropify-clear, .dropify-wrapper .dropify-clear:HOVER, .dropify-wrapper .dropify-preview .dropify-infos .dropify-infos-inner p.dropify-infos-message, .dropify-wrapper .dropify-message p, .nav-pills .nav-link.active, .nav-pills .show>.nav-link, .nav-pills .nav-link, .plus_button, .cb_nav li a, .CB-account-tab .nav-link, ._CP-detail strong, .add-product-line, ._ord-rightside h2, ._ord-rightLink ._ord-head, ._more-action .dropdown-item, .pr_text, b, strong, ._BC-btn, ._order-price, .dataTable th, .st_boxgray span, .topActins, .assignedDate, .TaskTitle, .box-sec span, .Order-Cust-detail strong, .progress, .AssSupplier span, .OrderValue, .taskDetailL, .follow_action span, ._report-Head .nav-pills, .TI-head, ._amState p, .selectPri, .SP_flag {
 	font-family: proximanova-semibold, sans-serif!important;
 	font-weight: normal !important
 }
@@ -715,7 +715,7 @@ button {
 .textareaLog {
 	height: calc(100% - 71px)
 }
-.modalWindow-bottom .btn-primary, .modalWindow-bottom .btn-cancel, .modalWindow-bottom .lgray-btn, .modalWindow-bottom .btn-outline {
+.modalWindow-bottom .btn-primary, .modalWindow-bottom .btn-cancel, .modalWindow-bottom .btn-outline {
 	font-size: 13px
 }
 .modalWindow-act {

@@ -13,6 +13,7 @@ import { CreateDispatchedComponent } from './components/create-dispatched/create
 import { OrderExecutionListComponent } from './components/execution-list/execution-list.component';
 import { ExecuteOrderComponent } from './components/execute-order/execute-order.component';
 import { CompletedOrdersComponent } from './components/completed-orders/completed-orders.component';
+import { CounterSaleComponent } from './components/counter-sale/counter-sale.component';
 
 @NgModule({
   imports: [
@@ -30,6 +31,7 @@ import { CompletedOrdersComponent } from './components/completed-orders/complete
       OrderExecutionListComponent,
       ExecuteOrderComponent,
       CompletedOrdersComponent,
+      CounterSaleComponent,
     ]
 })
 export class OrderModule { }

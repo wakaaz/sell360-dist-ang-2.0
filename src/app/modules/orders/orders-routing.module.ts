@@ -9,6 +9,7 @@ import { OrderExecutionListComponent } from './components/execution-list/executi
 import { ExecuteOrderComponent } from './components/execute-order/execute-order.component';
 import { CompletedOrdersComponent } from './components/completed-orders/completed-orders.component';
 import { CounterSaleComponent } from './components/counter-sale/counter-sale.component';
+import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
 
 const routes: Routes = [
   {
@@ -49,6 +50,11 @@ const routes: Routes = [
             path: 'counter-sale',
             pathMatch: 'full',
             component: CounterSaleComponent
+        },
+        {
+            path: 'booking-vs-execution',
+            pathMatch: 'full',
+            component: BookingVsExecutionComponent
         },
     ]
   }

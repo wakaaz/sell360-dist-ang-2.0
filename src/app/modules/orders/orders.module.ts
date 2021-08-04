@@ -14,6 +14,7 @@ import { OrderExecutionListComponent } from './components/execution-list/executi
 import { ExecuteOrderComponent } from './components/execute-order/execute-order.component';
 import { CompletedOrdersComponent } from './components/completed-orders/completed-orders.component';
 import { CounterSaleComponent } from './components/counter-sale/counter-sale.component';
+import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
 
 @NgModule({
   imports: [
@@ -32,6 +33,7 @@ import { CounterSaleComponent } from './components/counter-sale/counter-sale.com
       ExecuteOrderComponent,
       CompletedOrdersComponent,
       CounterSaleComponent,
+      BookingVsExecutionComponent,
     ]
 })
 export class OrderModule { }

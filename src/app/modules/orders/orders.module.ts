@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { OrdersRoutingModule } from './orders-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DataTablesModule } from 'angular-datatables';
+import { ClickOutsideModule } from 'ng-click-outside';
 
 import { OrdersComponent } from './orders.component';
 import { OrdersListComponent } from './components/orders-list/orders-list.component';
@@ -21,6 +22,7 @@ import { BookingVsExecutionComponent } from './components/booking-vs-execution/b
     CommonModule,
     OrdersRoutingModule,
     FormsModule,
+    ClickOutsideModule,
     NgSelectModule,
     DataTablesModule,
   ],

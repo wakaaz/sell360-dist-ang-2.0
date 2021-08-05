@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 
 import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { LoginService } from './services/login.service';
@@ -23,8 +24,8 @@ export class LoginComponent implements OnInit {
         private storageService: LocalStorageService,
         private loginService: LoginService,
     ) {
-        const token = this.storageService.getItem('dist_session');
-        const distributor = this.storageService.getItem('distributor');
+        const token = this.storageService.getItem(localStorageKeys.session);
+        const distributor = this.storageService.getItem(localStorageKeys.distributor);
         if (token !== null && distributor !== null) {
             this.router.navigateByUrl('/home');
         }
@@ -45,8 +46,8 @@ export class LoginComponent implements OnInit {
                     this.resetApiError();
                 } else {
                     const { token, ...rest } = res.data;
-                    this.storageService.setItem('distributor', rest);
-                    this.storageService.setItem('dist_session', token);
+                    this.storageService.setItem(localStorageKeys.distributor, rest);
+                    this.storageService.setItem(localStorageKeys.session, token);
                     this.router.navigateByUrl('/home');
                 }
                 this.loading = false;

@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot} from '@angular/router';
+import { localStorageKeys } from '../constants/localstorage.constants';
 import { LocalStorageService } from '../services/storage.service';
 
 
@@ -17,8 +18,8 @@ export class AuthGuard implements CanActivate {
    * @returns true if user is authenticated otherwise false
    */
   public canActivate(route: ActivatedRouteSnapshot): boolean {
-    const token = this.storageService.getItem('dist_session');
-    const distributor = this.storageService.getItem('distributor');
+    const token = this.storageService.getItem(localStorageKeys.session);
+    const distributor = this.storageService.getItem(localStorageKeys.distributor);
     return token !== null && distributor !== null;
   }
 

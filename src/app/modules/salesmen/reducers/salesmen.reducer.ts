@@ -2,6 +2,7 @@ import { ActionReducer, Action } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
 import { SalemanModel } from '../../shared/models/saleman.model';
+import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 
 export interface State extends EntityState<SalemanModel> { }
 
@@ -98,7 +99,7 @@ export function stateReducer(
 }
 
 export function persistStateReducer(slemanReducer: ActionReducer<State>): any {
-    const localStorageKey = '__saleman';
+    const localStorageKey = localStorageKeys.saleman;
     return (state: State | undefined, action: Action) => {
         if (state === undefined) {
             const persisted = localStorage.getItem(localStorageKey);

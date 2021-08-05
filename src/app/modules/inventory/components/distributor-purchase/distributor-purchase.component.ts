@@ -213,8 +213,9 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         }
     }
 
-    isNumber(event: KeyboardEvent): boolean {
-        if (event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') || event.key.includes('.')) {
+    isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
+        if (event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
+            (type === 'charges' && event.key.includes('.'))) {
             return true;
         }
         return !isNaN(Number(event.key));
@@ -239,7 +240,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
     }
 
     getUnitPrice(item: ItemModel, isFree: boolean = false): void {
-        if (item.pref_id) {
+        if (item.unit_name) {
             const unitPrice = this.productPrefs.find(x => x.pref_id === item.pref_id).item_trade_price;
             item.original_amount = this.dataService.calculateUnitPrice(item.quantity, unitPrice);
             item.discount = this.dataService.calculateDiscount(item.discount_type_value,

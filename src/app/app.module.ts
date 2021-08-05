@@ -15,7 +15,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { reducers, metaReducers } from './reducer';
-import { LocalStorageSalemanEffects } from './core/effects/localStorage.effects';
+import { LocalStorageSalemanEffects } from './core/effects/salesmen.effects';
 
 import { environment } from '../environments/environment';
 

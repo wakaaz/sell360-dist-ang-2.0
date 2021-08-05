@@ -24,7 +24,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     dtOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject();
 
-    salesMen: any;
+    salesMen: Array<any> = [];
     segments: Array<any>;
     selectedSegments: Array<string>;
     tableUpdated: boolean;
@@ -67,6 +67,9 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
             pagingType: 'simple_numbers'
         };
         this.store.pipe(select(getSalemenState)).subscribe(state => {
+            if (this.salesMen.length && !this.loading) {
+                this.tableUpdated = true;
+            }
             this.salesMen = Object.keys(state.entities).map(key => {
                 return state.entities[key];
             });
@@ -117,7 +120,6 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     openNewEmployeeForm(event: Event, selectedSaleman?: any): void {
         event.stopPropagation();
-        console.log('update saleman ::>', selectedSaleman);
         if (selectedSaleman) {
             this.selectedSaleman = selectedSaleman;
             this.name = selectedSaleman.name ? selectedSaleman.name : '';
@@ -249,12 +251,13 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     rerenderSalemenTable(): void {
-        console.log('Rerender Table!');
-        from(this.dtSalesmen.dtInstance)
-            .pipe(tap(dt => dt.destroy()))
-            .subscribe(fr => {
-                this.dtTrigger.next();
-            });
+        if (this.dtSalesmen) {
+            from(this.dtSalesmen.dtInstance)
+                .pipe(tap(dt => dt.destroy()))
+                .subscribe(fr => {
+                    this.dtTrigger.next();
+                });
+        }
     }
 
     isFormValid(): boolean {

@@ -127,6 +127,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
 
     addSelectedProduct(product: any): void {
         product.quantity = 1;
+        product.tradePrice = 0;
         if (this.showFreeProducts) {
             // Free products discount and payable amount
             product.original_amount = product.original_amount.toFixed(2);
@@ -230,6 +231,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         item.pref_id = selectedPref.pref_id;
         item.unit_id = selectedPref.unit_id;
         item.unit_name = selectedPref.unit_name;
+        item.tradePrice = selectedPref.item_trade_price;
         if (item.quantity > 0) {
             item.original_amount = this.dataService.calculateUnitPrice(item.quantity, selectedPref.item_trade_price);
             item.discount = this.dataService.calculateDiscount(item.discount_type_value,
@@ -242,6 +244,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
     getUnitPrice(item: ItemModel, isFree: boolean = false): void {
         if (item.unit_name) {
             const unitPrice = this.productPrefs.find(x => x.pref_id === item.pref_id).item_trade_price;
+            item.tradePrice = unitPrice;
             item.original_amount = this.dataService.calculateUnitPrice(item.quantity, unitPrice);
             item.discount = this.dataService.calculateDiscount(item.discount_type_value,
                 item.discount_type, item.original_amount);

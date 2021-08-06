@@ -10,6 +10,7 @@ import { ExecuteOrderComponent } from './components/execute-order/execute-order.
 import { CompletedOrdersComponent } from './components/completed-orders/completed-orders.component';
 import { CounterSaleComponent } from './components/counter-sale/counter-sale.component';
 import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
+import { CompletedOrdersDetailComponent } from './components/completed-orders-detail/completed-orders-detail.component';
 
 const routes: Routes = [
   {
@@ -45,6 +46,11 @@ const routes: Routes = [
             path: 'completed-orders',
             pathMatch: 'full',
             component: CompletedOrdersComponent
+        },
+        {
+            path: 'completed-orders/:id',
+            pathMatch: 'full',
+            component: CompletedOrdersDetailComponent,
         },
         {
             path: 'counter-sale',

@@ -120,6 +120,10 @@ export class StockComponent implements OnInit {
         }
     }
 
+    closePopup(): void {
+        document.getElementById('close-history-btn').click();
+    }
+
     closeHistory(): void {
         if (this.showHistory) {
             this.showHistory = false;

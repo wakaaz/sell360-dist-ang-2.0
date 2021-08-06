@@ -52,7 +52,7 @@
                                     <td>{{hs.status}}</td>
                                     <td>{{hs.created_at}}</td>
                                     <td>
-                                        <button class="btn btn-default mb-0">View Details</button>
+                                        <button class="btn btn-default mb-0" (click)="closePopup()" [routerLink]="['/reports', 'purchase', hs.table_id]">View Details</button>
                                     </td>
                                 </tr>
                             </tbody>
@@ -67,7 +67,7 @@
                 </div>
             </div>
             <div class="modal-footer border-0" style="background-color: #f6f6f6">
-                <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close"
+                <button type="submit" id="close-history-btn" class="btn btn-cancel" data-dismiss="modal" aria-label="Close"
                     (click)="closeHistory()">Close</button>
             </div>
         </div>

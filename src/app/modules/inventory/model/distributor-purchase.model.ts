@@ -8,6 +8,7 @@ export interface ItemModel {
     unit_name: string;
     quantity: number;
     original_amount: number;
+    tradePrice?: number;
     discount_type: string;
     discount_type_value: number;
     discount: number;

@@ -137,8 +137,8 @@ export class AddStockComponent implements OnInit {
                     this.toastService.showToaster({
                         title: 'Stock Added', message: 'Opening Stock added successfully!', type: 'success'
                     });
-                } else if (res.type === 'error') {
-                    this.toastService.showToaster({ title: 'Error:', message: res.message, type: 'error' });
+                } else if (res.status === 208) {
+                    this.toastService.showToaster({ title: 'Error:', message: 'Your opning stock already added. If you want to add more stock go to Distributor Purchase!', type: 'error' });
                 }
                 this.router.navigateByUrl('/retailer/opening-balance');
             }, error => {

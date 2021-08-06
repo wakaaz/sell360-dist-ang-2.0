@@ -42,7 +42,7 @@
                                     <th>STOCK</th>
                                     <th>STATE</th>
                                     <th>LAST ADDED ON</th>
-                                    <th>ADDED BY</th>
+                                    <th>ACTION</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,7 +51,9 @@
                                     <td>{{hs.quantity | number}}</td>
                                     <td>{{hs.status}}</td>
                                     <td>{{hs.created_at}}</td>
-                                    <td>{{hs.addedBy}}</td>
+                                    <td>
+                                        <button class="btn btn-default mb-0">View Details</button>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>

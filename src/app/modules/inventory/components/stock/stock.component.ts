@@ -69,7 +69,7 @@ export class StockComponent implements OnInit {
     dateChanged(): void {
         this.resetTimer();
         if (((this.historyFilter === 'monthly' || this.historyFilter === 'daily') && this.historyDateFrom) ||
-        (this.historyFilter === 'range' && this.historyDateFrom && this.historyDateTo)) {
+            (this.historyFilter === 'range' && this.historyDateFrom && this.historyDateTo)) {
             this.getStockHistory();
         }
     }

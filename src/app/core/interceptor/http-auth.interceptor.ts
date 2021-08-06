@@ -43,6 +43,7 @@ export class AuthInterceptor implements HttpInterceptor {
                         this.toastService.showToaster({
                             title: 'Session Expired', message: 'Please login to continue!', type: 'error'
                         });
+                        document.getElementById('Close-All').click();
                         this.storageService.removeItem(localStorageKeys.session);
                         this.storageService.removeItem(localStorageKeys.distributor);
                         this.router.navigateByUrl('/login');

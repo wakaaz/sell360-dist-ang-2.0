@@ -118,4 +118,12 @@ export class AppComponent {
     this.router.navigateByUrl('/login');
   }
 
+  closeEverything(): void {
+    const modal  = document.querySelector('div.modal');
+    if (modal) {
+      const closeButton = modal.querySelector('button.close');
+      (closeButton as HTMLButtonElement).click();
+    }
+  }
+
 }

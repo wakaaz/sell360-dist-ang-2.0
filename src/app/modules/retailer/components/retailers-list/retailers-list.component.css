@@ -70,5 +70,5 @@
 .CL-Product .fa { position: absolute;top: 8px;left: 8px;color: #b5b5b5;}
 ._cust_filter {float: left; margin-bottom: 15px; width: 29%; padding-right: 10px;}
 ._cust_filter ng-select {border-radius: 0;height: 32px;}
-.ng-select .ng-select-container {border-radius: 0;height: 32px !important; min-height: 32px !important;line-height: 19px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
+.ng-select .ng-select-container {background: #fff !important;border-radius: 0;height: 32px !important; min-height: 32px !important;line-height: 19px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
 .dataTable .btn-default, .smBTN {color: #fff;}

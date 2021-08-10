@@ -1,31 +1,34 @@
-<!-- Unit and Quantity of Products -->
-<div class="modal fade dont-close-products" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<!-- Unit, Quantity and Trade Offer of Products -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content  top_border">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Promotion <span> Detail</span></h5>
-                <button type="button" class="close dont-close-products" data-dismiss="modal" aria-label="Close"> <span
-                        aria-hidden="true">&times;</span> </button>
+                <button type="button" class="close" data-dismiss="modal" (click)="closeQuantityModal()"
+                    aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
             </div>
-            <div class="modal-body AddDetailPR">
+            <div *ngIf="selectedProduct.hasOwnProperty('quantity')" class="modal-body AddDetailPR">
                 <div class="row">
                     <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
                     <div class="col-md-8 mb-15">
-                        <input type="text" class="dont-close-products form-control" placeholder="" style="font-size:13px">
+                        <input type="text" class="form-control" placeholder="" (keyup)="setQuantity()"
+                            (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.quantity"
+                            style="font-size:13px">
                     </div>
                     <div class="col-md-4 pt-7 mb-15">Select Unit:</div>
                     <div class="col-md-8 mb-15">
-                        <select class="custom-select custom-select-sm dont-close-products">
-                            <option>Select Unit</option>
-                            <option>Piece</option>
-                            <option>Box</option>
+                        <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
+                            (change)="setPrefrence($event.target.value)">
+                            <option [value]="null">Select Unit</option>
+                            <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
+                            </option>
                         </select>
                     </div>
                     <div class="col-md-4" style="padding-top: 2px">Trade Offer:</div>
                     <div class="col-md-8">
                         <div class="custom-control custom-radio">
-                            <input class="custom-control-input dont-close-products" type="radio" name="AssignCatalogue" id="byTerritory"
+                            <input class="custom-control-input" type="radio" name="AssignCatalogue" id="byTerritory"
                                 value=''>
                             <label class="custom-control-label font13" for="byTerritory"
                                 style="line-height:25px;">12+1</label>
@@ -34,8 +37,9 @@
                 </div>
             </div>
             <div class="modal-footer border-0" style="background-color: #f6f6f6">
-                <button type="button" class="btn btn-primary dont-close-products">Confirm</button>
-                <button type="submit" class="btn btn-cancel dont-close-products" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="submit" class="btn btn-primary" (click)="addProductToOrder()">Confirm</button>
+                <button type="button" id="pl-qty-close" class="btn btn-cancel" data-dismiss="modal"
+                    (click)="closeQuantityModal()" aria-label="Close">Cancel</button>
             </div>
         </div>
     </div>
@@ -46,14 +50,14 @@
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content top_border">
-            <div class="modal-header">
+            <div *ngIf="!isCredit" class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add <span> Cheque Information</span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
-            <div class="col-12">
+            <div *ngIf="!isCredit" class="col-12">
                 <div id="floating-label" class="form-wrap p-0">
                     <div class="row pt-10">
                         <div class="col-4">
@@ -101,16 +105,14 @@
                     </div>
                 </div>
             </div>
-
-            <br><br><br>Add credit information section below---------<br><br><br>
-            <div class="modal-header">
+            <div *ngIf="isCredit" class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add <span> Add Credit Information</span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
 
-            <div id="floating-label" class="form-wrap p-0">
+            <div *ngIf="isCredit" id="floating-label" class="form-wrap p-0">
                 <div class="col-12">
                     <div class="row pt-10">
                         <div class="col-6">
@@ -147,13 +149,15 @@
 </div>
 
 <!-- Products Listing -->
-<div id="product-cl-sec" (clickOutside)="clickedOutSide($event)" [ngClass]="showProducts ? 'active' : ''"> <a id="pl-close" (click)="closeProductsList()" class="close-btn-pl"></a>
+<div id="product-cl-sec" [ngClass]="showProducts ? 'active' : ''"> <a id="pl-close" (click)="closeProductsList()"
+        class="close-btn-pl"></a>
     <div class="pro-header-text">Add <span>Product</span></div>
     <div class="se_cus-type form-wrap p-15">
         <div class="row">
             <div class="col-12">
                 <div class="productSearch"><i class="fa fa-search"></i>
-                    <input type="text" class="form-control" id="" placeholder="Search">
+                    <input type="text" class="form-control" id="" [(ngModel)]="productSearchText"
+                        (keyup)="searchProduct()" placeholder="Search">
                 </div>
             </div>
         </div>
@@ -166,199 +170,33 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="card top_border p-15">
-                                    <table class="AddProductTable" width="100%">
+                                    <table *ngIf="!loadingProducts" class="AddProductTable" width="100%">
                                         <tbody>
-                                            <tr>
-                                                <td width="80%">
-                                                    <div class="ProListDiv">
-
-                                                        <img class="PrList_img" src="assets/images/product-img-005.jpg"
-                                                            alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
+                                            <tr *ngFor="let product of dispProducts; let i=index">
                                                 <td>
                                                     <div class="ProListDiv">
-                                                        <div class="lab-promotion">Promotion title here</div>
-                                                        <img class="PrList_img" src="assets/images/product-img-005.jpg"
-                                                            alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
+                                                        <div *ngIf="product.promo" class="lab-promotion">
+                                                            {{product.promo}}</div>
+                                                        <img class="PrList_img" src="{{product.thumbnail}}" alt="" />
+                                                        <div class="PR_Name">{{product.item_name}}</div>
                                                     </div>
                                                 </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default red-bg mb-0">Remove</button></td>
-                                            </tr>
-                                            <tr>
                                                 <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
+                                                    <button *ngIf="isAlreadyAdded(product.item_id); else notAdded"
+                                                        class="btn btn-default red-bg mb-0"
+                                                        (click)="removeProductFromOrder(product)">Remove</button>
+                                                    <ng-template #notAdded>
+                                                        <button data-toggle="modal" data-target="#exampleModal"
+                                                            class="btn btn-default mb-0"
+                                                            (click)="openQuantityModal(product)">Add</button>
+                                                    </ng-template>
                                                 </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv">
-                                                        <div class="lab-promotion">Promotion title here</div>
-                                                        <img class="PrList_img" src="assets/images/product-img-005.jpg"
-                                                            alt="" />
-                                                        <div class="PR_Name">Scent Dive Perfumed Telcum PowderScent Dive
-                                                            Perfumed Telcum Powder</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td width="80%">
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default red-bg mb-0">Remove</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">Scent Dive Perfumed Telcum PowderScent Dive
-                                                            Perfumed Telcum Powder</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td width="80%">
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default red-bg mb-0">Remove</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">Scent Dive Perfumed Telcum PowderScent Dive
-                                                            Perfumed Telcum Powder</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="assets/images/product-img-005.jpg" alt="" />
-                                                        <div class="PR_Name">3D CAR RALLY</div>
-                                                    </div>
-                                                </td>
-                                                <td><button data-toggle="modal" data-target="#exampleModal"
-                                                        class="btn btn-default mb-0">Add</button></td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <div class="col-md-12 loader" *ngIf="loadingProducts">
+                                        <h2 class="loading">Loading Products...</h2>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -368,8 +206,9 @@
         </div>
     </div>
     <div class="_cl-bottom">
-        <button type="submit" class="btn btn-primary mr-2">Add</button>
-        <button id="pl-close" type="butotn" (click)="closeProductsList()" class="btn btn-cancel mr-2">Cancel</button>
+        <!-- <button type="submit" class="btn btn-primary mr-2">Add</button> -->
+        <button id="pl-prod-close" type="butotn" (click)="closeProductsList()"
+            class="btn btn-cancel mr-2">Cancel</button>
     </div>
 </div>
 
@@ -392,35 +231,36 @@
                         <div class="row">
                             <div class="_sa-customer">
                                 <div class="form-s2">
-                                    <select class="form-control formselect" placeholder="Select Employee">
-                                        <option>Select Employee</option>
-                                        <option>Employee 1</option>
-                                        <option>Employee 2</option>
-                                    </select>
+                                    <ng-select [multiple]="false" class="formselect" placeholder="Select Employee">
+                                        <ng-option>Select Employee</ng-option>
+                                        <ng-option>Employee 1</ng-option>
+                                        <ng-option>Employee 2</ng-option>
+                                    </ng-select>
                                 </div>
                             </div>
 
                             <div class="_sa-customer">
                                 <div class="form-s2">
-                                    <select class="form-control formselect" placeholder="Select Route">
-                                        <option>Select Route</option>
-                                        <option>Route 1</option>
-                                        <option>Route 2</option>
-                                    </select>
+                                    <ng-select [multiple]="false" class="formselect" placeholder="Select Route">
+                                        <ng-option>Select Route</ng-option>
+                                        <ng-option>Route 1</ng-option>
+                                        <ng-option>Route 2</ng-option>
+                                    </ng-select>
                                 </div>
                             </div>
 
                             <div class="_sa-customer">
                                 <div class="form-s2">
-                                    <select class="form-control formselect" placeholder="Select Retailer">
-                                        <option>Select Retailer</option>
-                                        <option>Retailer 1</option>
-                                        <option>Retailer 2</option>
-                                    </select>
+                                    <ng-select [multiple]="false" class="formselect" placeholder="Select Retailer">
+                                        <ng-option>Select Retailer</ng-option>
+                                        <ng-option>Retailer 1</ng-option>
+                                        <ng-option>Retailer 2</ng-option>
+                                    </ng-select>
                                 </div>
                             </div>
 
-                            <button id="productlist01" (click)="showProductsList($event)" class="btn btn-primary ml-15">Add Product</button>
+                            <button id="productlist01" (click)="showProductsList($event)"
+                                class="btn btn-primary ml-15">Add Product</button>
 
                         </div>
 
@@ -452,87 +292,95 @@
                             </div>
 
 
-                            <div class="row _row-product">
+                            <div *ngFor="let product of selectedProducts;" class="row _row-product">
                                 <a href="#" class="dd-handle dd3-handle swap-div"></a>
 
                                 <div class="col-12 p-0">
                                     <div class="addItemCell PL-5">
                                         <div class="_emp-sele _product-name">
-                                            B.B. Dal Chana Rs10 (12X24) [ZOOPLAY]
+                                            {{product.item_name}}
                                         </div>
                                     </div>
 
                                     <div class="addItemCell unit-w">
                                         <div class="_emp-sele _addProduct">
-                                            <select class="form-control formselect" placeholder="select Product"
-                                                data-allow_clear="1">
-                                                <option>Select Unit</option>
-                                                <option>box</option>
-                                            </select>
+                                            <ng-select [multiple]="false" class="formselect"
+                                                [(ngModel)]="product.pref_id" (change)="setPrefrence($event)">
+                                                <ng-option [value]="null">Select Unit</ng-option>
+                                                <ng-option [value]="product.pref_id" *ngFor="let unit of product.units">
+                                                    {{unit.unit_name}}</ng-option>
+                                            </ng-select>
                                         </div>
                                     </div>
 
-                                    <div class="addItemCell2 _h25"><input type="text" placeholder="0"
-                                            style="font-size: 13px"></div>
-                                    <div class="addItemCell2 _h25">0.00</div>
-                                    <div class="addItemCell2 _h25">0.00</div>
-                                    <div class="addItemCell2 _h25">0.00</div>
-                                    <div class="addItemCell2 _h25">0.00</div>
-                                    <div class="addItemCell2 _h25"><input type="text" placeholder="0"
-                                            style="font-size: 13px"></div>
-                                    <div class="addItemCell2 _h25">35.25</div>
-                                    <div class="addItemCell3 _h25">0.00</div>
-                                    <a href="#" class="btn _order-del" title="Delete"><i
-                                            class="fa fa-trash-alt"></i></a>
+                                    <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
+                                            (keyup)="setQuantity()" (keydown)="isNumber($event, 'quantity')"
+                                            placeholder="0" [(ngModel)]="product.quantity" style="font-size: 13px">
+                                    </div>
+                                    <div class="addItemCell2 _h25">{{product.item_trade_price}}</div>
+                                    <div class="addItemCell2 _h25">{{product.trade_offer || 0.00}}</div>
+                                    <div class="addItemCell2 _h25">{{product.trade_discount || 0.00}}</div>
+                                    <div class="addItemCell2 _h25">{{product.special_discount || 0.00}}</div>
+                                    <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
+                                            placeholder="0" [(ngModel)]="product.extra_discount"
+                                            (keydown)="isNumber($event)" style="font-size: 13px"></div>
+                                    <div class="addItemCell2 _h25">{{product.tax || 0.00}}</div>
+                                    <div class="addItemCell3 _h25">{{product.net_amount || 0.00}}</div>
+                                    <a (click)="removeProductFromOrder(product)" class="btn _order-del"
+                                        title="Delete"><i class="fa fa-trash-alt"></i></a>
                                 </div>
                             </div>
-
                             <div class="row _row-product">
                                 <a href="#" class="dd-handle dd3-handle swap-div"></a>
 
                                 <div class="col-12 p-0">
                                     <div class="addItemCell PL-5">
                                         <div class="_emp-sele _product-name">
-                                            <div class="lab-promotion-l">Promotion title here</div>
                                             B.B. Dal Chana Rs10 (12X24) [ZOOPLAY]
                                         </div>
                                     </div>
 
                                     <div class="addItemCell unit-w">
                                         <div class="_emp-sele _addProduct">
-                                            <select class="form-control formselect" placeholder="select Product"
+                                            <ng-select class="formselect" placeholder="Select Unit"
                                                 data-allow_clear="1">
-                                                <option>Select Unit</option>
-                                                <option>box</option>
-                                            </select>
+                                                <ng-option>Select Unit</ng-option>
+                                                <ng-option>box</ng-option>
+                                            </ng-select>
                                         </div>
                                     </div>
 
-                                    <div class="addItemCell2 _h25"><input type="text" placeholder="0"
-                                            style="font-size: 13px"></div>
+                                    <div class="addItemCell2 _h25"><input type="text" class="addItemCell2_input"
+                                            placeholder="0" style="font-size: 13px"></div>
                                     <div class="addItemCell2 _h25">0.00</div>
                                     <div class="addItemCell2 _h25">0.00</div>
                                     <div class="addItemCell2 _h25">0.00</div>
                                     <div class="addItemCell2 _h25">0.00</div>
-                                    <div class="addItemCell2 _h25"><input type="text" placeholder="0"
-                                            style="font-size: 13px"></div>
+                                    <div class="addItemCell2 _h25"><input type="text" class="addItemCell2_input"
+                                            placeholder="0" style="font-size: 13px"></div>
                                     <div class="addItemCell2 _h25">35.25</div>
                                     <div class="addItemCell3 _h25">0.00</div>
                                     <a href="#" class="btn _order-del" title="Delete"><i
                                             class="fa fa-trash-alt"></i></a>
                                 </div>
+
+
+                            </div>
+
+                            <div *ngIf="!selectedProducts.length" class="row _row-product">
+                                <h6 class="no-data">Add products to counter sale...</h6>
                             </div>
 
                             <div class="row _totalBar _totalBar2">
                                 <div class="addItemCell _h25 PL-5">Total Items</div>
-                                <div class="addItemCell _h25 unit-w">0</div>
+                                <div class="addItemCell _h25 unit-w">{{selectedProducts.length}}</div>
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25 width-t">Gross Amount:</div>
-                                <div class="addItemCell3 _h25">0.00</div>
+                                <div class="addItemCell3 _h25">{{grossAmount | number: '1.2-2'}}</div>
                             </div>
 
                             <div class="row _totalBar2">
@@ -544,7 +392,7 @@
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25 width-t">Trade Offer:</div>
-                                <div class="addItemCell3 _h25">0.00</div>
+                                <div class="addItemCell3 _h25">{{tradeOffer | number: '1.2-2'}}</div>
                             </div>
 
                             <div class="row _totalBar2">
@@ -556,7 +404,7 @@
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25 width-t">Trade Discount:</div>
-                                <div class="addItemCell3 _h25">0.00</div>
+                                <div class="addItemCell3 _h25">{{tradeDiscount | number: '1.2-2'}}</div>
                             </div>
 
                             <div class="row _totalBar2">
@@ -569,7 +417,7 @@
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25 width-t">Special Discount:</div>
 
-                                <div class="addItemCell3 _h25">0.00</div>
+                                <div class="addItemCell3 _h25">{{specialDiscount | number: '1.2-2'}}</div>
                             </div>
 
 
@@ -583,7 +431,7 @@
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25 width-t">Extra Discount:</div>
 
-                                <div class="addItemCell3 _h25">0.00</div>
+                                <div class="addItemCell3 _h25">{{extraDiscount | number: '1.2-2'}}</div>
                             </div>
 
                             <div class="row _totalBar2">
@@ -596,7 +444,7 @@
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25 width-t">Tax:</div>
 
-                                <div class="addItemCell3 _h25">5.45</div>
+                                <div class="addItemCell3 _h25">{{tax | number: '1.2-2'}}</div>
                             </div>
 
                             <div class="row _totalBar2">
@@ -609,7 +457,8 @@
                                 <div class="addItemCell2 _h25"></div>
                                 <div class="addItemCell2 _h25 width-t"><strong>Total Amount Due:</strong></div>
 
-                                <div class="addItemCell3 _h25" style="font-size: 18px; color: #0038ba">4541.00
+                                <div class="addItemCell3 _h25" style="font-size: 18px; color: #0038ba">
+                                    {{dueAmount | number: '1.2-2'}}
                                 </div>
                             </div>
                             <div class="row _notesTER">
@@ -630,9 +479,11 @@
                     <button type="submit" class="btn btn-cancel mr-2" (click)="goBack()">Cancel</button>
                     <button class="btn btn-primary">Save Order</button>
 
-                    <button class="btn btn-primary float-left mr-2" data-toggle="modal" data-target="#exampleModal2">Add
+                    <button class="btn btn-primary float-left mr-2" (click)="isCredit = false;" data-toggle="modal"
+                        data-target="#exampleModal2">Add
                         Cheque</button>
-                    <button class="btn btn-primary float-left" data-toggle="modal" data-target="#exampleModal2">Add
+                    <button class="btn btn-primary float-left" (click)="isCredit = true;" data-toggle="modal"
+                        data-target="#exampleModal2">Add
                         Credit</button>
                 </div>
             </div>

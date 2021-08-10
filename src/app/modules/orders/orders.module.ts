@@ -18,6 +18,8 @@ import { CounterSaleComponent } from './components/counter-sale/counter-sale.com
 import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
 import { CompletedOrdersDetailComponent } from './components/completed-orders-detail/completed-orders-detail.component';
 
+import { OrdersService } from './services/orders.service';
+
 @NgModule({
   imports: [
     CommonModule,
@@ -38,6 +40,9 @@ import { CompletedOrdersDetailComponent } from './components/completed-orders-de
       CounterSaleComponent,
       BookingVsExecutionComponent,
       CompletedOrdersDetailComponent,
-    ]
+    ],
+    providers: [
+      OrdersService
+    ],
 })
 export class OrderModule { }

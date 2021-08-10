@@ -312,11 +312,7 @@
                                                                     [value]="pref.pref_id">{{pref.unit_name}}</option>
                                                             </select>
                                                         </td>
-                                                        <td [hidden]="showFreeProducts"><input placeholder="0" class="itemQTY"
-                                                                (keydown)="isNumber($event, 'qty')" name="purchase-qty" type="number" min="1"
-                                                                (keyup)="getUnitPrice(product)"
-                                                                [(ngModel)]="product.quantity"></td>
-                                                        <td [hidden]="!showFreeProducts"><input placeholder="0" class="itemQTY"
+                                                        <td><input placeholder="0" class="itemQTY"
                                                                 (keydown)="isNumber($event, 'qty')" name="free-qty" type="number" min="1"
                                                                 (keyup)="getUnitPrice(product, true)"
                                                                 [(ngModel)]="product.quantity"></td>

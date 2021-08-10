@@ -6,6 +6,7 @@ export const API_URLS = {
     DASHBOARD: '/dashboard',
 
     // Orders
+    COUNTER_SALE_DATA: '/counterSaleData',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

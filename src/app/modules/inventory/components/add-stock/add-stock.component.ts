@@ -71,6 +71,8 @@ export class AddStockComponent implements OnInit {
     isNumber(event: KeyboardEvent): boolean {
         if (event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete')) {
             return true;
+        } else if (event.key.trim() === '') {
+            return false;
         }
         return !isNaN(Number(event.key));
     }

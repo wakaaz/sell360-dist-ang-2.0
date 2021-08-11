@@ -6,6 +6,7 @@ import { OrdersRoutingModule } from './orders-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DataTablesModule } from 'angular-datatables';
 import { ClickOutsideModule } from 'ng-click-outside';
+import { SharedModule } from '../shared/shared.module';
 
 import { OrdersComponent } from './orders.component';
 import { OrdersListComponent } from './components/orders-list/orders-list.component';
@@ -27,6 +28,7 @@ import { OrdersService } from './services/orders.service';
     FormsModule,
     ClickOutsideModule,
     NgSelectModule,
+    SharedModule,
     DataTablesModule,
   ],
   declarations: [

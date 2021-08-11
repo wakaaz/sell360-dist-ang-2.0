@@ -218,6 +218,8 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         if (event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
             (type === 'charges' && event.key.includes('.'))) {
             return true;
+        } else if (event.key.trim() === '') {
+            return false;
         }
         return !isNaN(Number(event.key));
     }

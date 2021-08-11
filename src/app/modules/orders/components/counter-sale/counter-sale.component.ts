@@ -121,8 +121,10 @@ export class CounterSaleComponent implements OnInit {
         if (event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
             (type === 'charges' && event.key.includes('.'))) {
             return true;
+        } else if (event.key.trim() === '') {
+            return false;
         }
-        return !isNaN(Number(event.key));
+        return !isNaN(Number(event.key.trim()));
     }
 
     setQuantity(): void {
@@ -148,9 +150,11 @@ export class CounterSaleComponent implements OnInit {
         this.selectedProductsIds = this.selectedProductsIds.filter(x => x !== product.item_id);
     }
 
-    closeQuantityModal(): void {
-        this.showQuantityModal = false;
-        this.selectedProduct = JSON.parse(JSON.stringify({}));
+    closeQuantityModal(event: Event): void {
+        if (this.showQuantityModal && !(event.target as HTMLElement).classList.contains('dont-close-quantity')) {
+            this.showQuantityModal = false;
+            this.selectedProduct = JSON.parse(JSON.stringify({}));
+        }
     }
 
     searchProduct(): void {
@@ -168,7 +172,7 @@ export class CounterSaleComponent implements OnInit {
     }
 
     clickedOutSide(event: Event): void {
-        if (this.showProducts && !this.showQuantityModal) {
+        if (this.showProducts && !this.showQuantityModal && !(event.target as HTMLElement).classList.contains('dont-close-products')) {
             this.closeProductsList();
         }
     }

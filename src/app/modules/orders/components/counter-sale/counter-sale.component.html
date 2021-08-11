@@ -1,11 +1,11 @@
 <!-- Unit, Quantity and Trade Offer of Products -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" (clickOutside)="closeQuantityModal($event)" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content  top_border">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Promotion <span> Detail</span></h5>
-                <button type="button" class="close" data-dismiss="modal" (click)="closeQuantityModal()"
+                <button type="button" class="close" data-dismiss="modal" (click)="closeQuantityModal($event)"
                     aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
             </div>
             <div *ngIf="selectedProduct.hasOwnProperty('quantity')" class="modal-body AddDetailPR">
@@ -37,9 +37,9 @@
                 </div>
             </div>
             <div class="modal-footer border-0" style="background-color: #f6f6f6">
-                <button type="submit" class="btn btn-primary" (click)="addProductToOrder()">Confirm</button>
-                <button type="button" id="pl-qty-close" class="btn btn-cancel" data-dismiss="modal"
-                    (click)="closeQuantityModal()" aria-label="Close">Cancel</button>
+                <button type="submit" class="btn btn-primary dont-close-products" (click)="addProductToOrder()">Confirm</button>
+                <button type="button" id="pl-qty-close" class="btn btn-cancel dont-close-products" data-dismiss="modal"
+                    (click)="closeQuantityModal($event)" aria-label="Close">Cancel</button>
             </div>
         </div>
     </div>
@@ -149,7 +149,7 @@
 </div>
 
 <!-- Products Listing -->
-<div id="product-cl-sec" [ngClass]="showProducts ? 'active' : ''"> <a id="pl-close" (click)="closeProductsList()"
+<div id="product-cl-sec" (clickOutside)="clickedOutSide($event)" [ngClass]="showProducts ? 'active' : ''"> <a id="pl-close" (click)="closeProductsList()"
         class="close-btn-pl"></a>
     <div class="pro-header-text">Add <span>Product</span></div>
     <div class="se_cus-type form-wrap p-15">
@@ -187,7 +187,7 @@
                                                         (click)="removeProductFromOrder(product)">Remove</button>
                                                     <ng-template #notAdded>
                                                         <button data-toggle="modal" data-target="#exampleModal"
-                                                            class="btn btn-default mb-0"
+                                                            class="btn btn-default mb-0 dont-close-quantity"
                                                             (click)="openQuantityModal(product)">Add</button>
                                                     </ng-template>
                                                 </td>

@@ -46,4 +46,5 @@
 .loader { text-align: center; padding: 30px; }
 .loading { color: #b5b5b5; font-size: 24px; margin: 0 auto;}
 .ng-select .ng-clear-wrapper {display: none;}
+.custom-control-label {text-transform: capitalize;}
 .no-data {width: 100%; color: rgb(168, 154, 154); font-size: 20px; text-align: center;}

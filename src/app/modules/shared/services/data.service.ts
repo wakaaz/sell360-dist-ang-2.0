@@ -25,6 +25,21 @@ export class DataService {
         }
     }
 
+    getSchemes(itemId: number, unitId: number, prefId: number, schemes: Array<any>): Array<any> {
+        const productSchemes = schemes.filter(scheme => {
+            let productFound = [];
+            productFound = scheme.items.filter(item => {
+                if (item.item_id === itemId && item.unit_id === unitId && item.pref_id === +prefId) {
+                    return item;
+                }
+            });
+            if (productFound.length) {
+                return scheme;
+            }
+        });
+        return productSchemes;
+    }
+
     /**
      * Get the total scheme discount to be applied on the item selected
      * @param itemTradePrice trade price of the item

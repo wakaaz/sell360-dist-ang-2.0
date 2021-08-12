@@ -1,6 +1,6 @@
 <!-- Unit, Quantity and Trade Offer of Products -->
-<div class="modal fade" (clickOutside)="closeQuantityModal($event)" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" (clickOutside)="closeQuantityModal($event)" id="exampleModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content  top_border">
             <div class="modal-header">
@@ -12,32 +12,37 @@
                 <div class="row">
                     <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
                     <div class="col-md-8 mb-15">
-                        <input type="text" class="form-control" placeholder="" (keyup)="setQuantity()"
+                        <input type="text" class="form-control" placeholder="" (keyup)="setQuantity(selectedProduct)"
                             (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.quantity"
                             style="font-size:13px">
                     </div>
                     <div class="col-md-4 pt-7 mb-15">Select Unit:</div>
                     <div class="col-md-8 mb-15">
                         <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
-                            (change)="setPrefrence($event.target.value)">
-                            <option [value]="null">Select Unit</option>
+                            (change)="setPrefrence($event.target.value, selectedProduct)">
+                            <option [value]="null" disbaled>Select Unit</option>
                             <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
                             </option>
                         </select>
                     </div>
-                    <div class="col-md-4" style="padding-top: 2px">Trade Offer:</div>
+                    <div class="col-md-4" *ngIf="selectedProduct.schemes.length" style="padding-top: 2px">Trade Offer:
+                    </div>
                     <div class="col-md-8">
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" name="AssignCatalogue" id="byTerritory"
-                                value=''>
-                            <label class="custom-control-label font13" for="byTerritory"
-                                style="line-height:25px;">12+1</label>
+                        <div *ngFor="let scheme of selectedProduct.schemes;let i=index">
+                            <div class="custom-control custom-radio">
+                                <input [(ngModel)]="selectedProduct.scheme" class="custom-control-input" type="radio"
+                                    name="AssignCatalogue" id="byTerritory-{{i}}" [value]="scheme">
+                                <label class="custom-control-label font13" for="byTerritory-{{i}}"
+                                    style="line-height:25px;">{{scheme.name}}{{scheme.rule_name ? ' - ' +
+                                    scheme.rule_name : ''}}</label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer border-0" style="background-color: #f6f6f6">
-                <button type="submit" class="btn btn-primary dont-close-products" (click)="addProductToOrder()">Confirm</button>
+                <button type="submit" class="btn btn-primary dont-close-products"
+                    (click)="addProductToOrder()">Confirm</button>
                 <button type="button" id="pl-qty-close" class="btn btn-cancel dont-close-products" data-dismiss="modal"
                     (click)="closeQuantityModal($event)" aria-label="Close">Cancel</button>
             </div>
@@ -149,8 +154,8 @@
 </div>
 
 <!-- Products Listing -->
-<div id="product-cl-sec" (clickOutside)="clickedOutSide($event)" [ngClass]="showProducts ? 'active' : ''"> <a id="pl-close" (click)="closeProductsList()"
-        class="close-btn-pl"></a>
+<div id="product-cl-sec" (clickOutside)="clickedOutSide($event)" [ngClass]="showProducts ? 'active' : ''"> <a
+        id="pl-close" (click)="closeProductsList()" class="close-btn-pl"></a>
     <div class="pro-header-text">Add <span>Product</span></div>
     <div class="se_cus-type form-wrap p-15">
         <div class="row">
@@ -231,30 +236,36 @@
                         <div class="row">
                             <div class="_sa-customer">
                                 <div class="form-s2">
-                                    <ng-select [multiple]="false" class="formselect" placeholder="Select Employee">
-                                        <ng-option>Select Employee</ng-option>
-                                        <ng-option>Employee 1</ng-option>
-                                        <ng-option>Employee 2</ng-option>
+                                    <ng-select [multiple]="false" class="formselect" [(ngModel)]="selectedEmployee"
+                                        (change)="getRoutes()" placeholder="Select Employee">
+                                        <ng-option disabled>Select Employee</ng-option>
+                                        <ng-option *ngFor="let orderBooker of orderBookers"
+                                            [value]="orderBooker.employee_id">{{orderBooker.employee_first_name +' '+
+                                            orderBooker.employee_last_name}}</ng-option>
                                     </ng-select>
                                 </div>
                             </div>
 
                             <div class="_sa-customer">
                                 <div class="form-s2">
-                                    <ng-select [multiple]="false" class="formselect" placeholder="Select Route">
-                                        <ng-option>Select Route</ng-option>
-                                        <ng-option>Route 1</ng-option>
-                                        <ng-option>Route 2</ng-option>
+                                    <ng-select [multiple]="false" class="formselect" [(ngModel)]="selectedRoute"
+                                        (change)="getRetailerByRoute()" placeholder="Select Route">
+                                        <ng-option *ngIf="!selectedEmployee" disabled>Select Employee First</ng-option>
+                                        <ng-option *ngIf="selectedEmployee" disabled>Select Route</ng-option>
+                                        <ng-option *ngFor="let route of routes" [value]="route.route_id">{{route.name}}
+                                        </ng-option>
                                     </ng-select>
                                 </div>
                             </div>
 
                             <div class="_sa-customer">
                                 <div class="form-s2">
-                                    <ng-select [multiple]="false" class="formselect" placeholder="Select Retailer">
-                                        <ng-option>Select Retailer</ng-option>
-                                        <ng-option>Retailer 1</ng-option>
-                                        <ng-option>Retailer 2</ng-option>
+                                    <ng-select [multiple]="false" class="formselect" [(ngModel)]="selectedRetailer"
+                                        placeholder="Select Retailer">
+                                        <ng-option disabled *ngIf="!selectedRoute">Select Route First</ng-option>
+                                        <ng-option disabled *ngIf="selectedRoute">Select Retailer</ng-option>
+                                        <ng-option *ngFor="let retailer of retailers" [value]="retailer">
+                                            {{retailer.retailer_name}}</ng-option>
                                     </ng-select>
                                 </div>
                             </div>
@@ -266,13 +277,15 @@
 
                         <div class="_cut-detail">
                             <div class="row">
-                                <div class="col-md-6"><strong>Retailer Name: &nbsp; </strong> Dow 1 canteen
+                                <div class="col-md-6"><strong>Retailer Name: &nbsp; </strong>
+                                    {{selectedRetailer?.retailer_name || '--'}}
                                 </div>
-                                <div class="col-md-6"><strong>Channel Type: &nbsp; </strong> Institutional
-                                    Canteens</div>
-                                <div class="col-md-6"><strong>Location: &nbsp; </strong> karachi University to
-                                    okhai</div>
-                                <div class="col-md-6"><strong>Territory: &nbsp; </strong> Territory here</div>
+                                <div class="col-md-6"><strong>Channel Type: &nbsp; </strong> {{selectedRetailer?.type ||
+                                    '--'}}</div>
+                                <div class="col-md-6"><strong>Location: &nbsp; </strong> {{selectedRetailer?.loc ||
+                                    '--'}}</div>
+                                <div class="col-md-6"><strong>Territory: &nbsp; </strong> {{selectedRetailer?.territory
+                                    || '--'}}</div>
                             </div>
                         </div>
 
@@ -305,16 +318,16 @@
                                     <div class="addItemCell unit-w">
                                         <div class="_emp-sele _addProduct">
                                             <ng-select [multiple]="false" class="formselect"
-                                                [(ngModel)]="product.pref_id" (change)="setPrefrence($event)">
-                                                <ng-option [value]="null">Select Unit</ng-option>
-                                                <ng-option [value]="product.pref_id" *ngFor="let unit of product.units">
+                                                [(ngModel)]="product.pref_id" (change)="setPrefrence($event, product)">
+                                                <ng-option [value]="null" disabled>Select Unit</ng-option>
+                                                <ng-option *ngFor="let unit of product.units" value="{{unit.pref_id}}">
                                                     {{unit.unit_name}}</ng-option>
                                             </ng-select>
                                         </div>
                                     </div>
 
                                     <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
-                                            (keyup)="setQuantity()" (keydown)="isNumber($event, 'quantity')"
+                                            (keyup)="setQuantity(product)" (keydown)="isNumber($event, 'quantity')"
                                             placeholder="0" [(ngModel)]="product.quantity" style="font-size: 13px">
                                     </div>
                                     <div class="addItemCell2 _h25">{{product.item_trade_price}}</div>
@@ -329,42 +342,6 @@
                                     <a (click)="removeProductFromOrder(product)" class="btn _order-del"
                                         title="Delete"><i class="fa fa-trash-alt"></i></a>
                                 </div>
-                            </div>
-                            <div class="row _row-product">
-                                <a href="#" class="dd-handle dd3-handle swap-div"></a>
-
-                                <div class="col-12 p-0">
-                                    <div class="addItemCell PL-5">
-                                        <div class="_emp-sele _product-name">
-                                            B.B. Dal Chana Rs10 (12X24) [ZOOPLAY]
-                                        </div>
-                                    </div>
-
-                                    <div class="addItemCell unit-w">
-                                        <div class="_emp-sele _addProduct">
-                                            <ng-select class="formselect" placeholder="Select Unit"
-                                                data-allow_clear="1">
-                                                <ng-option>Select Unit</ng-option>
-                                                <ng-option>box</ng-option>
-                                            </ng-select>
-                                        </div>
-                                    </div>
-
-                                    <div class="addItemCell2 _h25"><input type="text" class="addItemCell2_input"
-                                            placeholder="0" style="font-size: 13px"></div>
-                                    <div class="addItemCell2 _h25">0.00</div>
-                                    <div class="addItemCell2 _h25">0.00</div>
-                                    <div class="addItemCell2 _h25">0.00</div>
-                                    <div class="addItemCell2 _h25">0.00</div>
-                                    <div class="addItemCell2 _h25"><input type="text" class="addItemCell2_input"
-                                            placeholder="0" style="font-size: 13px"></div>
-                                    <div class="addItemCell2 _h25">35.25</div>
-                                    <div class="addItemCell3 _h25">0.00</div>
-                                    <a href="#" class="btn _order-del" title="Delete"><i
-                                            class="fa fa-trash-alt"></i></a>
-                                </div>
-
-
                             </div>
 
                             <div *ngIf="!selectedProducts.length" class="row _row-product">

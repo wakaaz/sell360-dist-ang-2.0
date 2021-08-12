@@ -7,6 +7,10 @@ export const API_URLS = {
 
     // Orders
     COUNTER_SALE_DATA: '/counterSaleData',
+    GET_SCHEMES: '/getSchemesDiscount',
+    GET_EMPLOYEES: '/getEmployees',
+    GET_EMPLOYEE_ROUTES: '/getEmployeeRoutes',
+    GET_RETAILERS_BY_ROUTE: '/getRetailersByRoute',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

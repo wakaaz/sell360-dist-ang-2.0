@@ -2,6 +2,8 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { OrdersService } from '../../services/orders.service';
 import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
 import { DataService } from '../../../shared/services/data.service';
+import { LocalStorageService } from 'src/app/core/services/storage.service';
+import { freeProductsRules, schemes } from 'src/app/core/constants/schemes.constant';
 
 @Component({
     selector: 'app-counter-sale',
@@ -24,25 +26,27 @@ export class CounterSaleComponent implements OnInit {
     extraDiscount: number;
     tax: number;
     dueAmount: number;
+    selectedEmployee: number;
+    selectedRoute: number;
 
-    selectedEmployee: string;
-    selectedRetailer: string;
-    selectedRoute: string;
     productSearchText: string;
 
     selectedProduct: any = {};
+    selectedRetailer: any;
 
     allProducts: Array<any> = [];
     dispProducts: Array<any> = [];
-    discounts: Array<any> = [];
+    specialDiscounts: Array<any> = [];
     prefrences: Array<any> = [];
-    employees: Array<any> = [];
+    orderBookers: Array<any> = [];
     routes: Array<any> = [];
     retailers: Array<any> = [];
     selectedProducts: Array<any> = [];
     selectedProductsIds: Array<any> = [];
+    schemes: Array<any> = [];
 
     constructor(
+        private storageService: LocalStorageService,
         private ordersService: OrdersService,
         private toastService: ToasterService,
         private dataService: DataService,
@@ -57,7 +61,26 @@ export class CounterSaleComponent implements OnInit {
         this.extraDiscount = 0.00;
         this.tax = 0.00;
         this.dueAmount = 0.00;
+        this.getOrderBookers();
         this.getCounterSaleData();
+        this.getSchemesData();
+    }
+
+    getOrderBookers(): void {
+        const distributor = this.storageService.getItem('distributor');
+        this.ordersService.getOrderBookers(distributor.id).subscribe(res => {
+            if (res.status === 200) {
+                this.orderBookers = res.data;
+            } else {
+                const toast: Toaster = { type: 'error', message: res.message, title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                const toast: Toaster = { type: 'error', message: 'Cannot fetch order bookers. Please try again', title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        });
     }
 
     getCounterSaleData(): void {
@@ -69,7 +92,7 @@ export class CounterSaleComponent implements OnInit {
                     pr.net_amount = 0.00;
                     return pr;
                 });
-                this.discounts = res.data.special_discount;
+                this.specialDiscounts = res.data.special_discount;
                 this.prefrences = res.data.prefs;
                 this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
             } else {
@@ -85,8 +108,56 @@ export class CounterSaleComponent implements OnInit {
         });
     }
 
+    getSchemesData(): void {
+        this.ordersService.getSchemes().subscribe(res => {
+            if (res.status === 200) {
+                this.schemes = res.data;
+            } else {
+                const toast: Toaster = { type: 'error', message: res.message, title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                const toast: Toaster = { type: 'error', message: 'Cannot fetch Trade Offers. Please try again', title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        });
+    }
+
     goBack(): void {
         window.history.back();
+    }
+
+    getRoutes(): void {
+        this.ordersService.getOrderBookerRoutes(this.selectedEmployee).subscribe(res => {
+            if (res.status === 200) {
+                this.routes = res.data;
+            } else {
+                const toast: Toaster = { type: 'error', message: res.message, title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                const toast: Toaster = { type: 'error', message: 'Cannot fetch order booker routes. Please try again', title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        });
+    }
+
+    getRetailerByRoute(): void {
+        this.ordersService.getRetailersByRoute(this.selectedRoute).subscribe(res => {
+            if (res.status === 200) {
+                this.retailers = res.data;
+            } else {
+                const toast: Toaster = { type: 'error', message: res.message, title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                const toast: Toaster = { type: 'error', message: 'Cannot fetch retailers. Please try again', title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        });
     }
 
     openQuantityModal(product: any): void {
@@ -96,6 +167,8 @@ export class CounterSaleComponent implements OnInit {
         this.selectedProduct.unit_id = null;
         this.selectedProduct.unit_name = null;
         this.selectedProduct.quantity = null;
+        this.selectedProduct.schemes = [];
+        this.selectedProduct.scheme = null;
         this.selectedProduct.units = this.prefrences.filter(x => x.item_id === product.item_id);
     }
 
@@ -107,13 +180,30 @@ export class CounterSaleComponent implements OnInit {
         document.getElementById('counter-sale').classList.add('blur-div');
     }
 
-    setPrefrence(prefId: number): void {
+    setPrefrence(prefId: number, product: any): void {
         const prefrence = this.prefrences.find(x => x.pref_id === +prefId);
-        this.selectedProduct.unit_id = prefrence.unit_id;
-        this.selectedProduct.item_trade_price = prefrence.item_trade_price;
-        this.selectedProduct.unit_name = prefrence.unit_name;
-        if (this.selectedProduct.quantity) {
-            this.calculateProductPrice();
+        product.unit_id = prefrence.unit_id;
+        product.item_trade_price = prefrence.item_trade_price;
+        product.unit_name = prefrence.unit_name;
+        product.schemes = this.dataService.getSchemes(product.item_id,
+            product.unit_id, product.pref_id, this.schemes);
+        if (product.quantity) {
+            product.schemes = product.schemes.map(scheme => {
+                switch (scheme.scheme_type) {
+                    case 'free_product':
+                        scheme.name = schemes.free_products;
+                        scheme.rule_name = freeProductsRules[scheme.scheme_rule];
+                        break;
+                    case 'dotp':
+                        scheme.name = schemes.dotp;
+                        break;
+                    default:
+                        scheme.name = schemes.gift;
+                        break;
+                }
+                return scheme;
+            });
+            this.calculateProductPrice(product);
         }
     }
 
@@ -127,15 +217,15 @@ export class CounterSaleComponent implements OnInit {
         return !isNaN(Number(event.key.trim()));
     }
 
-    setQuantity(): void {
-        if (this.selectedProduct.item_trade_price) {
-            this.calculateProductPrice();
+    setQuantity(product: any): void {
+        if (product.item_trade_price) {
+            this.calculateProductPrice(product);
         }
     }
 
-    calculateProductPrice(): void {
-        this.selectedProduct.original_amount = this.dataService.calculateUnitPrice(+this.selectedProduct.quantity,
-            this.selectedProduct.item_trade_price);
+    calculateProductPrice(product): void {
+        product.original_amount = this.dataService.calculateUnitPrice(+product.quantity,
+            product.item_trade_price);
     }
 
     addProductToOrder(): void {

@@ -12,7 +12,7 @@ export const freeProductsRules = {
 };
 
 
-/** Discount Implementation Rules */
+/** Discount Implementation Rules For Free Products */
 
 // 1. Discount on Trade Price
 /**
@@ -59,4 +59,18 @@ export const freeProductsRules = {
 /**
  * Need some discussion to clear free products scenario (Either the free products are going to be added in the UserEnteredQty
  * Or has to reduce the price of product for the free products).
+ */
+
+/** Discount On Trade Price */
+/**
+ * Check user quantity is greater than scheme mimum quantity
+ * 1. Calculate the percentage value for the give discount_on_tp from the biggest unit of the selected product
+ * 2. Calculate the scheme discount value from the percentage obtained to selected unit of the product
+ */
+
+/** Gift */
+/**
+ * Check user quantity is greater than scheme mimum quantity
+ * 1. Calculate the scheme discount by deducting the gift_value from the totalItemPrice
+ * i.e. disoucnt = item_trade_price * userQty - gift_value;
  */

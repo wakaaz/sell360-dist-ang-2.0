@@ -28,6 +28,8 @@ export class CounterSaleComponent implements OnInit {
     dueAmount: number;
     selectedEmployee: number;
     selectedRoute: number;
+    selectedRegion: number;
+    selectedSegment: number;
 
     productSearchText: string;
 
@@ -129,6 +131,9 @@ export class CounterSaleComponent implements OnInit {
     }
 
     getRoutes(): void {
+        const employee = this.orderBookers.find(x => x.employee_id === this.selectedEmployee);
+        this.selectedRegion = employee.region_id;
+        this.selectedSegment = employee.segment_id;
         this.ordersService.getOrderBookerRoutes(this.selectedEmployee).subscribe(res => {
             if (res.status === 200) {
                 this.routes = res.data;
@@ -168,16 +173,24 @@ export class CounterSaleComponent implements OnInit {
         this.selectedProduct.unit_name = null;
         this.selectedProduct.quantity = null;
         this.selectedProduct.schemes = [];
-        this.selectedProduct.scheme = null;
+        this.selectedProduct.selectedScheme = null;
         this.selectedProduct.units = this.prefrences.filter(x => x.item_id === product.item_id);
     }
 
     showProductsList(event: Event): void {
         event.stopPropagation();
-        this.showProducts = true;
-        document.body.classList.add('no-scroll');
-        document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
-        document.getElementById('counter-sale').classList.add('blur-div');
+        if (this.selectedRetailer) {
+            this.showProducts = true;
+            document.body.classList.add('no-scroll');
+            document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
+            document.getElementById('counter-sale').classList.add('blur-div');
+        } else {
+            this.toastService.showToaster({
+                type: 'error',
+                message: 'Please select Retailer first!',
+                title: 'Fill required fields:'
+            });
+        }
     }
 
     setPrefrence(prefId: number, product: any): void {
@@ -186,7 +199,7 @@ export class CounterSaleComponent implements OnInit {
         product.item_trade_price = prefrence.item_trade_price;
         product.unit_name = prefrence.unit_name;
         product.schemes = this.dataService.getSchemes(product.item_id,
-            product.unit_id, product.pref_id, this.schemes);
+            product.unit_id, product.pref_id, this.schemes, this.selectedRetailer);
         if (product.quantity) {
             product.schemes = product.schemes.map(scheme => {
                 switch (scheme.scheme_type) {
@@ -230,6 +243,14 @@ export class CounterSaleComponent implements OnInit {
 
     addProductToOrder(): void {
         this.showQuantityModal = false;
+        if (this.selectedProduct.selectedScheme) {
+            this.selectedProduct = this.applyScheme(this.selectedProduct);
+        }
+        if (!this.selectedProduct.price) {
+            this.selectedProduct.price = JSON.parse(JSON.stringify(this.selectedProduct.item_trade_price));
+        }
+        this.selectedProduct = this.dataService.getSpecialDiscounts(this.selectedSegment,
+            this.selectedRegion, this.selectedProduct, this.specialDiscounts);
         this.selectedProducts.push(this.selectedProduct);
         this.selectedProductsIds.push(this.selectedProduct.item_id);
         document.getElementById('pl-qty-close').click();
@@ -238,6 +259,34 @@ export class CounterSaleComponent implements OnInit {
     removeProductFromOrder(product: any): void {
         this.selectedProducts = this.selectedProducts.filter(x => x.item_id !== product.item_id);
         this.selectedProductsIds = this.selectedProductsIds.filter(x => x !== product.item_id);
+    }
+
+    applyScheme(product: any): any {
+        switch (product.selectedScheme.scheme_type) {
+            case 'free_product':
+                product = this.applyFreeProductScheme(product);
+                break;
+            case 'dotp':
+                product = this.applyDOTPScheme(product);
+                break;
+            default:
+                product = this.applyGiftScheme(product);
+                break;
+        }
+        return product;
+    }
+
+    applyFreeProductScheme(product: any): any {
+        product = this.dataService.applyFreeProductScheme(product);
+        return product;
+    }
+
+    applyDOTPScheme(product: any): any {
+        return this.dataService.getSDForDOTP(product);
+    }
+
+    applyGiftScheme(product: any): any {
+        return this.dataService.getSDForGift(product);
     }
 
     closeQuantityModal(event: Event): void {

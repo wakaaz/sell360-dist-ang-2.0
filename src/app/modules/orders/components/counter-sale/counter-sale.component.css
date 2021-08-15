@@ -13,7 +13,7 @@
 .ng-select .ng-select-container {border-radius: 0;}
 .addItemCell .ng-select .ng-select-container {height: 25px!important;min-height: 25px!important;border-radius: 0; text-transform: capitalize;}
 .addItemCell .ng-select .ng-select-container div.ng-input { top: 2px !important; }
-._cut-detail, .ng-option { text-transform: capitalize; }
+._cut-detail, .ng-option, .ng-select span { text-transform: capitalize; }
 ._row-product .addItemCell3{color: #282828!important}
 ._totalBar2 ._h25{height: 20px;color: #282828; font-size: 14px;}
 ._totalBar2 .width-t{width: 196px; text-align: right!important;}

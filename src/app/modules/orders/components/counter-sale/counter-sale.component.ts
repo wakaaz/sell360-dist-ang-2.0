@@ -94,6 +94,7 @@ export class CounterSaleComponent implements OnInit {
                     pr.net_amount = 0.00;
                     return pr;
                 });
+                debugger;
                 this.specialDiscounts = res.data.special_discount;
                 this.prefrences = res.data.prefs;
                 this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
@@ -216,7 +217,9 @@ export class CounterSaleComponent implements OnInit {
                 }
                 return scheme;
             });
+            this.calculateProductDiscounts(product);
             this.calculateProductPrice(product);
+            this.calculateTotalBill();
         }
     }
 
@@ -232,33 +235,80 @@ export class CounterSaleComponent implements OnInit {
 
     setQuantity(product: any): void {
         if (product.item_trade_price) {
+            this.calculateProductDiscounts(product);
             this.calculateProductPrice(product);
+            this.calculateTotalBill();
         }
     }
 
     calculateProductPrice(product): void {
+        product.net_amoutn = this.dataService.calculateUnitPrice(+product.quantity, product.price);
         product.original_amount = this.dataService.calculateUnitPrice(+product.quantity,
             product.item_trade_price);
     }
 
     addProductToOrder(): void {
         this.showQuantityModal = false;
-        if (this.selectedProduct.selectedScheme) {
-            this.selectedProduct = this.applyScheme(this.selectedProduct);
-        }
-        if (!this.selectedProduct.price) {
-            this.selectedProduct.price = JSON.parse(JSON.stringify(this.selectedProduct.item_trade_price));
-        }
-        this.selectedProduct = this.dataService.getSpecialDiscounts(this.selectedSegment,
-            this.selectedRegion, this.selectedProduct, this.specialDiscounts);
         this.selectedProducts.push(this.selectedProduct);
         this.selectedProductsIds.push(this.selectedProduct.item_id);
+        this.calculateTotalBill();
         document.getElementById('pl-qty-close').click();
     }
 
     removeProductFromOrder(product: any): void {
         this.selectedProducts = this.selectedProducts.filter(x => x.item_id !== product.item_id);
         this.selectedProductsIds = this.selectedProductsIds.filter(x => x !== product.item_id);
+        this.calculateTotalBill();
+    }
+
+    calculateProductDiscounts(product: any, scheme?: any): void {
+        if (scheme) {
+            product.selectedScheme = scheme;
+        }
+        if (product.selectedScheme) {
+            product = this.applyScheme(product);
+        } else {
+            product.scheme_discount = 0;
+            product.price = JSON.parse(JSON.stringify(product.item_trade_price));
+        }
+
+        // Trade Discount Static for now
+        product.trade_discount = 0;
+        product.extra_discount = 0;
+        product = this.dataService.getSpecialDiscounts(this.selectedSegment,
+            this.selectedRegion, product, this.specialDiscounts);
+        this.calculateNetAmountOfProduct(product);
+    }
+
+    calculateExtraDiscount(product: any): void {
+        this.calculateNetAmountOfProduct(product);
+        product.net_amount = product.net_amount - +product.extra_discount;
+        this.calculateTotalBill();
+    }
+
+    calculateNetAmountOfProduct(product: any): any {
+        product.net_amount = this.dataService.calculateUnitPrice(product.price, product.quantity);
+    }
+
+    calculateTotalBill(): void {
+        // Gross Amount
+        let prices = this.selectedProducts.map(product => product.original_amount);
+        this.grossAmount = this.dataService.calculateItemsBill(prices);
+        // Net Amount
+        prices = this.selectedProducts.map(product => product.net_amount);
+        this.dueAmount = this.dataService.calculateItemsBill(prices);
+        // Scheme Discount
+        let discount = this.selectedProducts.map(product => product.scheme_discount);
+        this.tradeOffer = this.dataService.calculateItemsBill(discount);
+        // Trade Discount
+        discount = this.selectedProducts.map(product => product.trade_discount);
+        this.tradeDiscount = this.dataService.calculateItemsBill(discount);
+        // Special Discount
+        discount = this.selectedProducts.map(product => product.special_discount);
+        this.specialDiscount = this.dataService.calculateItemsBill(discount);
+        // Extra Discount
+        discount = this.selectedProducts.map(product => product.extra_discount);
+        this.extraDiscount = this.dataService.calculateItemsBill(discount);
     }
 
     applyScheme(product: any): any {

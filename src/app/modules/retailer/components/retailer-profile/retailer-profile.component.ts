@@ -99,7 +99,7 @@ export class RetailerProfileComponent implements OnInit {
             options: this.invoiceChartOptions
         });
         const legend = document.getElementById('legend');
-        legend.innerHTML = chart.generateLegend();
+        (legend.innerHTML as any) = chart.generateLegend();
         const legendItems = legend.getElementsByTagName('li');
 
         // tslint:disable-next-line: prefer-for-of

@@ -216,10 +216,12 @@ export class DataService {
     /** Special Discount */
     getSpecialDiscounts(segmentId: number, regionId: number, product: any, specialDiscounts: Array<any>): any {
         const selectedSpecialDiscount = specialDiscounts.find(x =>
-            segmentId === x.segment_id && regionId === x.region_id && product.pref_id === x.pref_id);
+            segmentId === x.segment_id && regionId === x.region_id && +product.pref_id === x.pref_id);
         if (selectedSpecialDiscount) {
             product.price = product.price - selectedSpecialDiscount.discount;
             product.special_discount = product.quantity * selectedSpecialDiscount.discount;
+        } else {
+            product.special_discount = 0.00;
         }
         return product;
     }

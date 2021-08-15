@@ -30,8 +30,10 @@
                     <div class="col-md-8">
                         <div *ngFor="let scheme of selectedProduct.schemes;let i=index">
                             <div class="custom-control custom-radio">
-                                <input [(ngModel)]="selectedProduct.selectedScheme" class="custom-control-input" type="radio"
-                                    name="AssignCatalogue" id="byTerritory-{{i}}" [value]="scheme">
+                                <input [(ngModel)]="selectedProduct.selectedScheme"
+                                    (click)="selectedProduct.pref_id && selectedProduct.quantity && calculateProductDiscounts(selectedProduct, scheme)"
+                                    class="custom-control-input" type="radio" name="AssignCatalogue"
+                                    id="byTerritory-{{i}}" [value]="scheme">
                                 <label class="custom-control-label font13" for="byTerritory-{{i}}"
                                     style="line-height:25px;">{{scheme.name}}{{scheme.rule_name ? ' - ' +
                                     scheme.rule_name : ''}}</label>
@@ -331,14 +333,18 @@
                                             placeholder="0" [(ngModel)]="product.quantity" style="font-size: 13px">
                                     </div>
                                     <div class="addItemCell2 _h25">{{product.item_trade_price}}</div>
-                                    <div class="addItemCell2 _h25">{{product.scheme_discount || 0.00 | number: '1.2-2'}}</div>
-                                    <div class="addItemCell2 _h25">{{product.trade_discount || 0.00 | number: '1.2-2'}}</div>
-                                    <div class="addItemCell2 _h25">{{product.special_discount || 0.00 | number: '1.2-2'}}</div>
+                                    <div class="addItemCell2 _h25">{{product.scheme_discount || 0.00 | number: '1.2-2'}}
+                                    </div>
+                                    <div class="addItemCell2 _h25">{{product.trade_discount || 0.00 | number: '1.2-2'}}
+                                    </div>
+                                    <div class="addItemCell2 _h25">{{product.special_discount || 0.00 | number:
+                                        '1.2-2'}}</div>
                                     <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
-                                            placeholder="0" [(ngModel)]="product.extra_discount"
+                                            placeholder="0" [(ngModel)]="product.extra_discount" (keyup)="calculateExtraDiscount(product)"
                                             (keydown)="isNumber($event)" style="font-size: 13px"></div>
                                     <div class="addItemCell2 _h25">{{product.tax || 0.00 | number: '1.2-2'}}</div>
-                                    <div class="addItemCell3 _h25">{{product.net_amount || 0.00 | number: '1.2-2'}}</div>
+                                    <div class="addItemCell3 _h25">{{product.net_amount || 0.00 | number: '1.2-2'}}
+                                    </div>
                                     <a (click)="removeProductFromOrder(product)" class="btn _order-del"
                                         title="Delete"><i class="fa fa-trash-alt"></i></a>
                                 </div>

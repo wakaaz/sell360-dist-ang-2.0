@@ -38,4 +38,14 @@ export interface OrderItem {
     area_id: number;
     assigned_route_id: number;
     territory_id: number;
+    booked_order_value: number;
+    booked_total_qty: number;
+    gross_sale_amount: number;
+    total_retail_price: number;
+    tax_class_id: number;
+    tax_in_percentage: number;
+    tax_in_value: number;
+    total_tax_amount: number;
+    total_amount_after_tax: number;
+    total_dicount: number;
 }

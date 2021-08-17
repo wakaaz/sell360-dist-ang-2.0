@@ -5,25 +5,31 @@
         <div class="modal-content  top_border">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Promotion <span> Detail</span></h5>
-                <button type="button" class="close" data-dismiss="modal" (click)="closeQuantityModal($event)"
+                <button type="button" class="close dont-close-products" data-dismiss="modal" (click)="closeQuantityModal($event)"
                     aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
             </div>
             <div *ngIf="selectedProduct.hasOwnProperty('quantity')" class="modal-body AddDetailPR">
                 <div class="row">
                     <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
                     <div class="col-md-8 mb-15">
-                        <input type="text" class="form-control" placeholder="" (keyup)="setQuantity(selectedProduct)"
-                            (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.quantity"
+                        <input type="text" class="form-control" placeholder="" (keyup)="setQuantity(selectedProduct)" required
+                            (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.quantity" #selectedQty="ngModel"
                             style="font-size:13px">
+                        <span *ngIf="selectedQty.errors?.required && (isAdded || selectedQty.touched || selectedQty.dirty)" class="input-error">
+                            Please add Quantity!
+                        </span>
                     </div>
                     <div class="col-md-4 pt-7 mb-15">Select Unit:</div>
                     <div class="col-md-8 mb-15">
-                        <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
-                            (change)="setPrefrence($event.target.value, selectedProduct)">
+                        <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id" name="prefrences"
+                            (change)="setPrefrence($event.target.value, selectedProduct)" #selectedPrefs="ngModel">
                             <option [value]="null" disbaled>Select Unit</option>
                             <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
                             </option>
                         </select>
+                        <span *ngIf="selectedProduct.pref_id === null && (isAdded || selectedPrefs.touched || selectedPrefs.dirty)" class="input-error">
+                            Please select a Unit!
+                        </span>
                     </div>
                     <div class="col-md-4" *ngIf="selectedProduct.schemes.length" style="padding-top: 2px">Trade Offer:
                     </div>
@@ -69,14 +75,14 @@
                     <div class="row pt-10">
                         <div class="col-4">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" name="payment" id="payment1" value=''>
+                                <input class="custom-control-input" type="radio" (click)="isFullPayment = true;" name="payment" id="payment1" value=''>
                                 <label class="custom-control-label" style="font-size: 13px; line-height:25px"
                                     for="payment1">Full Amount</label>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" name="payment" id="payment2" value=''>
+                                <input class="custom-control-input" type="radio" (click)="isFullPayment = false;" name="payment" id="payment2" value=''>
                                 <label class="custom-control-label" style="font-size: 13px; line-height:25px"
                                     for="payment2">Partial Amount</label>
                             </div>
@@ -88,25 +94,25 @@
                         <div class="col-md-6 PT-10">
                             <div class="form-group">
                                 <label class="control-label mb-10">Cheque Number*</label>
-                                <input type="text" class="form-control cheque_num">
+                                <input type="text" name="cheque_num" [(ngModel)]="chequeNumber" class="form-control cheque_num">
                             </div>
                         </div>
                         <div class="col-md-6 PT-10">
                             <div class="form-group">
                                 <label class="control-label mb-10">Date*</label>
-                                <input type="text" id="datepicker" class="form-control cheque_date datepicker">
+                                <input type="date" id="datepicker" name="payment_date" [(ngModel)]="paymentDate" class="form-control cheque_date datepicker">
                             </div>
                         </div>
                         <div class="col-md-6 PT-5">
                             <div class="form-group">
                                 <label class="control-label mb-10">Bank Name*</label>
-                                <input type="text" class="form-control cheque_bank_name">
+                                <input type="text" name="cheque_bank_name" [(ngModel)]="bankName" class="form-control cheque_bank_name">
                             </div>
                         </div>
                         <div class="col-md-6 PT-5">
                             <div class="form-group">
                                 <label class="control-label mb-10">Total Amount*</label>
-                                <input type="number" class="form-control cheque_amount">
+                                <input type="number" name="cheque_amount" [(ngModel)]="amount" class="form-control cheque_amount">
                             </div>
                         </div>
                     </div>
@@ -124,14 +130,14 @@
                     <div class="row pt-10">
                         <div class="col-6">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" name="payment" id="Amount1" value=''>
+                                <input class="custom-control-input" (click)="isFullPayment = true;" type="radio" name="payment" id="Amount1" value=''>
                                 <label class="custom-control-label" style="font-size: 13px; line-height: 25px"
                                     for="Amount1">Full Amount</label>
                             </div>
                         </div>
                         <div class="col-6">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" name="payment" id="Amount2" value=''>
+                                <input class="custom-control-input" (click)="isFullPayment = false;" type="radio" name="payment" id="Amount2" value=''>
                                 <label class="custom-control-label" style="font-size: 13px; line-height: 25px"
                                     for="Amount2">Partial Amount</label>
                             </div>
@@ -139,7 +145,7 @@
                         <div class="col-md-6 PT-10">
                             <div class="form-group">
                                 <label class="control-label mb-10">Amount*</label>
-                                <input type="number" class="form-control cheque_amount">
+                                <input type="number" name="cheque_amount" [(ngModel)]="amount" class="form-control cheque_amount">
                             </div>
                         </div>
                     </div>
@@ -189,14 +195,9 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <button *ngIf="isAlreadyAdded(product.item_id); else notAdded"
-                                                        class="btn btn-default red-bg mb-0"
-                                                        (click)="removeProductFromOrder(product)">Remove</button>
-                                                    <ng-template #notAdded>
-                                                        <button data-toggle="modal" data-target="#exampleModal"
-                                                            class="btn btn-default mb-0 dont-close-quantity"
-                                                            (click)="openQuantityModal(product)">Add</button>
-                                                    </ng-template>
+                                                    <button data-toggle="modal" data-target="#exampleModal"
+                                                        class="btn btn-default mb-0 dont-close-quantity"
+                                                        (click)="openQuantityModal(product)">Add</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -337,11 +338,12 @@
                                     </div>
                                     <div class="addItemCell2 _h25">{{product.trade_discount || 0.00 | number: '1.2-2'}}
                                     </div>
-                                    <div class="addItemCell2 _h25">{{product.special_discount || 0.00 | number:
+                                    <div class="addItemCell2 _h25">{{product.special_discount_pkr || 0.00 | number:
                                         '1.2-2'}}</div>
                                     <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
-                                            placeholder="0" [(ngModel)]="product.extra_discount" (keyup)="calculateExtraDiscount(product)"
-                                            (keydown)="isNumber($event)" style="font-size: 13px"></div>
+                                            placeholder="0" [(ngModel)]="product.extra_discount"
+                                            (keyup)="calculateExtraDiscount(product)" (keydown)="isNumber($event)"
+                                            style="font-size: 13px"></div>
                                     <div class="addItemCell2 _h25">{{product.tax || 0.00 | number: '1.2-2'}}</div>
                                     <div class="addItemCell3 _h25">{{product.net_amount || 0.00 | number: '1.2-2'}}
                                     </div>
@@ -447,8 +449,8 @@
                             <div class="row _notesTER">
                                 <div class="col-md-12">
                                     Notes
-                                    <textarea class="textarea-NOTES" rows='1' placeholder="Enter Notes"
-                                        style="font-size: 13px"></textarea>
+                                    <textarea class="textarea-NOTES" rows='1' name="notes-input" [(ngModel)]="notes"
+                                        placeholder="Enter Notes" style="font-size: 13px"></textarea>
                                 </div>
                             </div>
                         </div>
@@ -460,7 +462,7 @@
             <div class="container-fluid p-0">
                 <div class="align-right">
                     <button type="submit" class="btn btn-cancel mr-2" (click)="goBack()">Cancel</button>
-                    <button class="btn btn-primary">Save Order</button>
+                    <button class="btn btn-primary" (click)="setOrderFields()">Save Order</button>
 
                     <button class="btn btn-primary float-left mr-2" (click)="isCredit = false;" data-toggle="modal"
                         data-target="#exampleModal2">Add

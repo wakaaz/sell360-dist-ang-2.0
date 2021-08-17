@@ -49,3 +49,4 @@
 .ng-select .ng-clear-wrapper {display: none;}
 .custom-control-label {text-transform: capitalize;}
 .no-data {width: 100%; color: rgb(168, 154, 154); font-size: 20px; text-align: center;}
+.input-error { color: red; font-size: 13px; float: left;}

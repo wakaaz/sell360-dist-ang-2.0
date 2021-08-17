@@ -79,6 +79,7 @@ export class DataService {
             product.selectedScheme.min_qty, product.selectedScheme.quantity_free);
         product.scheme_discount = discounted.schemeDiscount;
         product.price = discounted.singleItemPrice;
+        product.unit_price_after_scheme_discount = discounted.singleItemPrice;
         return product;
     }
 
@@ -88,6 +89,7 @@ export class DataService {
                 product.selectedScheme.min_qty, product.selectedScheme.quantity_free);
             product.scheme_discount = discounted.schemeDiscount;
             product.price = discounted.singleItemPrice;
+            product.unit_price_after_scheme_discount = discounted.singleItemPrice;
         }
         return product;
     }
@@ -98,6 +100,7 @@ export class DataService {
                 product.selectedScheme.min_qty, product.selectedScheme.quantity_free);
             product.scheme_discount = discounted.schemeDiscount;
             product.price = discounted.singleItemPrice;
+            product.unit_price_after_scheme_discount = discounted.singleItemPrice;
         }
         return product;
     }
@@ -115,8 +118,9 @@ export class DataService {
         const minQtyTradePrice = itemTradePrice * minimumQty;
         const schemeItems = freeQty + minimumQty;
         const discount = minQtyTradePrice / schemeItems;
-        const tradePriceForSingleItem = itemTradePrice - discount;
-        return { singleItemPrice: tradePriceForSingleItem, schemeDiscount: tradePriceForSingleItem * userQty };
+        const tradePriceForSingleItem = itemTradePrice - (discount / userQty);
+        return { singleItemPrice: tradePriceForSingleItem,
+            schemeDiscount:  (itemTradePrice * userQty) - (tradePriceForSingleItem * userQty) };
     }
 
     /**
@@ -146,8 +150,8 @@ export class DataService {
         const schemeItems = minimumQty + orderFreeQty;
         const totalTPForMinQty = itemTradePrice * minimumQty;
         const discount = totalTPForMinQty / schemeItems;
-        const singItemPrice = itemTradePrice - discount;
-        return { singleItemPrice: singItemPrice, schemeDiscount: singItemPrice * userQty };
+        const singItemPrice = itemTradePrice - (discount / userQty);
+        return { singleItemPrice: singItemPrice, schemeDiscount: (itemTradePrice * userQty) - (singItemPrice * userQty) };
     }
 
     /**
@@ -167,8 +171,8 @@ export class DataService {
         const schemeItems = minimumQty + orderFreeQty;
         const totalTPForMinQty = itemTradePrice * minimumQty;
         const discount = totalTPForMinQty / schemeItems;
-        const singleItemPrice = itemTradePrice - discount;
-        const schemeDiscount = singleItemPrice * userQty;
+        const singleItemPrice = itemTradePrice - (discount / userQty);
+        const schemeDiscount = (itemTradePrice * userQty) - (singleItemPrice * userQty);
         return { singleItemPrice, schemeDiscount };
     }
 
@@ -219,9 +223,12 @@ export class DataService {
             segmentId === x.segment_id && regionId === x.region_id && +product.pref_id === x.pref_id);
         if (selectedSpecialDiscount) {
             product.price = product.price - selectedSpecialDiscount.discount;
-            product.special_discount = product.quantity * selectedSpecialDiscount.discount;
+            product.unit_price_after_special_discount = product.price - selectedSpecialDiscount.discount;
+            product.special_discount = selectedSpecialDiscount.discount;
+            product.special_discount_pkr = product.quantity * selectedSpecialDiscount.discount;
         } else {
             product.special_discount = 0.00;
+            product.unit_price_after_special_discount = JSON.parse(JSON.stringify(product.unit_price_after_merchant_discount));
         }
         return product;
     }

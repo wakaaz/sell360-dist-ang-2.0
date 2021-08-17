@@ -7,6 +7,7 @@ export const API_URLS = {
 
     // Orders
     COUNTER_SALE_DATA: '/counterSaleData',
+    ADD_COUNTER_SALE: '/addCounterSale',
     GET_SCHEMES: '/getSchemesDiscount',
     GET_EMPLOYEES: '/getEmployees',
     GET_EMPLOYEE_ROUTES: '/getEmployeeRoutes',

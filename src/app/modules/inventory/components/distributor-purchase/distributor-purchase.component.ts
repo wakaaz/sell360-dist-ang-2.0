@@ -345,6 +345,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                 this.router.navigateByUrl('/inventory/stock');
             }, error => {
                 this.loading = false;
+                this.submitted = false;
                 if (error.status !== 401 && error.status !== 1) {
                     this.toastService.showToaster({
                         title: 'Error:',
@@ -352,6 +353,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                         type: 'error'
                     });
                 }
+                scrollTo(0, 0);
             });
         }
     }

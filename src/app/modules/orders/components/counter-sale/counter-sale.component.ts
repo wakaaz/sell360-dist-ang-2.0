@@ -22,7 +22,6 @@ export class CounterSaleComponent implements OnInit {
     showQuantityModal: boolean;
     isCredit: boolean;
     loadingProducts: boolean;
-    isFullPayment: boolean;
     isOrdering: boolean;
     isAdded: boolean;
 
@@ -43,6 +42,7 @@ export class CounterSaleComponent implements OnInit {
     amount: number;
 
     paymentDate: string;
+    paymentType: string;
     bankName: string;
     productSearchText: string;
     notes: string;
@@ -80,7 +80,8 @@ export class CounterSaleComponent implements OnInit {
         this.tax = 0.00;
         this.dueAmount = 0.00;
         this.notes = '';
-        this.paymentDate = ' ';
+        this.paymentDate = new Date().toISOString().split('T')[0];
+        this.paymentType = '';
         this.getOrderBookers();
         this.getCounterSaleData();
         this.getSchemesData();
@@ -155,6 +156,22 @@ export class CounterSaleComponent implements OnInit {
     left(event: Event): void {
         if (!(event.target as HTMLInputElement).value) {
             (event.target as HTMLElement).parentElement.classList.remove('focused');
+        }
+    }
+
+    validatePaymentMethod(): boolean {
+        if (this.isCredit) {
+            return this.paymentType.length > 0 && this.amount > -1;
+        } else {
+            return this.paymentType.length > 0 && this.amount > -1 && this.bankName.length > 0
+                && this.chequeNumber > 0 && this.paymentDate.length > 0;
+        }
+    }
+    addPaymentMethod(): void {
+        this.isAdded = true;
+        if (this.validatePaymentMethod()) {
+            this.isAdded = false;
+            document.getElementById('close-payment-modal').click();
         }
     }
 

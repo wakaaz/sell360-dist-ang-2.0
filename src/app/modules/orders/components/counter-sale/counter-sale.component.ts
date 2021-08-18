@@ -343,7 +343,7 @@ export class CounterSaleComponent implements OnInit {
         discount = this.selectedProducts.map(product => product.trade_discount);
         this.tradeDiscount = this.dataService.calculateItemsBill(discount);
         // Special Discount
-        discount = this.selectedProducts.map(product => product.special_discount);
+        discount = this.selectedProducts.map(product => product.special_discount_pkr);
         this.specialDiscount = this.dataService.calculateItemsBill(discount);
         // Extra Discount
         discount = this.selectedProducts.map(product => product.extra_discount);
@@ -521,7 +521,7 @@ export class CounterSaleComponent implements OnInit {
                 tax_in_percentage: 0,
                 tax_in_value: 0,
                 total_amount_after_tax: this.grossAmount,
-                total_dicount: product.scheme_discount + product.trade_discount + product.special_discount + product.extra_discount,
+                total_dicount: product.scheme_discount + product.trade_discount + product.special_discount_pkr + product.extra_discount,
                 total_retail_price: product.original_amount,
                 total_tax_amount: product.tax || 0,
             };

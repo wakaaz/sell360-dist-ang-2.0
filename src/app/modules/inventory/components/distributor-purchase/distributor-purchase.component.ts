@@ -261,7 +261,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         if (this.purchasedProducts.length) {
             this.purchasedProducts.forEach(product => {
                 this.distributorPurchase.discount += product.discount;
-                prices.push(product.original_amount);
+                prices.push(+product.original_amount);
                 if (prices.length === this.purchasedProducts.length) {
                     this.calculateFreeSubTotal(prices);
                 }
@@ -275,7 +275,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         if (this.freeProducts.length) {
             this.freeProducts.forEach((product, index) => {
                 this.distributorPurchase.discount += product.discount;
-                prices.push(product.original_amount);
+                prices.push(+product.original_amount);
                 if (index === this.freeProducts.length - 1) {
                     this.distributorPurchase.original_amount = this.dataService.calculateItemsBill(prices);
                 }

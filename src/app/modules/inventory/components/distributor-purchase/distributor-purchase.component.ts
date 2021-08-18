@@ -375,9 +375,26 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             !this.distributorPurchase.remark ||
             !this.distributorPurchase.supplier
         ) {
+            this.toastService.showToaster({
+                title: 'Error:',
+                message: 'Please fill all the fields and select products to purchase and select the product units!',
+                type: 'error'
+            });
+            scrollTo(0, 0);
             return false;
         } else {
-            return true;
+            const unPrefPurchased = this.purchasedProducts.filter(x => x.pref_id === '0');
+            const unPrefFree = this.freeProducts.filter(x => x.pref_id === '0');
+            if (unPrefFree.length > 0 || unPrefPurchased.length > 0) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Please select the unit for all products!',
+                    type: 'error'
+                });
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 

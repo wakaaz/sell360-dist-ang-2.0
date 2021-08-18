@@ -391,6 +391,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     message: 'Please select the unit for all products!',
                     type: 'error'
                 });
+                scrollTo(0, 0);
                 return false;
             } else {
                 return true;

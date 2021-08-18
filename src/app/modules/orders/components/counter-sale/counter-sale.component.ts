@@ -521,6 +521,7 @@ export class CounterSaleComponent implements OnInit {
                 tax_in_percentage: 0,
                 tax_in_value: 0,
                 total_amount_after_tax: this.grossAmount,
+                // total_discount spelling mistake
                 total_dicount: product.scheme_discount + product.trade_discount + product.special_discount_pkr + product.extra_discount,
                 total_retail_price: product.original_amount,
                 total_tax_amount: product.tax || 0,

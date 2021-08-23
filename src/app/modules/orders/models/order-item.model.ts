@@ -13,6 +13,10 @@ export interface OrderItem {
     unit_price_after_special_discount: number;
     booker_discount: number;
     unit_price_after_individual_discount: number;
+    quantity: number;
+    division_id: number;
+    item_name: string;
+    unit_name: string;
     unit_id: number;
     brand_id: number;
     item_id: number;
@@ -47,5 +51,5 @@ export interface OrderItem {
     tax_in_value: number;
     total_tax_amount: number;
     total_amount_after_tax: number;
-    total_dicount: number;
+    total_discount: number;
 }

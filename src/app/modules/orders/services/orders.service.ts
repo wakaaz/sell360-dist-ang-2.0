@@ -39,4 +39,9 @@ export class OrdersService {
         const url = `${API_URLS.ADD_COUNTER_SALE}`;
         return this.baseService.post(url, order);
     }
+
+    getDiscountSlabs(): Observable<any> {
+        const url = `${API_URLS.GET_DISCOUNT_SLABS}`;
+        return this.baseService.get(url);
+    }
 }

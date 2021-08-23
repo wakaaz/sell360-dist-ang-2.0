@@ -5,29 +5,35 @@
         <div class="modal-content  top_border">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Promotion <span> Detail</span></h5>
-                <button type="button" class="close dont-close-products" data-dismiss="modal" (click)="closeQuantityModal($event)"
-                    aria-label="Close"> <span aria-hidden="true">&times;</span> </button>
+                <button type="button" class="close dont-close-products" data-dismiss="modal"
+                    (click)="closeQuantityModal($event)" aria-label="Close"> <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div *ngIf="selectedProduct.hasOwnProperty('quantity')" class="modal-body AddDetailPR">
                 <div class="row">
                     <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
                     <div class="col-md-8 mb-15">
-                        <input type="text" class="form-control" placeholder="" (keyup)="setQuantity(selectedProduct)" required
-                            (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.quantity" #selectedQty="ngModel"
-                            style="font-size:13px">
-                        <span *ngIf="selectedQty.errors?.required && (isAdded || selectedQty.touched || selectedQty.dirty)" class="input-error">
+                        <input type="text" class="form-control" placeholder="" (keyup)="setQuantity(selectedProduct)"
+                            required (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.quantity"
+                            #selectedQty="ngModel" style="font-size:13px">
+                        <span
+                            *ngIf="selectedQty.errors?.required && (isAdded || selectedQty.touched || selectedQty.dirty)"
+                            class="input-error">
                             Please add Quantity!
                         </span>
                     </div>
                     <div class="col-md-4 pt-7 mb-15">Select Unit:</div>
                     <div class="col-md-8 mb-15">
-                        <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id" name="prefrences"
-                            (change)="setPrefrence($event.target.value, selectedProduct)" #selectedPrefs="ngModel">
+                        <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
+                            name="prefrences" (change)="setPrefrence($event.target.value, selectedProduct)"
+                            #selectedPrefs="ngModel">
                             <option [value]="null" disbaled>Select Unit</option>
                             <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
                             </option>
                         </select>
-                        <span *ngIf="selectedProduct.pref_id === null && (isAdded || selectedPrefs.touched || selectedPrefs.dirty)" class="input-error">
+                        <span
+                            *ngIf="selectedProduct.pref_id === null && (isAdded || selectedPrefs.touched || selectedPrefs.dirty)"
+                            class="input-error">
                             Please select a Unit!
                         </span>
                     </div>
@@ -75,21 +81,24 @@
                     <div class="row pt-10">
                         <div class="col-4">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" [(ngModel)]="paymentType" name="payment" id="payment1" value='full'>
+                                <input class="custom-control-input" type="radio" [(ngModel)]="paymentTypeCheque"
+                                    (click)="currentFullPayment('Cheque Payment', 'Credit')" name="payment"
+                                    id="payment1" value='full'>
                                 <label class="custom-control-label" style="font-size: 13px; line-height:25px"
                                     for="payment1">Full Amount</label>
                             </div>
                         </div>
                         <div class="col-4">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" type="radio" [(ngModel)]="paymentType" name="payment" id="payment2" value='partial'>
+                                <input (click)="setPartial('Cheque Payment')" class="custom-control-input" type="radio"
+                                    [(ngModel)]="paymentTypeCheque" name="payment" id="payment2" value='partial'>
                                 <label class="custom-control-label" style="font-size: 13px; line-height:25px"
-                                for="payment2">Partial Amount</label>
+                                    for="payment2">Partial Amount</label>
                             </div>
                         </div>
-                        
+
                     </div>
-                    <div *ngIf="paymentType === '' && isAdded" class="col-12 input-error">
+                    <div *ngIf="paymentTypeCheque === '' && isAdded" class="col-12 input-error">
                         Please select a payment method!
                     </div>
 
@@ -98,19 +107,23 @@
                             <div class="form-group">
                                 <label class="control-label mb-10">Cheque Number*</label>
                                 <input type="text" name="cheque_num" (focus)="focused($event)" required
-                                (blur)="left($event)" [(ngModel)]="chequeNumber" #chequNo="ngModel" class="form-control cheque_num">
+                                    (blur)="left($event)" [(ngModel)]="chequeNumber" #chequNo="ngModel"
+                                    class="form-control cheque_num">
                             </div>
-                            <span *ngIf="chequNo.errors?.required && (isAdded || chequNo.touched || chequNo.dirty)" class="input-error">
+                            <span *ngIf="chequNo.errors?.required && (isAdded || chequNo.touched || chequNo.dirty)"
+                                class="input-error">
                                 Please add Cheque Number!
                             </span>
                         </div>
                         <div class="col-md-6 PT-10">
                             <div class="form-group focused">
                                 <label class="control-label mb-10">Date*</label>
-                                <input type="date" id="datepicker" (focus)="focused($event)" required placeholder="" autocomplete="off"
-                                (blur)="left($event)" name="payment_date" [(ngModel)]="paymentDate" #payDate="ngModel" class="form-control cheque_date">
+                                <input type="date" id="datepicker" (focus)="focused($event)" required placeholder=""
+                                    autocomplete="off" (blur)="left($event)" name="payment_date"
+                                    [(ngModel)]="paymentDate" #payDate="ngModel" class="form-control cheque_date">
                             </div>
-                            <span *ngIf="paymentDate === '  ' && (isAdded || payDate.touched || payDate.dirty)" class="input-error">
+                            <span *ngIf="paymentDate === '  ' && (isAdded || payDate.touched || payDate.dirty)"
+                                class="input-error">
                                 Please add Payment Date!
                             </span>
                         </div>
@@ -118,19 +131,25 @@
                             <div class="form-group">
                                 <label class="control-label mb-10">Bank Name*</label>
                                 <input type="text" name="cheque_bank_name" (focus)="focused($event)" required
-                                (blur)="left($event)" [(ngModel)]="bankName" #bank_Name="ngModel" class="form-control cheque_bank_name">
+                                    (blur)="left($event)" [(ngModel)]="bankName" #bank_Name="ngModel"
+                                    class="form-control cheque_bank_name">
                             </div>
-                            <span *ngIf="bank_Name.errors?.required && (isAdded || bank_Name.touched || bank_Name.dirty)" class="input-error">
+                            <span
+                                *ngIf="bank_Name.errors?.required && (isAdded || bank_Name.touched || bank_Name.dirty)"
+                                class="input-error">
                                 Please add Bank Name!
                             </span>
                         </div>
-                        <div class="col-md-6 PT-5">
+                        <div *ngIf="paymentTypeCheque === 'partial'" class="col-md-6 PT-5">
                             <div class="form-group">
                                 <label class="control-label mb-10">Total Amount*</label>
                                 <input type="number" name="cheque_amount" (focus)="focused($event)" required
-                                (blur)="left($event)" [(ngModel)]="amount" #chequeAmount="ngModel" class="form-control cheque_amount">
+                                    (blur)="left($event)" [(ngModel)]="chequeAmount" #cheqAmount="ngModel"
+                                    class="form-control cheque_amount">
                             </div>
-                            <span *ngIf="chequeAmount.errors?.required && (isAdded || chequeAmount.touched || chequeAmount.dirty)" class="input-error">
+                            <span
+                                *ngIf="cheqAmount.errors?.required && (isAdded || cheqAmount.touched || cheqAmount.dirty)"
+                                class="input-error">
                                 Please add Total Amount!
                             </span>
                         </div>
@@ -149,28 +168,35 @@
                     <div class="row pt-10">
                         <div class="col-6">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" [(ngModel)]="paymentType" type="radio" name="payment" id="Amount1" value='full'>
+                                <input class="custom-control-input" [(ngModel)]="paymentTypeCredit" type="radio"
+                                    (click)="currentFullPayment('Credit', 'Cheque payment')" name="payment" id="Amount1"
+                                    value='full'>
                                 <label class="custom-control-label" style="font-size: 13px; line-height: 25px"
                                     for="Amount1">Full Amount</label>
                             </div>
-                            <span *ngIf="paymentType === '' && isAdded" class="input-error">
+                            <span *ngIf="paymentTypeCredit === '' && isAdded" class="input-error">
                                 Please select a payment method!
                             </span>
                         </div>
                         <div class="col-6">
                             <div class="custom-control custom-radio">
-                                <input class="custom-control-input" [(ngModel)]="paymentType" type="radio" name="payment" id="Amount2" value='partial'>
+                                <input (click)="setPartial('Credit')" class="custom-control-input"
+                                    [(ngModel)]="paymentTypeCredit" type="radio" name="payment" id="Amount2"
+                                    value='partial'>
                                 <label class="custom-control-label" style="font-size: 13px; line-height: 25px"
                                     for="Amount2">Partial Amount</label>
                             </div>
                         </div>
-                        <div class="col-md-6 PT-10">
+                        <div *ngIf="paymentTypeCredit === 'partial'" class="col-md-6 PT-10">
                             <div class="form-group">
                                 <label class="control-label mb-10">Amount*</label>
                                 <input type="number" name="cheque_amount" (focus)="focused($event)" required
-                                (blur)="left($event)" [(ngModel)]="amount" #chequAmount="ngModel" class="form-control cheque_amount">
+                                    (blur)="left($event)" [(ngModel)]="creditAmount" #chequAmount="ngModel"
+                                    class="form-control cheque_amount">
                             </div>
-                            <span *ngIf="chequAmount.errors?.required && (isAdded || chequAmount.touched || chequAmount.dirty)" class="input-error">
+                            <span
+                                *ngIf="chequAmount.errors?.required && (isAdded || chequAmount.touched || chequAmount.dirty)"
+                                class="input-error">
                                 Please add Total Amount!
                             </span>
                         </div>
@@ -178,10 +204,37 @@
                 </div>
             </div>
 
+            <div *ngIf="(paymentTypeCheque === 'partial' && paymentTypeCredit === 'full') || (paymentTypeCheque === 'full' && paymentTypeCredit === 'partial')"
+                class="form-wrap p-10">
+                <h5 class="input-error">You have to choose "Partial Amount" to use both Credit and Cheque Payment!</h5>
+            </div>
+
 
             <div class="modal-footer border-0">
                 <button type="submit" class="btn btn-primary" (click)="addPaymentMethod()">Add</button>
-                <button type="button" id="close-payment-modal" (click)="isAdded=false" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="button" id="close-payment-modal" (click)="isAdded=false" class="btn btn-cancel"
+                    data-dismiss="modal" aria-label="Close">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="fullPaymentModal" role="dialog" aria-labelledby="fullPaymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content  top_border">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fullPaymentModalLabel">Full Payment selected for {{addedPayment}}</h5>
+                <button type="button" id="close-full-payment" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body AddDetailPR">
+                <div class="row">
+                    <h4 class="input-error">
+                        You already selected Full payment for <strong>{{addedPayment}}</strong> please remove it if you
+                        want to add <strong>{{currentPayment}}</strong>!
+                    </h4>
+                </div>
             </div>
         </div>
     </div>
@@ -364,13 +417,13 @@
                                     </div>
                                     <div class="addItemCell2 _h25">{{product.trade_discount || 0.00 | number: '1.2-2'}}
                                     </div>
-                                    <div class="addItemCell2 _h25">{{product.special_discount_pkr || 0.00 | number:
+                                    <div class="addItemCell2 _h25">{{product.special_discount || 0.00 | number:
                                         '1.2-2'}}</div>
                                     <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
                                             placeholder="0" [(ngModel)]="product.extra_discount"
                                             (keyup)="calculateExtraDiscount(product)" (keydown)="isNumber($event)"
                                             style="font-size: 13px"></div>
-                                    <div class="addItemCell2 _h25">{{product.tax || 0.00 | number: '1.2-2'}}</div>
+                                    <div class="addItemCell2 _h25">{{product.tax_amount_pkr || 0.00 | number: '1.2-2'}}</div>
                                     <div class="addItemCell3 _h25">{{product.net_amount || 0.00 | number: '1.2-2'}}
                                     </div>
                                     <a (click)="removeProductFromOrder(product)" class="btn _order-del"
@@ -472,6 +525,48 @@
                                     {{dueAmount | number: '1.2-2'}}
                                 </div>
                             </div>
+                            <div class="row _totalBar2">
+                                <div class="addItemCell _h25 PL-5"></div>
+                                <div class="addItemCell _h25 unit-w"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25 width-t"><strong>Cash:</strong></div>
+
+                                <div class="addItemCell3 _h25" style="font-size: 18px; color: #0038ba">
+                                    {{cash?.amount_received || 0 | number: '1.2-2'}}
+                                </div>
+                            </div>
+                            <div class="row _totalBar2">
+                                <div class="addItemCell _h25 PL-5"></div>
+                                <div class="addItemCell _h25 unit-w"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25 width-t"><strong>Cheque Payment:</strong></div>
+
+                                <div class="addItemCell3 _h25" style="font-size: 18px; color: #0038ba">
+                                    {{cheque?.amount_received || 0 | number: '1.2-2'}}
+                                </div>
+                            </div>
+                            <div class="row _totalBar2">
+                                <div class="addItemCell _h25 PL-5"></div>
+                                <div class="addItemCell _h25 unit-w"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25"></div>
+                                <div class="addItemCell2 _h25 width-t"><strong>Credited Amount:</strong></div>
+
+                                <div class="addItemCell3 _h25" style="font-size: 18px; color: #0038ba">
+                                    {{credit?.amount_received || 0 | number: '1.2-2'}}
+                                </div>
+                            </div>
                             <div class="row _notesTER">
                                 <div class="col-md-12">
                                     Notes
@@ -490,11 +585,14 @@
                     <button type="submit" class="btn btn-cancel mr-2" (click)="goBack()">Cancel</button>
                     <button class="btn btn-primary" (click)="setOrderFields()">Save Order</button>
 
-                    <button class="btn btn-primary float-left mr-2" (click)="isCredit = false;" data-toggle="modal"
-                        data-target="#exampleModal2">Add Cheque</button>
-                    <button class="btn btn-primary float-left" (click)="isCredit = true;" data-toggle="modal"
-                        data-target="#exampleModal2">Add
-                        Credit</button>
+                    <button class="btn btn-primary float-left mr-2"
+                        (click)="isCredit = false;isFullyPaymentAdded('Cheque Payment')">Add Cheque</button>
+                    <button class="btn btn-primary float-left"
+                        (click)="isCredit = true;isFullyPaymentAdded('Credit')">Add Credit</button>
+                    <button id="open-modal-payment" style="display: none;" data-toggle="modal"
+                        data-target="#exampleModal2">Show Modal</button>
+                    <button id="open-modal-fullpayment" style="display: none;" data-toggle="modal"
+                        data-target="#fullPaymentModal">Show Full Payment Modal</button>
                 </div>
             </div>
         </div>

@@ -6,7 +6,7 @@ import { Toaster, ToasterService } from '../../../../core/services/toaster.servi
 import { DataService } from '../../../shared/services/data.service';
 import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { freeProductsRules, schemes } from 'src/app/core/constants/schemes.constant';
-import { CounterSale } from '../../models/counter-sale.model';
+import { CounterSale, PaymentDetail } from '../../models/counter-sale.model';
 import { OrderItem } from '../../models/order-item.model';
 
 @Component({
@@ -24,6 +24,7 @@ export class CounterSaleComponent implements OnInit {
     loadingProducts: boolean;
     isOrdering: boolean;
     isAdded: boolean;
+    alreadyFullPayment: boolean;
 
     grossAmount: number;
     tradeOffer: number;
@@ -39,16 +40,23 @@ export class CounterSaleComponent implements OnInit {
     distributorId: number;
     selectedProductQuantities: number;
     chequeNumber: number;
-    amount: number;
+    chequeAmount: number;
+    creditAmount: number;
 
     paymentDate: string;
-    paymentType: string;
+    paymentTypeCheque: string;
+    paymentTypeCredit: string;
     bankName: string;
     productSearchText: string;
     notes: string;
+    addedPayment: string;
+    currentPayment: string;
 
     selectedProduct: any = {};
     selectedRetailer: any;
+    cheque: PaymentDetail;
+    credit: PaymentDetail;
+    cash: PaymentDetail;
     order: CounterSale;
 
     allProducts: Array<any> = [];
@@ -61,6 +69,7 @@ export class CounterSaleComponent implements OnInit {
     selectedProducts: Array<any> = [];
     selectedProductsIds: Array<any> = [];
     schemes: Array<any> = [];
+    discountSlabs: Array<any> = [];
 
     constructor(
         private router: Router,
@@ -81,7 +90,10 @@ export class CounterSaleComponent implements OnInit {
         this.dueAmount = 0.00;
         this.notes = '';
         this.paymentDate = new Date().toISOString().split('T')[0];
-        this.paymentType = '';
+        this.paymentTypeCheque = '';
+        this.paymentTypeCredit = '';
+        this.addedPayment = '';
+        this.currentPayment = '';
         this.getOrderBookers();
         this.getCounterSaleData();
         this.getSchemesData();
@@ -145,6 +157,19 @@ export class CounterSaleComponent implements OnInit {
         });
     }
 
+    getDiscountSlabs(): void {
+        this.ordersService.getDiscountSlabs().subscribe(res => {
+            if (res.status === 200) {
+                this.discountSlabs = res.data;
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                const toast: Toaster = { type: 'error', message: 'Cannot fetch Trade Discount. Please try again', title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        });
+    }
+
     goBack(): void {
         window.history.back();
     }
@@ -159,20 +184,102 @@ export class CounterSaleComponent implements OnInit {
         }
     }
 
-    validatePaymentMethod(): boolean {
-        if (this.isCredit) {
-            return this.paymentType.length > 0 && this.amount > -1;
+    isFullyPaymentAdded(current: string): void {
+        if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
+            document.getElementById('open-modal-fullpayment').click();
+            setTimeout(() => {
+                document.getElementById('close-full-payment').click();
+            }, 5000);
         } else {
-            return this.paymentType.length > 0 && this.amount > -1 && this.bankName.length > 0
-                && this.chequeNumber > 0 && this.paymentDate.length > 0;
+            document.getElementById('open-modal-payment').click();
         }
     }
+
+    currentFullPayment(current: string, other: string): void {
+        if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
+            this.alreadyFullPayment = true;
+            setTimeout(() => {
+                this.alreadyFullPayment = false;
+            }, 17000);
+        } else {
+            this.addedPayment = current;
+            this.currentPayment = other;
+        }
+    }
+
+    setPartial(current: string): void {
+        if (current === this.addedPayment) {
+            this.addedPayment = '';
+            this.currentPayment = '';
+            this.alreadyFullPayment = false;
+        }
+    }
+
+    validatePaymentMethod(): boolean {
+        if (this.isCredit) {
+            return this.paymentTypeCredit === 'full' ? this.paymentTypeCredit.length > 0 && this.creditAmount > -1 :
+                this.paymentTypeCredit.length > 0;
+        } else {
+            return this.paymentTypeCheque === 'full' ? this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 &&
+                this.bankName.length > 0 && this.chequeNumber > 0 && this.paymentDate.length > 0 :
+                this.paymentTypeCheque.length > 0 && this.bankName.length > 0 && this.chequeNumber > 0 && this.paymentDate.length > 0;
+        }
+    }
+
+    makePayment(): void {
+        if (this.isCredit) {
+            this.credit = {
+                retailer_id: this.selectedRetailer.retailer_id,
+                distributor_id: this.distributorId,
+                type: 'Counter',
+                payment_mode: 'Credit',
+                payment_detail: '',
+                dispatched_bill_amount: 0,
+                recovery: 0,
+                amount_received: this.paymentTypeCredit === 'full' ? JSON.parse(JSON.stringify(this.dueAmount)) :
+                    JSON.parse(JSON.stringify(this.creditAmount))
+            };
+        }
+        if (!this.isCredit) {
+            this.cheque = {
+                retailer_id: this.selectedRetailer.retailer_id,
+                distributor_id: this.distributorId,
+                type: 'Counter',
+                payment_mode: 'Cheque',
+                payment_detail: {
+                    cheque_amount: this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.dueAmount)) :
+                    JSON.parse(JSON.stringify(this.chequeAmount)),
+                    bank_name: JSON.parse(JSON.stringify(this.bankName)),
+                    cheque_number: JSON.parse(JSON.stringify(this.chequeNumber)),
+                    cheque_date: JSON.parse(JSON.stringify(this.paymentDate))
+                },
+                dispatched_bill_amount: 0,
+                recovery: 0,
+                amount_received: this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.dueAmount)) :
+                    JSON.parse(JSON.stringify(this.chequeAmount))
+            };
+        }
+        this.calculatePayments();
+    }
+
     addPaymentMethod(): void {
         this.isAdded = true;
         if (this.validatePaymentMethod()) {
             this.isAdded = false;
+            this.makePayment();
+            this.resetPaymentValues();
             document.getElementById('close-payment-modal').click();
         }
+    }
+
+    resetPaymentValues(): void {
+        this.paymentTypeCredit = '';
+        this.paymentTypeCheque = '';
+        this.chequeAmount = null;
+        this.paymentDate = new Date().toISOString().split('T')[0];
+        this.bankName = '';
+        this.chequeNumber = null;
+        this.creditAmount = null;
     }
 
     getRoutes(): void {
@@ -243,6 +350,7 @@ export class CounterSaleComponent implements OnInit {
         product.unit_id = prefrence.unit_id;
         product.item_trade_price = prefrence.item_trade_price;
         product.unit_name = prefrence.unit_name;
+        product.retail_price = prefrence.item_retail_price;
         product.schemes = this.dataService.getSchemes(product.item_id,
             product.unit_id, product.pref_id, this.schemes, this.selectedRetailer);
         if (product.quantity) {
@@ -323,6 +431,9 @@ export class CounterSaleComponent implements OnInit {
             product.unit_price_after_scheme_discount = JSON.parse(JSON.stringify(product.item_trade_price));
         }
 
+        const merchantDiscount = this.discountSlabs.find(x => x.region_id === this.selectedRegion &&
+            this.selectedRetailer.segment_id === x.segment_id && x.channel_id === this.selectedRetailer.type_id);
+
         // Trade Discount Static for now
         product.trade_discount = 0;
         product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
@@ -339,8 +450,18 @@ export class CounterSaleComponent implements OnInit {
         this.calculateTotalBill();
     }
 
+    calculateProductTax(product: any): void {
+        if (product.tax_class_amount) {
+            product.tax_amount_pkr = ((product.tax_class_amount / 100) * product.retail_price) * product.quantity;
+            product.net_amount = product.net_amount + product.tax_amount_pkr;
+        } else {
+            product.tax_amount_pkr = 0;
+        }
+    }
+
     calculateNetAmountOfProduct(product: any): any {
         product.net_amount = this.dataService.calculateUnitPrice(product.price, product.quantity);
+        this.calculateProductTax(product);
     }
 
     calculateTotalBill(): void {
@@ -365,6 +486,30 @@ export class CounterSaleComponent implements OnInit {
         // Extra Discount
         discount = this.selectedProducts.map(product => product.extra_discount);
         this.extraDiscount = this.dataService.calculateItemsBill(discount);
+        // Tax
+        const taxes = this.selectedProducts.map(product => product.tax_amount_pkr);
+        this.tax = this.dataService.calculateItemsBill(taxes);
+
+        this.calculatePayments();
+    }
+
+    calculatePayments(): void {
+        this.cash = {
+            retailer_id: 1,
+            distributor_id: 1,
+            type: 'Counter',
+            payment_mode: 'Cash',
+            payment_detail: '',
+            dispatched_bill_amount: 0,
+            recovery: 0,
+            amount_received: JSON.parse(JSON.stringify(this.dueAmount))
+        };
+        if (this.cheque) {
+            this.cash.amount_received = this.cash.amount_received - this.cheque.amount_received;
+        }
+        if (this.credit) {
+            this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
+        }
     }
 
     applyScheme(product: any): any {
@@ -482,9 +627,20 @@ export class CounterSaleComponent implements OnInit {
                 total_retail_price: this.grossAmount,
                 ttl_products_sold: this.selectedProductsIds.length,
                 ttl_qty_sold: this.selectedProductQuantities,
+                payment: {
+                    total_payment: this.dueAmount,
+                    detail: []
+                },
                 items: []
             };
             this.order = newOrder;
+            if (this.cheque) {
+                this.order.payment.detail.push(this.cheque);
+            }
+            if (this.credit) {
+                this.order.payment.detail.push(this.credit);
+            }
+            this.order.payment.detail.push(this.cash);
             this.setOrderItems(employee);
         }
     }
@@ -495,18 +651,22 @@ export class CounterSaleComponent implements OnInit {
                 item_id: product.item_id,
                 pref_id: product.pref_id,
                 unit_id: product.unit_id,
-                item_quantity_booker: product.quantity,
+                item_name: product.item_name,
+                unit_name: product.unit_name,
+                item_quantity_booker: 0,
                 quantity_returned: 0,
                 area_id: selectedEmployee.area_id,
+                division_id: selectedEmployee.area_id,
                 assigned_route_id: this.selectedRoute,
-                booked_total_qty: product.quantity,
+                booked_total_qty: 0,
+                quantity: product.quantity,
                 gross_sale_amount: product.net_amount,
                 booked_order_value: product.original_amount,
                 brand_id: product.brand_id,
                 campaign_id: product.selectedScheme?.id || 0,
                 dispatch_status: 0,
                 distributor_id: this.distributorId,
-                final_price: product.retail_due_amount,
+                final_price: product.net_amount,
                 gift_value: product.gift_value || 0,
                 item_quantity_updated: 0,
                 item_status: product.is_active,
@@ -532,14 +692,14 @@ export class CounterSaleComponent implements OnInit {
                 reasoning: '',
                 region_id: this.selectedRegion,
                 territory_id: selectedEmployee.territory_id,
-                parent_qty_sold: 0,
-                parent_value_sold: 0,
-                tax_class_id: 1,
-                tax_in_percentage: 0,
-                tax_in_value: 0,
+                parent_qty_sold: 0, // Convert to Biggest unit
+                parent_value_sold: 0, // parent_trade_price * parent_qty_sold
+                tax_class_id: product.tax_class_id,
+                tax_in_percentage: product.tax_class_amount,
+                tax_in_value: product.tax_amount_pkr,
                 total_amount_after_tax: this.grossAmount,
                 // total_discount spelling mistake
-                total_dicount: product.scheme_discount + product.trade_discount + product.special_discount_pkr + product.extra_discount,
+                total_discount: product.scheme_discount + product.trade_discount + product.special_discount_pkr + product.extra_discount,
                 total_retail_price: product.original_amount,
                 total_tax_amount: product.tax || 0,
             };

@@ -1,5 +1,24 @@
 import { OrderItem } from './order-item.model';
 
+export interface PaymentDetail {
+  retailer_id: number;
+  distributor_id: number;
+  type: string;
+  payment_mode: string;
+  payment_detail: string | {
+      cheque_number: number;
+      cheque_amount: number;
+      cheque_date: string;
+      bank_name: string;
+    };
+  dispatched_bill_amount: number;
+  recovery: number;
+  amount_received: number;
+}
+export interface Payment {
+    total_payment: number;
+    detail: Array<PaymentDetail>;
+}
 export interface CounterSale {
     employee_id: number; // Selected Employee
     retailer_id: number; // Selected Retailer
@@ -35,5 +54,6 @@ export interface CounterSale {
     total_tax_amount: number;
     total_amount_after_tax: number;
     total_discount: number;
+    payment: Payment;
     items: Array<OrderItem>;
 }

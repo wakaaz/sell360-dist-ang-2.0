@@ -11,6 +11,7 @@ export const API_URLS = {
     GET_SCHEMES: '/getSchemesDiscount',
     GET_EMPLOYEES: '/getEmployees',
     GET_EMPLOYEE_ROUTES: '/getEmployeeRoutes',
+    GET_DISCOUNT_SLABS: '/getSlabDiscount',
     GET_RETAILERS_BY_ROUTE: '/getRetailersByRoute',
 
     // Salesmen

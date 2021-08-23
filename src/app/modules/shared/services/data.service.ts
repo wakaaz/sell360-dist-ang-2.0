@@ -105,6 +105,14 @@ export class DataService {
         return product;
     }
 
+    getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
+        const totalTpMinQty = itemTP * minQty;
+        const totalItemBeingGiven = freeQty + minQty;
+        const discountOnEachItem = (totalTpMinQty / totalItemBeingGiven).toFixed(2);
+        const schemeAmount = itemTP - Number(discountOnEachItem);
+        return schemeAmount;
+    }
+
     /**
      * Get the total scheme discount to be applied on the item selected
      * @param itemTradePrice trade price of the item
@@ -115,12 +123,9 @@ export class DataService {
      */
     getSDForFPTradePriceScheme(itemTradePrice: number, userQty: number, minimumQty: number, freeQty: number)
         : { singleItemPrice: number, schemeDiscount: number } {
-        const minQtyTradePrice = itemTradePrice * minimumQty;
-        const schemeItems = freeQty + minimumQty;
-        const discount = minQtyTradePrice / schemeItems;
-        const tradePriceForSingleItem = itemTradePrice - (discount / userQty);
-        return { singleItemPrice: tradePriceForSingleItem,
-            schemeDiscount:  (itemTradePrice * userQty) - (tradePriceForSingleItem * userQty) };
+        const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, freeQty);
+        const tradePriceForSingleItem = itemTradePrice - (schemeAmount / userQty);
+        return { singleItemPrice: tradePriceForSingleItem,  schemeDiscount:  schemeAmount };
     }
 
     /**
@@ -144,14 +149,11 @@ export class DataService {
      */
     getSDForFPHalfQtyDiscount(itemTradePrice: number, userQty: number, minimumQty: number, freeQty: number)
         : { singleItemPrice: number, schemeDiscount: number } {
-        const eligibleQty = Math.floor(minimumQty / 2);
-        const freeQtyInterval = Math.floor(userQty / eligibleQty);
+        const freeQtyInterval = Math.floor(userQty / minimumQty);
         const orderFreeQty = freeQtyInterval * freeQty;
-        const schemeItems = minimumQty + orderFreeQty;
-        const totalTPForMinQty = itemTradePrice * minimumQty;
-        const discount = totalTPForMinQty / schemeItems;
-        const singItemPrice = itemTradePrice - (discount / userQty);
-        return { singleItemPrice: singItemPrice, schemeDiscount: (itemTradePrice * userQty) - (singItemPrice * userQty) };
+        const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, orderFreeQty);
+        const singItemPrice = itemTradePrice - (schemeAmount / userQty);
+        return { singleItemPrice: singItemPrice, schemeDiscount: schemeAmount };
     }
 
     /**
@@ -168,12 +170,9 @@ export class DataService {
         : { singleItemPrice: number, schemeDiscount: number } {
         const freeQtyInterval = Math.floor(userQty / minimumQty);
         const orderFreeQty = freeQtyInterval * freeQty;
-        const schemeItems = minimumQty + orderFreeQty;
-        const totalTPForMinQty = itemTradePrice * minimumQty;
-        const discount = totalTPForMinQty / schemeItems;
-        const singleItemPrice = itemTradePrice - (discount / userQty);
-        const schemeDiscount = (itemTradePrice * userQty) - (singleItemPrice * userQty);
-        return { singleItemPrice, schemeDiscount };
+        const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, orderFreeQty);
+        const singleItemPrice = itemTradePrice - (schemeAmount / userQty);
+        return { singleItemPrice, schemeDiscount: schemeAmount };
     }
 
     getSDForDOTP(product: any): any {

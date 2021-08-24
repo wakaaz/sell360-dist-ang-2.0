@@ -161,23 +161,20 @@ export class CounterSaleComponent implements OnInit {
     }
 
     getDiscountSlabs(): void {
-        this.ordersService.getDiscountSlabs().subscribe(res => {
-            if (res.status === 200) {
-                debugger
-                this.discountSlabs = res.data;
-                this.merchantDiscount = this.discountSlabs.find(x => x.region_id === this.selectedRegion &&
-                    this.selectedSegment === x.segment_id && x.channel_id === this.selectedRetailer.type_id);
-            }
-        }, error => {
-            if (error.status !== 1 && error.status !== 401) {
-                const toast: Toaster = { type: 'error', message: 'Cannot fetch Trade Discount. Please try again', title: 'Error:' };
-                this.toastService.showToaster(toast);
-            }
-        });
-    }
-
-    goBack(): void {
-        window.history.back();
+        if (!this.discountSlabs.length && !this.merchantDiscount) {
+            this.ordersService.getDiscountSlabs().subscribe(res => {
+                if (res.status === 200) {
+                    this.discountSlabs = res.data;
+                    this.merchantDiscount = this.discountSlabs.find(x => x.region_id === this.selectedRegion &&
+                        this.selectedSegment === x.segment_id && x.channel_id === this.selectedRetailer.type_id);
+                }
+            }, error => {
+                if (error.status !== 1 && error.status !== 401) {
+                    const toast: Toaster = { type: 'error', message: 'Cannot fetch Trade Discount. Please try again', title: 'Error:' };
+                    this.toastService.showToaster(toast);
+                }
+            });
+        }
     }
 
     focused(event: Event): void {
@@ -192,10 +189,10 @@ export class CounterSaleComponent implements OnInit {
 
     isFullyPaymentAdded(current: string): void {
         if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
-            document.getElementById('open-modal-fullpayment').click();
-            setTimeout(() => {
-                document.getElementById('close-full-payment').click();
-            }, 5000);
+            const toast: Toaster = { type: 'error',
+            message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${this.currentPayment}!`,
+            title: `Full Payment selected for ${this.addedPayment}` };
+            this.toastService.showToaster(toast);
         } else {
             document.getElementById('open-modal-payment').click();
         }
@@ -223,12 +220,19 @@ export class CounterSaleComponent implements OnInit {
 
     validatePaymentMethod(): boolean {
         if (this.isCredit) {
-            return this.paymentTypeCredit === 'full' ? this.paymentTypeCredit.length > 0 && this.creditAmount > -1 :
-                this.paymentTypeCredit.length > 0;
+            if (this.paymentTypeCredit === 'full') {
+                return this.paymentTypeCredit.length > 0;
+            } else {
+                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1;
+            }
         } else {
-            return this.paymentTypeCheque === 'full' ? this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 &&
-                this.bankName.length > 0 && this.chequeNumber > 0 && this.paymentDate.length > 0 :
-                this.paymentTypeCheque.length > 0 && this.bankName.length > 0 && this.chequeNumber > 0 && this.paymentDate.length > 0;
+            if (this.paymentTypeCheque === 'full') {
+                return this.paymentTypeCheque.length > 0 && this.bankName.length > 0 &&
+                    this.chequeNumber > 0 && this.paymentDate.length > 0;
+            } else {
+                return this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 &&
+                    this.bankName.length > 0 && this.chequeNumber > 0 && this.paymentDate.length > 0;
+            }
         }
     }
 
@@ -254,7 +258,7 @@ export class CounterSaleComponent implements OnInit {
                 payment_mode: 'Cheque',
                 payment_detail: {
                     cheque_amount: this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.dueAmount)) :
-                    JSON.parse(JSON.stringify(this.chequeAmount)),
+                        JSON.parse(JSON.stringify(this.chequeAmount)),
                     bank_name: JSON.parse(JSON.stringify(this.bankName)),
                     cheque_number: JSON.parse(JSON.stringify(this.chequeNumber)),
                     cheque_date: JSON.parse(JSON.stringify(this.paymentDate))
@@ -279,8 +283,8 @@ export class CounterSaleComponent implements OnInit {
     }
 
     resetPaymentValues(): void {
-        this.paymentTypeCredit = '';
-        this.paymentTypeCheque = '';
+        // this.paymentTypeCredit = '';
+        // this.paymentTypeCheque = '';
         this.chequeAmount = null;
         this.paymentDate = new Date().toISOString().split('T')[0];
         this.bankName = '';
@@ -361,7 +365,7 @@ export class CounterSaleComponent implements OnInit {
             product.unit_id, product.pref_id, this.schemes, this.selectedRetailer);
         if (product.quantity) {
             if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
-                this.dueAmount = this.dueAmount - product.net_amount;
+                this.grossAmount = this.grossAmount - product.gross_amount;
             }
             product.schemes = product.schemes.map(scheme => {
                 switch (scheme.scheme_type) {
@@ -411,6 +415,7 @@ export class CounterSaleComponent implements OnInit {
         product.net_amount = this.dataService.calculateUnitPrice(+product.quantity, product.price);
         const productAmount = this.dataService.calculateUnitPrice(+product.quantity,
             product.item_trade_price);
+        product.gross_amount = product.unit_price_after_scheme_discount * +product.quantity;
         if (product.tax_amount_pkr) {
             product.original_amount = productAmount + product.tax_amount_pkr;
         } else {
@@ -421,7 +426,7 @@ export class CounterSaleComponent implements OnInit {
     applySlabOnAllProducts(): void {
         if (this.merchantDiscount && this.merchantDiscount.slab !== null) {
             this.selectedProducts = this.selectedProducts.map(product => {
-                product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.orderTotal);
+                product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.grossAmount);
                 product = this.calculateProductSpecialDiscount(product);
                 if (product.extra_discount) {
                     product.price = product.unit_price_after_special_discount - +product.extra_discount;
@@ -435,7 +440,7 @@ export class CounterSaleComponent implements OnInit {
 
     addProductToOrder(): void {
         this.isAdded = true;
-        if (this.selectedProduct.quantity && this.selectedProduct.pref_id) {
+        if (+this.selectedProduct.quantity > 0 && this.selectedProduct.pref_id) {
             const pr = this.selectedProducts.find(x => x.item_id === this.selectedProduct.item_id &&
                 x.pref_id === this.selectedProduct.pref_id);
             if (pr) {
@@ -482,7 +487,7 @@ export class CounterSaleComponent implements OnInit {
 
         // Trade Discount
         if (this.merchantDiscount) {
-            product = this.dataService.applyMerchantDiscountForSingleProduct(this.merchantDiscount, product, this.dueAmount);
+            product = this.dataService.applyMerchantDiscountForSingleProduct(this.merchantDiscount, product, this.grossAmount);
         } else {
             product.trade_discount = 0;
             product.trade_discount_pkr = 0;
@@ -504,9 +509,15 @@ export class CounterSaleComponent implements OnInit {
     }
 
     calculateExtraDiscount(product: any): void {
-        product.price = product.unit_price_after_special_discount - +product.extra_discount;
-        this.calculateNetAmountOfProduct(product);
-        this.calculateTotalBill();
+        if (+product.extra_discount < product.unit_price_after_special_discount) {
+            product.price = product.unit_price_after_special_discount - +product.extra_discount;
+            this.calculateNetAmountOfProduct(product);
+            this.calculateTotalBill();
+        } else {
+            product.extra_discount = 0;
+            const toast: Toaster = { type: 'error', message: 'Discount should not be greater than item price!', title: 'Error:' };
+            this.toastService.showToaster(toast);
+        }
     }
 
     calculateProductTax(product: any): void {
@@ -519,7 +530,7 @@ export class CounterSaleComponent implements OnInit {
     }
 
     calculateNetAmountOfProduct(product: any): any {
-        product.net_amount = this.dataService.calculateUnitPrice(product.price, product.quantity);
+        product.net_amount = this.dataService.calculateUnitPrice(product.price, +product.quantity);
         this.calculateProductTax(product);
     }
 
@@ -528,11 +539,13 @@ export class CounterSaleComponent implements OnInit {
             this.selectedProductQuantities = this.selectedProducts.map(product => +product.quantity).reduce((a, b) => a + b);
         }
         // Gross Amount
-        let prices = this.selectedProducts.map(product => product.original_amount);
+        let prices = this.selectedProducts.map(product => product.gross_amount);
         this.grossAmount = this.dataService.calculateItemsBill(prices);
         // Net Amount
         prices = this.selectedProducts.map(product => product.net_amount);
         this.dueAmount = this.dataService.calculateItemsBill(prices);
+        // Order Original
+        prices = this.selectedProducts.map(product => product.original_amount);
         this.orderTotal = JSON.parse(JSON.stringify(this.dueAmount));
         // Scheme Discount
         let discount = this.selectedProducts.map(product => product.scheme_discount);
@@ -541,10 +554,10 @@ export class CounterSaleComponent implements OnInit {
         discount = this.selectedProducts.map(product => product.trade_discount);
         this.tradeDiscount = this.dataService.calculateItemsBill(discount);
         // Special Discount
-        discount = this.selectedProducts.map(product => product.special_discount_pkr);
+        discount = this.selectedProducts.map(product => product.special_discount);
         this.specialDiscount = this.dataService.calculateItemsBill(discount);
         // Extra Discount
-        discount = this.selectedProducts.map(product => product.extra_discount);
+        discount = this.selectedProducts.map(product => +product.extra_discount);
         this.extraDiscount = this.dataService.calculateItemsBill(discount);
         // Tax
         const taxes = this.selectedProducts.map(product => product.tax_amount_pkr);
@@ -670,7 +683,7 @@ export class CounterSaleComponent implements OnInit {
                 total_amount_after_tax: this.dueAmount,
                 total_discount: this.specialDiscount + this.tradeDiscount + this.tradeOffer + this.extraDiscount,
                 total_tax_amount: this.tax,
-                booked_order_value: this.grossAmount,
+                booked_order_value: this.dueAmount,
                 booked_total_qty: this.selectedProductQuantities,
                 booked_total_skus: this.selectedProductsIds.length,
                 booking_area: employee.area_id,
@@ -679,7 +692,7 @@ export class CounterSaleComponent implements OnInit {
                 booking_zone: employee.area_id,
                 employee_id: employee.employee_id,
                 freight_charges: 0,
-                order_total: this.grossAmount,
+                order_total: this.orderTotal,
                 region_id: this.selectedRegion,
                 status: '',
                 status_code: 0,
@@ -719,7 +732,7 @@ export class CounterSaleComponent implements OnInit {
                 division_id: selectedEmployee.area_id,
                 assigned_route_id: this.selectedRoute,
                 booked_total_qty: 0,
-                quantity: product.quantity,
+                quantity: +product.quantity,
                 gross_sale_amount: product.net_amount,
                 booked_order_value: product.original_amount,
                 brand_id: product.brand_id,
@@ -758,7 +771,6 @@ export class CounterSaleComponent implements OnInit {
                 tax_in_percentage: product.tax_class_amount,
                 tax_in_value: product.tax_amount_pkr,
                 total_amount_after_tax: this.grossAmount,
-                // total_discount spelling mistake
                 total_discount: product.scheme_discount + product.trade_discount + product.special_discount_pkr + product.extra_discount,
                 total_retail_price: product.original_amount,
                 total_tax_amount: product.tax || 0,
@@ -781,7 +793,7 @@ export class CounterSaleComponent implements OnInit {
                     title: 'Order Placed:'
                 };
                 this.toastService.showToaster(toast);
-                this.router.navigateByUrl('orders');
+                this.router.navigateByUrl('/orders');
             }
         }, error => {
             this.isOrdering = false;

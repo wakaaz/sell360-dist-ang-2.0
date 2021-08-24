@@ -16,10 +16,11 @@
                         <input type="text" class="form-control" placeholder="" (keyup)="setQuantity(selectedProduct)"
                             required (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.quantity"
                             #selectedQty="ngModel" style="font-size:13px">
-                        <span
-                            *ngIf="selectedQty.errors?.required && isAdded"
-                            class="input-error">
+                        <span *ngIf="selectedQty.errors?.required && isAdded" class="input-error">
                             Please add Quantity!
+                        </span>
+                        <span *ngIf="+selectedProduct.quantity === 0 && isAdded && !selectedQty.errors?.required" class="input-error">
+                            Quantity should be greater than 0!
                         </span>
                     </div>
                     <div class="col-md-4 pt-7 mb-15">Select Unit:</div>
@@ -31,9 +32,7 @@
                             <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
                             </option>
                         </select>
-                        <span
-                            *ngIf="selectedProduct.pref_id === null && isAdded"
-                            class="input-error">
+                        <span *ngIf="selectedProduct.pref_id === null && isAdded" class="input-error">
                             Please select a Unit!
                         </span>
                         <span *ngIf="alreadyAdded" class="input-error">
@@ -109,7 +108,7 @@
                         <div class="col-md-6 PT-10">
                             <div class="form-group">
                                 <label class="control-label mb-10">Cheque Number*</label>
-                                <input type="text" name="cheque_num" (focus)="focused($event)" required
+                                <input type="text" name="cheque_num" (focus)="focused($event)" required (keydown)="isNumber($event)"
                                     (blur)="left($event)" [(ngModel)]="chequeNumber" #chequNo="ngModel"
                                     class="form-control cheque_num">
                             </div>
@@ -217,27 +216,6 @@
                 <button type="submit" class="btn btn-primary" (click)="addPaymentMethod()">Add</button>
                 <button type="button" id="close-payment-modal" (click)="isAdded=false" class="btn btn-cancel"
                     data-dismiss="modal" aria-label="Close">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="fullPaymentModal" role="dialog" aria-labelledby="fullPaymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content  top_border">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fullPaymentModalLabel">Full Payment selected for {{addedPayment}}</h5>
-                <button type="button" id="close-full-payment" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body AddDetailPR">
-                <div class="row">
-                    <h4 class="input-error">
-                        You already selected Full payment for <strong>{{addedPayment}}</strong> please remove it if you
-                        want to add <strong>{{currentPayment}}</strong>!
-                    </h4>
-                </div>
             </div>
         </div>
     </div>
@@ -401,13 +379,14 @@
                                     </div>
 
                                     <div class="addItemCell unit-w">
-                                        <div class="_emp-sele _addProduct">
-                                            <ng-select [multiple]="false" class="formselect"
+                                        <div class="addItemCell2 _h25">
+                                            {{product.unit_name}}
+                                            <!-- <ng-select [multiple]="false" class="formselect"
                                                 [(ngModel)]="product.pref_id" (change)="setPrefrence($event, product)">
                                                 <ng-option [value]="null" disabled>Select Unit</ng-option>
                                                 <ng-option *ngFor="let unit of product.units" value="{{unit.pref_id}}">
                                                     {{unit.unit_name}}</ng-option>
-                                            </ng-select>
+                                            </ng-select> -->
                                         </div>
                                     </div>
 
@@ -426,7 +405,8 @@
                                             placeholder="0" [(ngModel)]="product.extra_discount"
                                             (keyup)="calculateExtraDiscount(product)" (keydown)="isNumber($event)"
                                             style="font-size: 13px"></div>
-                                    <div class="addItemCell2 _h25">{{product.tax_amount_pkr || 0.00 | number: '1.2-2'}}</div>
+                                    <div class="addItemCell2 _h25">{{product.tax_amount_pkr || 0.00 | number: '1.2-2'}}
+                                    </div>
                                     <div class="addItemCell3 _h25">{{product.net_amount || 0.00 | number: '1.2-2'}}
                                     </div>
                                     <a (click)="removeProductFromOrder(product, ind)" class="btn _order-del"
@@ -585,7 +565,7 @@
         <div class="Action_bottom">
             <div class="container-fluid p-0">
                 <div class="align-right">
-                    <button type="submit" class="btn btn-cancel mr-2" (click)="goBack()">Cancel</button>
+                    <button type="submit" class="btn btn-cancel mr-2" [routerLink]="['/home']">Cancel</button>
                     <button class="btn btn-primary" (click)="setOrderFields()">Save Order</button>
 
                     <button class="btn btn-primary float-left mr-2"
@@ -594,8 +574,6 @@
                         (click)="isCredit = true;isFullyPaymentAdded('Credit')">Add Credit</button>
                     <button id="open-modal-payment" style="display: none;" data-toggle="modal"
                         data-target="#exampleModal2">Show Modal</button>
-                    <button id="open-modal-fullpayment" style="display: none;" data-toggle="modal"
-                        data-target="#fullPaymentModal">Show Full Payment Modal</button>
                 </div>
             </div>
         </div>

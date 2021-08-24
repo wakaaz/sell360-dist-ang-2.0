@@ -238,17 +238,21 @@ export class DataService {
     applyMerchantDiscountForSingleProduct(merchantDiscount: any, product: any, orderTotal: number): any {
         let discountValuePKR = 0;
         if (merchantDiscount.flat !== null) {
-            discountValuePKR = (merchantDiscount.flat.value / 100) * product.price;
+            discountValuePKR = (merchantDiscount.flat.value / 100) * product.unit_price_after_scheme_discount;
             product.trade_discount = merchantDiscount.flat.value;
         } else if (merchantDiscount.slab?.length > 0) {
             const currentItemsPrice = product.unit_price_after_scheme_discount * product.quantity;
             const totalItemsPrice = currentItemsPrice + orderTotal;
             const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from <= totalItemsPrice && slb.range_to >= totalItemsPrice);
-            discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
-            product.trade_discount = selectedSlab.value;
+            if (selectedSlab) {
+                discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
+                product.trade_discount = selectedSlab.value;
+            } else {
+                product.trade_discount = 0;
+            }
         }
         product.trade_discount_pkr = discountValuePKR;
-        product.price = product.price - discountValuePKR;
+        product.price = product.unit_price_after_scheme_discount - discountValuePKR;
         product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
         return product;
     }
@@ -258,7 +262,7 @@ export class DataService {
         const discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
         product.trade_discount = selectedSlab.value;
         product.trade_discount_pkr = discountValuePKR;
-        product.price = product.price - discountValuePKR;
+        product.price = product.unit_price_after_scheme_discount - discountValuePKR;
         product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
         return product;
     }
@@ -270,7 +274,7 @@ export class DataService {
         const selectedSpecialDiscount = specialDiscounts.find(x =>
             segmentId === x.segment_id && regionId === x.region_id && +product.pref_id === x.pref_id);
         if (selectedSpecialDiscount) {
-            product.price = product.price - selectedSpecialDiscount.discount;
+            product.price = product.unit_price_after_merchant_discount - selectedSpecialDiscount.discount;
             product.unit_price_after_special_discount = product.price - selectedSpecialDiscount.discount;
             product.special_discount = selectedSpecialDiscount.discount;
             product.special_discount_pkr = product.quantity * selectedSpecialDiscount.discount;

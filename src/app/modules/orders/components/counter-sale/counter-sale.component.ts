@@ -25,6 +25,7 @@ export class CounterSaleComponent implements OnInit {
     isOrdering: boolean;
     isAdded: boolean;
     alreadyFullPayment: boolean;
+    alreadyAdded: boolean;
 
     grossAmount: number;
     tradeOffer: number;
@@ -42,6 +43,7 @@ export class CounterSaleComponent implements OnInit {
     chequeNumber: number;
     chequeAmount: number;
     creditAmount: number;
+    orderTotal: number;
 
     paymentDate: string;
     paymentTypeCheque: string;
@@ -53,6 +55,7 @@ export class CounterSaleComponent implements OnInit {
     currentPayment: string;
 
     selectedProduct: any = {};
+    merchantDiscount: any;
     selectedRetailer: any;
     cheque: PaymentDetail;
     credit: PaymentDetail;
@@ -160,7 +163,10 @@ export class CounterSaleComponent implements OnInit {
     getDiscountSlabs(): void {
         this.ordersService.getDiscountSlabs().subscribe(res => {
             if (res.status === 200) {
+                debugger
                 this.discountSlabs = res.data;
+                this.merchantDiscount = this.discountSlabs.find(x => x.region_id === this.selectedRegion &&
+                    this.selectedSegment === x.segment_id && x.channel_id === this.selectedRetailer.type_id);
             }
         }, error => {
             if (error.status !== 1 && error.status !== 401) {
@@ -354,6 +360,9 @@ export class CounterSaleComponent implements OnInit {
         product.schemes = this.dataService.getSchemes(product.item_id,
             product.unit_id, product.pref_id, this.schemes, this.selectedRetailer);
         if (product.quantity) {
+            if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
+                this.dueAmount = this.dueAmount - product.net_amount;
+            }
             product.schemes = product.schemes.map(scheme => {
                 switch (scheme.scheme_type) {
                     case 'free_product':
@@ -372,6 +381,7 @@ export class CounterSaleComponent implements OnInit {
             this.calculateProductDiscounts(product);
             this.calculateProductPrice(product);
             this.calculateTotalBill();
+            this.applySlabOnAllProducts();
         }
     }
 
@@ -387,39 +397,78 @@ export class CounterSaleComponent implements OnInit {
 
     setQuantity(product: any): void {
         if (product.item_trade_price) {
+            if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
+                this.dueAmount = this.dueAmount - product.net_amount;
+            }
             this.calculateProductDiscounts(product);
             this.calculateProductPrice(product);
             this.calculateTotalBill();
+            this.applySlabOnAllProducts();
         }
     }
 
     calculateProductPrice(product): void {
-        product.net_amoutn = this.dataService.calculateUnitPrice(+product.quantity, product.price);
-        product.original_amount = this.dataService.calculateUnitPrice(+product.quantity,
+        product.net_amount = this.dataService.calculateUnitPrice(+product.quantity, product.price);
+        const productAmount = this.dataService.calculateUnitPrice(+product.quantity,
             product.item_trade_price);
+        if (product.tax_amount_pkr) {
+            product.original_amount = productAmount + product.tax_amount_pkr;
+        } else {
+            product.original_amount = productAmount;
+        }
+    }
+
+    applySlabOnAllProducts(): void {
+        if (this.merchantDiscount && this.merchantDiscount.slab !== null) {
+            this.selectedProducts = this.selectedProducts.map(product => {
+                product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.orderTotal);
+                product = this.calculateProductSpecialDiscount(product);
+                if (product.extra_discount) {
+                    product.price = product.unit_price_after_special_discount - +product.extra_discount;
+                }
+                this.calculateNetAmountOfProduct(product);
+                return product;
+            });
+            this.calculateTotalBill();
+        }
     }
 
     addProductToOrder(): void {
         this.isAdded = true;
         if (this.selectedProduct.quantity && this.selectedProduct.pref_id) {
-            this.showQuantityModal = false;
-            this.selectedProducts.push(this.selectedProduct);
-            if (!this.selectedProductsIds.includes(this.selectedProduct.item_id)) {
-                this.selectedProductsIds.push(this.selectedProduct.item_id);
+            const pr = this.selectedProducts.find(x => x.item_id === this.selectedProduct.item_id &&
+                x.pref_id === this.selectedProduct.pref_id);
+            if (pr) {
+                this.alreadyAdded = true;
+            } else {
+                this.alreadyAdded = false;
+                this.showQuantityModal = false;
+                this.selectedProducts.push(this.selectedProduct);
+                if (!this.selectedProductsIds.includes(this.selectedProduct.item_id)) {
+                    this.selectedProductsIds.push(this.selectedProduct.item_id);
+                }
+                this.calculateTotalBill();
+                this.applySlabOnAllProducts();
+                document.getElementById('pl-qty-close').click();
+                this.isAdded = false;
             }
-            this.calculateTotalBill();
-            document.getElementById('pl-qty-close').click();
-            this.isAdded = false;
         }
     }
 
     removeProductFromOrder(product: any): void {
-        this.selectedProducts = this.selectedProducts.filter(x => x.item_id !== product.item_id);
-        this.selectedProductsIds = this.selectedProductsIds.filter(x => x !== product.item_id);
+        this.selectedProducts = this.selectedProducts.filter(x => {
+            if (x.item_id === product.item_id && x.unit_name !== product.unit_name) { return x; }
+            else if (x.item_id !== product.item_id) { return x; }
+        });
+        if (!this.selectedProducts.find(x => x.item_id !== product.item_id)) {
+            this.selectedProductsIds = this.selectedProductsIds.filter(x => x !== product.item_id);
+        }
         this.calculateTotalBill();
+        this.applySlabOnAllProducts();
     }
 
     calculateProductDiscounts(product: any, scheme?: any): void {
+        // Trade Offer
         if (scheme) {
             product.selectedScheme = scheme;
         }
@@ -431,17 +480,27 @@ export class CounterSaleComponent implements OnInit {
             product.unit_price_after_scheme_discount = JSON.parse(JSON.stringify(product.item_trade_price));
         }
 
-        const merchantDiscount = this.discountSlabs.find(x => x.region_id === this.selectedRegion &&
-            this.selectedRetailer.segment_id === x.segment_id && x.channel_id === this.selectedRetailer.type_id);
+        // Trade Discount
+        if (this.merchantDiscount) {
+            product = this.dataService.applyMerchantDiscountForSingleProduct(this.merchantDiscount, product, this.dueAmount);
+        } else {
+            product.trade_discount = 0;
+            product.trade_discount_pkr = 0;
+            product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
+        }
 
-        // Trade Discount Static for now
-        product.trade_discount = 0;
-        product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
+        // Special Discount
+        product = this.calculateProductSpecialDiscount(product);
 
+        // Extra Discount => Booker Discount
         product.extra_discount = 0;
-        product = this.dataService.getSpecialDiscounts(this.selectedSegment,
-            this.selectedRegion, product, this.specialDiscounts);
+
         this.calculateNetAmountOfProduct(product);
+    }
+
+    calculateProductSpecialDiscount(product: any): any {
+        return this.dataService.getSpecialDiscounts(this.selectedSegment,
+            this.selectedRegion, product, this.specialDiscounts);
     }
 
     calculateExtraDiscount(product: any): void {
@@ -474,6 +533,7 @@ export class CounterSaleComponent implements OnInit {
         // Net Amount
         prices = this.selectedProducts.map(product => product.net_amount);
         this.dueAmount = this.dataService.calculateItemsBill(prices);
+        this.orderTotal = JSON.parse(JSON.stringify(this.dueAmount));
         // Scheme Discount
         let discount = this.selectedProducts.map(product => product.scheme_discount);
         this.tradeOffer = this.dataService.calculateItemsBill(discount);
@@ -675,7 +735,7 @@ export class CounterSaleComponent implements OnInit {
                 scheme_id: product.selectedScheme?.id || 0,
                 scheme_discount: product.scheme_discount,
                 unit_price_after_scheme_discount: product.unit_price_after_scheme_discount,
-                merchant_discount_pkr: product.trade_discount,
+                merchant_discount_pkr: product.trade_discount_pkr,
                 merchant_discount: product.trade_discount,
                 unit_price_after_merchant_discount: product.unit_price_after_merchant_discount,
                 special_discount: product.special_discount,

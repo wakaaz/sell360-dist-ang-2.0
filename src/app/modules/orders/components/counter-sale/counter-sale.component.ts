@@ -240,9 +240,11 @@ export class CounterSaleComponent implements OnInit {
 
     currentFullPayment(current: string, other: string): void {
         if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
-            const toast: Toaster = { type: 'error',
-            message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${this.currentPayment}!`,
-            title: `Full Payment selected for ${this.addedPayment}` };
+            const toast: Toaster = {
+                type: 'error',
+                message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${this.currentPayment}!`,
+                title: `Full Payment selected for ${this.addedPayment}`
+            };
             this.toastService.showToaster(toast);
         } else {
             this.addedPayment = current;
@@ -490,8 +492,6 @@ export class CounterSaleComponent implements OnInit {
                 return product;
             });
             this.calculateTotalBill();
-        }else if(this.merchantDiscount && this.merchantDiscount.discount_filter === 'flat'){
-            
         }
     }
 
@@ -568,10 +568,12 @@ export class CounterSaleComponent implements OnInit {
     calculateExtraDiscount(product: any): void {
         if (+product.extra_discount < product.unit_price_after_special_discount) {
             product.price = product.unit_price_after_special_discount - +product.extra_discount;
+            product.extra_discount_pkr = +product.quantity * +product.extra_discount;
             this.calculateNetAmountOfProduct(product);
             this.calculateTotalBill();
         } else {
             product.extra_discount = 0;
+            product.extra_discount_pkr = 0;
             const toast: Toaster = { type: 'error', message: 'Discount should not be greater than item price!', title: 'Error:' };
             this.toastService.showToaster(toast);
         }
@@ -613,10 +615,10 @@ export class CounterSaleComponent implements OnInit {
         discount = this.selectedProducts.map(product => product.trade_discount_pkr);
         this.tradeDiscount = this.dataService.calculateItemsBill(discount);
         // Special Discount
-        discount = this.selectedProducts.map(product => product.special_discount);
+        discount = this.selectedProducts.map(product => product.special_discount_pkr);
         this.specialDiscount = this.dataService.calculateItemsBill(discount);
         // Extra Discount
-        discount = this.selectedProducts.map(product => +product.extra_discount);
+        discount = this.selectedProducts.map(product => +product.extra_discount_pkr);
         this.extraDiscount = this.dataService.calculateItemsBill(discount);
         // Tax
         const taxes = this.selectedProducts.map(product => product.tax_amount_pkr);
@@ -818,7 +820,7 @@ export class CounterSaleComponent implements OnInit {
                 unit_price_after_merchant_discount: product.unit_price_after_merchant_discount,
                 special_discount: product.special_discount,
                 unit_price_after_special_discount: product.unit_price_after_special_discount,
-                booker_discount: product.extra_discount,
+                booker_discount: product.extra_discount_pkr,
                 unit_price_after_individual_discount: product.unit_price_after_individual_discount || product.price,
                 scheme_min_quantity: product.selectedScheme?.min_qty || 0,
                 scheme_quantity_free: product.selectedScheme?.quantity_free || 0,
@@ -836,7 +838,8 @@ export class CounterSaleComponent implements OnInit {
                 tax_in_percentage: product.tax_class_amount,
                 tax_in_value: product.tax_amount_pkr,
                 total_amount_after_tax: this.grossAmount,
-                total_discount: product.scheme_discount + product.trade_discount + product.special_discount_pkr + product.extra_discount,
+                total_discount: product.scheme_discount +
+                    product.trade_discount_pkr + product.special_discount_pkr + product.extra_discount_pkr,
                 total_retail_price: product.original_amount,
                 total_tax_amount: product.tax || 0,
             };

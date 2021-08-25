@@ -165,7 +165,7 @@
                 </div>
             </div>
             <div *ngIf="isCredit" class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add <span> Add Credit Information</span></h5>
+                <h5 class="modal-title" id="exampleModalLabel">Add <span>Credit Information</span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -410,7 +410,7 @@
                                     <div class="addItemCell2 _h25">{{product.item_trade_price}}</div>
                                     <div class="addItemCell2 _h25">{{product.scheme_discount || 0.00 | number: '1.2-2'}}
                                     </div>
-                                    <div class="addItemCell2 _h25">{{ product.trade_discount || 0 }} %
+                                    <div class="addItemCell2 _h25">{{ product.trade_discount || 0 }}%
                                         ({{product.trade_discount_pkr | number: '1.2-2' }})
                                     </div>
                                     <div class="addItemCell2 _h25">{{product.special_discount || 0.00 | number:

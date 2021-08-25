@@ -126,22 +126,23 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
     }
 
     addSelectedProduct(product: any): void {
-        product.quantity = 1;
-        product.tradePrice = 0;
+        const selectedProduct = JSON.parse(JSON.stringify(product));
+        selectedProduct.quantity = 1;
+        selectedProduct.tradePrice = 0;
         if (this.showFreeProducts) {
             // Free products discount and payable amount
-            product.original_amount = product.original_amount.toFixed(2);
-            product.discount = product.original_amount;
-            product.discount_type = 'percentage';
-            product.discount_type_value = 100;
-            product.net_amount = 0;
+            selectedProduct.original_amount = selectedProduct.original_amount.toFixed(2);
+            selectedProduct.discount = selectedProduct.original_amount;
+            selectedProduct.discount_type = 'percentage';
+            selectedProduct.discount_type_value = 100;
+            selectedProduct.net_amount = 0;
 
-            this.freeProducts.push(JSON.parse(JSON.stringify(product)));
-            this.freeProductsIds.push(product.item_id);
+            this.freeProducts.push(JSON.parse(JSON.stringify(selectedProduct)));
+            this.freeProductsIds.push(selectedProduct.item_id);
             this.rerenderPurchasedProducts();
         } else {
-            this.purchasedProducts.push(JSON.parse(JSON.stringify(product)));
-            this.purchasedProductsIds.push(product.item_id);
+            this.purchasedProducts.push(JSON.parse(JSON.stringify(selectedProduct)));
+            this.purchasedProductsIds.push(selectedProduct.item_id);
             this.rerenderPurchasedProducts();
         }
     }
@@ -260,7 +261,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         this.distributorPurchase.discount = 0;
         if (this.purchasedProducts.length) {
             this.purchasedProducts.forEach(product => {
-                this.distributorPurchase.discount += product.discount;
+                this.distributorPurchase.discount += +product.discount;
                 prices.push(+product.original_amount);
                 if (prices.length === this.purchasedProducts.length) {
                     this.calculateFreeSubTotal(prices);
@@ -342,7 +343,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     message: 'Your order is placed successfully.',
                     type: 'success'
                 });
-                this.router.navigateByUrl('/inventory/stock');
+                this.router.navigateByUrl('/reports/purchase-history');
             }, error => {
                 this.loading = false;
                 this.submitted = false;

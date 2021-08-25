@@ -206,6 +206,11 @@ export class CounterSaleComponent implements OnInit {
     }
 
     isFullyPaymentAdded(current: string): void {
+        if (current === 'Credit') {
+            this.paymentTypeCredit = '';
+        } else {
+            this.paymentTypeCheque = '';
+        }
         if (this.selectedProducts.length === 0 && this.dueAmount === 0.00) {
             const toast: Toaster = {
                 type: 'error',
@@ -254,9 +259,14 @@ export class CounterSaleComponent implements OnInit {
 
     setPartial(current: string): void {
         if (current === this.addedPayment) {
-            this.cash.amount_received = JSON.parse(JSON.stringify(this.dueAmount));
-            if (this.credit && current === 'Credit') { this.credit.amount_received = 0; }
-            if (this.cheque && current === 'Cheque Payment') { this.cheque.amount_received = 0; }
+            if (this.credit && current === 'Credit') {
+                this.cash.amount_received = this.cash.amount_received + this.credit.amount_received;
+                this.credit.amount_received = 0;
+            }
+            if (this.cheque && current === 'Cheque Payment') {
+                this.cash.amount_received = this.cash.amount_received + this.cheque.amount_received;
+                this.cheque.amount_received = 0;
+            }
             this.addedPayment = '';
             this.currentPayment = '';
             this.alreadyFullPayment = false;

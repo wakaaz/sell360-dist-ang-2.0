@@ -44,4 +44,14 @@ export class OrdersService {
         const url = `${API_URLS.GET_DISCOUNT_SLABS}`;
         return this.baseService.get(url);
     }
+
+    getNewOrders(): Observable<any> {
+        const url = `${API_URLS.GET_NEW_ORDERS}`;
+        return this.baseService.get(url);
+    }
+
+    getAllSalesMen(): Observable<any> {
+        const url = API_URLS.GET_ALL_SALESMEN;
+        return this.baseService.get(url);
+    }
 }

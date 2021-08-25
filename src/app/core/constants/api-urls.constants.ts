@@ -13,6 +13,7 @@ export const API_URLS = {
     GET_EMPLOYEE_ROUTES: '/getEmployeeRoutes',
     GET_DISCOUNT_SLABS: '/getSlabDiscount',
     GET_RETAILERS_BY_ROUTE: '/getRetailersByRoute',
+    GET_NEW_ORDERS: '/getNewOrders',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

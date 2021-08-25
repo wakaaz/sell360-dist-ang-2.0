@@ -23,7 +23,7 @@ const routes: Routes = [
             component: OrdersListComponent
         },
         {
-            path: 'order-list-details',
+            path: 'order-list-details/:id',
             pathMatch: 'full',
             component: OrdersListDetailsComponent
         },

@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ToasterService } from 'src/app/core/services/toaster.service';
+import { OrdersService } from '../../services/orders.service';
 
 @Component({
     selector: 'app-orders-list',
@@ -10,26 +12,49 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 export class OrdersListComponent implements OnInit {
     selectedOrderBooker: number;
     showDetailsPopup: boolean;
-    orderBookers: Array<any>;
-    orders: Array<any>;
-    dtOptions: DataTables.Settings = {};
     byOrderBooker: boolean;
+    loading: boolean;
+    orderBookers: Array<any> = [];
+    salesMen: Array<any> = [];
+    orders: Array<any> = [];
+    dtOptions: DataTables.Settings = {};
 
-    constructor() {
+    constructor(
+        private ordersService: OrdersService,
+        private toastService: ToasterService,
+    ) {
     }
 
     ngOnInit(): void {
-        this.byOrderBooker = false;
-        this.orderBookers = [{name: 'Utba', id: 1}, {name: 'Atif', id: 13}, {name: 'Ali', id: 21}];
-        this.orders = [
-            { id: 1, retailer: 'Market Store', channel: 'Kiryana Store', totalOrder: 1075.02 },
-            { id: 2, retailer: 'Kirana Store', channel: 'App Store', totalOrder: 1271.12 },
-            { id: 3, retailer: '786 Store', channel: 'Google Store', totalOrder: 3365.75 },
-        ];
-        this.selectedOrderBooker = null;
+        this.byOrderBooker = true;
         this.dtOptions = {
             pagingType: 'simple_numbers'
         };
+
+        this.getNewOrders();
+    }
+
+    getAllSalesMen(): void {
+    }
+
+    getNewOrders(): void {
+        this.loading = true;
+        this.ordersService.getNewOrders().subscribe(res => {
+            this.loading = false;
+            if (res.status === 200) {
+                this.orders = res.data;
+            }
+        }, error => {
+            this.loading = false;
+            if (error.status !== 401 && error.status !== 1) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'New Orders not fetched, try again later.',
+                    type: 'error'
+                });
+            }
+            scrollTo(0, 0);
+        });
     }
 
     openDetailsModal(order: any): void {

@@ -778,11 +778,11 @@ export class CounterSaleComponent implements OnInit {
 
     setOrderItems(selectedEmployee: any): void {
         this.selectedProducts.forEach((product, index) => {
-            const productParent = product.units.sort((a, b) => {
-                return b.pref_id - a.pref_id;
-            })[0];
-            const subInvnt = this.subInventory.find(x => x.child === +product.pref_id);
-            const parentQtySold = this.dataService.roundUptoTwoDecimal(product.quantity / subInvnt.quantity);
+            // const productParent = product.units.sort((a, b) => {
+            //     return b.pref_id - a.pref_id;
+            // })[0];
+            // const subInvnt = this.subInventory.find(x => x.child === +product.pref_id);
+            // const parentQtySold = this.dataService.roundUptoTwoDecimal(product.quantity / subInvnt.quantity);
             const item: OrderItem = {
                 item_id: product.item_id,
                 pref_id: product.pref_id,

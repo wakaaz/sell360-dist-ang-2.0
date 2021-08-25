@@ -245,9 +245,6 @@ export class CounterSaleComponent implements OnInit {
             title: `Full Payment selected for ${this.addedPayment}` };
             this.toastService.showToaster(toast);
         } else {
-            this.cash.amount_received = JSON.parse(JSON.stringify(this.dueAmount));
-            if (this.credit && current === 'Credit') { this.credit.amount_received = 0; }
-            if (this.cheque && current === 'Cheque Payment') { this.cheque.amount_received = 0; }
             this.addedPayment = current;
             this.currentPayment = other;
         }
@@ -255,6 +252,9 @@ export class CounterSaleComponent implements OnInit {
 
     setPartial(current: string): void {
         if (current === this.addedPayment) {
+            this.cash.amount_received = JSON.parse(JSON.stringify(this.dueAmount));
+            if (this.credit && current === 'Credit') { this.credit.amount_received = 0; }
+            if (this.cheque && current === 'Cheque Payment') { this.cheque.amount_received = 0; }
             this.addedPayment = '';
             this.currentPayment = '';
             this.alreadyFullPayment = false;
@@ -479,7 +479,7 @@ export class CounterSaleComponent implements OnInit {
     }
 
     applySlabOnAllProducts(): void {
-        if (this.merchantDiscount && this.merchantDiscount.slab !== null) {
+        if (this.merchantDiscount && this.merchantDiscount.discount_filter === 'slab') {
             this.selectedProducts = this.selectedProducts.map(product => {
                 product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.grossAmount);
                 product = this.calculateProductSpecialDiscount(product);
@@ -490,6 +490,8 @@ export class CounterSaleComponent implements OnInit {
                 return product;
             });
             this.calculateTotalBill();
+        }else if(this.merchantDiscount && this.merchantDiscount.discount_filter === 'flat'){
+            
         }
     }
 
@@ -608,7 +610,7 @@ export class CounterSaleComponent implements OnInit {
         let discount = this.selectedProducts.map(product => product.scheme_discount);
         this.tradeOffer = this.dataService.calculateItemsBill(discount);
         // Trade Discount
-        discount = this.selectedProducts.map(product => product.trade_discount);
+        discount = this.selectedProducts.map(product => product.trade_discount_pkr);
         this.tradeDiscount = this.dataService.calculateItemsBill(discount);
         // Special Discount
         discount = this.selectedProducts.map(product => product.special_discount);
@@ -752,7 +754,7 @@ export class CounterSaleComponent implements OnInit {
                 freight_charges: 0,
                 order_total: this.orderTotal,
                 region_id: this.selectedRegion,
-                status: '',
+                status: 'Completed',
                 status_code: 0,
                 territory_id: employee.territory_id,
                 total_retail_price: this.grossAmount,

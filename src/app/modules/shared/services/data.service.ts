@@ -236,10 +236,15 @@ export class DataService {
     /** Merchant Discount Start */
     applyMerchantDiscountForSingleProduct(merchantDiscount: any, product: any, orderTotal: number): any {
         let discountValuePKR = 0;
-        if (merchantDiscount.flat !== null) {
-            discountValuePKR = this.roundUptoTwoDecimal((merchantDiscount.flat.value / 100) * product.unit_price_after_scheme_discount);
-            product.trade_discount = merchantDiscount.flat.value;
-        } else if (merchantDiscount.slab?.length > 0) {
+        if (merchantDiscount.discount_filter === 'flat') {
+            if (merchantDiscount.flat.discount_type === 'percentage') {
+                discountValuePKR = this.roundUptoTwoDecimal((merchantDiscount.flat.value / 100) * product.unit_price_after_scheme_discount);
+                product.trade_discount = merchantDiscount.flat.value;
+            } else {
+                discountValuePKR = merchantDiscount.flat.value;
+                product.trade_discount = merchantDiscount.flat.value;
+            }
+        } else if (merchantDiscount.discount_filter === 'slab') {
             const currentItemsPrice = product.unit_price_after_scheme_discount * product.quantity;
             const totalItemsPrice = currentItemsPrice + orderTotal;
             const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from <= totalItemsPrice && slb.range_to >= totalItemsPrice);
@@ -250,7 +255,7 @@ export class DataService {
                 product.trade_discount = 0;
             }
         }
-        product.trade_discount_pkr = discountValuePKR;
+        product.trade_discount_pkr = discountValuePKR * +product.quantity;
         product.price = product.unit_price_after_scheme_discount - discountValuePKR;
         product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
         return product;
@@ -260,7 +265,7 @@ export class DataService {
         const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from <= orderTotal && slb.range_to >= orderTotal);
         const discountValuePKR = this.roundUptoTwoDecimal((selectedSlab.value / 100) * product.unit_price_after_scheme_discount);
         product.trade_discount = selectedSlab.value;
-        product.trade_discount_pkr = discountValuePKR;
+        product.trade_discount_pkr = discountValuePKR * +product.quantity;
         product.price = product.unit_price_after_scheme_discount - discountValuePKR;
         product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
         return product;
@@ -275,7 +280,7 @@ export class DataService {
         if (selectedSpecialDiscount) {
             product.price = product.unit_price_after_merchant_discount - selectedSpecialDiscount.discount;
             product.unit_price_after_special_discount = product.price - selectedSpecialDiscount.discount;
-            product.special_discount = selectedSpecialDiscount.discount;
+            product.special_discount = +product.quantity * selectedSpecialDiscount.discount;
             product.special_discount_pkr = product.quantity * selectedSpecialDiscount.discount;
         } else {
             product.special_discount_pkr = 0.00;

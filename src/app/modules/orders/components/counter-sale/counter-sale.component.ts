@@ -566,6 +566,7 @@ export class CounterSaleComponent implements OnInit {
 
         // Extra Discount => Booker Discount
         product.extra_discount = 0;
+        product.extra_discount_pkr = 0;
 
         this.calculateNetAmountOfProduct(product);
     }

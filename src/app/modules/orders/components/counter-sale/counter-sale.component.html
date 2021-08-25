@@ -35,7 +35,7 @@
                         <span *ngIf="selectedProduct.pref_id === null && isAdded" class="input-error">
                             Please select a Unit!
                         </span>
-                        <span *ngIf="alreadyAdded" class="input-error">
+                        <span *ngIf="alreadyAdded && selectedProduct.pref_id !== null" class="input-error">
                             Selected Unit already added please change unit or update the quantity in the list!
                         </span>
                     </div>
@@ -73,7 +73,7 @@
         <div class="modal-content top_border">
             <div *ngIf="!isCredit" class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Add <span> Cheque Information</span></h5>
-                <button type="button" (click)="isAdded=false" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" (click)="paymentCancelled()" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -108,11 +108,11 @@
                         <div class="col-md-6 PT-10">
                             <div class="form-group">
                                 <label class="control-label mb-10">Cheque Number*</label>
-                                <input type="text" name="cheque_num" (focus)="focused($event)" required (keydown)="isNumber($event)"
-                                    (blur)="left($event)" [(ngModel)]="chequeNumber" #chequNo="ngModel"
+                                <input type="text" id="chequeNum" name="cheque_num" (focus)="focused($event)" required (keydown)="isNumber($event)"
+                                    (blur)="left($event)" [(ngModel)]="chequeNumber" #chequNo="ngModel" autocomplete="off"
                                     class="form-control cheque_num">
                             </div>
-                            <span *ngIf="chequNo.errors?.required && (isAdded || chequNo.touched || chequNo.dirty)"
+                            <span *ngIf="chequNo.errors?.required && isAdded"
                                 class="input-error">
                                 Please add Cheque Number!
                             </span>
@@ -124,7 +124,7 @@
                                     autocomplete="off" (blur)="left($event)" name="payment_date"
                                     [(ngModel)]="paymentDate" #payDate="ngModel" class="form-control cheque_date">
                             </div>
-                            <span *ngIf="paymentDate === '  ' && (isAdded || payDate.touched || payDate.dirty)"
+                            <span *ngIf="paymentDate === '  ' && isAdded"
                                 class="input-error">
                                 Please add Payment Date!
                             </span>
@@ -132,27 +132,37 @@
                         <div class="col-md-6 PT-5">
                             <div class="form-group">
                                 <label class="control-label mb-10">Bank Name*</label>
-                                <input type="text" name="cheque_bank_name" (focus)="focused($event)" required
-                                    (blur)="left($event)" [(ngModel)]="bankName" #bank_Name="ngModel"
+                                <input type="text" name="cheque_bank_name" id="chequeBankName" (focus)="focused($event)" required
+                                    (blur)="left($event)" [(ngModel)]="bankName" #bank_Name="ngModel" autocomplete="off"
                                     class="form-control cheque_bank_name">
                             </div>
                             <span
-                                *ngIf="bank_Name.errors?.required && (isAdded || bank_Name.touched || bank_Name.dirty)"
+                                *ngIf="bank_Name.errors?.required && isAdded"
                                 class="input-error">
                                 Please add Bank Name!
                             </span>
                         </div>
-                        <div *ngIf="paymentTypeCheque === 'partial'" class="col-md-6 PT-5">
+                        <div *ngIf="paymentTypeCheque !== 'full'" class="col-md-6 PT-5">
                             <div class="form-group">
                                 <label class="control-label mb-10">Total Amount*</label>
-                                <input type="number" name="cheque_amount" (focus)="focused($event)" required
-                                    (blur)="left($event)" [(ngModel)]="chequeAmount" #cheqAmount="ngModel"
+                                <input type="number" min="0" [max]="cash?.amount_received" name="cheque_amount" (focus)="focused($event)" required
+                                    (blur)="left($event)" [(ngModel)]="chequeAmount" #cheqAmount="ngModel" id="Amount1" autocomplete="off"
                                     class="form-control cheque_amount">
                             </div>
                             <span
-                                *ngIf="cheqAmount.errors?.required && (isAdded || cheqAmount.touched || cheqAmount.dirty)"
+                                *ngIf="cheqAmount.errors?.required && isAdded"
                                 class="input-error">
                                 Please add Total Amount!
+                            </span>
+                            <span
+                                *ngIf="!cheqAmount.errors?.required && chequeAmount < 0 && isAdded"
+                                class="input-error">
+                                Negative values not allowed
+                            </span>
+                            <span
+                            *ngIf="!cheqAmount.errors?.required && chequeAmount > cash?.amount_received && isAdded"
+                                class="input-error">
+                                Amount should not be greater than {{cash?.amount_received | number: '1.2-2'}}
                             </span>
                         </div>
                     </div>
@@ -189,17 +199,27 @@
                                     for="Amount2">Partial Amount</label>
                             </div>
                         </div>
-                        <div *ngIf="paymentTypeCredit === 'partial'" class="col-md-6 PT-10">
+                        <div *ngIf="paymentTypeCredit !== 'full'" class="col-md-6 PT-10">
                             <div class="form-group">
                                 <label class="control-label mb-10">Amount*</label>
-                                <input type="number" name="cheque_amount" (focus)="focused($event)" required
-                                    (blur)="left($event)" [(ngModel)]="creditAmount" #chequAmount="ngModel"
+                                <input type="number" min="0" [max]="cash?.amount_received" name="cheque_amount" (focus)="focused($event)" required
+                                    (blur)="left($event)" [(ngModel)]="creditAmount" #credAmount="ngModel" autocomplete="off"
                                     class="form-control cheque_amount">
                             </div>
                             <span
-                                *ngIf="chequAmount.errors?.required && (isAdded || chequAmount.touched || chequAmount.dirty)"
+                                *ngIf="credAmount.errors?.required && isAdded"
                                 class="input-error">
                                 Please add Total Amount!
+                            </span>
+                            <span
+                                *ngIf="!credAmount.errors?.required && creditAmount < 0 && isAdded"
+                                class="input-error">
+                                Negative values not allowed
+                            </span>
+                            <span
+                                *ngIf="!credAmount.errors?.required && creditAmount > cash?.amount_received && isAdded"
+                                class="input-error">
+                                Amount should not be greater than {{cash?.amount_received | number: '1.2-2'}}
                             </span>
                         </div>
                     </div>
@@ -214,7 +234,7 @@
 
             <div class="modal-footer border-0">
                 <button type="submit" class="btn btn-primary" (click)="addPaymentMethod()">Add</button>
-                <button type="button" id="close-payment-modal" (click)="isAdded=false" class="btn btn-cancel"
+                <button type="button" id="close-payment-modal" (click)="paymentCancelled()" class="btn btn-cancel"
                     data-dismiss="modal" aria-label="Close">Cancel</button>
             </div>
         </div>
@@ -360,7 +380,7 @@
                                 <div class="addItemCell2">QTY.</div>
                                 <div class="addItemCell2">T.P</div>
                                 <div class="addItemCell2">T.O </div>
-                                <div class="addItemCell2">T. Dis.</div>
+                                <div class="addItemCell2">T. Dis. (%)</div>
                                 <div class="addItemCell2">S. Disc.</div>
                                 <div class="addItemCell2">E. Disc.</div>
                                 <div class="addItemCell2">Tax</div>
@@ -397,7 +417,7 @@
                                     <div class="addItemCell2 _h25">{{product.item_trade_price}}</div>
                                     <div class="addItemCell2 _h25">{{product.scheme_discount || 0.00 | number: '1.2-2'}}
                                     </div>
-                                    <div class="addItemCell2 _h25">{{product.trade_discount || 0.00 | number: '1.2-2'}}
+                                    <div class="addItemCell2 _h25">{{product.trade_discount || 0 }}
                                     </div>
                                     <div class="addItemCell2 _h25">{{product.special_discount || 0.00 | number:
                                         '1.2-2'}}</div>

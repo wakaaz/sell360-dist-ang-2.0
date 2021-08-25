@@ -22,7 +22,7 @@ export class DataService {
 
     calculateDiscount(discount: number, type: string, total: number): number {
         if (type === 'percentage') {
-            return (discount / 100) * total;
+            return this.roundUptoTwoDecimal((discount / 100) * total);
         } else if (type === 'price') {
             return total - discount;
         }
@@ -116,8 +116,8 @@ export class DataService {
     getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
         const totalTpMinQty = itemTP * minQty;
         const totalItemBeingGiven = freeQty + minQty;
-        const discountOnEachItem = (totalTpMinQty / totalItemBeingGiven).toFixed(2);
-        const schemeAmount = itemTP - Number(discountOnEachItem);
+        const discountOnEachItem = this.roundUptoTwoDecimal(totalTpMinQty / totalItemBeingGiven);
+        const schemeAmount = itemTP - discountOnEachItem;
         return schemeAmount;
     }
 
@@ -132,7 +132,7 @@ export class DataService {
     getSDForFPTradePriceScheme(itemTradePrice: number, userQty: number, minimumQty: number, freeQty: number)
         : { singleItemPrice: number, schemeDiscount: number } {
         const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, freeQty);
-        const tradePriceForSingleItem = itemTradePrice - (schemeAmount / userQty);
+        const tradePriceForSingleItem = itemTradePrice - (this.roundUptoTwoDecimal(schemeAmount / userQty));
         return { singleItemPrice: tradePriceForSingleItem,  schemeDiscount:  schemeAmount };
     }
 
@@ -160,7 +160,7 @@ export class DataService {
         const freeQtyInterval = Math.floor(userQty / minimumQty);
         const orderFreeQty = freeQtyInterval * freeQty;
         const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, orderFreeQty);
-        const singItemPrice = itemTradePrice - (schemeAmount / userQty);
+        const singItemPrice = itemTradePrice - (this.roundUptoTwoDecimal(schemeAmount / userQty));
         return { singleItemPrice: singItemPrice, schemeDiscount: schemeAmount };
     }
 
@@ -188,9 +188,8 @@ export class DataService {
             const units = product.units.sort((a, b) => {
                 return b.item_trade_price - a.item_trade_price;
             });
-            const percentageDiscount = (product.selectedScheme.disouct_on_tp / units[0].item_trade_price) * 100;
-            const totalPrice = product.item_trade_price * product.quantity;
-            const singleUnitDiscount = this.calculateDiscount(percentageDiscount, 'percentage', totalPrice);
+            const percentageDiscount = this.roundUptoTwoDecimal((product.selectedScheme.discount_on_tp / units[0].item_trade_price) * 100);
+            const singleUnitDiscount = this.calculateDiscount(percentageDiscount, 'percentage', product.item_trade_price);
             product.price = product.item_trade_price - singleUnitDiscount;
             product.unit_price_after_scheme_discount = product.item_trade_price - singleUnitDiscount;
             product.scheme_discount = product.quantity * singleUnitDiscount;
@@ -238,14 +237,14 @@ export class DataService {
     applyMerchantDiscountForSingleProduct(merchantDiscount: any, product: any, orderTotal: number): any {
         let discountValuePKR = 0;
         if (merchantDiscount.flat !== null) {
-            discountValuePKR = (merchantDiscount.flat.value / 100) * product.unit_price_after_scheme_discount;
+            discountValuePKR = this.roundUptoTwoDecimal((merchantDiscount.flat.value / 100) * product.unit_price_after_scheme_discount);
             product.trade_discount = merchantDiscount.flat.value;
         } else if (merchantDiscount.slab?.length > 0) {
             const currentItemsPrice = product.unit_price_after_scheme_discount * product.quantity;
             const totalItemsPrice = currentItemsPrice + orderTotal;
             const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from <= totalItemsPrice && slb.range_to >= totalItemsPrice);
             if (selectedSlab) {
-                discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
+                discountValuePKR = this.roundUptoTwoDecimal((selectedSlab.value / 100) * product.unit_price_after_scheme_discount);
                 product.trade_discount = selectedSlab.value;
             } else {
                 product.trade_discount = 0;
@@ -259,7 +258,7 @@ export class DataService {
 
     applySlabForTotal(product: any, merchantDiscount: any, orderTotal: number): any {
         const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from <= orderTotal && slb.range_to >= orderTotal);
-        const discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
+        const discountValuePKR = this.roundUptoTwoDecimal((selectedSlab.value / 100) * product.unit_price_after_scheme_discount);
         product.trade_discount = selectedSlab.value;
         product.trade_discount_pkr = discountValuePKR;
         product.price = product.unit_price_after_scheme_discount - discountValuePKR;
@@ -286,5 +285,9 @@ export class DataService {
         return product;
     }
     /** Special Discount End */
+
+    roundUptoTwoDecimal(value: number): number {
+        return Math.round(value * 100) / 100;
+    }
 
 }

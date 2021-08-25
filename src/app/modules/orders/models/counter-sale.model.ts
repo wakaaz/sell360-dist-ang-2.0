@@ -41,6 +41,7 @@ export interface CounterSale {
     spot_sale: number;
     counter_sale: number;
     invoice_date: string;
+    order_type: 'counter' | 'dispatched' | 'spot';
     distributor_id: number;
     region_id: number; // Selected Employee
     area_id: number;  // Selected Employee

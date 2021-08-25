@@ -72,6 +72,7 @@ export class CounterSaleComponent implements OnInit {
     selectedProducts: Array<any> = [];
     selectedProductsIds: Array<any> = [];
     schemes: Array<any> = [];
+    subInventory: Array<any> = [];
     discountSlabs: Array<any> = [];
 
     constructor(
@@ -131,6 +132,7 @@ export class CounterSaleComponent implements OnInit {
                 this.specialDiscounts = res.data.special_discount;
                 this.prefrences = res.data.prefs;
                 this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
+                this.subInventory = res.data.sub_inventory;
             } else {
                 const toast: Toaster = { type: 'error', message: res.message, title: 'Error:' };
                 this.toastService.showToaster(toast);
@@ -142,6 +144,22 @@ export class CounterSaleComponent implements OnInit {
                 this.toastService.showToaster(toast);
             }
         });
+    }
+
+    resetValues(): void {
+        this.selectedProducts = [];
+        this.grossAmount = 0.00;
+        this.tradeOffer = 0.00;
+        this.tradeDiscount = 0.00;
+        this.specialDiscount = 0.00;
+        this.extraDiscount = 0.00;
+        this.tax = 0.00;
+        this.dueAmount = 0.00;
+        this.notes = '';
+        this.paymentDate = new Date().toISOString().split('T')[0];
+        this.paymentTypeCheque = '';
+        this.paymentTypeCredit = '';
+        this.addedPayment = '';
     }
 
     getSchemesData(): void {
@@ -188,23 +206,48 @@ export class CounterSaleComponent implements OnInit {
     }
 
     isFullyPaymentAdded(current: string): void {
+        if (this.selectedProducts.length === 0 && this.dueAmount === 0.00) {
+            const toast: Toaster = {
+                type: 'error',
+                message: `Please select products first!`,
+                title: `Payment cannot be added`
+            };
+            this.toastService.showToaster(toast);
+        } else {
+            if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
+                const toast: Toaster = {
+                    type: 'error',
+                    message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${this.currentPayment}!`,
+                    title: `Full Payment selected for ${this.addedPayment}`
+                };
+                this.toastService.showToaster(toast);
+            } else {
+                document.getElementById('open-modal-payment').click();
+                this.focusForPaymentValues();
+            }
+        }
+    }
+
+    focusForPaymentValues(): void {
+        if (this.isCredit && this.creditAmount) {
+            document.getElementById('Amount2').parentElement.classList.add('focused');
+        } else {
+            if (this.chequeAmount) { document.getElementById('Amount1').parentElement.classList.add('focused'); }
+            if (this.bankName) { document.getElementById('chequeBankName').parentElement.classList.add('focused'); }
+            if (this.chequeNumber) { document.getElementById('chequeNum').parentElement.classList.add('focused'); }
+        }
+    }
+
+    currentFullPayment(current: string, other: string): void {
         if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
             const toast: Toaster = { type: 'error',
             message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${this.currentPayment}!`,
             title: `Full Payment selected for ${this.addedPayment}` };
             this.toastService.showToaster(toast);
         } else {
-            document.getElementById('open-modal-payment').click();
-        }
-    }
-
-    currentFullPayment(current: string, other: string): void {
-        if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
-            this.alreadyFullPayment = true;
-            setTimeout(() => {
-                this.alreadyFullPayment = false;
-            }, 17000);
-        } else {
+            this.cash.amount_received = JSON.parse(JSON.stringify(this.dueAmount));
+            if (this.credit) { this.credit.amount_received = 0; }
+            if (this.cheque) { this.cheque.amount_received = 0; }
             this.addedPayment = current;
             this.currentPayment = other;
         }
@@ -218,19 +261,19 @@ export class CounterSaleComponent implements OnInit {
         }
     }
 
-    validatePaymentMethod(): boolean {
+    checkPaymentHasValues(): boolean {
         if (this.isCredit) {
             if (this.paymentTypeCredit === 'full') {
                 return this.paymentTypeCredit.length > 0;
             } else {
-                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1;
+                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1 && this.creditAmount <= this.cash.amount_received;
             }
         } else {
             if (this.paymentTypeCheque === 'full') {
                 return this.paymentTypeCheque.length > 0 && this.bankName.length > 0 &&
                     this.chequeNumber > 0 && this.paymentDate.length > 0;
             } else {
-                return this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 &&
+                return this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 && this.chequeAmount <= this.cash.amount_received &&
                     this.bankName.length > 0 && this.chequeNumber > 0 && this.paymentDate.length > 0;
             }
         }
@@ -274,17 +317,21 @@ export class CounterSaleComponent implements OnInit {
 
     addPaymentMethod(): void {
         this.isAdded = true;
-        if (this.validatePaymentMethod()) {
+        if (this.checkPaymentHasValues()) {
             this.isAdded = false;
             this.makePayment();
-            this.resetPaymentValues();
-            document.getElementById('close-payment-modal').click();
+            document.getElementById('open-modal-payment').click();
         }
     }
 
+    paymentCancelled(): void {
+        this.isAdded = false;
+        this.resetPaymentValues();
+        this.paymentTypeCredit = '';
+        this.paymentTypeCheque = '';
+    }
+
     resetPaymentValues(): void {
-        // this.paymentTypeCredit = '';
-        // this.paymentTypeCheque = '';
         this.chequeAmount = null;
         this.paymentDate = new Date().toISOString().split('T')[0];
         this.bankName = '';
@@ -296,6 +343,9 @@ export class CounterSaleComponent implements OnInit {
         const employee = this.orderBookers.find(x => x.employee_id === this.selectedEmployee);
         this.selectedRegion = employee.region_id;
         this.selectedSegment = employee.segment_id;
+        this.selectedRoute = null;
+        this.selectedRetailer = null;
+        this.resetValues();
         this.ordersService.getOrderBookerRoutes(this.selectedEmployee).subscribe(res => {
             if (res.status === 200) {
                 this.routes = res.data;
@@ -312,6 +362,8 @@ export class CounterSaleComponent implements OnInit {
     }
 
     getRetailerByRoute(): void {
+        this.selectedRetailer = null;
+        this.resetValues();
         this.ordersService.getRetailersByRoute(this.selectedRoute).subscribe(res => {
             if (res.status === 200) {
                 this.retailers = res.data;
@@ -356,6 +408,7 @@ export class CounterSaleComponent implements OnInit {
     }
 
     setPrefrence(prefId: number, product: any): void {
+        this.alreadyAdded = false;
         const prefrence = this.prefrences.find(x => x.pref_id === +prefId);
         product.unit_id = prefrence.unit_id;
         product.item_trade_price = prefrence.item_trade_price;
@@ -363,10 +416,7 @@ export class CounterSaleComponent implements OnInit {
         product.retail_price = prefrence.item_retail_price;
         product.schemes = this.dataService.getSchemes(product.item_id,
             product.unit_id, product.pref_id, this.schemes, this.selectedRetailer);
-        if (product.quantity) {
-            if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
-                this.grossAmount = this.grossAmount - product.gross_amount;
-            }
+        if (product.schemes?.length) {
             product.schemes = product.schemes.map(scheme => {
                 switch (scheme.scheme_type) {
                     case 'free_product':
@@ -382,6 +432,11 @@ export class CounterSaleComponent implements OnInit {
                 }
                 return scheme;
             });
+        }
+        if (product.quantity) {
+            if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
+                this.grossAmount = this.grossAmount - product.gross_amount;
+            }
             this.calculateProductDiscounts(product);
             this.calculateProductPrice(product);
             this.calculateTotalBill();
@@ -390,10 +445,10 @@ export class CounterSaleComponent implements OnInit {
     }
 
     isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
-        if (event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
+        if (event.key && event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
             (type === 'charges' && event.key.includes('.'))) {
             return true;
-        } else if (event.key.trim() === '') {
+        } else if (event.key && event.key.trim() === '') {
             return false;
         }
         return !isNaN(Number(event.key.trim()));
@@ -522,7 +577,9 @@ export class CounterSaleComponent implements OnInit {
 
     calculateProductTax(product: any): void {
         if (product.tax_class_amount) {
-            product.tax_amount_pkr = ((product.tax_class_amount / 100) * product.retail_price) * product.quantity;
+            product.tax_amount_pkr = this.dataService.roundUptoTwoDecimal(
+                ((product.tax_class_amount / 100) * product.retail_price) * product.quantity
+            );
             product.net_amount = product.net_amount + product.tax_amount_pkr;
         } else {
             product.tax_amount_pkr = 0;
@@ -669,6 +726,7 @@ export class CounterSaleComponent implements OnInit {
                 area_id: employee.area_id,
                 assigned_route_id: this.selectedRoute,
                 booking_territory: employee.territory_id,
+                order_type: 'counter',
                 counter_sale: 1,
                 spot_sale: 0,
                 sales_man_id: 0,
@@ -720,6 +778,11 @@ export class CounterSaleComponent implements OnInit {
 
     setOrderItems(selectedEmployee: any): void {
         this.selectedProducts.forEach((product, index) => {
+            const productParent = product.units.sort((a, b) => {
+                return b.pref_id - a.pref_id;
+            })[0];
+            const subInvnt = this.subInventory.find(x => x.child === +product.pref_id);
+            const parentQtySold = this.dataService.roundUptoTwoDecimal(product.quantity / subInvnt.quantity);
             const item: OrderItem = {
                 item_id: product.item_id,
                 pref_id: product.pref_id,
@@ -733,7 +796,7 @@ export class CounterSaleComponent implements OnInit {
                 assigned_route_id: this.selectedRoute,
                 booked_total_qty: 0,
                 quantity: +product.quantity,
-                gross_sale_amount: product.net_amount,
+                gross_sale_amount: product.gross_amount,
                 booked_order_value: product.original_amount,
                 brand_id: product.brand_id,
                 campaign_id: product.selectedScheme?.id || 0,

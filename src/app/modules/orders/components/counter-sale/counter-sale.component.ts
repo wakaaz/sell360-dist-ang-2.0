@@ -246,8 +246,8 @@ export class CounterSaleComponent implements OnInit {
             this.toastService.showToaster(toast);
         } else {
             this.cash.amount_received = JSON.parse(JSON.stringify(this.dueAmount));
-            if (this.credit) { this.credit.amount_received = 0; }
-            if (this.cheque) { this.cheque.amount_received = 0; }
+            if (this.credit && current === 'Credit') { this.credit.amount_received = 0; }
+            if (this.cheque && current === 'Cheque Payment') { this.cheque.amount_received = 0; }
             this.addedPayment = current;
             this.currentPayment = other;
         }
@@ -856,7 +856,17 @@ export class CounterSaleComponent implements OnInit {
                     title: 'Order Placed:'
                 };
                 this.toastService.showToaster(toast);
-                this.router.navigateByUrl('/orders');
+                this.selectedEmployee = null;
+                this.selectedRoute = null;
+                this.selectedRetailer = null;
+                this.credit = null;
+                this.cheque = null;
+                this.cash = null;
+                this.retailers = [];
+                this.routes = [];
+                this.resetValues();
+                this.paymentCancelled();
+                // this.router.navigateByUrl('/orders');
             }
         }, error => {
             this.isOrdering = false;

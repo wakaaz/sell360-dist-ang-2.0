@@ -74,7 +74,6 @@ export class OrdersListComponent implements OnInit {
 
     addOrderToAssignment(order: any): void  {
         this.selectedOrders  = this.selectedOrders.filter(odr => odr.date !== order.date && order.employee_id);
-        console.log('this.selectedOrders ----> ', this.selectedOrders);
         const assignment = {
             sales_man: order.selectedSaleman.id,
             employee_id: order.employee_id,
@@ -85,31 +84,39 @@ export class OrdersListComponent implements OnInit {
     }
 
     assignSaleman(): void {
-        const assigned = {salesman: this.selectedOrders};
-        this.loading = true;
-        this.ordersService.assignSalesMan(assigned).subscribe(res => {
-            if (res.status) {
-                this.toastService.showToaster({
-                    title: 'Salesman Assigned:',
-                    message: 'Salesmen assigned to selected order.',
-                    type: 'success'
-                });
-                this.selectedOrders.forEach(order => {
-                    this.orders = this.orders.filter(ordr => ordr.date !== order.date && order.employee_id);
-                });
+        if (this.selectedOrders.length) {
+            const assigned = {salesman: this.selectedOrders};
+            this.loading = true;
+            this.ordersService.assignSalesMan(assigned).subscribe(res => {
+                if (res.status) {
+                    this.toastService.showToaster({
+                        title: 'Salesman Assigned:',
+                        message: 'Salesmen assigned to selected order.',
+                        type: 'success'
+                    });
+                    this.selectedOrders.forEach(order => {
+                        this.orders = this.orders.filter(ordr => ordr.date !== order.date && order.employee_id);
+                    });
+                    this.loading = false;
+                }
+            }, error => {
                 this.loading = false;
-            }
-        }, error => {
-            this.loading = false;
-            if (error.status !== 401 && error.status !== 1) {
-                this.toastService.showToaster({
-                    title: 'Error:',
-                    message: 'Salesmen assignment is not working at the moment, try again later.',
-                    type: 'error'
-                });
-            }
-            scrollTo(0, 0);
-        });
+                if (error.status !== 401 && error.status !== 1) {
+                    this.toastService.showToaster({
+                        title: 'Error:',
+                        message: 'Salesmen assignment is not working at the moment, try again later.',
+                        type: 'error'
+                    });
+                }
+                scrollTo(0, 0);
+            });
+        } else {
+            this.toastService.showToaster({
+                title: 'Error:',
+                message: 'Please select saleman to assign orders!',
+                type: 'error'
+            });
+        }
     }
 
     openDetailsModal(order: any): void {

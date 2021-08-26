@@ -179,6 +179,7 @@ export class CounterSaleComponent implements OnInit {
     }
 
     getDiscountSlabs(): void {
+        this.resetValues();
         this.ordersService.getDiscountSlabs().subscribe(res => {
             if (res.status === 200) {
                 this.discountSlabs = res.data;

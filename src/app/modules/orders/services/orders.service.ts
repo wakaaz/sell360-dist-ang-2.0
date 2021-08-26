@@ -54,4 +54,14 @@ export class OrdersService {
         const url = API_URLS.GET_ALL_SALESMEN;
         return this.baseService.get(url);
     }
+
+    getViewOrdersByEmployee(id: number, date: string): Observable<any> {
+        const url = `${API_URLS.VIEW_ORDERS}${id}/${date}`;
+        return this.baseService.get(url);
+    }
+
+    getViewOrderDetailById(orderid: number): Observable<any> {
+        const url = `${API_URLS.ORDER_DETAIL}/${orderid}`;
+        return this.baseService.get(url);
+    }
 }

@@ -14,6 +14,7 @@ export const API_URLS = {
     GET_DISCOUNT_SLABS: '/getSlabDiscount',
     GET_RETAILERS_BY_ROUTE: '/getRetailersByRoute',
     GET_NEW_ORDERS: '/getNewOrders',
+    ASSIGN_SALESMAN: '/assignSalesman',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

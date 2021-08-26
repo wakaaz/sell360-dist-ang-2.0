@@ -224,7 +224,7 @@
                                 <div class="_cust_filter">
                                     <div class="form-s2">
                                         <ng-select class="form-control formselect" placeholder="Select Order Booker"
-                                            name="order-booker" style="width: 100%!important"
+                                            name="order-booker" style="width: 100%!important" [multiple]="false"
                                             [(ngModel)]="selectedOrderBooker" id="order-booker">
                                             <ng-option [value]="orderBooker.id"
                                                 *ngFor="let orderBooker of orderBookers">
@@ -320,11 +320,9 @@
                                         <td>{{order.emp_name}}</td>
                                         <td>{{order.total_orders}}</td>
                                         <td>
-                                            <ng-select class="formselect" placeholder="Select Salesman" name="select-saleman-for-order-booker"
-                                                style="width: 95%!important" [(ngModel)]="selectedOrderBooker" id="select-saleman-for-order-booker">
-                                                <ng-option value="148">Utba </ng-option>
-                                                <ng-option value="154">Adeel </ng-option>
-                                                <ng-option value="155">Atif 747 </ng-option>
+                                            <ng-select class="formselect" (change)="addOrderToAssignment(order)" placeholder="Select Salesman" name="select-saleman-{{i}}" [multiple]="false"
+                                                style="width: 95%!important" [(ngModel)]="order.selectedSaleman" id="select-saleman-{{i}}">
+                                                <ng-option *ngFor="let saleman of salesMen; let in=index" [value]="saleman">{{saleman.name}}</ng-option>
                                             </ng-select>
                                         </td>
                                         <td>
@@ -343,7 +341,7 @@
                         <div *ngIf="!loading" class="col-12 bottom-gray">
                             <div class="row justify-content-end">
                                 <div class="col-auto pl-0">
-                                    <button type="submit" class="btn btn-primary">Assign Salesman</button>
+                                    <button type="submit" (click)="assignSaleman()" class="btn btn-primary">Assign Salesman</button>
                                 </div>
                             </div>
                         </div>

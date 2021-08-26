@@ -179,20 +179,18 @@ export class CounterSaleComponent implements OnInit {
     }
 
     getDiscountSlabs(): void {
-        if (!this.discountSlabs.length && !this.merchantDiscount) {
-            this.ordersService.getDiscountSlabs().subscribe(res => {
-                if (res.status === 200) {
-                    this.discountSlabs = res.data;
-                    this.merchantDiscount = this.discountSlabs.find(x => x.region_id === this.selectedRegion &&
-                        this.selectedSegment === x.segment_id && x.channel_id === this.selectedRetailer.type_id);
-                }
-            }, error => {
-                if (error.status !== 1 && error.status !== 401) {
-                    const toast: Toaster = { type: 'error', message: 'Cannot fetch Trade Discount. Please try again', title: 'Error:' };
-                    this.toastService.showToaster(toast);
-                }
-            });
-        }
+        this.ordersService.getDiscountSlabs().subscribe(res => {
+            if (res.status === 200) {
+                this.discountSlabs = res.data;
+                this.merchantDiscount = this.discountSlabs.find(x => x.region_id === this.selectedRegion &&
+                    this.selectedSegment === x.segment_id && x.channel_id === this.selectedRetailer.type_id);
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                const toast: Toaster = { type: 'error', message: 'Cannot fetch Trade Discount. Please try again', title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        });
     }
 
     focused(event: Event): void {
@@ -592,11 +590,12 @@ export class CounterSaleComponent implements OnInit {
 
     calculateProductTax(product: any): void {
         if (product.tax_class_amount) {
-            product.tax_amount_pkr = this.dataService.roundUptoTwoDecimal(
-                ((product.tax_class_amount / 100) * product.retail_price) * product.quantity
-            );
+            product.tax_amount_value = this.dataService.roundUptoTwoDecimal(
+                ((product.tax_class_amount / 100) * product.retail_price));
+            product.tax_amount_pkr = this.dataService.roundUptoTwoDecimal(product.tax_amount_value * product.quantity);
             product.net_amount = product.net_amount + product.tax_amount_pkr;
         } else {
+            product.tax_amount_value = 0;
             product.tax_amount_pkr = 0;
         }
     }
@@ -847,12 +846,12 @@ export class CounterSaleComponent implements OnInit {
                 parent_value_sold: 0, // parent_trade_price * parent_qty_sold
                 tax_class_id: product.tax_class_id,
                 tax_in_percentage: product.tax_class_amount,
-                tax_in_value: product.tax_amount_pkr,
+                tax_in_value: product.tax_amount_value,
                 total_amount_after_tax: this.grossAmount,
                 total_discount: product.scheme_discount +
                     product.trade_discount_pkr + product.special_discount_pkr + product.extra_discount_pkr,
                 total_retail_price: product.original_amount,
-                total_tax_amount: product.tax || 0,
+                total_tax_amount: product.tax_amount_pkr || 0,
             };
             this.order.items.push(item);
             if (index === this.selectedProducts.length - 1) {

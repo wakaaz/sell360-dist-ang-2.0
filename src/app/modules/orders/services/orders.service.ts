@@ -54,4 +54,9 @@ export class OrdersService {
         const url = API_URLS.GET_ALL_SALESMEN;
         return this.baseService.get(url);
     }
+
+    assignSalesMan(saleman: any): Observable<any> {
+        const url = API_URLS.ASSIGN_SALESMAN;
+        return this.baseService.post(url, saleman);
+    }
 }

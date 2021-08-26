@@ -12,12 +12,14 @@ import { OrdersService } from '../../services/orders.service';
 export class OrdersListComponent implements OnInit {
     selectedOrderBooker: number;
     showDetailsPopup: boolean;
+    submitted: boolean;
     byOrderBooker: boolean;
     loading: boolean;
     orderBookers: Array<any> = [];
     salesMen: Array<any> = [];
     orders: Array<any> = [];
     dtOptions: DataTables.Settings = {};
+    selectedOrders: Array<any> = [];
 
     constructor(
         private ordersService: OrdersService,
@@ -30,11 +32,24 @@ export class OrdersListComponent implements OnInit {
         this.dtOptions = {
             pagingType: 'simple_numbers'
         };
-
+        this.getAllSalesMen();
         this.getNewOrders();
     }
 
     getAllSalesMen(): void {
+        this.ordersService.getAllSalesMen().subscribe(res => {
+            if (res.status === 200) {
+                this.salesMen = res.data;
+            }
+        }, error => {
+            if (error.status !== 401 && error.status !== 1) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Salesmen not fetched, try again later.',
+                    type: 'error'
+                });
+            }
+        });
     }
 
     getNewOrders(): void {
@@ -50,6 +65,46 @@ export class OrdersListComponent implements OnInit {
                 this.toastService.showToaster({
                     title: 'Error:',
                     message: 'New Orders not fetched, try again later.',
+                    type: 'error'
+                });
+            }
+            scrollTo(0, 0);
+        });
+    }
+
+    addOrderToAssignment(order: any): void  {
+        this.selectedOrders  = this.selectedOrders.filter(odr => odr.date !== order.date && order.employee_id);
+        console.log('this.selectedOrders ----> ', this.selectedOrders);
+        const assignment = {
+            sales_man: order.selectedSaleman.id,
+            employee_id: order.employee_id,
+            date: order.date
+        };
+        this.selectedOrders.push(assignment);
+
+    }
+
+    assignSaleman(): void {
+        const assigned = {salesman: this.selectedOrders};
+        this.loading = true;
+        this.ordersService.assignSalesMan(assigned).subscribe(res => {
+            if (res.status) {
+                this.toastService.showToaster({
+                    title: 'Salesman Assigned:',
+                    message: 'Salesmen assigned to selected order.',
+                    type: 'success'
+                });
+                this.selectedOrders.forEach(order => {
+                    this.orders = this.orders.filter(ordr => ordr.date !== order.date && order.employee_id);
+                });
+                this.loading = false;
+            }
+        }, error => {
+            this.loading = false;
+            if (error.status !== 401 && error.status !== 1) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Salesmen assignment is not working at the moment, try again later.',
                     type: 'error'
                 });
             }

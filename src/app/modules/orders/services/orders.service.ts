@@ -20,21 +20,6 @@ export class OrdersService {
         return this.baseService.get(API_URLS.GET_SCHEMES);
     }
 
-    getOrderBookers(distributorId: number): Observable<any> {
-        const url = `${API_URLS.GET_EMPLOYEES}/${distributorId}`;
-        return this.baseService.get(url);
-    }
-
-    getOrderBookerRoutes(orderBookerId: number): Observable<any> {
-        const url = `${API_URLS.GET_EMPLOYEE_ROUTES}/${orderBookerId}`;
-        return this.baseService.get(url);
-    }
-
-    getRetailersByRoute(routeId: number): Observable<any> {
-        const url = `${API_URLS.GET_RETAILERS_BY_ROUTE}/${routeId}`;
-        return this.baseService.get(url);
-    }
-
     counterSaleOrder(order: CounterSale): Observable<any> {
         const url = `${API_URLS.ADD_COUNTER_SALE}`;
         return this.baseService.post(url, order);
@@ -47,11 +32,6 @@ export class OrdersService {
 
     getNewOrders(): Observable<any> {
         const url = `${API_URLS.GET_NEW_ORDERS}`;
-        return this.baseService.get(url);
-    }
-
-    getAllSalesMen(): Observable<any> {
-        const url = API_URLS.GET_ALL_SALESMEN;
         return this.baseService.get(url);
     }
 

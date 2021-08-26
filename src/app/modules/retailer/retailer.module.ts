@@ -13,6 +13,7 @@ import { RetailerComponent } from './retailer.component';
 import { RetalersListComponent } from './components/retailers-list/retailers-list.component';
 import { RetailerProfileComponent } from './components/retailer-profile/retailer-profile.component';
 import { OpeningBalanceComponent } from './components/opening-balance/opening-balance.component';
+import { RetailerService } from './services/retailer.service';
 
 @NgModule({
     imports: [
@@ -32,6 +33,7 @@ import { OpeningBalanceComponent } from './components/opening-balance/opening-ba
         OpeningBalanceComponent,
     ],
     providers: [
+        RetailerService
     ],
 })
 export class RetailerModule { }

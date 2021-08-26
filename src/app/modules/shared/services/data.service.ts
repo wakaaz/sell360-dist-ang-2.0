@@ -279,9 +279,9 @@ export class DataService {
             segmentId === x.segment_id && regionId === x.region_id && +product.pref_id === x.pref_id);
         if (selectedSpecialDiscount) {
             product.price = product.unit_price_after_merchant_discount - selectedSpecialDiscount.discount;
-            product.unit_price_after_special_discount = product.price - selectedSpecialDiscount.discount;
-            product.special_discount = +product.quantity * selectedSpecialDiscount.discount;
-            product.special_discount_pkr = product.quantity * selectedSpecialDiscount.discount;
+            product.unit_price_after_special_discount = product.unit_price_after_merchant_discount - selectedSpecialDiscount.discount;
+            product.special_discount = selectedSpecialDiscount.discount;
+            product.special_discount_pkr = selectedSpecialDiscount.discount;
         } else {
             product.special_discount_pkr = 0.00;
             product.special_discount = 0.00;

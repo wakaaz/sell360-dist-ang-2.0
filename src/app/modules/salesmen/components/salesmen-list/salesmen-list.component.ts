@@ -9,6 +9,7 @@ import { ToasterService } from 'src/app/core/services/toaster.service';
 import { addSalemens, addSaleman, updateSaleman } from '../../reducers/salesmen.reducer';
 import { getSalemenState } from '../../selectors/base.selector';
 
+import { GeneralDataService } from '../../../shared/services';
 import { SalesmenService } from '../../services/salesmen.service';
 
 @Component({
@@ -51,6 +52,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         private router: Router,
         private store: Store<{}>,
+        private generalDataService: GeneralDataService,
         private salemenService: SalesmenService,
         private toastService: ToasterService,
     ) {
@@ -87,7 +89,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     getAllSalemen(): void {
         this.loading = true;
-        this.salemenService.getAllSalesMen().subscribe((res: any) => {
+        this.generalDataService.getAllSalesMen().subscribe((res: any) => {
             this.loading = false;
             if (res.status === 200) {
                 this.salemenError = false;
@@ -98,7 +100,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
             }
         }, error => {
             this.loading = false;
-            if (error.status !== 1) {
+            if (error.status !== 1 && error.status !== 401) {
                 this.toastService.showToaster({
                     title: 'Error:',
                     message: 'Salemens cannot be fetched at the moment.',

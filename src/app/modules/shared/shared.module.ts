@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import { WhiteLoaderComponent } from './components/loader-white/loader-white.component';
-import { DataService } from './services/data.service';
+import { DataService, GeneralDataService } from './services';
 
 @NgModule({
     imports: [],
@@ -12,7 +12,8 @@ import { DataService } from './services/data.service';
         WhiteLoaderComponent,
     ],
     providers: [
-        DataService
+        GeneralDataService,
+        DataService,
     ],
 })
 export class SharedModule { }

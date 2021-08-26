@@ -34,6 +34,7 @@ export const API_URLS = {
     ADD_OPENING_STOCK: '/addDistributorOpeningStock',
 
     // Retailers
+    ADD_OPENING_BALANCE: '/addOpeningBalance',
 
     // Reports
     DISTRIBUTOR_PURCHASE_HISTORY: '/distributorPurchaseHistory',

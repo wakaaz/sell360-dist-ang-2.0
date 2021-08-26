@@ -1,6 +1,10 @@
 ._PR_filter{margin-top: -4px; width: 210px!important;}
-._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 30px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
-._PR_filter .form-s2 .select2-container .select2-selection--single, ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__arrow{height: 31px!important;}
+._PR_filter .form-s2 .ng-select {padding: 0 !important;height: 30px !important;}
+._PR_filter .form-s2 .ng-select .ng-select-container div.ng-input { top: 0 !important; }
+._PR_filter .form-s2 .ng-select .ng-select-container {line-height: 28px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
+._PR_filter .form-s2 .ng-select .ng-select-container, ._PR_filter .form-s2 .ng-select .ng-arrow-wrapper{height: 31px!important; min-height: 31px!important;}
+._PR_filter .form-s2 .ng-select .ng-select-container {border-radius: 0 !important;}
+._PR_filter .form-s2 .ng-select .ng-clear-wrapper {display: none !important;}
 .mw-1280 {max-width: 1280px;}
 .add-stock-input{font-size: 13px; width: 80px; height: 25px; box-shadow: none; border-color:#dddddd; padding: 0px 5px 0 8px;}	
 .retailerTable .dataTable td, .retailerTable .dataTable th {vertical-align: middle;}
@@ -15,16 +19,14 @@
 .FT-date input {padding: 0;height: 18px;font-size: 14px;letter-spacing: 2px;border: none;margin-top: -3px}
 .FT-date .col-4 {margin-top: -7px}
 .addPR-head {font-size: 16px;padding: 15px 15px 15px 20px !important}
-.APS-list {	width: 230px;	position: relative;	float: right;	padding-right: 15px;}
+.APS-list {	width: 230px;	position: relative;	float: right; padding-right: 15px;}
 .APS-list input {height: 32px;border: solid 1px #eae9e9;-webkit-box-shadow: none;-moz-box-shadow: none;box-shadow: none;padding-left: 30px;font-size: 13px;letter-spacing: 1px;}
 .APS-list .fa {	position: absolute;	top: 8px;left: 8px;	color: #b5b5b5;}
-._PR_filter {width: 245px;float: right;	padding-right: 0px;}
+._PR_filter {width: 245px; padding-right: 0px;}
 .w160px {width: 160px}
-._PR_filter .custom-select-sm {	border-radius: 0;	border: solid 1px #eae9e9;}
-._PR_filter .select2-container .select2-selection--single {background-color: #fff;border-color: #e4e4e4;font-size: 14px;border-radius: 0;}
+._PR_filter .custom-select-sm {	border-radius: 0; border: solid 1px #eae9e9;}
 .CatalogueAss {	padding: 15px 15px}
 .CatalogueAss .custom-radio {font-size: 13px;line-height: 25px}
-.CatalogueAss .form-s2 .select2-container .select2-selection--single {background-color: #fff;border-color: #eae9e9}
 ._selectProList {background: #ebebeb;width: 100%;height: 646px;overflow-y: auto;display: flex;flex-direction: column;overflow: hidden;background-color: #f6f6f6;border-left: solid 1px #e4e4e4;border-bottom: solid 1px #e4e4e4;}
 .ProListHeight {height: 679px}
 ._selectProList .header {padding: 15px 20px !important;}
@@ -72,3 +74,8 @@ input:focus + .slider {box-shadow: 0 0 1px #0038ba}
 ._add-EmpList {	display: inline-block;padding: 7px 25px 5px 7px;font-family: 'Source Sans Pro', sans-serif;margin-right: 2%;margin-bottom: 7px;line-height: 1;font-size: 12px;letter-spacing: 1px;width: 48%;float: left}
 ._add-EmpList .close {position: absolute;top: 3px;right: 5px;border: none;outline: none;font-size: 22px}
 .assCatalogue-radio {background-color: #f6f6f6;padding-top: 5px;padding-bottom: 5px;margin: 0}
+.ng-select .ng-clear {display: none !important;}
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
+/* Firefox */input[type=number] {-moz-appearance: textfield;}
+

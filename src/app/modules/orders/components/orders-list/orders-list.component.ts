@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ToasterService } from 'src/app/core/services/toaster.service';
+import { GeneralDataService } from '../../../shared/services';
 import { OrdersService } from '../../services/orders.service';
 
 @Component({
@@ -22,6 +23,7 @@ export class OrdersListComponent implements OnInit {
     selectedOrders: Array<any> = [];
 
     constructor(
+        private generalDataService: GeneralDataService,
         private ordersService: OrdersService,
         private toastService: ToasterService,
     ) {
@@ -37,7 +39,7 @@ export class OrdersListComponent implements OnInit {
     }
 
     getAllSalesMen(): void {
-        this.ordersService.getAllSalesMen().subscribe(res => {
+        this.generalDataService.getAllSalesMen().subscribe(res => {
             if (res.status === 200) {
                 this.salesMen = res.data;
             }

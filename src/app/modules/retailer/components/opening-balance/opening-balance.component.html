@@ -7,29 +7,37 @@
                         <div class="header addPR-head mb-10">
                             <h2>Add <span> Opening Balance</span></h2>
 
-                            <div class="_PR_filter pl-15">
-                                <div class="form-s2">
-                                    <select class="form-control formselect" placeholder="select Route"
-                                        style="width: 100%!important">
-                                        <option value="0" disabled>Select Route</option>
-                                        <option value="1">Route Name</option>
-                                    </select>
+                            <div style="float: right;">
+                                <div class="_PR_filter pl-15" style="float: left;">
+                                    <div class="form-s2">
+                                        <ng-select [multiple]="false" class="formselect" [(ngModel)]="selectedOrderBooker"
+                                            (change)="getBookerRoutes()" placeholder="Select Employee">
+                                            <ng-option disabled>Select Employee</ng-option>
+                                            <ng-option *ngFor="let orderBooker of orderBookers"
+                                                [value]="orderBooker">{{orderBooker.employee_first_name +' '+
+                                                orderBooker.employee_last_name}}</ng-option>
+                                        </ng-select>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="_PR_filter pl-15">
-                                <div class="form-s2">
-                                    <select class="form-control formselect" placeholder="select Order Booker"
-                                        style="width: 100%!important">
-                                        <option value="0" disabled>Select Order Booker</option>
-                                        <option value="1">Utba</option>
-                                    </select>
+                                <div class="_PR_filter pl-15" style="float: left;">
+                                    <div class="form-s2">
+                                        <ng-select [multiple]="false" class="formselect" [(ngModel)]="selectedRoute"
+                                            (change)="getRetailersByRoute()" placeholder="Select Route">
+                                            <ng-option *ngIf="!selectedOrderBooker" disabled>Select Employee First
+                                            </ng-option>
+                                            <ng-option *ngIf="selectedOrderBooker" disabled>Select Route</ng-option>
+                                            <ng-option *ngFor="let route of routes" [value]="route">{{route.name}}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
                                 </div>
                             </div>
 
                         </div>
                         <div class="col-12 retailerTable">
-                            <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                            <table *ngIf="!loading" datatable [dtOptions]="dtOptions"
+                                class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Retailer Name</th>
@@ -40,99 +48,25 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>768 Shop</td>
-                                        <td>Retailer Type</td>
-                                        <td>03228754121</td>
-                                        <td><input type="text" class="form-control add-stock-input"></td>
-                                        <td><button class="btn btn-default btn-line mb-0">Add</button></td>
+                                    <tr *ngFor="let retailer of retailers;let ind=index">
+                                        <td>{{retailer.retailer_name}}</td>
+                                        <td>{{retailer.type}}</td>
+                                        <td>{{retailer.retailer_phone}}</td>
+                                        <td><input *ngIf="retailer.opening_balance === 0; else openBalance" type="number" (keydown)="isNumber($event)" [(ngModel)]="retailer.openingBalance" min="1"
+                                                id="retailer-balance-{{i}}" name="retailer-balance-{{i}}"
+                                                class="form-control add-stock-input">
+                                                <ng-template #openBalance>{{retailer.opening_balance}}</ng-template>
+                                            </td>
+                                        <td>
+                                            <button *ngIf="retailer.opening_balance === 0" [disabled]="!retailer.openingBalance"
+                                              (click)="addRetailer(retailer)" class="btn btn-default btn-line mb-0">Add</button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
+                            <div *ngIf="loading" class="col-md-12">
+                                <app-loader-white></app-loader-white>
+                            </div>
                         </div>
 
                     </div>
@@ -162,48 +96,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr *ngFor="let ret of selectedRetailers;let in=index">
                                             <td>
-                                                <div class="Pro-IN"><img class="Pr_imgV" src="assets/images/avatar.svg"
+                                                <div class="Pro-IN"><img class="Pr_imgV" [src]="ret.image || 'assets/images/avatar.svg'"
                                                         alt="" />
-                                                    <div class="CP-name"><strong>786 Shop</strong> <span>Balance:
-                                                            485</span></div>
+                                                    <div class="CP-name"><strong>{{ret.retailer_name}}</strong> <span>Balance:
+                                                            {{ret.openingBalance}}</span></div>
                                                 </div>
                                             </td>
-                                            <td align="right"><a href="#" class="RLDelete"><i
-                                                        class="fa fa-times"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="Pro-IN"><img class="Pr_imgV" src="assets/images/avatar.svg"
-                                                        alt="" />
-                                                    <div class="CP-name"><strong>786 Shop</strong> <span>Balance:
-                                                            485</span></div>
-                                                </div>
-                                            </td>
-                                            <td align="right"><a href="#" class="RLDelete"><i
-                                                        class="fa fa-times"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="Pro-IN"><img class="Pr_imgV" src="assets/images/avatar.svg"
-                                                        alt="" />
-                                                    <div class="CP-name"><strong>786 Shop</strong> <span>Balance:
-                                                            485</span></div>
-                                                </div>
-                                            </td>
-                                            <td align="right"><a href="#" class="RLDelete"><i
-                                                        class="fa fa-times"></i></a></td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <div class="Pro-IN"><img class="Pr_imgV" src="assets/images/avatar.svg"
-                                                        alt="" />
-                                                    <div class="CP-name"><strong>786 Shop</strong> <span>Balance:
-                                                            485</span></div>
-                                                </div>
-                                            </td>
-                                            <td align="right"><a href="#" class="RLDelete"><i
+                                            <td align="right"><a class="RLDelete" (click)="removeRetailerFromList(ret)"><i
                                                         class="fa fa-times"></i></a></td>
                                         </tr>
                                     </tbody>
@@ -213,9 +114,13 @@
                     </div>
 
                     <div class="col-md-12 text-right PT-15">
-                        <button data-toggle="modal" data-target="#exampleModal" type="submit"
-                            class="btn btn-primary mr-2">Save</button>
-                        <button type="submit" class="btn btn-cancel" [routerLink]="['/retailer', 'list']">Cancel</button>
+                        <button *ngIf="submitted" class="btn btn-info btn-login" disabled>
+                            <div class="spinner-border text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                        <button type="submit" *ngIf="!submitted" class="btn btn-primary mr-2" (click)="setOpeningBalance()">Save</button>
+                        <button type="submit" *ngIf="!submitted" class="btn btn-cancel" [routerLink]="['/home']">Cancel</button>
                     </div>
                 </div>
             </div>

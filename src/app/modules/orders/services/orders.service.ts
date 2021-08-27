@@ -39,4 +39,9 @@ export class OrdersService {
         const url = API_URLS.ASSIGN_SALESMAN;
         return this.baseService.post(url, saleman);
     }
+
+    getDispatchOrdersListing(): Observable<any> {
+        const url = `${API_URLS.DISPATCH_ORDER_LISTING}`;
+        return this.baseService.get(url);
+    }
 }

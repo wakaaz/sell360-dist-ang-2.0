@@ -21,7 +21,6 @@ export class AddStockComponent implements OnInit {
     units: Array<string> = [];
     submitted: boolean;
     loading: boolean;
-    noProducts: boolean;
     selectedUnit: string;
     selectedBrand: string;
     selectedCategory: string;
@@ -139,10 +138,10 @@ export class AddStockComponent implements OnInit {
                     this.toastService.showToaster({
                         title: 'Stock Added', message: 'Opening Stock added successfully!', type: 'success'
                     });
+                    this.router.navigateByUrl('/retailer/opening-balance');
                 } else if (res.status === 208) {
                     this.toastService.showToaster({ title: 'Error:', message: 'Your opning stock already added. If you want to add more stock go to Distributor Purchase!', type: 'error' });
                 }
-                this.router.navigateByUrl('/retailer/opening-balance');
             }, error => {
                 this.submitted = false;
                 if (error.status !== 1 && error.status !== 401) {
@@ -150,10 +149,11 @@ export class AddStockComponent implements OnInit {
                 }
             });
         } else {
-            this.noProducts = true;
-            setTimeout(() => {
-                this.noProducts = false;
-            }, 3000);
+            this.toastService.showToaster({
+                title: 'Error:',
+                message: 'Please select product with quantity to add in stock!',
+                type: 'error'
+            });
         }
     }
 

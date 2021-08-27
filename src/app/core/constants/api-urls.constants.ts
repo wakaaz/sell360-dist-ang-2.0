@@ -15,6 +15,7 @@ export const API_URLS = {
     GET_RETAILERS_BY_ROUTE: '/getRetailersByRoute',
     GET_NEW_ORDERS: '/getNewOrders',
     ASSIGN_SALESMAN: '/assignSalesman',
+    DISPATCH_ORDER_LISTING: '/dispatchOrderListing',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

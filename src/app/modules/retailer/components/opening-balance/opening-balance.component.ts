@@ -142,11 +142,13 @@ export class OpeningBalanceComponent implements OnInit {
                 }
             }, error => {
                 this.submitted = false;
-                this.toastService.showToaster({
-                    title: 'Error:',
-                    message: 'Opening balance cannot be added right now. Please try again later!',
-                    type: 'error'
-                });
+                if (error.status !== 1 && error.status !== 401) {
+                    this.toastService.showToaster({
+                        title: 'Error:',
+                        message: 'Opening balance cannot be added right now. Please try again later!',
+                        type: 'error'
+                    });
+                }
             });
         } else {
             this.toastService.showToaster({

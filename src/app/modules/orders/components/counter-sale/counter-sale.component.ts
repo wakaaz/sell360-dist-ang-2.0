@@ -798,13 +798,10 @@ export class CounterSaleComponent implements OnInit {
 
     setOrderItems(selectedEmployee: any): void {
         this.selectedProducts.forEach((product, index) => {
-            // const productParent = product.units.sort((a, b) => {
-            //     return b.pref_id - a.pref_id;
-            // })[0];
-            // const subInvnt = this.subInventory.find(x => x.child === +product.pref_id);
-            // const parentQtySold = this.dataService.roundUptoTwoDecimal(product.quantity / subInvnt.quantity);
             const productTotalDiscount = product.scheme_discount +
             product.trade_discount_pkr + (+product.quantity * product.special_discount) + product.extra_discount_pkr;
+            const parentTPAfterDiscount = product.units[product.units.length - 1].item_trade_price - productTotalDiscount;
+            const parentQtySold = this.dataService.getParentQty(product.quantity, product.parent_quantity);
             const item: OrderItem = {
                 item_id: product.item_id,
                 pref_id: product.pref_id,
@@ -833,7 +830,7 @@ export class CounterSaleComponent implements OnInit {
                 scheme_id: product.selectedScheme?.id || 0,
                 scheme_discount: product.scheme_discount,
                 unit_price_after_scheme_discount: product.unit_price_after_scheme_discount,
-                merchant_discount_pkr: product.trade_discount_pkr,
+                merchant_discount_pkr: product.trade_discount_pkr / product.quantity,
                 merchant_discount: product.trade_discount,
                 unit_price_after_merchant_discount: product.unit_price_after_merchant_discount,
                 special_discount: product.special_discount,
@@ -846,12 +843,12 @@ export class CounterSaleComponent implements OnInit {
                 parent_pref_id: product.units[product.units.length - 1].pref_id,
                 parent_unit_id: product.units[product.units.length - 1].unit_id,
                 parent_brand_id: product.brand_id,
-                parent_tp: product.units[product.units.length - 1].item_trade_price - productTotalDiscount,
+                parent_tp: parentTPAfterDiscount,
                 reasoning: '',
                 region_id: this.selectedRegion,
                 territory_id: selectedEmployee.territory_id,
-                parent_qty_sold: 0, // Convert to Biggest unit
-                parent_value_sold: 0, // parent_trade_price * parent_qty_sold
+                parent_qty_sold: parentQtySold,
+                parent_value_sold: parentQtySold * parentTPAfterDiscount,
                 tax_class_id: product.tax_class_id,
                 tax_in_percentage: product.tax_class_amount,
                 tax_in_value: product.tax_amount_value,

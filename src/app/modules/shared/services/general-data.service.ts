@@ -9,6 +9,11 @@ export class GeneralDataService {
         private httpBaseService: HttpBaseService
     ) { }
 
+    getProductsWithPrefType(prefType: string): Observable<any> {
+        const url = `${API_URLS.PRODUCTS_LIST_BY_PREF_TYPE}/${prefType}`;
+        return this.httpBaseService.get(url);
+    }
+
     getOrderBookers(distributorId: number): Observable<any> {
         const url = `${API_URLS.GET_EMPLOYEES}/${distributorId}`;
         return this.httpBaseService.get(url);

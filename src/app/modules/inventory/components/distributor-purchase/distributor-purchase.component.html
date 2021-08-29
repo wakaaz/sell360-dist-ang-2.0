@@ -295,31 +295,33 @@
                                                             </div>
                                                         </td>
                                                         <td [hidden]="showFreeProducts">
-                                                            <select class="custom-select custom-select-sm" id="" name="purchased-unit"
+                                                            {{product.unit_name}}
+                                                            <!-- <select class="custom-select custom-select-sm" id="" name="purchased-unit"
                                                                 #preferenceUnit [(ngModel)]="product.pref_id"
                                                                 (change)="setPreference(product, $event.target.value, showFreeProducts)">
                                                                 <option disabled value="0">Select Unit</option>
                                                                 <option *ngFor="let pref of getUnits(product.item_id)"
                                                                     [value]="pref.pref_id">{{pref.unit_name}}</option>
-                                                            </select>
+                                                            </select> -->
                                                         </td>
                                                         <td [hidden]="!showFreeProducts">
-                                                            <select class="custom-select custom-select-sm" id="" name="free-unit"
+                                                            {{product.unit_name}}
+                                                            <!-- <select class="custom-select custom-select-sm" id="" name="free-unit"
                                                                 #preferenceUnit [(ngModel)]="product.pref_id"
                                                                 (change)="setPreference(product, $event.target.value, true)">
                                                                 <option disabled value="0">Select Unit</option>
                                                                 <option *ngFor="let pref of getUnits(product.item_id)"
                                                                     [value]="pref.pref_id">{{pref.unit_name}}</option>
-                                                            </select>
+                                                            </select> -->
                                                         </td>
                                                         <td [hidden]="!showFreeProducts"><input placeholder="0" class="itemQTY"
                                                                 (keydown)="isNumber($event, 'qty')" name="free-qty" type="number" min="1"
                                                                 (keyup)="getUnitPrice(product, true)"
-                                                                [(ngModel)]="product.quantity"></td>
+                                                                [(ngModel)]="product.stockQty"></td>
                                                         <td [hidden]="showFreeProducts"><input placeholder="0" class="itemQTY"
                                                                 (keydown)="isNumber($event, 'qty')" name="purchase-qty" type="number" min="1"
                                                                 (keyup)="getUnitPrice(product, true)"
-                                                                [(ngModel)]="product.quantity"></td>
+                                                                [(ngModel)]="product.stockQty"></td>
                                                         <td>{{product.tradePrice}}</td>
                                                         <td [hidden]="showFreeProducts">{{product.discount_type_value}}</td>
                                                         <td [hidden]="showFreeProducts">{{product.net_amount | number: '1.2-2'}}

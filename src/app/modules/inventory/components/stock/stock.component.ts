@@ -76,15 +76,21 @@ export class StockComponent implements OnInit {
 
     getStockHistory(): void {
         if (!this.timer) {
-            let value = '';
+            let value = {};
             this.stockHistory = null;
             this.historyLoading = true;
             if (this.historyFilter === 'monthly') {
-                value = `month=${new Date(this.historyDateFrom).getMonth() + 1}&year=${new Date(this.historyDateFrom).getFullYear()}`;
+                value = {
+                    month: new Date(this.historyDateFrom).getMonth() + 1,
+                    year: new Date(this.historyDateFrom).getFullYear()
+                };
             } else if (this.historyFilter === 'daily') {
-                value = `date=${this.historyDateFrom}`;
+                value = {date: this.historyDateFrom};
             } else {
-                value = `to=${this.historyDateFrom}&to=${this.historyDateTo}`;
+                value = {
+                    from: this.historyDateFrom,
+                    to: this.historyDateTo
+                };
             }
             this.timer = setTimeout(() => {
                 this.inventoryService.getProductStockHistory(this.selectedProductId, this.historyFilter, value).subscribe(res => {

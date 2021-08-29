@@ -69,9 +69,9 @@
                                     <td>{{product.brand_name}}</td>
                                     <td>{{product.unit_name}}</td>
                                     <td><input type="number" class="form-control add-stock-input" min="0"
-                                        (keydown)="isNumber($event)"
-                                            [(ngModel)]="product.quantity" required name="qty"></td>
-                                    <td *ngIf="!product.isAdded"><button [disabled]="!product.quantity"
+                                        (keydown)="isNumber($event)" placeholder="0"
+                                            [(ngModel)]="product.stockQty" required name="qty"></td>
+                                    <td *ngIf="!product.isAdded"><button [disabled]="!product.stockQty"
                                             (click)="addProduct(product)"
                                             class="btn btn-default btn-line mb-0">Add</button></td>
                                     <td *ngIf="product.isAdded"><button (click)="removeProduct(product)"

@@ -295,4 +295,17 @@ export class DataService {
         return Math.round(value * 100) / 100;
     }
 
+    getParentQty(qty: number, childQtyInParent: number): number {
+        return Math.floor(qty / childQtyInParent);
+    }
+
+    convertStockToUnits(totalQty: number, childQtyInParent: number): { parentQty: number, childQty: number } {
+        const parentQty = this.getParentQty(totalQty, childQtyInParent);
+        const childQty = totalQty % childQtyInParent;
+        return { parentQty, childQty };
+    }
+
+    getChildQty(qty: number, childQtyInParent: number): number {
+        return qty * childQtyInParent;
+    }
 }

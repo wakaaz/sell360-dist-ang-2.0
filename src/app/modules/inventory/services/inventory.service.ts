@@ -28,7 +28,7 @@ export class InventoryService {
     }
 
     getDistributorPurchaseData(): Observable<any> {
-        const url = API_URLS.DISTRIBUTOR_PURCHASE_DATA;
+        const url = `${API_URLS.DISTRIBUTOR_PURCHASE_DATA}`;
         return this.httpService.get(url);
     }
 
@@ -42,9 +42,9 @@ export class InventoryService {
         return this.httpService.get(url);
     }
 
-    getProductStockHistory(itemId: number, filter: string, value: string): Observable<any> {
-        const url = `${API_URLS.PRODUCT_STOCK_DETAIL}/${itemId}/${filter}?${value}`;
-        return this.httpService.get(url);
+    getProductStockHistory(itemId: number, filter: string, value: any): Observable<any> {
+        const url = `${API_URLS.PRODUCT_STOCK_DETAIL}/${itemId}/${filter}`;
+        return this.httpService.post(url, value);
     }
 
     addDistributorOpeningStock(stock: Array<any>): Observable<any> {

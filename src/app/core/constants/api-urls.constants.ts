@@ -34,6 +34,9 @@ export const API_URLS = {
     PRODUCT_STOCK_DETAIL: '/stockDetailProductWise',
     ADD_OPENING_STOCK: '/addDistributorOpeningStock',
 
+    // General
+    PRODUCTS_LIST_BY_PREF_TYPE: '/productListByType',
+
     // Retailers
     ADD_OPENING_BALANCE: '/addOpeningBalance',
 

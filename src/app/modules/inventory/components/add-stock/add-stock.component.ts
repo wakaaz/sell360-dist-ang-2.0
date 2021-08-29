@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToasterService } from 'src/app/core/services/toaster.service';
+import { GeneralDataService } from '../../../shared/services';
 import { InventoryService } from '../../services/inventory.service';
 
 @Component({
@@ -28,6 +29,7 @@ export class AddStockComponent implements OnInit {
     constructor(
         private router: Router,
         private inventoryService: InventoryService,
+        private generalDataService: GeneralDataService,
         private toastService: ToasterService,
     ) {
         this.dtOptions = {
@@ -48,15 +50,10 @@ export class AddStockComponent implements OnInit {
 
     getAllProducts(): void {
         this.loading = true;
-        this.inventoryService.getDistributorPurchaseData().subscribe((res: any) => {
+        this.generalDataService.getProductsWithPrefType('secondary').subscribe((res: any) => {
             this.loading = false;
             if (res.status === 200) {
-                this.products = res.data.prefs.map(x => {
-                    const product = res.data.inventory.find(p => p.item_id === x.item_id);
-                    product.isAdded = false;
-                    product.quantity = 0;
-                    return { ...x, ...product };
-                });
+                this.products = res.data;
                 this.dispProducts = JSON.parse(JSON.stringify(this.products));
             }
         }, error => {
@@ -120,8 +117,8 @@ export class AddStockComponent implements OnInit {
 
     addProduct(product: any): void {
         product.isAdded = true;
-        const { pref_id, unit_id, item_id, unit_name, item_name, quantity } = product;
-        this.stock.push({ pref_id, unit_id, item_id, unit_name, item_name, quantity });
+        const { pref_id, unit_id, item_id, unit_name, item_name } = product;
+        this.stock.push({ pref_id, unit_id, item_id, unit_name, item_name, quantity: product.stockQty });
     }
 
     removeProduct(product: any): void {
@@ -140,7 +137,7 @@ export class AddStockComponent implements OnInit {
                     });
                     this.router.navigateByUrl('/retailer/opening-balance');
                 } else if (res.status === 208) {
-                    this.toastService.showToaster({ title: 'Error:', message: 'Your opning stock already added. If you want to add more stock go to Distributor Purchase!', type: 'error' });
+                    this.toastService.showToaster({ title: 'Error:', message: 'Your stock already added. If you want to add more stock go to Distributor Purchase!', type: 'error' });
                 }
             }, error => {
                 this.submitted = false;

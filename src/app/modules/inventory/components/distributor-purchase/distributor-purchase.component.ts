@@ -6,7 +6,7 @@ import { from, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ToasterService } from 'src/app/core/services/toaster.service';
-import { DataService } from 'src/app/modules/shared/services/data.service';
+import { GeneralDataService, DataService } from '../../../shared/services';
 import { DistributorPurchaseModel, ItemModel } from '../../model/distributor-purchase.model';
 import { InventoryService } from '../../services/inventory.service';
 
@@ -42,6 +42,8 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
     freeProducts: Array<any>;
     purchasedProducts: Array<any>;
     products: Array<any>;
+    primaryProducts: Array<any> = [];
+    secondaryProducts: Array<any> = [];
     productsDispList: Array<any>;
     productPrefs: Array<any>;
     itemMargin: Array<any>;
@@ -51,6 +53,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         private router: Router,
         private inventoryService: InventoryService,
         private toastService: ToasterService,
+        private generalDataService: GeneralDataService,
         private dataService: DataService,
     ) { }
 
@@ -94,26 +97,61 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
     }
 
     getDistributorInventory(): void {
-        this.loadingProducts = true;
         this.inventoryService.getDistributorPurchaseData().subscribe((res: any) => {
-            this.loadingProducts = false;
             if (res.status === 200) {
-                this.productPrefs = res.data.prefs;
-                this.itemMargin = res.data.itemMargin;
                 this.products = res.data.inventory.map(x => {
                     x.discount = 0;
                     x.discount_type = 'percentage',
-                        x.discount_type_value = this.itemMargin.find(m => m.item_id === x.item_id)?.discount || 0;
+                        x.discount_type_value = res.data.itemMargin.find(m => m.item_id === x.item_id)?.discount || 0;
                     x.net_amount = 0;
-                    x.quantity = 0;
+                    x.stockQty = 0;
                     x.original_amount = 0;
                     x.pref_id = '0';
                     return x;
                 });
-                this.productsDispList = JSON.parse(JSON.stringify(this.products));
+                this.primaryProducts = this.products.filter(prod => prod.child === 0);
+                this.secondaryProducts = this.products.filter(prod => prod.child !== 0);
+                this.productsDispList = JSON.parse(JSON.stringify(this.secondaryProducts));
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Products not fetched, please try again later.',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+    getProductsWithPrefType(): void {
+        this.loadingProducts = true;
+        this.generalDataService.getProductsWithPrefType('').subscribe((res: any) => {
+            this.loadingProducts = false;
+            if (res.status === 200) {
+                this.products = res.data.invetory.map(x => {
+                    x.discount = 0;
+                    x.discount_type = 'percentage',
+                        x.discount_type_value = res.data.itemMargin.find(m => m.item_id === x.item_id)?.discount || 0;
+                    x.net_amount = 0;
+                    x.stockQty = 0;
+                    x.original_amount = 0;
+                    x.pref_id = '0';
+                    return x;
+                });
+                this.primaryProducts = this.products.filter(prod => prod.child === 0);
+                this.secondaryProducts = this.products.filter(prod => prod.child !== 0);
+                this.productsDispList = JSON.parse(JSON.stringify(this.secondaryProducts));
             }
         }, error => {
             this.loadingProducts = false;
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Products not fetched, please try again later.',
+                    type: 'error'
+                });
+            }
         });
     }
 
@@ -121,7 +159,8 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         if (searchText) {
             this.productsDispList = this.products.filter(product => product.item_name.toLowerCase().includes(searchText.toLowerCase()));
         } else {
-            this.productsDispList = JSON.parse(JSON.stringify(this.products));
+            this.productsDispList = this.showFreeProducts ? JSON.parse(JSON.stringify(this.secondaryProducts)) :
+                JSON.parse(JSON.stringify(this.primaryProducts));
         }
     }
 
@@ -177,6 +216,8 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
 
     openNewProducts(event: Event): void {
         event.stopPropagation();
+        this.productsDispList = this.showFreeProducts ? JSON.parse(JSON.stringify(this.secondaryProducts)) :
+                JSON.parse(JSON.stringify(this.primaryProducts));
         this.addNewProducts = true;
         document.body.classList.add('no-scroll');
         document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
@@ -225,7 +266,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         return !isNaN(Number(event.key));
     }
 
-    getUnits(itemId: number): Array<any> {
+    /*getUnits(itemId: number): Array<any> {
         return this.productPrefs.filter(pref => pref.item_id === itemId);
     }
 
@@ -242,18 +283,18 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             item.net_amount = item.original_amount - item.discount;
             this.calculatePurchasedSubTotal();
         }
-    }
+    }*/
 
-    getUnitPrice(item: ItemModel, isFree: boolean = false): void {
-        if (item.unit_name) {
-            const unitPrice = this.productPrefs.find(x => x.pref_id === item.pref_id).item_trade_price;
-            item.tradePrice = unitPrice;
-            item.original_amount = this.dataService.calculateUnitPrice(item.quantity, unitPrice);
-            item.discount = this.dataService.calculateDiscount(item.discount_type_value,
-                item.discount_type, item.original_amount);
-            item.net_amount = item.original_amount - item.discount;
-            this.calculatePurchasedSubTotal();
-        }
+    getUnitPrice(item: any, isFree: boolean = false): void {
+        // if (item.unit_name) {
+        // const unitPrice = item.item_trade_price;
+        // item.tradePrice = unitPrice;
+        item.original_amount = this.dataService.calculateUnitPrice(item.stockQty, item.item_trade_price);
+        item.discount = this.dataService.calculateDiscount(item.discount_type_value,
+            item.discount_type, item.original_amount);
+        item.net_amount = item.original_amount - item.discount;
+        this.calculatePurchasedSubTotal();
+        // }
     }
 
     calculatePurchasedSubTotal(): void {
@@ -308,7 +349,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     item_sku: product.item_sku,
                     item_name: product.item_name,
                     unit_name: product.unit_name,
-                    quantity: product.quantity,
+                    quantity: product.stockQty,
                     original_amount: product.original_amount.toFixed(2),
                     discount: product.discount.toFixed(2),
                     discount_type: 'percentage',

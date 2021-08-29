@@ -14,31 +14,32 @@
                     <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
                     <div class="col-md-8 mb-15">
                         <input type="text" class="form-control" placeholder="" (keyup)="setQuantity(selectedProduct)"
-                            required (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.quantity"
+                            required (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.stockQty"
                             #selectedQty="ngModel" style="font-size:13px">
                         <span *ngIf="selectedQty.errors?.required && isAdded" class="input-error">
                             Please add Quantity!
                         </span>
-                        <span *ngIf="+selectedProduct.quantity === 0 && isAdded && !selectedQty.errors?.required"
+                        <span *ngIf="+selectedProduct.stockQty === 0 && isAdded && !selectedQty.errors?.required"
                             class="input-error">
                             Quantity should be greater than 0!
                         </span>
                     </div>
-                    <div class="col-md-4 pt-7 mb-15">Select Unit:</div>
+                    <div class="col-md-4 pt-7 mb-15">Unit:</div>
                     <div class="col-md-8 mb-15">
-                        <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
+                        {{selectedProduct.unit_name}}
+                        <!-- <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
                             name="prefrences" (change)="setPrefrence($event.target.value, selectedProduct)"
                             #selectedPrefs="ngModel">
                             <option [value]="null" disbaled>Select Unit</option>
                             <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
                             </option>
-                        </select>
-                        <span *ngIf="selectedProduct.pref_id === null && isAdded" class="input-error">
+                        </select> -->
+                        <!-- <span *ngIf="selectedProduct.pref_id === null && isAdded" class="input-error">
                             Please select a Unit!
                         </span>
                         <span *ngIf="alreadyAdded && selectedProduct.pref_id !== null" class="input-error">
                             Selected Unit already added please change unit or update the quantity in the list!
-                        </span>
+                        </span> -->
                     </div>
                     <div class="col-md-4" *ngIf="selectedProduct.schemes.length" style="padding-top: 2px">Trade Offer:
                     </div>
@@ -46,7 +47,7 @@
                         <div *ngFor="let scheme of selectedProduct.schemes;let i=index">
                             <div class="custom-control custom-radio">
                                 <input [(ngModel)]="selectedProduct.selectedScheme"
-                                    (click)="selectedProduct.pref_id && selectedProduct.quantity && calculateProductDiscounts(selectedProduct, scheme)"
+                                    (click)="selectedProduct.pref_id && selectedProduct.stockQty && calculateProductDiscounts(selectedProduct, scheme)"
                                     class="custom-control-input" type="radio" name="AssignCatalogue"
                                     id="byTerritory-{{i}}" [value]="scheme">
                                 <label class="custom-control-label font13" for="byTerritory-{{i}}"
@@ -268,9 +269,12 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <button data-toggle="modal" data-target="#exampleModal"
+                                                    <button *ngIf="!product.isAdded" data-toggle="modal" data-target="#exampleModal"
                                                         class="btn btn-default mb-0 dont-close-quantity"
                                                         (click)="openQuantityModal(product)">Add</button>
+                                                    <button *ngIf="product.isAdded"
+                                                        class="btn btn-default mb-0"
+                                                        (click)="removeProductFromOrder(product)">Remove</button>
                                                 </td>
                                             </tr>
                                         </tbody>
@@ -405,7 +409,7 @@
 
                                     <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
                                             (keyup)="setQuantity(product)" (keydown)="isNumber($event, 'quantity')"
-                                            placeholder="0" [(ngModel)]="product.quantity" style="font-size: 13px">
+                                            placeholder="0" [(ngModel)]="product.stockQty" style="font-size: 13px">
                                     </div>
                                     <div class="addItemCell2 _h25">{{product.item_trade_price}}</div>
                                     <div class="addItemCell2 _h25">{{product.scheme_discount || 0.00 | number: '1.2-2'}}
@@ -413,7 +417,7 @@
                                     <div class="addItemCell2 _h25">{{ product.trade_discount || 0 }}%
                                         ({{product.trade_discount_pkr | number: '1.2-2' }})
                                     </div>
-                                    <div class="addItemCell2 _h25">{{ +product.quantity * product.special_discount || 0.00 | number:'1.2-2'}}</div>
+                                    <div class="addItemCell2 _h25">{{ +product.stockQty * product.special_discount || 0.00 | number:'1.2-2'}}</div>
                                     <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
                                             placeholder="0" [(ngModel)]="product.extra_discount"
                                             (keyup)="calculateExtraDiscount(product)" (keydown)="isNumber($event)"

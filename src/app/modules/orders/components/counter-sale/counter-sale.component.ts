@@ -131,10 +131,11 @@ export class CounterSaleComponent implements OnInit {
             if (res.status === 200) {
                 this.allProducts = res.data.inventory.map(pr => {
                     pr.net_amount = 0.00;
+                    pr.isAdded = false;
                     return pr;
                 });
                 this.specialDiscounts = res.data.special_discount;
-                this.prefrences = res.data.prefs;
+                // this.prefrences = res.data.prefs;
                 this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
                 this.subInventory = res.data.sub_inventory;
             } else {
@@ -399,39 +400,6 @@ export class CounterSaleComponent implements OnInit {
 
     openQuantityModal(product: any): void {
         this.showQuantityModal = true;
-        this.selectedProduct = JSON.parse(JSON.stringify(product));
-        this.selectedProduct.pref_id = null;
-        this.selectedProduct.unit_id = null;
-        this.selectedProduct.unit_name = null;
-        this.selectedProduct.quantity = null;
-        this.selectedProduct.schemes = [];
-        this.selectedProduct.selectedScheme = null;
-        this.selectedProduct.units = this.prefrences.filter(x => x.item_id === product.item_id);
-    }
-
-    showProductsList(event: Event): void {
-        event.stopPropagation();
-        if (this.selectedRetailer) {
-            this.showProducts = true;
-            document.body.classList.add('no-scroll');
-            document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
-            document.getElementById('counter-sale').classList.add('blur-div');
-        } else {
-            this.toastService.showToaster({
-                type: 'error',
-                message: 'Please select Retailer first!',
-                title: 'Fill required fields:'
-            });
-        }
-    }
-
-    setPrefrence(prefId: number, product: any): void {
-        this.alreadyAdded = false;
-        const prefrence = this.prefrences.find(x => x.pref_id === +prefId);
-        product.unit_id = prefrence.unit_id;
-        product.item_trade_price = prefrence.item_trade_price;
-        product.unit_name = prefrence.unit_name;
-        product.retail_price = prefrence.item_retail_price;
         product.schemes = this.dataService.getSchemes(product.item_id,
             product.unit_id, product.pref_id, this.schemes, this.selectedRetailer);
         if (product.schemes?.length) {
@@ -451,16 +419,44 @@ export class CounterSaleComponent implements OnInit {
                 return scheme;
             });
         }
-        if (product.quantity) {
-            if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
-                this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount;
-            }
-            this.calculateProductDiscounts(product);
-            this.calculateProductPrice(product);
-            this.calculateTotalBill();
-            this.applySlabOnAllProducts();
+        this.selectedProduct = JSON.parse(JSON.stringify(product));
+        this.selectedProduct.selectedScheme = null;
+        // this.selectedProduct.units = this.prefrences.filter(x => x.item_id === product.item_id);
+    }
+
+    showProductsList(event: Event): void {
+        event.stopPropagation();
+        if (this.selectedRetailer) {
+            this.showProducts = true;
+            document.body.classList.add('no-scroll');
+            document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
+            document.getElementById('counter-sale').classList.add('blur-div');
+        } else {
+            this.toastService.showToaster({
+                type: 'error',
+                message: 'Please select Retailer first!',
+                title: 'Fill required fields:'
+            });
         }
     }
+
+    // setPrefrence(prefId: number, product: any): void {
+    //     this.alreadyAdded = false;
+    //     const prefrence = this.prefrences.find(x => x.pref_id === +prefId);
+    //     product.unit_id = prefrence.unit_id;
+    //     product.item_trade_price = prefrence.item_trade_price;
+    //     product.unit_name = prefrence.unit_name;
+    //     product.retail_price = prefrence.item_retail_price;
+    //     if (product.stockQty) {
+    //         if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
+    //             this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount;
+    //         }
+    //         this.calculateProductDiscounts(product);
+    //         this.calculateProductPrice(product);
+    //         this.calculateTotalBill();
+    //         this.applySlabOnAllProducts();
+    //     }
+    // }
 
     isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
         if (event.key && event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
@@ -474,8 +470,8 @@ export class CounterSaleComponent implements OnInit {
 
     setQuantity(product: any): void {
         if (product.item_trade_price) {
-            if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
-                this.dueAmount = this.dueAmount - product.net_amount;
+            if (this.selectedProducts.find(x => x.item_id === product.item_id)) {
+                this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount;
             }
             this.calculateProductDiscounts(product);
             this.calculateProductPrice(product);
@@ -485,10 +481,10 @@ export class CounterSaleComponent implements OnInit {
     }
 
     calculateProductPrice(product): void {
-        product.net_amount = this.dataService.calculateUnitPrice(+product.quantity, product.price);
-        product.original_amount = this.dataService.calculateUnitPrice(+product.quantity,
+        product.net_amount = this.dataService.calculateUnitPrice(+product.stockQty, product.price);
+        product.original_amount = this.dataService.calculateUnitPrice(+product.stockQty,
             product.item_trade_price);
-        product.gross_amount = product.unit_price_after_scheme_discount * +product.quantity;
+        product.gross_amount = product.unit_price_after_scheme_discount * +product.stockQty;
     }
 
     applySlabOnAllProducts(): void {
@@ -508,7 +504,7 @@ export class CounterSaleComponent implements OnInit {
 
     addProductToOrder(): void {
         this.isAdded = true;
-        if (+this.selectedProduct.quantity > 0 && this.selectedProduct.pref_id) {
+        if (+this.selectedProduct.stockQty > 0 && this.selectedProduct.pref_id) {
             const pr = this.selectedProducts.find(x => x.item_id === this.selectedProduct.item_id &&
                 x.pref_id === this.selectedProduct.pref_id);
             if (pr) {
@@ -516,6 +512,7 @@ export class CounterSaleComponent implements OnInit {
             } else {
                 this.alreadyAdded = false;
                 this.showQuantityModal = false;
+                this.selectedProduct.isAdded = true;
                 this.selectedProducts.push(this.selectedProduct);
                 if (!this.selectedProductsIds.includes(this.selectedProduct.item_id)) {
                     this.selectedProductsIds.push(this.selectedProduct.item_id);
@@ -533,9 +530,9 @@ export class CounterSaleComponent implements OnInit {
             if (x.item_id === product.item_id && x.unit_name !== product.unit_name) { return x; }
             else if (x.item_id !== product.item_id) { return x; }
         });
-        if (!this.selectedProducts.find(x => x.item_id !== product.item_id)) {
-            this.selectedProductsIds = this.selectedProductsIds.filter(x => x !== product.item_id);
-        }
+        // if (!this.selectedProducts.find(x => x.item_id !== product.item_id)) {
+        this.selectedProductsIds = this.selectedProductsIds.filter(x => x !== product.item_id);
+        // }
         this.calculateTotalBill();
         this.applySlabOnAllProducts();
     }
@@ -580,7 +577,7 @@ export class CounterSaleComponent implements OnInit {
     calculateExtraDiscount(product: any): void {
         if (+product.extra_discount < product.unit_price_after_special_discount) {
             product.price = product.unit_price_after_special_discount - +product.extra_discount;
-            product.extra_discount_pkr = +product.quantity * +product.extra_discount;
+            product.extra_discount_pkr = +product.stockQty * +product.extra_discount;
             this.calculateNetAmountOfProduct(product);
             this.calculateTotalBill();
         } else {
@@ -594,8 +591,8 @@ export class CounterSaleComponent implements OnInit {
     calculateProductTax(product: any): void {
         if (product.tax_class_amount) {
             product.tax_amount_value = this.dataService.roundUptoTwoDecimal(
-                ((product.tax_class_amount / 100) * product.retail_price));
-            product.tax_amount_pkr = this.dataService.roundUptoTwoDecimal(product.tax_amount_value * product.quantity);
+                ((product.tax_class_amount / 100) * product.item_retail_price));
+            product.tax_amount_pkr = this.dataService.roundUptoTwoDecimal(product.tax_amount_value * product.stockQty);
             product.net_amount = product.net_amount + product.tax_amount_pkr;
         } else {
             product.tax_amount_value = 0;
@@ -604,13 +601,13 @@ export class CounterSaleComponent implements OnInit {
     }
 
     calculateNetAmountOfProduct(product: any): any {
-        product.net_amount = this.dataService.calculateUnitPrice(product.price, +product.quantity);
+        product.net_amount = this.dataService.calculateUnitPrice(product.price, +product.stockQty);
         this.calculateProductTax(product);
     }
 
     calculateTotalBill(): void {
         if (this.selectedProducts.length) {
-            this.selectedProductQuantities = this.selectedProducts.map(product => +product.quantity).reduce((a, b) => a + b);
+            this.selectedProductQuantities = this.selectedProducts.map(product => +product.stockQty).reduce((a, b) => a + b);
         }
         // Gross Amount
         let prices = this.selectedProducts.map(product => product.original_amount);
@@ -631,7 +628,7 @@ export class CounterSaleComponent implements OnInit {
         discount = this.selectedProducts.map(product => product.trade_discount_pkr);
         this.tradeDiscount = this.dataService.calculateItemsBill(discount);
         // Special Discount
-        discount = this.selectedProducts.map(product => +product.quantity * product.special_discount_pkr);
+        discount = this.selectedProducts.map(product => +product.stockQty * product.special_discount_pkr);
         this.specialDiscount = this.dataService.calculateItemsBill(discount);
         // Extra Discount
         discount = this.selectedProducts.map(product => +product.extra_discount_pkr);
@@ -799,9 +796,9 @@ export class CounterSaleComponent implements OnInit {
     setOrderItems(selectedEmployee: any): void {
         this.selectedProducts.forEach((product, index) => {
             const productTotalDiscount = product.scheme_discount +
-            product.trade_discount_pkr + (+product.quantity * product.special_discount) + product.extra_discount_pkr;
-            const parentTPAfterDiscount = product.units[product.units.length - 1].item_trade_price - productTotalDiscount;
-            const parentQtySold = this.dataService.getParentQty(product.quantity, product.parent_quantity);
+            product.trade_discount_pkr + (+product.stockQty * product.special_discount) + product.extra_discount_pkr;
+            const parentTPAfterDiscount = product.parent_trade_price - productTotalDiscount;
+            const parentQtySold = this.dataService.getParentQty(product.stockQty, product.quantity);
             const item: OrderItem = {
                 item_id: product.item_id,
                 pref_id: product.pref_id,
@@ -814,7 +811,7 @@ export class CounterSaleComponent implements OnInit {
                 division_id: selectedEmployee.area_id,
                 assigned_route_id: this.selectedRoute,
                 booked_total_qty: 0,
-                quantity: +product.quantity,
+                quantity: +product.stockQty,
                 gross_sale_amount: product.original_amount,
                 booked_order_value: 0,
                 brand_id: product.brand_id,
@@ -830,7 +827,7 @@ export class CounterSaleComponent implements OnInit {
                 scheme_id: product.selectedScheme?.id || 0,
                 scheme_discount: product.scheme_discount,
                 unit_price_after_scheme_discount: product.unit_price_after_scheme_discount,
-                merchant_discount_pkr: product.trade_discount_pkr / product.quantity,
+                merchant_discount_pkr: product.trade_discount_pkr / product.stockQty,
                 merchant_discount: product.trade_discount,
                 unit_price_after_merchant_discount: product.unit_price_after_merchant_discount,
                 special_discount: product.special_discount,
@@ -840,8 +837,8 @@ export class CounterSaleComponent implements OnInit {
                 scheme_min_quantity: product.selectedScheme?.min_qty || 0,
                 scheme_quantity_free: product.selectedScheme?.quantity_free || 0,
                 scheme_rule: product.selectedScheme?.rule_name || '',
-                parent_pref_id: product.units[product.units.length - 1].pref_id,
-                parent_unit_id: product.units[product.units.length - 1].unit_id,
+                parent_pref_id: product.child,
+                parent_unit_id: product.parent_unit_id,
                 parent_brand_id: product.brand_id,
                 parent_tp: parentTPAfterDiscount,
                 reasoning: '',
@@ -854,7 +851,7 @@ export class CounterSaleComponent implements OnInit {
                 tax_in_value: product.tax_amount_value,
                 total_amount_after_tax: product.net_amount,
                 total_discount: productTotalDiscount,
-                total_retail_price: product.quantity * product.retail_price,
+                total_retail_price: product.stockQty * product.item_retail_price,
                 total_tax_amount: product.tax_amount_pkr || 0,
             };
             this.order.items.push(item);

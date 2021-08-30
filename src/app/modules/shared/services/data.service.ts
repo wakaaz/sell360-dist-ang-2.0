@@ -76,7 +76,7 @@ export class DataService {
 
     applyFPDOTP(product: any): any {
         const discounted = this.getSDForFPTradePriceScheme(product.item_trade_price, product.stockQty,
-            product.selectedScheme.min_qty, product.selectedScheme.stockQty_free);
+            product.selectedScheme.min_qty, product.selectedScheme.quantity_free);
         product.scheme_discount = discounted.schemeDiscount;
         product.price = discounted.singleItemPrice;
         product.unit_price_after_scheme_discount = discounted.singleItemPrice;
@@ -84,7 +84,7 @@ export class DataService {
     }
 
     applyFPHalfQtyDiscount(product: any): any {
-        if (this.isHalfQuantityEligible(product.quantit, product.selectedScheme.min_qty)) {
+        if (this.isHalfQuantityEligible(product.stockQty, product.selectedScheme.min_qty)) {
             const discounted = this.getSDForFPHalfQtyDiscount(product.item_trade_price, product.stockQty,
                 product.selectedScheme.min_qty, product.selectedScheme.stockQty_free);
             product.scheme_discount = discounted.schemeDiscount;

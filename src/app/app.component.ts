@@ -47,7 +47,7 @@ export class AppComponent {
       if (event instanceof NavigationEnd) {
         this.isLoggedIn = this.storageService.getItem('dist_session') ? true : false;
         const url = event.urlAfterRedirects;
-        if (leftBarHidden.includes(url)) {
+        if (leftBarHidden.includes(url) || url.includes('/orders/dispatch/')) {
           this.isSideNavHidden = true;
         } else {
           this.isSideNavHidden = false;

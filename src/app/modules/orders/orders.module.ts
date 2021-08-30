@@ -20,6 +20,7 @@ import { BookingVsExecutionComponent } from './components/booking-vs-execution/b
 import { CompletedOrdersDetailComponent } from './components/completed-orders-detail/completed-orders-detail.component';
 
 import { OrdersService } from './services/orders.service';
+import { OrderDispatchedComponent } from './components/order-dispatched/order-dispatched.component';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { OrdersService } from './services/orders.service';
       OrdersListDetailsComponent,
       CreateDispatchedComponent,
       OrderExecutionListComponent,
+      OrderDispatchedComponent,
       ExecuteOrderComponent,
       CompletedOrdersComponent,
       CounterSaleComponent,

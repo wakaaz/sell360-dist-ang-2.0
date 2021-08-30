@@ -1,0 +1,39 @@
+.ProListHeight {
+    height: calc(100vh - 200px);
+}
+.ProList-div {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: inherit;
+    padding: 10px;
+    font-size: 14px;
+}
+._selectProList .header {
+    padding: 15px 15px !important;
+}
+.order-list{font-size: 12px; background: #fff; padding: 6px 10px; border: solid 1px #eaeaea; position: relative;
+	transition: all 0.2s;
+    transform: translateZ(0);
+    -ms-transform: scale(0.97);
+    -webkit-transform: scale(0.97);
+    transform: scale(0.97); cursor: pointer;
+	}
+.order-list.active{
+	border-color:#0038ba;
+}
+.order-list:hover, .order-list.active{ 
+	box-shadow: 0px 0px 22px 0px rgba(0, 0, 0, 0.18);	
+	-ms-transform: scale(1);
+    -webkit-transform: scale(1);
+    transform: scale(1); z-index: 3
+}
+.order-list span{display: block}
+.order-list span .fa{color: #b5b5b5}
+.order-list span.or-val{font-family: 'Rationale', sans-serif;font-size: 16.5px; line-height: 1; color: #0038ba }
+.order-list .ord-no{
+	font-family: 'Poppins', sans-serif;
+    line-height: 1;
+    font-size: 35px;
+    font-weight: 800;
+    color: #ececec;  position: absolute; right:80px; top: 7px}

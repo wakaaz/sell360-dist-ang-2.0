@@ -106,7 +106,6 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     x.net_amount = 0;
                     x.stockQty = 0;
                     x.original_amount = 0;
-                    x.pref_id = '0';
                     return x;
                 });
                 this.primaryProducts = this.products.filter(prod => prod.child === 0);

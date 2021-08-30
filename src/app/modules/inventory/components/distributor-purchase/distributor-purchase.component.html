@@ -322,7 +322,7 @@
                                                                 (keydown)="isNumber($event, 'qty')" name="purchase-qty" type="number" min="1"
                                                                 (keyup)="getUnitPrice(product, true)"
                                                                 [(ngModel)]="product.stockQty"></td>
-                                                        <td>{{product.tradePrice}}</td>
+                                                        <td>{{product.item_trade_price}}</td>
                                                         <td [hidden]="showFreeProducts">{{product.discount_type_value}}</td>
                                                         <td [hidden]="showFreeProducts">{{product.net_amount | number: '1.2-2'}}
                                                         </td>

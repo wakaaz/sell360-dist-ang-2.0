@@ -165,7 +165,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
 
     addSelectedProduct(product: any): void {
         const selectedProduct = JSON.parse(JSON.stringify(product));
-        selectedProduct.quantity = 1;
+        selectedProduct.stockQty = 1;
         selectedProduct.tradePrice = 0;
         if (this.showFreeProducts) {
             // Free products discount and payable amount
@@ -346,6 +346,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     unit_id: product.unit_id,
                     item_id: product.item_id,
                     item_sku: product.item_sku,
+                    child: product.child,
                     item_name: product.item_name,
                     unit_name: product.unit_name,
                     quantity: product.stockQty,
@@ -363,10 +364,11 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     pref_id: product.pref_id,
                     unit_id: product.unit_id,
                     item_id: product.item_id,
+                    child: product.child,
                     item_sku: product.item_sku,
                     item_name: product.item_name,
                     unit_name: product.unit_name,
-                    quantity: product.quantity,
+                    quantity: product.stockQty,
                     original_amount: product.original_amount.toFixed(2),
                     discount: product.original_amount,
                     discount_type: 'percentage',

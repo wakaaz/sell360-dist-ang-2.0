@@ -36,13 +36,12 @@
                         aria-labelledby="pills-home-tab">
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list></app-retailer-sub-list>
+                                <app-retailer-sub-list [retailers]="ordersRetailers" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
                                 <div class="rightHeight">
-                                    <app-order-items-list [inventoryProducts]="inventory"
-                                        [productsLoading]="loadingProduct" (openDrawer)="openProductsList()">
+                                    <app-order-items-list [orderDetail]="orderDetails" (openDrawer)="openProductsList()">
                                     </app-order-items-list>
                                 </div>
                                 <div class="col-md-12 bottom-act-btn">

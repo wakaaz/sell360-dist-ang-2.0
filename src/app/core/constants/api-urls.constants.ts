@@ -16,6 +16,7 @@ export const API_URLS = {
     GET_NEW_ORDERS: '/getNewOrders',
     ASSIGN_SALESMAN: '/assignSalesman',
     DISPATCH_ORDER_LISTING: '/dispatchOrderListing',
+    DISPATCH_DETAIL: '/dispatchDetail',
     VIEW_ORDERS: '/viewOrder/new/',
     ORDER_DETAIL: '/viewOrderDetail',
 

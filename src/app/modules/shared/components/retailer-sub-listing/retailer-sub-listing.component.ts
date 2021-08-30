@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 
 @Component({
     selector: 'app-retailer-sub-list',
@@ -8,8 +8,25 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 })
 
 export class RetailerSubListComponent implements OnInit {
+    @Input() retailers: Array<any>;
+
+    @Output() retailerChanged: EventEmitter<any> = new EventEmitter();
+
     constructor() { }
 
     ngOnInit(): void { }
+
+    getOrderDetails(retailer: any): void {
+        this.retailers = this.retailers.map(ret => {
+            if (ret.isActive) {
+                ret.isActive = false;
+            }
+            if (ret.id === retailer.id) {
+                ret.isActive = true;
+            }
+            return ret;
+        });
+        this.retailerChanged.emit(retailer);
+    }
 
 }

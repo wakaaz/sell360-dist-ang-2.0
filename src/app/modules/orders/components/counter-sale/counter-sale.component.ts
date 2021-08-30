@@ -512,6 +512,14 @@ export class CounterSaleComponent implements OnInit {
             } else {
                 this.alreadyAdded = false;
                 this.showQuantityModal = false;
+                this.allProducts = this.allProducts.map(prod => {
+                    if (prod.item_id === this.selectedProduct.item_id) { prod.isAdded = true; }
+                    return prod;
+                });
+                this.dispProducts = this.dispProducts.map(prod => {
+                    if (prod.item_id === this.selectedProduct.item_id) { prod.isAdded = true; }
+                    return prod;
+                });
                 this.selectedProduct.isAdded = true;
                 this.selectedProducts.push(this.selectedProduct);
                 if (!this.selectedProductsIds.includes(this.selectedProduct.item_id)) {
@@ -529,6 +537,14 @@ export class CounterSaleComponent implements OnInit {
         this.selectedProducts = this.selectedProducts.filter(x => {
             if (x.item_id === product.item_id && x.unit_name !== product.unit_name) { return x; }
             else if (x.item_id !== product.item_id) { return x; }
+        });
+        this.allProducts = this.allProducts.map(prod => {
+            if (prod.item_id === product.item_id) { prod.isAdded = false; }
+            return prod;
+        });
+        this.dispProducts = this.dispProducts.map(prod => {
+            if (prod.item_id === product.item_id) { prod.isAdded = false; }
+            return prod;
         });
         // if (!this.selectedProducts.find(x => x.item_id !== product.item_id)) {
         this.selectedProductsIds = this.selectedProductsIds.filter(x => x !== product.item_id);

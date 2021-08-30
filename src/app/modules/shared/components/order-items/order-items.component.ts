@@ -8,8 +8,7 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
 
 export class OrderItemsListComponent implements OnInit {
 
-    @Input() inventoryProducts: Array<any>;
-    @Input() productsLoading: boolean;
+    @Input() orderDetail: any;
 
     showProducts: boolean;
 

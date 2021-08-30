@@ -17,7 +17,7 @@
                                             <img src="assets/images/sell-360.svg" alt="" />
                                         </div>
                                         <div class="col-4 ord-no">
-                                            Order # <strong>05485</strong>
+                                            Order # <strong>{{orderDetail?.order_detail[0].order_number}}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -28,17 +28,27 @@
                                                 <div class="row OrderInfo">
 
                                                     <div class="col-md-9">
-                                                        <span>Retailer Name: </span> <strong>Chohan Store
-                                                            Township</strong><br>
-                                                        <span>Phone No: </span> <strong>02222222221</strong><br>
-                                                        <span>Location: </span> <strong>Madina Market Township,
-                                                            Lahore</strong>
+                                                        <span>Retailer Name: </span> <strong>
+                                                            {{orderDetail?.retailer_detail.retailer_name}}
+                                                            </strong><br>
+                                                        <span>Phone No: </span> <strong>
+                                                            {{orderDetail?.retailer_detail.retailer_phone}}
+                                                        </strong><br>
+                                                        <span>Location: </span> <strong>
+                                                            {{orderDetail?.retailer_detail.retailer_address}}
+                                                        </strong>
                                                     </div>
 
                                                     <div class="col-md-3 p-0">
-                                                        <span>Status: </span> <strong>Awaiting</strong><br>
-                                                        <span>Booking Date: </span> <strong>12/04/2020</strong><br>
-                                                        <span>Employee: </span> <strong>Asad Ali</strong>
+                                                        <span>Status: </span> <strong>
+                                                            {{orderDetail?.retailer_detail.status}}
+                                                        </strong><br>
+                                                        <span>Booking Date: </span> <strong>
+                                                            {{orderDetail?.retailer_detail.order_date}}
+                                                        </strong><br>
+                                                        <span>Employee: </span> <strong>
+                                                            {{orderDetail?.retailer_detail.employee_name}}
+                                                        </strong>
                                                     </div>
 
                                                 </div>
@@ -66,41 +76,17 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody class="order_items_body">
-                                                            <tr>
-                                                                <td>5261</td>
-                                                                <td>AasPas R5 (Chocolate BTNT) (24x36)</td>
-                                                                <td>0</td>
-                                                                <td>1</td>
-                                                                <td>103.25</td>
-                                                                <td>103.25</td>
-                                                                <td>0</td>
-                                                                <td>3%</td>
-                                                                <td>0</td>
-                                                                <td>100.00</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>5259</td>
-                                                                <td>AasPas Rs2 (chocolate WO BTNT)</td>
-                                                                <td>0</td>
-                                                                <td>1</td>
-                                                                <td>82.61</td>
-                                                                <td>82.61</td>
-                                                                <td>0</td>
-                                                                <td>3%</td>
-                                                                <td>5</td>
-                                                                <td>75.00</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>5258</td>
-                                                                <td>AasPas Rs5 (Sweet Sonf) (24x24)</td>
-                                                                <td>0</td>
-                                                                <td>9</td>
-                                                                <td>103.26</td>
-                                                                <td>929.34</td>
-                                                                <td>0</td>
-                                                                <td>3%</td>
-                                                                <td>1</td>
-                                                                <td>900.02</td>
+                                                            <tr *ngFor="let item of orderDetail?.order_detail">
+                                                                <td>{{item.item_sku}}</td>
+                                                                <td>{{item.item_name}}</td>
+                                                                <td>{{item.parent_type === 1 ? item.quantity : 0}}</td>
+                                                                <td>{{item.parent_type === 2 ?item.quantity : 0}}</td>
+                                                                <td>{{item.tp}}</td>
+                                                                <td>{{item.tp * item.quantity}}</td>
+                                                                <td>{{item.scheme_discount}}</td>
+                                                                <td>{{item.merchant_discount}}</td>
+                                                                <td>{{item.special_discount}}</td>
+                                                                <td>{{item.final_price}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -112,7 +98,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Subtotal PKR.</strong></td>
-                                                                <td><strong>1115.20</strong></td>
+                                                                <td><strong>{{orderDetail?.subTotal}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -124,7 +110,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Discount PKR.</strong></td>
-                                                                <td><strong>-40.18</strong></td>
+                                                                <td><strong>-{{orderDetail?.totalDiscount}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -139,7 +125,7 @@
                                                                     <strong>Total PKR.</strong>
                                                                 </td>
                                                                 <td style="background-color:#000; color:#fff">
-                                                                    <strong>1075.02</strong>
+                                                                    <strong>{{orderDetail?.subTotal - orderDetail?.totalDiscount}}</strong>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -159,13 +145,13 @@
                 </div>
             </div>
 
-            <div class="modal-footer button-list">
+            <!-- <div class="modal-footer button-list">
                 <button type="button" class="btn btn-primary btn-outline"><i class="fa fa-file-pdf"> </i> <span> Save
                         PDF</span> </button> <button type="button" class="btn btn-primary btn-outline"> <i
                         class="fa fa-envelope"> </i> <span> Send Email</span> </button> <button type="button"
                     class="btn btn-primary btn-outline"><i class="fa fa-print"></i> <span> Print</span> </button>
 
-            </div>
+            </div> -->
         </div>
     </div>
 </div>
@@ -206,13 +192,13 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>2021-04-28</td>
-                                <td>786 store</td>
-                                <td>Kiryana Store </td>
-                                <td>Atif</td>
-                                <td>1,075.02</td>
-                                <td><button data-toggle="modal" data-target="#exampleModal" (click)="showDetails = true;openDetailsModal({})"
+                            <tr *ngFor="let order of orders">
+                                <td>{{order.date}}</td>
+                                <td>{{order.retailer}}</td>
+                                <td>{{order.channel}} </td>
+                                <td>{{order.emp_name}}</td>
+                                <td>{{order.order_total}}</td>
+                                <td><button data-toggle="modal" data-target="#exampleModal" (click)="showDetails = true;openDetailsModal(order.id)"
                                         class="btn btn-default btn-line mb-0">Detail</button></td>
                             </tr>
 

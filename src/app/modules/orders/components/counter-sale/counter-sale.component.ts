@@ -26,6 +26,8 @@ export class CounterSaleComponent implements OnInit {
     isOrdering: boolean;
     isAdded: boolean;
     alreadyFullPayment: boolean;
+    isChequeAdded: boolean;
+    isCreditAdded: boolean;
     alreadyAdded: boolean;
 
     grossAmount: number;
@@ -41,12 +43,12 @@ export class CounterSaleComponent implements OnInit {
     selectedSegment: number;
     distributorId: number;
     selectedProductQuantities: number;
-    chequeNumber: number;
     chequeAmount: number;
     creditAmount: number;
     orderTotal: number;
     totalAmountAfterScheme: number;
-
+    
+    chequeNumber: string;
     paymentDate: string;
     paymentTypeCheque: string;
     paymentTypeCredit: string;
@@ -293,12 +295,24 @@ export class CounterSaleComponent implements OnInit {
         } else {
             if (this.paymentTypeCheque === 'full') {
                 return this.paymentTypeCheque.length > 0 && this.bankName.length > 0 &&
-                    this.chequeNumber > 0 && this.paymentDate.length > 0;
+                    this.chequeNumber.length > 0 && this.paymentDate.length > 0;
             } else {
                 return this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 && this.chequeAmount <= this.cash.amount_received &&
-                    this.bankName.length > 0 && this.chequeNumber > 0 && this.paymentDate.length > 0;
+                    this.bankName.length > 0 && this.chequeNumber.length > 0 && this.paymentDate.length > 0;
             }
         }
+    }
+
+    removeCheque(): void {
+        this.cheque = null;
+        this.isChequeAdded = false;
+        this.calculatePayments();
+    }
+
+    removeCredit(): void {
+        this.credit = null;
+        this.isCreditAdded = false;
+        this.calculatePayments();
     }
 
     makePayment(): void {
@@ -314,6 +328,7 @@ export class CounterSaleComponent implements OnInit {
                 amount_received: this.paymentTypeCredit === 'full' ? JSON.parse(JSON.stringify(this.dueAmount)) :
                     JSON.parse(JSON.stringify(this.creditAmount))
             };
+            this.isCreditAdded = true;
         }
         if (!this.isCredit) {
             this.cheque = {
@@ -333,13 +348,15 @@ export class CounterSaleComponent implements OnInit {
                 amount_received: this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.dueAmount)) :
                     JSON.parse(JSON.stringify(this.chequeAmount))
             };
+            this.isChequeAdded = true;
         }
         this.calculatePayments();
     }
 
     addPaymentMethod(): void {
         this.isAdded = true;
-        if (this.checkPaymentHasValues()) {
+        const isPaymentAdded = this.checkPaymentHasValues();
+        if (isPaymentAdded) {
             this.isAdded = false;
             this.makePayment();
             document.getElementById('open-modal-payment').click();
@@ -660,8 +677,8 @@ export class CounterSaleComponent implements OnInit {
 
     calculatePayments(): void {
         this.cash = {
-            retailer_id: 1,
-            distributor_id: 1,
+            retailer_id: this.selectedRetailer.retailer_id,
+            distributor_id: this.distributorId,
             type: 'Counter',
             payment_mode: 'Cash',
             payment_detail: '',

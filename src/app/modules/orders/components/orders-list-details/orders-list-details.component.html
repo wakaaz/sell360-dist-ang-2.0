@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header border-0">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="showDetails = false;closeDetailsModal()"
-                    style="font-size:30px">×</button>
+                    style="font-size:30px; outline: none;">×</button>
             </div>
             <div class="modal-body p-0">
                 <div class="container">
@@ -86,7 +86,7 @@
                                                                 <td>{{item.scheme_discount}}</td>
                                                                 <td>{{item.merchant_discount}}</td>
                                                                 <td>{{item.special_discount}}</td>
-                                                                <td>{{item.final_price}}</td>
+                                                                <td>{{item.final_price | number: '1.2-2'}}</td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -98,7 +98,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Subtotal PKR.</strong></td>
-                                                                <td><strong>{{orderDetail?.subTotal}}</strong></td>
+                                                                <td><strong>{{orderDetail?.subTotal | number: '1.2-2'}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -110,7 +110,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Discount PKR.</strong></td>
-                                                                <td><strong>-{{orderDetail?.totalDiscount}}</strong></td>
+                                                                <td><strong>-{{orderDetail?.totalDiscount | number: '1.2-2'}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -125,7 +125,7 @@
                                                                     <strong>Total PKR.</strong>
                                                                 </td>
                                                                 <td style="background-color:#000; color:#fff">
-                                                                    <strong>{{orderDetail?.subTotal - orderDetail?.totalDiscount}}</strong>
+                                                                    <strong>{{orderDetail?.subTotal - orderDetail?.totalDiscount | number: '1.2-2'}}</strong>
                                                                 </td>
                                                             </tr>
                                                         </tbody>
@@ -176,11 +176,11 @@
             <div class="card">
                 <div class="header">
                     <h2>Execute <span> Orders</span>
-                        <div class="_list-total">145</div>
+                        <div class="_list-total">{{orders.length || 0}}</div>
                     </h2>
                 </div>
                 <div class="body">
-                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                    <table *ngIf="!loading" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
                         <thead>
                             <tr>
                                 <th>Date</th>
@@ -198,12 +198,15 @@
                                 <td>{{order.channel}} </td>
                                 <td>{{order.emp_name}}</td>
                                 <td>{{order.order_total}}</td>
-                                <td><button data-toggle="modal" data-target="#exampleModal" (click)="showDetails = true;openDetailsModal(order.id)"
+                                <td><button (click)="showDetails = true;openDetailsModal(order.id)"
                                         class="btn btn-default btn-line mb-0">Detail</button></td>
                             </tr>
 
                         </tbody>
                     </table>
+                    <div *ngIf="loading" class="col-12">
+                        <app-loader-white></app-loader-white>
+                    </div>
                 </div>
             </div>
         </div>

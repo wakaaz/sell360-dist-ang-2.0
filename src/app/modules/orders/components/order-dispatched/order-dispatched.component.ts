@@ -108,6 +108,11 @@ export class OrderDispatchedComponent implements OnInit {
         this.orderService.getViewOrderDetailById(retailer.id).subscribe(res => {
             if (res.status === 200) {
                 this.orderDetails = res.data;
+                this.orderDetails.order_detail = this.orderDetails.order_detail.map(prod => {
+                    prod.deliveryQty = JSON.parse(JSON.stringify(prod.quantity));
+                    prod.isBooked = true;
+                    return prod;
+                });
             }
         }, error => {
             this.loading = false;

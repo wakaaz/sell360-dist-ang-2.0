@@ -21,51 +21,23 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td style="width:200px">AasPas R5 (Chocolate BTNT) (24x36)</td>
-                <td>1</td>
-                <td><input type="text" id="" class="form-control value_input" placeholder="0"></td>
-                <td>103.25</td>
-                <td>103.25</td>
-                <td>0</td>
-                <td>3%</td>
-                <td>0.00</td>
-                <td><input type="text" class="form-control value_input" placeholder="0"></td>
-                <td>100.00</td>
+            <tr *ngFor="let order of orderDetail.order_detail; let i=index">
+                <td style="width:200px">{{order.item_name}}</td>
+                <td>{{order.quantity}}</td>
+                <td><input type="text" id="item-{{order.item_sku}}" name="item-{{order.item_sku}}" [(ngModel)]="order.deliveryQty" class="form-control value_input" placeholder="0"></td>
+                <td>{{order.tp | number: '1.2-2'}}</td>
+                <td>{{order.gross_amount || 0 | number: '1.2-2'}}</td>
+                <td>{{order.scheme_discount | number: '1.2-2'}}</td>
+                <td>{{order.merchant_discount}}%</td>
+                <td>{{order.special_discount | number: '1.2-2'}}</td>
+                <td><input type="text" id="bd-{{order.item_sku}}" name="bd-{{order.item_sku}}" [(ngModel)]="order.booker_discount" class="form-control value_input" placeholder="0"></td>
+                <td>{{order.net_amount || 0 | number: '1.2-2'}}</td>
                 <td><button type="button" class="del_item btn smBTN red-bg" data-toggle="modal"
                         data-target="#exampleModal-del">Delete</button></td>
             </tr>
-            <tr>
-                <td style="width:200px">AasPas R5 (Chocolate BTNT) (24x36)</td>
-                <td>1</td>
-                <td><input type="text" id="" class="form-control value_input" placeholder="0"></td>
-                <td>103.25</td>
-                <td>103.25</td>
-                <td>0</td>
-                <td>3%</td>
-                <td>0.00</td>
-                <td><input type="text" class="form-control value_input" placeholder="0"></td>
-                <td>100.00</td>
-                <td><button type="button" class="del_item btn smBTN red-bg" data-toggle="modal"
-                        data-target="#exampleModal-del">Delete</button></td>
-            </tr>
-            <tr>
-                <td style="width:200px">AasPas R5 (Chocolate BTNT) (24x36)</td>
-                <td>1</td>
-                <td><input type="text" id="" class="form-control value_input" placeholder="0"></td>
-                <td>103.25</td>
-                <td>103.25</td>
-                <td>0</td>
-                <td>3%</td>
-                <td>0.00</td>
-                <td><input type="text" class="form-control value_input" placeholder="0"></td>
-                <td>100.00</td>
-                <td><button type="button" class="del_item btn smBTN red-bg" data-toggle="modal"
-                        data-target="#exampleModal-del">Delete</button></td>
-            </tr>
-
         </tbody>
     </table>
+    <h4 *ngIf="!orderDetail?.order_detail?.length" class="no-products">No items to display yet please select order!</h4>
 
     <div class="row">
         <div class="col"></div>
@@ -73,28 +45,28 @@
             <div class="total-valu-div">
                 <div class="row">
                     <div class="col-6">Gross Amount: </div>
-                    <div class="col-6"><span>289.12</span></div>
+                    <div class="col-6"><span>{{grossAmount | number: '1.2-2'}}</span></div>
                 </div>
                 <div class="row">
                     <div class="col-6">Trade Offer: </div>
-                    <div class="col-6"><span>0.00</span></div>
+                    <div class="col-6"><span>{{totalSchemeDiscount | number: '1.2-2'}}</span></div>
                 </div>
                 <div class="row">
                     <div class="col-6">Trade Discount: </div>
-                    <div class="col-6"><span>8.67</span></div>
+                    <div class="col-6"><span>{{totalMerchantDiscount | number: '1.2-2'}}</span></div>
                 </div>
                 <div class="row">
                     <div class="col-6">Special Discount:</div>
-                    <div class="col-6"><span>0.00</span></div>
+                    <div class="col-6"><span>{{totalSpecialDiscount | number: '1.2-2'}}</span></div>
                 </div>
                 <div class="row">
                     <div class="col-6">Booker Discount:</div>
-                    <div class="col-6"><span>0.00</span></div>
+                    <div class="col-6"><span>{{totalBookerDiscount | number}}</span></div>
                 </div>
                 <div class="row">
                     <div class="col-6" style="color:#0038ba;">Total Amount Due:
                     </div>
-                    <div class="col-6" style="color:#0038ba;"><span>4,655.74</span>
+                    <div class="col-6" style="color:#0038ba;"><span>{{netAmount | number: '1.2-2'}}</span>
                     </div>
                 </div>
             </div>

@@ -594,14 +594,14 @@ export class CounterSaleComponent implements OnInit {
         if (+product.extra_discount < product.unit_price_after_special_discount) {
             product.price = product.unit_price_after_special_discount - +product.extra_discount;
             product.extra_discount_pkr = +product.stockQty * +product.extra_discount;
-            this.calculateNetAmountOfProduct(product);
-            this.calculateTotalBill();
         } else {
             product.extra_discount = 0;
             product.extra_discount_pkr = 0;
             const toast: Toaster = { type: 'error', message: 'Discount should not be greater than item price!', title: 'Error:' };
             this.toastService.showToaster(toast);
         }
+        this.calculateNetAmountOfProduct(product);
+        this.calculateTotalBill();
     }
 
     calculateProductTax(product: any): void {
@@ -778,8 +778,8 @@ export class CounterSaleComponent implements OnInit {
                 booked_total_qty: 0,
                 booked_total_skus: 0,
                 booking_area: employee.area_id,
-                booking_locality_id: employee.area_id,
-                booking_neighbourhood_id: employee.area_id,
+                booking_locality_id: this.selectedRetailer.locality_id,
+                booking_neighbourhood_id: this.selectedRetailer.neighbourhood_id,
                 booking_zone: employee.area_id,
                 employee_id: employee.employee_id,
                 freight_charges: 0,
@@ -824,7 +824,7 @@ export class CounterSaleComponent implements OnInit {
                 item_quantity_booker: 0,
                 quantity_returned: 0,
                 area_id: selectedEmployee.area_id,
-                division_id: selectedEmployee.area_id,
+                division_id: selectedEmployee.division_id,
                 assigned_route_id: this.selectedRoute,
                 booked_total_qty: 0,
                 quantity: +product.stockQty,
@@ -848,7 +848,7 @@ export class CounterSaleComponent implements OnInit {
                 unit_price_after_merchant_discount: product.unit_price_after_merchant_discount,
                 special_discount: product.special_discount,
                 unit_price_after_special_discount: product.unit_price_after_special_discount,
-                booker_discount: product.extra_discount_pkr,
+                booker_discount: product.extra_discount,
                 unit_price_after_individual_discount: product.unit_price_after_individual_discount || product.price,
                 scheme_min_quantity: product.selectedScheme?.min_qty || 0,
                 scheme_quantity_free: product.selectedScheme?.quantity_free || 0,

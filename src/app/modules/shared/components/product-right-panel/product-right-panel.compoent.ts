@@ -34,7 +34,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(change: SimpleChanges): void {
-        if (change.allProducts.currentValue) { this.dispProducts = JSON.parse(JSON.stringify(this.allProducts)); }
+        if (change.allProducts?.currentValue) { this.dispProducts = JSON.parse(JSON.stringify(this.allProducts)); }
     }
 
     isNumber(event: Event): boolean {

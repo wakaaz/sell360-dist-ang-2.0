@@ -40,6 +40,7 @@
                                 <tr>
                                     <th>ITEM</th>
                                     <th>STOCK</th>
+                                    <th>TYPE</th>
                                     <th>STATE</th>
                                     <th>LAST ADDED ON</th>
                                     <th>ACTION</th>
@@ -49,16 +50,17 @@
                                 <tr *ngFor="let hs of stockHistory; let in=index">
                                     <td>{{hs.item_name}}</td>
                                     <td>{{hs.quantity | number}}</td>
+                                    <td>{{hs.type}}</td>
                                     <td>{{hs.status}}</td>
                                     <td>{{hs.created_at}}</td>
                                     <td>
-                                        <button class="btn btn-default mb-0" (click)="closePopup()" [routerLink]="['/reports', 'purchase', hs.table_id]">View Details</button>
+                                        <button *ngIf="hs.type==='purchase'" class="btn btn-default mb-0" (click)="closePopup()" [routerLink]="['/reports', 'purchase', hs.table_id]">View Details</button>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="col-md-12" style="text-align: center;padding: 30px;">
-                            <div *ngIf="historyLoading" class="spinner-border" style="width: 5rem; height: 5rem;" role="status">
+                            <div *ngIf="historyLoading" class="spinner-border" style="width: 5rem; height: 5rem;color: #0038ba" role="status">
                                 <span class="sr-only">Loading...</span>
                             </div>
                         </div>

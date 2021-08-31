@@ -63,10 +63,10 @@ export class OrdersListDetailsComponent implements OnInit {
             this.loading = false;
             if (res.status === 200) {
                 this.orderDetail = res.data;
-                console.log('orders', this.orderDetail);
                 this.orderDetail.subTotal = this.orderDetail.order_detail.map(x => x.final_price).reduce((a, b) => a + b, 0);
                 this.orderDetail.totalDiscount = this.orderDetail.order_detail
                     .map(x => (x.tp * x.quantity) - x.final_price).reduce((a, b) => a + b, 0);
+                this.showDetails = true;
             }
         }, error => {
             this.loading = false;

@@ -187,6 +187,7 @@ export class CounterSaleComponent implements OnInit {
     }
 
     getDiscountSlabs(): void {
+        this.selectedSegment = this.selectedRetailer.segment_id;
         this.resetValues();
         this.ordersService.getDiscountSlabs().subscribe(res => {
             if (res.status === 200) {
@@ -361,7 +362,6 @@ export class CounterSaleComponent implements OnInit {
     getRoutes(): void {
         const employee = this.orderBookers.find(x => x.employee_id === this.selectedEmployee);
         this.selectedRegion = employee.region_id;
-        this.selectedSegment = employee.segment_id;
         this.selectedRoute = null;
         this.selectedRetailer = null;
         this.resetValues();

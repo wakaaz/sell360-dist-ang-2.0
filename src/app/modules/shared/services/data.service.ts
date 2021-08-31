@@ -30,11 +30,11 @@ export class DataService {
 
     /** Schemes Calculation and implementation */
 
-    getSchemes(itemId: number, unitId: number, prefId: number, schemes: Array<any>, retailer: any): Array<any> {
+    getSchemes(itemId: number, unitId: number, prefId: number, schemes: Array<any>, retailerType: number, retailerId: number): Array<any> {
         const productSchemes = schemes.filter(scheme => {
             let isRetailerEligible = false;
             scheme.assignment.filter(assigned => {
-                if (assigned.retailer_type_id === retailer.type_id && !assigned.except_retailers.includes(retailer.id)) {
+                if (assigned.retailer_type_id === retailerType && !assigned.except_retailers.includes(retailerId)) {
                     isRetailerEligible = true;
                     return assigned;
                 }

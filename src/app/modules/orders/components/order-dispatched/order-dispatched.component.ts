@@ -20,6 +20,8 @@ export class OrderDispatchedComponent implements OnInit {
     orderDate: string;
 
     orderDetails: any = {};
+    selectedRetailer: any;
+    merchantDiscount: any;
 
     inventory: Array<any> = [];
     ordersRetailers: Array<any> = [];
@@ -105,11 +107,15 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     getOrderDetailsByRetailer(retailer: any): void {
+        this.selectedRetailer = retailer;
         this.orderService.getViewOrderDetailById(retailer.id).subscribe(res => {
             if (res.status === 200) {
                 this.orderDetails = res.data;
                 this.orderDetails.order_detail = this.orderDetails.order_detail.map(prod => {
-                    prod.deliveryQty = JSON.parse(JSON.stringify(prod.quantity));
+                    prod.stockQty = JSON.parse(JSON.stringify(prod.quantity));
+                    prod.item_trade_price = JSON.parse(JSON.stringify(prod.tp));
+                    prod.extra_discount = JSON.parse(JSON.stringify(prod.booker_discount));
+                    prod.trade_discount = JSON.parse(JSON.stringify(prod.merchant_discount));
                     prod.isBooked = true;
                     return prod;
                 });
@@ -122,6 +128,31 @@ export class OrderDispatchedComponent implements OnInit {
                 this.toastService.showToaster(toast);
             }
         });
+        this.getDiscountSlabs();
+    }
+
+    getDiscountSlabs(): void {
+        if (!this.discountSlabs.length) {
+            this.orderService.getDiscountSlabs().subscribe(res => {
+                if (res.status === 200) {
+                    this.discountSlabs = res.data;
+                    this.setMerchantDiscount();
+                }
+            }, error => {
+                if (error.status !== 1 && error.status !== 401) {
+                    console.log('Error while getting order detail data :>> ', error.message);
+                    const toast: Toaster = { type: 'error', message: 'Cannot fetch Merchant Discounts. Please try again', title: 'Error:' };
+                    this.toastService.showToaster(toast);
+                }
+            });
+        } else {
+            this.setMerchantDiscount();
+        }
+    }
+
+    setMerchantDiscount(): void {
+        this.merchantDiscount = this.discountSlabs.find(x => x.region_id === this.selectedRetailer.region_id &&
+            this.selectedRetailer.segment_id === x.segment_id && x.channel_id === this.selectedRetailer.type_id);
     }
 
     openProductsList(): void {

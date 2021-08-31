@@ -1,4 +1,4 @@
-<app-products-drawer *ngIf="showProducts" [loadingProducts]="loadingProduct" [allProducts]="inventory"
+<app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [loadingProducts]="loadingProduct" [allProducts]="inventory"
     [productSchemes]="schemes" [productMerchantDiscount]="{flat: null, slabs: null}" (drawerClosed)="closeNewProducts()" (productAdded)="addNewProductToOrder($event)">
 </app-products-drawer>
 <div id="order-contaienr" class="container">
@@ -41,7 +41,8 @@
 
                             <div class="col p-0">
                                 <div class="rightHeight">
-                                    <app-order-items-list [orderDetail]="orderDetails" (openDrawer)="openProductsList()">
+                                    <app-order-items-list [orderDetail]="orderDetails" [schemes]="schemes" [selectedRetailer]="selectedRetailer"
+                                    [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount" (openDrawer)="openProductsList()">
                                     </app-order-items-list>
                                 </div>
                                 <div class="col-md-12 bottom-act-btn">

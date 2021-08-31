@@ -24,7 +24,7 @@
             <tr *ngFor="let order of orderDetail.order_detail; let i=index">
                 <td style="width:200px">{{order.item_name}}</td>
                 <td>{{order.quantity}}</td>
-                <td><input type="text" id="item-{{order.item_sku}}" name="item-{{order.item_sku}}" [(ngModel)]="order.deliveryQty" class="form-control value_input" placeholder="0"></td>
+                <td><input type="text" id="item-{{order.item_sku}}" name="item-{{order.item_sku}}" [(ngModel)]="order.stockQty" class="form-control value_input" placeholder="0"></td>
                 <td>{{order.tp | number: '1.2-2'}}</td>
                 <td>{{order.gross_amount || 0 | number: '1.2-2'}}</td>
                 <td>{{order.scheme_discount | number: '1.2-2'}}</td>
@@ -61,7 +61,11 @@
                 </div>
                 <div class="row">
                     <div class="col-6">Booker Discount:</div>
-                    <div class="col-6"><span>{{totalBookerDiscount | number}}</span></div>
+                    <div class="col-6"><span>{{totalBookerDiscount | number: '1.2-2'}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Tax:</div>
+                    <div class="col-6"><span>{{totalTax | number: '1.2-2'}}</span></div>
                 </div>
                 <div class="row">
                     <div class="col-6" style="color:#0038ba;">Total Amount Due:

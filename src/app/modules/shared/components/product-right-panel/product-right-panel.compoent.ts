@@ -11,8 +11,9 @@ import { DataService } from '../../services';
 export class ProductsRightPanelComponent implements OnInit, OnChanges {
     @Input() loadingProducts: boolean;
     @Input() allProducts: Array<any>;
-    @Input() productSchemes: Array<any> = [];
-    @Input() productMerchantDiscount: any = {};
+    @Input() productSchemes: Array<any>;
+    @Input() selectedRetailer: any;
+    @Input() productMerchantDiscount: any;
 
     productSearchText: string;
 
@@ -66,7 +67,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     openQuantityModal(product: any): void {
         this.showQuantityModal = true;
         product.schemes = this.dataService.getSchemes(product.item_id,
-            product.unit_id, product.pref_id, this.productSchemes, {id: 1, type_id: 1});
+            product.unit_id, product.pref_id, this.productSchemes, this.selectedRetailer.type_id, this.selectedRetailer.retailer_id);
         if (product.schemes?.length) {
             product.schemes = product.schemes.map(scheme => {
                 switch (scheme.scheme_type) {

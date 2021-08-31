@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { API_URLS } from 'src/app/core/constants/api-urls.constants';
+import { environment } from 'src/environments/environment';
 import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
 import { OrdersService } from '../../services/orders.service';
 
@@ -11,6 +13,8 @@ import { OrdersService } from '../../services/orders.service';
 export class CreateDispatchedComponent implements OnInit {
     dtOptions: DataTables.Settings = {};
 
+    bookingSheetUrl: string;
+
     loading: boolean;
 
     ordersList: Array<any> = [];
@@ -19,6 +23,7 @@ export class CreateDispatchedComponent implements OnInit {
         private toastService: ToasterService,
         private orderService: OrdersService,
     ) {
+        this.bookingSheetUrl = `${environment.apiDomain}${API_URLS.BOOKING_SHEET_PDF}`;
     }
 
     ngOnInit(): void {
@@ -45,5 +50,10 @@ export class CreateDispatchedComponent implements OnInit {
                 this.toastService.showToaster(toast);
             }
         });
+    }
+
+    loadBookingSheet(order: any): void {
+        const sheetUrl = `${this.bookingSheetUrl}?emp=${order.sales_man_id}&date=${order.date}`;
+        window.open(sheetUrl);
     }
 }

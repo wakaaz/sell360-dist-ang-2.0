@@ -39,7 +39,7 @@
                                 <td>{{order.emp_names.split(',').join(', ')}} </td>
                                 <td>{{order.total_orders}}</td>
                                 <td>{{order.order_total | number: '1.2-2'}}</td>
-                                <td><button class="btn btn-default mb-0">BS</button>
+                                <td><button (click)="loadBookingSheet(order)" class="btn btn-default mb-0">BS</button>
                                     <a [routerLink]="['/orders', 'dispatch', order.sales_man_id, order.date]" class="btn btn-default btn-line mb-0">Dispatch</a>
                                     <button class="btn btn-default red-bg mb-0">Revert</button>
                                 </td>

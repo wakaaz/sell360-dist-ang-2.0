@@ -4,7 +4,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content  top_border">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Promotion <span> Detail</span></h5>
+                <h5 class="modal-title" id="exampleModalLabel">Product <span> Detail</span></h5>
                 <button type="button" class="close dont-close-products" data-dismiss="modal"
                     (click)="closeQuantityModal($event)" aria-label="Close"> <span class="dont-close-products" aria-hidden="true">&times;</span>
                 </button>
@@ -415,7 +415,7 @@
                                     <div class="addItemCell2 _h25">{{product.scheme_discount || 0.00 | number: '1.2-2'}}
                                     </div>
                                     <div class="addItemCell2 _h25">{{ product.trade_discount || 0 }}%
-                                        ({{product.trade_discount_pkr | number: '1.2-2' }})
+                                        ({{product.trade_discount_pkr/product.stockQty | number: '1.2-2' }})
                                     </div>
                                     <div class="addItemCell2 _h25">{{ +product.stockQty * product.special_discount || 0.00 | number:'1.2-2'}}</div>
                                     <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
@@ -567,13 +567,13 @@
                                     {{credit?.amount_received || 0 | number: '1.2-2'}}
                                 </div>
                             </div>
-                            <div class="row _notesTER">
+                            <!-- <div class="row _notesTER">
                                 <div class="col-md-12">
                                     Notes
                                     <textarea class="textarea-NOTES" rows='1' name="notes-input" [(ngModel)]="notes"
                                         placeholder="Enter Notes" style="font-size: 13px"></textarea>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -582,14 +582,19 @@
         <div class="Action_bottom">
             <div class="container-fluid p-0">
                 <div class="align-right">
-                    <button type="submit" class="btn btn-cancel mr-2" [routerLink]="['/home']">Cancel</button>
-                    <button class="btn btn-primary" (click)="setOrderFields()">Save Order</button>
+                    <button *ngIf="isOrdering" type="submit" class="btn btn-primary mr-2" disabled>
+                        <div class="spinner-border text-light" role="status">
+                            <span class="sr-only">Loading...</span>
+                        </div>
+                    </button>
+                    <button *ngIf="!isOrdering" type="submit" class="btn btn-cancel mr-2" [routerLink]="['/home']">Cancel</button>
+                    <button *ngIf="!isOrdering" class="btn btn-primary" (click)="setOrderFields()">Save Order</button>
 
-                    <button class="btn btn-primary float-left mr-2"
+                    <button *ngIf="!isOrdering" class="btn btn-primary float-left mr-2"
                         (click)="isCredit = false;isFullyPaymentAdded('Cheque Payment')">Add Cheque</button>
-                    <button class="btn btn-primary float-left"
+                    <button *ngIf="!isOrdering" class="btn btn-primary float-left"
                         (click)="isCredit = true;isFullyPaymentAdded('Credit')">Add Credit</button>
-                    <button id="open-modal-payment" style="display: none;" data-toggle="modal"
+                    <button *ngIf="!isOrdering" id="open-modal-payment" style="display: none;" data-toggle="modal"
                         data-target="#exampleModal2">Show Modal</button>
                 </div>
             </div>

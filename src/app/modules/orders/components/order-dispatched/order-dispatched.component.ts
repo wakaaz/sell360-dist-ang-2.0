@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService, GeneralDataService } from '../../../shared/services';
 import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
@@ -18,6 +18,7 @@ export class OrderDispatchedComponent implements OnInit {
     savingOrder: boolean;
 
     salemanId: number;
+    currentTab: number;
     orderDate: string;
 
     orderDetails: any = {};
@@ -32,6 +33,7 @@ export class OrderDispatchedComponent implements OnInit {
     discountSlabs: Array<any> = [];
 
     constructor(
+        private change: ChangeDetectorRef,
         private router: Router,
         private route: ActivatedRoute,
         private toastService: ToasterService,
@@ -42,6 +44,7 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.currentTab = 1;
         this.salemanId = +this.route.snapshot.paramMap.get('saleManId') || null;
         this.orderDate = this.route.snapshot.paramMap.get('date');
         if (!this.salemanId || !this.orderDate) {
@@ -133,7 +136,7 @@ export class OrderDispatchedComponent implements OnInit {
                         prod.brand_id = JSON.parse(JSON.stringify(product.brand_id));
                         prod.is_active = JSON.parse(JSON.stringify(product.is_active));
 
-                        prod.stockQty = JSON.parse(JSON.stringify(prod.item_quantity_booker));
+                        prod.stockQty = JSON.parse(JSON.stringify(prod.dispatch_qty));
                         prod.net_amount = JSON.parse(JSON.stringify(prod.final_price));
                         prod.gross_amount = prod.unit_price_after_scheme_discount * prod.stockQty;
                         prod.extra_discount_pkr = prod.stockQty * prod.extra_discount;
@@ -212,9 +215,8 @@ export class OrderDispatchedComponent implements OnInit {
                     title: 'Order dispatched:',
                     type: 'success'
                 });
-                // this.orderDetails.items = [];
-                // this.ordersRetailers = this.ordersRetailers.filter(x => x.id !== this.selectedRetailer.id);
-                this.selectedRetailer = null;
+                this.orderDetails.items = [];
+                this.selectedRetailer.isActive = false;
             }
         }, error => {
             this.savingOrder = false;
@@ -297,6 +299,30 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     cancelOrder(): void {
+        this.savingOrder = true;
+        this.orderService.cancelOrder(this.orderDetails.id).subscribe(res => {
+            if (res.status === 200) {
+                this.toastService.showToaster({
+                    message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
+                    title: 'Order dispatched:',
+                    type: 'success'
+                });
+                this.orderDetails.items = [];
+                this.ordersRetailers = this.ordersRetailers.filter(x => x.id !== this.selectedRetailer.id);
+                this.selectedRetailer = null;
+                this.getDispatchDetails();
+            }
+        }, error => {
+            this.savingOrder = false;
+            if (error.status !== 1 && error.status !== 401) {
+                console.log('Error in Save Order for dispatch ::>> ', error);
+                this.toastService.showToaster({
+                    message: 'Something went wrong order cannot be canceled at the moment!',
+                    title: 'Error:',
+                    type: 'error'
+                });
+            }
+        });
     }
 
 }

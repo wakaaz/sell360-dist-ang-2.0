@@ -1,5 +1,7 @@
-<app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [loadingProducts]="loadingProduct" [allProducts]="inventory"
-    [productSchemes]="schemes" [productMerchantDiscount]="{flat: null, slabs: null}" (drawerClosed)="closeNewProducts()" (productAdded)="addNewProductToOrder($event)">
+<app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [orderedProducts]="orderDetails?.items"
+    [loadingProducts]="loadingProduct" [allProducts]="inventory" [productSchemes]="schemes"
+    [productMerchantDiscount]="merchantDiscount" [specialDiscounts]="specialDiscounts"
+    (drawerClosed)="closeNewProducts()" (productSelected)="addNewProductToOrder($event)">
 </app-products-drawer>
 <div id="order-contaienr" class="container">
     <div class="row">
@@ -36,19 +38,28 @@
                         aria-labelledby="pills-home-tab">
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="ordersRetailers" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
+                                <app-retailer-sub-list [retailers]="ordersRetailers"
+                                    (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
                                 <div class="rightHeight">
-                                    <app-order-items-list [orderDetail]="orderDetails" [schemes]="schemes" [selectedRetailer]="selectedRetailer"
-                                    [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount" (openDrawer)="openProductsList()">
+                                    <app-order-items-list [orderDetail]="orderDetails" [savingOrder]="savingOrder" [schemes]="schemes"
+                                        [selectedRetailer]="selectedRetailer" [inventory]="allProducts"
+                                        [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
+                                        [newProduct]="newProduct" (openDrawer)="openProductsList()">
                                     </app-order-items-list>
                                 </div>
                                 <div class="col-md-12 bottom-act-btn">
-                                    <button class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>
-                                    <button class="btn btn-cancel cancel_order_btn font13" data-toggle="modal"
-                                        data-target="#ConfirmCancelSpotSale">Cancel</button>
+                                    <button *ngIf="!savingOrder" (click)="setOrderItems()"
+                                        class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>
+                                    <button *ngIf="!savingOrder" (click)="cancelOrder()" class="btn btn-cancel cancel_order_btn font13"
+                                        data-toggle="modal" data-target="#ConfirmCancelSpotSale">Cancel</button>
+                                    <button *ngIf="savingOrder" type="submit" class="btn btn-primary mr-2" disabled>
+                                        <div class="spinner-border text-light" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </button>
                                 </div>
                             </div>
                         </div>

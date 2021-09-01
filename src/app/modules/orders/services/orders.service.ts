@@ -56,7 +56,18 @@ export class OrdersService {
     }
 
     getViewOrderDetailById(orderid: number): Observable<any> {
-        const url = `${API_URLS.ORDER_DETAIL}/${orderid}`;
+        const url = `${API_URLS.VIEW_ORDER_DETAIL}/${orderid}`;
         return this.baseService.get(url);
     }
+
+    getDispatchOrderDetails(orderId: number): Observable<any> {
+        const url = `${API_URLS.ORDER_DETAIL}/${orderId}`;
+        return this.baseService.get(url);
+    }
+
+    saveDispatch(order: any): Observable<any> {
+        const url = `${API_URLS.SAVE_DISPATCH}`;
+        return this.baseService.post(url, order);
+    }
+
 }

@@ -27,19 +27,6 @@
                     <div class="col-md-4 pt-7 mb-15">Unit:</div>
                     <div class="col-md-8 mb-15">
                         {{selectedProduct.unit_name}}
-                        <!-- <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
-                            name="prefrences" (change)="setPrefrence($event.target.value, selectedProduct)"
-                            #selectedPrefs="ngModel">
-                            <option [value]="null" disbaled>Select Unit</option>
-                            <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
-                            </option>
-                        </select>
-                        <span *ngIf="selectedProduct.pref_id === null && isAdded" class="input-error">
-                            Please select a Unit!
-                        </span>
-                        <span *ngIf="alreadyAdded && selectedProduct.pref_id !== null" class="input-error">
-                            Selected Unit already added please change unit or update the quantity in the list!
-                        </span> -->
                     </div>
                     <div class="col-md-4" *ngIf="selectedProduct.schemes.length" style="padding-top: 2px">Trade Offer:
                     </div>
@@ -102,9 +89,10 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <button
+                                                    <button *ngIf="!product.isAdded"
                                                         class="btn btn-default mb-0 dont-close-quantity" data-toggle="modal" data-target="#exampleModal"
                                                         (click)="openQuantityModal(product)">Add</button>
+                                                    <span *ngIf="product.isAdded" class="btn btn-added mb-0 dont-close-quantity">Added</span>
                                                 </td>
                                             </tr>
                                         </tbody>

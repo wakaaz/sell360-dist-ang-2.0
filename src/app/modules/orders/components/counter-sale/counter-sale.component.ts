@@ -47,7 +47,7 @@ export class CounterSaleComponent implements OnInit {
     creditAmount: number;
     orderTotal: number;
     totalAmountAfterScheme: number;
-    
+
     chequeNumber: string;
     paymentDate: string;
     paymentTypeCheque: string;
@@ -625,9 +625,8 @@ export class CounterSaleComponent implements OnInit {
 
     calculateProductTax(product: any): void {
         if (product.tax_class_amount) {
-            product.tax_amount_value = this.dataService.roundUptoTwoDecimal(
-                ((product.tax_class_amount / 100) * product.item_retail_price));
-            product.tax_amount_pkr = this.dataService.roundUptoTwoDecimal(product.tax_amount_value * product.stockQty);
+            product.tax_amount_value = (product.tax_class_amount / 100) * product.item_retail_price;
+            product.tax_amount_pkr = product.tax_amount_value * product.stockQty;
             product.net_amount = product.net_amount + product.tax_amount_pkr;
         } else {
             product.tax_amount_value = 0;
@@ -861,7 +860,7 @@ export class CounterSaleComponent implements OnInit {
                 order_id: 0,
                 original_price: product.item_trade_price,
                 scheme_id: product.selectedScheme?.id || 0,
-                scheme_discount: product.scheme_discount,
+                scheme_discount: product.scheme_discount / product.stockQty,
                 unit_price_after_scheme_discount: product.unit_price_after_scheme_discount,
                 merchant_discount_pkr: product.trade_discount_pkr / product.stockQty,
                 merchant_discount: product.trade_discount,
@@ -876,12 +875,12 @@ export class CounterSaleComponent implements OnInit {
                 parent_pref_id: product.child,
                 parent_unit_id: product.parent_unit_id,
                 parent_brand_id: product.brand_id,
-                parent_tp: parentTPAfterDiscount,
+                parent_tp: product.parent_trade_price,
                 reasoning: '',
                 region_id: this.selectedRegion,
                 territory_id: selectedEmployee.territory_id,
                 parent_qty_sold: parentQtySold,
-                parent_value_sold: parentQtySold * parentTPAfterDiscount,
+                parent_value_sold: product.net_amount,
                 tax_class_id: product.tax_class_id,
                 tax_in_percentage: product.tax_class_amount,
                 tax_in_value: product.tax_amount_value,

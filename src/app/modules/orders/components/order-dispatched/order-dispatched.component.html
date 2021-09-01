@@ -34,30 +34,26 @@
             <div class="card daily-operations">
                 <ul class="nav nav-pills nav_M mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 1 ? 'active' : ''" id="pills-home-tab"
-                            (click)="currentTab=1" data-toggle="pill" href="#pills-home" role="tab"
-                            aria-controls="pills-home" aria-selected="true"><span>Orders</span>
+                        <a class="nav-link" [ngClass]="currentTab === 1 ? 'active' : ''"
+                            id="pills-home-tab"><span>Orders</span>
                             <span class="wz-icon"><i class="fa fa-list-ul"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 2 ? 'active' : ''" (click)="currentTab=2"
-                            id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab"
-                            aria-controls="pills-contact" aria-selected="false"><span>Credit</span>
+                        <a class="nav-link" [ngClass]="currentTab === 2 ? 'active' : ''"
+                            id="pills-contact-tab"><span>Credit</span>
                             <span class="wz-icon"><i class="fa  fa-dollar-sign"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 3 ? 'active' : ''" (click)="currentTab=3"
-                            id="pills-load-tab" data-toggle="pill" href="#pills-load" role="tab"
-                            aria-controls="pills-load" aria-selected="false"><span>Load</span>
+                        <a class="nav-link" [ngClass]="currentTab === 3 ? 'active' : ''"
+                            id="pills-load-tab"><span>Load</span>
                             <span class="wz-icon"><i class="fa fa-truck"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 4 ? 'active' : ''" (click)="currentTab=4"
-                            id="pills-final-tab" data-toggle="pill" href="#pills-final" role="tab"
-                            aria-controls="pills-final" aria-selected="false"><span>Final</span>
+                        <a class="nav-link" [ngClass]="currentTab === 4 ? 'active' : ''"
+                            id="pills-final-tab"><span>Final</span>
                             <span class="wz-icon"><i class="fa fa-check"></i></span>
                         </a>
                     </li>
@@ -617,9 +613,9 @@
                     <div class="col-md-12 pl-10 pr-10 text-center">
                         <div class="execFooter">
                             <button *ngIf="currentTab !== 4" (click)="currentTab=currentTab-1"
-                                [disabled]="currentTab === 1" type="submit"
+                                [disabled]="currentTab === 1 || savingOrder" type="submit"
                                 class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button *ngIf="currentTab !== 4" (click)="currentTab=currentTab+1" type="submit"
+                            <button *ngIf="currentTab !== 4" [disabled]="savingOrder" (click)="currentTab=currentTab+1" type="submit"
                                 class="btn btn-primary m-0">Next</button>
                             <button *ngIf="currentTab === 4" type="submit" class="btn btn-primary m-0"
                                 [routerLink]="['/orders', 'dispatch-orders']">Finish</button>

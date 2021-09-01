@@ -21,6 +21,7 @@ import { CompletedOrdersDetailComponent } from './components/completed-orders-de
 
 import { OrdersService } from './services/orders.service';
 import { OrderDispatchedComponent } from './components/order-dispatched/order-dispatched.component';
+import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component';
 
 @NgModule({
   imports: [
@@ -44,6 +45,7 @@ import { OrderDispatchedComponent } from './components/order-dispatched/order-di
       CounterSaleComponent,
       BookingVsExecutionComponent,
       CompletedOrdersDetailComponent,
+      OrderBookerListComponent,     
     ],
     providers: [
       OrdersService

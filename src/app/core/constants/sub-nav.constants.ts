@@ -30,7 +30,13 @@ export const ordersSubMenu = {
             title: 'Booking VS Execution',
             link: '/orders/booking-vs-execution',
             icon: '/assets/images/complete-orders.svg'
-        }
+        },
+        {
+            title: 'Order Booker List',
+            link: '/orders/order-booker-list',
+            icon: '/assets/images/complete-orders.svg'
+            
+        },
     ]
 };
 export const salesmanSubMenu = {

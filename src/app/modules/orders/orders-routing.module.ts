@@ -12,7 +12,8 @@ import { CounterSaleComponent } from './components/counter-sale/counter-sale.com
 import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
 import { CompletedOrdersDetailComponent } from './components/completed-orders-detail/completed-orders-detail.component';
 import { OrderDispatchedComponent } from './components/order-dispatched/order-dispatched.component';
-
+import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component'; 
+ 
 const routes: Routes = [
     {
         path: '',
@@ -68,6 +69,11 @@ const routes: Routes = [
                 pathMatch: 'full',
                 component: BookingVsExecutionComponent
             },
+            {
+                path:'order-booker-list',
+                pathMatch: 'full',
+                component: OrderBookerListComponent
+            }
         ]
     }
 ];

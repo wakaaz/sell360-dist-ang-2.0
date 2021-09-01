@@ -97,7 +97,7 @@
                     <div [ngClass]="currentTab === 2 ? 'active show' : ''" class="tab-pane p-0 PT-20 tab_M fade"
                         id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
                         <div class="col-12 PT-15">
-                            <table class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                            <table *ngIf="dispatchOrderDetail?.orders" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Retailer Name</th>
@@ -108,27 +108,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Sardar General Store</td>
-                                        <td>Rs. 20,250</td>
-                                        <td>10 Days</td>
-                                        <td><input type="text" class="form-control value_input" placeholder="0"></td>
-                                        <td><button class="btn btn-default btn-line">Add to Bill</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sardar General Store</td>
-                                        <td>Rs. 20,250</td>
-                                        <td>10 Days</td>
-                                        <td><input type="text" class="form-control value_input" placeholder="0"></td>
-                                        <td><button class="btn btn-default btn-line">Add to Bill</button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Sardar General Store</td>
-                                        <td>Rs. 20,250</td>
-                                        <td>10 Days</td>
-                                        <td><input type="text" class="form-control value_input" placeholder="0"></td>
-                                        <td><button class="btn btn-default btn-line">Add to Bill</button></td>
-                                    </tr>
+                                    <ng-container *ngFor="let order of dispatchOrderDetail.orders">
+                                        <tr *ngIf="order.balance > 0">
+                                            <td>{{order.retailer_name}}</td>
+                                            <td>Rs. {{order.balance}}</td>
+                                            <td>{{order.aging || 0}} Days</td>
+                                            <td><input type="text" class="form-control value_input" placeholder="0"></td>
+                                            <td><button class="btn btn-default btn-line">Add to Bill</button></td>
+                                        </tr>
+                                    </ng-container>
                                 </tbody>
                             </table>
                         </div>
@@ -612,10 +600,10 @@
 
                     <div class="col-md-12 pl-10 pr-10 text-center">
                         <div class="execFooter">
-                            <button *ngIf="currentTab !== 4" (click)="currentTab=currentTab-1"
+                            <button *ngIf="currentTab !== 4" (click)="currentTab=currentTab-1;tabChanged()"
                                 [disabled]="currentTab === 1 || savingOrder" type="submit"
                                 class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button *ngIf="currentTab !== 4" [disabled]="savingOrder" (click)="currentTab=currentTab+1" type="submit"
+                            <button *ngIf="currentTab !== 4" [disabled]="savingOrder" (click)="currentTab=currentTab+1;tabChanged()" type="submit"
                                 class="btn btn-primary m-0">Next</button>
                             <button *ngIf="currentTab === 4" type="submit" class="btn btn-primary m-0"
                                 [routerLink]="['/orders', 'dispatch-orders']">Finish</button>

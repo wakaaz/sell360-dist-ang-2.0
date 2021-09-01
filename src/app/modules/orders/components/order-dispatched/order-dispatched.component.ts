@@ -25,6 +25,7 @@ export class OrderDispatchedComponent implements OnInit {
     selectedRetailer: any;
     merchantDiscount: any;
     newProduct: any;
+    dispatchOrderDetail: any;
 
     inventory: Array<any> = [];
     ordersRetailers: Array<any> = [];
@@ -58,8 +59,30 @@ export class OrderDispatchedComponent implements OnInit {
         }
     }
 
+    tabChanged(): void {
+        switch (this.currentTab) {
+            case 1:
+                this.selectedRetailer = JSON.parse(JSON.stringify(null));
+                this.orderDetails.items = [];
+                this.savingOrder = true;
+                this.getDispatchDetails();
+                break;
+            case 2:
+                this.dispatchOrderDetail = null;
+                this.getDispatchOrdersDetail();
+                break;
+            case 3:
+
+                break;
+
+            default:
+                break;
+        }
+    }
+
     getDispatchDetails(): void {
         this.loading = true;
+        this.savingOrder = false;
         this.orderService.getDispatchDetailBySalemanAndDate(this.salemanId, this.orderDate).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
@@ -67,6 +90,23 @@ export class OrderDispatchedComponent implements OnInit {
                     ret.isActive = false;
                     return ret;
                 });
+            }
+        }, error => {
+            this.loading = false;
+            if (error.status !== 1 && error.status !== 401) {
+                console.log('Error while getting orders data :>> ', error.message);
+                const toast: Toaster = { type: 'error', message: 'Cannot fetch Orders. Please try again', title: 'Error:' };
+                this.toastService.showToaster(toast);
+            }
+        });
+    }
+
+    getDispatchOrdersDetail(): void {
+        this.loading = true;
+        this.orderService.getDispatchOrdersDetail(this.salemanId, this.orderDate).subscribe(res => {
+            this.loading = false;
+            if (res.status === 200) {
+                this.dispatchOrderDetail = res.data;
             }
         }, error => {
             this.loading = false;

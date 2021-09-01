@@ -111,6 +111,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
     setQuantity(product: any): void {
         if (product.item_trade_price) {
+            product.isDeleted = false;
             if (this.orderDetail.items.find(x => x.item_id === product.item_id) && this.totalAmountAfterScheme) {
                 this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount;
             }

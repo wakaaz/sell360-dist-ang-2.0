@@ -106,7 +106,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
             this.totalAmountAfterScheme = this.totalAmountAfterScheme - this.selectedItem.gross_amount;
             this.applySlabOnAllProducts();
         }
-        document.getElementById('close-del').click();
+        document.getElementById('close-prod-del').click();
     }
 
     setQuantity(product: any): void {

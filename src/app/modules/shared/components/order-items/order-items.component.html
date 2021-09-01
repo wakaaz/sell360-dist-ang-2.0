@@ -1,23 +1,24 @@
-<div class="modal fade" id="exampleModal-del" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="exampleModal-del" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content top-borderRed">
-        <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Delete <span></span></h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
+        <div class="modal-content top-borderRed">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete <span></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
                 <div class="col-md-12">
-                  <p>Are you sure you want to delete?</p>
-                </div>  
-
+                    <p>Are you sure you want to delete?</p>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary" (click)="deleteProduct()">Yes</button>
+                <button type="submit" id="close-prod-del" class="btn btn-cancel" data-dismiss="modal"
+                    aria-label="Close">No</button>
+            </div>
         </div>
-        <div class="modal-footer border-0">
-          <button type="button" class="btn btn-primary" (click)="deleteProduct()">Yes</button>
-          <button type="submit" id="close-del" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">No</button>
-        </div> 
-      </div>
     </div>
 </div>
 
@@ -55,13 +56,14 @@
                 <td>{{item.scheme_discount | number: '1.2-2'}}</td>
                 <td>{{item.trade_discount}}%</td>
                 <td>{{item.special_discount * item.stockQty | number: '1.2-2'}}</td>
-                <td><input type="text" [id]="item.item_id" [name]="item.item_id"
-                        [(ngModel)]="item.extra_discount" (keyup)="calculateExtraDiscount(item)"
-                        (keydown)="isNumber($event)" class="form-control value_input" placeholder="0"></td>
+                <td><input type="text" [id]="item.item_id" [name]="item.item_id" [(ngModel)]="item.extra_discount"
+                        (keyup)="calculateExtraDiscount(item)" (keydown)="isNumber($event)"
+                        class="form-control value_input" placeholder="0"></td>
                 <td>{{item.net_amount || 0 | number: '1.2-2'}}</td>
-                <td><button *ngIf="!item.isDeleted" type="button" (click)="selectedItem=item;" class="del_item btn smBTN red-bg" data-toggle="modal"
+                <td><button *ngIf="!item.isDeleted" type="button" (click)="selectedItem=item;"
+                        class="del_item btn smBTN red-bg" data-toggle="modal"
                         data-target="#exampleModal-del">Delete</button>
-                    </td>
+                </td>
             </tr>
         </tbody>
     </table>

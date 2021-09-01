@@ -4,12 +4,11 @@
     (drawerClosed)="closeNewProducts()" (productSelected)="addNewProductToOrder($event)">
 </app-products-drawer>
 
-<div class="modal fade" id="exampleModal-del" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="order-del" tabindex="-1" role="dialog" aria-labelledby="orderLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content top-borderRed">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete <span></span></h5>
+                <h5 class="modal-title" id="orderLabel">Delete <span></span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -85,11 +84,11 @@
                                     <button *ngIf="!savingOrder" (click)="setOrderItems()"
                                         [disabled]="!orderDetails?.items?.length"
                                         class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>
-                                    
+
                                     <button [disabled]="!orderDetails?.items?.length" *ngIf="!savingOrder"
-                                        data-toggle="modal" data-target="#exampleModal-del"
+                                        data-toggle="modal" data-target="#order-del"
                                         class="btn btn-cancel cancel_order_btn font13">Cancel Order</button>
-                                    
+
                                     <button *ngIf="savingOrder" type="submit" class="btn btn-primary mr-2" disabled>
                                         <div class="spinner-border text-light" role="status">
                                             <span class="sr-only">Loading...</span>

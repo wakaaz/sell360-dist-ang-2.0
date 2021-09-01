@@ -3,39 +3,69 @@
     [productMerchantDiscount]="merchantDiscount" [specialDiscounts]="specialDiscounts"
     (drawerClosed)="closeNewProducts()" (productSelected)="addNewProductToOrder($event)">
 </app-products-drawer>
+
+<div class="modal fade" id="exampleModal-del" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content top-borderRed">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete <span></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <p>Are you sure you want to cancel the order?</p>
+                </div>
+
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary" (click)="cancelOrder()">Yes</button>
+                <button type="submit" id="close-del" class="btn btn-cancel" data-dismiss="modal"
+                    aria-label="Close">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="order-contaienr" class="container">
     <div class="row">
         <div class="col-md-12">
             <div class="card daily-operations">
                 <ul class="nav nav-pills nav_M mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 1 ? 'active' : ''" id="pills-home-tab" (click)="currentTab=1" data-toggle="pill" href="#pills-home" role="tab"
+                        <a class="nav-link" [ngClass]="currentTab === 1 ? 'active' : ''" id="pills-home-tab"
+                            (click)="currentTab=1" data-toggle="pill" href="#pills-home" role="tab"
                             aria-controls="pills-home" aria-selected="true"><span>Orders</span>
                             <span class="wz-icon"><i class="fa fa-list-ul"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 2 ? 'active' : ''" (click)="currentTab=2" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab"
+                        <a class="nav-link" [ngClass]="currentTab === 2 ? 'active' : ''" (click)="currentTab=2"
+                            id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab"
                             aria-controls="pills-contact" aria-selected="false"><span>Credit</span>
                             <span class="wz-icon"><i class="fa  fa-dollar-sign"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 3 ? 'active' : ''" (click)="currentTab=3" id="pills-load-tab" data-toggle="pill" href="#pills-load" role="tab"
+                        <a class="nav-link" [ngClass]="currentTab === 3 ? 'active' : ''" (click)="currentTab=3"
+                            id="pills-load-tab" data-toggle="pill" href="#pills-load" role="tab"
                             aria-controls="pills-load" aria-selected="false"><span>Load</span>
                             <span class="wz-icon"><i class="fa fa-truck"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 4 ? 'active' : ''" (click)="currentTab=4" id="pills-final-tab" data-toggle="pill" href="#pills-final" role="tab"
+                        <a class="nav-link" [ngClass]="currentTab === 4 ? 'active' : ''" (click)="currentTab=4"
+                            id="pills-final-tab" data-toggle="pill" href="#pills-final" role="tab"
                             aria-controls="pills-final" aria-selected="false"><span>Final</span>
                             <span class="wz-icon"><i class="fa fa-check"></i></span>
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-                    <div [ngClass]="currentTab === 1 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade" id="pills-home" role="tabpanel"
-                        aria-labelledby="pills-home-tab">
+                    <div [ngClass]="currentTab === 1 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
+                        id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
                                 <app-retailer-sub-list [retailers]="ordersRetailers"
@@ -44,17 +74,22 @@
 
                             <div class="col p-0">
                                 <div class="rightHeight">
-                                    <app-order-items-list [orderDetail]="orderDetails" [savingOrder]="savingOrder" [schemes]="schemes"
-                                        [selectedRetailer]="selectedRetailer" [allProducts]="inventory"
-                                        [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
-                                        [newProduct]="newProduct" (openDrawer)="openProductsList()">
+                                    <app-order-items-list [orderDetail]="orderDetails" [savingOrder]="savingOrder"
+                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer"
+                                        [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
+                                        [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
+                                        (openDrawer)="openProductsList()">
                                     </app-order-items-list>
                                 </div>
                                 <div class="col-md-12 bottom-act-btn">
                                     <button *ngIf="!savingOrder" (click)="setOrderItems()"
+                                        [disabled]="!orderDetails?.items?.length"
                                         class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>
-                                    <button *ngIf="!savingOrder" (click)="cancelOrder()" class="btn btn-cancel cancel_order_btn font13"
-                                        data-toggle="modal" data-target="#ConfirmCancelSpotSale">Cancel</button>
+                                    
+                                    <button [disabled]="!orderDetails?.items?.length" *ngIf="!savingOrder"
+                                        data-toggle="modal" data-target="#exampleModal-del"
+                                        class="btn btn-cancel cancel_order_btn font13">Cancel Order</button>
+                                    
                                     <button *ngIf="savingOrder" type="submit" class="btn btn-primary mr-2" disabled>
                                         <div class="spinner-border text-light" role="status">
                                             <span class="sr-only">Loading...</span>
@@ -64,8 +99,8 @@
                             </div>
                         </div>
                     </div>
-                    <div [ngClass]="currentTab === 2 ? 'active show' : ''" class="tab-pane p-0 PT-20 tab_M fade" id="pills-contact" role="tabpanel"
-                        aria-labelledby="pills-contact-tab">
+                    <div [ngClass]="currentTab === 2 ? 'active show' : ''" class="tab-pane p-0 PT-20 tab_M fade"
+                        id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
                         <div class="col-12 PT-15">
                             <table class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
                                 <thead>
@@ -105,8 +140,8 @@
 
                     </div>
 
-                    <div [ngClass]="currentTab === 3 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade" id="pills-load" role="tabpanel"
-                        aria-labelledby="pills-load-tab">
+                    <div [ngClass]="currentTab === 3 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
+                        id="pills-load" role="tabpanel" aria-labelledby="pills-load-tab">
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id2" class="col-4 p-0">
@@ -440,8 +475,8 @@
                         </div>
                     </div>
 
-                    <div [ngClass]="currentTab === 4 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade" id="pills-final" role="tabpanel"
-                        aria-labelledby="pills-final-tab">
+                    <div [ngClass]="currentTab === 4 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
+                        id="pills-final" role="tabpanel" aria-labelledby="pills-final-tab">
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-8 PB-30">
@@ -582,9 +617,13 @@
 
                     <div class="col-md-12 pl-10 pr-10 text-center">
                         <div class="execFooter">
-                            <button *ngIf="currentTab !== 4" (click)="currentTab=currentTab-1" [disabled]="currentTab === 1" type="submit" class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button *ngIf="currentTab !== 4" (click)="currentTab=currentTab+1" type="submit" class="btn btn-primary m-0">Next</button>
-                            <button *ngIf="currentTab === 4" type="submit" class="btn btn-primary m-0" [routerLink]="['/orders', 'dispatch-orders']">Finish</button>
+                            <button *ngIf="currentTab !== 4" (click)="currentTab=currentTab-1"
+                                [disabled]="currentTab === 1" type="submit"
+                                class="btn btn-primary m-0 mr-2">Previous</button>
+                            <button *ngIf="currentTab !== 4" (click)="currentTab=currentTab+1" type="submit"
+                                class="btn btn-primary m-0">Next</button>
+                            <button *ngIf="currentTab === 4" type="submit" class="btn btn-primary m-0"
+                                [routerLink]="['/orders', 'dispatch-orders']">Finish</button>
                         </div>
                     </div>
                 </div>

@@ -301,8 +301,10 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     cancelOrder(): void {
+        document.getElementById('close-del').click();
         this.savingOrder = true;
         this.orderService.cancelOrder(this.orderDetails.id).subscribe(res => {
+            this.savingOrder = false;
             if (res.status === 200) {
                 this.toastService.showToaster({
                     message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,

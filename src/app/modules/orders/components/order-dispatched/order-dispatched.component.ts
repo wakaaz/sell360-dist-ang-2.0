@@ -281,6 +281,7 @@ export class OrderDispatchedComponent implements OnInit {
                 territory_id: this.orderDetails.territory_id,
                 booked_order_value: item.booked_order_value || 0,
                 booked_total_qty: item.booked_total_qty || 0,
+                is_deleted: item.isDeleted || false,
                 quantity: +item.stockQty,
                 gross_sale_amount: item.original_amount,
                 total_retail_price: item.item_retail_price * item.stockQty,

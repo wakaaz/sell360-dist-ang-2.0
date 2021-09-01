@@ -22,6 +22,7 @@ export const API_URLS = {
     VIEW_ORDERS: '/viewOrder/new/',
     ORDER_DETAIL: '/orderDetail',
     VIEW_ORDER_DETAIL: '/viewOrderDetail',
+    DISPATCH_ORDERS_DETAIL: '/dispatchOrdersDetail',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

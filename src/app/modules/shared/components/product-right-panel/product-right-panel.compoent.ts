@@ -62,7 +62,6 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
 
     addProductToOrder(): void {
         if (+this.selectedProduct.quantity > 0) {
-            this.selectedProduct.isBooked = false;
             this.selectedProduct.item_quantity_booker = 0;
             this.allProducts.find(x => x.item_id === this.selectedProduct.item_id).isAdded = true;
             this.dispProducts.find(x => x.item_id === this.selectedProduct.item_id).isAdded = true;

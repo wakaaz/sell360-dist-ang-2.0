@@ -97,7 +97,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
 
     deleteProduct(): void {
-        if (this.selectedItem.isBooked) {
+        if (this.selectedItem.id) {
             this.selectedItem.isDeleted = true;
             this.selectedItem.stockQty = 0;
             this.setQuantity(this.selectedItem);

@@ -45,7 +45,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of orderDetail.items; let i=index">
+            <tr *ngFor="let item of orderDetail.items; let i=index" [ngClass]="!item.booked_total_qty && item.isDeleted ? 'd-none' : ''">
                 <td style="width:200px">{{item.item_name}}</td>
                 <td>{{item.booked_total_qty || 0}}</td>
                 <td><input type="text" [id]="item.item_name" [name]="item.item_name"

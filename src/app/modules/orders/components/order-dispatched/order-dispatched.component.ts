@@ -214,11 +214,10 @@ export class OrderDispatchedComponent implements OnInit {
                     title: 'Order dispatched:',
                     type: 'success'
                 });
-                this.getOrderDetailsByRetailer(this.selectedRetailer);
             }
-            // this.orderDetails.items = [];
-            // this.selectedRetailer.isActive = false;
-            // this.selectedRetailer = JSON.parse(JSON.stringify(null));
+            this.orderDetails.items = [];
+            this.selectedRetailer.isActive = false;
+            this.selectedRetailer = JSON.parse(JSON.stringify(null));
         }, error => {
             this.savingOrder = false;
             if (error.status !== 1 && error.status !== 401) {
@@ -282,7 +281,7 @@ export class OrderDispatchedComponent implements OnInit {
                 territory_id: this.orderDetails.territory_id,
                 booked_order_value: item.booked_order_value || 0,
                 booked_total_qty: item.booked_total_qty || 0,
-                is_deleted: item.isDeleted || false,
+                is_deleted: item.isDeleted,
                 quantity: +item.stockQty,
                 gross_sale_amount: item.original_amount,
                 total_retail_price: item.item_retail_price * item.stockQty,

@@ -98,9 +98,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
     deleteProduct(): void {
         if (this.selectedItem.id) {
-            this.selectedItem.isDeleted = true;
             this.selectedItem.stockQty = 0;
             this.setQuantity(this.selectedItem);
+            this.selectedItem.isDeleted = true;
         } else {
             this.orderDetail.items = this.orderDetail.items.filter(x => x.item_id !== this.selectedItem.item_id);
             this.totalAmountAfterScheme = this.totalAmountAfterScheme - this.selectedItem.gross_amount;

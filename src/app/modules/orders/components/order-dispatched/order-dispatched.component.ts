@@ -146,7 +146,7 @@ export class OrderDispatchedComponent implements OnInit {
                         prod.trade_discount_pkr = JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
                         prod.tax_amount_pkr = JSON.parse(JSON.stringify(prod.total_tax_amount || 0));
                         prod.selectedScheme = this.schemes.find(scheme => scheme.id === prod.scheme_id);
-                        prod.isBooked = true;
+                        prod.isBooked = prod.booked_total_qty > 0;
                         return prod;
                     });
                 }
@@ -215,9 +215,10 @@ export class OrderDispatchedComponent implements OnInit {
                     title: 'Order dispatched:',
                     type: 'success'
                 });
-                this.orderDetails.items = [];
-                this.selectedRetailer.isActive = false;
             }
+            this.orderDetails.items = [];
+            this.selectedRetailer.isActive = false;
+            this.selectedRetailer = JSON.parse(JSON.stringify(null));
         }, error => {
             this.savingOrder = false;
             if (error.status !== 1 && error.status !== 401) {

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToasterService } from 'src/app/core/services/toaster.service';
-import { GeneralDataService } from '../../../shared/services';
+import { DataService, GeneralDataService } from '../../../shared/services';
 import { InventoryService } from '../../services/inventory.service';
 
 @Component({
@@ -30,6 +30,7 @@ export class AddStockComponent implements OnInit {
         private router: Router,
         private inventoryService: InventoryService,
         private generalDataService: GeneralDataService,
+        private dataService: DataService,
         private toastService: ToasterService,
     ) {
         this.dtOptions = {
@@ -65,12 +66,7 @@ export class AddStockComponent implements OnInit {
     }
 
     isNumber(event: KeyboardEvent): boolean {
-        if (event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete')) {
-            return true;
-        } else if (event.key.trim() === '') {
-            return false;
-        }
-        return !isNaN(Number(event.key));
+        return this.dataService.isNumber(event, 'quantity');
     }
 
     getBrands(): void {

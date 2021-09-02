@@ -97,7 +97,8 @@
                     <div [ngClass]="currentTab === 2 ? 'active show' : ''" class="tab-pane p-0 PT-20 tab_M fade"
                         id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
                         <div class="col-12 PT-15">
-                            <table *ngIf="dispatchOrderDetail?.orders" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                            <table datatable [dtOptions]="dtOptions" *ngIf="dispatchOrderDetail?.orders"
+                                class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Retailer Name</th>
@@ -108,18 +109,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <ng-container *ngFor="let order of dispatchOrderDetail.orders">
+                                    <ng-container *ngFor="let order of dispatchOrderDetail.orders;let ind=index">
                                         <tr *ngIf="order.balance > 0">
                                             <td>{{order.retailer_name}}</td>
-                                            <td>Rs. {{order.balance}}</td>
+                                            <td>Rs. {{order.balance | number: '1.2-2'}}</td>
                                             <td>{{order.aging || 0}} Days</td>
-                                            <td><input type="text" class="form-control value_input" placeholder="0"></td>
-                                            <td><button class="btn btn-default btn-line">Add to Bill</button></td>
+                                            <td>
+                                                <input type="number" [id]="ind" [(ngModel)]="order.currentBalance"
+                                                    (keydown)="isNumber($event)" [name]="ind"
+                                                    class="form-control value_input" placeholder="0">
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-default btn-line" *ngIf="!order.isAdded"
+                                                    [disabled]="!order.currentBalance || +order.currentBalance > 0"
+                                                    (click)="addOrderBill(order)">Add to Bill</button>
+                                                <button class="btn btn-default btn-line" *ngIf="order.isAdded"
+                                                    (click)="addOrderBill(order)">
+                                                    <div class="spinner-border text-light" role="status">
+                                                        <span class="sr-only">Loading...</span>
+                                                    </div>
+                                                </button>
+                                            </td>
                                         </tr>
                                     </ng-container>
                                 </tbody>
                             </table>
-                            <h4 *ngIf="!dispatchOrderDetail?.orders?.length && !loading" class="no-products">No credit to display!</h4>
+                            <h4 *ngIf="!dispatchOrderDetail?.orders?.length && !loading" class="no-products">No credit
+                                to display!</h4>
                             <div class="col-12" *ngIf="loading">
                                 <app-loader-white></app-loader-white>
                             </div>
@@ -604,10 +620,11 @@
 
                     <div class="col-md-12 pl-10 pr-10 text-center">
                         <div class="execFooter">
-                            <button *ngIf="currentTab !== 4" (click)="currentTab=currentTab-1;tabChanged()"
+                            <button (click)="currentTab=currentTab-1;tabChanged()"
                                 [disabled]="currentTab === 1 || savingOrder" type="submit"
                                 class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button *ngIf="currentTab !== 4" [disabled]="savingOrder" (click)="currentTab=currentTab+1;tabChanged()" type="submit"
+                            <button *ngIf="currentTab !== 4" [disabled]="savingOrder"
+                                (click)="currentTab=currentTab+1;tabChanged()" type="submit"
                                 class="btn btn-primary m-0">Next</button>
                             <button *ngIf="currentTab === 4" type="submit" class="btn btn-primary m-0"
                                 [routerLink]="['/orders', 'dispatch-orders']">Finish</button>

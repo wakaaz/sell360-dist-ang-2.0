@@ -478,13 +478,7 @@ export class CounterSaleComponent implements OnInit {
     // }
 
     isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
-        if (event.key && event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
-            (type === 'charges' && event.key.includes('.'))) {
-            return true;
-        } else if (event.key && event.key.trim() === '') {
-            return false;
-        }
-        return !isNaN(Number(event.key.trim()));
+        return this.dataService.isNumber(event, type);
     }
 
     setQuantity(product: any): void {

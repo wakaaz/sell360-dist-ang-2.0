@@ -12,6 +12,7 @@ import { OrdersService } from '../../services/orders.service';
 
 export class OrderDispatchedComponent implements OnInit {
 
+    dtOptions: DataTables.Settings;
     loading: boolean;
     loadingProduct: boolean;
     showProducts: boolean;
@@ -45,6 +46,9 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.dtOptions = {
+            pagingType: 'simple_numbers'
+        };
         this.currentTab = 1;
         this.salemanId = +this.route.snapshot.paramMap.get('saleManId') || null;
         this.orderDate = this.route.snapshot.paramMap.get('date');
@@ -78,6 +82,10 @@ export class OrderDispatchedComponent implements OnInit {
             default:
                 break;
         }
+    }
+
+    isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
+        return this.dataService.isNumber(event, type);
     }
 
     getDispatchDetails(): void {
@@ -366,6 +374,13 @@ export class OrderDispatchedComponent implements OnInit {
                 });
             }
         });
+    }
+
+    addOrderBill(order: any): void {
+        order.isAdded = true;
+        // setTimeout(() => {
+        //     order.isAdded = false;
+        // }, 10000);
     }
 
 }

@@ -17,17 +17,11 @@
 .topstats .gary-box{line-height: 1;background-color: #f9f9f9;border-bottom: solid 1px #d1d1d1;padding: 10px;}
 .topstats .gary-box span{font-family: 'Rationale', sans-serif; color:#0038ba; font-size: 18px; float: right; margin-top: -4px;}
 .min-w{min-width:240px }	
-
 #orderList-id{flex: 0 0 300px; max-width: 300px; width: 300px;}
 #orderList-id2{flex: 0 0 300px; max-width: 300px; width: 300px;}
 .value_input { padding: 2px; margin: 0!important; font-size: 12px; box-shadow: none;height: 22px; width: 52px; border: solid 1px #e2e6ea;}	
-
 .rightHeight{ height: calc(100vh - 249px); overflow-y: auto;}
-
-.ProListDiv {
-	padding: 0;
-	display: table;
-}
+.ProListDiv {padding: 0;display: table;}
 .ProListDiv .PR_Name {
 	display: table-cell;
 	vertical-align: middle;
@@ -35,12 +29,7 @@
 	letter-spacing: 1px;
 	line-height: 16px
 }
-.ProListDiv .PrList_img {
-	width: 35px;
-	height: 35px;
-	margin-right: 8px;
-	border: solid 1px #e0e0e0
-}
+.ProListDiv .PrList_img {width: 35px;height: 35px;margin-right: 8px;border: solid 1px #e0e0e0}
 .AddProductTable .btn-default {
 	padding: 5px 8px;
 	font-size: 13px;
@@ -58,6 +47,9 @@
 	float: right;
 	border: none!important
 }
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
+/* Firefox */input[type=number] {-moz-appearance: textfield;}
 .no-products {text-align: center; color: lightgray;}
 .AddDetailPR {
 	padding: 25px;

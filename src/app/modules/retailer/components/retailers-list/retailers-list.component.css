@@ -1,0 +1,74 @@
+#product-cl-sec {width: 750px}
+#product-cl-sec table th,  #product-cl-sec table td {padding-left: 5px;}
+.sell360report {padding-bottom: 15px}
+.sell360report .card {
+	background-color: #fff;
+	border: none;
+	padding: 10px 15px;
+	margin: 10px 0px;
+	border-radius: 0px;
+	position: relative;
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.2);
+	background-image: url(/assets/images/bg-0123.jpg);
+	background-position: center center;
+	background-repeat: no-repeat;
+	background-size: 100%;
+	height: 90px
+}
+.sell360report h4 {	font-size: 16px;padding: 0;margin: 0;color: #0038ba}
+.sell360report h4 span {color: #282828;	font-family: 'proximanova-regular', sans-serif !important;position: relative;}
+.sell360report .digit {
+	font-size: 30px;
+	font-weight: normal;
+	line-height: normal;
+	color: #282828;
+	margin-bottom: 0;
+	padding-bottom: 0;
+	line-height: 1;
+	font-family: 'Rationale', sans-serif !important;
+	position: absolute;
+	bottom: 10px;
+	right: 15px
+}
+.sell360report .head-font {	font-size: 16px}
+.Product-Filter {
+    background-color: #f3f2f2;
+    padding: 15px 15px 0px 15px;
+    box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.2);
+    margin-bottom: 15px;
+    border-bottom: solid 2px #0038ba
+}
+.Product-Filter .nav-link { padding: 6px 8px 0px 8px; cursor: pointer;}
+.Product-Filter .nav {width: 74px;float: right}
+.Product-Filter .nav .fa {color: #a6a5a5; font-size: 20px}
+.Product-Filter .active .fa {color: #0038ba}
+.Product-Filter .btn-primary {
+    color: #fff !important;
+    cursor: pointer;
+    float: left;
+    margin-left: 15px;
+    padding-top: 4px;
+    padding-bottom: 4px
+}
+#productlist01 { color: #fff !important }
+.CL-Product {
+    width: 29%;
+    position: relative;
+    float: left;
+    padding-right: 15px
+}
+.CL-Product input {
+    height: 32px;
+    border: solid 1px #dedede;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    padding-left: 30px;
+    font-size: 13px;
+    letter-spacing: 1px;
+}
+.CL-Product .fa { position: absolute;top: 8px;left: 8px;color: #b5b5b5;}
+._cust_filter {float: left; margin-bottom: 15px; width: 29%; padding-right: 10px;}
+._cust_filter ng-select {border-radius: 0;height: 32px;}
+.ng-select .ng-select-container {background: #fff !important;border-radius: 0;height: 32px !important; min-height: 32px !important;line-height: 19px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
+.dataTable .btn-default, .smBTN {color: #fff;}

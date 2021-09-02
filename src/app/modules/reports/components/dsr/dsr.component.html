@@ -1,0 +1,190 @@
+<div class="container">
+
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Daily <span> Sales Report</span></h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a><span>Report</span></a></li>
+                <li><span>DSR</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+
+                <div class="header addPR-head">
+                    <div class="float-left">
+                        <h3>Select Date</h3>
+                    </div>
+                    <div class="_PR_filter pr-15" style="width: 170px!important;">
+                        <div class="form-group mb-0" style="height: auto">
+                            <input type="text" id="datepicker" class="form-control" placeholder="">
+                        </div>
+                    </div>
+                    <div class="float-left">
+                        <h3>Select Salesman</h3>
+                    </div>
+                    <div class="_PR_filter pr-15">
+                        <div class="form-s2">
+                            <select class="form-control formselect" placeholder="Select Salesman"
+                                style="width: 100%!important">
+                                <option value="0" selected=""> Select Salesman</option>
+                                <option value="1">Salesman</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="body pb-0">
+                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>S.NO</th>
+                                <th>ITEMS/PRODUCT NAME</th>
+                                <th>ISSUE</th>
+                                <th>RETURNS</th>
+                                <th>NET SALES</th>
+                                <th>T.P</th>
+                                <th>GROSS AMT.</th>
+                                <th>SCH DIS.</th>
+                                <th>NET AMT.</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>Dal Chana R5 (1x48) </td>
+                                <td>149</td>
+                                <td>0</td>
+                                <td>149</td>
+                                <td>Rs:0</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                                <td>Rs. 6,705</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Dal Chana R5 (1x48) </td>
+                                <td>149</td>
+                                <td>0</td>
+                                <td>149</td>
+                                <td>Rs:0</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                                <td>Rs. 6,705</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Dal Chana R5 (1x48) </td>
+                                <td>149</td>
+                                <td>0</td>
+                                <td>149</td>
+                                <td>Rs:0</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                                <td>Rs. 6,705</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Dal Chana R5 (1x48) </td>
+                                <td>149</td>
+                                <td>0</td>
+                                <td>149</td>
+                                <td>Rs:0</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                                <td>Rs. 6,705</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Dal Chana R5 (1x48) </td>
+                                <td>149</td>
+                                <td>0</td>
+                                <td>149</td>
+                                <td>Rs:0</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                                <td>Rs. 6,705</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Dal Chana R5 (1x48) </td>
+                                <td>149</td>
+                                <td>0</td>
+                                <td>149</td>
+                                <td>Rs:0</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                                <td>Rs. 6,705</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Dal Chana R5 (1x48) </td>
+                                <td>149</td>
+                                <td>0</td>
+                                <td>149</td>
+                                <td>Rs:0</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                                <td>Rs. 6,705</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Dal Chana R5 (1x48) </td>
+                                <td>149</td>
+                                <td>0</td>
+                                <td>149</td>
+                                <td>Rs:0</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                                <td>Rs. 6,705</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>Dal Chana R5 (1x48) </td>
+                                <td>149</td>
+                                <td>0</td>
+                                <td>149</td>
+                                <td>Rs:0</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                                <td>Rs. 6,705</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <div class="row">
+                        <div class="col-8"></div>
+                        <div class="col-4 PT-20">
+                            <div class="report_value totalcash"><strong>Gross Sales Amount: </strong> <span>Rs.
+                                    98</span></div>
+                            <div class="report_value totalcash"><strong>Scheme Discount:</strong> <span>Rs. 0</span>
+                            </div>
+                            <div class="report_value totalcash"><strong>Trade Discount:</strong> <span>Rs. 0</span>
+                            </div>
+                            <div class="report_value totalcash"><strong>Ind. Discount:</strong> <span>Rs. 0</span></div>
+                            <div class="report_value totalcash"><strong>Less Market Return:</strong> <span>Rs. 0</span>
+                            </div>
+                            <div class="report_value totalcash border-0"><strong>Net Sales Amount:</strong> <span>Rs.
+                                    38,413</span></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 text-right"
+                            style="background-color: #f3f3f3; padding: 10px 15px; margin-top: 5px; margin-bottom: 5px;">
+                            <button class="btn btn-primary">Generate DSR</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

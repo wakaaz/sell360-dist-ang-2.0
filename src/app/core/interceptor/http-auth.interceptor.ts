@@ -10,6 +10,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { LocalStorageService } from '../services/storage.service';
 import { ToasterService } from '../services/toaster.service';
+import { localStorageKeys } from '../constants/localstorage.constants';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -42,8 +43,9 @@ export class AuthInterceptor implements HttpInterceptor {
                         this.toastService.showToaster({
                             title: 'Session Expired', message: 'Please login to continue!', type: 'error'
                         });
-                        this.storageService.removeItem('dist_session');
-                        this.storageService.removeItem('distributor');
+                        document.getElementById('Close-All').click();
+                        this.storageService.removeItem(localStorageKeys.session);
+                        this.storageService.removeItem(localStorageKeys.distributor);
                         this.router.navigateByUrl('/login');
                     }
                     return throwError(error);

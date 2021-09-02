@@ -11,6 +11,8 @@ import {
   salesmanSubMenu
 } from './core/constants/sub-nav.constants';
 import { Toaster, ToasterService } from './core/services/toaster.service';
+import { leftBarHidden } from './core/constants/no-left-bar.constants';
+import { localStorageKeys } from './core/constants/localstorage.constants';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +23,7 @@ export class AppComponent {
 
   @ViewChild('subNav') subNav: ElementRef;
   isLoggedIn: boolean;
+  isSideNavHidden: boolean;
 
   toastTitle: string;
   toastMessage: string;
@@ -43,6 +46,12 @@ export class AppComponent {
     this.router.events.subscribe(event => {
       if (event instanceof NavigationEnd) {
         this.isLoggedIn = this.storageService.getItem('dist_session') ? true : false;
+        const url = event.urlAfterRedirects;
+        if (leftBarHidden.includes(url) || url.includes('/orders/dispatch/')) {
+          this.isSideNavHidden = true;
+        } else {
+          this.isSideNavHidden = false;
+        }
       }
     });
     this.toasterHandler();
@@ -102,10 +111,19 @@ export class AppComponent {
   }
 
   logout(): void {
-    this.storageService.removeItem('dist_session');
-    this.storageService.removeItem('distributor');
-    this.storageService.removeItem('__saleman');
+    this.storageService.removeItem(localStorageKeys.session);
+    this.storageService.removeItem(localStorageKeys.distributor);
+    this.storageService.removeItem(localStorageKeys.saleman);
+    this.storageService.removeItem(localStorageKeys.actions);
     this.router.navigateByUrl('/login');
+  }
+
+  closeEverything(): void {
+    const modal  = document.querySelector('div.modal');
+    if (modal) {
+      const closeButton = modal.querySelector('button.close');
+      (closeButton as HTMLButtonElement).click();
+    }
   }
 
 }

@@ -7,11 +7,13 @@ import { ProductComponent } from './product.component';
 import { ProductDetailsComponent } from './product-detail/product-detail.component';
 
 import { ProductService } from './product.service';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
     imports: [
         CommonModule,
         DataTablesModule,
+        SharedModule,
         ProductRoutingModule,
     ],
     declarations: [

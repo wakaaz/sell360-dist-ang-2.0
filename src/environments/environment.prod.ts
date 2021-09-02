@@ -1,4 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://product.am7.studio/distributor-api',
+  apiDomain: 'https://sell360.allomate.solutions',
+  apiUrl: 'https://sell360.allomate.solutions/distributor-api',
 };

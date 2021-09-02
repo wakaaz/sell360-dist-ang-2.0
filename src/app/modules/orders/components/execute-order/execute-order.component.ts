@@ -26,7 +26,7 @@ export class ExecuteOrderComponent implements OnInit {
         this.currentTab = this.executionEnum.orders;
         this.dtOPtions = {
             pagingType: 'simple_numbers',
-        }
+        };
     }
 
     changeTab(selectedTab: string): void {

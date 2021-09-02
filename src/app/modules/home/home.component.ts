@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 
 import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { HomeService } from './services/home.service';
@@ -20,7 +21,7 @@ export class HomeComponent implements OnInit {
 
     ngOnInit(): void {
         this.loading = false;
-        this.distributor = this.storageService.getItem('distributor');
+        this.distributor = this.storageService.getItem(localStorageKeys.distributor);
         this.getDashboardData();
     }
 

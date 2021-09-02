@@ -1,0 +1,71 @@
+<div class="container">
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Daily <span> Cash Summary</span></h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a href="#"><span>Report</span></a></li>
+                <li><span>DCS</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+
+                <div class="header addPR-head">
+                    <div class="float-left">
+                        <h3>Select Date</h3>
+                    </div>
+                    <div class="_PR_filter pr-15" style="width: 170px!important;">
+                        <div class="form-group mb-0" style="height: auto">
+                            <input type="date" id="datepicker" [(ngModel)]="selectedDate" name="gen-date"
+                                class="form-control" placeholder="">
+                        </div>
+                    </div>
+                    <div class="gen-act">
+                        <a class="btn btn-primary" (click)="generateDateWiseSummary()">Generate DCS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-30 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Monthly <span> Cash Summary</span></h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a href="#"><span>Report</span></a></li>
+                <li><span>MCS</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+
+                <div class="header addPR-head">
+                    <div class="float-left">
+                        <h3>Select Month</h3>
+                    </div>
+                    <div class="_PR_filter pr-15" style="width: 170px!important;">
+                        <div class="form-group mb-0" style="height: auto">
+                            <input type="month" id="datepicker" [(ngModel)]="selectedMonth" name="gen-month"
+                                class="form-control" placeholder="">
+                        </div>
+                    </div>
+                    <div class="gen-act">
+                        <a class="btn btn-primary" (click)="generateMonthWiseSummary()">Generate MCS</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

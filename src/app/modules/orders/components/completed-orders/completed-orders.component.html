@@ -1,0 +1,71 @@
+<div class="container">
+
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Orders <span> Management</span></h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a><span>Orders</span></a></li>
+                <li><span>List</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Completed <span> Orders</span>
+                        <div class="_list-total">145</div>
+                    </h2>
+                </div>
+                <div class="body">
+                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Month</th>
+                                <th>Orders</th>
+                                <th>Amount</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>February</td>
+                                <td>15</td>
+                                <td>Rs. 15,000 </td>
+                                <td><a [routerLink]="['/orders', 'completed-orders', 1]" class="btn btn-default btn-line m-0">View
+                                        All</a></td>
+                            </tr>
+                            <tr>
+                                <td>January</td>
+                                <td>15</td>
+                                <td>Rs. 15,000 </td>
+                                <td><a [routerLink]="['/orders', 'completed-orders', 2]" class="btn btn-default btn-line m-0">View
+                                        All</a></td>
+                            </tr>
+                            <tr>
+                                <td>June</td>
+                                <td>15</td>
+                                <td>Rs. 15,000 </td>
+                                <td><a [routerLink]="['/orders', 'completed-orders', 3]" class="btn btn-default btn-line m-0">View
+                                        All</a></td>
+                            </tr>
+                            <tr>
+                                <td>March</td>
+                                <td>15</td>
+                                <td>Rs. 15,000 </td>
+                                <td><a [routerLink]="['/orders', 'completed-orders', 4]" class="btn btn-default btn-line m-0">View
+                                        All</a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

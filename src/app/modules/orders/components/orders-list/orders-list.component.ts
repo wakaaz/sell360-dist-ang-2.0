@@ -1,4 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ToasterService } from 'src/app/core/services/toaster.service';
+import { GeneralDataService } from '../../../shared/services';
+import { OrdersService } from '../../services/orders.service';
 
 @Component({
     selector: 'app-orders-list',
@@ -10,26 +13,118 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 export class OrdersListComponent implements OnInit {
     selectedOrderBooker: number;
     showDetailsPopup: boolean;
-    orderBookers: Array<any>;
-    orders: Array<any>;
-    dtOptions: DataTables.Settings = {};
+    submitted: boolean;
     byOrderBooker: boolean;
+    loading: boolean;
+    orderBookers: Array<any> = [];
+    salesMen: Array<any> = [];
+    orders: Array<any> = [];
+    dtOptions: DataTables.Settings = {};
+    selectedOrders: Array<any> = [];
 
-    constructor() {
+    constructor(
+        private generalDataService: GeneralDataService,
+        private ordersService: OrdersService,
+        private toastService: ToasterService,
+    ) {
     }
 
     ngOnInit(): void {
-        this.byOrderBooker = false;
-        this.orderBookers = [{name: 'Utba', id: 1}, {name: 'Atif', id: 13}, {name: 'Ali', id: 21}];
-        this.orders = [
-            { id: 1, retailer: 'Market Store', channel: 'Kiryana Store', totalOrder: 1075.02 },
-            { id: 2, retailer: 'Kirana Store', channel: 'App Store', totalOrder: 1271.12 },
-            { id: 3, retailer: '786 Store', channel: 'Google Store', totalOrder: 3365.75 },
-        ];
-        this.selectedOrderBooker = null;
+        this.byOrderBooker = true;
         this.dtOptions = {
             pagingType: 'simple_numbers'
         };
+        this.getAllSalesMen();
+        this.getNewOrders();
+    }
+
+    getAllSalesMen(): void {
+        this.generalDataService.getAllSalesMen().subscribe(res => {
+            if (res.status === 200) {
+                this.salesMen = res.data;
+            }
+        }, error => {
+            if (error.status !== 401 && error.status !== 1) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Salesmen not fetched, try again later.',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+    getNewOrders(): void {
+        this.loading = true;
+        this.ordersService.getNewOrders().subscribe(res => {
+            this.loading = false;
+            if (res.status === 200) {
+                this.orders = res.data;
+            }
+        }, error => {
+            this.loading = false;
+            if (error.status !== 401 && error.status !== 1) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'New Orders not fetched, try again later.',
+                    type: 'error'
+                });
+            }
+            scrollTo(0, 0);
+        });
+    }
+
+    addOrderToAssignment(order: any): void {
+        this.selectedOrders = this.selectedOrders.filter(odr => odr.id !== order.id);
+        const assignment = {
+            sales_man: order.selectedSaleman.id,
+            employee_id: order.employee_id,
+            id: order.id,
+            date: order.date
+        };
+        this.selectedOrders.push(assignment);
+
+    }
+
+    assignSaleman(): void {
+        if (this.selectedOrders.length) {
+            const assigned = {
+                salesman: this.selectedOrders.map(x => {
+                    const { sales_man, employee_id, date } = x;
+                    return { sales_man, employee_id, date };
+                })
+            };
+            this.loading = true;
+            this.ordersService.assignSalesMan(assigned).subscribe(res => {
+                if (res.status) {
+                    this.toastService.showToaster({
+                        title: 'Salesman Assigned:',
+                        message: 'Salesmen assigned to selected order.',
+                        type: 'success'
+                    });
+                    this.selectedOrders.forEach(order => {
+                        this.orders = this.orders.filter(ordr => ordr.date !== order.date && order.employee_id);
+                    });
+                    this.loading = false;
+                }
+            }, error => {
+                this.loading = false;
+                if (error.status !== 401 && error.status !== 1) {
+                    this.toastService.showToaster({
+                        title: 'Error:',
+                        message: 'Salesmen assignment is not working at the moment, try again later.',
+                        type: 'error'
+                    });
+                }
+                scrollTo(0, 0);
+            });
+        } else {
+            this.toastService.showToaster({
+                title: 'Error:',
+                message: 'Please select saleman to assign orders!',
+                type: 'error'
+            });
+        }
     }
 
     openDetailsModal(order: any): void {

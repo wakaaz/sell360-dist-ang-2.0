@@ -1,0 +1,129 @@
+<div class="container mw-1280">
+    <div class="row">
+        <div class="col-md-12 mb-30">
+            <div class="card PB-20">
+                <div class="row m-0 grayTopborder">
+                    <div class="col-8 p-0">
+                        <div class="header addPR-head mb-10">
+                            <h2>Add <span> Opening Balance</span></h2>
+
+                            <div style="float: right;">
+                                <div class="_PR_filter pl-15" style="float: left;">
+                                    <div class="form-s2">
+                                        <ng-select [multiple]="false" class="formselect" [(ngModel)]="selectedOrderBooker"
+                                            (change)="getBookerRoutes()" placeholder="Select Employee">
+                                            <ng-option disabled>Select Employee</ng-option>
+                                            <ng-option *ngFor="let orderBooker of orderBookers"
+                                                [value]="orderBooker">{{orderBooker.employee_first_name +' '+
+                                                orderBooker.employee_last_name}}</ng-option>
+                                        </ng-select>
+                                    </div>
+                                </div>
+
+                                <div class="_PR_filter pl-15" style="float: left;">
+                                    <div class="form-s2">
+                                        <ng-select [multiple]="false" class="formselect" [(ngModel)]="selectedRoute"
+                                            (change)="getRetailersByRoute()" placeholder="Select Route">
+                                            <ng-option *ngIf="!selectedOrderBooker" disabled>Select Employee First
+                                            </ng-option>
+                                            <ng-option *ngIf="selectedOrderBooker" disabled>Select Route</ng-option>
+                                            <ng-option *ngFor="let route of routes" [value]="route">{{route.name}}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-12 retailerTable">
+                            <table *ngIf="!loading" datatable [dtOptions]="dtOptions"
+                                class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                                <thead>
+                                    <tr>
+                                        <th>Retailer Name</th>
+                                        <th>Retailer Type</th>
+                                        <th>Retailer Phone</th>
+                                        <th>Balance</th>
+                                        <th>ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let retailer of retailers;let ind=index">
+                                        <td>{{retailer.retailer_name}}</td>
+                                        <td>{{retailer.type}}</td>
+                                        <td>{{retailer.retailer_phone}}</td>
+                                        <td><input *ngIf="retailer.opening_balance === 0; else openBalance" type="number" (keydown)="isNumber($event)" [(ngModel)]="retailer.openingBalance" min="1"
+                                                id="retailer-balance-{{i}}" name="retailer-balance-{{i}}"
+                                                class="form-control add-stock-input">
+                                                <ng-template #openBalance>{{retailer.opening_balance}}</ng-template>
+                                            </td>
+                                        <td>
+                                            <button *ngIf="retailer.opening_balance === 0" [disabled]="!retailer.openingBalance"
+                                              (click)="addRetailer(retailer)" class="btn btn-default btn-line mb-0">Add</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div *ngIf="loading" class="col-md-12">
+                                <app-loader-white></app-loader-white>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-4 p-0">
+                        <div class="_selectProList ProListHeight">
+                            <div class="header ProListHD">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <h2 class="w-100">Retailers <span> List</span></h2>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="APS-list"><i class="fa fa-search"></i>
+                                            <input type="text" class="form-control" id="" placeholder="Search">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="ProList-div">
+                                <table class="table table-hover dt-responsive nowrap" id="example2" style="width:100%">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let ret of selectedRetailers;let in=index">
+                                            <td>
+                                                <div class="Pro-IN"><img class="Pr_imgV" [src]="ret.image || 'assets/images/avatar.svg'"
+                                                        alt="" />
+                                                    <div class="CP-name"><strong>{{ret.retailer_name}}</strong> <span>Balance:
+                                                            {{ret.openingBalance}}</span></div>
+                                                </div>
+                                            </td>
+                                            <td align="right"><a class="RLDelete" (click)="removeRetailerFromList(ret)"><i
+                                                        class="fa fa-times"></i></a></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 text-right PT-15">
+                        <button *ngIf="submitted" class="btn btn-info btn-login" disabled>
+                            <div class="spinner-border text-light" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </button>
+                        <button type="submit" *ngIf="!submitted" class="btn btn-primary mr-2" (click)="setOpeningBalance()">Save</button>
+                        <button type="submit" *ngIf="!submitted" class="btn btn-cancel" [routerLink]="['/home']">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

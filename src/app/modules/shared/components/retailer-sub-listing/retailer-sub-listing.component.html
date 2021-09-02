@@ -1,0 +1,27 @@
+<div class="_selectProList ProListHeight">
+    <div class="header ProListHD">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="w-100">Orders <span> List</span></h2>
+            </div>
+            <div class="col-12">
+                <div class="APS-list"><i class="fa fa-search"></i>
+                    <input type="text" class="form-control" id="" placeholder="Search">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ProList-div" *ngIf="retailers?.length">
+        <div *ngFor="let retailer of retailers; let i=index" [ngClass]="retailer.isActive ? 'active' : ''"
+            class="col-12 order-list" id="retailer-{{retailer.id}}" (click)="getOrderDetails(retailer)">
+            <div class="ord-no">{{ i + 1 }}</div>
+            <div class="row">
+                <div class="col-8 pr-0"><strong>{{retailer.retailer_name}}</strong><span><i
+                            class="fa fa-map-marker-alt"></i>{{retailer.retailer_address}}</span></div>
+                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs. {{retailer.order_total | number:
+                        '1.2-2'}}</span></div>
+            </div>
+        </div>
+    </div>
+</div>

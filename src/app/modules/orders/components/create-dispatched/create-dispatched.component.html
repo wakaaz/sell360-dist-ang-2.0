@@ -2,7 +2,7 @@
 
     <div class="row mt-2 mb-2">
         <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Orders <span> Management</span></h2>
+            <h2 class="_head01">Create <span> Dispatch</span></h2>
         </div>
 
         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -16,11 +16,11 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card">
-                <div class="header">
+                <!-- <div class="header">
                     <h2>Create <span>Dispatch</span></h2>
-                </div>
+                </div> -->
                 <div class="body">
-                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example"
+                    <table *ngIf="!loading" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example"
                         style="width:100%">
                         <thead>
                             <tr>
@@ -28,61 +28,27 @@
                                 <th>Sales Man</th>
                                 <th>Order Bookers</th>
                                 <th>Orders</th>
-                                <th>Amount</th>
+                                <th>Booked Value</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>2021-04-28</td>
-                                <td>Arif</td>
-                                <td>Atif </td>
-                                <td>12 </td>
-                                <td>15,000</td>
-                                <td><button class="btn btn-default mb-0">BS</button>
-                                    <button class="btn btn-default mb-0">Bills</button>
-                                    <a href="orders-dispatched.html" class="btn btn-default btn-line mb-0">Dispatch</a>
-                                    <button class="btn btn-default red-bg mb-0">Revert</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2021-04-28</td>
-                                <td>Arif</td>
-                                <td>Atif </td>
-                                <td>12 </td>
-                                <td>15,000</td>
-                                <td><button class="btn btn-default mb-0">BS</button>
-                                    <button class="btn btn-default mb-0">Bills</button>
-                                    <a href="orders-dispatched.html" class="btn btn-default btn-line mb-0">Dispatch</a>
-                                    <button class="btn btn-default red-bg mb-0">Revert</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2021-04-28</td>
-                                <td>Arif</td>
-                                <td>Atif </td>
-                                <td>12 </td>
-                                <td>15,000</td>
-                                <td><button class="btn btn-default mb-0">BS</button>
-                                    <button class="btn btn-default mb-0">Bills</button>
-                                    <a href="orders-dispatched.html" class="btn btn-default btn-line mb-0">Dispatch</a>
-                                    <button class="btn btn-default red-bg mb-0">Revert</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2021-04-28</td>
-                                <td>Arif</td>
-                                <td>Atif </td>
-                                <td>12 </td>
-                                <td>15,000</td>
-                                <td><button class="btn btn-default mb-0">BS</button>
-                                    <button class="btn btn-default mb-0">Bills</button>
-                                    <a href="orders-dispatched.html" class="btn btn-default btn-line mb-0">Dispatch</a>
+                            <tr *ngFor="let order of ordersList;let ind=index">
+                                <td>{{order.date}}</td>
+                                <td>{{order.sales_man}}</td>
+                                <td>{{order.emp_names.split(',').join(', ')}} </td>
+                                <td>{{order.total_orders}}</td>
+                                <td>{{order.order_total | number: '1.2-2'}}</td>
+                                <td><button (click)="loadBookingSheet(order)" class="btn btn-default mb-0">BS</button>
+                                    <a [routerLink]="['/orders', 'dispatch', order.sales_man_id, order.date]" class="btn btn-default btn-line mb-0">Dispatch</a>
                                     <button class="btn btn-default red-bg mb-0">Revert</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    <div *ngIf="loading" class="col-md-12">
+                        <app-loader-white></app-loader-white>
+                    </div>
                 </div>
             </div>
         </div>

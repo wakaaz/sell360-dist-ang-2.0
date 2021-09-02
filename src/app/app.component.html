@@ -29,7 +29,7 @@
   </div>
 </div>
   
-<div *ngIf="isLoggedIn" class="sidebarblue">
+<div *ngIf="isLoggedIn && !isSideNavHidden" class="sidebarblue">
   <div class="aside-primary">
     <div class="sell360"><a routerLink="/home"><img alt="Sell360" src="/assets/images/logo-w.svg"></a></div>
     <div class="main-links">
@@ -65,8 +65,8 @@
 </div>
 
 <div *ngIf="isLoggedIn" id="wrapper">
-  <div id="content-wrapper">
-    <div *ngIf="showToast" aria-live="polite" aria-atomic="true" style="position: relative; margin-right: 10px;z-index: 1;">
+  <div id="content-wrapper" [ngClass]="isSideNavHidden ? 'pl-0' : ''">
+    <div *ngIf="showToast" aria-live="polite" aria-atomic="true" style="position: relative; margin-right: 10px;z-index: 1000;">
       <!-- Position it -->
       <div style="position: absolute; top: 20px; right: 0;">
     
@@ -88,6 +88,9 @@
     
     <div id="blureEffct">
       <div class="overlay-blure"></div>
+      <button id="Close-All" (click)="closeEverything()" hidden data-dismiss="modal"  aria-label="Close">
+        Close every thing!
+      </button>
       <router-outlet></router-outlet>
       <footer *ngIf="true" class="sticky-footer">
         <div class="container my-auto">

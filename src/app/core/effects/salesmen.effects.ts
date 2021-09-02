@@ -8,13 +8,14 @@ import {
     ADD_SALEMAN_STORAGE,
     UPDATE_SALEMAN,
 } from '../../modules/salesmen/reducers/salesmen.reducer';
+import { localStorageKeys } from '../constants/localstorage.constants';
 
 @Injectable()
 export class LocalStorageSalemanEffects {
   // change this to `dispatch: true` to sync state with actions
   @Effect({ dispatch: false })
   onChange = fromEvent<StorageEvent>(window, 'storage').pipe(
-    filter(evt => evt.key === '__actions'),
+    filter(evt => evt.key === localStorageKeys.actions),
     filter(evt => evt.newValue !== null),
     map(evt => {
       const [{ type, payload }] = JSON.parse(evt.newValue);
@@ -36,17 +37,17 @@ export class LocalStorageSalemanEffects {
         UPDATE_SALEMAN,
     ),
     tap(action => {
-      const storedActions = window.localStorage.getItem('__actions');
+      const storedActions = window.localStorage.getItem(localStorageKeys.actions);
       const actions = storedActions ? JSON.parse(storedActions) : [];
       const newActions = [action, ...actions];
-      window.localStorage.setItem('__actions', JSON.stringify(newActions));
+      window.localStorage.setItem(localStorageKeys.actions, JSON.stringify(newActions));
     }),
   );
 
   // change this to `dispatch: true` to sync state with state
   @Effect({ dispatch: true })
   updateState = fromEvent<StorageEvent>(window, 'storage').pipe(
-    filter(evt => evt.key === '__saleman'),
+    filter(evt => evt.key === localStorageKeys.saleman),
     filter(evt => evt.newValue !== null),
     map(evt => {
       const newState = JSON.parse(evt.newValue);

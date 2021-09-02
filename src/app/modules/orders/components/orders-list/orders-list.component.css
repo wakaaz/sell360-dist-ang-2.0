@@ -6,6 +6,7 @@
 .nav-item {cursor: pointer;text-transform: capitalize !important;}
 .CL-Product {padding-top: 0 !important;margin-left: 0 !important;}
 .OrderInfo {font-size: 14px}
+.dataTable .btn-default, .smBTN {color: #fff; }
 .OrderInfo span {width: 105px;float: left}
 .Order-Detail-table table td {border: solid 1px #333333;padding: 5px!important;font-size: 12px}
 .Order-Detail-table table th {border: solid 1px #333333!important;background-color: #ededed!important;color: #000;padding: 5px!important;font-size: 12px}
@@ -22,7 +23,7 @@
 .active { display: block;}
 #example2 .ng-select .ng-select-container {width: 100%;font-size: 14px;border-radius: 0;min-height: 25px !important;height: 25px !important;}
 #example2 .ng-select .ng-select-container div.ng-input { top: 0 !important; }
-
+.ng-select .ng-clear {display: none !important;}
 .Product-Filter {
     background-color: #f3f2f2;
     padding: 15px 15px 0px 15px;

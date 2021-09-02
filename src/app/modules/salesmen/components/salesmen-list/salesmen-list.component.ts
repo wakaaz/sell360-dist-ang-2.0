@@ -9,8 +9,8 @@ import { ToasterService } from 'src/app/core/services/toaster.service';
 import { addSalemens, addSaleman, updateSaleman } from '../../reducers/salesmen.reducer';
 import { getSalemenState } from '../../selectors/base.selector';
 
+import { GeneralDataService } from '../../../shared/services';
 import { SalesmenService } from '../../services/salesmen.service';
-declare var jQuery: any;
 
 @Component({
     selector: 'app-salesmenlist-component',
@@ -25,7 +25,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     dtOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject();
 
-    salesMen: any;
+    salesMen: Array<any> = [];
     segments: Array<any>;
     selectedSegments: Array<string>;
     tableUpdated: boolean;
@@ -52,6 +52,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         private router: Router,
         private store: Store<{}>,
+        private generalDataService: GeneralDataService,
         private salemenService: SalesmenService,
         private toastService: ToasterService,
     ) {
@@ -68,6 +69,9 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
             pagingType: 'simple_numbers'
         };
         this.store.pipe(select(getSalemenState)).subscribe(state => {
+            if (this.salesMen.length && !this.loading) {
+                this.tableUpdated = true;
+            }
             this.salesMen = Object.keys(state.entities).map(key => {
                 return state.entities[key];
             });
@@ -81,24 +85,22 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        // if (!this.loading && this.salesMen?.length) {
-        // }
     }
 
     getAllSalemen(): void {
         this.loading = true;
-        this.salemenService.getAllSalesMen().subscribe((res: any) => {
+        this.generalDataService.getAllSalesMen().subscribe((res: any) => {
             this.loading = false;
             if (res.status === 200) {
                 this.salemenError = false;
                 this.store.dispatch(addSalemens(res.data));
                 setTimeout(() => {
                     this.dtTrigger.next();
-                }, 500);
+                }, 200);
             }
         }, error => {
             this.loading = false;
-            if (error.status !== 1) {
+            if (error.status !== 1 && error.status !== 401) {
                 this.toastService.showToaster({
                     title: 'Error:',
                     message: 'Salemens cannot be fetched at the moment.',
@@ -120,7 +122,6 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     openNewEmployeeForm(event: Event, selectedSaleman?: any): void {
         event.stopPropagation();
-        console.log('update saleman ::>', selectedSaleman);
         if (selectedSaleman) {
             this.selectedSaleman = selectedSaleman;
             this.name = selectedSaleman.name ? selectedSaleman.name : '';
@@ -191,7 +192,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.store.dispatch(addSaleman(res.data));
                 this.toastService.showToaster({
                     title: 'Saleman Added:',
-                    message: this.name + ' added succesfuly.',
+                    message: this.name + ' added successfully.',
                     type: 'success'
                 });
                 this.resetValues();
@@ -231,7 +232,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.store.dispatch(updateSaleman(res.data));
                 this.toastService.showToaster({
                     title: 'Update Saleman:',
-                    message: res.data.name + ' updated succesfuly.',
+                    message: res.data.name + ' updated successfully.',
                     type: 'success'
                 });
                 this.resetValues();
@@ -252,12 +253,13 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     rerenderSalemenTable(): void {
-        console.log('Rerender Table!');
-        from(this.dtSalesmen.dtInstance)
-            .pipe(tap(dt => dt.destroy()))
-            .subscribe(fr => {
-                this.dtTrigger.next();
-            });
+        if (this.dtSalesmen) {
+            from(this.dtSalesmen.dtInstance)
+                .pipe(tap(dt => dt.destroy()))
+                .subscribe(fr => {
+                    this.dtTrigger.next();
+                });
+        }
     }
 
     isFormValid(): boolean {
@@ -286,7 +288,6 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        // this.dtTrigger.unsubscribe();
     }
 
 }

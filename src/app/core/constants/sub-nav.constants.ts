@@ -18,17 +18,17 @@ export const ordersSubMenu = {
         },
         {
             title: 'Completed Orders',
-            link: '/orders',
+            link: '/orders/completed-orders',
             icon: '/assets/images/complete-orders.svg'
         },
         {
             title: 'Counter Sale',
-            link: '/orders',
+            link: '/orders/counter-sale',
             icon: '/assets/images/complete-orders.svg'
         },
         {
             title: 'Booking VS Execution',
-            link: '/orders',
+            link: '/orders/booking-vs-execution',
             icon: '/assets/images/complete-orders.svg'
         }
     ]
@@ -78,12 +78,12 @@ export const retailerSubMenu = {
     subMenu: [
         {
             title: 'Retailer',
-            link: '/retailer',
+            link: '/retailer/list',
             icon: '/assets/images/retailar-list-icon.svg'
         },
         {
             title: 'Opening Balance',
-            link: '/retailer',
+            link: '/retailer/opening-balance',
             icon: '/assets/images/opening-balance.svg'
         }
     ]
@@ -93,32 +93,32 @@ export const reportsSubMenu = {
     subMenu: [
         {
             title: 'DSR',
-            link: '/reports',
+            link: '/reports/dsr',
             icon: '/assets/images/reports-icon.svg'
         },
         {
             title: 'Cash Summary',
-            link: '/reports',
+            link: '/reports/cash-summary',
             icon: '/assets/images/reports-icon.svg'
         },
         {
             title: 'Export Rate List',
-            link: '/reports',
+            link: '/reports/export-rate-list',
             icon: '/assets/images/reports-icon.svg'
         },
         {
             title: 'Spot Sale',
-            link: '/reports',
+            link: '/reports/spot-sale',
             icon: '/assets/images/reports-icon.svg'
         },
         {
             title: 'Purchase History',
-            link: '/reports',
+            link: '/reports/purchase-history',
             icon: '/assets/images/reports-icon.svg'
         },
         {
             title: 'Stock Out Report',
-            link: '/reports',
+            link: '/reports/stock-report',
             icon: '/assets/images/reports-icon.svg'
         }
     ]

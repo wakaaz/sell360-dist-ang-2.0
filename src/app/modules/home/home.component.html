@@ -17,7 +17,7 @@
             </div>
             <div class="alert alert-secondary alert-dismissible fade show" role="alert">
                 <strong>Holy guacamole!</strong> You should check in on some of those fields below.
-                <a href="#" class="ml-2">Open Page</a>
+                <a class="ml-2">Open Page</a>
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -118,13 +118,13 @@
 
         <div class="col-12 h_dash">
             <div class="row">
-                <div class="col-4"><a href="#"><img src="assets/images/add-stock-01.svg" alt="" />
+                <div class="col-4"><a [routerLink]="['/inventory', 'add-stock']"><img src="assets/images/add-stock-01.svg" alt="" />
                         <h2 class="HD-title">Add New <span class="f-light"> Stock</span></h2>
                     </a> </div>
-                <div class="col-4"><a href="#"><img src="assets/images/add-order.svg" alt="" />
+                <div class="col-4"><a ><img src="assets/images/add-order.svg" alt="" />
                         <h2 class="HD-title">Create New <span class="f-light"> Order</span></h2>
                     </a> </div>
-                <div class="col-4"><a href="#"><img src="assets/images/dispatch-order.svg" alt="" />
+                <div class="col-4"><a ><img src="assets/images/dispatch-order.svg" alt="" />
                         <h2 class="HD-title">Dispatch<span class="f-light">Order</span></h2>
                     </a> </div>
             </div>

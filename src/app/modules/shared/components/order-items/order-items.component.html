@@ -1,0 +1,109 @@
+<div class="modal fade" id="exampleModal-del" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content top-borderRed">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete <span></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <p>Are you sure you want to delete?</p>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary" (click)="deleteProduct()">Yes</button>
+                <button type="submit" id="close-prod-del" class="btn btn-cancel" data-dismiss="modal"
+                    aria-label="Close">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="header addPR-head mb-10">
+    <h2>Product <span> List</span> </h2>
+    <a id="productlist01" class="btn add_button addpr" (click)="openProductsList($event)"><i class="fa fa-plus"
+            style="margin-right: 3.5px;"></i><span>Add Product</span></a>
+</div>
+<div class="col-12 retailerTable">
+    <table class="table table-hover dt-responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th style="width:200px">Product Name</th>
+                <th>Bkd Qty</th>
+                <th>Dely.Qty</th>
+                <th>T.P.</th>
+                <th>GR.Amt</th>
+                <th>T.O.</th>
+                <th>T.Disc</th>
+                <th>Spec.Disc</th>
+                <th>B.Disc</th>
+                <th>Net Amt</th>
+                <th style="width: 48px;">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of orderDetail.items; let i=index" [ngClass]="!item.booked_total_qty && item.isDeleted ? 'd-none' : ''">
+                <td style="width:200px">{{item.item_name}}</td>
+                <td>{{item.booked_total_qty || 0}}</td>
+                <td><input type="text" [id]="item.item_name" [name]="item.item_name"
+                        (keyup)="setQuantity(item)" (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty"
+                        class="form-control value_input" placeholder="0"></td>
+                <td>{{item.item_trade_price | number: '1.2-2'}}</td>
+                <td>{{item.gross_amount || 0 | number: '1.2-2'}}</td>
+                <td>{{item.scheme_discount | number: '1.2-2'}}</td>
+                <td>{{item.trade_discount}}%</td>
+                <td>{{item.special_discount * item.stockQty | number: '1.2-2'}}</td>
+                <td><input type="text" [id]="item.item_id" [name]="item.item_id" [(ngModel)]="item.extra_discount"
+                        (keyup)="calculateExtraDiscount(item)" (keydown)="isNumber($event)"
+                        class="form-control value_input" placeholder="0"></td>
+                <td>{{item.net_amount || 0 | number: '1.2-2'}}</td>
+                <td><button *ngIf="!item.isDeleted" type="button" (click)="selectedItem=item;"
+                        class="del_item btn smBTN red-bg" data-toggle="modal"
+                        data-target="#exampleModal-del">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <h4 *ngIf="!orderDetail?.items?.length" class="no-products">No items to display yet please select order!</h4>
+
+    <div class="row">
+        <div class="col"></div>
+        <div class="col-auto">
+            <div class="total-valu-div">
+                <div class="row">
+                    <div class="col-6">Gross Amount: </div>
+                    <div class="col-6"><span>{{grossAmount | number: '1.2-2'}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Trade Offer: </div>
+                    <div class="col-6"><span>{{totalSchemeDiscount | number: '1.2-2'}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Trade Discount: </div>
+                    <div class="col-6"><span>{{totalMerchantDiscount | number: '1.2-2'}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Special Discount:</div>
+                    <div class="col-6"><span>{{totalSpecialDiscount | number: '1.2-2'}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Booker Discount:</div>
+                    <div class="col-6"><span>{{totalBookerDiscount | number: '1.2-2'}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Tax:</div>
+                    <div class="col-6"><span>{{totalTax | number: '1.2-2'}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6" style="color:#0038ba;">Total Amount Due:
+                    </div>
+                    <div class="col-6" style="color:#0038ba;"><span>{{netAmount | number: '1.2-2'}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

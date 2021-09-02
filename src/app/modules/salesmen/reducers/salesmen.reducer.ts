@@ -2,6 +2,7 @@ import { ActionReducer, Action } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 
 import { SalemanModel } from '../../shared/models/saleman.model';
+import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 
 export interface State extends EntityState<SalemanModel> { }
 
@@ -20,12 +21,12 @@ export const addSaleman = ({
     cnic = '',
     phone = '',
     salary = null,
-    segements_id = null,
+    segments_id = null,
     distributor_id = null
 }) => {
     return {
         type: ADD_SALEMAN as typeof ADD_SALEMAN,
-        payload: { id, name, cnic, phone, salary, segements_id, distributor_id },
+        payload: { id, name, cnic, phone, salary, segments_id, distributor_id },
     };
 };
 
@@ -36,12 +37,12 @@ export const addSalemanStorage = ({
     cnic = '',
     phone = '',
     salary = null,
-    segements_id = null,
+    segments_id = null,
     distributor_id = null
 }) => {
     return {
         type: ADD_SALEMAN_STORAGE as typeof ADD_SALEMAN_STORAGE,
-        payload: { id, name, cnic, phone, salary, segements_id, distributor_id },
+        payload: { id, name, cnic, phone, salary, segments_id, distributor_id },
     };
 };
 
@@ -52,12 +53,12 @@ export const updateSaleman = ({
     cnic = '',
     phone = '',
     salary = null,
-    segements_id = null,
+    segments_id = null,
     distributor_id = null
 }) => {
     return {
         type: UPDATE_SALEMAN as typeof UPDATE_SALEMAN,
-        payload: { id, name, cnic, phone, salary, segements_id, distributor_id },
+        payload: { id, name, cnic, phone, salary, segments_id, distributor_id },
     };
 };
 
@@ -98,7 +99,7 @@ export function stateReducer(
 }
 
 export function persistStateReducer(slemanReducer: ActionReducer<State>): any {
-    const localStorageKey = '__saleman';
+    const localStorageKey = localStorageKeys.saleman;
     return (state: State | undefined, action: Action) => {
         if (state === undefined) {
             const persisted = localStorage.getItem(localStorageKey);

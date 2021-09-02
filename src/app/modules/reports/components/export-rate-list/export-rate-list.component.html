@@ -1,0 +1,61 @@
+<div class="container">
+
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Rate <span> List</span></h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a><span>Rate List</span></a></li>
+                <li><span>Generate</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Rate <span>List</span></h2>
+                </div>
+                <div class="body PT-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="font11 mb-4">Segment Type*</label>
+                            <div class="form-s2">
+                                <ng-select class="forselect" [multiple]="false" placeholder="Select Segment Type" name="segment-type" [(ngModel)]="selectedSegment">
+                                    <ng-option>Select Segment Type</ng-option>
+                                    <ng-option>Segment Type</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 pl-0">
+                            <label class="font11 mb-4">Divisions*</label>
+                            <div class="form-s2">
+                                <ng-select class="formselect" name="division" [(ngModel)]="selectedDivision" placeholder="Select Divisions">
+                                    <ng-option>All</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 pl-0">
+                            <label class="font11 mb-4">Product Status*</label>
+                            <div class="form-s2">
+                                <ng-select class="formselect" name="product-status" [(ngModel)]="selectedProductStatus" placeholder="Select Product Status">
+                                    <ng-option>All</ng-option>
+                                </ng-select>
+                            </div>
+                        </div>
+
+                        <div class="col-3 pl-0 rate-act">
+                            <button type="button" class="btn btn-primary btn-line"
+                                style="line-height:1; height: 34px; box-shadow:none" (click)="downloadPDF()">Download PDF</button>&nbsp;
+                            <button type="button" class="btn btn-primary btn-line"
+                                style="line-height:1; height: 34px; box-shadow:none" (click)="downloadExecel()">Export Excel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

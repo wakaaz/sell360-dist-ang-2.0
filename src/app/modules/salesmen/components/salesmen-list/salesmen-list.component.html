@@ -152,7 +152,7 @@
                     </h2>
                 </div>
                 <div class="body">
-                        <table *ngIf="salesMen && salesMen.length && !loading" id="saleman-table" [dtTrigger]="dtTrigger"
+                        <table *ngIf="salesMen.length && !loading" id="saleman-table" [dtTrigger]="dtTrigger"
                         datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example"
                             style="width:100%">
                             <thead>

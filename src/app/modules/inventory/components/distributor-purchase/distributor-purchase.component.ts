@@ -6,7 +6,7 @@ import { from, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 import { ToasterService } from 'src/app/core/services/toaster.service';
-import { DataService } from 'src/app/modules/shared/services/data.service';
+import { GeneralDataService, DataService } from '../../../shared/services';
 import { DistributorPurchaseModel, ItemModel } from '../../model/distributor-purchase.model';
 import { InventoryService } from '../../services/inventory.service';
 
@@ -42,6 +42,8 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
     freeProducts: Array<any>;
     purchasedProducts: Array<any>;
     products: Array<any>;
+    primaryProducts: Array<any> = [];
+    secondaryProducts: Array<any> = [];
     productsDispList: Array<any>;
     productPrefs: Array<any>;
     itemMargin: Array<any>;
@@ -51,6 +53,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         private router: Router,
         private inventoryService: InventoryService,
         private toastService: ToasterService,
+        private generalDataService: GeneralDataService,
         private dataService: DataService,
     ) { }
 
@@ -94,25 +97,60 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
     }
 
     getDistributorInventory(): void {
-        this.loadingProducts = true;
         this.inventoryService.getDistributorPurchaseData().subscribe((res: any) => {
-            this.loadingProducts = false;
             if (res.status === 200) {
-                this.productPrefs = res.data.prefs;
-                this.itemMargin = res.data.itemMargin;
                 this.products = res.data.inventory.map(x => {
                     x.discount = 0;
                     x.discount_type = 'percentage',
-                        x.discount_type_value = this.itemMargin.find(m => m.item_id === x.item_id)?.discount || 0;
+                        x.discount_type_value = res.data.itemMargin.find(m => m.item_id === x.item_id)?.discount || 0;
                     x.net_amount = 0;
-                    x.quantity = 0;
+                    x.stockQty = 0;
                     x.original_amount = 0;
                     return x;
                 });
-                this.productsDispList = JSON.parse(JSON.stringify(this.products));
+                this.primaryProducts = this.products.filter(prod => prod.child === 0);
+                this.secondaryProducts = this.products.filter(prod => prod.child !== 0);
+                this.productsDispList = JSON.parse(JSON.stringify(this.secondaryProducts));
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Products not fetched, please try again later.',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+    getProductsWithPrefType(): void {
+        this.loadingProducts = true;
+        this.generalDataService.getProductsWithPrefType('').subscribe((res: any) => {
+            this.loadingProducts = false;
+            if (res.status === 200) {
+                this.products = res.data.invetory.map(x => {
+                    x.discount = 0;
+                    x.discount_type = 'percentage',
+                        x.discount_type_value = res.data.itemMargin.find(m => m.item_id === x.item_id)?.discount || 0;
+                    x.net_amount = 0;
+                    x.stockQty = 0;
+                    x.original_amount = 0;
+                    x.pref_id = '0';
+                    return x;
+                });
+                this.primaryProducts = this.products.filter(prod => prod.child === 0);
+                this.secondaryProducts = this.products.filter(prod => prod.child !== 0);
+                this.productsDispList = JSON.parse(JSON.stringify(this.secondaryProducts));
             }
         }, error => {
             this.loadingProducts = false;
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Products not fetched, please try again later.',
+                    type: 'error'
+                });
+            }
         });
     }
 
@@ -120,18 +158,29 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         if (searchText) {
             this.productsDispList = this.products.filter(product => product.item_name.toLowerCase().includes(searchText.toLowerCase()));
         } else {
-            this.productsDispList = JSON.parse(JSON.stringify(this.products));
+            this.productsDispList = this.showFreeProducts ? JSON.parse(JSON.stringify(this.secondaryProducts)) :
+                JSON.parse(JSON.stringify(this.primaryProducts));
         }
     }
 
     addSelectedProduct(product: any): void {
+        const selectedProduct = JSON.parse(JSON.stringify(product));
+        selectedProduct.stockQty = 1;
+        selectedProduct.tradePrice = 0;
         if (this.showFreeProducts) {
-            this.freeProducts.push(JSON.parse(JSON.stringify(product)));
-            this.freeProductsIds.push(product.item_id);
+            // Free products discount and payable amount
+            selectedProduct.original_amount = selectedProduct.original_amount.toFixed(2);
+            selectedProduct.discount = selectedProduct.original_amount;
+            selectedProduct.discount_type = 'percentage';
+            selectedProduct.discount_type_value = 100;
+            selectedProduct.net_amount = 0;
+
+            this.freeProducts.push(JSON.parse(JSON.stringify(selectedProduct)));
+            this.freeProductsIds.push(selectedProduct.item_id);
             this.rerenderPurchasedProducts();
         } else {
-            this.purchasedProducts.push(JSON.parse(JSON.stringify(product)));
-            this.purchasedProductsIds.push(product.item_id);
+            this.purchasedProducts.push(JSON.parse(JSON.stringify(selectedProduct)));
+            this.purchasedProductsIds.push(selectedProduct.item_id);
             this.rerenderPurchasedProducts();
         }
     }
@@ -160,11 +209,14 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             this.purchasedProductsIds.splice(ind, 1);
             this.distributionDiscount -= product.discount;
         }
+        this.calculatePurchasedSubTotal();
         this.rerenderPurchasedProducts();
     }
 
     openNewProducts(event: Event): void {
         event.stopPropagation();
+        this.productsDispList = this.showFreeProducts ? JSON.parse(JSON.stringify(this.secondaryProducts)) :
+                JSON.parse(JSON.stringify(this.primaryProducts));
         this.addNewProducts = true;
         document.body.classList.add('no-scroll');
         document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
@@ -203,14 +255,11 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         }
     }
 
-    isNumber(event: KeyboardEvent): boolean {
-        if (event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') || event.key.includes('.')) {
-            return true;
-        }
-        return !isNaN(Number(event.key));
+    isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
+        return this.dataService.isNumber(event, type);
     }
 
-    getUnits(itemId: number): Array<any> {
+    /*getUnits(itemId: number): Array<any> {
         return this.productPrefs.filter(pref => pref.item_id === itemId);
     }
 
@@ -219,40 +268,56 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         item.pref_id = selectedPref.pref_id;
         item.unit_id = selectedPref.unit_id;
         item.unit_name = selectedPref.unit_name;
+        item.tradePrice = selectedPref.item_trade_price;
         if (item.quantity > 0) {
             item.original_amount = this.dataService.calculateUnitPrice(item.quantity, selectedPref.item_trade_price);
             item.discount = this.dataService.calculateDiscount(item.discount_type_value,
                 item.discount_type, item.original_amount);
             item.net_amount = item.original_amount - item.discount;
-            if (!isFree) {
-                this.calculateSubTotal();
-            }
+            this.calculatePurchasedSubTotal();
         }
+    }*/
+
+    getUnitPrice(item: any, isFree: boolean = false): void {
+        // if (item.unit_name) {
+        // const unitPrice = item.item_trade_price;
+        // item.tradePrice = unitPrice;
+        item.original_amount = this.dataService.calculateUnitPrice(item.stockQty, item.item_trade_price);
+        item.discount = this.dataService.calculateDiscount(item.discount_type_value,
+            item.discount_type, item.original_amount);
+        item.net_amount = item.original_amount - item.discount;
+        this.calculatePurchasedSubTotal();
+        // }
     }
 
-    getUnitPrice(item: ItemModel, isFree: boolean = false): void {
-        if (item.pref_id) {
-            const unitPrice = this.productPrefs.find(x => x.pref_id === item.pref_id).item_trade_price;
-            item.original_amount = this.dataService.calculateUnitPrice(item.quantity, unitPrice);
-            item.discount = this.dataService.calculateDiscount(item.discount_type_value,
-                item.discount_type, item.original_amount);
-            item.net_amount = item.original_amount - item.discount;
-            if (!isFree) {
-                this.calculateSubTotal();
-            }
-        }
-    }
-
-    calculateSubTotal(): void {
+    calculatePurchasedSubTotal(): void {
         const prices = [];
         this.distributorPurchase.discount = 0;
-        this.purchasedProducts.forEach(product => {
-            this.distributorPurchase.discount += product.discount;
-            prices.push(product.original_amount);
-            if (prices.length === this.purchasedProducts.length) {
-                this.distributorPurchase.original_amount = this.dataService.calculateItemsBill(prices);
-            }
-        });
+        if (this.purchasedProducts.length) {
+            this.purchasedProducts.forEach(product => {
+                this.distributorPurchase.discount += +product.discount;
+                prices.push(+product.original_amount);
+                if (prices.length === this.purchasedProducts.length) {
+                    this.calculateFreeSubTotal(prices);
+                }
+            });
+        } else {
+            this.calculateFreeSubTotal(prices);
+        }
+    }
+
+    calculateFreeSubTotal(prices: Array<number>): void {
+        if (this.freeProducts.length) {
+            this.freeProducts.forEach((product, index) => {
+                this.distributorPurchase.discount += product.discount;
+                prices.push(+product.original_amount);
+                if (index === this.freeProducts.length - 1) {
+                    this.distributorPurchase.original_amount = this.dataService.calculateItemsBill(prices);
+                }
+            });
+        } else {
+            this.distributorPurchase.original_amount = this.dataService.calculateItemsBill(prices);
+        }
         this.calculateTotal();
     }
 
@@ -265,23 +330,25 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
         this.submitted = true;
         if (this.validateForm()) {
             this.loading = true;
-            this.distributorPurchase.discount = Number(this.distributorPurchase.discount.toFixed(1));
-            this.distributorPurchase.net_amount = Number(this.distributorPurchase.net_amount.toFixed(1));
-            this.distributorPurchase.original_amount = Number(this.distributorPurchase.original_amount.toFixed(1));
+            this.distributorPurchase.discount = Number(this.distributorPurchase.discount.toFixed(2));
+            this.distributorPurchase.net_amount = Number(this.distributorPurchase.net_amount.toFixed(2));
+            this.distributorPurchase.original_amount = Number(this.distributorPurchase.original_amount.toFixed(2));
             this.distributorPurchase.items = this.purchasedProducts.map(product => {
                 const regularProduct = {
                     type: 'regular',
                     pref_id: product.pref_id,
                     unit_id: product.unit_id,
                     item_id: product.item_id,
+                    item_sku: product.item_sku,
+                    child: product.child,
                     item_name: product.item_name,
                     unit_name: product.unit_name,
-                    quantity: product.quantity,
-                    original_amount: product.original_amount.toFixed(1),
-                    discount: product.discount.toFixed(1),
+                    quantity: product.stockQty,
+                    original_amount: product.original_amount.toFixed(2),
+                    discount: product.discount.toFixed(2),
                     discount_type: 'percentage',
                     discount_type_value: product.discount_type_value,
-                    net_amount: product.net_amount.toFixed(1),
+                    net_amount: product.net_amount.toFixed(2),
                 };
                 return regularProduct;
             });
@@ -291,10 +358,12 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                     pref_id: product.pref_id,
                     unit_id: product.unit_id,
                     item_id: product.item_id,
+                    child: product.child,
+                    item_sku: product.item_sku,
                     item_name: product.item_name,
                     unit_name: product.unit_name,
-                    quantity: product.quantity,
-                    original_amount: product.original_amount.toFixed(1),
+                    quantity: product.stockQty,
+                    original_amount: product.original_amount.toFixed(2),
                     discount: product.original_amount,
                     discount_type: 'percentage',
                     discount_type_value: 100,
@@ -304,14 +373,16 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             });
             this.inventoryService.addDistributorPurchase(this.distributorPurchase).subscribe(res => {
                 this.loading = false;
+                this.submitted = false;
                 this.toastService.showToaster({
                     title: 'Order Placed:',
                     message: 'Your order is placed successfully.',
                     type: 'success'
                 });
-                this.router.navigateByUrl('/inventory/gallery');
+                this.router.navigateByUrl('/reports/purchase-history');
             }, error => {
                 this.loading = false;
+                this.submitted = false;
                 if (error.status !== 401 && error.status !== 1) {
                     this.toastService.showToaster({
                         title: 'Error:',
@@ -319,6 +390,7 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
                         type: 'error'
                     });
                 }
+                scrollTo(0, 0);
             });
         }
     }
@@ -342,9 +414,27 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
             !this.distributorPurchase.remark ||
             !this.distributorPurchase.supplier
         ) {
+            this.toastService.showToaster({
+                title: 'Error:',
+                message: 'Please fill all the fields and select products to purchase and select the product units!',
+                type: 'error'
+            });
+            scrollTo(0, 0);
             return false;
         } else {
-            return true;
+            const unPrefPurchased = this.purchasedProducts.filter(x => x.pref_id === '0');
+            const unPrefFree = this.freeProducts.filter(x => x.pref_id === '0');
+            if (unPrefFree.length > 0 || unPrefPurchased.length > 0) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Please select the unit for all products!',
+                    type: 'error'
+                });
+                scrollTo(0, 0);
+                return false;
+            } else {
+                return true;
+            }
         }
     }
 

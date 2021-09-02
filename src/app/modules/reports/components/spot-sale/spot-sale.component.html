@@ -1,0 +1,108 @@
+<div class="container">
+
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Spot <span> Sales Report</span></h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a><span>Report</span></a></li>
+                <li><span>Spot Sale</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+
+                <div class="header addPR-head">
+                    <div class="float-left">
+                        <h3>Select Date</h3>
+                    </div>
+                    <div class="_PR_filter pr-15" style="width: 170px!important;">
+                        <div class="form-group mb-0" style="height: auto">
+                            <input type="date" id="datepicker" name="filt-date" [(ngModel)]="selectedDate"
+                                class="form-control" placeholder="">
+                        </div>
+                    </div>
+                    <div class="float-left">
+                        <h3>Select Salesman</h3>
+                    </div>
+                    <div class="_PR_filter pr-15">
+                        <div class="form-s2">
+                            <ng-select class="formselect" name="salesmen" [(ngModel)]="selectedSaleMan"
+                                [multiple]="false" placeholder="Select Salesman" style="width: 100%!important">
+                                <ng-option value="0" selected=""> Select Salesman</ng-option>
+                                <ng-option value="1">Salesman</ng-option>
+                            </ng-select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="body pb-0">
+                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>ORDER ID</th>
+                                <th>RETAILER NAME</th>
+                                <th>SEGMENT</th>
+                                <th>ROUTE</th>
+                                <th>ORDER BOOKER</th>
+                                <th>SALES MAN</th>
+                                <th>ORDER VALUE</th>
+                                <th>VIEW DATA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2323</td>
+                                <td>768 shop </td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>Asif</td>
+                                <td>Yasir</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>2323</td>
+                                <td>768 shop </td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>Asif</td>
+                                <td>Yasir</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>2323</td>
+                                <td>768 shop </td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>Asif</td>
+                                <td>Yasir</td>
+                                <td>Rs:0</td>
+                                <td>0</td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                    <div class="row">
+                        <div class="col-md-12 text-right"
+                            style="background-color: #f3f3f3; padding: 10px 15px; margin-top: 5px; margin-bottom: 5px;">
+                            <button id="generateSpotSale" class="btn btn-primary">Generate Sales Spot</button>
+                        </div>
+                    </div>
+                    <div *ngIf="loading" class="col-md-12">
+                        <app-loader-white></app-loader-white>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

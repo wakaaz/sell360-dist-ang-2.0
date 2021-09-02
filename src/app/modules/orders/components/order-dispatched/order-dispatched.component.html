@@ -111,36 +111,31 @@
                                 <tbody>
                                     <ng-container *ngFor="let order of dispatchOrderDetail.orders;let ind=index">
                                         <tr *ngIf="order.balance > 0">
-                                            <td>{{order.retailer_name}}</td>
+                                            <td>{{order.retailer_name | titlecase }}</td>
                                             <td>Rs. {{order.balance | number: '1.2-2'}}</td>
                                             <td>{{order.aging || 0}} Days</td>
                                             <td>
-                                                <input type="number" [id]="ind" [(ngModel)]="order.currentBalance"
+                                                <input type="number" [id]="ind" [(ngModel)]="order.recovery"
                                                     (keydown)="isNumber($event)" [name]="ind"
                                                     class="form-control value_input" placeholder="0">
                                             </td>
                                             <td>
                                                 <button class="btn btn-default btn-line" *ngIf="!order.isAdded"
-                                                    [disabled]="!order.currentBalance || +order.currentBalance > 0"
-                                                    (click)="addOrderBill(order)">Add to Bill</button>
-                                                <button class="btn btn-default btn-line" *ngIf="order.isAdded"
-                                                    (click)="addOrderBill(order)">
-                                                    <div class="spinner-border text-light" role="status">
-                                                        <span class="sr-only">Loading...</span>
-                                                    </div>
+                                                    [disabled]="!order.recovery || +order.recovery === 0"
+                                                    (click)="this.id='hello';addOrderBill(order)">Add to Bill</button>
+                                                <button class="btn btn-default red-bg" *ngIf="order.isAdded"
+                                                    (click)="removeOrderBill(order)">
+                                                    Remove From Bill
                                                 </button>
                                             </td>
                                         </tr>
                                     </ng-container>
                                 </tbody>
                             </table>
-                            <h4 *ngIf="!dispatchOrderDetail?.orders?.length && !loading" class="no-products">No credit
-                                to display!</h4>
                             <div class="col-12" *ngIf="loading">
                                 <app-loader-white></app-loader-white>
                             </div>
                         </div>
-
                     </div>
 
                     <div [ngClass]="currentTab === 3 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
@@ -163,7 +158,6 @@
                                                             All</label>
                                                     </div>
                                                 </div>
-
                                             </div>
                                             <div class="col-12">
                                                 <div class="APS-list"><i class="fa fa-search"></i>

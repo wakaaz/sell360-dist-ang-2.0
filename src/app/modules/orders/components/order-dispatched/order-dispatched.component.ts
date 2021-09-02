@@ -33,6 +33,7 @@ export class OrderDispatchedComponent implements OnInit {
     specialDiscounts: Array<any> = [];
     schemes: Array<any> = [];
     discountSlabs: Array<any> = [];
+    credits: Array<any> = [];
 
     constructor(
         private change: ChangeDetectorRef,
@@ -72,7 +73,7 @@ export class OrderDispatchedComponent implements OnInit {
                 this.getDispatchDetails();
                 break;
             case 2:
-                this.dispatchOrderDetail = null;
+                // this.dispatchOrderDetail = null;
                 this.getDispatchOrdersDetail();
                 break;
             case 3:
@@ -110,20 +111,30 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     getDispatchOrdersDetail(): void {
-        this.loading = true;
-        this.orderService.getDispatchOrdersDetail(this.salemanId, this.orderDate).subscribe(res => {
-            this.loading = false;
-            if (res.status === 200) {
-                this.dispatchOrderDetail = res.data;
-            }
-        }, error => {
-            this.loading = false;
-            if (error.status !== 1 && error.status !== 401) {
-                console.log('Error while getting orders data :>> ', error.message);
-                const toast: Toaster = { type: 'error', message: 'Cannot fetch Orders. Please try again', title: 'Error:' };
-                this.toastService.showToaster(toast);
-            }
-        });
+        if (!this.dispatchOrderDetail || !this.dispatchOrderDetail.summary) {
+            this.loading = true;
+            this.orderService.getDispatchOrdersDetail(this.salemanId, this.orderDate).subscribe(res => {
+                this.loading = false;
+                if (res.status === 200) {
+                    this.dispatchOrderDetail = res.data;
+                    this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(order => {
+                        order.isAdded = false;
+                        const isInCredit = this.credits.find(x => x.order_id === order.id);
+                        if (isInCredit) {
+                            order.isAdded = true;
+                        }
+                        return order;
+                    });
+                }
+            }, error => {
+                this.loading = false;
+                if (error.status !== 1 && error.status !== 401) {
+                    console.log('Error while getting orders data :>> ', error.message);
+                    const toast: Toaster = { type: 'error', message: 'Cannot fetch Orders. Please try again', title: 'Error:' };
+                    this.toastService.showToaster(toast);
+                }
+            });
+        }
     }
 
     getProducts(): void {
@@ -339,7 +350,7 @@ export class OrderDispatchedComponent implements OnInit {
                 total_tax_amount: item.tax_amount_pkr || 0,
                 total_amount_after_tax: item.net_amount,
                 total_discount: item.scheme_discount +
-                item.trade_discount_pkr + (+item.stockQty * item.special_discount) + item.extra_discount_pkr,
+                    item.trade_discount_pkr + (+item.stockQty * item.special_discount) + item.extra_discount_pkr,
                 order_id: this.orderDetails.id
             };
             return orderItem;
@@ -378,9 +389,20 @@ export class OrderDispatchedComponent implements OnInit {
 
     addOrderBill(order: any): void {
         order.isAdded = true;
-        // setTimeout(() => {
-        //     order.isAdded = false;
-        // }, 10000);
+        const { distributor_id, employee_id, sales_man_id, recovery, invoice_number } = order;
+        const orderId = order.id;
+        const dispatchAmount = order.total_amount_after_tax;
+        this.credits.push({
+            payment_mode: 'Cash', pyament_detail: '', invoice_number,
+            distributor_id, employee_id, saleman_id: sales_man_id, recovery, order_id: orderId,
+            dispatched_bill_amount: dispatchAmount, amount_received: recovery
+        });
+    }
+
+    removeOrderBill(order: any): void {
+        order.isAdded = false;
+        order.recovery = 0;
+        this.credits = this.credits.filter(ord => ord.order_id !== order.id);
     }
 
 }

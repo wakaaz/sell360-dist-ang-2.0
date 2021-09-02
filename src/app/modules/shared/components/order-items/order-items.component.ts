@@ -10,7 +10,7 @@ import { DataService } from '../../services';
 
 export class OrderItemsListComponent implements OnInit, OnChanges {
 
-    @Input() savingOrder: boolean;
+    @Input() currentTab: number;
     @Input() orderDetail: any;
     @Input() selectedRetailer: any;
     @Input() merchantDiscount: any;
@@ -69,7 +69,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         this.totalSchemeDiscount = 0;
         this.totalSpecialDiscount = 0;
         this.totalMerchantDiscount = 0;
-        this.totalAmountAfterScheme = 0;
+        this.totalAmountAfterScheme = 1;
         this.selectedProductQuantities = 0;
     }
 
@@ -112,7 +112,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     setQuantity(product: any): void {
         if (product.item_trade_price) {
             product.isDeleted = false;
-            if (this.orderDetail.items.find(x => x.item_id === product.item_id) && this.totalAmountAfterScheme) {
+            if (this.orderDetail.items.find(x => x.item_id === product.item_id)) {
                 this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount;
             }
             this.calculateProductDiscounts(product);
@@ -252,7 +252,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         // Net Amount
         prices = this.orderDetail.items.map(product => product.net_amount);
         this.netAmount = this.dataService.calculateItemsBill(prices);
-        this.selectedRetailer.order_total = this.netAmount;
+        if (this.selectedRetailer) {
+            this.selectedRetailer.order_total = this.netAmount;
+        }
         // Total Retail Price
         prices = this.orderDetail.items.map(product => product.stockQty * product.item_retail_price);
         const totalRetailPrice = this.dataService.calculateItemsBill(prices);

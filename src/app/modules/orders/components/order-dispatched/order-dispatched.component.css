@@ -58,6 +58,7 @@
 	float: right;
 	border: none!important
 }
+.no-products {text-align: center; color: lightgray;}
 .AddDetailPR {
 	padding: 25px;
 	font-size: 14px

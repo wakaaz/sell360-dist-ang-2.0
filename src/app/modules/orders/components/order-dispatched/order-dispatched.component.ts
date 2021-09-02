@@ -53,18 +53,18 @@ export class OrderDispatchedComponent implements OnInit {
             const toast: Toaster = { type: 'error', message: 'No order selected to dispatch!', title: 'Error:' };
             this.toastService.showToaster(toast);
         } else {
-            this.getDispatchDetails();
             this.getProducts();
             this.getSchemes();
+            this.getDispatchDetails();
         }
     }
 
     tabChanged(): void {
         switch (this.currentTab) {
             case 1:
+                this.savingOrder = true;
                 this.selectedRetailer = JSON.parse(JSON.stringify(null));
                 this.orderDetails.items = [];
-                this.savingOrder = true;
                 this.getDispatchDetails();
                 break;
             case 2:

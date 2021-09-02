@@ -68,8 +68,8 @@
                             </div>
 
                             <div class="col p-0">
-                                <div class="rightHeight">
-                                    <app-order-items-list [orderDetail]="orderDetails" [savingOrder]="savingOrder"
+                                <div *ngIf="currentTab === 1" class="rightHeight">
+                                    <app-order-items-list [orderDetail]="orderDetails" [currentTab]="currentTab"
                                         [schemes]="schemes" [selectedRetailer]="selectedRetailer"
                                         [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
                                         [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
@@ -119,6 +119,10 @@
                                     </ng-container>
                                 </tbody>
                             </table>
+                            <h4 *ngIf="!dispatchOrderDetail?.orders?.length && !loading" class="no-products">No credit to display!</h4>
+                            <div class="col-12" *ngIf="loading">
+                                <app-loader-white></app-loader-white>
+                            </div>
                         </div>
 
                     </div>

@@ -244,7 +244,8 @@ export class DataService {
         } else if (merchantDiscount.discount_filter === 'slab') {
             const currentItemsPrice = product.unit_price_after_scheme_discount * product.stockQty;
             const totalItemsPrice = currentItemsPrice + orderTotal;
-            const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from <= totalItemsPrice && slb.range_to >= totalItemsPrice);
+            const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from && slb.range_to &&
+                slb.range_from <= totalItemsPrice && slb.range_to >= totalItemsPrice);
             if (selectedSlab) {
                 discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
                 product.trade_discount = selectedSlab.value;
@@ -259,12 +260,20 @@ export class DataService {
     }
 
     applySlabForTotal(product: any, merchantDiscount: any, orderTotal: number): any {
-        const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from <= orderTotal && slb.range_to >= orderTotal);
-        const discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
-        product.trade_discount = selectedSlab.value;
-        product.trade_discount_pkr = discountValuePKR * +product.stockQty;
-        product.price = product.unit_price_after_scheme_discount - discountValuePKR;
-        product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
+        const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from && slb.range_to &&
+            slb.range_from <= orderTotal && slb.range_to >= orderTotal);
+        if (selectedSlab) {
+            const discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
+            product.trade_discount = selectedSlab.value;
+            product.trade_discount_pkr = discountValuePKR * +product.stockQty;
+            product.price = product.unit_price_after_scheme_discount - discountValuePKR;
+            product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
+        } else {
+            product.trade_discount = 0;
+            product.trade_discount_pkr = 0;
+            product.price = product.unit_price_after_scheme_discount;
+            product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
+        }
         return product;
     }
 

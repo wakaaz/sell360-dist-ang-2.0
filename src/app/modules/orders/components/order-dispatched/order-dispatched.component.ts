@@ -34,6 +34,7 @@ export class OrderDispatchedComponent implements OnInit {
     dispatchOrderDetail: any;
     load: any;
     currentLoadContent: any;
+    finalLoad: any;
 
     inventory: Array<any> = [];
     ordersRetailers: Array<any> = [];
@@ -136,10 +137,15 @@ export class OrderDispatchedComponent implements OnInit {
         this.orderService.getDispatchDetailBySalemanAndDate(this.salemanId, this.orderDate).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
-                this.ordersRetailers = res.data.retailers.map(ret => {
-                    ret.isActive = false;
-                    return ret;
-                });
+                if (res.data.loadSheetData) {
+                    this.finalLoad = res.data.loadSheetData;
+                    this.currentTab = 4;
+                } else {
+                    this.ordersRetailers = res.data.retailers.map(ret => {
+                        ret.isActive = false;
+                        return ret;
+                    });
+                }
             }
         }, error => {
             this.loading = false;
@@ -517,6 +523,7 @@ export class OrderDispatchedComponent implements OnInit {
         this.orderService.saveDispatchOrder(order).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
+                this.finalLoad = res.data;
                 this.setLoad();
                 this.setCurrentLoad(1);
                 this.load.content.push(this.currentLoadContent);

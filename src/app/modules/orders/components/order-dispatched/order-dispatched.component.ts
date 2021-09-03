@@ -17,6 +17,9 @@ export class OrderDispatchedComponent implements OnInit {
     loadingProduct: boolean;
     showProducts: boolean;
     savingOrder: boolean;
+    isAllSelected: boolean;
+
+    searchText: string;
 
     salemanId: number;
     currentTab: number;
@@ -27,6 +30,7 @@ export class OrderDispatchedComponent implements OnInit {
     merchantDiscount: any;
     newProduct: any;
     dispatchOrderDetail: any;
+    load: any;
 
     inventory: Array<any> = [];
     ordersRetailers: Array<any> = [];
@@ -34,6 +38,9 @@ export class OrderDispatchedComponent implements OnInit {
     schemes: Array<any> = [];
     discountSlabs: Array<any> = [];
     credits: Array<any> = [];
+    currentLoadContent: any;
+    remainingOrders: Array<any> = [];
+    ordersDispList: Array<any> = [];
 
     constructor(
         private change: ChangeDetectorRef,
@@ -402,6 +409,26 @@ export class OrderDispatchedComponent implements OnInit {
         order.isAdded = false;
         order.recovery = 0;
         this.credits = this.credits.filter(ord => ord.order_id !== order.id);
+    }
+
+    searchByRetailer(): void {
+        if (this.searchText) {
+            this.ordersDispList = this.remainingOrders.filter(ret =>
+                ret.retailer_name.toLowerCase().includes(this.searchText.toLowerCase()));
+        } else {
+            this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
+        }
+    }
+
+    allSelected(): void {
+    }
+
+    retailerSelected(selectedRetailer: any): void {
+        if (selectedRetailer.isSelected) {
+            selectedRetailer.isSelected = false;
+        } else {
+            selectedRetailer.isSelected = true;
+        }
     }
 
 }

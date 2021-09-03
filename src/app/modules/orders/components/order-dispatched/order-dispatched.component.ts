@@ -73,7 +73,6 @@ export class OrderDispatchedComponent implements OnInit {
                 this.getDispatchDetails();
                 break;
             case 2:
-                // this.dispatchOrderDetail = null;
                 this.getDispatchOrdersDetail();
                 break;
             case 3:

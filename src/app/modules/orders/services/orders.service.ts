@@ -30,6 +30,11 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
+    getDiscountSlabsByChannel(segementId: number, channelId: number): Observable<any> {
+        const url = `${API_URLS.GET_SLABS_BY_CHANNEL}/${segementId}/${channelId}`;
+        return this.baseService.get(url);
+    }
+
     getNewOrders(): Observable<any> {
         const url = `${API_URLS.GET_NEW_ORDERS}`;
         return this.baseService.get(url);

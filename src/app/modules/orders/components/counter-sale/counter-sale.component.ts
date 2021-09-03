@@ -468,7 +468,7 @@ export class CounterSaleComponent implements OnInit {
     //     product.retail_price = prefrence.item_retail_price;
     //     if (product.stockQty) {
     //         if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
-    //             this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount;
+    //             this.grossAmount = this.grossAmount - product.original_amount;
     //         }
     //         this.calculateProductDiscounts(product);
     //         this.calculateProductPrice(product);
@@ -484,7 +484,7 @@ export class CounterSaleComponent implements OnInit {
     setQuantity(product: any): void {
         if (product.item_trade_price) {
             if (this.selectedProducts.find(x => x.item_id === product.item_id)) {
-                this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount || 0;
+                this.grossAmount = this.grossAmount - product.original_amount || 0;
             }
             this.calculateProductPrice(product);
             this.calculateProductDiscounts(product);
@@ -496,13 +496,13 @@ export class CounterSaleComponent implements OnInit {
     calculateProductPrice(product): void {
         product.original_amount = this.dataService.calculateUnitPrice(+product.stockQty,
             product.item_trade_price);
-        product.gross_amount = product.unit_price_after_scheme_discount * +product.stockQty;
+        product.gross_amount = product.unit_price_after_scheme_discount || product.item_trade_price * +product.stockQty;
     }
 
     applySlabOnAllProducts(): void {
-        if (this.merchantDiscount && this.merchantDiscount.discount_filter === 'slab' && this.totalAmountAfterScheme) {
+        if (this.merchantDiscount && this.merchantDiscount.discount_filter === 'slab' && this.grossAmount) {
             this.selectedProducts = this.selectedProducts.map(product => {
-                product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.totalAmountAfterScheme);
+                product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.grossAmount);
                 product = this.calculateProductSpecialDiscount(product);
                 if (product.extra_discount) {
                     product.price = product.unit_price_after_special_discount - +product.extra_discount;

@@ -27,7 +27,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     totalSchemeDiscount: number;
     totalSpecialDiscount: number;
     totalMerchantDiscount: number;
-    totalAmountAfterScheme: number;
     selectedProductQuantities: number;
     totalTax: number;
 
@@ -69,7 +68,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         this.totalSchemeDiscount = 0;
         this.totalSpecialDiscount = 0;
         this.totalMerchantDiscount = 0;
-        this.totalAmountAfterScheme = 1;
         this.selectedProductQuantities = 0;
     }
 
@@ -97,7 +95,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
             this.selectedItem.isDeleted = true;
         } else {
             this.orderDetail.items = this.orderDetail.items.filter(x => x.item_id !== this.selectedItem.item_id);
-            this.totalAmountAfterScheme = this.totalAmountAfterScheme - this.selectedItem.gross_amount;
+            this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
             this.applySlabOnAllProducts();
         }
         document.getElementById('close-prod-del').click();
@@ -107,7 +105,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         if (product.item_trade_price) {
             product.isDeleted = false;
             if (this.orderDetail.items.find(x => x.item_id === product.item_id)) {
-                this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount;
+                this.grossAmount = this.grossAmount - product.original_amount;
             }
             this.calculateProductDiscounts(product);
             this.calculateProductPrice(product);
@@ -119,7 +117,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     applySlabOnAllProducts(): void {
         if (this.merchantDiscount && this.merchantDiscount.discount_filter === 'slab') {
             this.orderDetail.items = this.orderDetail.items.map(product => {
-                product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.totalAmountAfterScheme);
+                product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.grossAmount);
                 product = this.calculateProductSpecialDiscount(product);
                 if (product.extra_discount) {
                     product.price = product.unit_price_after_special_discount - +product.extra_discount;
@@ -152,7 +150,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
         // Trade Discount
         if (this.merchantDiscount) {
-            product = this.dataService.applyMerchantDiscountForSingleProduct(this.merchantDiscount, product, this.totalAmountAfterScheme);
+            product = this.dataService.applyMerchantDiscountForSingleProduct(this.merchantDiscount, product, this.grossAmount);
         } else {
             product.trade_discount = 0;
             product.trade_discount_pkr = 0;
@@ -240,9 +238,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         // Gross Amount
         let prices = this.orderDetail.items.map(product => product.original_amount);
         this.grossAmount = this.dataService.calculateItemsBill(prices);
-        // Gross Amount
-        prices = this.orderDetail.items.map(product => product.gross_amount);
-        this.totalAmountAfterScheme = this.dataService.calculateItemsBill(prices);
+
         // Net Amount
         prices = this.orderDetail.items.map(product => product.net_amount);
         this.netAmount = this.dataService.calculateItemsBill(prices);

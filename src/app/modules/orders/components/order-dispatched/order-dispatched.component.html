@@ -286,7 +286,7 @@
                                         <h2 class="w-100">Load <span> Sheet</span></h2>
                                     </div>
 
-                                    <table class="table table-hover dt-responsive nowrap dc-table" id="example2"
+                                    <table *ngIf="finalLoad" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap dc-table" id="example2"
                                         style="width:100%">
                                         <thead>
                                             <tr>

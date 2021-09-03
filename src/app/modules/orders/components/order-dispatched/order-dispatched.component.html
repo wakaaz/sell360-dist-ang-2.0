@@ -8,7 +8,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content top-borderRed">
             <div class="modal-header">
-                <h5 class="modal-title" id="orderLabel">Delete <span></span></h5>
+                <h5 class="modal-title" id="orderLabel">Cancel Order <span></span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -22,6 +22,31 @@
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-primary" (click)="cancelOrder()">Yes</button>
                 <button type="submit" id="close-del" class="btn btn-cancel" data-dismiss="modal"
+                    aria-label="Close">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="create-load" tabindex="-1" role="dialog" aria-labelledby="create-loadLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content top-borderRed">
+            <div class="modal-header">
+                <h5 class="modal-title" id="create-loadLabel">Confirm Load <span></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <p>Are you sure you want to create New Load?</p>
+                </div>
+
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary" (click)="addCurrentLoad()">Yes</button>
+                <button type="submit" id="close-confirm-load" class="btn btn-cancel" data-dismiss="modal"
                     aria-label="Close">No</button>
             </div>
         </div>
@@ -115,7 +140,7 @@
                                             <td>Rs. {{order.balance | number: '1.2-2'}}</td>
                                             <td>{{order.aging || 0}} Days</td>
                                             <td>
-                                                <input type="number" [id]="ind" [(ngModel)]="order.recovery"
+                                                <input type="number" [readonly]="order.isAdded" [id]="ind" [(ngModel)]="order.recovery"
                                                     (keydown)="isNumber($event)" [name]="ind"
                                                     class="form-control value_input" placeholder="0">
                                             </td>
@@ -152,8 +177,10 @@
 
                                                 <div class="select-all-op">
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" [(ngModel)]="isAllSelected" name="all-selected" id="all-selected"
-                                                            class="custom-control-input" (click)="allSelected()" id="all-s">
+                                                        <input type="checkbox" [(ngModel)]="isAllSelected"
+                                                            name="all-selected" id="all-selected"
+                                                            class="custom-control-input" (change)="allSelected()"
+                                                            id="all-s">
                                                         <label class="custom-control-label" for="all-s">Select
                                                             All</label>
                                                     </div>
@@ -170,22 +197,26 @@
 
                                     <div class="ProList-div">
 
-                                        <div *ngFor="let order of dispatchOrderDetail?.orders;let ind=index"
+                                        <div *ngFor="let order of ordersDispList;let ind=index"
                                             class="col-12 order-list select-checkmark">
                                             <div class="ord-no">{{ind+1}}</div>
                                             <div class="row">
-                                                <div class="col-8 pr-0"><strong style="margin-bottom:2px">{{order.retailer_name}}</strong>
+                                                <div class="col-8 pr-0"><strong
+                                                        style="margin-bottom:2px">{{order.retailer_name}}</strong>
                                                     <span><strong>Order Booker:</strong> {{order.emp_name}}</span>
-                                                    <span><i class="fa fa-map-marker-alt"></i> Fateh Garh</span>
+                                                    <span><i class="fa fa-map-marker-alt"></i>
+                                                        {{order.retailer_address}}</span>
                                                 </div>
                                                 <div class="col-4 pl-0">
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" name="" class="custom-control-input"
-                                                            value="" id="001">
-                                                        <label class="custom-control-label" for="001"></label>
+                                                        <input type="checkbox" [name]="ind"
+                                                            (change)="retailerSelected(order)"
+                                                            class="custom-control-input" [(ngModel)]="order.isSelected"
+                                                            [id]="'ord'+ind">
+                                                        <label class="custom-control-label" [for]="'ord'+ind"></label>
                                                     </div>
                                                     <div class="text-right">Total Sales<span class="or-val">Rs.
-                                                            590</span></div>
+                                                            {{order.total_amount_after_tax}}</span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -197,14 +228,12 @@
                                 <div class="rightHeight PT-5">
                                     <div class="header-tabs">
                                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                                            <a class="nav-item nav-link" [id]="cont.loadNumber"
+                                                [ngClass]="cont.loadNumber === currentLoadContent.loadNumber ? 'active' : ''"
+                                                (click)="changeCurrentLoad(cont.loadNumber)"
+                                                *ngFor="let cont of load?.content;let i=index" id="nav-load1-tab">Load
+                                                {{cont.loadNumber}}</a>
 
-                                            <a class="nav-item nav-link active" id="nav-load1-tab" data-toggle="tab"
-                                                href="#nav-load1" role="tab" aria-controls="nav-load1"
-                                                aria-selected="true">Load 1</a>
-
-                                            <a class="nav-item nav-link" id="nav-load2-tab" data-toggle="tab"
-                                                href="#nav-load2" role="tab" aria-controls="nav-load2"
-                                                aria-selected="false">Load 2 </a>
                                         </div>
                                     </div>
 
@@ -219,94 +248,29 @@
                                                         <tr>
                                                             <th rowspan="2">SN</th>
                                                             <th rowspan="2">Product Name</th>
-                                                            <th colspan="2" style="text-align: center">Actual</th>
-                                                            <th colspan="3" style="text-align: center">Issuance</th>
+                                                            <th colspan="1" style="text-align: center">Actual</th>
+                                                            <th colspan="1" style="text-align: center">Issuance</th>
                                                         </tr>
                                                         <tr>
-                                                            <th>CTNs</th>
-                                                            <th>BOX</th>
-                                                            <th>CTNs</th>
-                                                            <th>BOX</th>
-                                                            <th>PIECE</th>
+                                                            <th style="text-align: center">BOX/PIECE</th>
+                                                            <th style="text-align: center">BOX/PIECE</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>B.B. Chilli Chips Rs10 (12X24)</td>
-                                                            <td>0-Carton</td>
-                                                            <td>0-Box, 4-Piece</td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>B.B. Chilli Chips Rs10 (12X24)</td>
-                                                            <td>0-Carton</td>
-                                                            <td>0-Box, 4-Piece</td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>B.B. Chilli Chips Rs10 (12X24)</td>
-                                                            <td>0-Carton</td>
-                                                            <td>0-Box, 4-Piece</td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>B.B. Chilli Chips Rs10 (12X24)</td>
-                                                            <td>0-Carton</td>
-                                                            <td>0-Box, 4-Piece</td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
+                                                        <tr *ngFor="let item of currentLoadContent.items;let i=index">
+                                                            <td>{{item.item_id}}</td>
+                                                            <td>{{getItemName(item.item_id)}}</td>
+                                                            <td>{{item.actual_qty | number}}</td>
+                                                            <td><input class="value_input" [(ngModel)]="item.issued_qty"
+                                                                    [name]="item.item_id" [id]="item.item_id"
+                                                                    type="number"
+                                                                    (keydown)="isNumber($event, 'quantity')"></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
 
-                                        <div class="tab-pane fade" id="nav-load2" role="tabpanel"
-                                            aria-labelledby="nav-load2-tab">
-                                            <div class="col-12 retailerTable">
-                                                <table class="table table-hover dt-responsive nowrap th-boarder"
-                                                    style="width:100%">
-                                                    <thead>
-                                                        <tr>
-                                                            <th rowspan="2">SN</th>
-                                                            <th rowspan="2">Product Name</th>
-                                                            <th colspan="2" style="text-align: center">Actual</th>
-                                                            <th colspan="3" style="text-align: center">Issuance</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>CTNs</th>
-                                                            <th>BOX</th>
-                                                            <th>CTNs</th>
-                                                            <th>BOX</th>
-                                                            <th>PIECE</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>B.B. Chilli Chips Rs10 (12X24)</td>
-                                                            <td>0-Carton</td>
-                                                            <td>0-Box, 4-Piece</td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                            <td><input class="value_input" type="number" value="0"></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-
-                                            </div>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -453,16 +417,19 @@
                         </div>
                     </div>
 
-                    <div class="col-md-12 pl-10 pr-10 text-center">
+                    <div *ngIf="currentTab !== 4" class="col-md-12 pl-10 pr-10 text-center">
                         <div class="execFooter">
                             <button (click)="currentTab=currentTab-1;tabChanged()"
-                                [disabled]="currentTab === 1 || savingOrder" type="submit"
-                                class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button *ngIf="currentTab !== 4" [disabled]="savingOrder"
+                                [disabled]="currentTab === 1 || currentTab === 4 || loading || savingOrder || load.content[0].items.length > 0"
+                                type="submit" class="btn btn-primary m-0 mr-2">Previous</button>
+                            <button *ngIf="currentTab !== 4 && currentTab !== 3"
+                                [disabled]="currentTab === 4 || loading || savingOrder"
                                 (click)="currentTab=currentTab+1;tabChanged()" type="submit"
                                 class="btn btn-primary m-0">Next</button>
-                            <button *ngIf="currentTab === 4" type="submit" class="btn btn-primary m-0"
-                                [routerLink]="['/orders', 'dispatch-orders']">Finish</button>
+                            <button *ngIf="currentTab === 3" [disabled]="loading" (click)="openConfirmationModal()"
+                                type="submit" class="btn btn-primary m-0">Next</button>
+                            <button style="display: none;" id="open-create-load" data-toggle="modal"
+                                data-target="#create-load">Open Modal</button>
                         </div>
                     </div>
                 </div>

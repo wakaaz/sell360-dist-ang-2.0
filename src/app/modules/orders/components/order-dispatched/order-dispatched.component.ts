@@ -1,8 +1,10 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DataService, GeneralDataService } from '../../../shared/services';
+import { DataService } from '../../../shared/services';
 import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
 import { OrdersService } from '../../services/orders.service';
+import { OrderDispatchService } from '../../services/dispatch.service';
+import { LocalStorageService } from '../../../../core/services/storage.service';
 
 @Component({
     selector: 'app-dispatch-order',
@@ -31,6 +33,7 @@ export class OrderDispatchedComponent implements OnInit {
     newProduct: any;
     dispatchOrderDetail: any;
     load: any;
+    currentLoadContent: any;
 
     inventory: Array<any> = [];
     ordersRetailers: Array<any> = [];
@@ -38,17 +41,16 @@ export class OrderDispatchedComponent implements OnInit {
     schemes: Array<any> = [];
     discountSlabs: Array<any> = [];
     credits: Array<any> = [];
-    currentLoadContent: any;
     remainingOrders: Array<any> = [];
     ordersDispList: Array<any> = [];
 
     constructor(
-        private change: ChangeDetectorRef,
         private router: Router,
         private route: ActivatedRoute,
         private toastService: ToasterService,
         private dataService: DataService,
-        private generalDataService: GeneralDataService,
+        private storageService: LocalStorageService,
+        private dispatchService: OrderDispatchService,
         private orderService: OrdersService,
     ) {
     }
@@ -58,6 +60,9 @@ export class OrderDispatchedComponent implements OnInit {
             pagingType: 'simple_numbers'
         };
         this.currentTab = 1;
+        this.setLoad();
+        this.setCurrentLoad(1);
+        this.load.content.push(this.currentLoadContent);
         this.salemanId = +this.route.snapshot.paramMap.get('saleManId') || null;
         this.orderDate = this.route.snapshot.paramMap.get('date');
         if (!this.salemanId || !this.orderDate) {
@@ -69,6 +74,36 @@ export class OrderDispatchedComponent implements OnInit {
             this.getSchemes();
             this.getDispatchDetails();
         }
+    }
+
+    setLoad(): void {
+        this.load = {
+            salesman_id: 0,
+            total_orders: 0,
+            total_gross_amount: 0,
+            total_trade_offer: 0,
+            total_trade_discount: 0,
+            total_special_discount: 0,
+            total_booker_discount: 0,
+            total_tax_amount: 0,
+            total_recovery_amount: 0,
+            total_net_sale: 0,
+            total_products: 0,
+            distributor_id: 0,
+            total_sub_loads: 0,
+            processed_date: '',
+            content: []
+        };
+    }
+
+    setCurrentLoad(ldNumber: number): void {
+        this.currentLoadContent = {
+            loadNumber: ldNumber,
+            order_ids: [],
+            total_products: 0,
+            total_orders: 0,
+            items: []
+        };
     }
 
     tabChanged(): void {
@@ -83,7 +118,7 @@ export class OrderDispatchedComponent implements OnInit {
                 this.getDispatchOrdersDetail();
                 break;
             case 3:
-
+                this.setDataForLoad();
                 break;
 
             default:
@@ -129,8 +164,15 @@ export class OrderDispatchedComponent implements OnInit {
                         if (isInCredit) {
                             order.isAdded = true;
                         }
+                        const { retailer_id } = order;
+                        this.credits.push({
+                            recovery: 0, order_id: order.id, retailer_id, dispatched_bill_amount: order.total_amount_after_tax
+                        });
                         return order;
                     });
+                    if (this.currentTab === 3) {
+                        this.setDataForLoad();
+                    }
                 }
             }, error => {
                 this.loading = false;
@@ -140,6 +182,17 @@ export class OrderDispatchedComponent implements OnInit {
                     this.toastService.showToaster(toast);
                 }
             });
+        }
+    }
+
+    setDataForLoad(): void {
+        if (!this.dispatchOrderDetail?.orders) {
+            this.getDispatchOrdersDetail();
+        } else {
+            if (!this.remainingOrders.length) {
+                this.remainingOrders = JSON.parse(JSON.stringify(this.dispatchOrderDetail?.orders));
+            }
+            this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
         }
     }
 
@@ -271,7 +324,7 @@ export class OrderDispatchedComponent implements OnInit {
     saveOrder(): void {
         this.savingOrder = true;
         console.log('this.orderDetails :>> ', this.orderDetails);
-        this.orderService.saveDispatch(this.orderDetails).subscribe(res => {
+        this.orderService.saveDispatchQuantityOrder(this.orderDetails).subscribe(res => {
             this.savingOrder = false;
             if (res.status === 200) {
                 this.toastService.showToaster({
@@ -395,14 +448,8 @@ export class OrderDispatchedComponent implements OnInit {
 
     addOrderBill(order: any): void {
         order.isAdded = true;
-        const { distributor_id, employee_id, sales_man_id, recovery, invoice_number } = order;
-        const orderId = order.id;
-        const dispatchAmount = order.total_amount_after_tax;
-        this.credits.push({
-            payment_mode: 'Cash', pyament_detail: '', invoice_number,
-            distributor_id, employee_id, saleman_id: sales_man_id, recovery, order_id: orderId,
-            dispatched_bill_amount: dispatchAmount, amount_received: recovery
-        });
+        const payment = this.credits.find(x => x.order_id === order.id);
+        payment.recovery = +order.recovery;
     }
 
     removeOrderBill(order: any): void {
@@ -420,14 +467,170 @@ export class OrderDispatchedComponent implements OnInit {
         }
     }
 
-    allSelected(): void {
+    openConfirmationModal(): void {
+        const unSelected = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
+        if (this.load.content.length !== 3 && unSelected.length !== 0) {
+            if (this.currentLoadContent.items.length) {
+                document.getElementById('open-create-load').click();
+            } else {
+                this.toastService.showToaster({
+                    type: 'error',
+                    title: 'Select Orders:',
+                    message: 'Select orders to create load'
+                });
+            }
+        } else {
+            this.saveDispatch();
+        }
     }
 
-    retailerSelected(selectedRetailer: any): void {
-        if (selectedRetailer.isSelected) {
-            selectedRetailer.isSelected = false;
+    saveDispatch(): void {
+        this.loading = true;
+        let totalRecovery = 0;
+        const distributorId = this.storageService.getItem('distributor').id;
+        this.credits.map((x) => {
+            totalRecovery = x.recovery + totalRecovery;
+        });
+        let totalProducts = 0;
+        this.load.content.map((x) => {
+            totalProducts = x.total_products + totalProducts;
+        });
+        this.load.content = this.load.content.map(x => {
+            delete x.loadNumber;
+            return x;
+        });
+        this.load.salesman_id = this.salemanId;
+        this.load.total_orders = this.dispatchOrderDetail.orders.length;
+        this.load.total_gross_amount = this.dispatchOrderDetail.summary.gross_total;
+        this.load.total_trade_offer = this.dispatchOrderDetail.summary.trade_offer;
+        this.load.total_trade_discount = this.dispatchOrderDetail.summary.trade_discount;
+        this.load.total_special_discount = this.dispatchOrderDetail.summary.special_discount;
+        this.load.total_booker_discount = this.dispatchOrderDetail.summary.booker_discount;
+        this.load.total_tax_amount = this.dispatchOrderDetail.summary.total_tax;
+        this.load.total_recovery_amount = totalRecovery;
+        this.load.total_net_sale = this.dispatchOrderDetail.summary.total_price;
+        this.load.total_products = totalProducts;
+        this.load.distributor_id = distributorId;
+        this.load.total_sub_loads = this.load.content.length;
+        this.load.processed_date = this.orderDate;
+        const order = { load: this.load, payments: this.credits };
+        this.orderService.saveDispatchOrder(order).subscribe(res => {
+            this.loading = false;
+            if (res.status === 200) {
+                this.setLoad();
+                this.setCurrentLoad(1);
+                this.load.content.push(this.currentLoadContent);
+                this.toastService.showToaster({
+                    type: 'success',
+                    message: 'Payments and Load saved successfully!',
+                    title: 'Payments and Load saved:'
+                });
+                this.currentTab = 4;
+                this.tabChanged();
+            }
+        }, error => {
+            this.loading = false;
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    type: 'error',
+                    message: 'Payments and Load not saved, please try again later!',
+                    title: 'Error:'
+                });
+            }
+        });
+    }
+
+    changeCurrentLoad(ldNumber: number): void {
+        this.remainingOrders = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
+        this.currentLoadContent = this.load.content.find(x => x.loadNumber === ldNumber);
+        const orders = this.dispatchOrderDetail?.orders.filter(x => {
+            if (this.currentLoadContent.order_ids.includes(x.id)) {
+                x.isSelected = true;
+                return x;
+            }
+        });
+        if (orders.length) {
+            this.remainingOrders = [...orders, ...this.remainingOrders];
+        }
+        this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
+    }
+
+    allSelected(): void {
+        if (this.isAllSelected) {
+            this.remainingOrders = this.remainingOrders.map(order => {
+                order.isSelected = true;
+                return order;
+            });
+            this.setAllOrdersToCurrentLoad();
         } else {
-            selectedRetailer.isSelected = true;
+            this.remainingOrders = this.remainingOrders.map(order => {
+                order.isSelected = false;
+                return order;
+            });
+            this.removeAllOrdersFromCurrentLoad();
+        }
+        this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
+    }
+
+    setAllOrdersToCurrentLoad(): void {
+        this.remainingOrders.forEach(order => {
+            this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(x => {
+                if (order.id === x.id) {
+                    x.isSelected = true;
+                }
+                return x;
+            });
+            this.currentLoadContent = this.dispatchService.setLoadContent(order, this.currentLoadContent);
+        });
+    }
+
+    getItemName(itemId: number): string {
+        const item = this.inventory.find(x => x.item_id === itemId);
+        return item.item_name;
+    }
+
+    addCurrentLoad(): void {
+        this.remainingOrders = this.remainingOrders.filter(x => !(this.currentLoadContent.order_ids as Array<number>).includes(x.id));
+        this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
+        this.setCurrentLoad(this.currentLoadContent.loadNumber + 1);
+        this.load.content.push(this.currentLoadContent);
+        if (this.currentLoadContent.loadNumber === 3) {
+            this.isAllSelected = true;
+            this.allSelected();
+        }
+        document.getElementById('close-confirm-load').click();
+    }
+
+    removeAllOrdersFromCurrentLoad(): void {
+        this.currentLoadContent.items = [];
+        this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(x => {
+            if (this.currentLoadContent.order_ids.includes(x.id)) {
+                x.isSelected = false;
+            }
+            return x;
+        });
+        this.currentLoadContent.order_ids = [];
+        this.currentLoadContent.total_orders = 0;
+        this.currentLoadContent.total_products = 0;
+    }
+
+    retailerSelected(order: any): void {
+        if (order.isSelected) {
+            this.currentLoadContent = this.dispatchService.setLoadContent(order, this.currentLoadContent);
+            this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(x => {
+                if (order.id === x.id) {
+                    x.isSelected = true;
+                }
+                return x;
+            });
+        } else {
+            this.currentLoadContent = this.dispatchService.removeOrderFromCurrentLoad(order, this.currentLoadContent);
+            this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(x => {
+                if (order.id === x.id) {
+                    x.isSelected = false;
+                }
+                return x;
+            });
         }
     }
 

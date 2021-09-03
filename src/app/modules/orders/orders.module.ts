@@ -18,9 +18,10 @@ import { CompletedOrdersComponent } from './components/completed-orders/complete
 import { CounterSaleComponent } from './components/counter-sale/counter-sale.component';
 import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
 import { CompletedOrdersDetailComponent } from './components/completed-orders-detail/completed-orders-detail.component';
+import { OrderDispatchedComponent } from './components/order-dispatched/order-dispatched.component';
 
 import { OrdersService } from './services/orders.service';
-import { OrderDispatchedComponent } from './components/order-dispatched/order-dispatched.component';
+import { OrderDispatchService } from './services/dispatch.service';
 
 @NgModule({
   imports: [
@@ -46,6 +47,7 @@ import { OrderDispatchedComponent } from './components/order-dispatched/order-di
       CompletedOrdersDetailComponent,
     ],
     providers: [
+      OrderDispatchService,
       OrdersService
     ],
 })

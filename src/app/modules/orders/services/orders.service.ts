@@ -35,6 +35,11 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
+    saveDispatchOrder(order: any): Observable<any> {
+        const url = API_URLS.CREATE_DISPATCH;
+        return this.baseService.post(url, order);
+    }
+
     getNewOrders(): Observable<any> {
         const url = `${API_URLS.GET_NEW_ORDERS}`;
         return this.baseService.get(url);
@@ -75,7 +80,7 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
-    saveDispatch(order: any): Observable<any> {
+    saveDispatchQuantityOrder(order: any): Observable<any> {
         const url = `${API_URLS.SAVE_DISPATCH}`;
         return this.baseService.post(url, order);
     }

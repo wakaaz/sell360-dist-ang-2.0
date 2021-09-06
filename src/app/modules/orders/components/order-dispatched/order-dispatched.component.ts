@@ -651,6 +651,25 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     completeDispatch(): void {
+        this.loading = true;
+        this.orderService.completeOrderDispatch(this.finalLoad.load_id).subscribe(res => {
+            this.loading = false;
+            this.toastService.showToaster({
+                type: 'success',
+                message: 'Order dispatch completed successfully!',
+                title: 'Order Dipatched Completed:'
+            });
+            this.router.navigateByUrl('/orders/execution-list');
+        }, error => {
+            this.loading = false;
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    type: 'error',
+                    message: 'Order Dispatch cannot be completed at the moment, please try again later!',
+                    title: 'Error:'
+                });
+            }
+        });
     }
 
     revertDispatch(): void {

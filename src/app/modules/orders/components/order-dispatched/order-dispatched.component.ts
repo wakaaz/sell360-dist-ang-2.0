@@ -5,6 +5,8 @@ import { Toaster, ToasterService } from '../../../../core/services/toaster.servi
 import { OrdersService } from '../../services/orders.service';
 import { OrderDispatchService } from '../../services/dispatch.service';
 import { LocalStorageService } from '../../../../core/services/storage.service';
+import { API_URLS } from 'src/app/core/constants/api-urls.constants';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-dispatch-order',
@@ -693,6 +695,11 @@ export class OrderDispatchedComponent implements OnInit {
                 });
             }
         });
+    }
+
+    getBookingSheet(): void {
+       const sheetUrl = `${environment.apiDomain}${API_URLS.BOOKING_SHEET_PDF}?emp=${this.salemanId}&date=${this.orderDate}`;
+       window.open(sheetUrl);
     }
 
 }

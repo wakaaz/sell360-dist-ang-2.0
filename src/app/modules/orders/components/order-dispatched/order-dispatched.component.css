@@ -154,3 +154,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 #product-cl-sec{
  width: 750px;
 }
+.print-icon-div{text-align: center; padding: 15px;}
+.print-icon-div a{display: inline-block; border: solid 1px #e9ecef; padding: 15px; width: 100%; text-align: center; text-decoration: none; color: #282828; font-size: 13px;}
+.print-icon-div a:HOVER{border: solid 1px #0038ba; color: #0038ba; box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);}	
+.print-icon{filter: grayscale(1); width: 45px; opacity: 0.7; display: block; margin: auto; margin-top: 10px; margin-bottom: 15px;}
+.print-icon-div a:HOVER .print-icon{filter:none; opacity: 1;}	
+.heading3{margin: 0; font-size: 16px;}
+.select-date, .select-date:focus{box-shadow: none; border: none; background-color:#f6f6f6; font-size: 14px; height: 30px; width: 200px}

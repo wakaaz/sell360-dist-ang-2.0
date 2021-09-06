@@ -27,6 +27,7 @@ export const API_URLS = {
     COMPLETE_DISPATCH: '/completeDispatch',
     REVERT_DISPATCH: '/revertDispatch',
     DISPATCH_ORDERS_DETAIL: '/dispatchOrdersDetail',
+    UPDATE_INVOICE_DETAIL: '/updateDispatchInvoiceDate',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',
@@ -48,6 +49,7 @@ export const API_URLS = {
     // General
     PRODUCTS_LIST_BY_PREF_TYPE: '/productListByType',
     BOOKING_SHEET_PDF: '/BookingSheetPdf',
+    BILLS: '/pdfAll',
 
     // Retailers
     ADD_OPENING_BALANCE: '/addOpeningBalance',

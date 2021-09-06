@@ -50,6 +50,11 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
+    updateDispatchInvoiceDate(loadId: number, date: string): Observable<any> {
+        const url = API_URLS.UPDATE_INVOICE_DETAIL;
+        return this.baseService.post(url, {date});
+    }
+
     getNewOrders(): Observable<any> {
         const url = `${API_URLS.GET_NEW_ORDERS}`;
         return this.baseService.get(url);

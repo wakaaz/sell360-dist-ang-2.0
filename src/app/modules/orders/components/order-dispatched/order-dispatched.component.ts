@@ -27,7 +27,9 @@ export class OrderDispatchedComponent implements OnInit {
 
     salemanId: number;
     currentTab: number;
+    distributorId: number;
     orderDate: string;
+    invoiceDate: string;
 
     orderDetails: any = {};
     selectedRetailer: any;
@@ -56,6 +58,7 @@ export class OrderDispatchedComponent implements OnInit {
         private dispatchService: OrderDispatchService,
         private orderService: OrdersService,
     ) {
+        this.distributorId = this.storageService.getItem('distributor').id;
     }
 
     ngOnInit(): void {
@@ -503,7 +506,6 @@ export class OrderDispatchedComponent implements OnInit {
     saveDispatch(): void {
         this.loading = true;
         let totalRecovery = 0;
-        const distributorId = this.storageService.getItem('distributor').id;
         this.credits.map((x) => {
             totalRecovery = x.recovery + totalRecovery;
         });
@@ -526,7 +528,7 @@ export class OrderDispatchedComponent implements OnInit {
         this.load.total_recovery_amount = totalRecovery;
         this.load.total_net_sale = this.dispatchOrderDetail.summary.total_price;
         this.load.total_products = totalProducts;
-        this.load.distributor_id = distributorId;
+        this.load.distributor_id = this.distributorId;
         this.load.total_sub_loads = this.load.content.length;
         this.load.processed_date = this.orderDate;
         const order = { load: this.load, payments: this.credits };
@@ -700,6 +702,38 @@ export class OrderDispatchedComponent implements OnInit {
     getBookingSheet(): void {
        const sheetUrl = `${environment.apiDomain}${API_URLS.BOOKING_SHEET_PDF}?emp=${this.salemanId}&date=${this.orderDate}`;
        window.open(sheetUrl);
+    }
+
+    getBills(size: string = 'A4'): void {
+        if (this.invoiceDate) {
+            this.orderService.updateDispatchInvoiceDate(this.finalLoad.load_id, this.invoiceDate).subscribe(res => {
+                if (res.status === 200) {
+                    document.getElementById('close-bills').click();
+                    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.salemanId}&date=${this.orderDate}&dist_id=${this.distributorId}&size=${size}`;
+                    window.open(billsUrl);
+                } else {
+                    this.toastService.showToaster({
+                        type: 'error',
+                        message: 'Bill cannot be generated at the moment, please try again later!',
+                        title: 'Bill cannot be generated:'
+                    });
+                }
+            }, error => {
+                if (error.status !== 1 && error.status !== 401) {
+                    this.toastService.showToaster({
+                        type: 'error',
+                        message: 'Bill cannot be generated at the moment, please try again later!',
+                        title: 'Bill cannot be generated:'
+                    });
+                }
+            });
+        } else {
+            this.toastService.showToaster({
+                type: 'error',
+                message: 'Please select invoice date to generate bill(s)!',
+                title: 'Please select invoice date:'
+            });
+        }
     }
 
 }

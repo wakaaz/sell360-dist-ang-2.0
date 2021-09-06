@@ -66,7 +66,7 @@ export class AppComponent {
         this.showToast = true;
         setTimeout(() => {
           this.showToast = false;
-        }, 3000);
+        }, 5000);
       }
     });
   }

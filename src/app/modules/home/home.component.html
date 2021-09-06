@@ -1,9 +1,9 @@
-<div class="container" *ngIf="!loading">
+<div class="container mt-0" *ngIf="!loading">
     <div *ngIf="distributor" class="row _user-TS">
         <div class="col-md-12 _dashTOP"> <img class="_user_Pimage" onError="this.src='assets/images/avatar.svg'"
             [src]="distributor.distributor_image ? distributor.distributor_image : 'assets/images/avatar.svg'" alt="">
             <h2 class="_head01">Good Morning, {{distributor.distributor_name}}</h2>
-            <p>Here’s what’s happening at Sell360 today.</p>
+            <p>Here’s what’s happening at <strong>{{distributor.distributor_name}}.</strong></p>
         </div>
     </div>
     <div *ngIf="false" class="row">
@@ -30,7 +30,52 @@
             </div>
         </div>
     </div>
-    <div class="seabinReport">
+
+    <div class="row">
+		<div class="col-6">				
+			<div class="card total-sale">
+			  <div class="row">
+				<div class="col-12">
+				  <div class="row">
+					<div class="col-12 position-relative" style="background-image: url(assets/images/kpi-achive-img.jpg); background-position:bottom right; background-repeat:no-repeat">						
+					  <h2 class="card-heading">Today's <span>Booking</span></h2>
+					  <div class="total-amount" style="border-bottom:solid 1px #e1e1e1"><span>Rs.</span> 80,00,00,000</div>
+					</div>
+					<div class="col unit-v pr-0">Pending Sale<span><small>Rs.</small> 999,999 </span></div>
+					<div class="col unit-v pr-0">Spot Sale<span><small>Rs.</small> 999,999</span></div>
+					<div class="col unit-v pr-0">Counter Sale<span><small>Rs.</small> 999,999</span></div>
+					<div class="col unit-v pr-0">Net Sale<span><small>Rs.</small> 999,999</span></div>
+				  </div>
+				</div>
+				
+			  </div>
+			</div>				
+			</div>
+			
+		<div class="col-6">				
+			<div class="card total-sale">
+			  <div class="row">
+				<div class="col-12">
+				  <div class="row">
+					<div class="col-12 position-relative" style="background-image: url(assets/images/kpi-achive-img.jpg); background-position:bottom right; background-repeat:no-repeat">						
+					  <h2 class="card-heading">Monthly <span>Sale Trends</span></h2>
+					  <div class="total-amount" style="border-bottom:solid 1px #e1e1e1"><span>Rs.</span> 80,00,00,000</div>
+					</div>
+					<div class="col unit-v pr-0">Booked Sale<span><small>Rs.</small> 999,999 </span></div>
+					<div class="col unit-v pr-0">Spot Sale<span><small>Rs.</small> 999,999</span></div>
+					<div class="col unit-v pr-0">Counter Sale<span><small>Rs.</small> 999,999</span></div>
+					<div class="col unit-v pr-0">Pending Sale<span><small>Rs.</small> 999,999</span></div>
+				  </div>
+				</div>
+				
+			  </div>
+			</div>				
+			</div>
+			
+
+		</div>
+
+    <!-- <div class="seabinReport">
         <div class="row">
             <div class="col-md-4">
                 <div class="card mt-0">
@@ -51,81 +96,87 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
+
     <div class="row">
         <div class="col-lg-12 PB-10">
-            <h2 class="_head01 HomeHead">Top 5 <span>Products</span></h2>
+          <h2 class="_head01 HomeHead">Top 5 <span>Booked Products</span></h2>
         </div>
         <div class="col-md-12">
-            <div class="row pro-list">
-                <div class="col">
-                    <div class="product-card">
-                        <h3>Chilli Chips Without Zooplay</h3>
-                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
-                        <div class="row pr-st">
-                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
-                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
-                        </div>
-                    </div>
+          <div class="row pro-list">
+            <div class="col">
+              <div class="product-card">
+                <h3>Chilli Chips Without Zooplay Chilli Chips Without Zooplay</h3>
+                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                <div class="row pr-st">
+				   <div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
+                  <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+				  <div class="col-6"><span>245 <small>CTNS</small></span>Available</div>
                 </div>
-                <div class="col">
-                    <div class="product-card">
-                        <h3>Chilli Chips Without Zooplay </h3>
-                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
-                        <div class="row pr-st">
-                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
-                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="product-card">
-                        <h3>Chilli Chips Without Zooplay </h3>
-                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
-                        <div class="row pr-st">
-                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
-                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="product-card">
-                        <h3>Chilli Chips Without Zooplay </h3>
-                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
-                        <div class="row pr-st">
-                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
-                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="product-card">
-                        <h3>Chilli Chips Without Zooplay </h3>
-                        <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
-                        <div class="row pr-st">
-                            <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
-                            <div class="col-6 bg-shade"><span>50% <small>CTNS</small></span>Booked</div>
-                        </div>
-                    </div>
-                </div>
+              </div>
             </div>
+            <div class="col">
+              <div class="product-card">
+                <h3>Chilli Chips Without Zooplay </h3>
+                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                <div class="row pr-st">
+				<div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
+                  <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+				  <div class="col-6"><span>245 <small>CTNS</small></span>Available</div> 
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="product-card">
+                <h3>Chilli Chips Without Zooplay </h3>
+                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                <div class="row pr-st">
+				  <div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
+                  <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+				  <div class="col-6"><span>245 <small>CTNS</small></span>Available</div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="product-card">
+                <h3>Chilli Chips Without Zooplay </h3>
+                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                <div class="row pr-st">
+				   <div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
+                  <div class="col-6"><span>245 <small>Dozens</small></span>Booked</div>
+				  <div class="col-6"><span>245 <small>CTNS</small></span>Available</div>
+                </div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="product-card">
+                <h3>Chilli Chips Without Zooplay </h3>
+                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                <div class="row pr-st">
+				<div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
+                  <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+				  <div class="col-6"><span>245 <small>Dozens</small></span>Available</div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
+      </div>
     <div class="row m-0">
         <div class="col-lg-12 p-0">
-            <h2 class="_head01 HomeHead">Creat <span>New</span></h2>
+            <h2 class="_head01 HomeHead">Shortcuts <span></span></h2>
         </div>
 
         <div class="col-12 h_dash">
             <div class="row">
-                <div class="col-4"><a [routerLink]="['/inventory', 'add-stock']"><img src="assets/images/add-stock-01.svg" alt="" />
-                        <h2 class="HD-title">Add New <span class="f-light"> Stock</span></h2>
+                <div class="col-4"><a href="#"><img src="assets/images/add-stock-01.svg" alt="" />
+                        <h2 class="HD-title">Add <span class="f-light"> Counter Sale</span></h2>
                     </a> </div>
-                <div class="col-4"><a ><img src="assets/images/add-order.svg" alt="" />
-                        <h2 class="HD-title">Create New <span class="f-light"> Order</span></h2>
+                <div class="col-4"><a href="#"><img src="assets/images/add-order.svg" alt="" />
+                        <h2 class="HD-title">Add<span class="f-light"> Stock Purchase</span></h2>
                     </a> </div>
-                <div class="col-4"><a ><img src="assets/images/dispatch-order.svg" alt="" />
-                        <h2 class="HD-title">Dispatch<span class="f-light">Order</span></h2>
+                <div class="col-4"><a href="#"><img src="assets/images/dispatch-order.svg" alt="" />
+                        <h2 class="HD-title">View<span class="f-light">Booking</span></h2>
                     </a> </div>
             </div>
         </div>

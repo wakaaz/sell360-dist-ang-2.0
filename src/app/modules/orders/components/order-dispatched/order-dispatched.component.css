@@ -107,8 +107,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 .red-bg{border: solid 1px #f12300}
 .act-btn-print{margin: 0px 0 0 0}
 .act-btn-print .col-4{padding: 5px;}
-.print-btn{font-size: 14px; text-align: center; background: linear-gradient(90deg, #fff 0%, #fff 100%); color: #282828; border: solid 1px #0038ba; box-shadow: none; padding: 10px 14px; white-space: normal; width: 100%; min-height: 85px; line-height: 16px;}
-.print-btn:hover{background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%); color: #fff}
+.print-btn{font-size: 14px; text-align: center; background: linear-gradient(90deg, #fff 0%, #fff 100%); color: #282828 !important; border: solid 1px #0038ba; box-shadow: none; padding: 10px 14px; white-space: normal; width: 100%; min-height: 85px; line-height: 16px;}
+.print-btn:hover{background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%); color: #fff !important}
 .print-btn .fa{display: block; font-size: 16px; padding: 5px; margin-bottom: 5px;}
 .select-checkmark .salevalue{text-align: right; margin: auto; vertical-align: middle}
 .select-checkmark .ord-no{top: 14px; font-size: 45px}

@@ -641,4 +641,30 @@ export class OrderDispatchedComponent implements OnInit {
         }
     }
 
+    completeDispatch(): void {
+    }
+
+    revertDispatch(): void {
+        this.loading = true;
+        this.orderService.revertOrderDispatch(this.finalLoad.load_id).subscribe(res => {
+            this.loading = false;
+            this.toastService.showToaster({
+                type: 'success',
+                message: 'Order dispatch reverted successfully!',
+                title: 'Dipatch Reverted:'
+            });
+            this.currentTab = 1;
+            this.tabChanged();
+        }, error => {
+            this.loading = false;
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    type: 'error',
+                    message: 'Revert cannot be completed at the moment, please try again later!',
+                    title: 'Error:'
+                });
+            }
+        });
+    }
+
 }

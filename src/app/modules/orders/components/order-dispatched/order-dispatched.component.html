@@ -1,7 +1,5 @@
-<app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [orderedProducts]="orderDetails?.items"
-    [loadingProducts]="loadingProduct" [allProducts]="inventory" [productSchemes]="schemes"
-    [productMerchantDiscount]="merchantDiscount" [specialDiscounts]="specialDiscounts"
-    (drawerClosed)="closeNewProducts()" (productSelected)="addNewProductToOrder($event)">
+<app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [orderedProducts]="orderDetails?.items" [loadingProducts]="loadingProduct" [allProducts]="inventory" [productSchemes]="schemes" [productMerchantDiscount]="merchantDiscount"
+    [specialDiscounts]="specialDiscounts" (drawerClosed)="closeNewProducts()" (productSelected)="addNewProductToOrder($event)">
 </app-products-drawer>
 
 <div class="modal fade" id="order-del" tabindex="-1" role="dialog" aria-labelledby="orderLabel" aria-hidden="true">
@@ -21,15 +19,13 @@
             </div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-primary" (click)="cancelOrder()">Yes</button>
-                <button type="submit" id="close-del" class="btn btn-cancel" data-dismiss="modal"
-                    aria-label="Close">No</button>
+                <button type="submit" id="close-del" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">No</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="create-load" tabindex="-1" role="dialog" aria-labelledby="create-loadLabel"
-    aria-hidden="true">
+<div class="modal fade" id="create-load" tabindex="-1" role="dialog" aria-labelledby="create-loadLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content top-borderRed">
             <div class="modal-header">
@@ -46,8 +42,7 @@
             </div>
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-primary" (click)="addCurrentLoad()">Yes</button>
-                <button type="submit" id="close-confirm-load" class="btn btn-cancel" data-dismiss="modal"
-                    aria-label="Close">No</button>
+                <button type="submit" id="close-confirm-load" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">No</button>
             </div>
         </div>
     </div>
@@ -59,56 +54,43 @@
             <div class="card daily-operations">
                 <ul class="nav nav-pills nav_M mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 1 ? 'active' : ''"
-                            id="pills-home-tab"><span>Orders</span>
+                        <a class="nav-link" [ngClass]="currentTab === 1 ? 'active' : ''" id="pills-home-tab"><span>Orders</span>
                             <span class="wz-icon"><i class="fa fa-list-ul"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 2 ? 'active' : ''"
-                            id="pills-contact-tab"><span>Credit</span>
+                        <a class="nav-link" [ngClass]="currentTab === 2 ? 'active' : ''" id="pills-contact-tab"><span>Credit</span>
                             <span class="wz-icon"><i class="fa  fa-dollar-sign"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 3 ? 'active' : ''"
-                            id="pills-load-tab"><span>Load</span>
+                        <a class="nav-link" [ngClass]="currentTab === 3 ? 'active' : ''" id="pills-load-tab"><span>Load</span>
                             <span class="wz-icon"><i class="fa fa-truck"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 4 ? 'active' : ''"
-                            id="pills-final-tab"><span>Final</span>
+                        <a class="nav-link" [ngClass]="currentTab === 4 ? 'active' : ''" id="pills-final-tab"><span>Final</span>
                             <span class="wz-icon"><i class="fa fa-check"></i></span>
                         </a>
                     </li>
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-                    <div [ngClass]="currentTab === 1 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
-                        id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div [ngClass]="currentTab === 1 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="ordersRetailers"
-                                    (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
+                                <app-retailer-sub-list [retailers]="ordersRetailers" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
                                 <div *ngIf="currentTab === 1" class="rightHeight">
-                                    <app-order-items-list [orderDetail]="orderDetails" [currentTab]="currentTab"
-                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer"
-                                        [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
-                                        [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
+                                    <app-order-items-list [orderDetail]="orderDetails" [currentTab]="currentTab" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
                                         (openDrawer)="openProductsList()">
                                     </app-order-items-list>
                                 </div>
                                 <div class="col-md-12 bottom-act-btn">
-                                    <button *ngIf="!savingOrder" (click)="setOrderItems()"
-                                        [disabled]="!orderDetails?.items?.length"
-                                        class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>
+                                    <button *ngIf="!savingOrder" (click)="setOrderItems()" [disabled]="!orderDetails?.items?.length" class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>
 
-                                    <button [disabled]="!orderDetails?.items?.length" *ngIf="!savingOrder"
-                                        data-toggle="modal" data-target="#order-del"
-                                        class="btn btn-cancel cancel_order_btn font13">Cancel Order</button>
+                                    <button [disabled]="!orderDetails?.items?.length" *ngIf="!savingOrder" data-toggle="modal" data-target="#order-del" class="btn btn-cancel cancel_order_btn font13">Cancel Order</button>
 
                                     <button *ngIf="savingOrder" type="submit" class="btn btn-primary mr-2" disabled>
                                         <div class="spinner-border text-light" role="status">
@@ -119,11 +101,9 @@
                             </div>
                         </div>
                     </div>
-                    <div [ngClass]="currentTab === 2 ? 'active show' : ''" class="tab-pane p-0 PT-20 tab_M fade"
-                        id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                    <div [ngClass]="currentTab === 2 ? 'active show' : ''" class="tab-pane p-0 PT-20 tab_M fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
                         <div class="col-12 PT-15">
-                            <table datatable [dtOptions]="dtOptions" *ngIf="dispatchOrderDetail?.orders"
-                                class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                            <table datatable [dtOptions]="dtOptions" *ngIf="dispatchOrderDetail?.orders" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
                                 <thead>
                                     <tr>
                                         <th>Retailer Name</th>
@@ -140,16 +120,11 @@
                                             <td>Rs. {{order.balance | number: '1.2-2'}}</td>
                                             <td>{{order.aging || 0}} Days</td>
                                             <td>
-                                                <input type="number" [readonly]="order.isAdded" [id]="ind" [(ngModel)]="order.recovery"
-                                                    (keydown)="isNumber($event)" [name]="ind"
-                                                    class="form-control value_input" placeholder="0">
+                                                <input type="number" [readonly]="order.isAdded" [id]="ind" [(ngModel)]="order.recovery" (keydown)="isNumber($event)" [name]="ind" class="form-control value_input" placeholder="0">
                                             </td>
                                             <td>
-                                                <button class="btn btn-default btn-line" *ngIf="!order.isAdded"
-                                                    [disabled]="!order.recovery || +order.recovery === 0"
-                                                    (click)="this.id='hello';addOrderBill(order)">Add to Bill</button>
-                                                <button class="btn btn-default red-bg" *ngIf="order.isAdded"
-                                                    (click)="removeOrderBill(order)">
+                                                <button class="btn btn-default btn-line" *ngIf="!order.isAdded" [disabled]="!order.recovery || +order.recovery === 0" (click)="this.id='hello';addOrderBill(order)">Add to Bill</button>
+                                                <button class="btn btn-default red-bg" *ngIf="order.isAdded" (click)="removeOrderBill(order)">
                                                     Remove From Bill
                                                 </button>
                                             </td>
@@ -163,8 +138,7 @@
                         </div>
                     </div>
 
-                    <div [ngClass]="currentTab === 3 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
-                        id="pills-load" role="tabpanel" aria-labelledby="pills-load-tab">
+                    <div [ngClass]="currentTab === 3 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade" id="pills-load" role="tabpanel" aria-labelledby="pills-load-tab">
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id2" class="col-4 p-0">
@@ -177,10 +151,7 @@
 
                                                 <div class="select-all-op">
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" [(ngModel)]="isAllSelected"
-                                                            name="all-selected" id="all-selected"
-                                                            class="custom-control-input" (change)="allSelected()"
-                                                            id="all-s">
+                                                        <input type="checkbox" [(ngModel)]="isAllSelected" name="all-selected" id="all-selected" class="custom-control-input" (change)="allSelected()" id="all-s">
                                                         <label class="custom-control-label" for="all-s">Select
                                                             All</label>
                                                     </div>
@@ -197,22 +168,17 @@
 
                                     <div class="ProList-div">
 
-                                        <div *ngFor="let order of ordersDispList;let ind=index"
-                                            class="col-12 order-list select-checkmark">
+                                        <div *ngFor="let order of ordersDispList;let ind=index" class="col-12 order-list select-checkmark">
                                             <div class="ord-no">{{ind+1}}</div>
                                             <div class="row">
-                                                <div class="col-8 pr-0"><strong
-                                                        style="margin-bottom:2px">{{order.retailer_name}}</strong>
+                                                <div class="col-8 pr-0"><strong style="margin-bottom:2px">{{order.retailer_name}}</strong>
                                                     <span><strong>Order Booker:</strong> {{order.emp_name}}</span>
                                                     <span><i class="fa fa-map-marker-alt"></i>
                                                         {{order.retailer_address}}</span>
                                                 </div>
                                                 <div class="col-4 pl-0">
                                                     <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" [name]="ind"
-                                                            (change)="retailerSelected(order)"
-                                                            class="custom-control-input" [(ngModel)]="order.isSelected"
-                                                            [id]="'ord'+ind">
+                                                        <input type="checkbox" [name]="ind" (change)="retailerSelected(order)" class="custom-control-input" [(ngModel)]="order.isSelected" [id]="'ord'+ind">
                                                         <label class="custom-control-label" [for]="'ord'+ind"></label>
                                                     </div>
                                                     <div class="text-right">Total Sales<span class="or-val">Rs.
@@ -228,10 +194,7 @@
                                 <div class="rightHeight PT-5">
                                     <div class="header-tabs">
                                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                            <a class="nav-item nav-link" [id]="cont.loadNumber"
-                                                [ngClass]="cont.loadNumber === currentLoadContent.loadNumber ? 'active' : ''"
-                                                (click)="changeCurrentLoad(cont.loadNumber)"
-                                                *ngFor="let cont of load?.content;let i=index" id="nav-load1-tab">Load
+                                            <a class="nav-item nav-link" [id]="cont.loadNumber" [ngClass]="cont.loadNumber === currentLoadContent.loadNumber ? 'active' : ''" (click)="changeCurrentLoad(cont.loadNumber)" *ngFor="let cont of load?.content;let i=index" id="nav-load1-tab">Load
                                                 {{cont.loadNumber}}</a>
 
                                         </div>
@@ -239,11 +202,9 @@
 
                                     <div class="tab-content" id="nav-tabContent">
 
-                                        <div class="tab-pane fade show active body_sales_agants" id="nav-load1"
-                                            role="tabpanel" aria-labelledby="nav-load1-tab">
+                                        <div class="tab-pane fade show active body_sales_agants" id="nav-load1" role="tabpanel" aria-labelledby="nav-load1-tab">
                                             <div class="col-12 retailerTable">
-                                                <table class="table table-hover dt-responsive nowrap th-boarder"
-                                                    style="width:100%">
+                                                <table class="table table-hover dt-responsive nowrap th-boarder" style="width:100%">
                                                     <thead>
                                                         <tr>
                                                             <th rowspan="2">SN</th>
@@ -261,10 +222,7 @@
                                                             <td>{{item.item_id}}</td>
                                                             <td>{{getItemName(item.item_id)}}</td>
                                                             <td>{{item.actual_qty | number}}</td>
-                                                            <td><input class="value_input" [(ngModel)]="item.issued_qty"
-                                                                    [name]="item.item_id" [id]="item.item_id"
-                                                                    type="number"
-                                                                    (keydown)="isNumber($event, 'quantity')"></td>
+                                                            <td><input class="value_input" [(ngModel)]="item.issued_qty" [name]="item.item_id" [id]="item.item_id" type="number" (keydown)="isNumber($event, 'quantity')"></td>
                                                         </tr>
                                                     </tbody>
                                                 </table>
@@ -277,8 +235,7 @@
                         </div>
                     </div>
 
-                    <div [ngClass]="currentTab === 4 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
-                        id="pills-final" role="tabpanel" aria-labelledby="pills-final-tab">
+                    <div [ngClass]="currentTab === 4 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade" id="pills-final" role="tabpanel" aria-labelledby="pills-final-tab">
                         <div class="col-12">
                             <div class="row">
                                 <div class="col-8 PB-30">
@@ -286,127 +243,102 @@
                                         <h2 class="w-100">Load <span> Sheet</span></h2>
                                     </div>
 
-                                    <table *ngIf="finalLoad" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap dc-table" id="example2"
-                                        style="width:100%">
+                                    <table *ngIf="finalLoad" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap dc-table" id="example2" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th rowspan="2" style="vertical-align: middle">SN</th>
                                                 <th rowspan="2" style="vertical-align: middle">Product Name</th>
-                                                <th colspan="2" style="text-align:center">Load 1</th>
-                                                <th colspan="2" style="text-align:center">Load 2</th>
-                                                <th colspan="2" style="text-align:center">Load 3</th>
+                                                <th colspan="3" style="text-align:center" *ngFor="let number of finalLoad.load[0].content; let i = index">Load {{i+1}}</th>
+                                                <!-- <th colspan="2" style="text-align:center">Load 2</th>
+                                                <th colspan="2" style="text-align:center">Load 3</th> -->
                                             </tr>
-                                            <tr>
+                                            <tr *ngIf="finalLoad.count==3">
                                                 <th>CTN</th>
                                                 <th>Box</th>
+                                                <th>Issued</th>
                                                 <th>CTN</th>
                                                 <th>Box</th>
+                                                <th>Issued</th>
                                                 <th>CTN</th>
                                                 <th>Box</th>
+                                                <th>Issued</th>
+                                            </tr>
+                                            <tr *ngIf="finalLoad.count==2">
+                                                <th>CTN</th>
+                                                <th>Box</th>
+                                                <th>Issued</th>
+                                                <th>CTN</th>
+                                                <th>Box</th>
+                                                <th>Issued</th>
+                                            </tr>
+                                            <tr *ngIf="finalLoad.count==1">
+                                                <th>CTN</th>
+                                                <th>Box</th>
+                                                <th>Issued</th>
                                             </tr>
 
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>0245</td>
-                                                <td>Dal Chana R5 (1x48) </td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
+                                            <tr *ngFor="let product of finalLoad.load">
+                                                <td>{{product.item_sku}}</td>
+                                                <td>{{product.item_name}}</td>
+                                                <td colspan="3" *ngFor="let loadContent of product.content">
+                                                    <table style="width: 100%;">
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="border-color: white; width:33%;">{{loadContent.parent_qty}}</td>
+                                                                <td style="border-color: white; width:33%;">{{loadContent.child_qty}}</td>
+                                                                <td style="border-color: white; width:34%;">{{loadContent.issued_qty}}</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </td>
                                             </tr>
-                                            <tr>
-                                                <td>0245</td>
-                                                <td>Dal Chana R5 (1x48) </td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                            </tr>
-                                            <tr>
-                                                <td>0245</td>
-                                                <td>Dal Chana R5 (1x48) </td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                            </tr>
-                                            <tr>
-                                                <td>0245</td>
-                                                <td>Dal Chana R5 (1x48) </td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                            </tr>
-                                            <tr>
-                                                <td>0245</td>
-                                                <td>Dal Chana R5 (1x48) </td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                                <td>22</td>
-                                                <td>23</td>
-                                            </tr>
-
                                         </tbody>
                                     </table>
-                                    <strong style="font-size: 35px">Add here col fix table like live</strong>
                                 </div>
 
                                 <div class="col-4">
-                                    <div class="cash-report">
+                                    <div class="cash-report" *ngIf="finalLoad">
                                         <div class="header">
                                             <div class="report_value"> <strong>Gross Total:</strong>
-                                                <span>5,555.22</span>
+                                                <span>{{finalLoad.summary.total_gross_amount | number}}</span>
                                             </div>
-                                            <div class="report_value"> <strong>Trade Offer:</strong> <span>0.00</span>
+                                            <div class="report_value"> <strong>Trade Offer:</strong> <span>{{finalLoad.summary.total_trade_offer | number}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Trade Discount:</strong>
-                                                <span>239.97</span>
+                                                <span>{{finalLoad.summary.total_trade_offer | number}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Special Discount:</strong>
-                                                <span>28.16</span>
+                                                <span>{{finalLoad.summary.total_special_discount | number}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Booker Discount:</strong>
-                                                <span>0.00</span>
+                                                <span>{{finalLoad.summary.total_booker_discount | number}}</span>
                                             </div>
-                                            <div class="report_value"> <strong>Total:</strong> <span>5,287.09</span>
+                                            <div class="report_value"> <strong>Total:</strong> <span>{{finalLoad.summary.total_trade_offer | number}}</span>
                                             </div>
-                                            <div class="report_value"> <strong>Recovery:</strong> <span>0.00</span>
+                                            <div class="report_value"> <strong>Tax:</strong> <span>{{finalLoad.summary.total_tax_amount | number}}</span>
+                                            </div>
+                                            <div class="report_value"> <strong>Recovery:</strong> <span>{{finalLoad.summary.total_recovery_amount | number}}</span>
                                             </div>
                                             <div class="report_value" style="color:#0038ba"> <strong>Total Amount
-                                                    Due:</strong> <span>5,287.09</span> </div>
+                                                    Due:</strong> <span>{{finalLoad.summary.total_net_sale | number}}</span> </div>
                                         </div>
                                         <div style="padding: 10px 15px;">
                                             <div class="row act-btn-print">
-                                                <div class="col-4"> <a href="#"
-                                                        class="btn btn-primary print-btn fontSize"><i
+                                                <div class="col-4"> <a href="#" class="btn btn-primary print-btn fontSize"><i
                                                             class="fa fa-print"></i> Booking Sheet</a> </div>
-                                                <div class="col-4"> <a href="#"
-                                                        class="btn btn-primary print-btn fontSize"><i
+                                                <div class="col-4"> <a href="#" class="btn btn-primary print-btn fontSize"><i
                                                             class="fa fa-print"></i> Load Sheet</a> </div>
                                                 <div class="col-4">
-                                                    <button class="btn btn-primary print-btn fontSize"
-                                                        data-toggle="modal" data-target="#billsModal"><i
+                                                    <button class="btn btn-primary print-btn fontSize" data-toggle="modal" data-target="#billsModal"><i
                                                             class="fa fa-print"></i> Bills</button>
                                                 </div>
                                                 <div class="col-6 pl-5 pt-5">
-                                                    <button
-                                                        class="btn btn-primary red-bg cancel_dispatch w-100">Reset</button>
+                                                    <button class="btn btn-primary red-bg cancel_dispatch w-100">Reset</button>
                                                 </div>
                                                 <div class="col-6 pl-0 pr-5 pt-5">
-                                                    <button
-                                                        class="btn btn-primary m-0 nextButton w-100">Complete</button>
+                                                    <button class="btn btn-primary m-0 nextButton w-100">Complete</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -419,17 +351,10 @@
 
                     <div *ngIf="currentTab !== 4" class="col-md-12 pl-10 pr-10 text-center">
                         <div class="execFooter">
-                            <button (click)="currentTab=currentTab-1;tabChanged()"
-                                [disabled]="currentTab === 1 || currentTab === 4 || loading || savingOrder || load.content[0].items.length > 0"
-                                type="submit" class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button *ngIf="currentTab !== 4 && currentTab !== 3"
-                                [disabled]="currentTab === 4 || loading || savingOrder"
-                                (click)="currentTab=currentTab+1;tabChanged()" type="submit"
-                                class="btn btn-primary m-0">Next</button>
-                            <button *ngIf="currentTab === 3" [disabled]="loading" (click)="openConfirmationModal()"
-                                type="submit" class="btn btn-primary m-0">Next</button>
-                            <button style="display: none;" id="open-create-load" data-toggle="modal"
-                                data-target="#create-load">Open Modal</button>
+                            <button (click)="currentTab=currentTab-1;tabChanged()" [disabled]="currentTab === 1 || currentTab === 4 || loading || savingOrder || load.content[0].items.length > 0" type="submit" class="btn btn-primary m-0 mr-2">Previous</button>
+                            <button *ngIf="currentTab !== 4 && currentTab !== 3" [disabled]="currentTab === 4 || loading || savingOrder" (click)="currentTab=currentTab+1;tabChanged()" type="submit" class="btn btn-primary m-0">Next</button>
+                            <button *ngIf="currentTab === 3" [disabled]="loading" (click)="openConfirmationModal()" type="submit" class="btn btn-primary m-0">Next</button>
+                            <button style="display: none;" id="open-create-load" data-toggle="modal" data-target="#create-load">Open Modal</button>
                         </div>
                     </div>
                 </div>

@@ -51,7 +51,7 @@ export class OrdersService {
     }
 
     getNewOrders(): Observable<any> {
-        const url = ``;
+        const url = `${API_URLS.GET_NEW_ORDERS}`;
         return this.baseService.get(url);
     }
 

@@ -475,6 +475,14 @@ export class OrderDispatchedComponent implements OnInit {
 
     openConfirmationModal(): void {
         const unSelected = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
+        if (this.load.content.length === 3 && unSelected.length !== 0) {
+            this.toastService.showToaster({
+                type: 'error',
+                title: 'Select All Orders:',
+                message: 'Some orders are not selected'
+            });
+            return;
+        }
         if (this.load.content.length !== 3 && unSelected.length !== 0) {
             if (this.currentLoadContent.items.length) {
                 document.getElementById('open-create-load').click();
@@ -524,6 +532,7 @@ export class OrderDispatchedComponent implements OnInit {
             this.loading = false;
             if (res.status === 200) {
                 this.finalLoad = res.data;
+                this.dispatchOrderDetail = null;
                 this.setLoad();
                 this.setCurrentLoad(1);
                 this.load.content.push(this.currentLoadContent);
@@ -599,7 +608,7 @@ export class OrderDispatchedComponent implements OnInit {
     addCurrentLoad(): void {
         this.remainingOrders = this.remainingOrders.filter(x => !(this.currentLoadContent.order_ids as Array<number>).includes(x.id));
         this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
-        this.setCurrentLoad(this.currentLoadContent.loadNumber + 1);
+        this.setCurrentLoad(this.load.content.length + 1);
         this.load.content.push(this.currentLoadContent);
         if (this.currentLoadContent.loadNumber === 3) {
             this.isAllSelected = true;

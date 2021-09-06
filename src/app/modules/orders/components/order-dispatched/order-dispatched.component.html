@@ -141,7 +141,7 @@
                     <div [ngClass]="currentTab === 3 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade" id="pills-load" role="tabpanel" aria-labelledby="pills-load-tab">
 
                         <div class="row m-0 grayTopborder">
-                            <div id="orderList-id2" class="col-4 p-0">
+                            <div *ngIf="!loading" id="orderList-id2" class="col-4 p-0">
                                 <div class="_selectProList ProListHeight">
 
                                     <div class="header ProListHD">
@@ -190,7 +190,7 @@
                                 </div>
                             </div>
 
-                            <div class="col p-0">
+                            <div *ngIf="!loading" class="col p-0">
                                 <div class="rightHeight PT-5">
                                     <div class="header-tabs">
                                         <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -231,6 +231,9 @@
 
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-12" *ngIf="loading">
+                                <app-loader-white></app-loader-white>
                             </div>
                         </div>
                     </div>

@@ -24,7 +24,7 @@ export const API_URLS = {
     ORDER_DETAIL: '/orderDetail',
     VIEW_ORDER_DETAIL: '/viewOrderDetail',
     CREATE_DISPATCH: '/createDispatch',
-    COMPLETE_DISPATCH: '/',
+    COMPLETE_DISPATCH: '/completeDispatch',
     REVERT_DISPATCH: '/revertDispatch',
     DISPATCH_ORDERS_DETAIL: '/dispatchOrdersDetail',
 

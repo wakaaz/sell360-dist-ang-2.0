@@ -40,9 +40,9 @@ export class OrdersService {
         return this.baseService.post(url, order);
     }
 
-    completeOrderDispatch(order: any): Observable<any> {
-        const url = API_URLS.CREATE_DISPATCH;
-        return this.baseService.post(url, order);
+    completeOrderDispatch(loadId: any): Observable<any> {
+        const url = `${API_URLS.COMPLETE_DISPATCH}/${loadId}`;
+        return this.baseService.get(url);
     }
 
     revertOrderDispatch(loadId: any): Observable<any> {

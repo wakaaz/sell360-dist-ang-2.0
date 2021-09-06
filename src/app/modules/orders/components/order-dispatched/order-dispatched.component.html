@@ -330,10 +330,10 @@
                                                             class="fa fa-print"></i> Bills</button>
                                                 </div>
                                                 <div class="col-6 pl-5 pt-5">
-                                                    <button class="btn btn-primary red-bg cancel_dispatch w-100" (click)="revertDispatch()">Reset</button>
+                                                    <button [disabled]="loading" class="btn btn-primary red-bg cancel_dispatch w-100" (click)="revertDispatch()">Reset</button>
                                                 </div>
                                                 <div class="col-6 pl-0 pr-5 pt-5">
-                                                    <button class="btn btn-primary m-0 nextButton w-100" (click)="completeDispatch()">Complete</button>
+                                                    <button [disabled]="loading" class="btn btn-primary m-0 nextButton w-100" (click)="completeDispatch()">Complete</button>
                                                 </div>
                                             </div>
                                         </div>

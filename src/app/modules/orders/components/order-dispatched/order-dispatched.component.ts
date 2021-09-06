@@ -659,7 +659,7 @@ export class OrderDispatchedComponent implements OnInit {
                 message: 'Order dispatch completed successfully!',
                 title: 'Order Dipatched Completed:'
             });
-            this.router.navigateByUrl('/orders/execution-list');
+            this.router.navigateByUrl('/orders/dispatch-orders');
         }, error => {
             this.loading = false;
             if (error.status !== 1 && error.status !== 401) {

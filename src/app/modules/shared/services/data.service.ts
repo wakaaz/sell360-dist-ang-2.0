@@ -298,7 +298,7 @@ export class DataService {
     /** Special Discount End */
 
     getParentQty(qty: number, childQtyInParent: number): number {
-        return Math.floor(qty / childQtyInParent);
+        return qty / childQtyInParent;
     }
 
     convertStockToUnits(totalQty: number, childQtyInParent: number): { parentQty: number, childQty: number } {

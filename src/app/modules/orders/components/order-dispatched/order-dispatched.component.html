@@ -83,9 +83,12 @@
 
                             <div class="col p-0">
                                 <div *ngIf="currentTab === 1" class="rightHeight">
-                                    <app-order-items-list [orderDetail]="orderDetails" [currentTab]="currentTab" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
+                                    <app-order-items-list *ngIf="!savingOrder" [orderDetail]="orderDetails" [currentTab]="currentTab" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
                                         (openDrawer)="openProductsList()">
                                     </app-order-items-list>
+                                    <div class="col-12" *ngIf="savingOrder">
+                                        <app-loader-white></app-loader-white>
+                                    </div>
                                 </div>
                                 <div class="col-md-12 bottom-act-btn">
                                     <button *ngIf="!savingOrder" (click)="setOrderItems()" [disabled]="!orderDetails?.items?.length" class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>
@@ -256,26 +259,26 @@
                                             <tr *ngIf="finalLoad.count==3">
                                                 <th>CTN</th>
                                                 <th>Box</th>
-                                                <th>Issued</th>
+                                                <!-- <th>Issued</th> -->
                                                 <th>CTN</th>
                                                 <th>Box</th>
-                                                <th>Issued</th>
+                                                <!-- <th>Issued</th> -->
                                                 <th>CTN</th>
                                                 <th>Box</th>
-                                                <th>Issued</th>
+                                                <!-- <th>Issued</th> -->
                                             </tr>
                                             <tr *ngIf="finalLoad.count==2">
                                                 <th>CTN</th>
                                                 <th>Box</th>
-                                                <th>Issued</th>
+                                                <!-- <th>Issued</th> -->
                                                 <th>CTN</th>
                                                 <th>Box</th>
-                                                <th>Issued</th>
+                                                <!-- <th>Issued</th> -->
                                             </tr>
                                             <tr *ngIf="finalLoad.count==1">
                                                 <th>CTN</th>
                                                 <th>Box</th>
-                                                <th>Issued</th>
+                                                <!-- <th>Issued</th> -->
                                             </tr>
 
                                         </thead>
@@ -286,7 +289,7 @@
                                                 <ng-container *ngFor="let loadContent of product.content">
                                                     <td>{{loadContent.parent_qty}}</td>
                                                     <td>{{loadContent.child_qty}}</td>
-                                                    <td>{{loadContent.issued_qty}}</td>
+                                                    <!-- <td>{{loadContent.issued_qty}}</td> -->
                                                 </ng-container>
                                             </tr>
                                         </tbody>

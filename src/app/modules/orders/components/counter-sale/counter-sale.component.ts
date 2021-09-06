@@ -155,6 +155,7 @@ export class CounterSaleComponent implements OnInit {
 
     resetValues(): void {
         this.selectedProducts = [];
+        this.selectedProductsIds = [];
         this.grossAmount = 0.00;
         this.tradeOffer = 0.00;
         this.tradeDiscount = 0.00;
@@ -486,6 +487,7 @@ export class CounterSaleComponent implements OnInit {
             if (this.selectedProducts.find(x => x.item_id === product.item_id)) {
                 this.grossAmount = this.grossAmount - product.original_amount || 0;
             }
+            product.parent_qty_sold = this.dataService.getParentQty(+product.stockQty, product.quantity);
             this.calculateProductPrice(product);
             this.calculateProductDiscounts(product);
             this.calculateTotalBill();
@@ -635,7 +637,7 @@ export class CounterSaleComponent implements OnInit {
 
     calculateTotalBill(): void {
         if (this.selectedProducts.length) {
-            this.selectedProductQuantities = this.selectedProducts.map(product => +product.stockQty).reduce((a, b) => a + b);
+            this.selectedProductQuantities = this.selectedProducts.map(product => +product.parent_qty_sold).reduce((a, b) => a + b);
         }
         // Gross Amount
         let prices = this.selectedProducts.map(product => product.original_amount);
@@ -822,12 +824,9 @@ export class CounterSaleComponent implements OnInit {
     }
 
     setOrderItems(selectedEmployee: any): void {
-        console.log('this.selectedProducts :>> ', this.selectedProducts);
         this.selectedProducts.forEach((product, index) => {
             const productTotalDiscount = product.scheme_discount +
             product.trade_discount_pkr + (+product.stockQty * product.special_discount) + product.extra_discount_pkr;
-            const parentTPAfterDiscount = product.parent_trade_price - productTotalDiscount;
-            const parentQtySold = this.dataService.getParentQty(product.stockQty, product.quantity);
             const item: OrderItem = {
                 item_id: product.item_id,
                 pref_id: product.pref_id,
@@ -873,7 +872,7 @@ export class CounterSaleComponent implements OnInit {
                 reasoning: '',
                 region_id: this.selectedRegion,
                 territory_id: selectedEmployee.territory_id,
-                parent_qty_sold: parentQtySold,
+                parent_qty_sold: product.parent_qty_sold,
                 parent_value_sold: product.net_amount,
                 tax_class_id: product.tax_class_id,
                 tax_in_percentage: product.tax_class_amount,

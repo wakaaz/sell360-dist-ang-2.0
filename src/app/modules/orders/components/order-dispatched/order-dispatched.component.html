@@ -260,24 +260,24 @@
                                                 <th>CTN</th>
                                                 <th>Box</th>
                                                 <!-- <th>Issued</th> -->
-                                                <th>CTN</th>
-                                                <th>Box</th>
+                                                <th>CTN/Bundle</th>
+                                                <th>Box/Piece</th>
                                                 <!-- <th>Issued</th> -->
-                                                <th>CTN</th>
-                                                <th>Box</th>
+                                                <th>CTN/Bundle</th>
+                                                <th>Box/Piece</th>
                                                 <!-- <th>Issued</th> -->
                                             </tr>
                                             <tr *ngIf="finalLoad.count==2">
-                                                <th>CTN</th>
-                                                <th>Box</th>
+                                                <th>CTN/Bundle</th>
+                                                <th>Box/Piece</th>
                                                 <!-- <th>Issued</th> -->
-                                                <th>CTN</th>
-                                                <th>Box</th>
+                                                <th>CTN/Bundle</th>
+                                                <th>Box/Piece</th>
                                                 <!-- <th>Issued</th> -->
                                             </tr>
                                             <tr *ngIf="finalLoad.count==1">
-                                                <th>CTN</th>
-                                                <th>Box</th>
+                                                <th>CTN/Bundle</th>
+                                                <th>Box/Piece</th>
                                                 <!-- <th>Issued</th> -->
                                             </tr>
 
@@ -313,7 +313,9 @@
                                             <div class="report_value"> <strong>Booker Discount:</strong>
                                                 <span>{{finalLoad.summary.total_booker_discount | number: '1.2-2'}}</span>
                                             </div>
-                                            <div class="report_value"> <strong>Total:</strong> <span>{{finalLoad.summary.total_trade_offer | number: '1.2-2'}}</span>
+                                            <div class="report_value"> <strong>Total:</strong> <span>{{finalLoad.summary.total_gross_amount -
+                                                finalLoad.summary.total_trade_offer - finalLoad.summary.total_trade_discount - finalLoad.summary.total_special_discount -
+                                                finalLoad.summary.total_booker_discount | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Tax:</strong> <span>{{finalLoad.summary.total_tax_amount | number: '1.2-2'}}</span>
                                             </div>

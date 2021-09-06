@@ -1,4 +1,6 @@
-﻿.dashboard-date .form-control, .total-sale .total-amount, .unit-v span, .total-val span, .key-trend .key-val, .strength .Strength-val, .emp-val-box span, .avg-booking span, .avg-state .col span, .font-digit, .progressValue, .pr-st span, .avg-booking-day h2 span, .segmentType-value, .empsale, .sale-pu span, .empvisits span, .total-bs .total-amount, .pr-unit-v span, .total-VO span, .total-time, .total-stime .time-s span, .key-tr-list span, .sale-val span, .productcard .productvalue span, .total-vals span, .keytrend-lr span, .ex-avg-booking span, .dis-vs-value, .dash-order-list .dash-ord-price {
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap');
+.dashboard-date .form-control, .total-sale .total-amount, .unit-v span, .total-val span, .key-trend .key-val, .strength .Strength-val, .emp-val-box span, .avg-booking span, .avg-state .col span, .font-digit, .progressValue, .pr-st span, .avg-booking-day h2 span, .segmentType-value, .empsale, .sale-pu span, .empvisits span, .total-bs .total-amount, .pr-unit-v span, .total-VO span, .total-time, .total-stime .time-s span, .key-tr-list span, .sale-val span, .productcard .productvalue span, .total-vals span, .keytrend-lr span, .ex-avg-booking span, .dis-vs-value, .dash-order-list .dash-ord-price {
 	font-family: 'Rationale', sans-serif!important; font-size: 18px;
 }
 .card {
@@ -503,7 +505,6 @@
 
 
 /* +++++++++  employee page   ++++++++++++ */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap');
 .employeecard {
 	border-top: solid 2px #0038ba;
 	box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.2);
@@ -1761,7 +1762,6 @@
 
 
 /* +++++++++  employee page   ++++++++++++ */
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@800&display=swap');
 .employeecard {
 	border-top: solid 2px #0038ba;
 	box-shadow: 0px 0px 10px 0px rgba(82, 63, 105, 0.2);

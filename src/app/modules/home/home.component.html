@@ -169,13 +169,13 @@
 
         <div class="col-12 h_dash">
             <div class="row">
-                <div class="col-4"><a href="#"><img src="assets/images/add-stock-01.svg" alt="" />
+                <div class="col-4"><a [routerLink]="['/orders', 'counter-sale']"><img src="assets/images/add-stock-01.svg" alt="" />
                         <h2 class="HD-title">Add <span class="f-light"> Counter Sale</span></h2>
                     </a> </div>
-                <div class="col-4"><a href="#"><img src="assets/images/add-order.svg" alt="" />
+                <div class="col-4"><a [routerLink]="['/inventory', 'distributor-purchase']"><img src="assets/images/add-order.svg" alt="" />
                         <h2 class="HD-title">Add<span class="f-light"> Stock Purchase</span></h2>
                     </a> </div>
-                <div class="col-4"><a href="#"><img src="assets/images/dispatch-order.svg" alt="" />
+                <div class="col-4"><a [routerLink]="['/orders']"><img src="assets/images/dispatch-order.svg" alt="" />
                         <h2 class="HD-title">View<span class="f-light">Booking</span></h2>
                     </a> </div>
             </div>

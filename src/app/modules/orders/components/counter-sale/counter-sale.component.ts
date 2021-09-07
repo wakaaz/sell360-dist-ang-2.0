@@ -652,10 +652,10 @@ export class CounterSaleComponent implements OnInit {
         prices = this.selectedProducts.map(product => product.original_amount);
         this.orderTotal = JSON.parse(JSON.stringify(this.dueAmount));
         // Scheme Discount
-        let discount = this.selectedProducts.map(product => product.scheme_discount);
+        let discount = this.selectedProducts.map(product => +product.stockQty * product.scheme_discount);
         this.tradeOffer = this.dataService.calculateItemsBill(discount);
         // Trade Discount
-        discount = this.selectedProducts.map(product => product.trade_discount_pkr);
+        discount = this.selectedProducts.map(product => +product.stockQty * product.trade_discount_pkr);
         this.tradeDiscount = this.dataService.calculateItemsBill(discount);
         // Special Discount
         discount = this.selectedProducts.map(product => +product.stockQty * product.special_discount_pkr);
@@ -825,8 +825,8 @@ export class CounterSaleComponent implements OnInit {
 
     setOrderItems(selectedEmployee: any): void {
         this.selectedProducts.forEach((product, index) => {
-            const productTotalDiscount = product.scheme_discount +
-            product.trade_discount_pkr + (+product.stockQty * product.special_discount) + product.extra_discount_pkr;
+            const productTotalDiscount = (+product.stockQty * product.scheme_discount) +
+            (+product.stockQty * product.trade_discount_pkr) + (+product.stockQty * product.special_discount) + product.extra_discount_pkr;
             const item: OrderItem = {
                 item_id: product.item_id,
                 pref_id: product.pref_id,
@@ -853,9 +853,9 @@ export class CounterSaleComponent implements OnInit {
                 order_id: 0,
                 original_price: product.item_trade_price,
                 scheme_id: product.selectedScheme?.id || 0,
-                scheme_discount: product.scheme_discount / product.stockQty,
+                scheme_discount: product.scheme_discount,
                 unit_price_after_scheme_discount: product.unit_price_after_scheme_discount,
-                merchant_discount_pkr: product.trade_discount_pkr / product.stockQty,
+                merchant_discount_pkr: product.trade_discount_pkr,
                 merchant_discount: product.trade_discount,
                 unit_price_after_merchant_discount: product.unit_price_after_merchant_discount,
                 special_discount: product.special_discount,

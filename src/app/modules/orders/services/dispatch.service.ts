@@ -14,6 +14,9 @@ export class OrderDispatchService {
             if (!loadItem) {
                 const newContent = {
                     item_id: item.item_id,
+                    pref_id: item.pref_id,
+                    unit_id: item.unit_id,
+                    item_trade_price: item.original_price,
                     actual_qty: item.item_quantity_booker,
                     dispatched_qty: item.dispatch_qty,
                     issued_qty: 0,

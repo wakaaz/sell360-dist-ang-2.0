@@ -416,12 +416,14 @@
                                             <div class="report_value"> <strong>Tax:</strong>
                                                 <span>{{finalLoad.summary.total_tax_amount | number: '1.2-2'}}</span>
                                             </div>
+                                            <div class="report_value" style="color:#0038ba"> <strong>Total Amount
+                                                    Due:</strong> <span>{{finalLoad.summary.total_net_sale | number:
+                                                    '1.2-2'}}</span> </div>
                                             <div class="report_value"> <strong>Recovery:</strong>
                                                 <span>{{finalLoad.summary.total_recovery_amount | number:
                                                     '1.2-2'}}</span>
                                             </div>
-                                            <div class="report_value" style="color:#0038ba"> <strong>Total Amount
-                                                    Due:</strong> <span>{{finalLoad.summary.total_net_sale | number:
+                                            <div class="report_value" style="color:#0038ba"> <strong>Total Issued Amount:</strong> <span>{{finalLoad.summary.issued_total_price | number:
                                                     '1.2-2'}}</span> </div>
                                         </div>
                                         <div style="padding: 10px 15px;">

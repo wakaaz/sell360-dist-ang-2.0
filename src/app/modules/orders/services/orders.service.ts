@@ -51,7 +51,7 @@ export class OrdersService {
     }
 
     updateDispatchInvoiceDate(loadId: number, date: string): Observable<any> {
-        const url = API_URLS.UPDATE_INVOICE_DETAIL;
+        const url = `${API_URLS.UPDATE_INVOICE_DETAIL}/${loadId}`;
         return this.baseService.post(url, {date});
     }
 

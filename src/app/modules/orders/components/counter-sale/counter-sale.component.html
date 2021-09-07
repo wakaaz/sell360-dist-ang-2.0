@@ -413,10 +413,10 @@
                                             placeholder="0" [(ngModel)]="product.stockQty" style="font-size: 13px">
                                     </div>
                                     <div class="addItemCell2 _h25">{{product.item_trade_price}}</div>
-                                    <div class="addItemCell2 _h25">{{product.scheme_discount || 0.00 | number: '1.2-2'}}
+                                    <div class="addItemCell2 _h25">{{(+product.stockQty * product.scheme_discount) || 0.00 | number: '1.2-2'}}
                                     </div>
                                     <div class="addItemCell2 _h25">{{ product.trade_discount || 0 }}%
-                                        ({{product.trade_discount_pkr/product.stockQty | number: '1.2-2' }})
+                                        ({{product.trade_discount_pkr | number: '1.2-2' }})
                                     </div>
                                     <div class="addItemCell2 _h25">{{ +product.stockQty * product.special_discount || 0.00 | number:'1.2-2'}}</div>
                                     <div class="addItemCell2 _h25"><input [readonly]="isCreditAdded || isChequeAdded" class="addItemCell2_input" type="text"

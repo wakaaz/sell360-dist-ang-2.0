@@ -247,13 +247,13 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
             this.selectedRetailer.order_total = this.netAmount;
         }
         // Total Retail Price
-        prices = this.orderDetail.items.map(product => product.stockQty * product.item_retail_price);
+        prices = this.orderDetail.items.map(product => +product.stockQty * product.item_retail_price);
         const totalRetailPrice = this.dataService.calculateItemsBill(prices);
         // Scheme Discount
-        let discount = this.orderDetail.items.map(product => product.scheme_discount);
+        let discount = this.orderDetail.items.map(product => (+product.stockQty * product.scheme_discount));
         this.totalSchemeDiscount = this.dataService.calculateItemsBill(discount);
         // Trade Discount
-        discount = this.orderDetail.items.map(product => product.trade_discount_pkr);
+        discount = this.orderDetail.items.map(product => (+product.stockQty * product.trade_discount_pkr));
         this.totalMerchantDiscount = this.dataService.calculateItemsBill(discount);
         // Special Discount
         discount = this.orderDetail.items.map(product => +product.stockQty * product.special_discount_pkr);

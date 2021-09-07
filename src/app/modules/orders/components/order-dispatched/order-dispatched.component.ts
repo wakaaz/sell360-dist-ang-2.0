@@ -78,7 +78,6 @@ export class OrderDispatchedComponent implements OnInit {
         } else {
             this.getProducts();
             this.getSchemes();
-            this.getDispatchDetails();
         }
     }
 
@@ -214,6 +213,7 @@ export class OrderDispatchedComponent implements OnInit {
             if (res.status === 200) {
                 this.inventory = res.data.inventory;
                 this.specialDiscounts = res.data.special_discount;
+                this.getDispatchDetails();
             }
         }, error => {
             this.loadingProduct = false;
@@ -686,6 +686,8 @@ export class OrderDispatchedComponent implements OnInit {
                 title: 'Dipatch Reverted:'
             });
             this.currentTab = 1;
+            this.credits = [];
+            this.dispatchOrderDetail = null;
             this.tabChanged();
         }, error => {
             this.loading = false;
@@ -709,7 +711,7 @@ export class OrderDispatchedComponent implements OnInit {
             this.orderService.updateDispatchInvoiceDate(this.finalLoad.load_id, this.invoiceDate).subscribe(res => {
                 if (res.status === 200) {
                     document.getElementById('close-bills').click();
-                    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.salemanId}&date=${this.orderDate}&dist_id=${this.distributorId}&size=${size}`;
+                    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.salemanId}&date=${this.orderDate}&dist_id=${this.distributorId}&size=${size}&status=processed`;
                     window.open(billsUrl);
                 } else {
                     this.toastService.showToaster({

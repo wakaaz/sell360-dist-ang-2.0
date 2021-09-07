@@ -30,7 +30,7 @@ export class HomeComponent implements OnInit {
         this.loading = true;
         this.homeService.getDashboardData().subscribe(res => {
             this.homeService.getHomeDailyReport().subscribe(data => {
-                // console.clear();
+                console.clear();
                 console.log('daily => ', data);
                 this.homeReport = data;
                 this.loading = false;

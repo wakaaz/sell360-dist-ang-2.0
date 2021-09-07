@@ -47,6 +47,7 @@ export class CounterSaleComponent implements OnInit {
     creditAmount: number;
     orderTotal: number;
     totalAmountAfterScheme: number;
+    totalRetailPrice: number;
 
     chequeNumber: string;
     paymentDate: string;
@@ -642,6 +643,9 @@ export class CounterSaleComponent implements OnInit {
         // Gross Amount
         let prices = this.selectedProducts.map(product => product.original_amount);
         this.grossAmount = this.dataService.calculateItemsBill(prices);
+        // Retail Price
+        prices = this.selectedProducts.map(product => product.stockQty * product.item_retail_price);
+        this.totalRetailPrice = this.dataService.calculateItemsBill(prices);
         // Gross Amount
         prices = this.selectedProducts.map(product => product.gross_amount);
         this.totalAmountAfterScheme = this.dataService.calculateItemsBill(prices);
@@ -802,7 +806,7 @@ export class CounterSaleComponent implements OnInit {
                 status: 'Completed',
                 status_code: 0,
                 territory_id: employee.territory_id,
-                total_retail_price: this.grossAmount,
+                total_retail_price: this.totalRetailPrice,
                 ttl_products_sold: this.selectedProductsIds.length,
                 ttl_qty_sold: this.selectedProductQuantities,
                 payment: {

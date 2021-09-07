@@ -4,6 +4,7 @@ export const API_URLS = {
 
     // Dashboard
     DASHBOARD: '/dashboard',
+    HOME_DAILY: '/reports/home/daily',
 
     // Orders
     COUNTER_SALE_DATA: '/counterSaleData',

@@ -15,5 +15,9 @@ export class HomeService {
         const url = API_URLS.DASHBOARD;
         return this.httpService.get(url);
     }
+    getHomeDailyReport(): Observable<any> {
+        const url = API_URLS.HOME_DAILY;
+        return this.httpService.get(url);
+    }
 
 }

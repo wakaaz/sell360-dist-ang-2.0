@@ -28,6 +28,8 @@ export const API_URLS = {
     REVERT_DISPATCH: '/revertDispatch',
     DISPATCH_ORDERS_DETAIL: '/dispatchOrdersDetail',
     UPDATE_INVOICE_DETAIL: '/updateDispatchInvoiceDate',
+    GET_EXECUTION_LIST: '/executionOrderListing',
+    GET_EXECUTION_DETAILS: '/executionDetail',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

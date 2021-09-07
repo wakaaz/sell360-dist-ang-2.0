@@ -10,7 +10,7 @@ import { DataService } from '../../services';
 
 export class OrderItemsListComponent implements OnInit, OnChanges {
 
-    @Input() currentTab: number;
+    @Input() orderType: string;
     @Input() orderDetail: any;
     @Input() selectedRetailer: any;
     @Input() merchantDiscount: any;

@@ -137,10 +137,10 @@
                             <div class="col p-0">
                                 <div *ngIf="currentTab === 1" class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder" [orderDetail]="orderDetails"
-                                        [currentTab]="currentTab" [schemes]="schemes"
-                                        [selectedRetailer]="selectedRetailer" [allProducts]="inventory"
-                                        [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
-                                        [newProduct]="newProduct" (openDrawer)="openProductsList()">
+                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer"
+                                        [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
+                                        [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
+                                        [orderType]="'dispatch'" (openDrawer)="openProductsList()">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">
                                         <app-loader-white></app-loader-white>
@@ -261,7 +261,8 @@
                                                         <label class="custom-control-label" [for]="'ord'+ind"></label>
                                                     </div>
                                                     <div class="text-right">Total Sales<span class="or-val">Rs.
-                                                            {{order.total_amount_after_tax | number: '1.2-2'}}</span></div>
+                                                            {{order.total_amount_after_tax | number: '1.2-2'}}</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -350,32 +351,26 @@
                                             <tr *ngIf="finalLoad.count==3">
                                                 <th>CTN/Bundle</th>
                                                 <th>Box/Piece</th>
-                                                <!-- <th>Issued</th> -->
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                                <!-- <th>Issued</th> -->
                                                 <th>CTN/Bundle</th>
                                                 <th>Box/Piece</th>
                                                 <th>CTN/Bundle</th>
                                                 <th>Box/Piece</th>
-                                                <!-- <th>Issued</th> -->
+                                                <th>CTN/Bundle</th>
+                                                <th>Box/Piece</th>
                                             </tr>
                                             <tr *ngIf="finalLoad.count==2">
                                                 <th>CTN/Bundle</th>
                                                 <th>Box/Piece</th>
-                                                <!-- <th>Issued</th> -->
                                                 <th>CTN/Bundle</th>
                                                 <th>Box/Piece</th>
                                                 <th>CTN/Bundle</th>
                                                 <th>Box/Piece</th>
-                                                <!-- <th>Issued</th> -->
                                             </tr>
                                             <tr *ngIf="finalLoad.count==1">
                                                 <th>CTN/Bundle</th>
                                                 <th>Box/Piece</th>
                                                 <th>CTN/Bundle</th>
                                                 <th>Box/Piece</th>
-                                                <!-- <th>Issued</th> -->
                                             </tr>
 
                                         </thead>
@@ -386,7 +381,6 @@
                                                 <ng-container *ngFor="let loadContent of product.content">
                                                     <td>{{loadContent.parent_qty | number}}</td>
                                                     <td>{{loadContent.child_qty}}</td>
-                                                    <!-- <td>{{loadContent.issued_qty}}</td> -->
                                                 </ng-container>
                                                 <td>{{product.total_primary_qty | number }}</td>
                                                 <td>{{product.total_secondary_qty | number }}</td>
@@ -433,8 +427,9 @@
                                                 <span>{{finalLoad.summary.total_recovery_amount | number:
                                                     '1.2-2'}}</span>
                                             </div>
-                                            <div class="report_value" style="color:#0038ba"> <strong>Total Issued Amount:</strong> <span>{{finalLoad.summary.issued_total_price | number:
-                                                    '1.2-2'}}</span> </div>
+                                            <div class="report_value" style="color:#0038ba"> <strong>Total Issued
+                                                    Amount:</strong> <span>{{finalLoad.summary.issued_total_price |
+                                                    number: '1.2-2'}}</span> </div>
                                         </div>
                                         <div style="padding: 10px 15px;">
                                             <div class="row act-btn-print">

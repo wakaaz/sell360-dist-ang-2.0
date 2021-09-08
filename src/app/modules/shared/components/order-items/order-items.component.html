@@ -25,7 +25,7 @@
 <div class="header addPR-head mb-10">
     <h2 *ngIf="orderType ==='dispatch'">Product <span> List</span> </h2>
     <h2 *ngIf="orderType ==='execution'">Orders <span> Detail</span> </h2>
-    <a *ngIf="orderType ==='execution'" class="btn add_button addpr addReturn"><i class="fa fa-plus"
+    <a *ngIf="orderType ==='execution'" (click)="openReturnedProduct($event)" class="btn add_button addpr addReturn"><i class="fa fa-plus"
             style="margin-right: 3.5px;"></i> <span>Add
             Return</span></a>
     <a id="productlist01" class="btn add_button addpr" (click)="openProductsList($event)"><i class="fa fa-plus"
@@ -36,8 +36,8 @@
         <thead>
             <tr>
                 <th style="width:200px">Product Name</th>
-                <th>Bkd Qty</th>
-                <th>Dely.Qty</th>
+                <th>{{orderType === 'dispatch' ? 'Bkd Qty' : 'Disp.Qty'}}</th>
+                <th>{{orderType === 'dispatch' ? 'Dely.Qty' : 'Exec.Qty'}}</th>
                 <th>T.P.</th>
                 <th>GR.Amt</th>
                 <th>T.O.</th>

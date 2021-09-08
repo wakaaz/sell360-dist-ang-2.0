@@ -82,7 +82,7 @@ export class OpeningBalanceComponent implements OnInit {
 
     getRetailersByRoute(): void {
         this.loading = true;
-        this.generalDataService.getRetailersByRoute(this.selectedRoute.id).subscribe(res => {
+        this.generalDataService.getRetailersByRoute(this.selectedRoute.route_id).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
                 this.retailers = res.data;

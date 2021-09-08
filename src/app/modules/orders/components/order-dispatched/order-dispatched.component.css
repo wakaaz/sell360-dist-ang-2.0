@@ -3,80 +3,21 @@
 .dispatch-order{padding: 0}
 .retailerTable .table thead th { font-size: 12px; border: solid 1px #fff !important; vertical-align: middle; padding: 2px 5px!important; }
 .retailerTable .table tbody td { font-size: 12px!important; padding: 5px 4px!important; vertical-align: middle; line-height: 1 }
-._PR_filter{margin-top: -4px; width: 190px!important;}
-._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 30px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
-._PR_filter .form-s2 .select2-container .select2-selection--single, ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__arrow{height: 31px!important;}
 #wrapper #content-wrapper {padding-left: 0!important;}
 .container {max-width: 1280px;}
 .add-stock-input{font-size: 13px; width: 80px; height: 25px; box-shadow: none; border-color:#dddddd; padding: 0px 5px 0 8px;}	 
-
 .CP-name{letter-spacing: 1px;}
 .CP-name span{letter-spacing:1px; display: block; margin-top: 4px;}	
 .ProList-div .table img{margin-top: -2px; margin-bottom: -2px; margin-left: 4px;}
 ._selectProList .header .add_button {padding: 4px 8px 3px 8px; right: 15px;}	
-.topstats{margin-top: 10px; font-size: 13px; margin-bottom: 5px;}
-.topstats .gary-box{line-height: 1;background-color: #f9f9f9;border-bottom: solid 1px #d1d1d1;padding: 10px;}
-.topstats .gary-box span{font-family: 'Rationale', sans-serif; color:#0038ba; font-size: 18px; float: right; margin-top: -4px;}
-.min-w{min-width:240px }	
 #orderList-id{flex: 0 0 300px; max-width: 300px; width: 300px;}
 #orderList-id2{flex: 0 0 300px; max-width: 300px; width: 300px;}
 .value_input { padding: 2px; margin: 0!important; font-size: 12px; box-shadow: none;height: 22px; width: 52px; border: solid 1px #e2e6ea;}	
 .rightHeight{ height: calc(100vh - 249px); overflow-y: auto;}
-.ProListDiv {padding: 0;display: table;}
-.ProListDiv .PR_Name {
-	display: table-cell;
-	vertical-align: middle;
-	font-size: 14px;
-	letter-spacing: 1px;
-	line-height: 16px
-}
-.ProListDiv .PrList_img {width: 35px;height: 35px;margin-right: 8px;border: solid 1px #e0e0e0}
-.AddProductTable .btn-default {
-	padding: 5px 8px;
-	font-size: 13px;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
-	-khtml-border-radius: 0;
-	background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%);
-	color: #fff;
-	text-align: center;
-	margin: 0;
-	line-height: 1;
-	min-width: 74px;
-	letter-spacing: 1px;
-	float: right;
-	border: none!important
-}
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
 /* Firefox */input[type=number] {-moz-appearance: textfield;}
 .no-products {text-align: center; color: lightgray;}
-.AddDetailPR {
-	padding: 25px;
-	font-size: 14px
-}
-.AddDetailPR .form-control {
-	height: 32px;
-	border: solid 1px #dedede;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	padding: 0px 10px;
-	font-size: 13px;
-	letter-spacing: 1px;
-}
-.AddDetailPR select {
-	border-radius: 0;
-	padding: 0px 10px;
-	height: 32px;
-	border: solid 1px #dedede;
-	font-size: 14px
-}
-.se_cus-type .form-control{
-    border: 1px solid #eeeeee;
-    background-color: #fff;
-}
 .daily-operations .nav_M a, .daily-operations .nav_M .nav-link.active{padding-top: 15px;}
 .cash-report{background-color: #f8f8f8; min-height: calc(100vh - 210px);}
 .cash-report .header{background: linear-gradient(0deg, #f8f8f8 0%, #f8f8f8 50%); padding:15px 20px;}
@@ -93,11 +34,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 .cash-report .report_value span{font-family: 'Rationale', sans-serif; line-height: 1; font-size: 18px; float: right; margin-top: -2px}
 .totalcash span{font-size: 20px!important; color: #0038ba}
 .cash-report .value_input{float: right; width: 85px;} 
-.addsalesman{
-  font-size: 11px;
-    width: 100%;
-    line-height: 1; margin-top: 5px;
-}
+.addsalesman{font-size: 11px;width: 100%;line-height: 1; margin-top: 5px;}
 .return-btn{line-height: 1; margin-top: 10px;}
 .add-expense{font-size: 13px;
     padding: 2px 10px;
@@ -121,39 +58,25 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 .header-tabs .add_button{letter-spacing: 1px; padding:4px 15px; right: 15px; box-shadow: none}
 .dc-table thead th{vertical-align: middle; padding: 4px 5px; border: solid 1px #fff!important}
 .dc-table td{padding: 5px 8px!important; }
-.wz-icon .fa {
-    color: #fff;
-}
+.wz-icon .fa {color: #fff;}
 .th-boarder thead th {
     border: solid 1px #fff !important;
     vertical-align: middle;
     padding: 2px 5px!important;
 }
-.input-border-w{border: solid 1px #ddd; width: 50px}
- 
-  
-.addReturn{right: 128px; box-shadow: none}
 .daily-operations .tab-content{padding-bottom: 10px}
 .bottom-act-btn{text-align: right; padding-top: 15px; padding-bottom: 15px}
 .bottom-act-btn .btn {
     letter-spacing: 1px;
     font-size: 12px;
     padding: 4px 12px; box-shadow: none}
- 
 .execFooter {
     background: #F6F6F6;
     padding-top: 10px;
     padding-bottom: 10px; margin-top: 5px;
 }
-.Product-Filter{box-shadow: none; margin: 0; padding: 10px}
-.cash-report .value_input {
-    float: right;
-    width: 95px;
-}
+.cash-report .value_input { float: right; width: 95px; }
 ._selectProList .header {padding: 15px 15px !important;}
-#product-cl-sec{
- width: 750px;
-}
 .print-icon-div{text-align: center; padding: 15px;}
 .print-icon-div a{display: inline-block; border: solid 1px #e9ecef; padding: 15px; width: 100%; text-align: center; text-decoration: none; color: #282828; font-size: 13px;}
 .print-icon-div a:HOVER{border: solid 1px #0038ba; color: #0038ba; box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);}	

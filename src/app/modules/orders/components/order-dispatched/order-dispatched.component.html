@@ -188,10 +188,13 @@
                                                 <input type="number" [readonly]="order.isAdded" [id]="ind"
                                                     [(ngModel)]="order.recovery" (keydown)="isNumber($event)"
                                                     [name]="ind" class="form-control value_input" placeholder="0">
+                                                    <span class="red-bg" *ngIf="+order.recovery > order.balance">
+                                                        The payable amount should not be greater than pending amount!
+                                                    </span>
                                             </td>
                                             <td>
                                                 <button class="btn btn-default btn-line" *ngIf="!order.isAdded"
-                                                    [disabled]="!order.recovery || +order.recovery === 0"
+                                                    [disabled]="!order.recovery || +order.recovery === 0 || +order.recovery > order.balance"
                                                     (click)="this.id='hello';addOrderBill(order)">Add to Bill</button>
                                                 <button class="btn btn-default red-bg" *ngIf="order.isAdded"
                                                     (click)="removeOrderBill(order)">
@@ -211,7 +214,7 @@
                     <div [ngClass]="currentTab === 3 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
                         id="pills-load" role="tabpanel" aria-labelledby="pills-load-tab">
 
-                        <div class="row m-0 grayTopborder">
+                        <div *ngIf="currentTab === 3" class="row m-0 grayTopborder">
                             <div *ngIf="!loading" id="orderList-id2" class="col-4 p-0">
                                 <div class="_selectProList ProListHeight">
 
@@ -335,7 +338,7 @@
                                         <h2 class="w-100">Load <span> Sheet</span></h2>
                                     </div>
 
-                                    <table *ngIf="finalLoad" datatable [dtOptions]="dtOptions"
+                                    <table *ngIf="showFinalLoad" datatable [dtOptions]="dtOptions"
                                         class="table table-hover dt-responsive nowrap dc-table" id="example2"
                                         style="width:100%">
                                         <thead>
@@ -343,8 +346,8 @@
                                                 <th rowspan="2" style="vertical-align: middle">SN</th>
                                                 <th rowspan="2" style="vertical-align: middle">Product Name</th>
                                                 <th colspan="2" style="text-align:center"
-                                                    *ngFor="let number of finalLoad.load[0]?.content; let i = index">
-                                                    Load {{i+1}}</th>
+                                                    *ngFor="let number of finalLoad.load[0].content; let i = index">
+                                                   Load {{i+1}}</th>
                                                 <th colspan="2" style="text-align:center">
                                                     Total Issuance</th>
                                             </tr>

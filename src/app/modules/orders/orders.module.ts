@@ -36,22 +36,22 @@ import { OrderDispatchService } from './services/dispatch.service';
     DataTablesModule,
   ],
   declarations: [
-      OrdersComponent,
-      OrdersListComponent,
-      OrdersListDetailsComponent,
-      CreateDispatchedComponent,
-      OrderExecutionListComponent,
-      OrderDispatchedComponent,
-      ExecuteOrderComponent,
-      CompletedOrdersComponent,
-      CounterSaleComponent,
-      BookingVsExecutionComponent,
-      CompletedOrdersDetailComponent,
-      OrderBookerListComponent,     
-    ],
-    providers: [
-      OrderDispatchService,
-      OrdersService
-    ],
+    OrdersComponent,
+    OrdersListComponent,
+    OrdersListDetailsComponent,
+    CreateDispatchedComponent,
+    OrderExecutionListComponent,
+    OrderDispatchedComponent,
+    ExecuteOrderComponent,
+    CompletedOrdersComponent,
+    CounterSaleComponent,
+    BookingVsExecutionComponent,
+    CompletedOrdersDetailComponent,
+    OrderBookerListComponent,
+  ],
+  providers: [
+    OrderDispatchService,
+    OrdersService
+  ],
 })
 export class OrderModule { }

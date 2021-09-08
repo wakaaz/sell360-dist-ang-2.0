@@ -16,6 +16,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     @Input() merchantDiscount: any;
     @Input() schemes: any;
     @Input() newProduct: any;
+    @Input() returnedProduct: any;
     @Input() specialDiscounts: Array<any>;
     @Input() allProducts: Array<any>;
 
@@ -33,6 +34,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     selectedItem: any;
 
     @Output() openDrawer: EventEmitter<boolean> = new EventEmitter();
+    @Output() openReturnedModal: EventEmitter<boolean> = new EventEmitter();
     @Output() saveCurrentOrder: EventEmitter<any> = new EventEmitter();
     @Output() cancelCurrentOrder: EventEmitter<any> = new EventEmitter();
 
@@ -54,6 +56,12 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         if (changes.newProduct?.currentValue) {
             this.orderDetail.items.push(this.newProduct);
             this.setQuantity(this.newProduct);
+        }
+        if (changes.returnedProduct?.currentValue) {
+            const index = this.orderDetail.items.findIndex(x => x.item_id === this.returnedProduct.item_id && x.productType === 'returned');
+            if (index > -1) {
+                // this.orderDetail.items[index].stockQty =
+            }
         }
         if (changes.savingOrder?.currentValue) {
             this.resetValues();
@@ -80,6 +88,19 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
                 type: 'error',
                 title: 'Error:',
                 message: 'Please select order to add products!'
+            });
+        }
+    }
+
+    openReturnedProduct(event: Event): void {
+        event.stopPropagation();
+        if (this.selectedRetailer?.retailer_id) {
+            this.openReturnedModal.emit();
+        } else {
+            this.toastService.showToaster({
+                type: 'error',
+                title: 'Error:',
+                message: 'Please select order to add returned products!'
             });
         }
     }

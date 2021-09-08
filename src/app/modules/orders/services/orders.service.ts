@@ -30,6 +30,16 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
+    getDiscountSlabsByChannel(segementId: number, channelId: number): Observable<any> {
+        const url = `${API_URLS.GET_SLABS_BY_CHANNEL}/${segementId}/${channelId}`;
+        return this.baseService.get(url);
+    }
+
+    saveDispatchOrder(order: any): Observable<any> {
+        const url = API_URLS.CREATE_DISPATCH;
+        return this.baseService.post(url, order);
+    }
+
     getNewOrders(): Observable<any> {
         const url = `${API_URLS.GET_NEW_ORDERS}`;
         return this.baseService.get(url);
@@ -56,7 +66,28 @@ export class OrdersService {
     }
 
     getViewOrderDetailById(orderid: number): Observable<any> {
-        const url = `${API_URLS.ORDER_DETAIL}/${orderid}`;
+        const url = `${API_URLS.VIEW_ORDER_DETAIL}/${orderid}`;
         return this.baseService.get(url);
     }
+
+    getDispatchOrderDetails(orderId: number): Observable<any> {
+        const url = `${API_URLS.ORDER_DETAIL}/${orderId}`;
+        return this.baseService.get(url);
+    }
+
+    getDispatchOrdersDetail(salemanId: number, date: string): Observable<any> {
+        const url = `${API_URLS.DISPATCH_ORDERS_DETAIL}/${salemanId}/${date}`;
+        return this.baseService.get(url);
+    }
+
+    saveDispatchQuantityOrder(order: any): Observable<any> {
+        const url = `${API_URLS.SAVE_DISPATCH}`;
+        return this.baseService.post(url, order);
+    }
+
+    cancelOrder(orderId: number): Observable<any> {
+        const url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
+        return this.baseService.get(url);
+    }
+
 }

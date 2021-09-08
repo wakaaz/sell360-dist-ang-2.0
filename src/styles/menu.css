@@ -3583,8 +3583,8 @@ a.report-Card:HOVER {
 	border-radius: 0
 }
 .header-tabs .nav-tabs .nav-item.show, .header-tabs .nav-tabs .nav-link.active {
-	border-bottom: solid 2px #0038ba;
-	color: #0038ba;
+	border-bottom: solid 2px #0038ba !important;
+	color: #0038ba !important;
 }
 .header-tabs .nav-tabs {
 	border: none

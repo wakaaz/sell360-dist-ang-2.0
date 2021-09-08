@@ -1,7 +1,8 @@
 .dispatch-order{padding:0px!important;}	
 .dispatch-order .container{max-width: 1220px;}
 .dispatch-order{padding: 0}
-	
+.retailerTable .table thead th { font-size: 12px; border: solid 1px #fff !important; vertical-align: middle; padding: 2px 5px!important; }
+.retailerTable .table tbody td { font-size: 12px!important; padding: 5px 4px!important; vertical-align: middle; line-height: 1 }
 ._PR_filter{margin-top: -4px; width: 190px!important;}
 ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 30px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
 ._PR_filter .form-s2 .select2-container .select2-selection--single, ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__arrow{height: 31px!important;}
@@ -17,17 +18,11 @@
 .topstats .gary-box{line-height: 1;background-color: #f9f9f9;border-bottom: solid 1px #d1d1d1;padding: 10px;}
 .topstats .gary-box span{font-family: 'Rationale', sans-serif; color:#0038ba; font-size: 18px; float: right; margin-top: -4px;}
 .min-w{min-width:240px }	
-
 #orderList-id{flex: 0 0 300px; max-width: 300px; width: 300px;}
 #orderList-id2{flex: 0 0 300px; max-width: 300px; width: 300px;}
 .value_input { padding: 2px; margin: 0!important; font-size: 12px; box-shadow: none;height: 22px; width: 52px; border: solid 1px #e2e6ea;}	
-
 .rightHeight{ height: calc(100vh - 249px); overflow-y: auto;}
-
-.ProListDiv {
-	padding: 0;
-	display: table;
-}
+.ProListDiv {padding: 0;display: table;}
 .ProListDiv .PR_Name {
 	display: table-cell;
 	vertical-align: middle;
@@ -35,12 +30,7 @@
 	letter-spacing: 1px;
 	line-height: 16px
 }
-.ProListDiv .PrList_img {
-	width: 35px;
-	height: 35px;
-	margin-right: 8px;
-	border: solid 1px #e0e0e0
-}
+.ProListDiv .PrList_img {width: 35px;height: 35px;margin-right: 8px;border: solid 1px #e0e0e0}
 .AddProductTable .btn-default {
 	padding: 5px 8px;
 	font-size: 13px;
@@ -58,6 +48,10 @@
 	float: right;
 	border: none!important
 }
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
+/* Firefox */input[type=number] {-moz-appearance: textfield;}
+.no-products {text-align: center; color: lightgray;}
 .AddDetailPR {
 	padding: 25px;
 	font-size: 14px

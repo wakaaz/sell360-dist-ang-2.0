@@ -1,12 +1,13 @@
 <!-- Unit, Quantity and Trade Offer of Products -->
-<div class="modal fade" [ngClass]="{'active': showQuantityModal}" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" [ngClass]="{'active': showQuantityModal}" id="exampleModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content  top_border">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Product <span> Detail</span></h5>
                 <button type="button" class="close dont-close-products" data-dismiss="modal"
-                    (click)="closeQuantityModal($event)" aria-label="Close"> <span class="dont-close-products" aria-hidden="true">&times;</span>
+                    (click)="closeQuantityModal($event)" aria-label="Close"> <span class="dont-close-products"
+                        aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div *ngIf="selectedProduct.hasOwnProperty('quantity')" class="modal-body AddDetailPR">
@@ -27,19 +28,6 @@
                     <div class="col-md-4 pt-7 mb-15">Unit:</div>
                     <div class="col-md-8 mb-15">
                         {{selectedProduct.unit_name}}
-                        <!-- <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
-                            name="prefrences" (change)="setPrefrence($event.target.value, selectedProduct)"
-                            #selectedPrefs="ngModel">
-                            <option [value]="null" disbaled>Select Unit</option>
-                            <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
-                            </option>
-                        </select>
-                        <span *ngIf="selectedProduct.pref_id === null && isAdded" class="input-error">
-                            Please select a Unit!
-                        </span>
-                        <span *ngIf="alreadyAdded && selectedProduct.pref_id !== null" class="input-error">
-                            Selected Unit already added please change unit or update the quantity in the list!
-                        </span> -->
                     </div>
                     <div class="col-md-4" *ngIf="selectedProduct.schemes.length" style="padding-top: 2px">Trade Offer:
                     </div>
@@ -69,8 +57,8 @@
 </div>
 
 <!-- Products listing -->
-<div id="product-cl-sec" class="active" (clickOutside)="clickedOutSide($event)"> <a
-        id="pl-close" (click)="closeProductsList()" class="close-btn-pl"></a>
+<div id="product-cl-sec" class="active" (clickOutside)="clickedOutSide($event)"> <a id="pl-close"
+        (click)="closeProductsList()" class="close-btn-pl"></a>
     <div class="pro-header-text">Add <span>Product</span></div>
     <div class="se_cus-type form-wrap p-15">
         <div class="row">
@@ -102,9 +90,12 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <button
-                                                        class="btn btn-default mb-0 dont-close-quantity" data-toggle="modal" data-target="#exampleModal"
+                                                    <button *ngIf="!product.isAdded"
+                                                        class="btn btn-default mb-0 dont-close-quantity"
+                                                        data-toggle="modal" data-target="#exampleModal"
                                                         (click)="openQuantityModal(product)">Add</button>
+                                                    <span *ngIf="product.isAdded"
+                                                        class="btn btn-added mb-0 dont-close-quantity">Added</span>
                                                 </td>
                                             </tr>
                                         </tbody>

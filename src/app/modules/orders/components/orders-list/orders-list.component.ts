@@ -74,11 +74,12 @@ export class OrdersListComponent implements OnInit {
         });
     }
 
-    addOrderToAssignment(order: any): void  {
-        this.selectedOrders  = this.selectedOrders.filter(odr => odr.date !== order.date && order.employee_id);
+    addOrderToAssignment(order: any): void {
+        this.selectedOrders = this.selectedOrders.filter(odr => odr.id !== order.id);
         const assignment = {
             sales_man: order.selectedSaleman.id,
             employee_id: order.employee_id,
+            id: order.id,
             date: order.date
         };
         this.selectedOrders.push(assignment);
@@ -87,7 +88,12 @@ export class OrdersListComponent implements OnInit {
 
     assignSaleman(): void {
         if (this.selectedOrders.length) {
-            const assigned = {salesman: this.selectedOrders};
+            const assigned = {
+                salesman: this.selectedOrders.map(x => {
+                    const { sales_man, employee_id, date } = x;
+                    return { sales_man, employee_id, date };
+                })
+            };
             this.loading = true;
             this.ordersService.assignSalesMan(assigned).subscribe(res => {
                 if (res.status) {

@@ -26,6 +26,8 @@ export class CounterSaleComponent implements OnInit {
     isOrdering: boolean;
     isAdded: boolean;
     alreadyFullPayment: boolean;
+    isChequeAdded: boolean;
+    isCreditAdded: boolean;
     alreadyAdded: boolean;
 
     grossAmount: number;
@@ -41,12 +43,12 @@ export class CounterSaleComponent implements OnInit {
     selectedSegment: number;
     distributorId: number;
     selectedProductQuantities: number;
-    chequeNumber: number;
     chequeAmount: number;
     creditAmount: number;
     orderTotal: number;
     totalAmountAfterScheme: number;
 
+    chequeNumber: string;
     paymentDate: string;
     paymentTypeCheque: string;
     paymentTypeCredit: string;
@@ -293,12 +295,24 @@ export class CounterSaleComponent implements OnInit {
         } else {
             if (this.paymentTypeCheque === 'full') {
                 return this.paymentTypeCheque.length > 0 && this.bankName.length > 0 &&
-                    this.chequeNumber > 0 && this.paymentDate.length > 0;
+                    this.chequeNumber.length > 0 && this.paymentDate.length > 0;
             } else {
                 return this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 && this.chequeAmount <= this.cash.amount_received &&
-                    this.bankName.length > 0 && this.chequeNumber > 0 && this.paymentDate.length > 0;
+                    this.bankName.length > 0 && this.chequeNumber.length > 0 && this.paymentDate.length > 0;
             }
         }
+    }
+
+    removeCheque(): void {
+        this.cheque = null;
+        this.isChequeAdded = false;
+        this.calculatePayments();
+    }
+
+    removeCredit(): void {
+        this.credit = null;
+        this.isCreditAdded = false;
+        this.calculatePayments();
     }
 
     makePayment(): void {
@@ -314,6 +328,7 @@ export class CounterSaleComponent implements OnInit {
                 amount_received: this.paymentTypeCredit === 'full' ? JSON.parse(JSON.stringify(this.dueAmount)) :
                     JSON.parse(JSON.stringify(this.creditAmount))
             };
+            this.isCreditAdded = true;
         }
         if (!this.isCredit) {
             this.cheque = {
@@ -333,13 +348,15 @@ export class CounterSaleComponent implements OnInit {
                 amount_received: this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.dueAmount)) :
                     JSON.parse(JSON.stringify(this.chequeAmount))
             };
+            this.isChequeAdded = true;
         }
         this.calculatePayments();
     }
 
     addPaymentMethod(): void {
         this.isAdded = true;
-        if (this.checkPaymentHasValues()) {
+        const isPaymentAdded = this.checkPaymentHasValues();
+        if (isPaymentAdded) {
             this.isAdded = false;
             this.makePayment();
             document.getElementById('open-modal-payment').click();
@@ -451,7 +468,7 @@ export class CounterSaleComponent implements OnInit {
     //     product.retail_price = prefrence.item_retail_price;
     //     if (product.stockQty) {
     //         if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
-    //             this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount;
+    //             this.grossAmount = this.grossAmount - product.original_amount;
     //         }
     //         this.calculateProductDiscounts(product);
     //         this.calculateProductPrice(product);
@@ -461,19 +478,13 @@ export class CounterSaleComponent implements OnInit {
     // }
 
     isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
-        if (event.key && event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
-            (type === 'charges' && event.key.includes('.'))) {
-            return true;
-        } else if (event.key && event.key.trim() === '') {
-            return false;
-        }
-        return !isNaN(Number(event.key.trim()));
+        return this.dataService.isNumber(event, type);
     }
 
     setQuantity(product: any): void {
         if (product.item_trade_price) {
             if (this.selectedProducts.find(x => x.item_id === product.item_id)) {
-                this.totalAmountAfterScheme = this.totalAmountAfterScheme - product.gross_amount || 0;
+                this.grossAmount = this.grossAmount - product.original_amount || 0;
             }
             this.calculateProductPrice(product);
             this.calculateProductDiscounts(product);
@@ -485,13 +496,13 @@ export class CounterSaleComponent implements OnInit {
     calculateProductPrice(product): void {
         product.original_amount = this.dataService.calculateUnitPrice(+product.stockQty,
             product.item_trade_price);
-        product.gross_amount = product.unit_price_after_scheme_discount * +product.stockQty;
+        product.gross_amount = product.unit_price_after_scheme_discount || product.item_trade_price * +product.stockQty;
     }
 
     applySlabOnAllProducts(): void {
-        if (this.merchantDiscount && this.merchantDiscount.discount_filter === 'slab' && this.totalAmountAfterScheme) {
+        if (this.merchantDiscount && this.merchantDiscount.discount_filter === 'slab' && this.grossAmount) {
             this.selectedProducts = this.selectedProducts.map(product => {
-                product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.totalAmountAfterScheme);
+                product = this.dataService.applySlabForTotal(product, this.merchantDiscount, this.grossAmount);
                 product = this.calculateProductSpecialDiscount(product);
                 if (product.extra_discount) {
                     product.price = product.unit_price_after_special_discount - +product.extra_discount;
@@ -608,9 +619,8 @@ export class CounterSaleComponent implements OnInit {
 
     calculateProductTax(product: any): void {
         if (product.tax_class_amount) {
-            product.tax_amount_value = this.dataService.roundUptoTwoDecimal(
-                ((product.tax_class_amount / 100) * product.item_retail_price));
-            product.tax_amount_pkr = this.dataService.roundUptoTwoDecimal(product.tax_amount_value * product.stockQty);
+            product.tax_amount_value = (product.tax_class_amount / 100) * product.item_retail_price;
+            product.tax_amount_pkr = product.tax_amount_value * product.stockQty;
             product.net_amount = product.net_amount + product.tax_amount_pkr;
         } else {
             product.tax_amount_value = 0;
@@ -660,8 +670,8 @@ export class CounterSaleComponent implements OnInit {
 
     calculatePayments(): void {
         this.cash = {
-            retailer_id: 1,
-            distributor_id: 1,
+            retailer_id: this.selectedRetailer.retailer_id,
+            distributor_id: this.distributorId,
             type: 'Counter',
             payment_mode: 'Cash',
             payment_detail: '',
@@ -844,7 +854,7 @@ export class CounterSaleComponent implements OnInit {
                 order_id: 0,
                 original_price: product.item_trade_price,
                 scheme_id: product.selectedScheme?.id || 0,
-                scheme_discount: product.scheme_discount,
+                scheme_discount: product.scheme_discount / product.stockQty,
                 unit_price_after_scheme_discount: product.unit_price_after_scheme_discount,
                 merchant_discount_pkr: product.trade_discount_pkr / product.stockQty,
                 merchant_discount: product.trade_discount,
@@ -859,12 +869,12 @@ export class CounterSaleComponent implements OnInit {
                 parent_pref_id: product.child,
                 parent_unit_id: product.parent_unit_id,
                 parent_brand_id: product.brand_id,
-                parent_tp: parentTPAfterDiscount,
+                parent_tp: product.parent_trade_price,
                 reasoning: '',
                 region_id: this.selectedRegion,
                 territory_id: selectedEmployee.territory_id,
                 parent_qty_sold: parentQtySold,
-                parent_value_sold: parentQtySold * parentTPAfterDiscount,
+                parent_value_sold: product.net_amount,
                 tax_class_id: product.tax_class_id,
                 tax_in_percentage: product.tax_class_amount,
                 tax_in_value: product.tax_amount_value,

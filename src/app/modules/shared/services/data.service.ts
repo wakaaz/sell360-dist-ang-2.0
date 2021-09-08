@@ -22,7 +22,7 @@ export class DataService {
 
     calculateDiscount(discount: number, type: string, total: number): number {
         if (type === 'percentage') {
-            return this.roundUptoTwoDecimal((discount / 100) * total);
+            return (discount / 100) * total;
         } else if (type === 'price') {
             return total - discount;
         }
@@ -116,7 +116,7 @@ export class DataService {
     getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
         const totalTpMinQty = itemTP * minQty;
         const totalItemBeingGiven = freeQty + minQty;
-        const discountOnEachItem = this.roundUptoTwoDecimal(totalTpMinQty / totalItemBeingGiven);
+        const discountOnEachItem = totalTpMinQty / totalItemBeingGiven;
         const schemeAmount = itemTP - discountOnEachItem;
         return schemeAmount;
     }
@@ -132,8 +132,8 @@ export class DataService {
     getSDForFPTradePriceScheme(itemTradePrice: number, userQty: number, minimumQty: number, freeQty: number)
         : { singleItemPrice: number, schemeDiscount: number } {
         const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, freeQty);
-        const tradePriceForSingleItem = itemTradePrice - (this.roundUptoTwoDecimal(schemeAmount / userQty));
-        return { singleItemPrice: tradePriceForSingleItem,  schemeDiscount:  schemeAmount };
+        const tradePriceForSingleItem = itemTradePrice - (schemeAmount / userQty);
+        return { singleItemPrice: tradePriceForSingleItem, schemeDiscount: schemeAmount };
     }
 
     /**
@@ -160,7 +160,7 @@ export class DataService {
         const freeQtyInterval = Math.floor(userQty / minimumQty);
         const orderFreeQty = freeQtyInterval * freeQty;
         const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, orderFreeQty);
-        const singItemPrice = itemTradePrice - (this.roundUptoTwoDecimal(schemeAmount / userQty));
+        const singItemPrice = itemTradePrice - (schemeAmount / userQty);
         return { singleItemPrice: singItemPrice, schemeDiscount: schemeAmount };
     }
 
@@ -185,10 +185,7 @@ export class DataService {
 
     getSDForDOTP(product: any): any {
         if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
-            const units = product.units.sort((a, b) => {
-                return b.item_trade_price - a.item_trade_price;
-            });
-            const percentageDiscount = this.roundUptoTwoDecimal((product.selectedScheme.discount_on_tp / units[0].item_trade_price) * 100);
+            const percentageDiscount = (product.selectedScheme.discount_on_tp / product.parent_trade_price) * 100;
             const singleUnitDiscount = this.calculateDiscount(percentageDiscount, 'percentage', product.item_trade_price);
             product.price = product.item_trade_price - singleUnitDiscount;
             product.unit_price_after_scheme_discount = product.item_trade_price - singleUnitDiscount;
@@ -238,7 +235,7 @@ export class DataService {
         let discountValuePKR = 0;
         if (merchantDiscount.discount_filter === 'flat') {
             if (merchantDiscount.flat.discount_type === 'percentage') {
-                discountValuePKR = this.roundUptoTwoDecimal((merchantDiscount.flat.value / 100) * product.unit_price_after_scheme_discount);
+                discountValuePKR = (merchantDiscount.flat.value / 100) * product.unit_price_after_scheme_discount;
                 product.trade_discount = merchantDiscount.flat.value;
             } else {
                 discountValuePKR = merchantDiscount.flat.value;
@@ -247,9 +244,10 @@ export class DataService {
         } else if (merchantDiscount.discount_filter === 'slab') {
             const currentItemsPrice = product.unit_price_after_scheme_discount * product.stockQty;
             const totalItemsPrice = currentItemsPrice + orderTotal;
-            const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from <= totalItemsPrice && slb.range_to >= totalItemsPrice);
+            const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from && slb.range_to &&
+                slb.range_from <= totalItemsPrice && slb.range_to >= totalItemsPrice);
             if (selectedSlab) {
-                discountValuePKR = this.roundUptoTwoDecimal((selectedSlab.value / 100) * product.unit_price_after_scheme_discount);
+                discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
                 product.trade_discount = selectedSlab.value;
             } else {
                 product.trade_discount = 0;
@@ -262,12 +260,20 @@ export class DataService {
     }
 
     applySlabForTotal(product: any, merchantDiscount: any, orderTotal: number): any {
-        const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from <= orderTotal && slb.range_to >= orderTotal);
-        const discountValuePKR = this.roundUptoTwoDecimal((selectedSlab.value / 100) * product.unit_price_after_scheme_discount);
-        product.trade_discount = selectedSlab.value;
-        product.trade_discount_pkr = discountValuePKR * +product.stockQty;
-        product.price = product.unit_price_after_scheme_discount - discountValuePKR;
-        product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
+        const selectedSlab = merchantDiscount.slab.find(slb => slb.range_from && slb.range_to &&
+            slb.range_from <= orderTotal && slb.range_to >= orderTotal);
+        if (selectedSlab) {
+            const discountValuePKR = (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
+            product.trade_discount = selectedSlab.value;
+            product.trade_discount_pkr = discountValuePKR * +product.stockQty;
+            product.price = product.unit_price_after_scheme_discount - discountValuePKR;
+            product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
+        } else {
+            product.trade_discount = 0;
+            product.trade_discount_pkr = 0;
+            product.price = product.unit_price_after_scheme_discount;
+            product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
+        }
         return product;
     }
 
@@ -291,10 +297,6 @@ export class DataService {
     }
     /** Special Discount End */
 
-    roundUptoTwoDecimal(value: number): number {
-        return Math.round(value * 100) / 100;
-    }
-
     getParentQty(qty: number, childQtyInParent: number): number {
         return Math.floor(qty / childQtyInParent);
     }
@@ -307,5 +309,15 @@ export class DataService {
 
     getChildQty(qty: number, childQtyInParent: number): number {
         return qty * childQtyInParent;
+    }
+
+    isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
+        if (event.key && event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
+            (type === 'charges' && event.key.includes('.'))) {
+            return true;
+        } else if (event.key && event.key.trim() === '') {
+            return false;
+        }
+        return !isNaN(Number(event.key.trim()));
     }
 }

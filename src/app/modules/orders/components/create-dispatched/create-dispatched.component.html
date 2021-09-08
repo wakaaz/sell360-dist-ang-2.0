@@ -35,7 +35,7 @@
                         <tbody>
                             <tr *ngFor="let order of ordersList;let ind=index">
                                 <td>{{order.date}}</td>
-                                <td>{{order.sales_man}}</td>
+                                <td>{{order.sales_man | titlecase }}</td>
                                 <td>{{order.emp_names.split(',').join(', ')}} </td>
                                 <td>{{order.total_orders}}</td>
                                 <td>{{order.order_total | number: '1.2-2'}}</td>

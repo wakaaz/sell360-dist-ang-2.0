@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ToasterService } from '../../../../core/services/toaster.service';
 import { LocalStorageService } from '../../../../core/services/storage.service';
-import { GeneralDataService } from '../../../shared/services';
+import { DataService, GeneralDataService } from '../../../shared/services';
 import { RetailerService } from '../../services/retailer.service';
 import { Router } from '@angular/router';
 
@@ -31,6 +31,7 @@ export class OpeningBalanceComponent implements OnInit {
 
     constructor(
         private generalDataService: GeneralDataService,
+        private dataService: DataService,
         private toastService: ToasterService,
         private storageService: LocalStorageService,
         private retailerService: RetailerService,
@@ -108,13 +109,7 @@ export class OpeningBalanceComponent implements OnInit {
     }
 
     isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
-        if (event.key && event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
-            (type === 'charges' && event.key.includes('.'))) {
-            return true;
-        } else if (event.key && event.key.trim() === '') {
-            return false;
-        }
-        return !isNaN(Number(event.key.trim()));
+        return this.dataService.isNumber(event, type);
     }
 
     setOpeningBalance(): void {

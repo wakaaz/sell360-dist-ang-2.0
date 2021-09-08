@@ -22,6 +22,7 @@ import { OrderDispatchedComponent } from './components/order-dispatched/order-di
 import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component';
 
 import { OrdersService } from './services/orders.service';
+
 import { OrderDispatchService } from './services/dispatch.service';
 
 @NgModule({

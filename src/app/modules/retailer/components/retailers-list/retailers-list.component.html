@@ -120,13 +120,13 @@
                     <div class="row">
                         <div class="col-12">
 
-                            <div class="CL-Product"><i class="fa fa-search"></i>
-                                <input type="text" class="form-control" id="" placeholder="Search">
-                            </div>
+                            <!-- <div class="CL-Product"><i class="fa fa-search"></i>
+                                <input type="text" class="form-control" id="" placeholder="Search by Shop ID or Name">
+                            </div> -->
 
                             <div class="_cust_filter">
                                 <div class="form-s2">
-                                    <ng-select class="formselect" [multiple]="false" id="order-booker" placeholder="Select Order Booker"
+                                    <ng-select class="formselect" [multiple]="false" id="order-booker" placeholder="All Order Booker"
                                         name="order-booker" [(ngModel)]="orderBooker" required>
                                         <ng-option value="Asif Ali">
                                             Asif Ali
@@ -140,7 +140,7 @@
 
                             <div class="_cust_filter">
                                 <div class="form-s2">
-                                    <ng-select class="formselect" [multiple]="false" id="route" placeholder="Select Order Booker"
+                                    <ng-select class="formselect" [multiple]="false" id="route" placeholder="All Route"
                                         name="route" [(ngModel)]="route" required>
                                         <ng-option value="1">
                                             Route 1
@@ -151,6 +151,21 @@
                                     </ng-select>
                                 </div>
                             </div>
+
+
+                            <!-- <div class="_cust_filter">
+                                <div class="form-s2">
+                                    <ng-select class="formselect" [multiple]="false" id="segment" placeholder="All Segment"
+                                        name="segment" [(ngModel)]="segment" required>
+                                        <ng-option value="1">
+                                            segment 1
+                                        </ng-option>
+                                        <ng-option value="2">
+                                            segment 2
+                                        </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div> -->
 
                             <button class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
 
@@ -170,19 +185,23 @@
                     <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Retailer Name</th>
+                                <th>Shop ID</th>
+                                <th>Shop Name</th>
                                 <th>Phone Number</th>
-                                <th>Segment </th>
-                                <th>Retailer Type</th>
+                                <th>Segment	</th>
+                                <th>Channel</th>  
+                                <th>POC Name</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
+                                <td>2451</td>
                                 <td>768 store</td>
                                 <td>03211234567</td>
                                 <td>G.T.-C Class</td>
                                 <td>Kiryana Store</td>
+                                <td>Pan Shop</td>
                                 <td><a id="productlist01" (click)="openSalemanLedger($event)" class="btn btn-default mb-0">View Leadger</a>
                                     <a [routerLink]="['/retailer','profile',1]" class="btn btn-default mb-0">View Profile</a>
                                 </td>

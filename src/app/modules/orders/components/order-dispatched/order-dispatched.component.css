@@ -107,8 +107,8 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 .red-bg{border: solid 1px #f12300}
 .act-btn-print{margin: 0px 0 0 0}
 .act-btn-print .col-4{padding: 5px;}
-.print-btn{font-size: 14px; text-align: center; background: linear-gradient(90deg, #fff 0%, #fff 100%); color: #282828; border: solid 1px #0038ba; box-shadow: none; padding: 10px 14px; white-space: normal; width: 100%; min-height: 85px; line-height: 16px;}
-.print-btn:hover{background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%); color: #fff}
+.print-btn{font-size: 14px; text-align: center; background: linear-gradient(90deg, #fff 0%, #fff 100%); color: #282828 !important; border: solid 1px #0038ba; box-shadow: none; padding: 10px 14px; white-space: normal; width: 100%; min-height: 85px; line-height: 16px;}
+.print-btn:hover{background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%); color: #fff !important}
 .print-btn .fa{display: block; font-size: 16px; padding: 5px; margin-bottom: 5px;}
 .select-checkmark .salevalue{text-align: right; margin: auto; vertical-align: middle}
 .select-checkmark .ord-no{top: 14px; font-size: 45px}
@@ -154,3 +154,10 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 #product-cl-sec{
  width: 750px;
 }
+.print-icon-div{text-align: center; padding: 15px;}
+.print-icon-div a{display: inline-block; border: solid 1px #e9ecef; padding: 15px; width: 100%; text-align: center; text-decoration: none; color: #282828; font-size: 13px;}
+.print-icon-div a:HOVER{border: solid 1px #0038ba; color: #0038ba; box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);}	
+.print-icon{filter: grayscale(1); width: 45px; opacity: 0.7; display: block; margin: auto; margin-top: 10px; margin-bottom: 15px;}
+.print-icon-div a:HOVER .print-icon{filter:none; opacity: 1;}	
+.heading3{margin: 0; font-size: 16px;}
+.select-date, .select-date:focus{box-shadow: none; border: none; background-color:#f6f6f6; font-size: 14px; height: 30px; width: 200px}

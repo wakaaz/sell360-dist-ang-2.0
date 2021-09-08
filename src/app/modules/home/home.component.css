@@ -1,7 +1,8 @@
+@import "../../../styles/dashboard-new.css";
+
 .seabinReport {
     padding-bottom: 15px
 }
-
 .seabinReport .card {
     background-color: #fff;
     border: none;
@@ -16,29 +17,25 @@
     background-size: auto;
     height: 110px
 }
-
 .seabinReport h2 {
     font-size: 18px;
     padding-top: 15px;
     margin-bottom: 15px;
     display: block
 }
-
 .seabinReport h4 {
     font-size: 20px;
     padding: 0;
     margin: 0;
     color: #0038ba
 }
-
 .seabinReport h4 span {
     color: #282828;
     font-family: 'proximanova-regular', sans-serif !important;
     padding-top: 0px;
     position: relative;
     margin-top: 0px
-}
-
+} 
 .seabinReport .digit {
     font-size: 35px;
     font-weight: normal;
@@ -52,30 +49,23 @@
     bottom: 10px;
     right: 15px
 }
-
-.seabinReport .digit small {
-    color: #0038ba
-}
-
+.seabinReport .digit small{color: #0038ba}
 .seabinReport .head-font {
     font-size: 16px
 }
-
 .seabinReport .card .cardicon {
     width: 50px;
     position: absolute;
     top: 15px;
     right: 15px
 }
-
 ._user_Pimage {
     border: solid 1px #0038ba;
 }
-
+    
 ._dashTOP {
     padding-top: 0
 }
-
 .btnActivView {
     border: solid 1px #0038ba;
     font-size: 13px;
@@ -87,56 +77,31 @@
     letter-spacing: 1px;
     display: inline-block
 }
-
 .btnActivView:HOVER {
     border: solid 1px #282828;
     background: #282828;
     color: #fff;
     text-decoration: none
 }
-
 .view-all-EA:HOVER {
     background: linear-gradient(90deg, #282828 0%, #282828 100%);
     border: solid 1px #282828
 }
-
 .HomeHead {
     font-size: 20px;
     border-bottom: solid 2px #e3e3e3;
     padding-bottom: 10px;
     margin-bottom: 0
 }
-
-.NoAct .btn-primary {
-    border: none
-}
-
-.DashHomeLink, .DashHomeLink:HOVER {
-    text-decoration: none;
-    display: block;
-    transition: all 0.2s ease-in-out;
-}
-
-.DashHomeLink:HOVER .card {
-    box-shadow: 2px 2px 10px 0 rgba(79, 79, 79, .4);
-}
-
-.DashHomeLink:HOVER {
-    margin-top: -5px;
-    transition: all 0.2s ease-in-out;
-}
-
-.pro-list {
-    margin-left: -10px;
-    margin-right: -10px;
-    padding-bottom: 25px;
-}
-
-.pro-list .col {
+.NoAct .btn-primary{border: none}
+.DashHomeLink, .DashHomeLink:HOVER{text-decoration: none; display: block; transition: all 0.2s ease-in-out;}	
+.DashHomeLink:HOVER .card {box-shadow: 2px 2px 10px 0 rgba(79,79,79,.4);}
+.DashHomeLink:HOVER  {margin-top: -5px; transition: all 0.2s ease-in-out;}
+.pro-list{margin-left:-10px; margin-right: -10px; padding-bottom: 25px;}
+.pro-list .col{
     padding: 0 5px;
     max-width: 20%;
-}
-
+}		
 .product-card {
     padding: 0 12px 0 15px;
     position: relative;
@@ -146,10 +111,8 @@
     transition: all 0.2s;
     -ms-transform: scale(0.96);
     -webkit-transform: scale(0.96);
-    transform: scale(0.96);
-    border: solid 1px #e8e8e8;
+    transform: scale(0.96); border: solid 1px #e8e8e8; overflow: hidden
 }
-
 .product-card:HOVER {
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
@@ -159,18 +122,14 @@
     transform: scale(1);
     box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.25);
 }
-
 .product-card h3 {
     font-size: 14px;
-    margin-bottom: 5px;
-    margin-top: 10px;
+    margin-bottom: 5px; margin-top: 10px;
     line-height: 20px;
     height: 42px;
     overflow: hidden;
-    color: #282828;
-    position: relative;
+    color: #282828; position: relative;
 }
-
 .product-card:before {
     background: #0038ba;
     position: absolute;
@@ -180,72 +139,34 @@
     top: 13px;
     content: '';
 }
-
-.PR-Thumb {
-    margin: auto;
-    display: block;
-    text-align: center;
-    height: 140px
-}
-
-.PR-Thumb img {
-    width: 130px;
-    height: 130px;
-    margin: auto;
-}
-
-.pr-st {
-    background-color: #fbfbfb;
-    border-top: solid 1px #0038ba;
-    text-align: center;
-    line-height: 1;
-    margin-top: 5px;
-}
-
-.pr-st span {
-    font-size: 20px;
-    display: block;
-    margin-bottom: 5px;
-    font-family: 'Rationale', sans-serif!important;
-}
-
-.pr-st .col-6 {
-    padding: 10px;
-}
-
-.bg-shade {
-    background-color: #f1f1f1;
-}
-
-.h_dash {
-    position: relative;
-    padding: 0;
-    padding-top: 30px;
-}
-
+.PR-Thumb{margin: auto; display: block; text-align:center; height: 140px}
+.PR-Thumb img { width: 130px; height:130px; margin: auto;}
+.pr-st{background-color: #fbfbfb;  text-align: center; line-height:1; margin-top: 5px; border: none;}
+.rev-pr{background-color: #fff; font-size: 16px; border-bottom: solid 1px #0038ba; color:#0038ba; font-size: 16px}
+.rev-pr span{font-size: 24px !important}
+.pr-st span{font-size: 20px; display: block;margin-bottom: 5px; font-family: 'Rationale', sans-serif!important;}
+.pr-st .col-6{padding: 10px;}
+.bg-shade{background-color:#f1f1f1;} 
+.h_dash {position: relative; padding: 0; padding-top: 20px; }
 .h_dash a {
     display: block;
-    -webkit-box-shadow: 0px 0px 12px 0px rgba(79, 79, 79, 0.3);
-    -moz-box-shadow: 0px 0px 12px 0px rgba(79, 79, 79, 0.3);
-    box-shadow: 0px 0px 12px 0px rgba(79, 79, 79, 0.3);
+    -webkit-box-shadow: 0px 0px 12px 0px rgba(79,79,79,0.3);
+    -moz-box-shadow: 0px 0px 12px 0px rgba(79,79,79,0.3);
+    box-shadow: 0px 0px 12px 0px rgba(79,79,79,0.3);
     border-radius: 0px;
-    height: 165px;
-    width: 100%;
+    height: 165px; width: 100%; 
     position: relative;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 30px;
+    margin-bottom: 5px;
     background-image: url(/assets/images/dash-card-bg.png);
-    background-position: left bottom;
-    background-size: 30%;
-    background-repeat: no-repeat;
-    background-color: #fff;
+    background-position: left bottom; background-size: 30%; background-repeat: no-repeat; 
+    background-color: #fff; 
     -webkit-transition: all 0.15s;
     -moz-transition: all 0.15s;
     transition: all 0.15s;
 }
-
-.h_dash a::before {
+.h_dash a::before{
     content: '';
     display: inline-block;
     width: 2px;
@@ -255,30 +176,20 @@
     bottom: 22px;
     left: 0;
 }
-
-.HD-title {
+.HD-title{
     color: #282828;
     font-size: 18px;
-    text-decoration: none;
+    text-decoration: none; 
     text-align: left;
     position: absolute;
     bottom: 15px;
     left: 15px;
-    margin: 0;
-    font-weight: 600;
-    padding: 0;
-    padding-bottom: 5px;
-    letter-spacing: 1px
+    margin: 0; font-weight: 600;
+    padding: 0;padding-bottom:5px; letter-spacing: 1px
 }
-
-.f-light {
-    font-weight: normal;
-    font-size: 14px;
-    display: block;
-    font-family: 'proximanova-light', sans-serif !important;
-    color: #787878
+.f-light{
+    font-weight: normal; font-size: 14px; display: block; font-family: 'proximanova-light', sans-serif !important; color: #787878
 }
-
 .h_dash a img {
     width: 60px;
     height: auto;
@@ -287,21 +198,22 @@
     padding-right: 10px;
     float: right;
 }
-
-.h_dash a:hover {
-    -webkit-box-shadow: 0px 0px 15px 0px rgba(79, 79, 79, 0.5);
-    -moz-box-shadow: 0px 0px 15px 0px rgba(79, 79, 79, 0.5);
-    box-shadow: 0px 0px 15px 0px rgba(79, 79, 79, 0.5);
+.h_dash a:hover {  
+    -webkit-box-shadow: 0px 0px 15px 0px rgba(79,79,79,0.5);
+    -moz-box-shadow: 0px 0px 15px 0px rgba(79,79,79,0.5);
+    box-shadow: 0px 0px 15px 0px rgba(79,79,79,0.5);
     background-size: 150%;
     -webkit-transition: all 0.2s;
     -moz-transition: all 0.2s;
     transition: all 0.2s;
 }
-
-.h_dash a:hover .HD-title {
-    color: #0038ba;
-}
+.h_dash a:hover .HD-title{ color: #0038ba;} 
 .alert {padding: 10px 15px 10px 15px; font-size: 15px; line-height: normal}
 .alert-dismissible .close {padding: 5px 10px; outline: none!important;}
 .alert-primary{color: #0038ba}
-.alert-primary .btn-primary{font-size: 12px; padding: 3px 8px; letter-spacing: 1px; margin-top: -3px; margin-bottom: -3px}
+.alert-primary .btn-primary{font-size: 12px; padding: 3px 8px; letter-spacing: 1px; margin-top: -3px; margin-bottom: -3px}	
+.set-ptb{padding-top:8px; padding-bottom: 8px}
+.total-sale{padding: 15px}
+.total-sale .card-heading:before {left: -15px; top: 2px;}
+.unit-v span, .total-val span{font-size: 24px; letter-spacing: normal}
+ 

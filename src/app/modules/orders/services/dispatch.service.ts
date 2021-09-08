@@ -14,13 +14,16 @@ export class OrderDispatchService {
             if (!loadItem) {
                 const newContent = {
                     item_id: item.item_id,
-                    actual_qty: item.booked_total_qty,
+                    pref_id: item.pref_id,
+                    unit_id: item.unit_id,
+                    item_trade_price: item.original_price,
+                    actual_qty: item.item_quantity_booker,
                     dispatched_qty: item.dispatch_qty,
                     issued_qty: 0,
                 };
                 currentLoadContent.items.push(newContent);
             } else {
-                loadItem.actual_qty = loadItem.actual_qty + item.booked_total_qty;
+                loadItem.actual_qty = loadItem.actual_qty + item.item_quantity_booker;
                 loadItem.dispatched_qty = loadItem.dispatched_qty + item.dispatch_qty;
             }
         });
@@ -34,7 +37,7 @@ export class OrderDispatchService {
         order.items.forEach(item => {
             const loadItem = currentLoadContent.items.find(x => x.item_id === item.item_id);
             if (loadItem) {
-                loadItem.actual_qty = loadItem.actual_qty - item.booked_total_qty;
+                loadItem.actual_qty = loadItem.actual_qty - item.item_quantity_booker;
                 loadItem.dispatched_qty = loadItem.dispatched_qty - item.dispatch_qty;
                 loadItem.issued_qty = 0;
             }

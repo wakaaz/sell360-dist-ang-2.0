@@ -8,11 +8,11 @@
 .close-btn-pl:after, .close-btn-pl:before { background-color: #888888; height: 20px; top: 0px;}
 ._left-filter{padding-top:0}.FU-history{margin-top: 0}
 .align-center { text-align: center;}
-.POCDetail { padding-top: 15px; padding-bottom: 15px; border-bottom: solid 1px #e0e0e0; font-size: 16px; line-height: 24px}
+.POCDetail { padding-top: 15px; padding-bottom: 15px;  font-size: 14px; line-height: 24px}
 .pocPic img {position: relative;width: 110px;height: 110px;height: auto;border-radius: 50%;-webkit-box-shadow: 0 0 20px 0 rgba(103,92,139,.35);box-shadow: 0 0 20px 0 rgba(103,92,139,.35);}
 .border-bottomNone {border-bottom: none;}
 .POCDetail h2 {color: #282828;	font-size:18px;	margin-bottom: 0px;	margin-top: 0px; line-height: normal;}
-.POCDetail p{margin-bottom: 0}
+.POCDetail p{margin-bottom: 6px}
 .POCDetail .view-report {font-size: 11px;margin-left: 10px;padding: 5px 8px 5px 8px;letter-spacing: 1.5px;border-radius: 4px;text-transform: uppercase;background-color: #5f5f5f;color: #fff!important; display: inline-block;text-align: center;white-space: nowrap;margin-bottom: 0px; line-height: 1}
 .POCDetail .view-report:HOVER, .POCDetail .view-report:focus {
     background-color: #0038ba;
@@ -25,7 +25,7 @@
 	margin-top: 0px
 }
 .Warehouse-img {
-	height: 365px!important;
+	height: 345px!important;
 	width: 100%!important
 }
 .btn-blue {
@@ -115,3 +115,46 @@
 .mapouter{position:relative;text-align:right;width:100%;height:400px;}
 .gmap_canvas {overflow:hidden;background:none!important;width:100%;height:400px;}
 .gmap_iframe {width:100%!important;height:400px!important;}
+.topstats{margin-top: 15px; font-size: 14px;}
+.topstats .gary-box{line-height: 1;background-color: #f9f9f9;border-bottom: solid 1px #d1d1d1;
+	padding: 10px 10px 8px 10px;letter-spacing: 1px;}
+.topstats .gary-box span{font-family: proximanova-semibold!important; color:#0038ba; float: right; margin-top: -2px; padding-left: 15px;}
+.OrderLogo {
+	text-align: left;
+	padding-left: 0
+}
+.OrderLogo img {
+	width: auto;
+	height: 46px
+}
+.OrderInfo {
+	font-size: 14px
+}
+.OrderInfo span {
+	width: 105px;
+	float: left
+}
+.Order-Detail-table table td {
+	border: solid 1px #333333;
+	padding: 5px!important;
+	font-size: 12px
+}
+.Order-Detail-table table th {
+	border: solid 1px #333333!important;
+	background-color: #ededed!important;
+	color: #000;
+	padding: 5px!important;
+	font-size: 12px
+}
+.button-list .btn-primary {
+	font-size: 14px!important;
+	letter-spacing: 1px
+}
+.button-list .btn-primary .fa {
+	padding-right: 3px
+}
+.ord-no {
+	padding-top: 16px;
+	font-size: 14px;
+	text-align: right;
+}

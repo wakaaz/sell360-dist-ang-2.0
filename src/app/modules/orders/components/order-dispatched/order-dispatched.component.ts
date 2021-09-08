@@ -5,6 +5,8 @@ import { Toaster, ToasterService } from '../../../../core/services/toaster.servi
 import { OrdersService } from '../../services/orders.service';
 import { OrderDispatchService } from '../../services/dispatch.service';
 import { LocalStorageService } from '../../../../core/services/storage.service';
+import { API_URLS } from 'src/app/core/constants/api-urls.constants';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-dispatch-order',
@@ -25,7 +27,9 @@ export class OrderDispatchedComponent implements OnInit {
 
     salemanId: number;
     currentTab: number;
+    distributorId: number;
     orderDate: string;
+    invoiceDate: string;
 
     orderDetails: any = {};
     selectedRetailer: any;
@@ -54,6 +58,7 @@ export class OrderDispatchedComponent implements OnInit {
         private dispatchService: OrderDispatchService,
         private orderService: OrdersService,
     ) {
+        this.distributorId = this.storageService.getItem('distributor').id;
     }
 
     ngOnInit(): void {
@@ -73,7 +78,6 @@ export class OrderDispatchedComponent implements OnInit {
         } else {
             this.getProducts();
             this.getSchemes();
-            this.getDispatchDetails();
         }
     }
 
@@ -209,6 +213,7 @@ export class OrderDispatchedComponent implements OnInit {
             if (res.status === 200) {
                 this.inventory = res.data.inventory;
                 this.specialDiscounts = res.data.special_discount;
+                this.getDispatchDetails();
             }
         }, error => {
             this.loadingProduct = false;
@@ -239,7 +244,7 @@ export class OrderDispatchedComponent implements OnInit {
     getOrderDetailsByRetailer(retailer: any): void {
         if (this.selectedRetailer?.id !== retailer.id) {
             this.selectedRetailer = retailer;
-            this.orderService.getDispatchOrderDetails(retailer.id).subscribe(res => {
+            this.orderService.getOrderDetails(retailer.id).subscribe(res => {
                 if (res.status === 200) {
                     this.orderDetails = res.data;
                     this.orderDetails.items = this.orderDetails.items.map(prod => {
@@ -388,7 +393,7 @@ export class OrderDispatchedComponent implements OnInit {
                 parent_unit_id: item.parent_unit_id,
                 parent_brand_id: item.brand_id,
                 parent_tp: item.parent_trade_price,
-                parent_qty_sold: this.dataService.getParentQty(item.stockQty, item.parent_quantity || item.quantity),
+                parent_qty_sold: item.parent_qty_sold,
                 parent_value_sold: item.net_amount,
                 final_price: item.net_amount,
                 campaign_id: item.selectedScheme?.id || 0,
@@ -398,7 +403,7 @@ export class OrderDispatchedComponent implements OnInit {
                 dispatch_amount: item.net_amount,
                 reasoning: '',
                 distributor_id: this.orderDetails.distributor_id,
-                division_id: this.selectedRetailer.division_id || 1,
+                division_id: this.selectedRetailer.division_id || 0,
                 region_id: this.orderDetails.region_id,
                 area_id: this.orderDetails.area_id,
                 assigned_route_id: this.orderDetails.assigned_route_id,
@@ -475,6 +480,14 @@ export class OrderDispatchedComponent implements OnInit {
 
     openConfirmationModal(): void {
         const unSelected = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
+        if (this.load.content.length === 3 && unSelected.length !== 0) {
+            this.toastService.showToaster({
+                type: 'error',
+                title: 'Select All Orders:',
+                message: 'Some orders are not selected'
+            });
+            return;
+        }
         if (this.load.content.length !== 3 && unSelected.length !== 0) {
             if (this.currentLoadContent.items.length) {
                 document.getElementById('open-create-load').click();
@@ -493,7 +506,6 @@ export class OrderDispatchedComponent implements OnInit {
     saveDispatch(): void {
         this.loading = true;
         let totalRecovery = 0;
-        const distributorId = this.storageService.getItem('distributor').id;
         this.credits.map((x) => {
             totalRecovery = x.recovery + totalRecovery;
         });
@@ -516,7 +528,7 @@ export class OrderDispatchedComponent implements OnInit {
         this.load.total_recovery_amount = totalRecovery;
         this.load.total_net_sale = this.dispatchOrderDetail.summary.total_price;
         this.load.total_products = totalProducts;
-        this.load.distributor_id = distributorId;
+        this.load.distributor_id = this.distributorId;
         this.load.total_sub_loads = this.load.content.length;
         this.load.processed_date = this.orderDate;
         const order = { load: this.load, payments: this.credits };
@@ -524,6 +536,7 @@ export class OrderDispatchedComponent implements OnInit {
             this.loading = false;
             if (res.status === 200) {
                 this.finalLoad = res.data;
+                this.dispatchOrderDetail = null;
                 this.setLoad();
                 this.setCurrentLoad(1);
                 this.load.content.push(this.currentLoadContent);
@@ -599,7 +612,7 @@ export class OrderDispatchedComponent implements OnInit {
     addCurrentLoad(): void {
         this.remainingOrders = this.remainingOrders.filter(x => !(this.currentLoadContent.order_ids as Array<number>).includes(x.id));
         this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
-        this.setCurrentLoad(this.currentLoadContent.loadNumber + 1);
+        this.setCurrentLoad(this.load.content.length + 1);
         this.load.content.push(this.currentLoadContent);
         if (this.currentLoadContent.loadNumber === 3) {
             this.isAllSelected = true;
@@ -637,6 +650,90 @@ export class OrderDispatchedComponent implements OnInit {
                     x.isSelected = false;
                 }
                 return x;
+            });
+        }
+    }
+
+    completeDispatch(): void {
+        this.loading = true;
+        this.orderService.completeOrderDispatch(this.finalLoad.load_id).subscribe(res => {
+            this.loading = false;
+            this.toastService.showToaster({
+                type: 'success',
+                message: 'Order dispatch completed successfully!',
+                title: 'Order Dipatched Completed:'
+            });
+            this.router.navigateByUrl('/orders/dispatch-orders');
+        }, error => {
+            this.loading = false;
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    type: 'error',
+                    message: 'Order Dispatch cannot be completed at the moment, please try again later!',
+                    title: 'Error:'
+                });
+            }
+        });
+    }
+
+    revertDispatch(): void {
+        this.loading = true;
+        this.orderService.revertOrderDispatch(this.finalLoad.load_id).subscribe(res => {
+            this.loading = false;
+            this.toastService.showToaster({
+                type: 'success',
+                message: 'Order dispatch reverted successfully!',
+                title: 'Dipatch Reverted:'
+            });
+            this.currentTab = 1;
+            this.credits = [];
+            this.dispatchOrderDetail = null;
+            this.tabChanged();
+        }, error => {
+            this.loading = false;
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    type: 'error',
+                    message: 'Revert cannot be completed at the moment, please try again later!',
+                    title: 'Error:'
+                });
+            }
+        });
+    }
+
+    getBookingSheet(): void {
+       const sheetUrl = `${environment.apiDomain}${API_URLS.BOOKING_SHEET_PDF}?emp=${this.salemanId}&date=${this.orderDate}`;
+       window.open(sheetUrl);
+    }
+
+    getBills(size: string = 'A4'): void {
+        if (this.invoiceDate) {
+            this.orderService.updateDispatchInvoiceDate(this.finalLoad.load_id, this.invoiceDate).subscribe(res => {
+                if (res.status === 200) {
+                    document.getElementById('close-bills').click();
+                    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.salemanId}&date=${this.orderDate}&dist_id=${this.distributorId}&size=${size}&status=processed`;
+                    window.open(billsUrl);
+                } else {
+                    this.toastService.showToaster({
+                        type: 'error',
+                        message: 'Bill cannot be generated at the moment, please try again later!',
+                        title: 'Bill cannot be generated:'
+                    });
+                }
+            }, error => {
+                if (error.status !== 1 && error.status !== 401) {
+                    this.toastService.showToaster({
+                        type: 'error',
+                        message: 'Bill cannot be generated at the moment, please try again later!',
+                        title: 'Bill cannot be generated:'
+                    });
+                }
+            });
+        } else {
+            this.toastService.showToaster({
+                type: 'error',
+                message: 'Please select invoice date to generate bill(s)!',
+                title: 'Please select invoice date:'
             });
         }
     }

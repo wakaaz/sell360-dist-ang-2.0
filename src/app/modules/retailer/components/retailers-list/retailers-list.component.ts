@@ -12,6 +12,7 @@ export class RetalersListComponent implements OnInit {
     dtOptions: DataTables.Settings = {};
     orderBooker: string;
     route: string;
+    segment: string;
     shwoSaleManLedger: boolean;
 
     constructor() {

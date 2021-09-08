@@ -47,7 +47,7 @@ export class AppComponent {
       if (event instanceof NavigationEnd) {
         this.isLoggedIn = this.storageService.getItem('dist_session') ? true : false;
         const url = event.urlAfterRedirects;
-        if (leftBarHidden.includes(url) || url.includes('/orders/dispatch/')) {
+        if (leftBarHidden.includes(url) || url.includes('/orders/dispatch/') || url.includes('/orders/execute-order/')) {
           this.isSideNavHidden = true;
         } else {
           this.isSideNavHidden = false;
@@ -66,7 +66,7 @@ export class AppComponent {
         this.showToast = true;
         setTimeout(() => {
           this.showToast = false;
-        }, 3000);
+        }, 5000);
       }
     });
   }

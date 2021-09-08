@@ -44,6 +44,7 @@ export class RetailerSubListComponent implements OnInit, OnChanges {
             }
             return ret;
         });
+        this.retailerDispList = JSON.parse(JSON.stringify(this.retailers));
         this.retailerChanged.emit(retailer);
     }
 

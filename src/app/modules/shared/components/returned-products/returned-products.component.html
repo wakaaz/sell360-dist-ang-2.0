@@ -1,0 +1,80 @@
+<div class="modal fade" id="returnsmodal" role="dialog" data-backdrop="static" data-keyboard="false"
+    aria-labelledby="returnsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 900px">
+        <div class="modal-content top_border">
+            <div class="modal-header">
+                <h5 class="modal-title" id="returnsModalLabel">Add <span> Returns</span></h5>
+                <button type="button" class="close" data-dismiss="modal" (click)="close()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="col-12 PT-10">
+                <div id="floating-label" class="form-wrap p-0">
+
+                    <div class="row">
+                    </div>
+
+                    <table class="table dt-responsive nowrap table-padd" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th><strong>Select Product</strong></th>
+                                <th><strong>QTY.</strong></th>
+                                <th><strong>DISC</strong></th>
+                                <th><strong>Value</strong></th>
+                                <th><strong>Type</strong></th>
+                                <th style="width: 70px"><strong>Action</strong></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <div class="form-s2">
+                                        <ng-select class="formselect" #productRet placeholder="Select Product" id="ret-product"
+                                            name="ret-product" (change)="productSelected($event)" style="width: 230px">
+                                            <ng-option *ngFor="let product of productsList" [value]="product">{{product.item_name}}
+                                            </ng-option>
+                                        </ng-select>
+                                    </div>
+                                </td>
+                                <td><input type="number" id="ret-qty" name="ret-qty"
+                                        [(ngModel)]="selectedProduct.stockQty" (keyup)="setReturnedQty()"
+                                        (keydown)="isNumber($event, 'quantity')" class="form-control"></td>
+                                <td><input type="number" id="ret-dis" name="ret-dis" (keyup)="setExtraDiscount()"
+                                        [(ngModel)]="selectedProduct.extra_discount" (keydown)="isNumber($event)"
+                                        class="form-control"></td>
+                                <td>
+                                    <input type="text" id="ret-val" name="ret-val"
+                                        value="{{selectedProduct.net_amount | number: '1.2-2'}}" readonly class="form-control">
+                                </td>
+                                <td>
+                                    <div class="form-s2">
+                                        <select class="form-control formselect" name="return-type"
+                                            [(ngModel)]="selectedProduct.returnType" placeholder="Select Sellable"
+                                            style="width: 230px">
+                                            <option value="Sellable">Sellable</option>
+                                            <option value="Damaged">Damaged</option>
+                                        </select>
+                                    </div>
+                                </td>
+                                <td><button class="btn btn-primary add_return_item" (click)="addReturned()">Add</button></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+            <div class="modal-footer border-0">
+                <!-- <button type="button" class="btn btn-primary">Save</button> -->
+                <button type="submit" (click)="close()" class="btn btn-cancel" data-dismiss="modal"
+                    aria-label="Close">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+<button id="open-returned" class="dont-close-returned" style="display: none;" data-toggle="modal"
+    data-target="#returnsmodal">
+    Open Modal
+</button>

@@ -15,11 +15,12 @@ export class ExecuteOrderComponent implements OnInit {
 
     loading: boolean;
     savingOrder: boolean;
+    showReturned: boolean;
     showProducts: boolean;
-    currentTab: number;
 
     orderDate: string;
 
+    currentTab: number;
     salemanId: number;
 
     orderDetails: any = {};
@@ -27,6 +28,7 @@ export class ExecuteOrderComponent implements OnInit {
     merchantDiscount: any;
     newProduct: any;
     dispatchSummary: any;
+    returnedProduct: any;
     retailersList: Array<any> = [];
     schemes: Array<any> = [];
     inventory: Array<any> = [];
@@ -130,7 +132,7 @@ export class ExecuteOrderComponent implements OnInit {
 
                         prod.stockQty = JSON.parse(JSON.stringify(prod.dispatch_qty));
                         prod.net_amount = JSON.parse(JSON.stringify(prod.final_price));
-                        prod.gross_amount = prod.unit_price_after_scheme_discount * prod.stockQty;
+                        prod.gross_amount = prod.item_trade_price * prod.stockQty;
                         prod.extra_discount_pkr = prod.stockQty * prod.extra_discount;
                         prod.original_amount = prod.item_trade_price * prod.stockQty;
                         prod.special_discount_pkr = prod.special_discount;
@@ -177,6 +179,13 @@ export class ExecuteOrderComponent implements OnInit {
             this.selectedRetailer.segment_id === x.segment_id && x.channel_id === this.selectedRetailer.retailer_type_id);
     }
 
+    handleReturnedProduct(returnedProduct: any): void {
+        if (!this.orderDetails.returned_items?.length) {
+            this.orderDetails.returned_items = [];
+        }
+        this.orderDetails.returned_items.push(returnedProduct);
+    }
+
     openProductsList(): void {
         this.showProducts = true;
         document.body.classList.add('no-scroll');
@@ -189,6 +198,14 @@ export class ExecuteOrderComponent implements OnInit {
         document.body.classList.remove('no-scroll');
         document.getElementsByClassName('overlay-blure')[0].classList.remove('d-block');
         document.getElementById('order-container').classList.remove('blur-div');
+    }
+
+    openReturnedModal(): void {
+        this.showReturned = true;
+    }
+
+    closeReturnedModal(): void {
+        this.showReturned = false;
     }
 
     changeTab(selectedTab: number): void {

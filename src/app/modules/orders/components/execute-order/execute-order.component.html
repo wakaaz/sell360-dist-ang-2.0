@@ -59,6 +59,7 @@
     [productMerchantDiscount]="merchantDiscount" [specialDiscounts]="specialDiscounts"
     (drawerClosed)="closeNewProducts()" (productSelected)="addNewProductToOrder($event)">
 </app-products-drawer>
+<app-returned-products [productsList]="allProducts" (productReturned)="handleReturnedProduct($event)" (closeReturned)="closeReturnedModal()" *ngIf="showReturned"></app-returned-products>
 
 
 <div class="container" id="order-container">
@@ -102,27 +103,27 @@
                             <div class="row m-0">
                                 <div class="col pr-0">
                                     <div class="gary-box "><strong>Date:</strong> <span
-                                            class="execution_date">{{dispatchSummary?.date}}</span></div>
+                                            class="execution_date">{{dispatchSummary?.date || '--'}}</span></div>
                                 </div>
                                 <div class="col-auto pr-0">
                                     <div class="gary-box min-w"><strong>Order Booker:</strong> <b
                                             class="execution_bookers float-right">{{dispatchSummary?.order_bookers.join(',
-                                            ')}}</b></div>
+                                            ') || '--'}}</b></div>
                                 </div>
                                 <div class="col-auto pr-0">
                                     <div class="gary-box min-w"><strong>Territory:</strong> <span
                                             class="execution_territories">{{dispatchSummary?.territories.join(',
-                                            ')}}</span></div>
+                                            ') || '--'}}</span></div>
                                 </div>
                                 <div class="col pr-0">
                                     <div class="gary-box"><strong>Total Outlets:</strong> <span
-                                            class="execution_order">{{dispatchSummary?.total_outlets}}</span>
+                                            class="execution_order">{{dispatchSummary?.total_outlets || '--'}}</span>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="gary-box" style="min-width: 200px;"><strong>Total
                                             Amount:</strong>
-                                        <span class="execution_amount">Rs. {{dispatchSummary?.total_amount | number:
+                                        <span class="execution_amount">Rs. {{dispatchSummary?.total_amount || 0 | number:
                                             '1.2-2'}}</span>
                                     </div>
                                 </div>
@@ -138,10 +139,10 @@
                             <div class="col p-0">
                                 <div class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder" [orderDetail]="orderDetails"
-                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer"
+                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct"
                                         [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
                                         [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
-                                        [orderType]="'execution'" (openDrawer)="openProductsList()">
+                                        [orderType]="'execution'" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">
                                         <app-loader-white></app-loader-white>

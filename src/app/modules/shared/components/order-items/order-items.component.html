@@ -23,7 +23,11 @@
 </div>
 
 <div class="header addPR-head mb-10">
-    <h2>Product <span> List</span> </h2>
+    <h2 *ngIf="orderType ==='dispatch'">Product <span> List</span> </h2>
+    <h2 *ngIf="orderType ==='execution'">Orders <span> Detail</span> </h2>
+    <a *ngIf="orderType ==='execution'" class="btn add_button addpr addReturn"><i class="fa fa-plus"
+            style="margin-right: 3.5px;"></i> <span>Add
+            Return</span></a>
     <a id="productlist01" class="btn add_button addpr" (click)="openProductsList($event)"><i class="fa fa-plus"
             style="margin-right: 3.5px;"></i><span>Add Product</span></a>
 </div>
@@ -45,11 +49,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let item of orderDetail.items; let i=index" [ngClass]="!item.item_quantity_booker && item.isDeleted ? 'd-none' : ''">
+            <tr *ngFor="let item of orderDetail.items; let i=index"
+                [ngClass]="!item.item_quantity_booker && item.isDeleted ? 'd-none' : ''">
                 <td style="width:200px">{{item.item_name}}</td>
                 <td>{{item.item_quantity_booker || 0}}</td>
-                <td><input type="text" [id]="item.item_name" [name]="item.item_name"
-                        (keyup)="setQuantity(item)" (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty"
+                <td><input type="text" [id]="item.item_name" [name]="item.item_name" (keyup)="setQuantity(item)"
+                        (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.item_trade_price | number: '1.2-2'}}</td>
                 <td>{{item.gross_amount || 0 | number: '1.2-2'}}</td>
@@ -98,10 +103,45 @@
                     <div class="col-6"><span>{{totalTax | number: '1.2-2'}}</span></div>
                 </div>
                 <div class="row">
-                    <div class="col-6" style="color:#0038ba;">Total Amount Due:
+                    <div *ngIf="orderType==='dispatch'" class="col-6" style="color:#0038ba;">Total Amount Due:
                     </div>
-                    <div class="col-6" style="color:#0038ba;"><span>{{netAmount | number: '1.2-2'}}</span>
+                    <div *ngIf="orderType==='dispatch'" class="col-6" style="color:#0038ba;"><span>{{ netAmount | number: '1.2-2'}}</span>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="orderType==='execution'" class="col-auto">
+            <div class="total-valu-div">
+                <div class="row">
+                    <div class="col-6">Amount Due:</div>
+                    <div class="col-6"><span>{{netAmount | number: '1.2-2'}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Less Return:</div>
+                    <div class="col-6"><span>0.00</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Net Receivable:</div>
+                    <div class="col-6"><span>8.67</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Cheque:</div>
+                    <div class="col-6"><span>0.00</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Cash Payment:</div>
+                    <div class="col-6"><span>0.00</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6" style="color:#0038ba;">Total
+                        Payment</div>
+                    <div class="col-6" style="color:#0038ba;">
+                        <span>280.01</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Credit:</div>
+                    <div class="col-6"><span>0.00</span></div>
                 </div>
             </div>
         </div>

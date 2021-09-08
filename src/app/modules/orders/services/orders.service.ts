@@ -40,6 +40,21 @@ export class OrdersService {
         return this.baseService.post(url, order);
     }
 
+    completeOrderDispatch(loadId: any): Observable<any> {
+        const url = `${API_URLS.COMPLETE_DISPATCH}/${loadId}`;
+        return this.baseService.get(url);
+    }
+
+    revertOrderDispatch(loadId: any): Observable<any> {
+        const url = `${API_URLS.REVERT_DISPATCH}/${loadId}`;
+        return this.baseService.get(url);
+    }
+
+    updateDispatchInvoiceDate(loadId: number, date: string): Observable<any> {
+        const url = `${API_URLS.UPDATE_INVOICE_DETAIL}/${loadId}`;
+        return this.baseService.post(url, {date});
+    }
+
     getNewOrders(): Observable<any> {
         const url = `${API_URLS.GET_NEW_ORDERS}`;
         return this.baseService.get(url);
@@ -70,7 +85,7 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
-    getDispatchOrderDetails(orderId: number): Observable<any> {
+    getOrderDetails(orderId: number): Observable<any> {
         const url = `${API_URLS.ORDER_DETAIL}/${orderId}`;
         return this.baseService.get(url);
     }
@@ -87,6 +102,16 @@ export class OrdersService {
 
     cancelOrder(orderId: number): Observable<any> {
         const url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
+        return this.baseService.get(url);
+    }
+
+    getExecutionList(): Observable<any> {
+        const url = `${API_URLS.GET_EXECUTION_LIST}`;
+        return this.baseService.get(url);
+    }
+
+    getExectedOrdersListing(salemanId: number, date: string): Observable<any> {
+        const url = `${API_URLS.GET_EXECUTION_DETAILS}/${salemanId}/${date}`;
         return this.baseService.get(url);
     }
 

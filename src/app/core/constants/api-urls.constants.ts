@@ -24,7 +24,12 @@ export const API_URLS = {
     ORDER_DETAIL: '/orderDetail',
     VIEW_ORDER_DETAIL: '/viewOrderDetail',
     CREATE_DISPATCH: '/createDispatch',
+    COMPLETE_DISPATCH: '/completeDispatch',
+    REVERT_DISPATCH: '/revertDispatch',
     DISPATCH_ORDERS_DETAIL: '/dispatchOrdersDetail',
+    UPDATE_INVOICE_DETAIL: '/updateDispatchInvoiceDate',
+    GET_EXECUTION_LIST: '/executionOrderListing',
+    GET_EXECUTION_DETAILS: '/executionDetail',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',
@@ -46,6 +51,7 @@ export const API_URLS = {
     // General
     PRODUCTS_LIST_BY_PREF_TYPE: '/productListByType',
     BOOKING_SHEET_PDF: '/BookingSheetPdf',
+    BILLS: '/GetAllBillsDetail',
 
     // Retailers
     ADD_OPENING_BALANCE: '/addOpeningBalance',

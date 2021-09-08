@@ -47,6 +47,7 @@ export class CounterSaleComponent implements OnInit {
     creditAmount: number;
     orderTotal: number;
     totalAmountAfterScheme: number;
+    totalRetailPrice: number;
 
     chequeNumber: string;
     paymentDate: string;
@@ -155,6 +156,7 @@ export class CounterSaleComponent implements OnInit {
 
     resetValues(): void {
         this.selectedProducts = [];
+        this.selectedProductsIds = [];
         this.grossAmount = 0.00;
         this.tradeOffer = 0.00;
         this.tradeDiscount = 0.00;
@@ -486,6 +488,7 @@ export class CounterSaleComponent implements OnInit {
             if (this.selectedProducts.find(x => x.item_id === product.item_id)) {
                 this.grossAmount = this.grossAmount - product.original_amount || 0;
             }
+            product.parent_qty_sold = this.dataService.getParentQty(+product.stockQty, product.quantity);
             this.calculateProductPrice(product);
             this.calculateProductDiscounts(product);
             this.calculateTotalBill();
@@ -635,11 +638,14 @@ export class CounterSaleComponent implements OnInit {
 
     calculateTotalBill(): void {
         if (this.selectedProducts.length) {
-            this.selectedProductQuantities = this.selectedProducts.map(product => +product.stockQty).reduce((a, b) => a + b);
+            this.selectedProductQuantities = this.selectedProducts.map(product => +product.parent_qty_sold).reduce((a, b) => a + b);
         }
         // Gross Amount
         let prices = this.selectedProducts.map(product => product.original_amount);
         this.grossAmount = this.dataService.calculateItemsBill(prices);
+        // Retail Price
+        prices = this.selectedProducts.map(product => product.stockQty * product.item_retail_price);
+        this.totalRetailPrice = this.dataService.calculateItemsBill(prices);
         // Gross Amount
         prices = this.selectedProducts.map(product => product.gross_amount);
         this.totalAmountAfterScheme = this.dataService.calculateItemsBill(prices);
@@ -650,10 +656,10 @@ export class CounterSaleComponent implements OnInit {
         prices = this.selectedProducts.map(product => product.original_amount);
         this.orderTotal = JSON.parse(JSON.stringify(this.dueAmount));
         // Scheme Discount
-        let discount = this.selectedProducts.map(product => product.scheme_discount);
+        let discount = this.selectedProducts.map(product => +product.stockQty * product.scheme_discount);
         this.tradeOffer = this.dataService.calculateItemsBill(discount);
         // Trade Discount
-        discount = this.selectedProducts.map(product => product.trade_discount_pkr);
+        discount = this.selectedProducts.map(product => +product.stockQty * product.trade_discount_pkr);
         this.tradeDiscount = this.dataService.calculateItemsBill(discount);
         // Special Discount
         discount = this.selectedProducts.map(product => +product.stockQty * product.special_discount_pkr);
@@ -800,7 +806,7 @@ export class CounterSaleComponent implements OnInit {
                 status: 'Completed',
                 status_code: 0,
                 territory_id: employee.territory_id,
-                total_retail_price: this.grossAmount,
+                total_retail_price: this.totalRetailPrice,
                 ttl_products_sold: this.selectedProductsIds.length,
                 ttl_qty_sold: this.selectedProductQuantities,
                 payment: {
@@ -822,12 +828,9 @@ export class CounterSaleComponent implements OnInit {
     }
 
     setOrderItems(selectedEmployee: any): void {
-        console.log('this.selectedProducts :>> ', this.selectedProducts);
         this.selectedProducts.forEach((product, index) => {
-            const productTotalDiscount = product.scheme_discount +
-            product.trade_discount_pkr + (+product.stockQty * product.special_discount) + product.extra_discount_pkr;
-            const parentTPAfterDiscount = product.parent_trade_price - productTotalDiscount;
-            const parentQtySold = this.dataService.getParentQty(product.stockQty, product.quantity);
+            const productTotalDiscount = (+product.stockQty * product.scheme_discount) +
+            (+product.stockQty * product.trade_discount_pkr) + (+product.stockQty * product.special_discount) + product.extra_discount_pkr;
             const item: OrderItem = {
                 item_id: product.item_id,
                 pref_id: product.pref_id,
@@ -854,9 +857,9 @@ export class CounterSaleComponent implements OnInit {
                 order_id: 0,
                 original_price: product.item_trade_price,
                 scheme_id: product.selectedScheme?.id || 0,
-                scheme_discount: product.scheme_discount / product.stockQty,
+                scheme_discount: product.scheme_discount,
                 unit_price_after_scheme_discount: product.unit_price_after_scheme_discount,
-                merchant_discount_pkr: product.trade_discount_pkr / product.stockQty,
+                merchant_discount_pkr: product.trade_discount_pkr,
                 merchant_discount: product.trade_discount,
                 unit_price_after_merchant_discount: product.unit_price_after_merchant_discount,
                 special_discount: product.special_discount,
@@ -873,7 +876,7 @@ export class CounterSaleComponent implements OnInit {
                 reasoning: '',
                 region_id: this.selectedRegion,
                 territory_id: selectedEmployee.territory_id,
-                parent_qty_sold: parentQtySold,
+                parent_qty_sold: product.parent_qty_sold,
                 parent_value_sold: product.net_amount,
                 tax_class_id: product.tax_class_id,
                 tax_in_percentage: product.tax_class_amount,

@@ -36,5 +36,5 @@
 	font-family: 'Poppins', sans-serif;
     line-height: 1;
     font-size: 35px;
-    font-weight: 800;
+    font-weight: 800; padding-top: 0px;
     color: #ececec;  position: absolute; right:80px; top: 7px}

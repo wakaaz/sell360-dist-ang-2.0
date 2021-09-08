@@ -22,6 +22,7 @@ export class OrderDispatchedComponent implements OnInit {
     showProducts: boolean;
     savingOrder: boolean;
     isAllSelected: boolean;
+    showFinalLoad: boolean;
 
     searchText: string;
 
@@ -138,12 +139,16 @@ export class OrderDispatchedComponent implements OnInit {
     getDispatchDetails(): void {
         this.loading = true;
         this.savingOrder = false;
+        this.showFinalLoad = false;
         this.orderService.getDispatchDetailBySalemanAndDate(this.salemanId, this.orderDate).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
                 if (res.data.loadSheet) {
                     this.finalLoad = res.data.loadSheetData;
                     this.currentTab = 4;
+                    setTimeout(() => {
+                        this.showFinalLoad = true;
+                    }, 500);
                 } else {
                     this.ordersRetailers = res.data.retailers.map(ret => {
                         ret.isActive = false;
@@ -532,11 +537,18 @@ export class OrderDispatchedComponent implements OnInit {
         this.load.total_sub_loads = this.load.content.length;
         this.load.processed_date = this.orderDate;
         const order = { load: this.load, payments: this.credits };
+        this.showFinalLoad = false;
         this.orderService.saveDispatchOrder(order).subscribe(res => {
-            this.loading = false;
             if (res.status === 200) {
                 this.finalLoad = res.data;
+                setTimeout(() => {
+                    this.loading = false;
+                    this.showFinalLoad = true;
+                }, 500);
                 this.dispatchOrderDetail = null;
+                this.ordersDispList = [];
+                this.remainingOrders = [];
+                this.isAllSelected = false;
                 this.setLoad();
                 this.setCurrentLoad(1);
                 this.load.content.push(this.currentLoadContent);
@@ -688,6 +700,8 @@ export class OrderDispatchedComponent implements OnInit {
             this.currentTab = 1;
             this.credits = [];
             this.dispatchOrderDetail = null;
+            this.ordersDispList = [];
+            this.isAllSelected = false;
             this.tabChanged();
         }, error => {
             this.loading = false;

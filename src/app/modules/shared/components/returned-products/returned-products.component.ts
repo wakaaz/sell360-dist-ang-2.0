@@ -13,6 +13,7 @@ import { DataService } from '../../services';
 export class ReturnedProductsComponent implements OnInit, AfterViewInit {
 
     @Input() productsList: Array<any>;
+    @Input() orderReturnedItems: Array<any>;
     @ViewChild('productRet') productRet: NgSelectComponent;
 
     selectedProduct: any = {};
@@ -37,6 +38,10 @@ export class ReturnedProductsComponent implements OnInit, AfterViewInit {
         return this.dataService.isNumber(event, type);
     }
 
+    isAlreadyInOrder(product: any): any {
+        return this.orderReturnedItems.find(x => x.item_id === product.item_id) ? true : false;
+    }
+
     close(): void {
         this.closeReturned.emit(true);
     }
@@ -48,9 +53,6 @@ export class ReturnedProductsComponent implements OnInit, AfterViewInit {
     }
 
     setReturnedQty(): void {
-        this.selectedProduct.gross_amount = -(this.selectedProduct.item_trade_price * this.selectedProduct.stockQty);
-        this.selectedProduct.original_amount = -(this.selectedProduct.item_trade_price * this.selectedProduct.stockQty);
-        this.selectedProduct.total_retail_price = this.selectedProduct.item_retail_price * this.selectedProduct.stockQty;
         this.selectedProduct.scheme_discount = 0;
         this.selectedProduct.unit_price_after_scheme_discount = this.selectedProduct.item_trade_price;
         this.selectedProduct.special_discount = 0;
@@ -63,6 +65,9 @@ export class ReturnedProductsComponent implements OnInit, AfterViewInit {
         this.selectedProduct.trade_discount_pkr = 0;
         this.selectedProduct.tax_amount_pkr = 0;
         this.selectedProduct.tax_class_amount = 0;
+        this.selectedProduct.gross_amount = -(this.selectedProduct.item_trade_price * this.selectedProduct.stockQty);
+        this.selectedProduct.original_amount = -(this.selectedProduct.item_trade_price * this.selectedProduct.stockQty);
+        this.selectedProduct.total_retail_price = -(this.selectedProduct.item_retail_price * this.selectedProduct.stockQty);
         if (this.selectedProduct.extra_discount) {
             this.selectedProduct.booker_discount = +this.selectedProduct.extra_discount;
             this.selectedProduct.unit_price_after_individual_discount = this.selectedProduct.item_trade_price

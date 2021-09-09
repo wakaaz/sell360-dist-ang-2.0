@@ -22,7 +22,7 @@ export class RetailerSubListComponent implements OnInit, OnChanges {
 
     ngOnChanges(changes: SimpleChanges): void {
         if (changes.retailers.currentValue) {
-            this.retailerDispList = JSON.parse(JSON.stringify(this.retailers));
+            this.retailerDispList = this.retailers;
         }
     }
 
@@ -30,12 +30,12 @@ export class RetailerSubListComponent implements OnInit, OnChanges {
         if (this.searchText) {
             this.retailerDispList = this.retailers.filter(ret => ret.retailer_name.toLowerCase().includes(this.searchText.toLowerCase()));
         } else {
-            this.retailerDispList = JSON.parse(JSON.stringify(this.retailers));
+            this.retailerDispList = this.retailers;
         }
     }
 
     getOrderDetails(retailer: any): void {
-        this.retailers = this.retailers.map(ret => {
+        this.retailerDispList = this.retailerDispList.map(ret => {
             if (ret.isActive) {
                 ret.isActive = false;
             }
@@ -44,7 +44,6 @@ export class RetailerSubListComponent implements OnInit, OnChanges {
             }
             return ret;
         });
-        this.retailerDispList = JSON.parse(JSON.stringify(this.retailers));
         this.retailerChanged.emit(retailer);
     }
 

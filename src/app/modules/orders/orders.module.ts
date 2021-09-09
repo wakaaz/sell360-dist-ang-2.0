@@ -24,6 +24,7 @@ import { OrderBookerListComponent } from './components/order-booker-list/order-b
 import { OrdersService } from './services/orders.service';
 
 import { OrderDispatchService } from './services/dispatch.service';
+import { ExecutionService } from './services/execution.service';
 
 @NgModule({
   imports: [
@@ -51,6 +52,7 @@ import { OrderDispatchService } from './services/dispatch.service';
   ],
   providers: [
     OrderDispatchService,
+    ExecutionService,
     OrdersService
   ],
 })

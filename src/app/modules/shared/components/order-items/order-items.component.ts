@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
+import { PaymentDetail } from 'src/app/modules/orders/models/counter-sale.model';
 import { DataService } from '../../services';
 
 @Component({
@@ -11,6 +12,12 @@ import { DataService } from '../../services';
 export class OrderItemsListComponent implements OnInit, OnChanges {
 
     @Input() orderType: string;
+    @Input() returnAmount: number;
+    @Input() receivableAmount: number;
+    @Input() totalPayment: number;
+    @Input() cheque: PaymentDetail;
+    @Input() credit: PaymentDetail;
+    @Input() cash: PaymentDetail;
     @Input() orderDetail: any;
     @Input() selectedRetailer: any;
     @Input() merchantDiscount: any;
@@ -37,6 +44,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     @Output() openReturnedModal: EventEmitter<boolean> = new EventEmitter();
     @Output() saveCurrentOrder: EventEmitter<any> = new EventEmitter();
     @Output() cancelCurrentOrder: EventEmitter<any> = new EventEmitter();
+    @Output() deleteReturned: EventEmitter<any> = new EventEmitter();
+    @Output() productUpdated: EventEmitter<boolean> = new EventEmitter();
 
     constructor(
         private toastService: ToasterService,
@@ -110,19 +119,39 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
 
     deleteProduct(): void {
-        if (this.selectedItem.id) {
-            this.selectedItem.stockQty = 0;
-            this.setQuantity(this.selectedItem);
-            this.selectedItem.isDeleted = true;
+        if (this.selectedItem.productType === 'returned') {
+            this.deleteReturned.emit(this.selectedItem);
         } else {
-            this.orderDetail.items = this.orderDetail.items.filter(x => x.item_id !== this.selectedItem.item_id);
-            this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
-            this.applySlabOnAllProducts();
+            if (this.orderType === 'execution') {
+                const product = this.allProducts.find(x => x.item_id === this.selectedItem.item_id);
+                product.available_qty = +product.stockQty;
+            }
+            if (this.selectedItem.id) {
+                this.selectedItem.stockQty = 0;
+                this.setQuantity(this.selectedItem);
+                this.selectedItem.isDeleted = true;
+            } else {
+                this.orderDetail.items = this.orderDetail.items.filter(x => x.item_id !== this.selectedItem.item_id);
+                this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
+                this.applySlabOnAllProducts();
+            }
+            document.getElementById('close-prod-del').click();
         }
-        document.getElementById('close-prod-del').click();
     }
 
     setQuantity(product: any): void {
+        if (this.orderType === 'execution') {
+            if (+product.stockQty > product.dispatch_qty) {
+                const toast: Toaster = {
+                    message: 'Executed quantity cannot be greater than dispatched quantity!', type: 'error',
+                    title: 'Quantity Error:'
+                };
+                this.toastService.showToaster(toast);
+                const prod = this.allProducts.find(x => x.item_id === this.selectedItem.item_id);
+                prod.available_qty = +product.stockQty;
+                product.stockQty = 0;
+            }
+        }
         if (product.item_trade_price) {
             product.isDeleted = false;
             if (this.orderDetail.items.find(x => x.item_id === product.item_id)) {
@@ -133,7 +162,53 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
             this.calculateProductPrice(product);
             this.calculateTotalBill();
             this.applySlabOnAllProducts();
+            this.productUpdated.emit();
         }
+    }
+
+    setReturnedQty(product: any): void {
+        product.gross_amount = -(product.item_trade_price * product.stockQty);
+        product.original_amount = -(product.item_trade_price * product.stockQty);
+        product.total_retail_price = -(product.item_retail_price * product.stockQty);
+        if (product.extra_discount) {
+            product.booker_discount = +product.extra_discount;
+            product.unit_price_after_individual_discount = product.item_trade_price
+                - product.booker_discount;
+        }
+        product.net_amount = -(product.unit_price_after_individual_discount
+            * product.stockQty);
+        this.productUpdated.emit();
+    }
+
+    setExtraDiscount(product: any): void {
+        if (product.stockQty) {
+            if (this.checkDiscount(product)) {
+                product.booker_discount = +product.extra_discount;
+                product.unit_price_after_individual_discount = product.item_trade_price
+                    - product.booker_discount;
+                product.net_amount = -(product.unit_price_after_individual_discount
+                    * product.stockQty);
+                this.productUpdated.emit();
+            }
+        }
+    }
+
+    checkDiscount(product: any): boolean {
+        if (product.extra_discount && +product.extra_discount > product.item_trade_price) {
+            this.resetDiscount(product);
+            return false;
+        }
+        return true;
+    }
+
+    resetDiscount(product: any): void {
+        const toast: Toaster = {
+            type: 'error', title: 'Incorrect discount:',
+            message: `The discount cannot be greater than item trade price (${product.item_trade_price})!`
+        };
+        this.toastService.showToaster(toast);
+        product.extra_discount = 0;
+        this.setExtraDiscount(product);
     }
 
     applySlabOnAllProducts(): void {
@@ -183,10 +258,14 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         product = this.calculateProductSpecialDiscount(product);
 
         // Extra Discount => Booker Discount
-        product.extra_discount = 0;
-        product.extra_discount_pkr = 0;
+        if (!product.extra_discount) {
+            product.extra_discount = 0;
+            product.extra_discount_pkr = 0;
+            this.calculateNetAmountOfProduct(product);
+        } else {
+            this.calculateExtraDiscount(product);
+        }
 
-        this.calculateNetAmountOfProduct(product);
     }
 
     calculateProductSpecialDiscount(product: any): any {
@@ -207,6 +286,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         }
         this.calculateNetAmountOfProduct(product);
         this.calculateTotalBill();
+        this.productUpdated.emit();
     }
 
     calculateNetAmountOfProduct(product: any): any {

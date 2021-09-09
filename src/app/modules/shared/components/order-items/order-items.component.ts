@@ -147,9 +147,15 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
                     title: 'Quantity Error:'
                 };
                 this.toastService.showToaster(toast);
-                const prod = this.allProducts.find(x => x.item_id === this.selectedItem.item_id);
+                const prod = this.allProducts.find(x => x.item_id === product.item_id);
                 prod.available_qty = +product.stockQty;
                 product.stockQty = 0;
+            } else {
+                const diff = product.dispatch_qty - product.stockQty;
+                if (diff > 0) {
+                    const prod = this.allProducts.find(x => x.item_id === product.item_id);
+                    prod.available_qty = prod.available_qty + diff;
+                }
             }
         }
         if (product.item_trade_price) {

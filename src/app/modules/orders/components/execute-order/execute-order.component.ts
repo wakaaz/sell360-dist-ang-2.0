@@ -1,6 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
+import { LocalStorageService } from '../../../../core/services/storage.service';
+import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
+import { DataService } from '../../../shared/services';
+import { PaymentDetail } from '../../models/counter-sale.model';
+import { ExecutionService } from '../../services/execution.service';
 import { OrdersService } from '../../services/orders.service';
 
 @Component({
@@ -17,12 +21,33 @@ export class ExecuteOrderComponent implements OnInit {
     savingOrder: boolean;
     showReturned: boolean;
     showProducts: boolean;
+    isCredit: boolean;
+    alreadyFullPayment: boolean;
+    isChequeAdded: boolean;
+    isCreditAdded: boolean;
+    isAdded: boolean;
 
+    paymentDate: string;
     orderDate: string;
+    paymentTypeCredit: string;
+    paymentTypeCheque: string;
+    addedPayment: string;
+    bankName: string;
+    chequeNumber: string;
+    currentPayment: string;
 
+    creditAmount: number;
+    chequeAmount: number;
+    returnAmount: number;
+    receivableAmount: number;
+    totalPayment: number;
+    distributorId: number;
     currentTab: number;
     salemanId: number;
 
+    cheque: PaymentDetail;
+    credit: PaymentDetail;
+    cash: PaymentDetail;
     orderDetails: any = {};
     selectedRetailer: any;
     merchantDiscount: any;
@@ -36,13 +61,14 @@ export class ExecuteOrderComponent implements OnInit {
     specialDiscounts: Array<any> = [];
     discountSlabs: Array<any> = [];
 
-    @Output() cancel: EventEmitter<boolean> = new EventEmitter();
-
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private orderService: OrdersService,
+        private executionService: ExecutionService,
         private toastService: ToasterService,
+        private dataService: DataService,
+        private storageService: LocalStorageService,
     ) {
     }
 
@@ -52,6 +78,7 @@ export class ExecuteOrderComponent implements OnInit {
             pagingType: 'simple_numbers',
         };
         this.getSchemesData();
+        this.setPaymentInitalValues();
         this.salemanId = +this.route.snapshot.paramMap.get('saleManId');
         this.orderDate = this.route.snapshot.paramMap.get('date');
         if (!this.salemanId || !this.orderDate) {
@@ -59,6 +86,19 @@ export class ExecuteOrderComponent implements OnInit {
         } else {
             this.getOrdersBySalemanAndDate();
         }
+    }
+
+    setPaymentInitalValues(): void {
+        this.creditAmount = 0;
+        this.chequeAmount = 0;
+        this.returnAmount = 0;
+        this.receivableAmount = 0;
+        this.totalPayment = 0;
+        this.distributorId = this.storageService.getItem('distributor').id;
+    }
+
+    addNewProductToOrder(product: any): void {
+        this.newProduct = product;
     }
 
     getSchemesData(): void {
@@ -112,6 +152,8 @@ export class ExecuteOrderComponent implements OnInit {
             this.orderService.getOrderDetails(retailer.id).subscribe(res => {
                 if (res.status === 200) {
                     this.orderDetails = res.data;
+                    this.orderDetails.returned_items = [];
+                    this.receivableAmount = this.orderDetails.total_amount_after_tax;
                     this.orderDetails.items = this.orderDetails.items.map(prod => {
                         const product = this.inventory.find(x => x.item_id === prod.item_id);
                         prod.parent_trade_price = JSON.parse(JSON.stringify(product.parent_trade_price));
@@ -142,6 +184,7 @@ export class ExecuteOrderComponent implements OnInit {
                         prod.selectedScheme = this.schemes.find(scheme => scheme.id === prod.scheme_id);
                         return prod;
                     });
+                    this.calculatePayments();
                 }
             }, error => {
                 this.loading = false;
@@ -180,10 +223,28 @@ export class ExecuteOrderComponent implements OnInit {
     }
 
     handleReturnedProduct(returnedProduct: any): void {
-        if (!this.orderDetails.returned_items?.length) {
-            this.orderDetails.returned_items = [];
-        }
         this.orderDetails.returned_items.push(returnedProduct);
+        this.calculateReceivable();
+    }
+
+    deleteReturnedProduct(selectedItem: any): void {
+        if (selectedItem.id) {
+            selectedItem.stockQty = 0;
+            // this.setQuantity(selectedItem);
+            selectedItem.isDeleted = true;
+        } else {
+            this.orderDetails.returned_items = this.orderDetails.returned_items.filter(x => x.item_id !== selectedItem.item_id);
+            // this.applySlabOnAllProducts();
+        }
+        document.getElementById('close-prod-del').click();
+        this.calculateReceivable();
+    }
+
+    calculateReceivable(): void {
+        const returnPrices = this.orderDetails.returned_items.filter(x => !x.isDeleted).map(x => x.net_amount);
+        this.returnAmount = this.dataService.calculateItemsBill(returnPrices);
+        this.receivableAmount = this.orderDetails.total_amount_after_tax + this.returnAmount;
+        this.calculatePayments();
     }
 
     openProductsList(): void {
@@ -210,6 +271,275 @@ export class ExecuteOrderComponent implements OnInit {
 
     changeTab(selectedTab: number): void {
         this.currentTab = selectedTab;
+    }
+
+    focused(event: Event): void {
+        (event.target as HTMLElement).parentElement.classList.add('focused');
+    }
+
+    left(event: Event): void {
+        if (!(event.target as HTMLInputElement).value) {
+            (event.target as HTMLElement).parentElement.classList.remove('focused');
+        }
+    }
+
+    isFullyPaymentAdded(current: string): void {
+        if (this.receivableAmount <= 0) {
+            const toast: Toaster = {
+                type: 'error',
+                message: `Your receivable amount (${this.receivableAmount.toFixed(2)}) is not enough to add payment!`,
+                title: `Payment cannot be added`
+            };
+            this.toastService.showToaster(toast);
+            return;
+        }
+        if (current === 'Credit') {
+            this.paymentTypeCredit = '';
+        } else {
+            this.paymentTypeCheque = '';
+        }
+        if (!this.selectedRetailer) {
+            const toast: Toaster = {
+                type: 'error',
+                message: `Please select order to add payment details!`,
+                title: `Payment cannot be added`
+            };
+            this.toastService.showToaster(toast);
+        } else {
+            if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
+                const toast: Toaster = {
+                    type: 'error',
+                    message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${this.currentPayment}!`,
+                    title: `Full Payment selected for ${this.addedPayment}`
+                };
+                this.toastService.showToaster(toast);
+            } else {
+                this.focusForPaymentValues();
+                document.getElementById('open-modal-payment').click();
+            }
+        }
+    }
+
+    focusForPaymentValues(): void {
+        if (this.isCredit && this.creditAmount) {
+            document.getElementById('Amount2').parentElement.classList.add('focused');
+        } else {
+            if (this.chequeAmount) { document.getElementById('Amount1').parentElement.classList.add('focused'); }
+            if (this.bankName) { document.getElementById('chequeBankName').parentElement.classList.add('focused'); }
+            if (this.chequeNumber) { document.getElementById('chequeNum').parentElement.classList.add('focused'); }
+        }
+    }
+
+    currentFullPayment(current: string, other: string): void {
+        if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
+            const toast: Toaster = {
+                type: 'error',
+                message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${this.currentPayment}!`,
+                title: `Full Payment selected for ${this.addedPayment}`
+            };
+            this.toastService.showToaster(toast);
+        } else {
+            this.addedPayment = current;
+            this.currentPayment = other;
+        }
+    }
+
+    setPartial(current: string): void {
+        if (current === this.addedPayment) {
+            if (this.credit && current === 'Credit') {
+                this.cash.amount_received = this.cash.amount_received + this.credit.amount_received;
+                this.credit.amount_received = 0;
+            }
+            if (this.cheque && current === 'Cheque Payment') {
+                this.cash.amount_received = this.cash.amount_received + this.cheque.amount_received;
+                this.cheque.amount_received = 0;
+            }
+            this.addedPayment = '';
+            this.currentPayment = '';
+            this.alreadyFullPayment = false;
+        }
+    }
+
+    checkPaymentHasValues(): boolean {
+        if (this.isCredit) {
+            if (this.paymentTypeCredit === 'full') {
+                return this.paymentTypeCredit.length > 0;
+            } else {
+                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1 && this.creditAmount <= this.cash.amount_received;
+            }
+        } else {
+            if (this.paymentTypeCheque === 'full') {
+                return this.paymentTypeCheque.length > 0 && this.bankName.length > 0 &&
+                    this.chequeNumber.length > 0 && this.paymentDate.length > 0;
+            } else {
+                return this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 && this.chequeAmount <= this.cash.amount_received &&
+                    this.bankName.length > 0 && this.chequeNumber.length > 0 && this.paymentDate.length > 0;
+            }
+        }
+    }
+
+    removeCheque(): void {
+        this.cheque = null;
+        this.isChequeAdded = false;
+        this.paymentTypeCheque = '';
+        this.calculatePayments();
+    }
+
+    removeCredit(): void {
+        this.credit = null;
+        this.isCreditAdded = false;
+        this.paymentTypeCredit = '';
+        this.calculatePayments();
+    }
+
+    makePayment(): void {
+        if (this.isCredit) {
+            this.credit = {
+                retailer_id: this.selectedRetailer.retailer_id,
+                distributor_id: this.distributorId,
+                type: 'Counter',
+                payment_mode: 'Credit',
+                payment_detail: '',
+                dispatched_bill_amount: 0,
+                recovery: 0,
+                amount_received: this.paymentTypeCredit === 'full' ? JSON.parse(JSON.stringify(this.receivableAmount)) :
+                    JSON.parse(JSON.stringify(this.creditAmount))
+            };
+            this.isCreditAdded = true;
+        }
+        if (!this.isCredit) {
+            this.cheque = {
+                retailer_id: this.selectedRetailer.retailer_id,
+                distributor_id: this.distributorId,
+                type: 'Counter',
+                payment_mode: 'Cheque',
+                payment_detail: {
+                    cheque_amount: this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.receivableAmount)) :
+                        JSON.parse(JSON.stringify(this.chequeAmount)),
+                    bank_name: JSON.parse(JSON.stringify(this.bankName)),
+                    cheque_number: JSON.parse(JSON.stringify(this.chequeNumber)),
+                    cheque_date: JSON.parse(JSON.stringify(this.paymentDate))
+                },
+                dispatched_bill_amount: 0,
+                recovery: 0,
+                amount_received: this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.receivableAmount)) :
+                    JSON.parse(JSON.stringify(this.chequeAmount))
+            };
+            this.isChequeAdded = true;
+        }
+        this.calculatePayments();
+    }
+
+    addPaymentMethod(): void {
+        this.isAdded = true;
+        const isPaymentAdded = this.checkPaymentHasValues();
+        if (isPaymentAdded) {
+            this.isAdded = false;
+            this.makePayment();
+            document.getElementById('open-modal-payment').click();
+        }
+    }
+
+    paymentCancelled(): void {
+        this.isAdded = false;
+        this.resetPaymentValues();
+        this.paymentTypeCredit = '';
+        this.paymentTypeCheque = '';
+    }
+
+    resetPaymentValues(): void {
+        this.chequeAmount = null;
+        this.paymentDate = new Date().toISOString().split('T')[0];
+        this.bankName = '';
+        this.chequeNumber = null;
+        this.creditAmount = null;
+    }
+
+    calculatePayments(): void {
+        this.cash = {
+            retailer_id: this.selectedRetailer.retailer_id,
+            distributor_id: this.distributorId,
+            type: 'Counter',
+            payment_mode: 'Cash',
+            payment_detail: '',
+            dispatched_bill_amount: 0,
+            recovery: 0,
+            amount_received: Math.round((this.receivableAmount + Number.EPSILON) * 100) / 100
+        };
+        if (this.cheque) {
+            this.cash.amount_received = this.cash.amount_received - this.cheque.amount_received;
+        }
+        if (this.credit) {
+            this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
+        }
+        this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
+    }
+
+    saveExecutionQuantity(): void {
+        this.orderDetails.items = this.executionService.setOrderPayloadItems(this.orderDetails, this.selectedRetailer);
+        this.orderDetails.returned_items = this.executionService.setOrderPayloadReturnedItems(this.orderDetails, this.selectedRetailer);
+        this.orderDetails.payment = {
+            total_payment: this.totalPayment,
+            detail: [this.cash]
+        };
+        if (this.credit) {
+            this.orderDetails.payment.detail.push(this.credit);
+        }
+        if (this.cheque) {
+            this.orderDetails.payment.detail.push(this.cheque);
+        }
+        this.savingOrder = true;
+        this.orderService.saveExecutionQuantityOrder(this.orderDetails).subscribe(res => {
+            this.savingOrder = false;
+            if (res.status === 200) {
+                this.toastService.showToaster({
+                    message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} execution updated successfully!`,
+                    title: 'Order execution:',
+                    type: 'success'
+                });
+            }
+            this.orderDetails.items = [];
+            this.selectedRetailer.isActive = false;
+            this.selectedRetailer = JSON.parse(JSON.stringify(null));
+            this.resetPaymentValues();
+        }, error => {
+            this.savingOrder = false;
+            if (error.status !== 1 && error.status !== 401) {
+                console.log('Error in Save Order for execution ::>> ', error);
+                this.toastService.showToaster({
+                    message: 'Something went wrong execution cannot be save at the moment!',
+                    title: 'Error:',
+                    type: 'error'
+                });
+            }
+        });
+    }
+
+    cancelOrder(): void {
+        document.getElementById('close-del').click();
+        this.savingOrder = true;
+        this.orderService.cancelOrder(this.orderDetails.id).subscribe(res => {
+            this.savingOrder = false;
+            if (res.status === 200) {
+                this.toastService.showToaster({
+                    message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
+                    title: 'Order dispatched:',
+                    type: 'success'
+                });
+                this.orderDetails = null;
+                this.getOrdersBySalemanAndDate();
+            }
+        }, error => {
+            this.savingOrder = false;
+            if (error.status !== 1 && error.status !== 401) {
+                console.log('Error in Save Order for dispatch ::>> ', error);
+                this.toastService.showToaster({
+                    message: 'Something went wrong order cannot be canceled at the moment!',
+                    title: 'Error:',
+                    type: 'error'
+                });
+            }
+        });
     }
 
 }

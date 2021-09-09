@@ -1,5 +1,6 @@
 import { Component, Input, OnInit, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
-import { freeProductsRules, schemes } from 'src/app/core/constants/schemes.constant';
+import { freeProductsRules, schemes } from '../../../../core/constants/schemes.constant';
+import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
 import { DataService } from '../../services';
 
 @Component({
@@ -16,6 +17,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     @Input() specialDiscounts: Array<any>;
     @Input() selectedRetailer: any;
     @Input() productMerchantDiscount: any;
+    @Input() orderType: string;
 
     productSearchText: string;
 
@@ -31,6 +33,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
 
     constructor(
         private dataService: DataService,
+        private toastService: ToasterService,
     ) { }
 
     ngOnInit(): void {
@@ -41,6 +44,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
             this.allProducts = this.allProducts.map(x => {
                 const orderedProduct = this.orderedProducts.find(pr => pr.item_id === x.item_id);
                 x.isAdded = false;
+                x.availableQty = x.available_qty;
                 if (orderedProduct) {
                     x.isAdded = true;
                 }
@@ -54,8 +58,25 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         return this.dataService.isNumber(event, type);
     }
 
+    checkAvailableQty(product: any): void {
+        if (this.orderType === 'execution') {
+            const toast: Toaster = {
+                type: 'error',
+                message: `Quantity (${product.stockQty}) should not be greater than available quantity (${product.availableQty})!`,
+                title: 'Quantity Error:'
+            };
+            if (+product.stockQty > product.availableQty) {
+                this.toastService.showToaster(toast);
+            } else {
+                product.availableQty = product.available_qty - product.stockQty;
+            }
+        }
+    }
+
     addProductToOrder(): void {
-        if (+this.selectedProduct.quantity > 0) {
+        if (+this.selectedProduct.stockQty > 0 &&
+            (this.orderType !== 'execution' ||
+                this.orderType === 'execution' && +this.selectedProduct.stockQty <= this.selectedProduct.available_qty)) {
             this.selectedProduct.item_quantity_booker = 0;
             this.allProducts.find(x => x.item_id === this.selectedProduct.item_id).isAdded = true;
             this.dispProducts.find(x => x.item_id === this.selectedProduct.item_id).isAdded = true;

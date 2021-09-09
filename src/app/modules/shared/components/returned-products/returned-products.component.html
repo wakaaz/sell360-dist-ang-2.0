@@ -32,8 +32,10 @@
                                     <div class="form-s2">
                                         <ng-select class="formselect" #productRet placeholder="Select Product" id="ret-product"
                                             name="ret-product" (change)="productSelected($event)" style="width: 230px">
-                                            <ng-option *ngFor="let product of productsList" [value]="product">{{product.item_name}}
-                                            </ng-option>
+                                            <ng-container *ngFor="let product of productsList">
+                                                <ng-option *ngIf="!isAlreadyInOrder(product)" [value]="product">{{product.item_name}}
+                                                </ng-option>
+                                            </ng-container>
                                         </ng-select>
                                     </div>
                                 </td>

@@ -1,66 +1,204 @@
-<div class="modal fade" id="exampleModal-del" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" id="order-del" tabindex="-1" role="dialog" aria-labelledby="orderLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content top-borderRed">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Delete <span></span></h5>
+                <h5 class="modal-title" id="orderLabel">Cancel Order <span></span></h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
                 <div class="col-md-12">
-                    <p>Are you sure you want to delete?</p>
+                    <p>Are you sure you want to cancel the order?</p>
                 </div>
-
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-primary">Yes</button>
-                <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">No</button>
+                <button type="button" class="btn btn-primary" (click)="cancelOrder()">Yes</button>
+                <button type="submit" id="close-del" class="btn btn-cancel" data-dismiss="modal"
+                    aria-label="Close">No</button>
             </div>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="QuantityAndUnit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [orderType]="'execution'"
+    [orderedProducts]="orderDetails?.items" [loadingProducts]="loadingProduct" [allProducts]="inventory"
+    [productSchemes]="schemes" [productMerchantDiscount]="merchantDiscount" [specialDiscounts]="specialDiscounts"
+    (drawerClosed)="closeNewProducts()" (productSelected)="addNewProductToOrder($event)">
+</app-products-drawer>
+
+<app-returned-products [productsList]="allProducts" [orderReturnedItems]="orderDetails.returned_items"
+    (productReturned)="handleReturnedProduct($event)" (closeReturned)="closeReturnedModal()" *ngIf="showReturned">
+</app-returned-products>
+
+<!-- Credit and Cheque info -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content top_border">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Detail <span></span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
-                        aria-hidden="true">&times;</span> </button>
+            <div *ngIf="!isCredit" class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add <span> Cheque Information</span></h5>
+                <button type="button" (click)="paymentCancelled()" class="close" data-dismiss="modal"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body AddDetailPR">
-                <div class="row">
-                    <div class="col-md-4 pt-7 mb-15">Add Quantity*:</div>
-                    <div class="col-md-8 mb-15">
-                        <input type="number" class="form-control" placeholder="" style="font-size:13px">
+
+            <div *ngIf="!isCredit" class="col-12">
+                <div id="floating-label" class="form-wrap p-0">
+                    <div class="row pt-10">
+                        <div class="col-4">
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" type="radio" [(ngModel)]="paymentTypeCheque"
+                                    (click)="chequeAmount=null;currentFullPayment('Cheque Payment', 'Credit')"
+                                    name="payment" id="payment1" value='full'>
+                                <label class="custom-control-label" style="font-size: 13px; line-height:25px"
+                                    for="payment1">Full Amount</label>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="custom-control custom-radio">
+                                <input (click)="setPartial('Cheque Payment')" class="custom-control-input" type="radio"
+                                    [(ngModel)]="paymentTypeCheque" name="payment" id="payment2" value='partial'>
+                                <label class="custom-control-label" style="font-size: 13px; line-height:25px"
+                                    for="payment2">Partial Amount</label>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="col-md-4 pt-7 mb-15">Select Unit*:</div>
-                    <div class="col-md-8 mb-15">
-                        <select class="custom-select custom-select-sm" id="">
-                            <option disabled selected value="0">Select Unit</option>
-                        </select>
+                    <div *ngIf="paymentTypeCheque === '' && isAdded" class="col-12 input-error">
+                        Please select a payment method!
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6 PT-10">
+                            <div class="form-group">
+                                <label class="control-label mb-10">Cheque Number*</label>
+                                <input type="text" id="chequeNum" name="cheque_num" (focus)="focused($event)" required
+                                    (blur)="left($event)" [(ngModel)]="chequeNumber" #chequNo="ngModel"
+                                    autocomplete="off" class="form-control cheque_num">
+                            </div>
+                            <span *ngIf="chequNo.errors?.required && isAdded" class="input-error">
+                                Please add Cheque Number!
+                            </span>
+                        </div>
+                        <div class="col-md-6 PT-10">
+                            <div class="form-group focused">
+                                <label class="control-label mb-10">Date*</label>
+                                <input type="date" id="datepicker" (focus)="focused($event)" required placeholder=""
+                                    autocomplete="off" (blur)="left($event)" name="payment_date"
+                                    [(ngModel)]="paymentDate" #payDate="ngModel" class="form-control cheque_date">
+                            </div>
+                            <span *ngIf="paymentDate === '  ' && isAdded" class="input-error">
+                                Please add Payment Date!
+                            </span>
+                        </div>
+                        <div class="col-md-6 PT-5">
+                            <div class="form-group">
+                                <label class="control-label mb-10">Bank Name*</label>
+                                <input type="text" name="cheque_bank_name" id="chequeBankName" (focus)="focused($event)"
+                                    required (blur)="left($event)" [(ngModel)]="bankName" #bank_Name="ngModel"
+                                    autocomplete="off" class="form-control cheque_bank_name">
+                            </div>
+                            <span *ngIf="bank_Name.errors?.required && isAdded" class="input-error">
+                                Please add Bank Name!
+                            </span>
+                        </div>
+                        <div *ngIf="paymentTypeCheque !== 'full'" class="col-md-6 PT-5">
+                            <div class="form-group">
+                                <label class="control-label mb-10">Total Amount*</label>
+                                <input type="number" min="0" [max]="cash?.amount_received" name="cheque_amount"
+                                    (focus)="focused($event)" required (blur)="left($event)" [(ngModel)]="chequeAmount"
+                                    #cheqAmount="ngModel" id="Amount1" autocomplete="off"
+                                    class="form-control cheque_amount">
+                            </div>
+                            <span *ngIf="cheqAmount.errors?.required && isAdded" class="input-error">
+                                Please add Total Amount!
+                            </span>
+                            <span *ngIf="!cheqAmount.errors?.required && chequeAmount < 0 && isAdded"
+                                class="input-error">
+                                Negative values not allowed
+                            </span>
+                            <span
+                                *ngIf="!cheqAmount.errors?.required && chequeAmount > cash?.amount_received && isAdded"
+                                class="input-error">
+                                Amount should not be greater than {{cash?.amount_received | number: '1.2-2'}}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer border-0" style="background-color: #f6f6f6">
-                <button type="button" class="btn btn-primary">Confirm</button>
-                <button type="button" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">Cancel</button>
+            <div *ngIf="isCredit" class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add <span>Credit Information</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div *ngIf="isCredit" id="floating-label" class="form-wrap p-0">
+                <div class="col-12">
+                    <div class="row pt-10">
+                        <div class="col-6">
+                            <div class="custom-control custom-radio">
+                                <input class="custom-control-input" [(ngModel)]="paymentTypeCredit" type="radio"
+                                    (click)="creditAmount=null;currentFullPayment('Credit', 'Cheque payment')"
+                                    name="payment" id="Amount1" value='full'>
+                                <label class="custom-control-label" style="font-size: 13px; line-height: 25px"
+                                    for="Amount1">Full Amount</label>
+                            </div>
+                            <span *ngIf="paymentTypeCredit === '' && isAdded" class="input-error">
+                                Please select a payment method!
+                            </span>
+                        </div>
+                        <div class="col-6">
+                            <div class="custom-control custom-radio">
+                                <input (click)="setPartial('Credit')" class="custom-control-input"
+                                    [(ngModel)]="paymentTypeCredit" type="radio" name="payment" id="Amount2"
+                                    value='partial'>
+                                <label class="custom-control-label" style="font-size: 13px; line-height: 25px"
+                                    for="Amount2">Partial Amount</label>
+                            </div>
+                        </div>
+                        <div *ngIf="paymentTypeCredit !== 'full'" class="col-md-6 PT-10">
+                            <div class="form-group">
+                                <label class="control-label mb-10">Amount*</label>
+                                <input type="number" min="0" [max]="cash?.amount_received" name="cheque_amount"
+                                    (focus)="focused($event)" required (blur)="left($event)" [(ngModel)]="creditAmount"
+                                    #credAmount="ngModel" autocomplete="off" class="form-control cheque_amount">
+                            </div>
+                            <span *ngIf="credAmount.errors?.required && isAdded" class="input-error">
+                                Please add Total Amount!
+                            </span>
+                            <span *ngIf="!credAmount.errors?.required && creditAmount < 0 && isAdded"
+                                class="input-error">
+                                Negative values not allowed
+                            </span>
+                            <span
+                                *ngIf="!credAmount.errors?.required && creditAmount > cash?.amount_received && isAdded"
+                                class="input-error">
+                                Amount should not be greater than {{cash?.amount_received | number: '1.2-2'}}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="(paymentTypeCheque === 'partial' && paymentTypeCredit === 'full') || (paymentTypeCheque === 'full' && paymentTypeCredit === 'partial')"
+                class="form-wrap p-10">
+                <h5 class="input-error">You have to choose "Partial Amount" to use both Credit and Cheque Payment!</h5>
+            </div>
+
+
+            <div class="modal-footer border-0">
+                <button type="submit"
+                    [disabled]="(paymentTypeCheque === 'partial' && paymentTypeCredit === 'full') || (paymentTypeCheque === 'full' && paymentTypeCredit === 'partial')"
+                    class="btn btn-primary" (click)="addPaymentMethod()">Add</button>
+                <button type="button" id="close-payment-modal" (click)="paymentCancelled()" class="btn btn-cancel"
+                    data-dismiss="modal" aria-label="Close">Cancel</button>
             </div>
         </div>
     </div>
 </div>
-
-<app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [orderedProducts]="orderDetails?.items"
-    [loadingProducts]="loadingProduct" [allProducts]="inventory" [productSchemes]="schemes"
-    [productMerchantDiscount]="merchantDiscount" [specialDiscounts]="specialDiscounts"
-    (drawerClosed)="closeNewProducts()" (productSelected)="addNewProductToOrder($event)">
-</app-products-drawer>
-<app-returned-products [productsList]="allProducts" (productReturned)="handleReturnedProduct($event)" (closeReturned)="closeReturnedModal()" *ngIf="showReturned"></app-returned-products>
-
 
 <div class="container" id="order-container">
     <div class="row">
@@ -75,20 +213,20 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 2 ? 'active' : ''" id="pills-sale-tab"
-                            data-toggle="pill"><span>Spot Sale</span>
+                        <a class="nav-link" [ngClass]="currentTab === 2 ? 'active' : ''" id="pills-sale-tab"><span>Spot
+                                Sale</span>
                             <span class="wz-icon"><i class="fa fa-dollar-sign"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 3 ? 'active' : ''" id="pills-load-tab"
-                            data-toggle="pill"><span>Recovery</span>
+                        <a class="nav-link" [ngClass]="currentTab === 3 ? 'active' : ''"
+                            id="pills-load-tab"><span>Recovery</span>
                             <span class="wz-icon"><i class="fa fa-redo"></i></span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 4 ? 'active' : ''" id="pills-final-tab"
-                            data-toggle="pill"><span>Final</span>
+                        <a class="nav-link" [ngClass]="currentTab === 4 ? 'active' : ''"
+                            id="pills-final-tab"><span>Final</span>
                             <span class="wz-icon"><i class="fa fa-check"></i></span>
                         </a>
                     </li>
@@ -123,7 +261,8 @@
                                 <div class="col">
                                     <div class="gary-box" style="min-width: 200px;"><strong>Total
                                             Amount:</strong>
-                                        <span class="execution_amount">Rs. {{dispatchSummary?.total_amount || 0 | number:
+                                        <span class="execution_amount">Rs. {{dispatchSummary?.total_amount || 0 |
+                                            number:
                                             '1.2-2'}}</span>
                                     </div>
                                 </div>
@@ -139,10 +278,15 @@
                             <div class="col p-0">
                                 <div class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder" [orderDetail]="orderDetails"
-                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct"
-                                        [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
-                                        [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
-                                        [orderType]="'execution'" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()">
+                                        [returnAmount]="returnAmount" [receivableAmount]="receivableAmount"
+                                        [totalPayment]="totalPayment" [cheque]="cheque" [credit]="credit" [cash]="cash"
+                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer"
+                                        [returnedProduct]="returnedProduct" [allProducts]="allProducts"
+                                        [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
+                                        [newProduct]="newProduct" [orderType]="'execution'"
+                                        (deleteReturned)="deleteReturnedProduct($event)"
+                                        (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()"
+                                        (productUpdated)="calculateReceivable()">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">
                                         <app-loader-white></app-loader-white>
@@ -150,16 +294,27 @@
                                 </div>
 
                                 <div class="col-md-12 bottom-act-btn">
-                                    <button class="btn btn-primary mr-2 float-left font13" data-toggle="modal"
-                                        data-target="#CheckModalSpotSale">Add
-                                        cheque</button>
-                                    <button class="btn btn-primary mr-2 float-left font13" data-toggle="modal"
-                                        data-target="#CreditModalSpotSale">Add
-                                        credit</button>
-                                    <button class="btn btn-primary mr-2 save_order_execution font13">Save
+                                    <button *ngIf="!savingOrder && !isChequeAdded"
+                                        class="btn btn-primary float-left mr-2 font13"
+                                        (click)="isCredit = false;isFullyPaymentAdded('Cheque Payment')">Add
+                                        Cheque</button>
+                                    <button *ngIf="!savingOrder && isChequeAdded"
+                                        class="btn btn-primary float-left font13 mr-2 red-bg"
+                                        (click)="removeCheque()">Remove Cheque</button>
+                                    <button *ngIf="!savingOrder && !isCreditAdded"
+                                        class="btn btn-primary float-left font13"
+                                        (click)="isCredit = true;isFullyPaymentAdded('Credit')">Add Credit</button>
+                                    <button *ngIf="!savingOrder && isCreditAdded"
+                                        class="btn btn-primary float-left font13 red-bg" (click)="removeCredit()">Remove
+                                        Credit</button>
+                                    <button *ngIf="!savingOrder" id="open-modal-payment" style="display: none;"
+                                        data-toggle="modal" data-target="#exampleModal2">Show Modal</button>
+
+                                    <button [disabled]="savingOrder"
+                                        class="btn btn-primary mr-2 save_order_execution font13">Save
                                         Order</button>
-                                    <button class="btn btn-cancel cancel_order_btn font13" data-toggle="modal"
-                                        data-target="#ConfirmCancelSpotSale" (click)="cancelExecution()">Cancel</button>
+                                    <button [disabled]="savingOrder" class="btn btn-cancel cancel_order_btn font13"
+                                        data-toggle="modal" data-target="#order-del">Cancel Order</button>
                                 </div>
 
                             </div>
@@ -798,8 +953,10 @@
 
                     <div class="col-md-12 text-center">
                         <div *ngIf="currentTab !== 4" class="execFooter">
-                            <button [disabled]="currentTab === 1" type="submit" (click)="changeTab(currentTab - 1)" class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button type="submit" (click)="changeTab(currentTab + 1)" class="btn btn-primary m-0">Next</button>
+                            <button [disabled]="currentTab === 1" type="submit" (click)="changeTab(currentTab - 1)"
+                                class="btn btn-primary m-0 mr-2">Previous</button>
+                            <button type="submit" (click)="changeTab(currentTab + 1)"
+                                class="btn btn-primary m-0">Next</button>
                         </div>
                     </div>
                 </div>

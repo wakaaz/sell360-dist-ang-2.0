@@ -1,5 +1,6 @@
 <!-- Saleman Ledger -->
-<div id="product-cl-sec" (clickOutside)="clickedOutSide($event)" [ngClass]="shwoSaleManLedger ? 'active' : ''"> <a id="pl-close" (click)="closeSalemanLedger()" class="close-btn-pl"></a>
+<div id="product-cl-sec" (clickOutside)="clickedOutSide($event)" [ngClass]="shwoSaleManLedger ? 'active' : ''">
+    <a id="pl-close" (click)="closeSalemanLedger()" class="close-btn-pl"></a>
     <div class="pro-header-text">Leadger <span> SalesMan</span></div>
     <div class="pc-cartlist">
         <div class="overflow-plist">
@@ -26,8 +27,9 @@
                                 <div class="card p-20 top_border mb-3">
                                     <h2 class="_head03 mb-10">Transaction <span>List</span></h2>
 
-                                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example"
-                                        style="width:100%">
+                                    <table *ngIf="!loading" datatable [dtOptions]="dtOptions"
+                                        class="table table-hover dt-responsive nowrap" id="example4"
+                                        style="width: 100%">
                                         <thead>
                                             <tr>
                                                 <th>Date</th>
@@ -80,34 +82,37 @@
                                                 <td>11,880</td>
                                                 <td>11,880</td>
                                             </tr>
-
                                         </tbody>
                                     </table>
-
+                                    <div *ngIf="loading" class="col-md-12">
+                                        <app-loader-white></app-loader-white>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="_cl-bottom">
-        <button id="pl-close" (click)="closeSalemanLedger()" type="submit" class="btn btn-cancel mr-2">Close</button>
+        <button id="pl-close" (click)="closeSalemanLedger()" type="submit" class="btn btn-cancel mr-2">
+            Close
+        </button>
     </div>
 </div>
 
 <!-- Retailers List -->
 <div class="container" id="retailer-list">
-
     <div class="row mt-2 mb-2">
         <div class="col-lg-6 col-md-6 col-sm-6">
             <h2 class="_head01">Retailers <span>Management</span></h2>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
             <ol class="breadcrumb">
-                <li><a><span>Retailers</span></a></li>
+                <li>
+                    <a><span>Retailers</span></a>
+                </li>
                 <li><span>List</span></li>
             </ol>
         </div>
@@ -119,21 +124,17 @@
                 <div class="Product-Filter">
                     <div class="row">
                         <div class="col-12">
-
-                            <!-- <div class="CL-Product"><i class="fa fa-search"></i>
+                            <div class="CL-Product"><i class="fa fa-search"></i>
                                 <input type="text" class="form-control" id="" placeholder="Search by Shop ID or Name">
-                            </div> -->
+                            </div>
 
                             <div class="_cust_filter">
                                 <div class="form-s2">
-                                    <ng-select class="formselect" [multiple]="false" id="order-booker" placeholder="All Order Booker"
-                                        name="order-booker" [(ngModel)]="orderBooker" required>
-                                        <ng-option value="Asif Ali">
-                                            Asif Ali
-                                        </ng-option>
-                                        <ng-option value="Utba Aziz">
-                                            Utba Aziz
-                                        </ng-option>
+                                    <ng-select class="formselect" [multiple]="false" id="order-booker"
+                                        placeholder="All Order Booker" name="order-booker" [(ngModel)]="orderBooker"
+                                        required>
+                                        <ng-option value="Asif Ali"> Asif Ali </ng-option>
+                                        <ng-option value="Utba Aziz"> Utba Aziz </ng-option>
                                     </ng-select>
                                 </div>
                             </div>
@@ -142,33 +143,26 @@
                                 <div class="form-s2">
                                     <ng-select class="formselect" [multiple]="false" id="route" placeholder="All Route"
                                         name="route" [(ngModel)]="route" required>
+                                        <ng-option value="1"> Route 1 </ng-option>
+                                        <ng-option value="2"> Route 2 </ng-option>
+                                    </ng-select>
+                                </div>
+                            </div>
+
+                            <div class="_cust_filter">
+                                <div class="form-s2">
+                                    <ng-select class="formselect" [multiple]="false" id="segment"
+                                        placeholder="All Segment" name="segment" [(ngModel)]="segment" required>
                                         <ng-option value="1">
-                                            Route 1
-                                        </ng-option>
-                                        <ng-option value="2">
-                                            Route 2
+                                            segment 1
                                         </ng-option>
                                     </ng-select>
                                 </div>
                             </div>
 
-
-                            <!-- <div class="_cust_filter">
-                                <div class="form-s2">
-                                    <ng-select class="formselect" [multiple]="false" id="segment" placeholder="All Segment"
-                                        name="segment" [(ngModel)]="segment" required>
-                                        <ng-option value="1">
-                                            segment 1
-                                        </ng-option>
-                                        <ng-option value="2">
-                                            segment 2
-                                        </ng-option>
-                                    </ng-select>
-                                </div>
-                            </div> -->
-
-                            <button class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
-
+                            <button class="btn btn-primary">
+                                <i class="fa fa-search"></i> Search
+                            </button>
                         </div>
                     </div>
                     <div class="clearfix"></div>
@@ -181,33 +175,40 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="body">
-
-                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
+                    <table *ngIf="!loading" datatable [dtOptions]="dtOptions"
+                        class="table table-hover dt-responsive nowrap" id="example" style="width: 100%">
                         <thead>
                             <tr>
                                 <th>Shop ID</th>
                                 <th>Shop Name</th>
                                 <th>Phone Number</th>
-                                <th>Segment	</th>
-                                <th>Channel</th>  
+                                <th>Segment</th>
+                                <th>Channel</th>
                                 <th>POC Name</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>2451</td>
-                                <td>768 store</td>
-                                <td>03211234567</td>
-                                <td>G.T.-C Class</td>
-                                <td>Kiryana Store</td>
-                                <td>Pan Shop</td>
-                                <td><a id="productlist01" (click)="openSalemanLedger($event)" class="btn btn-default mb-0">View Leadger</a>
-                                    <a [routerLink]="['/retailer','profile',1]" class="btn btn-default mb-0">View Profile</a>
+                            <tr *ngFor="let retailer of retailers">
+                                <td>{{ retailer.id }}</td>
+                                <td>{{ retailer.retailer_name }}</td>
+                                <td>{{ retailer.retailer_phone }}</td>
+                                <td>{{ retailer.segment }}</td>
+                                <td>{{ retailer.retailer_type_name }}</td>
+                                <td>{{ retailer.poc }}</td>
+                                <td>
+                                    <a id="productlist01" (click)="openSalemanLedger($event)"
+                                        class="btn btn-default mb-0">View Leadger</a>
+                                    <a [routerLink]="['/retailer', 'profile', 1]" class="btn btn-default mb-0">View
+                                        Profile</a>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+
+                    <div *ngIf="loading" class="col-md-12">
+                        <app-loader-white></app-loader-white>
+                    </div>
                 </div>
             </div>
         </div>

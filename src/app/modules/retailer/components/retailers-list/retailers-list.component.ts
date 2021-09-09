@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ToasterService } from 'src/app/core/services/toaster.service';
+import { RetailerService } from '../../services/retailer.service';
 
 @Component({
     selector: 'app-retailers-list',
@@ -14,14 +16,36 @@ export class RetalersListComponent implements OnInit {
     route: string;
     segment: string;
     shwoSaleManLedger: boolean;
+    retailers = [];
+    loading: boolean;
 
-    constructor() {
+    constructor(
+        private retailerService: RetailerService,
+        private toastService: ToasterService,
+    ) {
         this.dtOptions = {
             pagingType: 'simple_numbers'
         };
     }
 
     ngOnInit(): void {
+        this.dtOptions = {
+            pagingType: 'simple_numbers'
+        };
+        this.loading = true;
+        this.retailerService.getRetailerListing().subscribe(res => {
+            console.log('retailers => ', res[0]);
+            this.loading = false;
+            this.retailers = res;
+        }, error => {
+            if (error.status !== 401 && error.status !== 1) {
+                this.toastService.showToaster({
+                    title: 'Error:',
+                    message: 'Salesmen not fetched, try again later.',
+                    type: 'error'
+                });
+            }
+        });
     }
 
     openSalemanLedger(event: Event): void {

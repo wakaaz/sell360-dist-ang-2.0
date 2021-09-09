@@ -36,7 +36,6 @@ export class HomeComponent implements OnInit {
                 this.homeReport = data;
                 this.loading = false;
                 this.homeService.getHomeDailyReport(true).subscribe(monthlyReport => {
-                    console.log('monthlyReport => ', monthlyReport);
                     this.homeReportMonthly = monthlyReport;
                 });
             }, error => {

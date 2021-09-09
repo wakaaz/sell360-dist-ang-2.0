@@ -11,10 +11,14 @@ export class RetailerService {
     ) {
     }
 
-
     addOpeningBalance(retailers: Array<any>): Observable<any> {
         const url = `${API_URLS.ADD_OPENING_BALANCE}`;
         return this.httpBaseService.post(url, retailers);
+    }
+
+    getRetailerListing(): Observable<any> {
+        const url = `${API_URLS.RETAILER_LISTING}`;
+        return this.httpBaseService.get(url);
     }
 
 }

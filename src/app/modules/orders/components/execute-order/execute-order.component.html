@@ -310,7 +310,7 @@
                                     <button *ngIf="!savingOrder" id="open-modal-payment" style="display: none;"
                                         data-toggle="modal" data-target="#exampleModal2">Show Modal</button>
 
-                                    <button [disabled]="savingOrder"
+                                    <button [disabled]="savingOrder" (click)="saveExecutionQuantity()"
                                         class="btn btn-primary mr-2 save_order_execution font13">Save
                                         Order</button>
                                     <button [disabled]="savingOrder" class="btn btn-cancel cancel_order_btn font13"

@@ -14,7 +14,7 @@
                 <div class="row">
                     <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
                     <div class="col-md-8 mb-15">
-                        <input type="text" class="form-control" placeholder="" (keyup)="setQuantity(selectedProduct)"
+                        <input type="text" class="form-control" placeholder="" (keyup)="setQuantity(selectedProduct);checkAvailableQty(selectedProduct)"
                             required (keydown)="isNumber($event, 'quantity')" [(ngModel)]="selectedProduct.stockQty"
                             #selectedQty="ngModel" style="font-size:13px">
                         <span *ngIf="selectedQty.errors?.required && isAdded" class="input-error">

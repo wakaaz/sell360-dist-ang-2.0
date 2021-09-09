@@ -9,6 +9,7 @@ export const API_URLS = {
     COUNTER_SALE_DATA: '/counterSaleData',
     ADD_COUNTER_SALE: '/saveOrder/counter',
     SAVE_DISPATCH: '/saveOrder/dispatch',
+    SAVE_EXECUTION: '/saveOrder/execution',
     CANCEL_ORDER: '/orderCancel',
     GET_SCHEMES: '/getSchemesDiscount',
     GET_EMPLOYEES: '/getEmployees',

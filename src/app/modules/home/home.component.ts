@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
     loading: boolean;
     distributor: any;
     homeReport: any;
+    homeReportMonthly: any;
 
     constructor(
         private storageService: LocalStorageService,
@@ -34,6 +35,10 @@ export class HomeComponent implements OnInit {
                 console.log('daily => ', data);
                 this.homeReport = data;
                 this.loading = false;
+                this.homeService.getHomeDailyReport(true).subscribe(monthlyReport => {
+                    console.log('monthlyReport => ', monthlyReport);
+                    this.homeReportMonthly = monthlyReport;
+                });
             }, error => {
                 this.loading = false;
                 console.log('Home Daily report API error :>> ', error);

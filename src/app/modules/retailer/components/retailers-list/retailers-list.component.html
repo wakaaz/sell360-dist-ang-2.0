@@ -125,7 +125,7 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="CL-Product"><i class="fa fa-search"></i>
-                                <input type="text" class="form-control" id="" placeholder="Search by Shop ID or Name">
+                                <input type="text" [(ngModel)]="shopIdOrName" class="form-control" id="" placeholder="Search by Shop ID or Name">
                             </div>
 
                             <div class="_cust_filter">
@@ -133,8 +133,7 @@
                                     <ng-select class="formselect" [multiple]="false" id="order-booker"
                                         placeholder="All Order Booker" name="order-booker" [(ngModel)]="orderBooker"
                                         required>
-                                        <ng-option value="Asif Ali"> Asif Ali </ng-option>
-                                        <ng-option value="Utba Aziz"> Utba Aziz </ng-option>
+                                        <ng-option *ngFor="let booker of retailerCore?.order_booker" [value]="booker.employee_id"> {{booker.employee_name}} </ng-option>
                                     </ng-select>
                                 </div>
                             </div>
@@ -143,8 +142,7 @@
                                 <div class="form-s2">
                                     <ng-select class="formselect" [multiple]="false" id="route" placeholder="All Route"
                                         name="route" [(ngModel)]="route" required>
-                                        <ng-option value="1"> Route 1 </ng-option>
-                                        <ng-option value="2"> Route 2 </ng-option>
+                                        <ng-option *ngFor="let route of retailerCore?.routes" [value]="route.id"> {{route.name}} </ng-option>
                                     </ng-select>
                                 </div>
                             </div>
@@ -153,14 +151,14 @@
                                 <div class="form-s2">
                                     <ng-select class="formselect" [multiple]="false" id="segment"
                                         placeholder="All Segment" name="segment" [(ngModel)]="segment" required>
-                                        <ng-option value="1">
-                                            segment 1
+                                        <ng-option *ngFor="let segment of retailerCore?.segments" [value]="segment.id">
+                                            {{segment.name}}
                                         </ng-option>
                                     </ng-select>
                                 </div>
                             </div>
 
-                            <button class="btn btn-primary">
+                            <button type="button" (click)="onSearch()" class="btn btn-primary">
                                 <i class="fa fa-search"></i> Search
                             </button>
                         </div>

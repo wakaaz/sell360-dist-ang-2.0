@@ -16,8 +16,12 @@ export class RetailerService {
         return this.httpBaseService.post(url, retailers);
     }
 
-    getRetailerListing(): Observable<any> {
-        const url = `${API_URLS.RETAILER_LISTING}`;
+    getRetailerListing(queryParams = null): Observable<any> {
+        const url = `${API_URLS.RETAILER_LISTING}?${queryParams}`;
+        return this.httpBaseService.get(url);
+    }
+    getRetailerCore(): Observable<any> {
+        const url = `${API_URLS.RETAILER_CORE}`;
         return this.httpBaseService.get(url);
     }
 

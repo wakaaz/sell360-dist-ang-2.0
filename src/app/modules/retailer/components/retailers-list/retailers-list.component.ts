@@ -12,11 +12,13 @@ import { RetailerService } from '../../services/retailer.service';
 export class RetalersListComponent implements OnInit {
 
     dtOptions: DataTables.Settings = {};
-    orderBooker: string;
-    route: string;
-    segment: string;
+    orderBooker: string = null;
+    shopIdOrName: string = null;
+    route: string = null;
+    segment: string = null;
     shwoSaleManLedger: boolean;
     retailers = [];
+    retailerCore: any;
     loading: boolean;
 
     constructor(
@@ -32,22 +34,30 @@ export class RetalersListComponent implements OnInit {
         this.dtOptions = {
             pagingType: 'simple_numbers'
         };
+        this.getRetailerListing();
+        // retailer core api call
+        this.retailerService.getRetailerCore().subscribe(data => {
+            this.retailerCore = data;
+        });
+    }
+
+    getRetailerListing(queryParams = null): void {
         this.loading = true;
-        this.retailerService.getRetailerListing().subscribe(res => {
-            console.log('retailers => ', res[0]);
+        this.retailerService.getRetailerListing(queryParams).subscribe(res => {
             this.loading = false;
             this.retailers = res;
         }, error => {
+            this.loading = false;
+            this.retailers = [];
             if (error.status !== 401 && error.status !== 1) {
                 this.toastService.showToaster({
                     title: 'Error:',
-                    message: 'Salesmen not fetched, try again later.',
+                    message: 'Retailers not fetched, try again later.',
                     type: 'error'
                 });
             }
         });
     }
-
     openSalemanLedger(event: Event): void {
         event.stopPropagation();
         this.shwoSaleManLedger = true;
@@ -71,6 +81,18 @@ export class RetalersListComponent implements OnInit {
 
     goToProfile(): void {
         console.log('Coming soon!');
+    }
+
+    onSearch(): void {
+        let params = '';
+        params = params + (this.orderBooker ? `order_booker=${this.orderBooker}` : params + '');
+        params = params.length ? (this.route ? params + `&route=${this.route}` : params + '')
+            : this.route ? params + `route=${this.route}` : params + '';
+        params = params.length ? (this.segment ? params + `&segment=${this.segment}` : params + '')
+            : this.segment ? params + `segment=${this.segment}` : params + '';
+        params = params.length ? (this.shopIdOrName ? params + `&shop=${this.shopIdOrName}` : params + '') : this.shopIdOrName ? params + `shop=${this.shopIdOrName}` : params + '';
+
+        this.getRetailerListing(params);
     }
 
 }

@@ -172,7 +172,7 @@ export class ExecuteOrderComponent implements OnInit {
                         prod.is_active = JSON.parse(JSON.stringify(product.is_active));
                         prod.item_trade_price = JSON.parse(JSON.stringify(product.item_trade_price));
 
-                        prod.stockQty = JSON.parse(JSON.stringify(prod.dispatch_qty));
+                        prod.stockQty = JSON.parse(JSON.stringify(prod.executed_qty));
                         prod.net_amount = JSON.parse(JSON.stringify(prod.final_price));
                         prod.gross_amount = prod.item_trade_price * prod.stockQty;
                         prod.extra_discount_pkr = prod.stockQty * prod.extra_discount;
@@ -499,9 +499,11 @@ export class ExecuteOrderComponent implements OnInit {
                 });
             }
             this.orderDetails.items = [];
+            this.orderDetails.returned_items = [];
             this.selectedRetailer.isActive = false;
             this.selectedRetailer = JSON.parse(JSON.stringify(null));
             this.resetPaymentValues();
+            this.getOrdersBySalemanAndDate();
         }, error => {
             this.savingOrder = false;
             if (error.status !== 1 && error.status !== 401) {

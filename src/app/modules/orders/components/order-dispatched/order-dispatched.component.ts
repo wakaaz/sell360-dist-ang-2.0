@@ -375,10 +375,10 @@ export class OrderDispatchedComponent implements OnInit {
                 item_quantity_updated: item.item_quantity_updated || 0,
                 quantity_returned: 0,
                 original_price: item.item_trade_price,
-                scheme_discount: item.scheme_discount / +item.stockQty,
+                scheme_discount: item.scheme_discount,
                 unit_price_after_scheme_discount: item.unit_price_after_scheme_discount,
                 merchant_discount: item.trade_discount,
-                merchant_discount_pkr: item.trade_discount_pkr / +item.stockQty,
+                merchant_discount_pkr: item.trade_discount_pkr,
                 unit_price_after_merchant_discount: item.unit_price_after_merchant_discount,
                 special_discount: item.special_discount,
                 unit_price_after_special_discount: item.unit_price_after_special_discount,
@@ -424,8 +424,8 @@ export class OrderDispatchedComponent implements OnInit {
                 tax_in_value: item.tax_amount_value || 0,
                 total_tax_amount: item.tax_amount_pkr || 0,
                 total_amount_after_tax: item.net_amount,
-                total_discount: item.scheme_discount +
-                    item.trade_discount_pkr + (+item.stockQty * item.special_discount) + item.extra_discount_pkr,
+                total_discount: +item.stockQty * item.scheme_discount +
+                    +item.stockQty * item.trade_discount_pkr + (+item.stockQty * item.special_discount) + item.extra_discount_pkr,
                 order_id: this.orderDetails.id
             };
             return orderItem;

@@ -16,14 +16,14 @@ export class ExecutionService {
                 item_quantity_booker: item.item_quantity_booker,
                 item_quantity_updated: item.item_quantity_updated || 0,
                 original_price: item.item_trade_price,
-                scheme_discount: item.scheme_discount / +item.stockQty,
+                scheme_discount: item.scheme_discount,
                 unit_price_after_scheme_discount: item.unit_price_after_scheme_discount,
                 merchant_discount: item.trade_discount,
-                merchant_discount_pkr: item.trade_discount_pkr / +item.stockQty,
+                merchant_discount_pkr: item.trade_discount_pkr,
                 unit_price_after_merchant_discount: item.unit_price_after_merchant_discount,
                 special_discount: item.special_discount,
                 unit_price_after_special_discount: item.unit_price_after_special_discount,
-                booker_discount: item.extra_discount,
+                booker_discount: item.extra_discount || 0,
                 unit_price_after_individual_discount: item.unit_price_after_individual_discount || item.price,
                 unit_id: item.unit_id,
                 unit_name: item.unit_name,
@@ -65,8 +65,8 @@ export class ExecutionService {
                 tax_in_value: item.tax_amount_value || 0,
                 total_tax_amount: item.tax_amount_pkr || 0,
                 total_amount_after_tax: item.net_amount,
-                total_discount: item.scheme_discount +
-                    item.trade_discount_pkr + (+item.stockQty * item.special_discount) + item.extra_discount_pkr,
+                total_discount: item.scheme_discount * +item.stockQty +
+                    item.trade_discount_pkr * +item.stockQty + (+item.stockQty * item.special_discount) + item.extra_discount_pkr,
                 order_id: orderDetails.id
             };
             return payloadItem;
@@ -77,7 +77,7 @@ export class ExecutionService {
     setOrderPayloadReturnedItems(orderDetails: any, selectedRetailer: any): any {
         const payLoadReturnedItems = orderDetails.returned_items.map(item => {
             const payloadItem = {
-                quantity_returned: item.stockQty,
+                quantity_returned: +item.stockQty,
                 executed_qty: 0,
                 id: item.id || 0,
                 employee_id: orderDetails.employee_id,
@@ -92,7 +92,7 @@ export class ExecutionService {
                 unit_price_after_merchant_discount: item.unit_price_after_merchant_discount,
                 special_discount: 0,
                 unit_price_after_special_discount: item.unit_price_after_special_discount,
-                booker_discount: item.extra_discount,
+                booker_discount: item.extra_discount || 0,
                 unit_price_after_individual_discount: item.unit_price_after_individual_discount || item.unit_price_after_special_discount,
                 unit_id: item.unit_id,
                 unit_name: item.unit_name,
@@ -102,6 +102,7 @@ export class ExecutionService {
                 scheme_id: 0,
                 scheme_min_quantity: 0,
                 scheme_quantity_free: 0,
+                return_type: item.returnType,
                 scheme_rule: '',
                 gift_value: 0,
                 parent_pref_id: item.child,
@@ -114,7 +115,7 @@ export class ExecutionService {
                 campaign_id: 0,
                 item_status: item.is_active,
                 dispatch_status: 0,
-                dispatch_qty: +item.stockQty,
+                dispatch_qty: 0,
                 dispatch_amount: item.net_amount,
                 reasoning: '',
                 distributor_id: orderDetails.distributor_id,
@@ -134,7 +135,7 @@ export class ExecutionService {
                 tax_in_value: 0,
                 total_tax_amount: 0,
                 total_amount_after_tax: item.net_amount,
-                total_discount: item.extra_discount * +item.stockQty,
+                total_discount: item.extra_discount ? item.extra_discount * +item.stockQty : 0,
                 order_id: orderDetails.id
             };
             return payloadItem;

@@ -80,24 +80,26 @@
                                 <div class="card top_border p-15">
                                     <table *ngIf="!loadingProducts" class="AddProductTable" width="100%">
                                         <tbody>
-                                            <tr *ngFor="let product of dispProducts; let i=index">
-                                                <td>
-                                                    <div class="ProListDiv">
-                                                        <div *ngIf="product.promo" class="lab-promotion">
-                                                            {{product.promo}}</div>
-                                                        <img class="PrList_img" src="{{product.thumbnail}}" alt="" />
-                                                        <div class="PR_Name">{{product.item_name}}</div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <button *ngIf="!product.isAdded"
-                                                        class="btn btn-default mb-0 dont-close-quantity"
-                                                        data-toggle="modal" data-target="#exampleModal"
-                                                        (click)="openQuantityModal(product)">Add</button>
-                                                    <span *ngIf="product.isAdded"
-                                                        class="btn btn-added mb-0 dont-close-quantity">Added</span>
-                                                </td>
-                                            </tr>
+                                            <ng-container *ngFor="let product of dispProducts; let i=index">
+                                                <tr *ngIf="orderType !== 'execution' || (orderType === 'execution' && product.availableQty > 0)">
+                                                    <td>
+                                                        <div class="ProListDiv">
+                                                            <div *ngIf="product.promo" class="lab-promotion">
+                                                                {{product.promo}}</div>
+                                                            <img class="PrList_img" src="{{product.thumbnail}}" alt="" />
+                                                            <div class="PR_Name">{{product.item_name}}</div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <button *ngIf="!product.isAdded"
+                                                            class="btn btn-default mb-0 dont-close-quantity"
+                                                            data-toggle="modal" data-target="#exampleModal"
+                                                            (click)="openQuantityModal(product)">Add</button>
+                                                        <span *ngIf="product.isAdded"
+                                                            class="btn btn-added mb-0 dont-close-quantity">Added</span>
+                                                    </td>
+                                                </tr>                                                
+                                            </ng-container>
                                         </tbody>
                                     </table>
                                     <div class="col-md-12 loader" *ngIf="loadingProducts">

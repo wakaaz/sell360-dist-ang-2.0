@@ -13,6 +13,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
     @Input() orderType: string;
     @Input() returnAmount: number;
+    @Input() recoveryAmount: number;
     @Input() receivableAmount: number;
     @Input() totalPayment: number;
     @Input() cheque: PaymentDetail;
@@ -138,7 +139,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
             const prod = this.allProducts.find(x => x.item_id === product.item_id);
             if (+product.stockQty > (prod.available_qty + prod.executed_qty)) {
                 const toast: Toaster = {
-                    message: 'Executed quantity cannot be greater than dispatched quantity!', type: 'error',
+                    message: 'Executed quantity cannot be greater than available quantity!', type: 'error',
                     title: 'Quantity Error:'
                 };
                 this.toastService.showToaster(toast);
@@ -147,6 +148,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         }
         if (product.item_trade_price) {
             if (this.orderType !== 'execution' && product.item_quantity_booker > 0 && +product.stockQty === 0) {
+                product.isDeleted = true;
+            } else if (this.orderType === 'execution' && product.dispatch_qty > 0 && +product.stockQty === 0) {
                 product.isDeleted = true;
             } else {
                 product.isDeleted = false;
@@ -330,9 +333,22 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         return this.dataService.getSDForGift(product);
     }
 
+    checkRecovery(): void {
+        if (+this.orderDetail.recovered > this.recoveryAmount) {
+            this.toastService.showToaster({
+                title: 'Recovery Error:',
+                message: `The recovered amount cannot be greater than the credit (${this.recoveryAmount})`,
+                type: 'error'
+            });
+            this.orderDetail.recovered = 0;
+        }
+        this.productUpdated.emit();
+    }
+
     calculateTotalBill(): void {
         if (this.orderDetail.items.length) {
-            this.selectedProductQuantities = this.orderDetail.items.map(product => +product.parent_qty_sold).reduce((a, b) => a + b);
+            this.selectedProductQuantities = this.orderDetail.items
+                .map(product => +product.parent_qty_sold).reduce((a, b) => a + b);
         }
         // Gross Amount
         let prices = this.orderDetail.items.map(product => product.original_amount);
@@ -362,12 +378,17 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         // Tax
         const taxes = this.orderDetail.items.map(product => product.tax_amount_pkr);
         this.totalTax = this.dataService.calculateItemsBill(taxes);
+        this.orderDetail.total_amount_after_tax = this.netAmount;
+        if (this.orderType === 'execution') {
+            if (this.selectedRetailer) { this.selectedRetailer.order_total = this.totalPayment; }
+            this.orderDetail.order_total = this.totalPayment;
+            this.orderDetail.total_amount_after_tax = this.totalPayment;
+        }
 
         this.orderDetail.total_discount = this.totalSchemeDiscount +
             this.totalMerchantDiscount +
             this.totalSpecialDiscount +
             this.totalBookerDiscount;
-        this.orderDetail.total_amount_after_tax = this.netAmount;
         this.orderDetail.gross_sale_amount = this.grossAmount;
         this.orderDetail.total_retail_price = totalRetailPrice;
         this.orderDetail.ttl_qty_sold = this.selectedProductQuantities;

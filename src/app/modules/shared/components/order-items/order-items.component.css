@@ -10,3 +10,4 @@
 .addpr {padding: 4px 8px;font-size: 12px;top: 11px;right: 15px; cursor: pointer; }
 .no-products {text-align: center; color: lightgray;}
 .addReturn{right: 128px; box-shadow: none}
+.recovered { height: calc(1.25rem + 2px) !important;font-family: 'Rationale', sans-serif;font-size: 18px;padding: 2px !important; }

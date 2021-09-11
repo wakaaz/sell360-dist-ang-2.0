@@ -19,8 +19,8 @@
             <div class="ord-no">{{ i + 1 }}</div>
             <div class="row">
                 <div class="col-8 pr-0"><strong>{{retailer.retailer_name}}</strong><span><i
-                            class="fa fa-map-marker-alt"></i> {{retailer.retailer_address}}</span></div>
-                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs. {{retailer.order_total | number:
+                            class="fa fa-map-marker-alt"></i> {{retailer.retailer_address || retailer.loc}}</span></div>
+                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs. {{retailer.order_total || 0 | number:
                         '1.2-2'}}</span></div>
             </div>
         </div>

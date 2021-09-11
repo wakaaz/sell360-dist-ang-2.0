@@ -3,13 +3,15 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class HttpBaseService {
 
     httpOptions: HttpHeaders;
     baseUrl: string;
+    domainUrl: string;
     constructor(private httpClient: HttpClient) {
         this.baseUrl = environment.apiUrl;
+        this.domainUrl = environment.apiDomain;
         this.httpOptions = new HttpHeaders().set('Content-type', 'application/json');
     }
 
@@ -25,7 +27,7 @@ export class HttpBaseService {
 
     put(url: string, body: any = null): Observable<any> {
         url = `${this.baseUrl}${url}`;
-        return this.httpClient.put(url, body, {headers: this.httpOptions});
+        return this.httpClient.put(url, body, { headers: this.httpOptions });
     }
 
     delete(url: string): Observable<any> {

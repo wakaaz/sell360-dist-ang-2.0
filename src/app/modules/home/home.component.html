@@ -39,12 +39,12 @@
 				  <div class="row">
 					<div class="col-12 position-relative" style="background-image: url(assets/images/kpi-achive-img.jpg); background-position:bottom right; background-repeat:no-repeat">						
 					  <h2 class="card-heading">Today's <span>Booking</span></h2>
-					  <div class="total-amount" style="border-bottom:solid 1px #e1e1e1"><span>Rs.</span> 80,00,00,000</div>
+					  <div class="total-amount" style="border-bottom:solid 1px #e1e1e1"><span>Rs.</span> {{homeReport.today_sale}}</div>
 					</div>
-					<div class="col unit-v pr-0">Pending Sale<span><small>Rs.</small> 999,999 </span></div>
-					<div class="col unit-v pr-0">Spot Sale<span><small>Rs.</small> 999,999</span></div>
-					<div class="col unit-v pr-0">Counter Sale<span><small>Rs.</small> 999,999</span></div>
-					<div class="col unit-v pr-0">Net Sale<span><small>Rs.</small> 999,999</span></div>
+					<div class="col unit-v pr-0">Pending Sale<span><small>Rs.</small> {{homeReport.pending_sale}} </span></div>
+					<div class="col unit-v pr-0">Spot Sale<span><small>Rs.</small> {{homeReport.spot_sale}}</span></div>
+					<div class="col unit-v pr-0">Counter Sale<span><small>Rs.</small>{{homeReport.counter_sale}}</span></div>
+					<div class="col unit-v pr-0">Net Sale<span><small>Rs.</small> {{homeReport.pending_sale + homeReport.spot_sale + homeReport.counter_sale }}</span></div>
 				  </div>
 				</div>
 				
@@ -59,12 +59,12 @@
 				  <div class="row">
 					<div class="col-12 position-relative" style="background-image: url(assets/images/kpi-achive-img.jpg); background-position:bottom right; background-repeat:no-repeat">						
 					  <h2 class="card-heading">Monthly <span>Sale Trends</span></h2>
-					  <div class="total-amount" style="border-bottom:solid 1px #e1e1e1"><span>Rs.</span> 80,00,00,000</div>
+					  <div class="total-amount" style="border-bottom:solid 1px #e1e1e1"><span>Rs.</span> {{homeReportMonthly?.monthly_sale}}</div>
 					</div>
-					<div class="col unit-v pr-0">Booked Sale<span><small>Rs.</small> 999,999 </span></div>
-					<div class="col unit-v pr-0">Spot Sale<span><small>Rs.</small> 999,999</span></div>
-					<div class="col unit-v pr-0">Counter Sale<span><small>Rs.</small> 999,999</span></div>
-					<div class="col unit-v pr-0">Pending Sale<span><small>Rs.</small> 999,999</span></div>
+					<div class="col unit-v pr-0">Pending Sale<span><small>Rs.</small> {{homeReportMonthly?.pending_sale}} </span></div>
+					<div class="col unit-v pr-0">Spot Sale<span><small>Rs.</small> {{homeReportMonthly?.spot_sale}}</span></div>
+					<div class="col unit-v pr-0">Counter Sale<span><small>Rs.</small>{{homeReportMonthly?.counter_sale}}</span></div>
+					<div class="col unit-v pr-0">Net Sale<span><small>Rs.</small> {{homeReportMonthly?.pending_sale + homeReportMonthly?.spot_sale + homeReportMonthly?.counter_sale }}</span></div>
 				  </div>
 				</div>
 				
@@ -86,13 +86,31 @@
             <div class="col-md-4">
                 <div class="card mt-0">
                     <h4>New <span>Orders</span></h4>
-                    <h2 class="digit">1450</h2>
+                    <h2 class="digit"><small>Rs.</small>1450</h2>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card mt-0">
                     <h4>Today <span>Sale</span></h4>
-                    <h2 class="digit"><small>Rs.</small> 34,000</h2>
+                    <h2 class="digit"><small>Rs.</small> {{homeReport.today_sale}}</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mt-0">
+                    <h4>Counter <span>Sale</span></h4>
+                    <h2 class="digit"><small>Rs.</small> {{homeReport.counter_sale}}</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mt-0">
+                    <h4>Pending <span>Sale</span></h4>
+                    <h2 class="digit"><small>Rs.</small> {{homeReport.pending_sale}}</h2>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card mt-0">
+                    <h4>Spot <span>Sale</span></h4>
+                    <h2 class="digit"><small>Rs.</small> {{homeReport.spot_sale}}</h2>
                 </div>
             </div>
         </div>
@@ -100,61 +118,17 @@
 
     <div class="row">
         <div class="col-lg-12 PB-10">
-          <h2 class="_head01 HomeHead">Top 5 <span>Booked Products</span></h2>
+          <h2 class="_head01 HomeHead">Top {{homeReport.products_sold.length}} <span>Booked Products</span></h2>
         </div>
         <div class="col-md-12">
           <div class="row pro-list">
-            <div class="col">
+            <div class="col" *ngFor="let product of homeReport.products_sold">
               <div class="product-card">
-                <h3>Chilli Chips Without Zooplay Chilli Chips Without Zooplay</h3>
-                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
+                <h3>{{product.item_name}} </h3>
+                <div class="PR-Thumb"> <img [src]="product.thumbnail" alt="" /> </div>
                 <div class="row pr-st">
-				   <div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
-                  <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
-				  <div class="col-6"><span>245 <small>CTNS</small></span>Available</div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="product-card">
-                <h3>Chilli Chips Without Zooplay </h3>
-                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
-                <div class="row pr-st">
-				<div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
-                  <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
-				  <div class="col-6"><span>245 <small>CTNS</small></span>Available</div> 
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="product-card">
-                <h3>Chilli Chips Without Zooplay </h3>
-                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
-                <div class="row pr-st">
-				  <div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
-                  <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
-				  <div class="col-6"><span>245 <small>CTNS</small></span>Available</div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="product-card">
-                <h3>Chilli Chips Without Zooplay </h3>
-                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
-                <div class="row pr-st">
-				   <div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
-                  <div class="col-6"><span>245 <small>Dozens</small></span>Booked</div>
-				  <div class="col-6"><span>245 <small>CTNS</small></span>Available</div>
-                </div>
-              </div>
-            </div>
-            <div class="col">
-              <div class="product-card">
-                <h3>Chilli Chips Without Zooplay </h3>
-                <div class="PR-Thumb"> <img src="assets/images/Dal_Chana_1594102079.jpg" alt="" /> </div>
-                <div class="row pr-st">
-				<div class="col-12 rev-pr"><span><small>Rs. </small>245</span></div>
-                  <div class="col-6"><span>245 <small>CTNS</small></span>Booked</div>
+				<div class="col-12 rev-pr"><span><small>Rs. </small>{{product.item_trade_price}}</span></div>
+                  <div class="col-6"><span>{{product.ctns_booked}} <small>CTNS</small></span>Booked</div>
 				  <div class="col-6"><span>245 <small>Dozens</small></span>Available</div>
                 </div>
               </div>

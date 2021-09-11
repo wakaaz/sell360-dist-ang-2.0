@@ -13,6 +13,8 @@ import { HomeService } from './services/home.service';
 export class HomeComponent implements OnInit {
     loading: boolean;
     distributor: any;
+    homeReport: any;
+    homeReportMonthly: any;
 
     constructor(
         private storageService: LocalStorageService,
@@ -28,8 +30,18 @@ export class HomeComponent implements OnInit {
     getDashboardData(): void {
         this.loading = true;
         this.homeService.getDashboardData().subscribe(res => {
-            this.loading = false;
-            console.log('Home dashboard API Response :>> ', res);
+            this.homeService.getHomeDailyReport().subscribe(data => {
+                console.clear();
+                console.log('daily => ', data);
+                this.homeReport = data;
+                this.loading = false;
+                this.homeService.getHomeDailyReport(true).subscribe(monthlyReport => {
+                    this.homeReportMonthly = monthlyReport;
+                });
+            }, error => {
+                this.loading = false;
+                console.log('Home Daily report API error :>> ', error);
+            });
         }, error => {
             this.loading = false;
             console.log('Home dashboard API error :>> ', error);

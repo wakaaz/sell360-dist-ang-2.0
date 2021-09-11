@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from '../../../../core/services/storage.service';
 import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
-import { DataService } from '../../../shared/services';
+import { DataService, GeneralDataService } from '../../../shared/services';
 import { PaymentDetail } from '../../models/counter-sale.model';
 import { ExecutionService } from '../../services/execution.service';
 import { OrdersService } from '../../services/orders.service';
@@ -10,7 +10,8 @@ import { OrdersService } from '../../services/orders.service';
 @Component({
     selector: 'app-execute-order',
     templateUrl: 'execute-order.component.html',
-    styleUrls: ['./execute-order.component.css']
+    styleUrls: ['./execute-order.component.css'],
+    encapsulation: ViewEncapsulation.None,
 })
 
 export class ExecuteOrderComponent implements OnInit {
@@ -44,6 +45,7 @@ export class ExecuteOrderComponent implements OnInit {
     distributorId: number;
     currentTab: number;
     salemanId: number;
+    selectedRoute: number;
 
     cheque: PaymentDetail;
     credit: PaymentDetail;
@@ -54,6 +56,13 @@ export class ExecuteOrderComponent implements OnInit {
     newProduct: any;
     dispatchSummary: any;
     returnedProduct: any;
+    selectedOrderBooker: any;
+    spotSaleOrder: any = {};
+    spotRetailer: any;
+    orderBookers: Array<any> = [];
+    bookerRoutes: Array<any> = [];
+    routeRetailers: Array<any> = [];
+    spotSaleOrders: Array<any> = [];
     retailersList: Array<any> = [];
     schemes: Array<any> = [];
     inventory: Array<any> = [];
@@ -67,6 +76,7 @@ export class ExecuteOrderComponent implements OnInit {
         private orderService: OrdersService,
         private executionService: ExecutionService,
         private toastService: ToasterService,
+        private generalDataService: GeneralDataService,
         private dataService: DataService,
         private storageService: LocalStorageService,
     ) {
@@ -79,13 +89,26 @@ export class ExecuteOrderComponent implements OnInit {
         };
         this.getSchemesData();
         this.setPaymentInitalValues();
+        this.setSpotSaleOrder();
         this.salemanId = +this.route.snapshot.paramMap.get('saleManId');
         this.orderDate = this.route.snapshot.paramMap.get('date');
         if (!this.salemanId || !this.orderDate) {
             this.router.navigateByUrl('/orders/execution-list');
         } else {
             this.getOrdersBySalemanAndDate();
+            this.getOrderBookers();
         }
+    }
+
+    setSpotSaleOrder(): void {
+        this.spotSaleOrder = {
+            retailers: [],
+            order_total: 0,
+            date: new Date().toISOString().split('T')[0],
+            territory: '--',
+            total_outlets: '--',
+            orderBookerName: '--',
+        };
     }
 
     setPaymentInitalValues(): void {
@@ -144,6 +167,72 @@ export class ExecuteOrderComponent implements OnInit {
                 });
             }
         });
+    }
+
+    getOrderBookers(): void {
+        this.generalDataService.getOrderBookers(this.distributorId).subscribe(res => {
+            if (res.status === 200) {
+                this.orderBookers = res.data;
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    type: 'error',
+                    title: 'Error:',
+                    message: 'Bookers not fetched, please try again later!'
+                });
+            }
+        });
+    }
+
+    getOrderBookerRoutes(): void {
+        this.spotSaleOrder.orderBookerName = `${this.selectedOrderBooker.employee_first_name} ${this.selectedOrderBooker.employee_last_name}`;
+        this.selectedRoute = null;
+        this.bookerRoutes = [];
+        this.spotRetailer = null;
+        this.routeRetailers = [];
+        this.generalDataService.getOrderBookerRoutes(this.selectedOrderBooker.employee_id).subscribe(res => {
+            if (res.status === 200) {
+                this.bookerRoutes = res.data;
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    type: 'error',
+                    title: 'Error:',
+                    message: 'Routes not fetched, please try again later!'
+                });
+            }
+        });
+    }
+
+    getRetaielrsByRoute(routeId: number): void {
+        this.spotRetailer = null;
+        this.routeRetailers = [];
+        this.generalDataService.getRetailersByRoute(routeId).subscribe(res => {
+            if (res.status === 200) {
+                this.routeRetailers = res.data;
+            }
+        }, error => {
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    type: 'error',
+                    title: 'Error:',
+                    message: 'Retailers not fetched, please try again later!'
+                });
+            }
+        });
+    }
+
+    setSpotSaleRetailer(): void {
+        if (!this.spotSaleOrder.retailers.find(x => x.retailer_id === this.spotRetailer.retailer_id)) {
+            if (!this.spotSaleOrder.retailers?.length) {
+                this.spotSaleOrder.retailers = [];
+            }
+            this.spotRetailer.isAdded = true;
+            this.spotRetailer.region_id = this.selectedOrderBooker.region_id;
+            this.spotSaleOrder.retailers.push(this.spotRetailer);
+        }
     }
 
     getOrderDetailsByRetailer(retailer: any): void {

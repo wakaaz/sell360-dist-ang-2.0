@@ -6,6 +6,7 @@ import { DataService, GeneralDataService } from '../../../shared/services';
 import { PaymentDetail } from '../../models/counter-sale.model';
 import { ExecutionService } from '../../services/execution.service';
 import { OrdersService } from '../../services/orders.service';
+import { SpotSaleService } from '../../services/spot-sale.service';
 
 @Component({
     selector: 'app-execute-order',
@@ -58,6 +59,7 @@ export class ExecuteOrderComponent implements OnInit {
     returnedProduct: any;
     selectedOrderBooker: any;
     spotSaleOrder: any = {};
+    currentSpotSale: any = {};
     spotRetailer: any;
     orderBookers: Array<any> = [];
     bookerRoutes: Array<any> = [];
@@ -78,6 +80,7 @@ export class ExecuteOrderComponent implements OnInit {
         private toastService: ToasterService,
         private generalDataService: GeneralDataService,
         private dataService: DataService,
+        private spotSaleService: SpotSaleService,
         private storageService: LocalStorageService,
     ) {
     }
@@ -103,6 +106,7 @@ export class ExecuteOrderComponent implements OnInit {
     setSpotSaleOrder(): void {
         this.spotSaleOrder = {
             retailers: [],
+            orders: [],
             order_total: 0,
             date: new Date().toISOString().split('T')[0],
             territory: '--',
@@ -225,12 +229,15 @@ export class ExecuteOrderComponent implements OnInit {
     }
 
     setSpotSaleRetailer(): void {
+        this.spotSaleOrder.territory = this.spotRetailer.territory;
         if (!this.spotSaleOrder.retailers.find(x => x.retailer_id === this.spotRetailer.retailer_id)) {
             if (!this.spotSaleOrder.retailers?.length) {
                 this.spotSaleOrder.retailers = [];
             }
             this.spotRetailer.isAdded = true;
             this.spotRetailer.region_id = this.selectedOrderBooker.region_id;
+            const order = this.spotSaleService.setSpotSaleOrderContent(this.spotRetailer, this.selectedOrderBooker, this.distributorId);
+            this.spotSaleOrder.orders.push(order);
             this.spotSaleOrder.retailers.push(this.spotRetailer);
         }
     }
@@ -287,6 +294,11 @@ export class ExecuteOrderComponent implements OnInit {
         }
     }
 
+    setCurrentSpotSaleOrder(retailer: any): void {
+        this.selectedRetailer = retailer;
+        this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
+    }
+
     getDiscountSlabs(): void {
         if (!this.discountSlabs.length) {
             this.orderService.getDiscountSlabs().subscribe(res => {
@@ -316,6 +328,8 @@ export class ExecuteOrderComponent implements OnInit {
         this.calculateReceivable();
     }
 
+    handleReturnedProductForSpotSale(returnedProduct: any): void {}
+
     deleteReturnedProduct(selectedItem: any): void {
         if (selectedItem.id) {
             selectedItem.stockQty = 0;
@@ -328,6 +342,8 @@ export class ExecuteOrderComponent implements OnInit {
         document.getElementById('close-prod-del').click();
         this.calculateReceivable();
     }
+
+    deleteReturnedProductFromSpotSale(selectedItem: any): void {}
 
     calculateReceivable(): void {
         const returnPrices = this.orderDetails.returned_items.filter(x => !x.isDeleted).map(x => x.net_amount);
@@ -486,7 +502,7 @@ export class ExecuteOrderComponent implements OnInit {
             this.credit = {
                 retailer_id: this.selectedRetailer.retailer_id,
                 distributor_id: this.distributorId,
-                type: 'Counter',
+                type: this.currentTab === 1 ? 'Execution' : 'Spot',
                 payment_mode: 'Credit',
                 payment_detail: '',
                 dispatched_bill_amount: 0,

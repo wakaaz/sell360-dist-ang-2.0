@@ -78,7 +78,7 @@ export class ExecutionService {
         const payLoadReturnedItems = orderDetails.returned_items.map(item => {
             const payloadItem = {
                 quantity_returned: +item.stockQty,
-                executed_qty: 0,
+                executed_qty: +item.stockQty,
                 id: item.id || 0,
                 employee_id: orderDetails.employee_id,
                 pref_id: item.pref_id,

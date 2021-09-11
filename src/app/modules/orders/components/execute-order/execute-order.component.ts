@@ -6,6 +6,7 @@ import { DataService, GeneralDataService } from '../../../shared/services';
 import { PaymentDetail } from '../../models/counter-sale.model';
 import { ExecutionService } from '../../services/execution.service';
 import { OrdersService } from '../../services/orders.service';
+import { SpotSaleService } from '../../services/spot-sale.service';
 
 @Component({
     selector: 'app-execute-order',
@@ -37,6 +38,7 @@ export class ExecuteOrderComponent implements OnInit {
     chequeNumber: string;
     currentPayment: string;
 
+    recoveryAmount: number;
     creditAmount: number;
     chequeAmount: number;
     returnAmount: number;
@@ -58,6 +60,7 @@ export class ExecuteOrderComponent implements OnInit {
     returnedProduct: any;
     selectedOrderBooker: any;
     spotSaleOrder: any = {};
+    currentSpotSale: any = {};
     spotRetailer: any;
     orderBookers: Array<any> = [];
     bookerRoutes: Array<any> = [];
@@ -78,6 +81,7 @@ export class ExecuteOrderComponent implements OnInit {
         private toastService: ToasterService,
         private generalDataService: GeneralDataService,
         private dataService: DataService,
+        private spotSaleService: SpotSaleService,
         private storageService: LocalStorageService,
     ) {
     }
@@ -103,6 +107,7 @@ export class ExecuteOrderComponent implements OnInit {
     setSpotSaleOrder(): void {
         this.spotSaleOrder = {
             retailers: [],
+            orders: [],
             order_total: 0,
             date: new Date().toISOString().split('T')[0],
             territory: '--',
@@ -116,6 +121,7 @@ export class ExecuteOrderComponent implements OnInit {
         this.chequeAmount = 0;
         this.returnAmount = 0;
         this.receivableAmount = 0;
+        this.recoveryAmount = 0;
         this.totalPayment = 0;
         this.distributorId = this.storageService.getItem('distributor').id;
     }
@@ -225,12 +231,15 @@ export class ExecuteOrderComponent implements OnInit {
     }
 
     setSpotSaleRetailer(): void {
+        this.spotSaleOrder.territory = this.spotRetailer.territory;
         if (!this.spotSaleOrder.retailers.find(x => x.retailer_id === this.spotRetailer.retailer_id)) {
             if (!this.spotSaleOrder.retailers?.length) {
                 this.spotSaleOrder.retailers = [];
             }
             this.spotRetailer.isAdded = true;
             this.spotRetailer.region_id = this.selectedOrderBooker.region_id;
+            const order = this.spotSaleService.setSpotSaleOrderContent(this.spotRetailer, this.selectedOrderBooker, this.distributorId);
+            this.spotSaleOrder.orders.push(order);
             this.spotSaleOrder.retailers.push(this.spotRetailer);
         }
     }
@@ -241,8 +250,23 @@ export class ExecuteOrderComponent implements OnInit {
             this.orderService.getOrderDetails(retailer.id).subscribe(res => {
                 if (res.status === 200) {
                     this.orderDetails = res.data;
-                    this.orderDetails.returned_items = [];
-                    this.receivableAmount = this.orderDetails.total_amount_after_tax;
+                    this.orderDetails.returned_items = this.orderDetails.returned_items;
+                    this.recoveryAmount = this.orderDetails.recovery;
+                    if (this.orderDetails.returned_items.length) {
+                        this.orderDetails.returned_items = this.orderDetails.returned_items.map(x => {
+                            x.item_trade_price = x.original_price;
+                            x.stockQty = x.quantity_returned;
+                            x.special_discount_pkr = 0;
+                            x.trade_discount = 0;
+                            x.trade_discount_pkr = 0;
+                            x.net_amount = x.final_price;
+                            x.gross_amount = x.gross_sale_amount;
+                            x.original_amount = x.gross_sale_amount;
+                            return x;
+                        });
+                    } else {
+                        this.receivableAmount = this.orderDetails.total_amount_after_tax;
+                    }
                     this.orderDetails.items = this.orderDetails.items.map(prod => {
                         const product = this.inventory.find(x => x.item_id === prod.item_id);
                         prod.parent_trade_price = JSON.parse(JSON.stringify(product.parent_trade_price));
@@ -273,7 +297,7 @@ export class ExecuteOrderComponent implements OnInit {
                         prod.selectedScheme = this.schemes.find(scheme => scheme.id === prod.scheme_id);
                         return prod;
                     });
-                    this.calculatePayments();
+                    this.calculateReceivable();
                 }
             }, error => {
                 this.loading = false;
@@ -285,6 +309,11 @@ export class ExecuteOrderComponent implements OnInit {
             });
             this.getDiscountSlabs();
         }
+    }
+
+    setCurrentSpotSaleOrder(retailer: any): void {
+        this.selectedRetailer = retailer;
+        this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
     }
 
     getDiscountSlabs(): void {
@@ -316,6 +345,8 @@ export class ExecuteOrderComponent implements OnInit {
         this.calculateReceivable();
     }
 
+    handleReturnedProductForSpotSale(returnedProduct: any): void {}
+
     deleteReturnedProduct(selectedItem: any): void {
         if (selectedItem.id) {
             selectedItem.stockQty = 0;
@@ -329,10 +360,14 @@ export class ExecuteOrderComponent implements OnInit {
         this.calculateReceivable();
     }
 
+    deleteReturnedProductFromSpotSale(selectedItem: any): void {}
+
     calculateReceivable(): void {
         const returnPrices = this.orderDetails.returned_items.filter(x => !x.isDeleted).map(x => x.net_amount);
         this.returnAmount = this.dataService.calculateItemsBill(returnPrices);
-        this.receivableAmount = this.orderDetails.total_amount_after_tax + this.returnAmount;
+        const price = this.orderDetails.items.map(x => x.net_amount).reduce((a, b) => a + b);
+        this.receivableAmount = price + this.orderDetails.recovered + this.returnAmount;
+        this.selectedRetailer.order_total = this.totalPayment;
         this.calculatePayments();
     }
 
@@ -486,7 +521,7 @@ export class ExecuteOrderComponent implements OnInit {
             this.credit = {
                 retailer_id: this.selectedRetailer.retailer_id,
                 distributor_id: this.distributorId,
-                type: 'Counter',
+                type: this.currentTab === 1 ? 'Execution' : 'Spot',
                 payment_mode: 'Credit',
                 payment_detail: '',
                 dispatched_bill_amount: 0,
@@ -542,6 +577,9 @@ export class ExecuteOrderComponent implements OnInit {
         this.bankName = '';
         this.chequeNumber = null;
         this.creditAmount = null;
+        this.cash = null;
+        this.cheque = null;
+        this.credit = null;
     }
 
     calculatePayments(): void {
@@ -562,6 +600,9 @@ export class ExecuteOrderComponent implements OnInit {
             this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
         }
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
+        this.selectedRetailer.order_total = this.totalPayment;
+        this.orderDetails.order_total = this.totalPayment;
+        this.orderDetails.total_amount_after_tax = this.totalPayment;
     }
 
     saveExecutionQuantity(): void {
@@ -581,20 +622,22 @@ export class ExecuteOrderComponent implements OnInit {
         this.orderService.saveExecutionQuantityOrder(this.orderDetails).subscribe(res => {
             this.savingOrder = false;
             if (res.status === 200) {
+                this.inventory = res.data.executed_products;
                 this.toastService.showToaster({
                     message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} execution updated successfully!`,
                     title: 'Order execution:',
                     type: 'success'
                 });
+                this.orderDetails.items = [];
+                this.orderDetails.returned_items = [];
+                this.selectedRetailer.isActive = false;
+                this.selectedRetailer = JSON.parse(JSON.stringify(null));
+                this.resetPaymentValues();
+                this.setPaymentInitalValues();
             }
-            this.orderDetails.items = [];
-            this.orderDetails.returned_items = [];
-            this.selectedRetailer.isActive = false;
-            this.selectedRetailer = JSON.parse(JSON.stringify(null));
-            this.resetPaymentValues();
-            this.getOrdersBySalemanAndDate();
         }, error => {
             this.savingOrder = false;
+            console.log('error in saving execution :>> ', error);
             if (error.status !== 1 && error.status !== 401) {
                 console.log('Error in Save Order for execution ::>> ', error);
                 this.toastService.showToaster({

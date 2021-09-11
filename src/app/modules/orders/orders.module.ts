@@ -25,6 +25,7 @@ import { OrdersService } from './services/orders.service';
 
 import { OrderDispatchService } from './services/dispatch.service';
 import { ExecutionService } from './services/execution.service';
+import { SpotSaleService } from './services/spot-sale.service';
 
 @NgModule({
   imports: [
@@ -53,6 +54,7 @@ import { ExecutionService } from './services/execution.service';
   providers: [
     OrderDispatchService,
     ExecutionService,
+    SpotSaleService,
     OrdersService
   ],
 })

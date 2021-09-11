@@ -292,6 +292,7 @@ export class DataService {
             product.special_discount = selectedSpecialDiscount.discount;
             product.special_discount_pkr = selectedSpecialDiscount.discount;
         } else {
+            product.special_discount = 0;
             product.special_discount_pkr = 0.00;
             product.special_discount = 0.00;
             product.unit_price_after_special_discount = JSON.parse(JSON.stringify(product.unit_price_after_merchant_discount));

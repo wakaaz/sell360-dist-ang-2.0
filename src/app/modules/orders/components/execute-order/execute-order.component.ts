@@ -38,6 +38,7 @@ export class ExecuteOrderComponent implements OnInit {
     chequeNumber: string;
     currentPayment: string;
 
+    recoveryAmount: number;
     creditAmount: number;
     chequeAmount: number;
     returnAmount: number;
@@ -120,6 +121,7 @@ export class ExecuteOrderComponent implements OnInit {
         this.chequeAmount = 0;
         this.returnAmount = 0;
         this.receivableAmount = 0;
+        this.recoveryAmount = 0;
         this.totalPayment = 0;
         this.distributorId = this.storageService.getItem('distributor').id;
     }
@@ -248,8 +250,23 @@ export class ExecuteOrderComponent implements OnInit {
             this.orderService.getOrderDetails(retailer.id).subscribe(res => {
                 if (res.status === 200) {
                     this.orderDetails = res.data;
-                    this.orderDetails.returned_items = [];
-                    this.receivableAmount = this.orderDetails.total_amount_after_tax;
+                    this.orderDetails.returned_items = this.orderDetails.returned_items;
+                    this.recoveryAmount = this.orderDetails.recovery;
+                    if (this.orderDetails.returned_items.length) {
+                        this.orderDetails.returned_items = this.orderDetails.returned_items.map(x => {
+                            x.item_trade_price = x.original_price;
+                            x.stockQty = x.quantity_returned;
+                            x.special_discount_pkr = 0;
+                            x.trade_discount = 0;
+                            x.trade_discount_pkr = 0;
+                            x.net_amount = x.final_price;
+                            x.gross_amount = x.gross_sale_amount;
+                            x.original_amount = x.gross_sale_amount;
+                            return x;
+                        });
+                    } else {
+                        this.receivableAmount = this.orderDetails.total_amount_after_tax;
+                    }
                     this.orderDetails.items = this.orderDetails.items.map(prod => {
                         const product = this.inventory.find(x => x.item_id === prod.item_id);
                         prod.parent_trade_price = JSON.parse(JSON.stringify(product.parent_trade_price));
@@ -280,7 +297,7 @@ export class ExecuteOrderComponent implements OnInit {
                         prod.selectedScheme = this.schemes.find(scheme => scheme.id === prod.scheme_id);
                         return prod;
                     });
-                    this.calculatePayments();
+                    this.calculateReceivable();
                 }
             }, error => {
                 this.loading = false;
@@ -348,7 +365,9 @@ export class ExecuteOrderComponent implements OnInit {
     calculateReceivable(): void {
         const returnPrices = this.orderDetails.returned_items.filter(x => !x.isDeleted).map(x => x.net_amount);
         this.returnAmount = this.dataService.calculateItemsBill(returnPrices);
-        this.receivableAmount = this.orderDetails.total_amount_after_tax + this.returnAmount;
+        const price = this.orderDetails.items.map(x => x.net_amount).reduce((a, b) => a + b);
+        this.receivableAmount = price + this.orderDetails.recovered + this.returnAmount;
+        this.selectedRetailer.order_total = this.totalPayment;
         this.calculatePayments();
     }
 
@@ -558,6 +577,9 @@ export class ExecuteOrderComponent implements OnInit {
         this.bankName = '';
         this.chequeNumber = null;
         this.creditAmount = null;
+        this.cash = null;
+        this.cheque = null;
+        this.credit = null;
     }
 
     calculatePayments(): void {
@@ -578,6 +600,9 @@ export class ExecuteOrderComponent implements OnInit {
             this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
         }
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
+        this.selectedRetailer.order_total = this.totalPayment;
+        this.orderDetails.order_total = this.totalPayment;
+        this.orderDetails.total_amount_after_tax = this.totalPayment;
     }
 
     saveExecutionQuantity(): void {
@@ -597,20 +622,22 @@ export class ExecuteOrderComponent implements OnInit {
         this.orderService.saveExecutionQuantityOrder(this.orderDetails).subscribe(res => {
             this.savingOrder = false;
             if (res.status === 200) {
+                this.inventory = res.data.executed_products;
                 this.toastService.showToaster({
                     message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} execution updated successfully!`,
                     title: 'Order execution:',
                     type: 'success'
                 });
+                this.orderDetails.items = [];
+                this.orderDetails.returned_items = [];
+                this.selectedRetailer.isActive = false;
+                this.selectedRetailer = JSON.parse(JSON.stringify(null));
+                this.resetPaymentValues();
+                this.setPaymentInitalValues();
             }
-            this.orderDetails.items = [];
-            this.orderDetails.returned_items = [];
-            this.selectedRetailer.isActive = false;
-            this.selectedRetailer = JSON.parse(JSON.stringify(null));
-            this.resetPaymentValues();
-            this.getOrdersBySalemanAndDate();
         }, error => {
             this.savingOrder = false;
+            console.log('error in saving execution :>> ', error);
             if (error.status !== 1 && error.status !== 401) {
                 console.log('Error in Save Order for execution ::>> ', error);
                 this.toastService.showToaster({

@@ -159,7 +159,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
             }
         }
         if (product.item_trade_price) {
-            product.isDeleted = false;
+            if (this.orderType !== 'execution' && product.item_quantity_booker > 0 && +product.stockQty === 0) {
+                product.isDeleted = true;
+            } else {
+                product.isDeleted = false;
+            }
             if (this.orderDetail.items.find(x => x.item_id === product.item_id)) {
                 this.grossAmount = this.grossAmount - product.original_amount;
             }

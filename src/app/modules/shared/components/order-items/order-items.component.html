@@ -92,7 +92,7 @@
             </tr>
         </tbody>
     </table>
-    <h4 *ngIf="!orderDetail?.items?.length" class="no-products">No items to display yet please select order!</h4>
+    <h4 *ngIf="!orderDetail?.items?.length || (orderDetail?.returned_items?.length)" class="no-products">No items to display yet please select order!</h4>
 
     <div class="row">
         <div class="col"></div>

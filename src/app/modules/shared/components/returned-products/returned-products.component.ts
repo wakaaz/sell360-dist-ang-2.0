@@ -53,6 +53,8 @@ export class ReturnedProductsComponent implements OnInit, AfterViewInit {
     }
 
     setReturnedQty(): void {
+        this.selectedProduct.item_quantity_booker = 0;
+        this.selectedProduct.dispatch_qty = 0;
         this.selectedProduct.scheme_discount = 0;
         this.selectedProduct.unit_price_after_scheme_discount = this.selectedProduct.item_trade_price;
         this.selectedProduct.special_discount = 0;

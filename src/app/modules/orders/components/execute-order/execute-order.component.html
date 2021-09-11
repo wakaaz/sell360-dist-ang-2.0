@@ -200,7 +200,7 @@
     </div>
 </div>
 
-<div class="container" id="order-container">
+<div class="container mw-1280" id="order-container">
     <div class="row">
         <div class="col-md-12">
             <div class="card daily-operations">
@@ -330,25 +330,25 @@
                             <div class="row m-0">
                                 <div class="col pr-0">
                                     <div class="gary-box "><strong>Date:</strong> <span
-                                            class="execution_date">2021-04-04</span></div>
+                                            class="execution_date">{{spotSaleOrder.date}}</span></div>
                                 </div>
                                 <div class="col-auto pr-0">
                                     <div class="gary-box min-w "><strong>Order Booker:</strong> <b
-                                            class="execution_bookers float-right">Usama Dev</b></div>
+                                            class="execution_bookers float-right">{{spotSaleOrder.orderBookerName}}</b></div>
                                 </div>
                                 <div class="col-auto pr-0">
                                     <div class="gary-box min-w "><strong>Territory:</strong> <span
-                                            class="execution_territories">Allo Test</span></div>
+                                            class="execution_territories">{{spotSaleOrder.territory}}</span></div>
                                 </div>
                                 <div class="col pr-0">
                                     <div class="gary-box "><strong>Total Outlets:</strong> <span
-                                            class="execution_order">2</span>
+                                            class="execution_order">{{spotSaleOrder.total_outelets}}</span>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="gary-box " style="min-width: 200px;"><strong>Total
                                             Amount:</strong>
-                                        <span class="execution_amount">Rs. 4,835.74</span>
+                                        <span class="execution_amount">Rs. {{spotSaleOrder.order_total || 0 | number: '1.2-2'}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -361,193 +361,53 @@
                                     <div class="col-3 pr-0">
                                         <div class="_cust_filter p-0 m-0 w-100">
                                             <div class="form-s2">
-                                                <select class="form-control formselect"
+                                                <ng-select class="formselect" (change)="getOrderBookerRoutes()"
+                                                    [(ngModel)]="selectedOrderBooker" name="order-booker"
                                                     placeholder="Select Order Booker" style="width: 100%!important">
-                                                    <option>Select Route</option>
-                                                </select>
+                                                    <ng-option *ngFor="let item of orderBookers;let i=index"
+                                                        [value]="item">{{item.employee_first_name}}
+                                                        {{item.employee_last_name}}</ng-option>
+                                                </ng-select>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-3 pr-0">
+                                    <div class="col-3 pr-0" *ngIf="selectedOrderBooker">
                                         <div class="_cust_filter p-0 m-0 w-100">
                                             <div class="form-s2">
-                                                <select class="form-control formselect"
-                                                    placeholder="Select Order Booker" style="width: 100%!important">
-                                                    <option>Select Retialer</option>
-                                                </select>
+                                                <ng-select class="formselect" (change)="getRetaielrsByRoute($event)" [(ngModel)]="selectedRoute"
+                                                    name="booker-route" placeholder="Select Route"
+                                                    style="width: 100%!important">
+                                                    <ng-option *ngFor="let item of bookerRoutes;let i=index"
+                                                        [value]="item.route_id">{{item.name}}</ng-option>
+                                                </ng-select>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-3 pr-0" *ngIf="selectedRoute">
+                                        <div class="_cust_filter p-0 m-0 w-100">
+                                            <div class="form-s2">
+                                                <ng-select class="formselect" [(ngModel)]="spotRetailer"
+                                                    name="spot-retailer" placeholder="Select Retailer"
+                                                    style="width: 100%!important">
+                                                    <ng-container *ngFor="let item of routeRetailers;let i=index">
+                                                            <ng-option *ngIf="!item.isAdded"
+                                                            [value]="item">{{item.retailer_name}}</ng-option>
+                                                    </ng-container>
+                                                </ng-select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button *ngIf="spotRetailer" (click)="setSpotSaleRetailer()" class="btn add_button addpr addReturn add-ordr">Add Order</button>
+
                                 </div>
                             </div>
                         </div>
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <div class="_selectProList ProListHeight">
-
-                                    <div class="header ProListHD">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <h2 class="w-100">Orders <span> List</span></h2>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="APS-list"><i class="fa fa-search"></i>
-                                                    <input type="text" class="form-control" id="" placeholder="Search">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="ProList-div">
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">01</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        15,590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list active">
-                                            <div class="ord-no">02</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">03</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">04</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">05</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">06</div>
-                                            <div class="row">
-
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">07</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">08</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">09</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">10</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">11</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">12</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-12 order-list">
-                                            <div class="ord-no">13</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong>Sardar General
-                                                        Store</strong><span><i class="fa fa-map-marker-alt"></i> Fateh
-                                                        Garh</span></div>
-                                                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs.
-                                                        590</span></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                <app-retailer-sub-list [retailers]="spotSaleOrder.retailers"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">

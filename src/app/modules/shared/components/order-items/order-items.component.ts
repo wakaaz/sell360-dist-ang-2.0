@@ -59,18 +59,12 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.orderDetail && changes.orderDetail.currentValue.items) {
+        if (changes.orderDetail && changes.orderDetail.currentValue?.items) {
             this.calculateTotalBill();
         }
         if (changes.newProduct?.currentValue) {
             this.orderDetail.items.push(this.newProduct);
             this.setQuantity(this.newProduct);
-        }
-        if (changes.returnedProduct?.currentValue) {
-            const index = this.orderDetail.items.findIndex(x => x.item_id === this.returnedProduct.item_id && x.productType === 'returned');
-            if (index > -1) {
-                // this.orderDetail.items[index].stockQty =
-            }
         }
         if (changes.savingOrder?.currentValue) {
             this.resetValues();
@@ -141,21 +135,14 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
     setQuantity(product: any): void {
         if (this.orderType === 'execution') {
-            if (+product.stockQty > product.dispatch_qty) {
+            const prod = this.allProducts.find(x => x.item_id === product.item_id);
+            if (+product.stockQty > (prod.available_qty + prod.executed_qty)) {
                 const toast: Toaster = {
                     message: 'Executed quantity cannot be greater than dispatched quantity!', type: 'error',
                     title: 'Quantity Error:'
                 };
                 this.toastService.showToaster(toast);
-                const prod = this.allProducts.find(x => x.item_id === product.item_id);
-                prod.available_qty = +product.stockQty;
                 product.stockQty = 0;
-            } else {
-                const diff = product.dispatch_qty - product.stockQty;
-                if (diff > 0) {
-                    const prod = this.allProducts.find(x => x.item_id === product.item_id);
-                    prod.available_qty = prod.available_qty + diff;
-                }
             }
         }
         if (product.item_trade_price) {

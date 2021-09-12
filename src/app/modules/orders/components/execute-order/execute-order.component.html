@@ -13,7 +13,10 @@
                 </div>
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-primary" (click)="cancelOrder()">Yes</button>
+                <button *ngIf="currentTab === 1" type="button" class="btn btn-primary"
+                    (click)="cancelOrder()">Yes</button>
+                <button *ngIf="currentTab === 2" type="button" class="btn btn-primary"
+                    (click)="cancelSpotSale()">Yes</button>
                 <button type="submit" id="close-del" class="btn btn-cancel" data-dismiss="modal"
                     aria-label="Close">No</button>
             </div>
@@ -271,19 +274,20 @@
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="retailersList"
+                                <app-retailer-sub-list [retailers]="retailersList" [orderType]="'execution'"
                                     (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
                                 <div class="rightHeight">
-                                    <app-order-items-list *ngIf="!savingOrder" [orderDetail]="orderDetails"
-                                        [returnAmount]="returnAmount" [receivableAmount]="receivableAmount"
-                                        [totalPayment]="totalPayment" [cheque]="cheque" [credit]="credit" [cash]="cash"
-                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer"
-                                        [returnedProduct]="returnedProduct" [allProducts]="allProducts"
-                                        [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
-                                        [newProduct]="newProduct" [orderType]="'execution'" [recoveryAmount]="recoveryAmount"
+                                    <app-order-items-list *ngIf="!savingOrder" [currentTab]="currentTab"
+                                        [orderDetail]="orderDetails" [returnAmount]="returnAmount"
+                                        [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
+                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes"
+                                        [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct"
+                                        [allProducts]="allProducts" [specialDiscounts]="specialDiscounts"
+                                        [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
+                                        [orderType]="'execution'" [recoveryAmount]="recoveryAmount"
                                         (deleteReturned)="deleteReturnedProduct($event)"
                                         (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()"
                                         (productUpdated)="calculateReceivable()">
@@ -313,7 +317,7 @@
                                     <button [disabled]="savingOrder" (click)="saveExecutionQuantity()"
                                         class="btn btn-primary mr-2 save_order_execution font13">Save
                                         Order</button>
-                                    <button [disabled]="savingOrder" class="btn btn-cancel cancel_order_btn font13"
+                                    <button [disabled]="savingOrder " class="btn btn-cancel cancel_order_btn font13"
                                         data-toggle="modal" data-target="#order-del">Cancel Order</button>
                                 </div>
 
@@ -343,7 +347,7 @@
                                 </div>
                                 <div class="col pr-0">
                                     <div class="gary-box "><strong>Total Outlets:</strong> <span
-                                            class="execution_order">{{spotSaleOrder.total_outelets}}</span>
+                                            class="execution_order">{{spotSaleOrder.retailers.length}}</span>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -410,22 +414,24 @@
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="spotSaleOrder.retailers"
+                                <app-retailer-sub-list [retailers]="spotSaleOrder.retailers" [orderType]="'execution'"
+                                    [isSpotSaleActive]="isSpotSaleActive"
                                     (retailerChanged)="setCurrentSpotSaleOrder($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
 
                                 <div class="rightHeight">
-                                    <app-order-items-list *ngIf="!savingOrder" [orderDetail]="currentSpotSale"
-                                        [returnAmount]="returnAmount" [receivableAmount]="receivableAmount"
-                                        [totalPayment]="totalPayment" [cheque]="cheque" [credit]="credit" [cash]="cash"
-                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer"
-                                        [orderType]="'execution'" [allProducts]="allProducts"
-                                        [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
-                                        [newProduct]="newProduct" (openDrawer)="openProductsList()"
-                                        (openReturnedModal)="openReturnedModal()" (productUpdated)="calculateReceivable()"
-                                        (deleteReturned)="deleteReturnedProductFromSpotSale($event)">
+                                    <app-order-items-list *ngIf="!savingOrder" [currentTab]="currentTab"
+                                        [orderDetail]="orderDetails" [returnAmount]="returnAmount"
+                                        [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
+                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes"
+                                        [selectedRetailer]="selectedRetailer" [orderType]="'execution'"
+                                        [allProducts]="allProducts" [specialDiscounts]="specialDiscounts"
+                                        [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
+                                        (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()"
+                                        (productUpdated)="calculateReceivable()"
+                                        (deleteReturned)="deleteReturnedProduct($event)">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">
                                         <app-loader-white></app-loader-white>
@@ -433,16 +439,29 @@
                                 </div>
 
                                 <div class="col-md-12 bottom-act-btn">
-                                    <button class="btn btn-primary mr-2 float-left font13" data-toggle="modal"
-                                        data-target="#CheckModalSpotSale">Add
-                                        cheque</button>
-                                    <button class="btn btn-primary mr-2 float-left font13" data-toggle="modal"
-                                        data-target="#CreditModalSpotSale">Add
-                                        credit</button>
-                                    <button class="btn btn-primary mr-2 save_order_execution font13">Save
+                                    <button *ngIf="!savingOrder && !isChequeAdded"
+                                        class="btn btn-primary float-left mr-2 font13"
+                                        (click)="isCredit = false;isFullyPaymentAdded('Cheque Payment')">Add
+                                        Cheque</button>
+                                    <button *ngIf="!savingOrder && isChequeAdded"
+                                        class="btn btn-primary float-left font13 mr-2 red-bg"
+                                        (click)="removeCheque()">Remove Cheque</button>
+                                    <button *ngIf="!savingOrder && !isCreditAdded"
+                                        class="btn btn-primary float-left font13"
+                                        (click)="isCredit = true;isFullyPaymentAdded('Credit')">Add Credit</button>
+                                    <button *ngIf="!savingOrder && isCreditAdded"
+                                        class="btn btn-primary float-left font13 red-bg" (click)="removeCredit()">Remove
+                                        Credit</button>
+                                    <button *ngIf="!savingOrder" id="open-modal-payment" style="display: none;"
+                                        data-toggle="modal" data-target="#exampleModal2">Show Modal</button>
+
+                                    <button
+                                        [disabled]="!orderDetails?.items?.length || !orderDetails?.returned_items?.length"
+                                        class="btn btn-primary mr-2 save_order_execution font13"
+                                        (click)="saveSpotSaleOrder()">Save
                                         Order</button>
-                                    <button class="btn btn-cancel cancel_order_btn font13" data-toggle="modal"
-                                        data-target="#ConfirmCancelSpotSale" (click)="cancelExecution()">Cancel</button>
+                                    <button [disabled]="!orderDetails" class="btn btn-cancel cancel_order_btn font13"
+                                        data-toggle="modal" data-target="#order-del">Cancel</button>
                                 </div>
 
                             </div>
@@ -672,10 +691,10 @@
 
                     <div class="col-md-12 text-center">
                         <div *ngIf="currentTab !== 4" class="execFooter">
-                            <button [disabled]="currentTab === 1" type="submit" (click)="changeTab(currentTab - 1)"
-                                class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button type="submit" (click)="changeTab(currentTab + 1)"
-                                class="btn btn-primary m-0">Next</button>
+                            <button [disabled]="currentTab === 1 || isSpotSaleActive || loading" type="submit"
+                                (click)="changeTab(currentTab - 1)" class="btn btn-primary m-0 mr-2">Previous</button>
+                            <button type="submit" [disabled]="isSpotSaleActive || loading"
+                                (click)="changeTab(currentTab + 1)" class="btn btn-primary m-0">Next</button>
                         </div>
                     </div>
                 </div>

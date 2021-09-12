@@ -78,8 +78,12 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
             (this.orderType !== 'execution' ||
                 this.orderType === 'execution' && +this.selectedProduct.stockQty <= this.selectedProduct.available_qty)) {
             this.selectedProduct.item_quantity_booker = 0;
-            this.allProducts.find(x => x.item_id === this.selectedProduct.item_id).isAdded = true;
-            this.dispProducts.find(x => x.item_id === this.selectedProduct.item_id).isAdded = true;
+            let prod = this.allProducts.find(x => x.item_id === this.selectedProduct.item_id);
+            prod.isAdded = true;
+            prod.available_qty = prod.available_qty - this.selectedProduct.stockQty;
+            prod = this.dispProducts.find(x => x.item_id === this.selectedProduct.item_id);
+            prod.isAdded = true;
+            prod.available_qty = prod.available_qty - this.selectedProduct.stockQty;
             this.productSelected.emit(JSON.parse(JSON.stringify(this.selectedProduct)));
             document.getElementById('pl-qty-close').click();
         }

@@ -31,6 +31,8 @@ export class SpotSaleService {
             order_type: 'spot',
             distributor_id: distributorId,
             region_id: selectedEmployee.region_id, // Selected Employee
+            recovery: 0,
+            recovered: 0,
             area_id: selectedEmployee.area_id,  // Selected Employee
             assigned_route_id: selectedRetailer.route_id, // Selected Route
             territory_id: selectedEmployee.territory_id, // Selected Employee

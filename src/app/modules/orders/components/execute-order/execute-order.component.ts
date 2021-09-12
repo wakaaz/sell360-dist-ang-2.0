@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LocalStorageService } from '../../../../core/services/storage.service';
 import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
@@ -15,7 +15,7 @@ import { SpotSaleService } from '../../services/spot-sale.service';
     encapsulation: ViewEncapsulation.None,
 })
 
-export class ExecuteOrderComponent implements OnInit {
+export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     dtOPtions: DataTables.Settings = {};
 
@@ -28,6 +28,7 @@ export class ExecuteOrderComponent implements OnInit {
     isChequeAdded: boolean;
     isCreditAdded: boolean;
     isAdded: boolean;
+    isSpotSaleActive: boolean;
 
     paymentDate: string;
     orderDate: string;
@@ -47,6 +48,7 @@ export class ExecuteOrderComponent implements OnInit {
     distributorId: number;
     currentTab: number;
     salemanId: number;
+    loadId: number;
     selectedRoute: number;
 
     cheque: PaymentDetail;
@@ -74,6 +76,7 @@ export class ExecuteOrderComponent implements OnInit {
     discountSlabs: Array<any> = [];
 
     constructor(
+        private change: ChangeDetectorRef,
         private route: ActivatedRoute,
         private router: Router,
         private orderService: OrdersService,
@@ -153,6 +156,7 @@ export class ExecuteOrderComponent implements OnInit {
             if (res.status === 200) {
                 this.retailersList = res.data.retailers;
                 this.allProducts = res.data.all_products;
+                this.loadId = res.data.load_id;
                 this.inventory = res.data.executed_products;
                 this.specialDiscounts = res.data.special_discount;
                 this.dispatchSummary = res.data.summary;
@@ -240,7 +244,10 @@ export class ExecuteOrderComponent implements OnInit {
             this.spotRetailer.region_id = this.selectedOrderBooker.region_id;
             const order = this.spotSaleService.setSpotSaleOrderContent(this.spotRetailer, this.selectedOrderBooker, this.distributorId);
             this.spotSaleOrder.orders.push(order);
-            this.spotSaleOrder.retailers.push(this.spotRetailer);
+            const retailers = JSON.parse(JSON.stringify(this.spotSaleOrder.retailers));
+            retailers.push(this.spotRetailer);
+            this.spotSaleOrder.retailers = JSON.parse(JSON.stringify(retailers));
+            this.change.detectChanges();
         }
     }
 
@@ -312,8 +319,18 @@ export class ExecuteOrderComponent implements OnInit {
     }
 
     setCurrentSpotSaleOrder(retailer: any): void {
-        this.selectedRetailer = retailer;
-        this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
+        if (!this.isSpotSaleActive) {
+            this.selectedRetailer = { ...retailer };
+            this.isSpotSaleActive = true;
+            this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
+            this.getDiscountSlabs();
+        } else {
+            const toast: Toaster = {
+                type: 'error', message: 'Please complete the current order to move forward!',
+                title: 'Spot Sale Error:'
+            };
+            this.toastService.showToaster(toast);
+        }
     }
 
     getDiscountSlabs(): void {
@@ -337,15 +354,14 @@ export class ExecuteOrderComponent implements OnInit {
 
     setMerchantDiscount(): void {
         this.merchantDiscount = this.discountSlabs.find(x => x.region_id === this.selectedRetailer.region_id &&
-            this.selectedRetailer.segment_id === x.segment_id && x.channel_id === this.selectedRetailer.retailer_type_id);
+            this.selectedRetailer.segment_id === x.segment_id &&
+            x.channel_id === (this.selectedRetailer.retailer_type_id || this.selectedRetailer.type_id));
     }
 
     handleReturnedProduct(returnedProduct: any): void {
         this.orderDetails.returned_items.push(returnedProduct);
         this.calculateReceivable();
     }
-
-    handleReturnedProductForSpotSale(returnedProduct: any): void {}
 
     deleteReturnedProduct(selectedItem: any): void {
         if (selectedItem.id) {
@@ -360,14 +376,17 @@ export class ExecuteOrderComponent implements OnInit {
         this.calculateReceivable();
     }
 
-    deleteReturnedProductFromSpotSale(selectedItem: any): void {}
-
     calculateReceivable(): void {
         const returnPrices = this.orderDetails.returned_items.filter(x => !x.isDeleted).map(x => x.net_amount);
         this.returnAmount = this.dataService.calculateItemsBill(returnPrices);
-        const price = this.orderDetails.items.map(x => x.net_amount).reduce((a, b) => a + b);
-        this.receivableAmount = price + this.orderDetails.recovered + this.returnAmount;
+        const price = this.orderDetails.items.map(x => x.net_amount);
+        const itemsNetAmount = this.dataService.calculateItemsBill(price);
+        this.receivableAmount = itemsNetAmount + this.orderDetails.recovered + this.returnAmount;
         this.selectedRetailer.order_total = this.totalPayment;
+        if (this.currentTab === 2) {
+            const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
+            retailer.order_total = this.totalPayment;
+        }
         this.calculatePayments();
     }
 
@@ -395,6 +414,16 @@ export class ExecuteOrderComponent implements OnInit {
 
     changeTab(selectedTab: number): void {
         this.currentTab = selectedTab;
+        if (this.currentTab === 2) {
+            if (this.selectedRetailer) {
+                this.selectedRetailer.isActive = false;
+                this.selectedRetailer = null;
+                this.orderDetails.items = [];
+                this.orderDetails.returned_items = [];
+            }
+            this.resetPaymentValues();
+            this.setPaymentInitalValues();
+        }
     }
 
     focused(event: Event): void {
@@ -601,6 +630,10 @@ export class ExecuteOrderComponent implements OnInit {
         }
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
         this.selectedRetailer.order_total = this.totalPayment;
+        if (this.currentTab === 2) {
+            const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
+            retailer.order_total = this.totalPayment;
+        }
         this.orderDetails.order_total = this.totalPayment;
         this.orderDetails.total_amount_after_tax = this.totalPayment;
     }
@@ -649,11 +682,50 @@ export class ExecuteOrderComponent implements OnInit {
         });
     }
 
+    saveSpotSaleOrder(): void {
+        this.savingOrder = true;
+        this.orderDetails.load_id = this.loadId;
+        this.orderDetails.items = this.executionService.setOrderPayloadItems(this.orderDetails, this.selectedRetailer);
+        this.orderDetails.returned_items = this.executionService.setOrderPayloadReturnedItems(this.orderDetails, this.selectedRetailer);
+        this.orderDetails.payment = {
+            total_payment: this.totalPayment,
+            detail: [this.cash]
+        };
+        if (this.credit) {
+            this.orderDetails.payment.detail.push(this.credit);
+        }
+        if (this.cheque) {
+            this.orderDetails.payment.detail.push(this.cheque);
+        }
+        this.orderService.saveSpotSaleOrder(this.orderDetails).subscribe(res => {
+            this.savingOrder = false;
+            this.isSpotSaleActive = false;
+            if (res.status === 200) {
+                const toast: Toaster = {
+                    type: 'success', message: `Spot Sale for ${this.selectedRetailer.retailer_name.toUpperCase()} saved successfully!`,
+                    title: 'Spot Sale Saved:'
+                };
+                this.inventory = res.data.executed_products;
+                this.orderDetails = JSON.parse(JSON.stringify(res.data.order));
+            }
+        }, error => {
+            this.savingOrder = false;
+            this.isSpotSaleActive = false;
+            if (error.status !== 1 && error.status !== 401) {
+                const toast: Toaster = {
+                    type: 'error', message: 'Something went wrong spot sale order not placed, please try again later!',
+                    title: 'Spot Sale Error:'
+                };
+            }
+        });
+    }
+
     cancelOrder(): void {
         document.getElementById('close-del').click();
         this.savingOrder = true;
         this.orderService.cancelOrder(this.orderDetails.id).subscribe(res => {
             this.savingOrder = false;
+            this.isSpotSaleActive = false;
             if (res.status === 200) {
                 this.toastService.showToaster({
                     message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
@@ -662,9 +734,11 @@ export class ExecuteOrderComponent implements OnInit {
                 });
                 this.orderDetails = null;
                 this.getOrdersBySalemanAndDate();
+                this.removeSpotOrder();
             }
         }, error => {
             this.savingOrder = false;
+            this.isSpotSaleActive = false;
             if (error.status !== 1 && error.status !== 401) {
                 console.log('Error in Save Order for dispatch ::>> ', error);
                 this.toastService.showToaster({
@@ -676,4 +750,26 @@ export class ExecuteOrderComponent implements OnInit {
         });
     }
 
+    cancelSpotSale(): void {
+        if (this.orderDetails.id) {
+            this.cancelOrder();
+        } else {
+            this.removeSpotOrder();
+            document.getElementById('close-del').click();
+        }
+    }
+
+    removeSpotOrder(): void {
+        this.spotRetailer.isAdded = false;
+        this.spotSaleOrder.retailers = this.spotSaleOrder.retailers.filter(x => x.retailer_id !== this.selectedRetailer.retailer_id);
+        this.orderDetails.items = [];
+        this.orderDetails.returned_items = [];
+        this.isSpotSaleActive = false;
+        this.resetPaymentValues();
+        this.setPaymentInitalValues();
+    }
+
+    ngOnDestroy(): void {
+        this.change.detach();
+    }
 }

@@ -64,6 +64,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     spotSaleOrder: any = {};
     currentSpotSale: any = {};
     spotRetailer: any;
+    finalLoad: any;
     orderBookers: Array<any> = [];
     bookerRoutes: Array<any> = [];
     routeRetailers: Array<any> = [];
@@ -157,6 +158,10 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.retailersList = res.data.retailers;
                 this.allProducts = res.data.all_products;
                 this.loadId = res.data.load_id;
+
+                // For testing
+                this.changeTab(4);
+
                 this.inventory = res.data.executed_products;
                 this.specialDiscounts = res.data.special_discount;
                 this.dispatchSummary = res.data.summary;
@@ -423,6 +428,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             }
             this.resetPaymentValues();
             this.setPaymentInitalValues();
+        } else if (this.currentTab === 4) {
+            this.getExecutionFinalLoad();
         }
     }
 
@@ -767,6 +774,26 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.isSpotSaleActive = false;
         this.resetPaymentValues();
         this.setPaymentInitalValues();
+    }
+
+    getExecutionFinalLoad(): void {
+        this.loading = true;
+        this.orderService.getExecutionFinalLoad(this.loadId).subscribe(res => {
+            this.loading = false;
+            if (res.status === 200) {
+                this.finalLoad = res.data;
+            }
+        }, error => {
+            this.loading = false;
+            if (error.status !== 1 && error.status !== 401) {
+                console.log('Error while fetching execution delivery challan :>> ', error);
+                this.toastService.showToaster({
+                    message: 'Delivery challan not fetched, please try again later!',
+                    title: 'Delivery Challan Error:',
+                    type: 'error'
+                });
+            }
+        });
     }
 
     ngOnDestroy(): void {

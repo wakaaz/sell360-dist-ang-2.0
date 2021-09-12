@@ -24,6 +24,74 @@
     </div>
 </div>
 
+<div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content top-borderBlue">
+            <div class="modal-header">
+                <h5 class="modal-title" id="expnseLabel">Add <span>Expense</span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="font12 mb-5">Expense Type</label>
+                        <div class="form-s2 focused" data-select2-id="39">
+                            <select class="form-control formselect expense_id select2-hidden-accessible"
+                                id="expense_type" placeholder="Expense Type" style="width: 100%" tabindex="-1"
+                                aria-hidden="true">
+                                <option *ngFor="let expType of finalLoad?.expense_type" [value]="expType">
+                                    {{expType.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group focused">
+                            <label class="control-label mb-10">Amount</label>
+                            <input type="number" id="expense-amount" class="form-control expense_amount" placeholder="">
+                        </div>
+                    </div>
+                    <div class="col-2" style="padding-top:29px;"><button type="button"
+                            class="btn btn-primary add_expense_btn">Add</button>
+                    </div>
+                </div>
+                <div class="expense_table">
+                    <div id="expenseAddedTable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
+                        <div class="row">
+                            <div class="col-12">
+                                <table class="table" datatable [dtOptions]="dtOPtions" id="expenseAddedTable"
+                                    style="width: 100%;" role="grid" aria-describedby="expenseAddedTable_info">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Expense Type</th>
+                                            <th>Amount</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Challan</td>
+                                            <td>150</td>
+                                            <td><button class="btn btn-default red-bg mb-0 remove_expense" eid="3"
+                                                    amt="150">Delete</button></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" id="close-expense" class="btn btn-cancel" data-dismiss="modal"
+                    aria-label="Close">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [orderType]="'execution'"
     [orderedProducts]="orderDetails?.items" [loadingProducts]="loadingProduct" [allProducts]="inventory"
     [productSchemes]="schemes" [productMerchantDiscount]="merchantDiscount" [specialDiscounts]="specialDiscounts"
@@ -545,74 +613,61 @@
                             <div class="row m-0">
                                 <div class="col pr-0">
                                     <div class="gary-box "><strong>Date:</strong> <span
-                                            class="execution_date">2021-04-04</span></div>
+                                            class="execution_date">{{finalLoad?.dsr?.executed_date?.split(' ')[0] ||
+                                            '--'}}</span></div>
                                 </div>
                                 <div class="col-auto pr-0">
                                     <div class="gary-box min-w "><strong>Order Booker:</strong> <b
-                                            class="execution_bookers float-right">Usama Dev</b></div>
+                                            class="execution_bookers float-right">{{'--'}}</b></div>
                                 </div>
                                 <div class="col-auto pr-0">
                                     <div class="gary-box min-w "><strong>Territory:</strong> <span
-                                            class="execution_territories">Allo Test</span></div>
+                                            class="execution_territories">{{finalLoad?.dsr?.territory || '--'}}</span>
+                                    </div>
                                 </div>
                                 <div class="col pr-0">
                                     <div class="gary-box "><strong>Total Outlets:</strong> <span
-                                            class="execution_order">2</span>
+                                            class="execution_order">{{finalLoad?.dsr?.total_orders || '--'}}</span>
                                     </div>
                                 </div>
                                 <div class="col">
                                     <div class="gary-box " style="min-width: 200px;"><strong>Total
                                             Amount:</strong>
-                                        <span class="execution_amount">Rs. 4,835.74</span>
+                                        <span class="execution_amount">Rs. {{finalLoad?.dsr?.total_net_amount || 0 |
+                                            number:'1.2-2'}}</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-12 PT-10">
-                            <div class="row">
+                            <div *ngIf="!loading" class="row">
                                 <div class="col-8 PB-30 pr-0">
                                     <div class="header PT-10 PB-10 mb-15">
                                         <h2 class="w-100">Delivery <span> Challan</span></h2>
                                     </div>
 
 
-                                    <table datatable [dtOptions]="dtOPtions"
+                                    <table *ngIf="finalLoad?.dsr?.contents" datatable [dtOptions]="dtOPtions"
                                         class="table table-hover dt-responsive nowrap" id="example3" style="width:100%">
                                         <thead>
                                             <tr>
                                                 <th>SN</th>
                                                 <th>Product Name</th>
                                                 <th>Unit</th>
-                                                <th>AIssue QTY.</th>
+                                                <th>Issue QTY.</th>
                                                 <th>Cancellation QTY.</th>
                                                 <th>Return QTY.</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                            </tr>
-                                            <tr>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                            </tr>
-                                            <tr>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
-                                                <td>-</td>
+                                            <tr *ngFor="let item of finalLoad?.dsr?.contents">
+                                                <td>{{item.item_id}}</td>
+                                                <td>{{item.item_name}}</td>
+                                                <td>{{item.unit_name}}</td>
+                                                <td>{{item.dispatch_issued_qty}}</td>
+                                                <td>{{item.total_cancel_qty}}</td>
+                                                <td>{{item.total_return_qty}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -629,35 +684,40 @@
                                                     Expense</button>
                                             </h2>
                                             <div class="report_value"> <strong>Gross Amount:</strong>
-                                                <span>5,555.22</span>
+                                                <span>{{finalLoad?.dsr?.total_gross_amount | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Cheque:</strong>
-                                                <span>0.00</span>
+                                                <span>{{finalLoad?.dsr?.total_cheque_amount | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Credit:</strong>
-                                                <span>0.0</span>
+                                                <span>{{finalLoad?.dsr?.total_credit_amount | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Expense:</strong>
-                                                <span>0.0</span>
+                                                <span>{{finalLoad?.dsr?.total_expense | number: '1.2-2'}}</span>
                                             </div>
-                                            <div class="report_value"> <strong>General Trade:</strong>
-                                                <span>0.0</span>
+                                            <div class="report_value"> <strong>Trade Offer:</strong>
+                                                <span>{{finalLoad?.dsr?.total_trade_offer | number: '1.2-2'}}</span>
+                                            </div>
+                                            <div class="report_value"> <strong>Trade Discount:</strong>
+                                                <span>{{finalLoad?.dsr?.total_trade_discount | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Special
                                                     Discount:</strong>
-                                                <span>0.0</span>
+                                                <span>{{finalLoad?.dsr?.total_special_discount | number:
+                                                    '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Extra Discount:</strong>
-                                                <span>0.0</span>
+                                                <span>{{finalLoad?.dsr?.total_booker_discount | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Return Amount:</strong>
-                                                <span>0.0</span>
+                                                <span>{{finalLoad?.dsr?.total_return_amount | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Total Cash:</strong>
-                                                <span>0.0</span>
+                                                <span>{{finalLoad?.dsr?.total_cash | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Recovery:</strong>
-                                                <span>0.0</span>
+                                                <span>{{finalLoad?.dsr?.total_recovered_amount | number:
+                                                    '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value" style="height:40px; line-height:22px;">
                                                 <strong>AMT. Received:</strong> <input type="number"
@@ -665,8 +725,8 @@
                                                     placeholder="0">
                                             </div>
                                             <div class="report_value" style="color:#0038ba">
-                                                <strong>Balance
-                                                    AMT:</strong> <span>5,287.09</span>
+                                                <strong>Balance AMT:</strong>
+                                                <span>{{finalLoad?.dsr?.total_amount_recieved | number: '1.2-2'}}</span>
                                             </div>
 
 
@@ -686,14 +746,17 @@
                                 </div>
 
                             </div>
+                            <div class="col-12" *ngIf="loading">
+                                <app-loader-white></app-loader-white>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-md-12 text-center">
-                        <div *ngIf="currentTab !== 4" class="execFooter">
+                        <div class="execFooter">
                             <button [disabled]="currentTab === 1 || isSpotSaleActive || loading" type="submit"
                                 (click)="changeTab(currentTab - 1)" class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button type="submit" [disabled]="isSpotSaleActive || loading"
+                            <button type="submit" [disabled]="isSpotSaleActive || loading || currentTab === 4"
                                 (click)="changeTab(currentTab + 1)" class="btn btn-primary m-0">Next</button>
                         </div>
                     </div>

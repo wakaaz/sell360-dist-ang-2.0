@@ -125,4 +125,8 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
+    getExecutionFinalLoad(loadId: number): Observable<any> {
+        const url = `${API_URLS.EXECUTION_FINAL_SAVE}/${loadId}`;
+        return this.baseService.post(url);
+    }
 }

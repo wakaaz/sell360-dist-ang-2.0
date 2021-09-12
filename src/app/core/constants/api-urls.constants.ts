@@ -34,6 +34,7 @@ export const API_URLS = {
     UPDATE_INVOICE_DETAIL: '/updateDispatchInvoiceDate',
     GET_EXECUTION_LIST: '/executionOrderListing',
     GET_EXECUTION_DETAILS: '/executionDetail',
+    EXECUTION_FINAL_SAVE: '/executionFinalSave',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

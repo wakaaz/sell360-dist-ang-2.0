@@ -122,10 +122,21 @@
                     <div class="col-6">Tax:</div>
                     <div class="col-6"><span>{{totalTax | number: '1.2-2'}}</span></div>
                 </div>
-                <div class="row">
-                    <div *ngIf="orderType==='dispatch'" class="col-6" style="color:#0038ba;">Total Amount Due:
+                <div *ngIf="orderType!=='execution'" class="row">
+                    <div class="col-6" style="color:#0038ba;">Total Amount Due:
                     </div>
-                    <div *ngIf="orderType==='dispatch'" class="col-6" style="color:#0038ba;"><span>{{ netAmount | number: '1.2-2'}}</span>
+                    <div class="col-6" style="color:#0038ba;"><span>{{ netAmount | number: '1.2-2'}}</span>
+                    </div>
+                </div>
+                <div *ngIf="orderType==='execution'" class="row">
+                    <div class="col-6" style="color:#0038ba;">Total Bill:
+                    </div>
+                    <div class="col-6" style="color:#0038ba;"><span>{{ (grossAmount
+                        - totalSchemeDiscount
+                        - totalMerchantDiscount
+                        - totalSpecialDiscount
+                        - totalBookerDiscount
+                        + totalTax) | number: '1.2-2'}}</span>
                     </div>
                 </div>
             </div>
@@ -139,6 +150,14 @@
                 <div class="row">
                     <div class="col-6">Less Return:</div>
                     <div class="col-6"><span>{{returnAmount | number: '1.2-2'}}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-6">Recovery:</div>
+                    <div class="col-6">
+                        <div class="col-6" style="float: right;">
+                            <input type="number" style="text-align: right;" name="recovered" id="recovered" class="form-control recovered" [(ngModel)]="orderDetail.recovered" (keydown)="isNumber($event)" (keyup)="checkRecovery()">
+                        </div>
+                    </div>
                 </div>
                 <div class="row">
                     <div class="col-6">Net Receivable:</div>

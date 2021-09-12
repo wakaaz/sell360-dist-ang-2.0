@@ -105,6 +105,11 @@ export class OrdersService {
         return this.baseService.post(url, order);
     }
 
+    saveSpotSaleOrder(order: any): Observable<any> {
+        const url = `${API_URLS.SAVE_SPOT}`;
+        return this.baseService.post(url, order);
+    }
+
     cancelOrder(orderId: number): Observable<any> {
         const url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
         return this.baseService.get(url);

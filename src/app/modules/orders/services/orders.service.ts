@@ -115,8 +115,23 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
+    cancelSpotSaleOrder(orderId: number): Observable<any> {
+        const url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
+        return this.baseService.get(url);
+    }
+
     getExecutionList(): Observable<any> {
         const url = `${API_URLS.GET_EXECUTION_LIST}`;
+        return this.baseService.get(url);
+    }
+
+    saveExecutionExpense(loadId: number, saleManId: number, date: string, expenses: Array<any>): Observable<any> {
+        const url = `${API_URLS.SAVE_EXPENSE}/${loadId}/${saleManId}/${date}`;
+        return this.baseService.post(url, {expenses});
+    }
+
+    checkBalance(retailerId: number): Observable<any> {
+        const url = `${API_URLS.CHECK_RETAILER_BALANCE}/${retailerId}`;
         return this.baseService.get(url);
     }
 
@@ -125,8 +140,8 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
-    getExecutionFinalLoad(loadId: number): Observable<any> {
+    getExecutionFinalLoad(loadId: number, outOfRouteRecovery: Array<any>): Observable<any> {
         const url = `${API_URLS.EXECUTION_FINAL_SAVE}/${loadId}`;
-        return this.baseService.post(url);
+        return this.baseService.post(url, {out_of_route_recovery: outOfRouteRecovery});
     }
 }

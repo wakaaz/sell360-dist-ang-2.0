@@ -29,6 +29,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     isCreditAdded: boolean;
     isAdded: boolean;
     isSpotSaleActive: boolean;
+    isExpenseAdded: boolean;
 
     paymentDate: string;
     orderDate: string;
@@ -65,6 +66,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     currentSpotSale: any = {};
     spotRetailer: any;
     finalLoad: any;
+    recoveryRetailer: any;
+    recoveryListing: Array<any> = [];
+    outOfRouteRecovery: Array<any> = [];
     orderBookers: Array<any> = [];
     bookerRoutes: Array<any> = [];
     routeRetailers: Array<any> = [];
@@ -158,13 +162,24 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.retailersList = res.data.retailers;
                 this.allProducts = res.data.all_products;
                 this.loadId = res.data.load_id;
-
-                // For testing
-                this.changeTab(4);
-
+                this.spotSaleOrder.retailers = res.data.spot_sale_orders;
                 this.inventory = res.data.executed_products;
                 this.specialDiscounts = res.data.special_discount;
                 this.dispatchSummary = res.data.summary;
+                this.recoveryListing = res.data.out_of_route_recovery.map(x => {
+                    x.recovery = x.amount_received;
+                    x.retailer_id = x.id;
+                    x.recoveryAdded = true;
+                    return x;
+                });
+                this.outOfRouteRecovery = res.data.out_of_route_recovery.map(x => {
+                    const recovery = {
+                        retailer_id: x.id,
+                        amount: x.amount_received,
+                        booker_id: x.booker_id
+                    };
+                    return recovery;
+                });
             } else {
                 this.toastService.showToaster({
                     type: 'error',
@@ -246,6 +261,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.spotSaleOrder.retailers = [];
             }
             this.spotRetailer.isAdded = true;
+            delete this.spotRetailer.id;
             this.spotRetailer.region_id = this.selectedOrderBooker.region_id;
             const order = this.spotSaleService.setSpotSaleOrderContent(this.spotRetailer, this.selectedOrderBooker, this.distributorId);
             this.spotSaleOrder.orders.push(order);
@@ -265,50 +281,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     this.orderDetails.returned_items = this.orderDetails.returned_items;
                     this.recoveryAmount = this.orderDetails.recovery;
                     if (this.orderDetails.returned_items.length) {
-                        this.orderDetails.returned_items = this.orderDetails.returned_items.map(x => {
-                            x.item_trade_price = x.original_price;
-                            x.stockQty = x.quantity_returned;
-                            x.special_discount_pkr = 0;
-                            x.trade_discount = 0;
-                            x.trade_discount_pkr = 0;
-                            x.net_amount = x.final_price;
-                            x.gross_amount = x.gross_sale_amount;
-                            x.original_amount = x.gross_sale_amount;
-                            return x;
-                        });
+                        this.setOrderDetailReturnedItems();
                     } else {
                         this.receivableAmount = this.orderDetails.total_amount_after_tax;
                     }
-                    this.orderDetails.items = this.orderDetails.items.map(prod => {
-                        const product = this.inventory.find(x => x.item_id === prod.item_id);
-                        prod.parent_trade_price = JSON.parse(JSON.stringify(product.parent_trade_price));
-                        prod.parent_unit_id = JSON.parse(JSON.stringify(product.parent_unit_id));
-                        prod.parent_quantity = JSON.parse(JSON.stringify(product.quantity));
-                        prod.child = JSON.parse(JSON.stringify(product.child));
-                        prod.item_retail_price = JSON.parse(JSON.stringify(product.item_retail_price));
-                        prod.extra_discount = JSON.parse(JSON.stringify(prod.booker_discount));
-                        prod.tax_class_amount = JSON.parse(JSON.stringify(product.tax_class_amount));
-                        prod.tax_class_id = JSON.parse(JSON.stringify(product.tax_class_id));
-                        prod.tax_class_type = JSON.parse(JSON.stringify(product.tax_class_type));
-                        prod.pref_id = JSON.parse(JSON.stringify(product.pref_id));
-                        prod.unit_id = JSON.parse(JSON.stringify(product.unit_id));
-                        prod.unit_name = JSON.parse(JSON.stringify(product.unit_name));
-                        prod.brand_id = JSON.parse(JSON.stringify(product.brand_id));
-                        prod.is_active = JSON.parse(JSON.stringify(product.is_active));
-                        prod.item_trade_price = JSON.parse(JSON.stringify(product.item_trade_price));
-
-                        prod.stockQty = JSON.parse(JSON.stringify(prod.executed_qty));
-                        prod.net_amount = JSON.parse(JSON.stringify(prod.final_price));
-                        prod.gross_amount = prod.item_trade_price * prod.stockQty;
-                        prod.extra_discount_pkr = prod.stockQty * prod.extra_discount;
-                        prod.original_amount = prod.item_trade_price * prod.stockQty;
-                        prod.special_discount_pkr = prod.special_discount;
-                        prod.trade_discount = JSON.parse(JSON.stringify(prod.merchant_discount));
-                        prod.trade_discount_pkr = JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
-                        prod.tax_amount_pkr = JSON.parse(JSON.stringify(prod.total_tax_amount || 0));
-                        prod.selectedScheme = this.schemes.find(scheme => scheme.id === prod.scheme_id);
-                        return prod;
-                    });
+                    this.setOrderDetailItems();
                     this.calculateReceivable();
                 }
             }, error => {
@@ -323,12 +300,63 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         }
     }
 
+    setOrderDetailReturnedItems(): void {
+        this.orderDetails.returned_items = this.orderDetails.returned_items.map(x => {
+            x.item_trade_price = x.original_price;
+            x.stockQty = x.quantity_returned;
+            x.special_discount_pkr = 0;
+            x.trade_discount = 0;
+            x.trade_discount_pkr = 0;
+            x.net_amount = x.final_price;
+            x.gross_amount = x.gross_sale_amount;
+            x.original_amount = x.gross_sale_amount;
+            return x;
+        });
+    }
+
+    setOrderDetailItems(): void {
+        this.orderDetails.items = this.orderDetails.items.map(prod => {
+            const product = this.inventory.find(x => x.item_id === prod.item_id);
+            prod.parent_trade_price = JSON.parse(JSON.stringify(product.parent_trade_price));
+            prod.parent_unit_id = JSON.parse(JSON.stringify(product.parent_unit_id));
+            prod.parent_quantity = JSON.parse(JSON.stringify(product.quantity));
+            prod.child = JSON.parse(JSON.stringify(product.child));
+            prod.item_retail_price = JSON.parse(JSON.stringify(product.item_retail_price));
+            prod.extra_discount = JSON.parse(JSON.stringify(prod.booker_discount));
+            prod.tax_class_amount = JSON.parse(JSON.stringify(product.tax_class_amount));
+            prod.tax_class_id = JSON.parse(JSON.stringify(product.tax_class_id));
+            prod.tax_class_type = JSON.parse(JSON.stringify(product.tax_class_type));
+            prod.pref_id = JSON.parse(JSON.stringify(product.pref_id));
+            prod.unit_id = JSON.parse(JSON.stringify(product.unit_id));
+            prod.unit_name = JSON.parse(JSON.stringify(product.unit_name));
+            prod.brand_id = JSON.parse(JSON.stringify(product.brand_id));
+            prod.is_active = JSON.parse(JSON.stringify(product.is_active));
+            prod.item_trade_price = JSON.parse(JSON.stringify(product.item_trade_price));
+
+            prod.stockQty = JSON.parse(JSON.stringify(prod.executed_qty));
+            prod.net_amount = JSON.parse(JSON.stringify(prod.final_price));
+            prod.gross_amount = prod.item_trade_price * prod.stockQty;
+            prod.extra_discount_pkr = prod.stockQty * prod.extra_discount;
+            prod.original_amount = prod.item_trade_price * prod.stockQty;
+            prod.special_discount_pkr = prod.special_discount;
+            prod.trade_discount = JSON.parse(JSON.stringify(prod.merchant_discount));
+            prod.trade_discount_pkr = JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
+            prod.tax_amount_pkr = JSON.parse(JSON.stringify(prod.total_tax_amount || 0));
+            prod.selectedScheme = this.schemes.find(scheme => scheme.id === prod.scheme_id);
+            return prod;
+        });
+    }
+
     setCurrentSpotSaleOrder(retailer: any): void {
         if (!this.isSpotSaleActive) {
-            this.selectedRetailer = { ...retailer };
-            this.isSpotSaleActive = true;
-            this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
-            this.getDiscountSlabs();
+            if (retailer.id) {
+                this.getOrderDetailsByRetailer(retailer);
+            } else {
+                this.selectedRetailer = { ...retailer };
+                this.isSpotSaleActive = true;
+                this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
+                this.getDiscountSlabs();
+            }
         } else {
             const toast: Toaster = {
                 type: 'error', message: 'Please complete the current order to move forward!',
@@ -428,6 +456,10 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             }
             this.resetPaymentValues();
             this.setPaymentInitalValues();
+        } else if (this.currentTab === 3) {
+            this.selectedOrderBooker = null;
+            this.selectedRoute = null;
+            this.recoveryRetailer = null;
         } else if (this.currentTab === 4) {
             this.getExecutionFinalLoad();
         }
@@ -441,6 +473,10 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         if (!(event.target as HTMLInputElement).value) {
             (event.target as HTMLElement).parentElement.classList.remove('focused');
         }
+    }
+
+    isNumber(event: KeyboardEvent): boolean {
+        return this.dataService.isNumber(event);
     }
 
     isFullyPaymentAdded(current: string): void {
@@ -677,7 +713,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             }
         }, error => {
             this.savingOrder = false;
-            console.log('error in saving execution :>> ', error);
             if (error.status !== 1 && error.status !== 401) {
                 console.log('Error in Save Order for execution ::>> ', error);
                 this.toastService.showToaster({
@@ -692,6 +727,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     saveSpotSaleOrder(): void {
         this.savingOrder = true;
         this.orderDetails.load_id = this.loadId;
+        this.orderDetails.processed_at = this.orderDate;
+        this.orderDetails.processed_by = this.distributorId;
+        this.orderDetails.sales_man_id = this.salemanId;
+        this.orderDetails.dispatched_by = this.distributorId;
+        this.orderDetails.dispatched_at = this.orderDate;
+        this.orderDetails.status = 'Processed';
         this.orderDetails.items = this.executionService.setOrderPayloadItems(this.orderDetails, this.selectedRetailer);
         this.orderDetails.returned_items = this.executionService.setOrderPayloadReturnedItems(this.orderDetails, this.selectedRetailer);
         this.orderDetails.payment = {
@@ -712,8 +753,14 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     type: 'success', message: `Spot Sale for ${this.selectedRetailer.retailer_name.toUpperCase()} saved successfully!`,
                     title: 'Spot Sale Saved:'
                 };
+                this.toastService.showToaster(toast);
                 this.inventory = res.data.executed_products;
+                const index = this.spotSaleOrder.orders.findIndex(x => x.retailer_id === this.orderDetails.retailer_id);
+                this.spotSaleOrder.orders[index] = JSON.parse(JSON.stringify(res.data.order));
                 this.orderDetails = JSON.parse(JSON.stringify(res.data.order));
+                console.log('this.orderDetails::::>>>>', this.orderDetails);
+                this.setOrderDetailItems();
+                this.setOrderDetailReturnedItems();
             }
         }, error => {
             this.savingOrder = false;
@@ -741,7 +788,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 });
                 this.orderDetails = null;
                 this.getOrdersBySalemanAndDate();
-                this.removeSpotOrder();
+                if (this.currentTab === 2) { this.removeSpotOrder(); }
             }
         }, error => {
             this.savingOrder = false;
@@ -778,7 +825,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     getExecutionFinalLoad(): void {
         this.loading = true;
-        this.orderService.getExecutionFinalLoad(this.loadId).subscribe(res => {
+        this.orderService.getExecutionFinalLoad(this.loadId, this.outOfRouteRecovery).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
                 this.finalLoad = res.data;
@@ -794,6 +841,118 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 });
             }
         });
+    }
+
+    getExpense(id: number): string {
+        return this.finalLoad.expense_types.find(y => y.id === id).name;
+    }
+
+    addExpense(type: any, amount: any): void {
+        if (type.value && amount.value) {
+            const expenses = JSON.parse(JSON.stringify(this.finalLoad.expense_detail));
+            const expIndex = expenses.findIndex(x => x.expense_type === +type.value);
+            if (expIndex > -1) {
+                expenses[expIndex].amount = amount;
+            } else {
+                expenses.push({ expense_type: +type.value, amount: +amount.value });
+            }
+            type.value = '';
+            amount.value = '';
+            this.finalLoad.expense_detail = JSON.parse(JSON.stringify(expenses));
+
+            this.setIsExpenseAdded();
+        } else {
+            this.toastService.showToaster({
+                type: 'error',
+                title: 'Expense Error:',
+                message: 'Please select expense type and add amount!'
+            });
+        }
+    }
+
+    removeExpense(type: string): void {
+        this.finalLoad.expense_detail = this.finalLoad.expense_detail.filter(x => x.type !== type);
+        this.setIsExpenseAdded();
+    }
+
+    setIsExpenseAdded(): void {
+        this.isExpenseAdded = true;
+        setTimeout(() => {
+            this.isExpenseAdded = false;
+        }, 500);
+    }
+
+    saveExpense(): void {
+        if (this.finalLoad.expense_detail) {
+            document.getElementById('close-expense').click();
+            this.isAdded = true;
+            this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
+                return { expense_type: +x.expense_type, amount: +x.amount };
+            });
+            this.orderService.saveExecutionExpense(this.loadId, this.salemanId, this.orderDate, this.finalLoad.expense_detail)
+                .subscribe(res => {
+                    this.isAdded = false;
+                    if (res.status === 200) {
+                        this.toastService.showToaster({
+                            title: 'Expense Saved:',
+                            message: 'Expense saved successfully!',
+                            type: 'success'
+                        });
+                        this.claculateBalanceAmount();
+                    }
+                }, error => {
+                    this.isAdded = false;
+                    if (error.status !== 1 && error.status !== 401) {
+                        console.log('Error while saving expenses :>> ', error);
+                        this.toastService.showToaster({
+                            title: 'Expense Error:',
+                            message: 'Expense not saved, please try again before marking complete!',
+                            type: 'error'
+                        });
+                    }
+                });
+        }
+    }
+
+    claculateBalanceAmount(): void {
+    }
+
+    setRecoveryRetailer(): void {
+        this.isAdded = true;
+        this.orderService.checkBalance(this.recoveryRetailer.retailer_id).subscribe(res => {
+            if (res.status) {
+                if (res.data[0].balance > 0) {
+                    this.recoveryRetailer.isAdded = true;
+                    this.recoveryRetailer.balance = res.data[0].balance;
+                    this.recoveryRetailer.recovery = 0;
+                    this.recoveryRetailer.recoveryAdded = false;
+                    this.recoveryListing.push(this.recoveryRetailer);
+                    this.isAdded = false;
+                } else {
+                    this.toastService.showToaster({
+                        title: 'Recovery:',
+                        message: `${this.recoveryRetailer.retailer_name.toUpperCase()} has no credit to add recovery!`,
+                        type: 'error'
+                    });
+                }
+            }
+        });
+    }
+
+    addRevoery(retaielr: any): void {
+        retaielr.recoveryAdded = true;
+        const recoveryData = {
+            retailer_id: retaielr.retailer_id,
+            amount: +retaielr.recovery,
+            booker_id: this.selectedOrderBooker.employee_id
+        };
+        this.outOfRouteRecovery.push(recoveryData);
+    }
+
+    removeRecovery(retailer: any): void {
+        retailer.recoveryAdded = false;
+        retailer.recovery = 0;
+        this.outOfRouteRecovery = this.outOfRouteRecovery.filter(x => x.retailer_id !== retailer.retailer_id);
     }
 
     ngOnDestroy(): void {

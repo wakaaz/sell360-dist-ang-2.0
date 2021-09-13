@@ -14,6 +14,7 @@ export const API_URLS = {
     SAVE_EXECUTION: '/saveOrder/execution',
     SAVE_SPOT: '/saveOrder/spot',
     CANCEL_ORDER: '/orderCancel',
+    CANCEL_SPOT_SALE: '/cancelSpotSale',
     GET_SCHEMES: '/getSchemesDiscount',
     GET_EMPLOYEES: '/getEmployees',
     GET_EMPLOYEE_ROUTES: '/getEmployeeRoutes',
@@ -34,6 +35,8 @@ export const API_URLS = {
     UPDATE_INVOICE_DETAIL: '/updateDispatchInvoiceDate',
     GET_EXECUTION_LIST: '/executionOrderListing',
     GET_EXECUTION_DETAILS: '/executionDetail',
+    CHECK_RETAILER_BALANCE: '/executionCheckRetailerBalance',
+    SAVE_EXPENSE: '/executionSaveExpense',
     EXECUTION_FINAL_SAVE: '/executionFinalSave',
 
     // Salesmen

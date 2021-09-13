@@ -13,7 +13,7 @@ export class RetailerService {
 
     addOpeningBalance(retailers: Array<any>): Observable<any> {
         const url = `${API_URLS.ADD_OPENING_BALANCE}`;
-        return this.httpBaseService.post(url, retailers);
+        return this.httpBaseService.post(url, {opening_balance: retailers});
     }
 
     getRetailerListing(queryParams = null): Observable<any> {

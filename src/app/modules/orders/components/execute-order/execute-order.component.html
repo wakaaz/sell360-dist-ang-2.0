@@ -25,7 +25,7 @@
 </div>
 
 <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered" style="max-width: 850px;" role="document">
         <div class="modal-content top-borderBlue">
             <div class="modal-header">
                 <h5 class="modal-title" id="expnseLabel">Add <span>Expense</span></h5>
@@ -33,26 +33,29 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
+            <div *ngIf="finalLoad" class="modal-body">
+                <div class="row mb-20">
+                    <div class="col-md-4 pr-0">
                         <label class="font12 mb-5">Expense Type</label>
                         <div class="form-s2 focused" data-select2-id="39">
-                            <select class="form-control formselect expense_id select2-hidden-accessible"
-                                id="expense_type" placeholder="Expense Type" style="width: 100%" tabindex="-1"
-                                aria-hidden="true">
-                                <option *ngFor="let expType of finalLoad?.expense_type" [value]="expType">
+                            <select class="form-control formselect expense_id select2-hidden-accessible" #expenseType
+                                id="expense_type" placeholder="Expense Type" style="width: 100%;font-size: 12px;" tabindex="-1"
+                                aria-hidden="true" value="">
+                                <option value="" disabled selected>Select Expense Type</option>
+                                <option *ngFor="let expType of finalLoad?.expense_types" [value]="expType.id">
                                     {{expType.name}}</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3 pr-0">
                         <div class="form-group focused">
-                            <label class="control-label mb-10">Amount</label>
-                            <input type="number" id="expense-amount" class="form-control expense_amount" placeholder="">
+                            <label class="control-label">Amount</label>
+                            <input type="number" id="expense-amount" (keydown)="isNumber($event)"
+                                #expenseAmount class="form-control expense_amount" placeholder="">
                         </div>
                     </div>
-                    <div class="col-2" style="padding-top:29px;"><button type="button"
+                    <div class="col-2" style="padding-top:29px;"><button type="button" (click)="addExpense(expenseType, 
+                        expenseAmount)"
                             class="btn btn-primary add_expense_btn">Add</button>
                     </div>
                 </div>
@@ -60,7 +63,7 @@
                     <div id="expenseAddedTable_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
                         <div class="row">
                             <div class="col-12">
-                                <table class="table" datatable [dtOptions]="dtOPtions" id="expenseAddedTable"
+                                <table *ngIf="!isExpenseAdded" class="table" datatable [dtOptions]="dtOPtions" id="expenseAddedTable"
                                     style="width: 100%;" role="grid" aria-describedby="expenseAddedTable_info">
                                     <thead>
                                         <tr role="row">
@@ -70,21 +73,26 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Challan</td>
-                                            <td>150</td>
-                                            <td><button class="btn btn-default red-bg mb-0 remove_expense" eid="3"
-                                                    amt="150">Delete</button></td>
+                                        <tr *ngFor="let expense of finalLoad?.expense_detail">
+                                            <td>{{getExpense(expense.expense_type)}}</td>
+                                            <td>{{expense.amount}}</td>
+                                            <td><button class="btn btn-default red-bg mb-0 remove_expense" [id]="expense.type"
+                                                    (click)="removeExpense(expense.type)">Delete</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
+                                <div *ngIf="isExpenseAdded" class="col-md-12" style="text-align: center;padding: 30px;">
+                                    <div class="spinner-border" style="width: 5rem; height: 5rem;color: #0038ba" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer border-0">
-                <button type="button" class="btn btn-primary">Save</button>
+                <button type="button" (click)="saveExpense()" class="btn btn-primary">Save</button>
                 <button type="button" id="close-expense" class="btn btn-cancel" data-dismiss="modal"
                     aria-label="Close">Cancel</button>
             </div>
@@ -524,7 +532,7 @@
                                         data-toggle="modal" data-target="#exampleModal2">Show Modal</button>
 
                                     <button
-                                        [disabled]="!orderDetails?.items?.length || !orderDetails?.returned_items?.length"
+                                        [disabled]="!orderDetails?.items?.length && !orderDetails?.returned_items?.length"
                                         class="btn btn-primary mr-2 save_order_execution font13"
                                         (click)="saveSpotSaleOrder()">Save
                                         Order</button>
@@ -548,31 +556,41 @@
                                     <div class="col-3 pr-0">
                                         <div class="_cust_filter p-0 m-0 w-100">
                                             <div class="form-s2">
-                                                <select class="form-control formselect"
+                                                <ng-select class="formselect" (change)="getOrderBookerRoutes()"
+                                                    [(ngModel)]="selectedOrderBooker" name="order-booker"
                                                     placeholder="Select Order Booker" style="width: 100%!important">
-                                                    <option>Select Order Booker</option>
-                                                </select>
+                                                    <ng-option *ngFor="let item of orderBookers;let i=index"
+                                                        [value]="item">{{item.employee_first_name}}
+                                                        {{item.employee_last_name}}</ng-option>
+                                                </ng-select>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div class="col-3 pr-0">
+                                    <div class="col-3 pr-0" *ngIf="selectedOrderBooker">
                                         <div class="_cust_filter p-0 m-0 w-100">
                                             <div class="form-s2">
-                                                <select class="form-control formselect" placeholder="Select Route"
-                                                    style="width: 100%!important">
-                                                    <option>Select Route</option>
-                                                </select>
+                                                <ng-select class="formselect" (change)="getRetaielrsByRoute($event)"
+                                                    [(ngModel)]="selectedRoute" name="booker-route"
+                                                    placeholder="Select Route" style="width: 100%!important">
+                                                    <ng-option *ngFor="let item of bookerRoutes;let i=index"
+                                                        [value]="item.route_id">{{item.name}}</ng-option>
+                                                </ng-select>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-3 pr-0">
+
+                                    <div class="col-3 pr-0" *ngIf="selectedRoute">
                                         <div class="_cust_filter p-0 m-0 w-100">
                                             <div class="form-s2">
-                                                <select class="form-control formselect" placeholder="Select Retialer"
+                                                <ng-select class="formselect" [(ngModel)]="recoveryRetailer"
+                                                    name="spot-retailer" placeholder="Select Retailer" (change)="setRecoveryRetailer()"
                                                     style="width: 100%!important">
-                                                    <option>Select Retialer</option>
-                                                </select>
+                                                    <ng-container *ngFor="let item of routeRetailers;let i=index">
+                                                        <ng-option *ngIf="!item.isAdded" [value]="item">
+                                                            {{item.retailer_name}}</ng-option>
+                                                    </ng-container>
+                                                </ng-select>
                                             </div>
                                         </div>
                                     </div>
@@ -581,7 +599,7 @@
                         </div>
 
                         <div class="col-12 PT-10">
-                            <table datatable [dtOptions]="dtOPtions" class="table table-hover dt-responsive nowrap"
+                            <table *ngIf="!isAdded" datatable [dtOptions]="dtOPtions" class="table table-hover dt-responsive nowrap"
                                 id="example2" style="width:100%">
                                 <thead>
                                     <tr>
@@ -592,13 +610,18 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>New Malik pan shop</td>
-                                        <td>Rs.1,500.00</td>
-                                        <td><input type="text" class="form-control value_input" style="width:90px;"
+                                    <tr *ngFor="let retailer of recoveryListing">
+                                        <td>{{retailer.retailer_name}}</td>
+                                        <td>Rs. {{retailer.balance | number: '1.2-2'}}</td>
+                                        <td><input type="text" [readonly]="retailer.recoveryAdded" [(ngModel)]="retailer.recovery" name="{{retailer.retailer_name}}" id="{{retailer.retailer_name}}"
+                                                class="form-control value_input" style="width:90px;"
                                                 placeholder="0"></td>
-                                        <td><button class="btn btn-default btn-line">Add
-                                                Recovery</button></td>
+                                        <td>
+                                            <button *ngIf="!retailer.recoveryAdded" (click)="addRevoery(retailer)" class="btn btn-default btn-line">Add
+                                                Recovery</button>
+                                            <button *ngIf="retailer.recoveryAdded" (click)="removeRecovery(retailer)" class="btn btn-default red-bg" style="color: white;">Remove
+                                                Recovery</button>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -665,7 +688,7 @@
                                                 <td>{{item.item_id}}</td>
                                                 <td>{{item.item_name}}</td>
                                                 <td>{{item.unit_name}}</td>
-                                                <td>{{item.dispatch_issued_qty}}</td>
+                                                <td>{{item.total_dispatch_qty}}</td>
                                                 <td>{{item.total_cancel_qty}}</td>
                                                 <td>{{item.total_return_qty}}</td>
                                             </tr>
@@ -679,9 +702,14 @@
 
                                         <div class="header">
                                             <h2 class="cash-title w-100 mb-15">Cash <span>Report</span>
-                                                <button class="btn btn-primary add-expense" data-toggle="modal"
+                                                <button *ngIf="!isAdded" class="btn btn-primary add-expense" data-toggle="modal"
                                                     data-target="#expenseModal">Add
                                                     Expense</button>
+                                                <button *ngIf="isAdded" class="btn btn-primary add-expense" disabled>
+                                                    <div class="spinner-border text-light" role="status">
+                                                        <span class="sr-only">Loading...</span>
+                                                    </div>
+                                                </button>
                                             </h2>
                                             <div class="report_value"> <strong>Gross Amount:</strong>
                                                 <span>{{finalLoad?.dsr?.total_gross_amount | number: '1.2-2'}}</span>
@@ -713,14 +741,14 @@
                                                 <span>{{finalLoad?.dsr?.total_return_amount | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Total Cash:</strong>
-                                                <span>{{finalLoad?.dsr?.total_cash | number: '1.2-2'}}</span>
+                                                <span>{{finalLoad?.dsr?.total_cash_amount | number: '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value"> <strong>Recovery:</strong>
                                                 <span>{{finalLoad?.dsr?.total_recovered_amount | number:
                                                     '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value" style="height:40px; line-height:22px;">
-                                                <strong>AMT. Received:</strong> <input type="number"
+                                                <strong>AMT. Received:</strong> <input type="number" (keydown)="isNumber($event)"
                                                     class="form-control value_input amount_recieved_cashReport"
                                                     placeholder="0">
                                             </div>

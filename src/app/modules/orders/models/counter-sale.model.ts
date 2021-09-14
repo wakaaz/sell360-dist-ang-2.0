@@ -12,6 +12,7 @@ export interface PaymentDetail {
       bank_name: string;
     };
   dispatched_bill_amount: number;
+  return_amount?: number;
   recovery: number;
   amount_received: number;
 }

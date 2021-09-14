@@ -38,6 +38,8 @@ export const API_URLS = {
     CHECK_RETAILER_BALANCE: '/executionCheckRetailerBalance',
     SAVE_EXPENSE: '/executionSaveExpense',
     EXECUTION_FINAL_SAVE: '/executionFinalSave',
+    REMOVE_OUT_OF_ROUE_RECOVERY: '/executionRemoveOutOfRouteRecovery',
+    EXECUTION_COMPLETE: '/executionComplete',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

@@ -24,6 +24,31 @@
     </div>
 </div>
 
+<div class="modal fade" id="order-complete" tabindex="-1" role="dialog" aria-labelledby="orderCompleteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderLabel">Complete Execution <span></span></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="col-md-12">
+                    <p>Are you sure you want to Mark the order as Completed?</p>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary"
+                    (click)="markCompelet()">Yes</button>
+                <button type="submit" id="close-complete" class="btn btn-cancel" data-dismiss="modal"
+                    aria-label="Close">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+<button hidden data-target="#order-complete" data-toggle="modal" id="show-complete">show complete</button>
+
 <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 850px;" role="document">
         <div class="modal-content top-borderBlue">
@@ -361,7 +386,7 @@
                                         [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
                                         [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes"
                                         [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct"
-                                        [allProducts]="allProducts" [specialDiscounts]="specialDiscounts"
+                                        [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
                                         [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
                                         [orderType]="'execution'" [recoveryAmount]="recoveryAmount"
                                         (deleteReturned)="deleteReturnedProduct($event)"
@@ -503,7 +528,7 @@
                                         [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
                                         [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes"
                                         [selectedRetailer]="selectedRetailer" [orderType]="'execution'"
-                                        [allProducts]="allProducts" [specialDiscounts]="specialDiscounts"
+                                        [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
                                         [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
                                         (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()"
                                         (productUpdated)="calculateReceivable()"
@@ -751,13 +776,13 @@
                                                     '1.2-2'}}</span>
                                             </div>
                                             <div class="report_value" style="height:40px; line-height:22px;">
-                                                <strong>AMT. Received:</strong> <input type="number" (keydown)="isNumber($event)"
+                                                <strong>AMT. Received:</strong> <input type="number" [(ngModel)]="amountReceived" (keydown)="isNumber($event)"
                                                     class="form-control value_input amount_recieved_cashReport"
                                                     placeholder="0">
                                             </div>
                                             <div class="report_value" style="color:#0038ba">
                                                 <strong>Balance AMT:</strong>
-                                                <span>{{finalLoad?.dsr?.total_amount_recieved | number: '1.2-2'}}</span>
+                                                <span>{{finalLoad?.dsr?.total_net_amount - amountReceived || 0 | number: '1.2-2'}}</span>
                                             </div>
 
 
@@ -766,7 +791,7 @@
                                                     <div class="col-12 PB-10"> <a class="btn btn-primary w-100"
                                                             target="_blank">Generate DSR</a> </div>
                                                     <div class="col-12">
-                                                        <button class="btn btn-primary w-100">Mark
+                                                        <button class="btn btn-primary w-100" (click)="checkRecieveable()">Mark
                                                             Complete</button>
                                                     </div>
                                                 </div>

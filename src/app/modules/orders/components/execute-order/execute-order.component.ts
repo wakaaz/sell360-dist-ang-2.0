@@ -45,6 +45,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     chequeAmount: number;
     returnAmount: number;
     receivableAmount: number;
+    amountReceived: number;
     netAmount: number;
     totalPayment: number;
     distributorId: number;
@@ -243,6 +244,15 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.generalDataService.getRetailersByRoute(routeId).subscribe(res => {
             if (res.status === 200) {
                 this.routeRetailers = res.data;
+                if (this.currentTab === 2 && this.spotSaleOrder.retailers.length) {
+                    this.routeRetailers = this.routeRetailers.map(x => {
+                        const index = this.spotSaleOrder.retailers.findIndex(y => y.retailer_id === x.retailer_id);
+                        if (index > -1) {
+                            x.isAdded = true;
+                        }
+                        return x;
+                    });
+                }
             }
         }, error => {
             if (error.status !== 1 && error.status !== 401) {
@@ -980,6 +990,44 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         retailer.recoveryAdded = false;
         retailer.recovery = 0;
         this.outOfRouteRecovery = this.outOfRouteRecovery.filter(x => x.retailer_id !== retailer.retailer_id);
+    }
+
+    checkRecieveable(): void {
+        if (this.amountReceived === null || this.amountReceived === undefined) {
+            this.toastService.showToaster({
+                title: 'Execution Error:',
+                message: 'Please add received amount!',
+                type: 'error'
+            });
+        } else {
+            document.getElementById('show-complete').click();
+        }
+    }
+
+    markCompelet(): void {
+        document.getElementById('close-complete').click();
+        this.loading = true;
+        this.orderService.markCompeleteExecution(this.loadId, this.amountReceived).subscribe(res => {
+            this.loading = false;
+            if (res.status === 200) {
+                this.toastService.showToaster({
+                    title: 'Execution Completed:',
+                    message: 'Execution completed successfully!',
+                    type: 'success'
+                });
+                this.router.navigateByUrl('/orders/execution-list');
+            }
+        }, error => {
+            this.loading = false;
+            console.log('Execution complete Error :>> ', error);
+            if (error.status !== 1 && error.status !== 401) {
+                this.toastService.showToaster({
+                    title: 'Execution Error:',
+                    message: 'Execution not completed, please try again later!',
+                    type: 'error'
+                });
+            }
+        });
     }
 
     ngOnDestroy(): void {

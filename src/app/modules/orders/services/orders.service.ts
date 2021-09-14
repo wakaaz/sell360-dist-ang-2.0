@@ -144,4 +144,10 @@ export class OrdersService {
         const url = `${API_URLS.EXECUTION_FINAL_SAVE}/${loadId}`;
         return this.baseService.post(url, {out_of_route_recovery: outOfRouteRecovery});
     }
+
+    removeOutOfRuoteRecovery(paymentId: number): Observable<any> {
+        const url = `${API_URLS.REMOVE_OUT_OF_ROUE_RECOVERY}/${paymentId}`;
+        return this.baseService.get(url);
+    }
+
 }

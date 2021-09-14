@@ -917,6 +917,17 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     claculateBalanceAmount(): void {
     }
 
+    checkRecovery(retailer): void {
+        if (+retailer.recovery > retailer.balance) {
+            this.toastService.showToaster({
+                title: 'Recovery Error:',
+                message: 'Recovered amount cannot be greater than credit!',
+                type: 'error'
+            });
+            retailer.recovery = 0;
+        }
+    }
+
     setRecoveryRetailer(): void {
         this.isAdded = true;
         this.orderService.checkBalance(this.recoveryRetailer.retailer_id).subscribe(res => {
@@ -944,12 +955,24 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         const recoveryData = {
             retailer_id: retaielr.retailer_id,
             amount: +retaielr.recovery,
-            booker_id: this.selectedOrderBooker.employee_id
+            booker_id: retaielr.booker_id || this.selectedOrderBooker.employee_id
         };
         this.outOfRouteRecovery.push(recoveryData);
     }
 
     removeRecovery(retailer: any): void {
+        if (retailer.order_payment_id) {
+            this.orderService.removeOutOfRuoteRecovery(retailer.order_payment_id).subscribe(res => {
+                if (res.status === 200) {
+                    this.resetRecoveryValues(retailer);
+                }
+            });
+        } else {
+            this.resetRecoveryValues(retailer);
+        }
+    }
+
+    resetRecoveryValues(retailer: any): void {
         retailer.recoveryAdded = false;
         retailer.recovery = 0;
         this.outOfRouteRecovery = this.outOfRouteRecovery.filter(x => x.retailer_id !== retailer.retailer_id);

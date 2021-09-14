@@ -140,16 +140,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         if (this.orderType === 'execution') {
             const prod = this.allProducts.find(x => x.item_id === product.item_id);
             if (this.currentTab === 1) {
-                if (+product.stockQty > (prod.available_qty + prod.executed_qty)) {
-                    const toast: Toaster = {
-                        message: 'Executed quantity cannot be greater than available quantity!', type: 'error',
-                        title: 'Quantity Error:'
-                    };
-                    this.toastService.showToaster(toast);
-                    product.stockQty = 0;
-                }
-            } else if (this.currentTab === 2) {
-                if (+product.stockQty > prod.available_qty) {
+                if (+product.stockQty > (prod.available_qty + product.executed_qty)) {
                     const toast: Toaster = {
                         message: 'Executed quantity cannot be greater than available quantity!', type: 'error',
                         title: 'Quantity Error:'

@@ -45,6 +45,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     chequeAmount: number;
     returnAmount: number;
     receivableAmount: number;
+    netAmount: number;
     totalPayment: number;
     distributorId: number;
     currentTab: number;
@@ -72,7 +73,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     orderBookers: Array<any> = [];
     bookerRoutes: Array<any> = [];
     routeRetailers: Array<any> = [];
-    spotSaleOrders: Array<any> = [];
     retailersList: Array<any> = [];
     schemes: Array<any> = [];
     inventory: Array<any> = [];
@@ -125,6 +125,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     setPaymentInitalValues(): void {
+        this.netAmount = 0;
         this.creditAmount = 0;
         this.chequeAmount = 0;
         this.returnAmount = 0;
@@ -413,8 +414,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         const returnPrices = this.orderDetails.returned_items.filter(x => !x.isDeleted).map(x => x.net_amount);
         this.returnAmount = this.dataService.calculateItemsBill(returnPrices);
         const price = this.orderDetails.items.map(x => x.net_amount);
-        const itemsNetAmount = this.dataService.calculateItemsBill(price);
-        this.receivableAmount = itemsNetAmount + this.orderDetails.recovered + this.returnAmount;
+        this.netAmount = this.dataService.calculateItemsBill(price);
+        this.receivableAmount = this.netAmount + this.orderDetails.recovered + this.returnAmount;
         this.selectedRetailer.order_total = this.totalPayment;
         if (this.currentTab === 2) {
             const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
@@ -662,8 +663,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             payment_mode: 'Cash',
             payment_detail: '',
             dispatched_bill_amount: 0,
+            return_amount: this.returnAmount,
             recovery: 0,
-            amount_received: Math.round((this.receivableAmount + Number.EPSILON) * 100) / 100
+            amount_received: Math.round((this.receivableAmount + Number.EPSILON) * 100) / 100,
         };
         if (this.cheque) {
             this.cash.amount_received = this.cash.amount_received - this.cheque.amount_received;
@@ -684,8 +686,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     saveExecutionQuantity(): void {
         this.orderDetails.items = this.executionService.setOrderPayloadItems(this.orderDetails, this.selectedRetailer);
         this.orderDetails.returned_items = this.executionService.setOrderPayloadReturnedItems(this.orderDetails, this.selectedRetailer);
+        this.cash.amount_received = this.cash.amount_received > -1 ? this.cash.amount_received : this.netAmount;
         this.orderDetails.payment = {
-            total_payment: this.totalPayment,
+            total_payment: this.totalPayment > -1 ? this.totalPayment : this.netAmount,
             detail: [this.cash]
         };
         if (this.credit) {
@@ -753,12 +756,13 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     type: 'success', message: `Spot Sale for ${this.selectedRetailer.retailer_name.toUpperCase()} saved successfully!`,
                     title: 'Spot Sale Saved:'
                 };
+                this.newProduct = null;
                 this.toastService.showToaster(toast);
                 this.inventory = res.data.executed_products;
+                this.selectedRetailer.id = res.data.order.id;
                 const index = this.spotSaleOrder.orders.findIndex(x => x.retailer_id === this.orderDetails.retailer_id);
                 this.spotSaleOrder.orders[index] = JSON.parse(JSON.stringify(res.data.order));
                 this.orderDetails = JSON.parse(JSON.stringify(res.data.order));
-                console.log('this.orderDetails::::>>>>', this.orderDetails);
                 this.setOrderDetailItems();
                 this.setOrderDetailReturnedItems();
             }

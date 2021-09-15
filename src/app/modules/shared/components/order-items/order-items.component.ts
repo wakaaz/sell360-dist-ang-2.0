@@ -13,6 +13,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
     @Input() orderType: string;
     @Input() returnAmount: number;
+    @Input() currentTab: number;
     @Input() recoveryAmount: number;
     @Input() receivableAmount: number;
     @Input() totalPayment: number;
@@ -119,7 +120,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         } else {
             if (this.orderType === 'execution') {
                 const product = this.allProducts.find(x => x.item_id === this.selectedItem.item_id);
-                product.available_qty = +product.stockQty;
+                product.available_qty = +this.selectedItem.stockQty + product.available_qty;
             }
             if (this.selectedItem.id) {
                 this.selectedItem.stockQty = 0;
@@ -130,6 +131,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
                 this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
                 this.applySlabOnAllProducts();
             }
+            this.productUpdated.emit();
             document.getElementById('close-prod-del').click();
         }
     }
@@ -137,7 +139,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     setQuantity(product: any): void {
         if (this.orderType === 'execution') {
             const prod = this.allProducts.find(x => x.item_id === product.item_id);
-            if (+product.stockQty > (prod.available_qty + prod.executed_qty)) {
+            if ((product.id && +product.stockQty > (prod.available_qty + product.executed_qty)) ||
+                (!product.id && +product.stockQty > prod.available_qty)) {
                 const toast: Toaster = {
                     message: 'Executed quantity cannot be greater than available quantity!', type: 'error',
                     title: 'Quantity Error:'
@@ -380,7 +383,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         this.totalTax = this.dataService.calculateItemsBill(taxes);
         this.orderDetail.total_amount_after_tax = this.netAmount;
         if (this.orderType === 'execution') {
-            if (this.selectedRetailer) { this.selectedRetailer.order_total = this.totalPayment; }
+            if (this.selectedRetailer) {
+                this.selectedRetailer.order_total = this.totalPayment;
+            }
             this.orderDetail.order_total = this.totalPayment;
             this.orderDetail.total_amount_after_tax = this.totalPayment;
         }

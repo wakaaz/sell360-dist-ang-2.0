@@ -67,6 +67,7 @@ export class CounterSaleComponent implements OnInit {
     cash: PaymentDetail;
     order: CounterSale;
 
+    schemeItemIds: Array<number> = [];
     allProducts: Array<any> = [];
     dispProducts: Array<any> = [];
     specialDiscounts: Array<any> = [];
@@ -105,9 +106,9 @@ export class CounterSaleComponent implements OnInit {
         this.paymentTypeCredit = '';
         this.addedPayment = '';
         this.currentPayment = '';
+        this.getSchemesData();
         this.getOrderBookers();
         this.getCounterSaleData();
-        this.getSchemesData();
     }
 
     getOrderBookers(): void {
@@ -421,8 +422,6 @@ export class CounterSaleComponent implements OnInit {
 
     openQuantityModal(product: any): void {
         this.showQuantityModal = true;
-        product.schemes = this.dataService.getSchemes(product.item_id,
-            product.unit_id, product.pref_id, this.schemes, this.selectedRetailer.type_id, this.selectedRetailer.id);
         if (product.schemes?.length) {
             product.schemes = product.schemes.map(scheme => {
                 switch (scheme.scheme_type) {
@@ -448,6 +447,12 @@ export class CounterSaleComponent implements OnInit {
     showProductsList(event: Event): void {
         event.stopPropagation();
         if (this.selectedRetailer) {
+            this.allProducts = this.allProducts.map(product => {
+                product.schemes = this.dataService.getSchemes(product.item_id,
+                    product.unit_id, product.pref_id, this.schemes, this.selectedRetailer.type_id, this.selectedRetailer.id);
+                return product;
+            });
+            this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
             this.showProducts = true;
             document.body.classList.add('no-scroll');
             document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');

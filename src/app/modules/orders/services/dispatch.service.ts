@@ -17,7 +17,7 @@ export class OrderDispatchService {
                     pref_id: item.pref_id,
                     unit_id: item.unit_id,
                     item_trade_price: item.original_price,
-                    actual_qty: item.item_quantity_booker,
+                    actual_qty: item.dispatch_qty,
                     dispatched_qty: item.dispatch_qty,
                     issued_qty: 0,
                 };

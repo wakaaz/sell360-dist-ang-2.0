@@ -264,7 +264,7 @@
                                                         <label class="custom-control-label" [for]="'ord'+ind"></label>
                                                     </div>
                                                     <div class="text-right">Total Sales<span class="or-val">Rs.
-                                                            {{order.total_amount_after_tax | number: '1.2-2'}}</span>
+                                                            {{order.order_total || 0 | number: '1.2-2'}}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -309,10 +309,10 @@
                                                         <tr *ngFor="let item of currentLoadContent.items;let i=index">
                                                             <td>{{item.item_id}}</td>
                                                             <td>{{getItemName(item.item_id)}}</td>
-                                                            <td>{{item.dispatched_qty | number}}</td>
+                                                            <td>{{item.actual_qty | number}}</td>
                                                             <td><input class="value_input" [(ngModel)]="item.issued_qty"
                                                                     [name]="item.item_id" [id]="item.item_id"
-                                                                    type="number"
+                                                                    type="number" (keyup)="updateDispatchedQty(item)"
                                                                     (keydown)="isNumber($event, 'quantity')"></td>
                                                         </tr>
                                                     </tbody>
@@ -439,7 +439,7 @@
                                                 <div class="col-4"> <a (click)="getBookingSheet()"
                                                         class="btn btn-primary print-btn fontSize"><i
                                                             class="fa fa-print"></i> Booking Sheet</a> </div>
-                                                <div class="col-4"> <a href="#"
+                                                <div class="col-4"> <a (click)="generateLSPDF()"
                                                         class="btn btn-primary print-btn fontSize"><i
                                                             class="fa fa-print"></i> Load Sheet</a> </div>
                                                 <div class="col-4">

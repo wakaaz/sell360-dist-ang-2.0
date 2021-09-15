@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 
 @Component({
     selector: 'app-retailer-sub-list',
@@ -7,8 +8,10 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChange
     encapsulation: ViewEncapsulation.None,
 })
 
-export class RetailerSubListComponent implements OnInit, OnChanges {
+export class RetailerSubListComponent implements OnInit, OnChanges, OnDestroy {
     @Input() retailers: Array<any>;
+    @Input() orderType: string;
+    @Input() isSpotSaleActive: boolean;
 
     searchText: string;
 
@@ -16,14 +19,19 @@ export class RetailerSubListComponent implements OnInit, OnChanges {
 
     @Output() retailerChanged: EventEmitter<any> = new EventEmitter();
 
-    constructor() { }
+    constructor(
+        private toastService: ToasterService,
+        private change: ChangeDetectorRef,
+    ) { }
 
     ngOnInit(): void { }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes.retailers.currentValue) {
-            this.retailerDispList = this.retailers;
-        }
+        console.log('changes :>> ', changes);
+        // if (changes.retailers.currentValue) {
+        this.retailerDispList = this.retailers;
+        this.change.detectChanges();
+        // }
     }
 
     searchByRetailer(): void {
@@ -35,16 +43,28 @@ export class RetailerSubListComponent implements OnInit, OnChanges {
     }
 
     getOrderDetails(retailer: any): void {
-        this.retailerDispList = this.retailerDispList.map(ret => {
-            if (ret.isActive) {
-                ret.isActive = false;
-            }
-            if (ret.id === retailer.id) {
-                ret.isActive = true;
-            }
-            return ret;
-        });
-        this.retailerChanged.emit(retailer);
+        if (this.orderType !== 'execution' || (this.orderType === 'execution' && !this.isSpotSaleActive)) {
+            this.retailerDispList = this.retailerDispList.map(ret => {
+                if (ret.isActive) {
+                    ret.isActive = false;
+                }
+                if (ret.id === retailer.id) {
+                    ret.isActive = true;
+                }
+                return ret;
+            });
+            this.retailerChanged.emit(retailer);
+        } else if (this.orderType === 'execution' && this.isSpotSaleActive) {
+            const toast: Toaster = {
+                type: 'error', message: 'Please save/cancel the current order to move forward!',
+                title: 'Spot Sale Error:'
+            };
+            this.toastService.showToaster(toast);
+        }
+    }
+
+    ngOnDestroy(): void {
+        this.change.detach();
     }
 
 }

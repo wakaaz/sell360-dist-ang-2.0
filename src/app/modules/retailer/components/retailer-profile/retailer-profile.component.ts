@@ -2,51 +2,79 @@ import { Component, OnInit } from '@angular/core';
 import { ChartType, ChartOptions, Chart } from 'chart.js';
 import { SingleDataSet, Label, Color } from 'ng2-charts';
 import * as echarts from 'echarts';
+import { ActivatedRoute } from '@angular/router';
+import { RetailerService } from '../../services/retailer.service';
+import { ToasterService } from 'src/app/core/services/toaster.service';
 
 @Component({
     selector: 'app-retailer-profile',
     templateUrl: './retailer-profile.component.html',
-    styleUrls: ['./retailer-profile.component.css']
+    styleUrls: ['./retailer-profile.component.css'],
 })
-
 export class RetailerProfileComponent implements OnInit {
-
     dtOptions: DataTables.Settings = {};
+    dtOptionsOrders: DataTables.Settings = {};
     openReport: boolean;
+    profileId: string;
+    visits = [];
+    orders = [];
+    loading = false;
+    loadingOrders = false;
 
     // Payment Chart
     public paymentChartOptions: ChartOptions = {
         rotation: 1 * Math.PI,
-        circumference: 1 * Math.PI
+        circumference: 1 * Math.PI,
     };
     public paymentChartLabels: Label[] = ['Cash', 'Cheque', 'Deposite'];
     public paymentChartData: SingleDataSet = [350, 209, 55]; // Static for now
     public paymentChartType: ChartType = 'doughnut';
     public paymentChartColors: Color[] = [
-        { backgroundColor: ['#0038ba', '#282828', '#939393'], borderColor: ['#fff', '#fff', '#fff'], borderWidth: 1 }];
+        {
+            backgroundColor: ['#0038ba', '#282828', '#939393'],
+            borderColor: ['#fff', '#fff', '#fff'],
+            borderWidth: 1,
+        },
+    ];
     public paymentChartLegend = true;
     public paymentChartPlugins = [];
 
     // Invoice Chart
     public invoiceChartOptions: ChartOptions = {
         legend: {
-            display: false
+            display: false,
         },
         legendCallback: (chart) => {
             const text = [];
             text.push('<ul class="0-legend">');
             const ds = chart.data.datasets[0];
-            const sum = (ds.data as Array<number>).reduce(function add(a: number, b: number): number { return a + b; }, 0);
+            const sum = (ds.data as Array<number>).reduce(function add(
+                a: number,
+                b: number
+            ): number {
+                return a + b;
+            },
+                0);
             for (let i = 0; i < ds.data.length; i++) {
                 text.push('<li>');
-                const perc = Math.round(100 * (ds.data as Array<number>)[i] / sum);
-                text.push('<span style="background-color:' + ds.backgroundColor[i] + '">' +
-                    '</span>' + chart.data.labels[i] + ' (' + ds.data[i] + ') (' + perc + '%)');
+                const perc = Math.round((100 * (ds.data as Array<number>)[i]) / sum);
+                text.push(
+                    '<span style="background-color:' +
+                    ds.backgroundColor[i] +
+                    '">' +
+                    '</span>' +
+                    chart.data.labels[i] +
+                    ' (' +
+                    ds.data[i] +
+                    ') (' +
+                    perc +
+                    '%)'
+                );
                 text.push('</li>');
             }
             text.push('</ul>');
             return text.join('');
-        }
+        },
     };
     public invoiceChartData: SingleDataSet = [400, 300]; // Static for now
     public invoiceChartType: ChartType = 'pie';
@@ -55,34 +83,100 @@ export class RetailerProfileComponent implements OnInit {
 
     // Category Chart
     public categoryChartType: ChartType = 'pie';
-    public categoryChartLabels: Label[] =
-        ['Shahi Meva', 'Aas Pas', 'Daal Channa', 'Daal Moong', 'Ballay Nimko', 'Shahi Elaichi']; // Static for now
+    public categoryChartLabels: Label[] = [
+        'Shahi Meva',
+        'Aas Pas',
+        'Daal Channa',
+        'Daal Moong',
+        'Ballay Nimko',
+        'Shahi Elaichi',
+    ]; // Static for now
     public categoryChartData: SingleDataSet = [800, 700, 600, 950, 500, 150]; // Static for now
-    public categoryChartColors: Color[] = [{
-        backgroundColor: ['#002b8f', '#0038ba', '#1052eb', '#282828', '#7a7a7a', '#b4b4b4'], borderWidth: 1
-    }];
+    public categoryChartColors: Color[] = [
+        {
+            backgroundColor: [
+                '#002b8f',
+                '#0038ba',
+                '#1052eb',
+                '#282828',
+                '#7a7a7a',
+                '#b4b4b4',
+            ],
+            borderWidth: 1,
+        },
+    ];
     public categoryChartOptions: ChartOptions = {
         // scales: {
         //     yAxes: [{ ticks: { beginAtZero: true }}],
         //     xAxes: [{ ticks: { display: false }}]
         // },
-        legend: { position: 'right' }
+        legend: { position: 'right' },
     };
 
-    constructor() {
-        this.dtOptions = {
-            pagingType: 'simple_numbers'
-        };
-    }
+    constructor(
+        private route: ActivatedRoute,
+        private retailerService: RetailerService,
+        private toastService: ToasterService
+    ) { }
 
     ngOnInit(): void {
+        this.loading = true;
+        this.profileId = this.route.snapshot.paramMap.get('id');
+        this.dtOptions = {
+            pagingType: 'simple_numbers',
+        };
+        this.retailerService.getRetailerVisitsById(this.profileId).subscribe(
+            (data) => {
+                this.visits = data;
+                this.loading = false;
+                console.log('this.visits => ', this.visits[0]);
+                // this.getRetailerOrders();
+            },
+            (error) => {
+                this.loading = false;
+                if (error.status !== 401 && error.status !== 1) {
+                    this.toastService.showToaster({
+                        title: 'Error:',
+                        message: 'Visits not fetched, try again later.',
+                        type: 'error',
+                    });
+                }
+                scrollTo(0, 0);
+            }
+        );
     }
 
+    getRetailerOrders(): void {
+        this.loadingOrders = true;
+        this.dtOptionsOrders = {
+            pagingType: 'simple_numbers',
+        };
+        this.retailerService.getRetailerOrdersById(this.profileId).subscribe(
+            (data) => {
+                this.orders = data;
+                this.loadingOrders = false;
+                console.log('this.orders => ', this.orders[0]);
+            },
+            (error) => {
+                this.loadingOrders = false;
+                if (error.status !== 401 && error.status !== 1) {
+                    this.toastService.showToaster({
+                        title: 'Error:',
+                        message: 'Orders not fetched, try again later.',
+                        type: 'error',
+                    });
+                }
+                scrollTo(0, 0);
+            }
+        );
+    }
     openSalesAndProductsReport(event: Event): void {
         event.stopPropagation();
         this.openReport = true;
         document.body.classList.add('no-scroll');
-        document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
+        document
+            .getElementsByClassName('overlay-blure')[0]
+            .classList.add('d-block');
         document.getElementById('profile').classList.add('blur-div');
         this.createInvoiceCharts();
         this.createProductWiseChart();
@@ -94,9 +188,14 @@ export class RetailerProfileComponent implements OnInit {
             type: this.invoiceChartType,
             data: {
                 labels: this.InvoiceChartLabels,
-                datasets: [{ backgroundColor: this.invoiceChartColors, data: this.invoiceChartData }]
+                datasets: [
+                    {
+                        backgroundColor: this.invoiceChartColors,
+                        data: this.invoiceChartData,
+                    },
+                ],
             },
-            options: this.invoiceChartOptions
+            options: this.invoiceChartOptions,
         });
         const legend = document.getElementById('legend');
         (legend.innerHTML as any) = chart.generateLegend();
@@ -104,7 +203,11 @@ export class RetailerProfileComponent implements OnInit {
 
         // tslint:disable-next-line: prefer-for-of
         for (let i = 0; i < legendItems.length; i += 1) {
-            legendItems[i].addEventListener('click', this.invoiceLegendClicked, false);
+            legendItems[i].addEventListener(
+                'click',
+                this.invoiceLegendClicked,
+                false
+            );
         }
     }
 
@@ -114,39 +217,53 @@ export class RetailerProfileComponent implements OnInit {
         const app: any = {};
         let option = null;
         const posList = [
-            'left', 'right', 'top', 'bottom', 'inside',
-            'insideTop', 'insideLeft', 'insideRight', 'insideBottom',
-            'insideTopLeft', 'insideTopRight', 'insideBottomLeft', 'insideBottomRight'
+            'left',
+            'right',
+            'top',
+            'bottom',
+            'inside',
+            'insideTop',
+            'insideLeft',
+            'insideRight',
+            'insideBottom',
+            'insideTopLeft',
+            'insideTopRight',
+            'insideBottomLeft',
+            'insideBottomRight',
         ];
         app.configParameters = {
             rotate: {
                 min: -90,
-                max: 90
+                max: 90,
             },
             align: {
                 options: {
                     left: 'left',
                     center: 'center',
-                    right: 'right'
-                }
+                    right: 'right',
+                },
             },
             verticalAlign: {
                 options: {
                     top: 'top',
                     middle: 'middle',
-                    bottom: 'bottom'
-                }
+                    bottom: 'bottom',
+                },
             },
             position: {
-                options: echarts.util.reduce(posList, (map, pos) => {
-                    map[pos] = pos;
-                    return map;
-                }, {})
+                options: echarts.util.reduce(
+                    posList,
+                    (map, pos) => {
+                        map[pos] = pos;
+                        return map;
+                    },
+                    {}
+                ),
             },
             distance: {
                 min: 0,
-                max: 100
-            }
+                max: 100,
+            },
         };
 
         app.config = {
@@ -162,21 +279,26 @@ export class RetailerProfileComponent implements OnInit {
                         align: app.config.align,
                         verticalAlign: app.config.verticalAlign,
                         position: app.config.position,
-                        distance: app.config.distance
-                    }
+                        distance: app.config.distance,
+                    },
                 };
                 eChart.setOption({
-                    series: [{
-                        label: labels
-                    }, {
-                        label: labels
-                    }, {
-                        label: labels
-                    }, {
-                        label: labels
-                    }]
+                    series: [
+                        {
+                            label: labels,
+                        },
+                        {
+                            label: labels,
+                        },
+                        {
+                            label: labels,
+                        },
+                        {
+                            label: labels,
+                        },
+                    ],
                 });
-            }
+            },
         };
         const labelOption = {
             normal: {
@@ -191,10 +313,9 @@ export class RetailerProfileComponent implements OnInit {
                 rich: {
                     name: {
                         textBorderColor: '#fff',
-
-                    }
-                }
-            }
+                    },
+                },
+            },
         };
         option = {
             color: ['#0038ba', '#282828'],
@@ -206,19 +327,19 @@ export class RetailerProfileComponent implements OnInit {
                 axisPointer: {
                     type: 'cross',
                     label: {
-                        backgroundColor: 'rgba(33,33,33,1)'
-                    }
+                        backgroundColor: 'rgba(33,33,33,1)',
+                    },
                 },
                 textStyle: {
                     color: '#fff',
                     fontStyle: 'normal',
                     fontWeight: 'normal',
                     fontFamily: '"Roboto", sans-serif',
-                    fontSize: 12
-                }
+                    fontSize: 12,
+                },
             },
             legend: {
-                data: ['Product']
+                data: ['Product'],
             },
             toolbox: {
                 show: false,
@@ -229,77 +350,95 @@ export class RetailerProfileComponent implements OnInit {
                 top: 'center',
                 feature: {
                     mark: {
-                        show: true
+                        show: true,
                     },
                     dataView: {
                         show: true,
-                        readOnly: true
+                        readOnly: true,
                     },
                     magicType: {
                         show: true,
-                        type: ['line', 'bar', 'stack', 'tiled']
+                        type: ['line', 'bar', 'stack', 'tiled'],
                     },
                     restore: {
-                        show: true
+                        show: true,
                     },
                     saveAsImage: {
-                        show: false
-                    }
-                }
+                        show: false,
+                    },
+                },
             },
             grid: {
                 left: '0',
                 right: '0',
                 top: '35px',
                 bottom: '0',
-                containLabel: true
+                containLabel: true,
             },
             calculable: true,
             type: 'value',
             axisLine: {
-                show: true
+                show: true,
             },
-            xAxis: [{
-                type: 'category',
-                axisTick: {
-                    show: true
+            xAxis: [
+                {
+                    type: 'category',
+                    axisTick: {
+                        show: true,
+                    },
+                    data: [
+                        'Name 1',
+                        'Name 2',
+                        'Name 3',
+                        'Name 4',
+                        'Name 5',
+                        'Name 6',
+                        'Name 7',
+                        'Name 8',
+                        'Name 9',
+                        'Name 10',
+                    ],
+                    axisLine: {
+                        show: true,
+                    },
+                    axisLabel: {
+                        textStyle: {
+                            color: '#a0a0a0',
+                        },
+                    },
                 },
-                data: ['Name 1', 'Name 2', 'Name 3', 'Name 4', 'Name 5', 'Name 6', 'Name 7', 'Name 8', 'Name 9', 'Name 10',],
-                axisLine: {
-                    show: true
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                    axisLine: {
+                        show: true,
+                    },
+                    axisLabel: {
+                        textStyle: {
+                            color: '#a0a0a0',
+                        },
+                    },
+                    splitLine: {
+                        show: true,
+                    },
                 },
-                axisLabel: {
-                    textStyle: {
-                        color: '#a0a0a0'
-                    }
+            ],
+            series: [
+                {
+                    name: 'Sales',
+                    type: 'bar',
+                    barGap: 0,
+                    label: labelOption,
+                    data: [600, 510, 480, 420, 390, 330, 300, 280, 265, 205],
                 },
-            }],
-            yAxis: [{
-                type: 'value',
-                axisLine: {
-                    show: true
+                {
+                    name: 'percentage',
+                    type: 'line',
+                    label: labelOption,
+                    data: [600, 510, 480, 420, 390, 330, 300, 280, 265, 205],
                 },
-                axisLabel: {
-                    textStyle: {
-                        color: '#a0a0a0'
-                    }
-                },
-                splitLine: {
-                    show: true,
-                }
-            }],
-            series: [{
-                name: 'Sales',
-                type: 'bar',
-                barGap: 0,
-                label: labelOption,
-                data: [600, 510, 480, 420, 390, 330, 300, 280, 265, 205]
-            }, {
-                name: 'percentage',
-                type: 'line',
-                label: labelOption,
-                data: [600, 510, 480, 420, 390, 330, 300, 280, 265, 205]
-            }]
+            ],
         };
         if (option && typeof option === 'object') {
             eChart.setOption(option, true);
@@ -335,7 +474,10 @@ export class RetailerProfileComponent implements OnInit {
     }
 
     clickedOutSide(event: Event): void {
-        if (this.openReport && !(event.target as HTMLElement).classList.contains('paginate_button')) {
+        if (
+            this.openReport &&
+            !(event.target as HTMLElement).classList.contains('paginate_button')
+        ) {
             this.closeSalesAndProductsReport();
         }
     }
@@ -343,8 +485,9 @@ export class RetailerProfileComponent implements OnInit {
     closeSalesAndProductsReport(): void {
         this.openReport = false;
         document.body.classList.remove('no-scroll');
-        document.getElementsByClassName('overlay-blure')[0].classList.remove('d-block');
+        document
+            .getElementsByClassName('overlay-blure')[0]
+            .classList.remove('d-block');
         document.getElementById('profile').classList.remove('blur-div');
     }
-
 }

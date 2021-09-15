@@ -105,7 +105,17 @@ export class OrdersService {
         return this.baseService.post(url, order);
     }
 
+    saveSpotSaleOrder(order: any): Observable<any> {
+        const url = `${API_URLS.SAVE_SPOT}`;
+        return this.baseService.post(url, order);
+    }
+
     cancelOrder(orderId: number): Observable<any> {
+        const url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
+        return this.baseService.get(url);
+    }
+
+    cancelSpotSaleOrder(orderId: number): Observable<any> {
         const url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
         return this.baseService.get(url);
     }
@@ -115,9 +125,34 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
+    saveExecutionExpense(loadId: number, saleManId: number, date: string, expenses: Array<any>): Observable<any> {
+        const url = `${API_URLS.SAVE_EXPENSE}/${loadId}/${saleManId}/${date}`;
+        return this.baseService.post(url, {expenses});
+    }
+
+    checkBalance(retailerId: number): Observable<any> {
+        const url = `${API_URLS.CHECK_RETAILER_BALANCE}/${retailerId}`;
+        return this.baseService.get(url);
+    }
+
     getExectedOrdersListing(salemanId: number, date: string): Observable<any> {
         const url = `${API_URLS.GET_EXECUTION_DETAILS}/${salemanId}/${date}`;
         return this.baseService.get(url);
+    }
+
+    getExecutionFinalLoad(loadId: number, outOfRouteRecovery: Array<any>): Observable<any> {
+        const url = `${API_URLS.EXECUTION_FINAL_SAVE}/${loadId}`;
+        return this.baseService.post(url, {out_of_route_recovery: outOfRouteRecovery});
+    }
+
+    removeOutOfRuoteRecovery(paymentId: number): Observable<any> {
+        const url = `${API_URLS.REMOVE_OUT_OF_ROUE_RECOVERY}/${paymentId}`;
+        return this.baseService.get(url);
+    }
+
+    markCompeleteExecution(loadId: number, amountReceived: number): Observable<any> {
+        const url = `${API_URLS.EXECUTION_COMPLETE}/${loadId}`;
+        return this.baseService.post(url, { amount_received: amountReceived });
     }
 
 }

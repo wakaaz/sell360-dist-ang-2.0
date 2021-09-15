@@ -44,6 +44,8 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
             this.allProducts = this.allProducts.map(x => {
                 const orderedProduct = this.orderedProducts.find(pr => pr.item_id === x.item_id);
                 x.isAdded = false;
+                x.schemes = this.dataService.getSchemes(x.item_id,
+                    x.unit_id, x.pref_id, this.productSchemes, this.selectedRetailer.type_id, this.selectedRetailer.retailer_id);
                 x.availableQty = x.available_qty;
                 if (orderedProduct) {
                     x.isAdded = true;
@@ -78,8 +80,10 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
             (this.orderType !== 'execution' ||
                 this.orderType === 'execution' && +this.selectedProduct.stockQty <= this.selectedProduct.available_qty)) {
             this.selectedProduct.item_quantity_booker = 0;
-            this.allProducts.find(x => x.item_id === this.selectedProduct.item_id).isAdded = true;
-            this.dispProducts.find(x => x.item_id === this.selectedProduct.item_id).isAdded = true;
+            let prod = this.allProducts.find(x => x.item_id === this.selectedProduct.item_id);
+            prod.isAdded = true;
+            prod = this.dispProducts.find(x => x.item_id === this.selectedProduct.item_id);
+            prod.isAdded = true;
             this.productSelected.emit(JSON.parse(JSON.stringify(this.selectedProduct)));
             document.getElementById('pl-qty-close').click();
         }
@@ -103,8 +107,6 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
 
     openQuantityModal(product: any): void {
         this.showQuantityModal = true;
-        product.schemes = this.dataService.getSchemes(product.item_id,
-            product.unit_id, product.pref_id, this.productSchemes, this.selectedRetailer.type_id, this.selectedRetailer.retailer_id);
         if (product.schemes?.length) {
             product.schemes = product.schemes.map(scheme => {
                 switch (scheme.scheme_type) {

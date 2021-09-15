@@ -171,14 +171,14 @@ export class DataService {
      * @returns true/false i.e. whether Minimum Quantity Restriction Discount is applicable or not
      */
     isEligibleForMinimumQuantity(userQty: number, minimumQty: number): boolean {
-        return userQty > minimumQty;
+        return +userQty >= minimumQty;
     }
 
     getSDForFPQtyRestrictionDiscount(itemTradePrice: number, userQty: number, minimumQty: number, freeQty: number)
         : { singleItemPrice: number, schemeDiscount: number } {
-        const freeQtyInterval = Math.floor(userQty / minimumQty);
-        const orderFreeQty = freeQtyInterval * freeQty;
-        const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, orderFreeQty);
+        // const freeQtyInterval = Math.floor(userQty / minimumQty);
+        // const orderFreeQty = freeQtyInterval * freeQty;
+        const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, freeQty);
         const singleItemPrice = itemTradePrice - schemeAmount;
         return { singleItemPrice, schemeDiscount: schemeAmount };
     }

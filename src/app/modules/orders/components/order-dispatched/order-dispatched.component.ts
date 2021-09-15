@@ -587,6 +587,10 @@ export class OrderDispatchedComponent implements OnInit {
         this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
     }
 
+    updateDispatchedQty(item: any): void {
+        item.dispatched_qty = +item.issued_qty + item.actual_qty;
+    }
+
     allSelected(): void {
         if (this.isAllSelected) {
             this.remainingOrders = this.remainingOrders.map(order => {

@@ -309,10 +309,10 @@
                                                         <tr *ngFor="let item of currentLoadContent.items;let i=index">
                                                             <td>{{item.item_id}}</td>
                                                             <td>{{getItemName(item.item_id)}}</td>
-                                                            <td>{{item.dispatched_qty | number}}</td>
+                                                            <td>{{item.actual_qty | number}}</td>
                                                             <td><input class="value_input" [(ngModel)]="item.issued_qty"
                                                                     [name]="item.item_id" [id]="item.item_id"
-                                                                    type="number"
+                                                                    type="number" (keyup)="updateDispatchedQty(item)"
                                                                     (keydown)="isNumber($event, 'quantity')"></td>
                                                         </tr>
                                                     </tbody>

@@ -171,7 +171,7 @@ export class DataService {
      * @returns true/false i.e. whether Minimum Quantity Restriction Discount is applicable or not
      */
     isEligibleForMinimumQuantity(userQty: number, minimumQty: number): boolean {
-        return userQty > minimumQty;
+        return +userQty >= minimumQty;
     }
 
     getSDForFPQtyRestrictionDiscount(itemTradePrice: number, userQty: number, minimumQty: number, freeQty: number)

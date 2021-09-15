@@ -328,7 +328,7 @@
                                         <td>
                                             <a [routerLink]="['/orders/order-list-details', order.employee_id ,order.date]" 
                                                 class="btn btn-default btn-line mb-0">View Orders</a>
-                                            <a class="btn btn-default mb-0">BS</a>
+                                            <a (click)="loadBookingSheet(order)" class="btn btn-default mb-0">BS</a>
                                         </td>
                                     </tr>
                                 </tbody>

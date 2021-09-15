@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 import { ToasterService } from 'src/app/core/services/toaster.service';
+import { environment } from 'src/environments/environment';
 import { GeneralDataService } from '../../../shared/services';
 import { OrdersService } from '../../services/orders.service';
 
@@ -12,6 +14,7 @@ import { OrdersService } from '../../services/orders.service';
 
 export class OrdersListComponent implements OnInit {
     selectedOrderBooker: number;
+    bookingSheetUrl: string;
     showDetailsPopup: boolean;
     submitted: boolean;
     byOrderBooker: boolean;
@@ -27,6 +30,7 @@ export class OrdersListComponent implements OnInit {
         private ordersService: OrdersService,
         private toastService: ToasterService,
     ) {
+        this.bookingSheetUrl = `${environment.apiDomain}${API_URLS.BOOKING_SHEET_PDF}`;
     }
 
     ngOnInit(): void {
@@ -133,6 +137,11 @@ export class OrdersListComponent implements OnInit {
 
     closeDetailsModal(): void {
         document.body.classList.remove('no-scroll');
+    }
+
+    loadBookingSheet(order: any): void {
+        const sheetUrl = `${this.bookingSheetUrl}?emp=${order.sales_man_id}&date=${order.date}`;
+        window.open(sheetUrl);
     }
 
 }

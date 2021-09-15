@@ -752,4 +752,9 @@ export class OrderDispatchedComponent implements OnInit {
         }
     }
 
+    generateLSPDF(): void {
+        const billsUrl = `${environment.apiDomain}${API_URLS.LS_PDF}/${this.salemanId}/${this.orderDate}`;
+        window.open(billsUrl);
+    }
+
 }

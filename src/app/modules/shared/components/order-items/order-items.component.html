@@ -57,7 +57,7 @@
                         (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.item_trade_price | number: '1.2-2'}}</td>
-                <td>{{item.gross_amount || 0 | number: '1.2-2'}}</td>
+                <td>{{item.original_amount || 0 | number: '1.2-2'}}</td>
                 <td>{{item.scheme_discount | number: '1.2-2'}}</td>
                 <td>{{item.trade_discount}}%</td>
                 <td>{{item.special_discount * item.stockQty | number: '1.2-2'}}</td>

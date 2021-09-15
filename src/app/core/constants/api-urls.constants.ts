@@ -40,6 +40,7 @@ export const API_URLS = {
     EXECUTION_FINAL_SAVE: '/executionFinalSave',
     REMOVE_OUT_OF_ROUE_RECOVERY: '/executionRemoveOutOfRouteRecovery',
     EXECUTION_COMPLETE: '/executionComplete',
+    LS_PDF: '/LoadSheetDataPdf',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

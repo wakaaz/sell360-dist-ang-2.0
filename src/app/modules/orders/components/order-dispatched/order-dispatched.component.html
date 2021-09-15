@@ -264,7 +264,7 @@
                                                         <label class="custom-control-label" [for]="'ord'+ind"></label>
                                                     </div>
                                                     <div class="text-right">Total Sales<span class="or-val">Rs.
-                                                            {{order.total_amount_after_tax | number: '1.2-2'}}</span>
+                                                            {{order.order_total || 0 | number: '1.2-2'}}</span>
                                                     </div>
                                                 </div>
                                             </div>

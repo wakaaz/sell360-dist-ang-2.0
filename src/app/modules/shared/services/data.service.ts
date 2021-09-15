@@ -176,9 +176,9 @@ export class DataService {
 
     getSDForFPQtyRestrictionDiscount(itemTradePrice: number, userQty: number, minimumQty: number, freeQty: number)
         : { singleItemPrice: number, schemeDiscount: number } {
-        const freeQtyInterval = Math.floor(userQty / minimumQty);
-        const orderFreeQty = freeQtyInterval * freeQty;
-        const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, orderFreeQty);
+        // const freeQtyInterval = Math.floor(userQty / minimumQty);
+        // const orderFreeQty = freeQtyInterval * freeQty;
+        const schemeAmount = this.getSchemeAmount(itemTradePrice, minimumQty, freeQty);
         const singleItemPrice = itemTradePrice - schemeAmount;
         return { singleItemPrice, schemeDiscount: schemeAmount };
     }

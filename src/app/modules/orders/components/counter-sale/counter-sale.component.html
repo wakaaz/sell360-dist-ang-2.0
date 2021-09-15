@@ -51,8 +51,7 @@
                                     class="custom-control-input" type="radio" name="AssignCatalogue"
                                     id="byTerritory-{{i}}" [value]="scheme">
                                 <label class="custom-control-label font13" for="byTerritory-{{i}}"
-                                    style="line-height:25px;">{{scheme.name}}{{scheme.rule_name ? ' - ' +
-                                    scheme.rule_name : ''}}</label>
+                                    style="line-height:25px;">{{scheme.title}}</label>
                             </div>
                         </div>
                     </div>
@@ -263,10 +262,10 @@
                                             <tr *ngFor="let product of dispProducts; let i=index">
                                                 <td>
                                                     <div class="ProListDiv">
-                                                        <div *ngIf="product.promo" class="lab-promotion">
-                                                            {{product.promo}}</div>
+                                                        <div *ngIf="product.schemes?.length" class="lab-promotion">
+                                                            Scheme</div>
                                                         <img class="PrList_img" src="{{product.thumbnail}}" alt="" />
-                                                        <div class="PR_Name">{{product.item_name}}</div>
+                                                        <div class="PR_Name">{{product.item_name}}-{{product.schemes?.length}}</div>
                                                     </div>
                                                 </td>
                                                 <td>

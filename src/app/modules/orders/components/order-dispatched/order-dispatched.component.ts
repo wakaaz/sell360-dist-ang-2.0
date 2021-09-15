@@ -181,7 +181,7 @@ export class OrderDispatchedComponent implements OnInit {
                         }
                         const { retailer_id } = order;
                         this.credits.push({
-                            recovery: 0, order_id: order.id, retailer_id, dispatched_bill_amount: order.total_amount_after_tax
+                            recovery: 0, order_id: order.id, retailer_id, dispatched_bill_amount: order.order_total
                         });
                         return order;
                     });

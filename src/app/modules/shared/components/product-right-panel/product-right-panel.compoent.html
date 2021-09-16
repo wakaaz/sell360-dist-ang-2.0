@@ -80,7 +80,7 @@
                                     <table *ngIf="!loadingProducts" class="AddProductTable" width="100%">
                                         <tbody>
                                             <ng-container *ngFor="let product of dispProducts; let i=index">
-                                                <tr *ngIf="orderType !== 'execution' || (orderType === 'execution' && product.availableQty > 0)">
+                                                <tr>
                                                     <td>
                                                         <div class="ProListDiv">
                                                             <div *ngIf="product.scheme?.length" class="lab-promotion">

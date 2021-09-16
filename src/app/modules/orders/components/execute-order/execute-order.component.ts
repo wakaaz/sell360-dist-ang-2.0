@@ -717,6 +717,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     title: 'Order execution:',
                     type: 'success'
                 });
+                this.newProduct = null;
                 this.orderDetails.items = [];
                 this.orderDetails.returned_items = [];
                 this.selectedRetailer.isActive = false;

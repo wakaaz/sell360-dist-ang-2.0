@@ -205,9 +205,7 @@ export class OrderDispatchedComponent implements OnInit {
         if (!this.dispatchOrderDetail?.orders) {
             this.getDispatchOrdersDetail();
         } else {
-            if (!this.remainingOrders.length) {
-                this.remainingOrders = JSON.parse(JSON.stringify(this.dispatchOrderDetail?.orders));
-            }
+            this.remainingOrders = JSON.parse(JSON.stringify(this.dispatchOrderDetail?.orders));
             this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
         }
     }
@@ -466,8 +464,15 @@ export class OrderDispatchedComponent implements OnInit {
 
     addOrderBill(order: any): void {
         order.isAdded = true;
-        const payment = this.credits.find(x => x.order_id === order.id);
-        payment.recovery = +order.recovery;
+        let payment = this.credits.find(x => x.order_id === order.id);
+        if (payment) {
+            payment.recovery = +order.recovery;
+        } else {
+            payment = {
+                    recovery: +order.recovery, order_id: order.id, retailer_id: order.retailer_id, dispatched_bill_amount: order.order_total
+            };
+            this.credits.push(payment);
+        }
     }
 
     removeOrderBill(order: any): void {

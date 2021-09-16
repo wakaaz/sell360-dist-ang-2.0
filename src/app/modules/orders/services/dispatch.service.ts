@@ -23,7 +23,7 @@ export class OrderDispatchService {
                 };
                 currentLoadContent.items.push(newContent);
             } else {
-                loadItem.actual_qty = loadItem.actual_qty + item.item_quantity_booker;
+                loadItem.actual_qty = loadItem.actual_qty + item.dispatch_qty;
                 loadItem.dispatched_qty = loadItem.dispatched_qty + item.dispatch_qty;
             }
         });

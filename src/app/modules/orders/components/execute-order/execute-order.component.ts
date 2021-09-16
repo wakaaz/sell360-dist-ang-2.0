@@ -472,6 +472,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.selectedRoute = null;
             this.recoveryRetailer = null;
         } else if (this.currentTab === 4) {
+            this.isAdded = false;
             this.getExecutionFinalLoad();
         }
     }
@@ -913,6 +914,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                             message: 'Expense saved successfully!',
                             type: 'success'
                         });
+                        this.finalLoad = res.data;
                         this.claculateBalanceAmount();
                     }
                 }, error => {

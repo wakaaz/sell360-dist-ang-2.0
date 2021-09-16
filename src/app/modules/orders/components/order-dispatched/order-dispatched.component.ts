@@ -341,6 +341,7 @@ export class OrderDispatchedComponent implements OnInit {
         this.savingOrder = true;
         console.log('this.orderDetails :>> ', this.orderDetails);
         this.orderService.saveDispatchQuantityOrder(this.orderDetails).subscribe(res => {
+            this.newProduct = null;
             this.savingOrder = false;
             if (res.status === 200) {
                 this.toastService.showToaster({
@@ -524,12 +525,12 @@ export class OrderDispatchedComponent implements OnInit {
         });
         this.load.salesman_id = this.salemanId;
         this.load.total_orders = this.dispatchOrderDetail.orders.length;
-        this.load.total_gross_amount = this.dispatchOrderDetail.summary.gross_total;
+        this.load.total_gross_amount = this.dispatchOrderDetail.summary.gross_total || 0;
         this.load.total_trade_offer = this.dispatchOrderDetail.summary.trade_offer;
         this.load.total_trade_discount = this.dispatchOrderDetail.summary.trade_discount;
         this.load.total_special_discount = this.dispatchOrderDetail.summary.special_discount;
         this.load.total_booker_discount = this.dispatchOrderDetail.summary.booker_discount;
-        this.load.total_tax_amount = this.dispatchOrderDetail.summary.total_tax;
+        this.load.total_tax_amount = this.dispatchOrderDetail.summary.total_tax || 0;
         this.load.total_recovery_amount = totalRecovery;
         this.load.total_net_sale = this.dispatchOrderDetail.summary.total_price;
         this.load.total_products = totalProducts;

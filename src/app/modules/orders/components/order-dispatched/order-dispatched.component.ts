@@ -611,6 +611,7 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     setAllOrdersToCurrentLoad(): void {
+        this.currentLoadContent.items = [];
         this.remainingOrders.forEach(order => {
             this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(x => {
                 if (order.id === x.id) {

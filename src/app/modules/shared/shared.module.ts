@@ -9,6 +9,8 @@ import { OrderItemsListComponent } from './components/order-items/order-items.co
 import { ProductsRightPanelComponent } from './components/product-right-panel/product-right-panel.compoent';
 import { RetailerSubListComponent } from './components/retailer-sub-listing/retailer-sub-listing.component';
 import { ReturnedProductsComponent } from './components/returned-products/returned-products.component';
+import { Decimal } from './pipes/Decimal.pipe';
+import { PipeModule } from './pipes/pipe.module';
 import { DataService, GeneralDataService } from './services';
 
 const components = [
@@ -24,12 +26,23 @@ const components = [
         FormsModule,
         ClickOutsideModule,
         NgSelectModule,
+        PipeModule,
     ],
-    exports: [...components],
+    exports: [
+        ...components,
+        Decimal],
     declarations: [...components],
     providers: [
         GeneralDataService,
         DataService,
+        PipeModule,
     ],
 })
-export class SharedModule { }
+export class SharedModule {
+    static forRoot(): any {
+        return {
+            ngModule: PipeModule,
+            providers: [],
+        };
+    }
+}

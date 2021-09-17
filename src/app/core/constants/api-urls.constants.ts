@@ -41,6 +41,7 @@ export const API_URLS = {
     REMOVE_OUT_OF_ROUE_RECOVERY: '/executionRemoveOutOfRouteRecovery',
     EXECUTION_COMPLETE: '/executionComplete',
     LS_PDF: '/LoadSheetDataPdf',
+    DSR_PDF: '/pdfDSRNew',
 
     // Salesmen
     GET_ALL_SALESMEN: '/getAllSalesman',

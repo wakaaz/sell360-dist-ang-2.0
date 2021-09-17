@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { API_URLS } from 'src/app/core/constants/api-urls.constants';
+import { environment } from 'src/environments/environment';
 import { LocalStorageService } from '../../../../core/services/storage.service';
 import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
 import { DataService, GeneralDataService } from '../../../shared/services';
@@ -133,6 +135,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.receivableAmount = 0;
         this.recoveryAmount = 0;
         this.totalPayment = 0;
+        this.paymentDate = new Date().toISOString().split('T')[0];
         this.distributorId = this.storageService.getItem('distributor').id;
     }
 
@@ -438,10 +441,24 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     openProductsList(): void {
-        this.showProducts = true;
-        document.body.classList.add('no-scroll');
-        document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
-        document.getElementById('order-container').classList.add('blur-div');
+        if (!this.isPaymentAdded()) {
+            this.showProducts = true;
+            document.body.classList.add('no-scroll');
+            document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
+            document.getElementById('order-container').classList.add('blur-div');
+        }
+    }
+
+    isPaymentAdded(): boolean {
+        if (this.isChequeAdded || this.isCreditAdded) {
+            this.toastService.showToaster({
+                title: 'Payment Added:',
+                message: 'Please remove the payment to proceed!',
+                type: 'error'
+            });
+            return true;
+        }
+        return false;
     }
 
     closeNewProducts(): void {
@@ -452,7 +469,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     openReturnedModal(): void {
-        this.showReturned = true;
+        if (!this.isPaymentAdded()) {
+            this.showReturned = true;
+        }
     }
 
     closeReturnedModal(): void {
@@ -525,19 +544,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 };
                 this.toastService.showToaster(toast);
             } else {
-                this.focusForPaymentValues();
+                // this.focusForPaymentValues();
                 document.getElementById('open-modal-payment').click();
             }
-        }
-    }
-
-    focusForPaymentValues(): void {
-        if (this.isCredit && this.creditAmount) {
-            document.getElementById('Amount2').parentElement.classList.add('focused');
-        } else {
-            if (this.chequeAmount) { document.getElementById('Amount1').parentElement.classList.add('focused'); }
-            if (this.bankName) { document.getElementById('chequeBankName').parentElement.classList.add('focused'); }
-            if (this.chequeNumber) { document.getElementById('chequeNum').parentElement.classList.add('focused'); }
         }
     }
 
@@ -622,7 +631,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.cheque = {
                 retailer_id: this.selectedRetailer.retailer_id,
                 distributor_id: this.distributorId,
-                type: 'Counter',
+                type: this.currentTab === 1 ? 'Execution' : 'Spot',
                 payment_mode: 'Cheque',
                 payment_detail: {
                     cheque_amount: this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.receivableAmount)) :
@@ -673,11 +682,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.cash = {
             retailer_id: this.selectedRetailer.retailer_id,
             distributor_id: this.distributorId,
-            type: 'Counter',
+            type: this.currentTab === 1 ? 'Execution' : 'Spot',
             payment_mode: 'Cash',
             payment_detail: '',
             dispatched_bill_amount: 0,
-            return_amount: this.returnAmount,
+            return_amount: this.returnAmount || 0,
             recovery: 0,
             amount_received: Math.round((this.receivableAmount + Number.EPSILON) * 100) / 100,
         };
@@ -693,8 +702,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
             retailer.order_total = this.totalPayment;
         }
-        this.orderDetails.order_total = this.totalPayment;
-        this.orderDetails.total_amount_after_tax = this.totalPayment;
+        this.orderDetails.order_total = this.receivableAmount;
+        this.orderDetails.total_amount_after_tax = this.receivableAmount;
     }
 
     saveExecutionQuantity(): void {
@@ -802,10 +811,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             if (res.status === 200) {
                 this.toastService.showToaster({
                     message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
-                    title: 'Order dispatched:',
+                    title: 'Order Execution:',
                     type: 'success'
                 });
                 this.orderDetails = null;
+                this.newProduct = null;
                 this.getOrdersBySalemanAndDate();
                 if (this.currentTab === 2) { this.removeSpotOrder(); }
             }
@@ -1034,6 +1044,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 });
             }
         });
+    }
+
+    generateDSR(): void {
+        const url = `${environment.apiDomain}${API_URLS.DSR_PDF}/${this.finalLoad.dsr.id}`;
+        window.open(url);
     }
 
     ngOnDestroy(): void {

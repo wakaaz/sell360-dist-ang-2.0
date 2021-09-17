@@ -13,6 +13,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
     @Input() orderType: string;
     @Input() returnAmount: number;
+    @Input() isChequeAdded: boolean;
+    @Input() isCreditAdded: boolean;
     @Input() currentTab: number;
     @Input() recoveryAmount: number;
     @Input() receivableAmount: number;

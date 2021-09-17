@@ -68,7 +68,7 @@ export class OrderExecutionListComponent implements OnInit {
     }
 
     loadLoadSheet(order: any): void {
-        const sheetUrl = `${environment.apiDomain}${API_URLS.BOOKING_SHEET_PDF}?emp=${order.sales_man_id}&date=${order.date}`;
+        const sheetUrl = `${environment.apiDomain}${API_URLS.LS_PDF}/${order.sales_man_id}/${order.date}`;
         window.open(sheetUrl);
     }
 

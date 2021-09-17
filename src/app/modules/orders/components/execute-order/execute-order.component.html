@@ -176,7 +176,7 @@
 
                     <div class="row">
                         <div class="col-md-6 PT-10">
-                            <div class="form-group">
+                            <div class="form-group focused">
                                 <label class="control-label mb-10">Cheque Number*</label>
                                 <input type="text" id="chequeNum" name="cheque_num" (focus)="focused($event)" required
                                     (blur)="left($event)" [(ngModel)]="chequeNumber" #chequNo="ngModel"
@@ -198,7 +198,7 @@
                             </span>
                         </div>
                         <div class="col-md-6 PT-5">
-                            <div class="form-group">
+                            <div class="form-group focused">
                                 <label class="control-label mb-10">Bank Name*</label>
                                 <input type="text" name="cheque_bank_name" id="chequeBankName" (focus)="focused($event)"
                                     required (blur)="left($event)" [(ngModel)]="bankName" #bank_Name="ngModel"
@@ -209,7 +209,7 @@
                             </span>
                         </div>
                         <div *ngIf="paymentTypeCheque !== 'full'" class="col-md-6 PT-5">
-                            <div class="form-group">
+                            <div class="form-group focused">
                                 <label class="control-label mb-10">Total Amount*</label>
                                 <input type="number" min="0" [max]="cash?.amount_received" name="cheque_amount"
                                     (focus)="focused($event)" required (blur)="left($event)" [(ngModel)]="chequeAmount"
@@ -264,7 +264,7 @@
                             </div>
                         </div>
                         <div *ngIf="paymentTypeCredit !== 'full'" class="col-md-6 PT-10">
-                            <div class="form-group">
+                            <div class="form-group focused">
                                 <label class="control-label mb-10">Amount*</label>
                                 <input type="number" min="0" [max]="cash?.amount_received" name="cheque_amount"
                                     (focus)="focused($event)" required (blur)="left($event)" [(ngModel)]="creditAmount"
@@ -383,6 +383,7 @@
                                 <div class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder" [currentTab]="currentTab"
                                         [orderDetail]="orderDetails" [returnAmount]="returnAmount"
+                                        [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded"
                                         [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
                                         [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes"
                                         [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct"
@@ -400,25 +401,25 @@
 
                                 <div class="col-md-12 bottom-act-btn">
                                     <button *ngIf="!savingOrder && !isChequeAdded"
-                                        class="btn btn-primary float-left mr-2 font13"
+                                        class="btn btn-primary float-left mr-2 font13" [disabled]="!selectedRetailer"
                                         (click)="isCredit = false;isFullyPaymentAdded('Cheque Payment')">Add
                                         Cheque</button>
-                                    <button *ngIf="!savingOrder && isChequeAdded"
+                                    <button *ngIf="!savingOrder && isChequeAdded" [disabled]="!selectedRetailer"
                                         class="btn btn-primary float-left font13 mr-2 red-bg"
                                         (click)="removeCheque()">Remove Cheque</button>
-                                    <button *ngIf="!savingOrder && !isCreditAdded"
+                                    <button *ngIf="!savingOrder && !isCreditAdded" [disabled]="!selectedRetailer"
                                         class="btn btn-primary float-left font13"
                                         (click)="isCredit = true;isFullyPaymentAdded('Credit')">Add Credit</button>
-                                    <button *ngIf="!savingOrder && isCreditAdded"
+                                    <button *ngIf="!savingOrder && isCreditAdded" [disabled]="!selectedRetailer"
                                         class="btn btn-primary float-left font13 red-bg" (click)="removeCredit()">Remove
                                         Credit</button>
                                     <button *ngIf="!savingOrder" id="open-modal-payment" style="display: none;"
                                         data-toggle="modal" data-target="#exampleModal2">Show Modal</button>
 
-                                    <button [disabled]="savingOrder" (click)="saveExecutionQuantity()"
+                                    <button [disabled]="savingOrder || !selectedRetailer" (click)="saveExecutionQuantity()"
                                         class="btn btn-primary mr-2 save_order_execution font13">Save
                                         Order</button>
-                                    <button [disabled]="savingOrder " class="btn btn-cancel cancel_order_btn font13"
+                                    <button [disabled]="savingOrder || !selectedRetailer" class="btn btn-cancel cancel_order_btn font13"
                                         data-toggle="modal" data-target="#order-del">Cancel Order</button>
                                 </div>
 
@@ -525,6 +526,7 @@
                                 <div class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder" [currentTab]="currentTab"
                                         [orderDetail]="orderDetails" [returnAmount]="returnAmount"
+                                        [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded"
                                         [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
                                         [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes"
                                         [selectedRetailer]="selectedRetailer" [orderType]="'execution'"
@@ -788,7 +790,7 @@
                                             <div class="report_value">
                                                 <div class="row">
                                                     <div class="col-12 PB-10"> <a class="btn btn-primary w-100"
-                                                            target="_blank">Generate DSR</a> </div>
+                                                           (click)="generateSDR()">Generate DSR</a> </div>
                                                     <div class="col-12">
                                                         <button class="btn btn-primary w-100" (click)="checkRecieveable()">Mark
                                                             Complete</button>

@@ -182,6 +182,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     };
                     return recovery;
                 });
+                if (res.data.is_dsr) {
+                    this.changeTab(4);
+                }
             } else {
                 this.toastService.showToaster({
                     type: 'error',

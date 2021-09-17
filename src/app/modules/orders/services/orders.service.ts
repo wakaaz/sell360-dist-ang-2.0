@@ -116,7 +116,7 @@ export class OrdersService {
     }
 
     cancelSpotSaleOrder(orderId: number): Observable<any> {
-        const url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
+        const url = `${API_URLS.CANCEL_SPOT_SALE}/${orderId}`;
         return this.baseService.get(url);
     }
 

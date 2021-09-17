@@ -807,7 +807,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.savingOrder = true;
         this.orderService.cancelOrder(this.orderDetails.id).subscribe(res => {
             this.savingOrder = false;
-            this.isSpotSaleActive = false;
             if (res.status === 200) {
                 this.toastService.showToaster({
                     message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
@@ -817,11 +816,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.orderDetails = null;
                 this.newProduct = null;
                 this.getOrdersBySalemanAndDate();
-                if (this.currentTab === 2) { this.removeSpotOrder(); }
             }
         }, error => {
             this.savingOrder = false;
-            this.isSpotSaleActive = false;
             if (error.status !== 1 && error.status !== 401) {
                 console.log('Error in Save Order for dispatch ::>> ', error);
                 this.toastService.showToaster({
@@ -840,6 +837,36 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.removeSpotOrder();
             document.getElementById('close-del').click();
         }
+    }
+
+    cancelSpotSaleOrder(): void {
+        document.getElementById('close-del').click();
+        this.savingOrder = true;
+        this.orderService.cancelSpotSaleOrder(this.orderDetails.id).subscribe(res => {
+            this.savingOrder = false;
+            this.isSpotSaleActive = false;
+            if (res.status === 200) {
+                this.toastService.showToaster({
+                    message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
+                    title: 'Spot Order:',
+                    type: 'success'
+                });
+                this.orderDetails = null;
+                this.newProduct = null;
+                this.removeSpotOrder();
+            }
+        }, error => {
+            this.savingOrder = false;
+            this.isSpotSaleActive = false;
+            if (error.status !== 1 && error.status !== 401) {
+                console.log('Error in cancel spot sale Order ::>> ', error);
+                this.toastService.showToaster({
+                    message: 'Something went wrong order cannot be canceled at the moment!',
+                    title: 'Error:',
+                    type: 'error'
+                });
+            }
+        });
     }
 
     removeSpotOrder(): void {

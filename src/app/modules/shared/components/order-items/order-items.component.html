@@ -53,8 +53,8 @@
                 [ngClass]="!item.item_quantity_booker && item.isDeleted ? 'd-none' : ''">
                 <td style="width:200px">{{item.item_name}}</td>
                 <td>{{orderType !== 'execution' ? item.item_quantity_booker : item.dispatch_qty || 0}}</td>
-                <td><input type="text" [id]="item.item_name" [name]="item.item_name" (keyup)="setQuantity(item)"
-                        (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty"
+                <td><input type="number" [id]="item.item_name" [name]="item.item_name" (keyup)="setQuantity(item)"
+                        (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty" [max]="4"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.item_trade_price | number: '1.2-2'}}</td>
                 <td>{{item.original_amount || 0 | number: '1.2-2'}}</td>
@@ -74,7 +74,7 @@
                 <td style="width:200px">{{item.item_name}}</td>
                 <td>{{item.dispatch_qty || 0}}</td>
                 <td><input type="text" [id]="item.item_name" [name]="item.item_name" (keyup)="setReturnedQty(item)"
-                        (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty"
+                        (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty" [max]="4"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.item_trade_price | number: '1.2-2'}}</td>
                 <td>{{item.gross_amount || 0 | number: '1.2-2'}}</td>

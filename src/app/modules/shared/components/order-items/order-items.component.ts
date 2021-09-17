@@ -118,10 +118,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         if (this.selectedItem.productType === 'returned') {
             this.deleteReturned.emit(this.selectedItem);
         } else {
-            if (this.orderType === 'execution') {
-                const product = this.allProducts.find(x => x.item_id === this.selectedItem.item_id);
-                product.available_qty = +this.selectedItem.stockQty + product.available_qty;
-            }
             if (this.selectedItem.id) {
                 this.selectedItem.stockQty = 0;
                 this.setQuantity(this.selectedItem);

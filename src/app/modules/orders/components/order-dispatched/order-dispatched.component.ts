@@ -491,27 +491,29 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     openConfirmationModal(): void {
-        const unSelected = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
-        if (this.load.content.length === 3 && unSelected.length !== 0) {
-            this.toastService.showToaster({
-                type: 'error',
-                title: 'Select All Orders:',
-                message: 'Some orders are not selected'
-            });
-            return;
-        }
-        if (this.load.content.length !== 3 && unSelected.length !== 0) {
-            if (this.currentLoadContent.items.length) {
-                document.getElementById('open-create-load').click();
-            } else {
+        if (this.currentLoadValidation()) {
+            const unSelected = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
+            if (this.load.content.length === 3 && unSelected.length !== 0) {
                 this.toastService.showToaster({
                     type: 'error',
-                    title: 'Select Orders:',
-                    message: 'Select orders to create load'
+                    title: 'Select All Orders:',
+                    message: 'Some orders are not selected'
                 });
+                return;
             }
-        } else {
-            this.saveDispatch();
+            if (this.load.content.length !== 3 && unSelected.length !== 0) {
+                if (this.currentLoadContent.items.length) {
+                    document.getElementById('open-create-load').click();
+                } else {
+                    this.toastService.showToaster({
+                        type: 'error',
+                        title: 'Select Orders:',
+                        message: 'Select orders to create load'
+                    });
+                }
+            } else {
+                this.saveDispatch();
+            }
         }
     }
 
@@ -579,19 +581,33 @@ export class OrderDispatchedComponent implements OnInit {
         });
     }
 
-    changeCurrentLoad(ldNumber: number): void {
-        this.remainingOrders = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
-        this.currentLoadContent = this.load.content.find(x => x.loadNumber === ldNumber);
-        const orders = this.dispatchOrderDetail?.orders.filter(x => {
-            if (this.currentLoadContent.order_ids.includes(x.id)) {
-                x.isSelected = true;
-                return x;
-            }
-        });
-        if (orders.length) {
-            this.remainingOrders = [...orders, ...this.remainingOrders];
+    currentLoadValidation(): boolean {
+        if (!this.currentLoadContent.items.length) {
+            this.toastService.showToaster({
+                title: 'Load Error:',
+                message: 'Please select orders to add into current load',
+                type: 'error'
+            });
+            return false;
         }
-        this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
+        return true;
+    }
+
+    changeCurrentLoad(ldNumber: number): void {
+        if (this.currentLoadValidation()) {
+            this.remainingOrders = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
+            this.currentLoadContent = this.load.content.find(x => x.loadNumber === ldNumber);
+            const orders = this.dispatchOrderDetail?.orders.filter(x => {
+                if (this.currentLoadContent.order_ids.includes(x.id)) {
+                    x.isSelected = true;
+                    return x;
+                }
+            });
+            if (orders.length) {
+                this.remainingOrders = [...orders, ...this.remainingOrders];
+            }
+            this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
+        }
     }
 
     updateDispatchedQty(item: any): void {

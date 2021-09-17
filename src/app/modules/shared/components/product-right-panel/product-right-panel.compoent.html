@@ -80,13 +80,13 @@
                                     <table *ngIf="!loadingProducts" class="AddProductTable" width="100%">
                                         <tbody>
                                             <ng-container *ngFor="let product of dispProducts; let i=index">
-                                                <tr *ngIf="orderType !== 'execution' || (orderType === 'execution' && product.availableQty > 0)">
+                                                <tr>
                                                     <td>
                                                         <div class="ProListDiv">
                                                             <div *ngIf="product.scheme?.length" class="lab-promotion">
                                                                 Scheme</div>
                                                             <img class="PrList_img" src="{{product.thumbnail}}" alt="" />
-                                                            <div class="PR_Name">{{product.item_name}}</div>
+                                                            <div class="PR_Name">{{product.item_name}} <span *ngIf="orderType === 'execution'" style="display: block;">available: {{product.available_qty}}</span></div>
                                                         </div>
                                                     </td>
                                                     <td>

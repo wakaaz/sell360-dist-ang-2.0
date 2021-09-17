@@ -23,7 +23,7 @@ export class OrderDispatchService {
                 };
                 currentLoadContent.items.push(newContent);
             } else {
-                loadItem.actual_qty = loadItem.actual_qty + item.item_quantity_booker;
+                loadItem.actual_qty = loadItem.actual_qty + item.dispatch_qty;
                 loadItem.dispatched_qty = loadItem.dispatched_qty + item.dispatch_qty;
             }
         });
@@ -37,8 +37,8 @@ export class OrderDispatchService {
         order.items.forEach(item => {
             const loadItem = currentLoadContent.items.find(x => x.item_id === item.item_id);
             if (loadItem) {
-                loadItem.actual_qty = loadItem.actual_qty - item.item_quantity_booker;
-                loadItem.dispatched_qty = loadItem.dispatched_qty - item.dispatch_qty;
+                loadItem.actual_qty = loadItem.actual_qty - item.dispatch_qty;
+                loadItem.dispatched_qty = loadItem.dispatched_qty - item.dispatch_qty - loadItem.issued_qty;
                 loadItem.issued_qty = 0;
             }
             if (loadItem.actual_qty === 0) {

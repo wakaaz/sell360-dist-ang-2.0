@@ -11,3 +11,7 @@
 .no-products {text-align: center; color: lightgray;}
 .addReturn{right: 128px; box-shadow: none}
 .recovered { height: calc(1.25rem + 2px) !important;font-family: 'Rationale', sans-serif;font-size: 18px;padding: 2px !important; }
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
+/* Firefox */
+input[type=number] {-moz-appearance: textfield;}

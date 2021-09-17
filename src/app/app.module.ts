@@ -18,6 +18,7 @@ import { reducers, metaReducers } from './reducer';
 import { LocalStorageSalemanEffects } from './core/effects/salesmen.effects';
 
 import { environment } from '../environments/environment';
+import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -28,8 +29,9 @@ import { environment } from '../environments/environment';
     FormsModule,
     HttpClientModule,
     ClickOutsideModule,
+    SharedModule.forRoot(),
     AppRoutingModule,
-    StoreModule.forRoot(reducers, {metaReducers}),
+    StoreModule.forRoot(reducers, { metaReducers }),
     EffectsModule.forRoot([
       LocalStorageSalemanEffects,
     ]),

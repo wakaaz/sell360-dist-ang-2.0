@@ -121,6 +121,7 @@ export class OrderDispatchedComponent implements OnInit {
                 this.getDispatchDetails();
                 break;
             case 2:
+                this.dispatchOrderDetail = null;
                 this.getDispatchOrdersDetail();
                 break;
             case 3:
@@ -204,9 +205,7 @@ export class OrderDispatchedComponent implements OnInit {
         if (!this.dispatchOrderDetail?.orders) {
             this.getDispatchOrdersDetail();
         } else {
-            if (!this.remainingOrders.length) {
-                this.remainingOrders = JSON.parse(JSON.stringify(this.dispatchOrderDetail?.orders));
-            }
+            this.remainingOrders = JSON.parse(JSON.stringify(this.dispatchOrderDetail?.orders));
             this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
         }
     }
@@ -341,6 +340,7 @@ export class OrderDispatchedComponent implements OnInit {
         this.savingOrder = true;
         console.log('this.orderDetails :>> ', this.orderDetails);
         this.orderService.saveDispatchQuantityOrder(this.orderDetails).subscribe(res => {
+            this.newProduct = null;
             this.savingOrder = false;
             if (res.status === 200) {
                 this.toastService.showToaster({
@@ -464,8 +464,15 @@ export class OrderDispatchedComponent implements OnInit {
 
     addOrderBill(order: any): void {
         order.isAdded = true;
-        const payment = this.credits.find(x => x.order_id === order.id);
-        payment.recovery = +order.recovery;
+        let payment = this.credits.find(x => x.order_id === order.id);
+        if (payment) {
+            payment.recovery = +order.recovery;
+        } else {
+            payment = {
+                    recovery: +order.recovery, order_id: order.id, retailer_id: order.retailer_id, dispatched_bill_amount: order.order_total
+            };
+            this.credits.push(payment);
+        }
     }
 
     removeOrderBill(order: any): void {
@@ -484,27 +491,29 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     openConfirmationModal(): void {
-        const unSelected = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
-        if (this.load.content.length === 3 && unSelected.length !== 0) {
-            this.toastService.showToaster({
-                type: 'error',
-                title: 'Select All Orders:',
-                message: 'Some orders are not selected'
-            });
-            return;
-        }
-        if (this.load.content.length !== 3 && unSelected.length !== 0) {
-            if (this.currentLoadContent.items.length) {
-                document.getElementById('open-create-load').click();
-            } else {
+        if (this.currentLoadValidation()) {
+            const unSelected = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
+            if (this.load.content.length === 3 && unSelected.length !== 0) {
                 this.toastService.showToaster({
                     type: 'error',
-                    title: 'Select Orders:',
-                    message: 'Select orders to create load'
+                    title: 'Select All Orders:',
+                    message: 'Some orders are not selected'
                 });
+                return;
             }
-        } else {
-            this.saveDispatch();
+            if (this.load.content.length !== 3 && unSelected.length !== 0) {
+                if (this.currentLoadContent.items.length) {
+                    document.getElementById('open-create-load').click();
+                } else {
+                    this.toastService.showToaster({
+                        type: 'error',
+                        title: 'Select Orders:',
+                        message: 'Select orders to create load'
+                    });
+                }
+            } else {
+                this.saveDispatch();
+            }
         }
     }
 
@@ -524,12 +533,12 @@ export class OrderDispatchedComponent implements OnInit {
         });
         this.load.salesman_id = this.salemanId;
         this.load.total_orders = this.dispatchOrderDetail.orders.length;
-        this.load.total_gross_amount = this.dispatchOrderDetail.summary.gross_total;
+        this.load.total_gross_amount = this.dispatchOrderDetail.summary.gross_total || 0;
         this.load.total_trade_offer = this.dispatchOrderDetail.summary.trade_offer;
         this.load.total_trade_discount = this.dispatchOrderDetail.summary.trade_discount;
         this.load.total_special_discount = this.dispatchOrderDetail.summary.special_discount;
         this.load.total_booker_discount = this.dispatchOrderDetail.summary.booker_discount;
-        this.load.total_tax_amount = this.dispatchOrderDetail.summary.total_tax;
+        this.load.total_tax_amount = this.dispatchOrderDetail.summary.total_tax || 0;
         this.load.total_recovery_amount = totalRecovery;
         this.load.total_net_sale = this.dispatchOrderDetail.summary.total_price;
         this.load.total_products = totalProducts;
@@ -572,19 +581,33 @@ export class OrderDispatchedComponent implements OnInit {
         });
     }
 
-    changeCurrentLoad(ldNumber: number): void {
-        this.remainingOrders = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
-        this.currentLoadContent = this.load.content.find(x => x.loadNumber === ldNumber);
-        const orders = this.dispatchOrderDetail?.orders.filter(x => {
-            if (this.currentLoadContent.order_ids.includes(x.id)) {
-                x.isSelected = true;
-                return x;
-            }
-        });
-        if (orders.length) {
-            this.remainingOrders = [...orders, ...this.remainingOrders];
+    currentLoadValidation(): boolean {
+        if (!this.currentLoadContent.items.length) {
+            this.toastService.showToaster({
+                title: 'Load Error:',
+                message: 'Please select orders to add into current load',
+                type: 'error'
+            });
+            return false;
         }
-        this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
+        return true;
+    }
+
+    changeCurrentLoad(ldNumber: number): void {
+        if (this.currentLoadValidation()) {
+            this.remainingOrders = this.dispatchOrderDetail.orders.filter(x => !x.isSelected);
+            this.currentLoadContent = this.load.content.find(x => x.loadNumber === ldNumber);
+            const orders = this.dispatchOrderDetail?.orders.filter(x => {
+                if (this.currentLoadContent.order_ids.includes(x.id)) {
+                    x.isSelected = true;
+                    return x;
+                }
+            });
+            if (orders.length) {
+                this.remainingOrders = [...orders, ...this.remainingOrders];
+            }
+            this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
+        }
     }
 
     updateDispatchedQty(item: any): void {
@@ -609,6 +632,7 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     setAllOrdersToCurrentLoad(): void {
+        this.currentLoadContent.items = [];
         this.remainingOrders.forEach(order => {
             this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(x => {
                 if (order.id === x.id) {

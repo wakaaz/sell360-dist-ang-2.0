@@ -54,6 +54,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     currentTab: number;
     salemanId: number;
     loadId: number;
+    selectedLoadId: number;
     selectedRoute: number;
 
     cheque: PaymentDetail;
@@ -107,7 +108,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.setSpotSaleOrder();
         this.salemanId = +this.route.snapshot.paramMap.get('saleManId');
         this.orderDate = this.route.snapshot.paramMap.get('date');
-        if (!this.salemanId || !this.orderDate) {
+        this.selectedLoadId = +this.route.snapshot.paramMap.get('loadId');
+        if (!this.salemanId || !this.orderDate || !this.selectedLoadId) {
             this.router.navigateByUrl('/orders/execution-list');
         } else {
             this.getOrdersBySalemanAndDate();
@@ -161,7 +163,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     getOrdersBySalemanAndDate(): void {
         this.loading = true;
-        this.orderService.getExectedOrdersListing(this.salemanId, this.orderDate).subscribe(res => {
+        this.orderService.getExectedOrdersListing(this.salemanId, this.orderDate, this.selectedLoadId).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
                 this.retailersList = res.data.retailers;

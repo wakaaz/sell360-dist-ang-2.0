@@ -45,7 +45,7 @@ const routes: Routes = [
                 component: OrderExecutionListComponent
             },
             {
-                path: 'execute-order/:saleManId/:date',
+                path: 'execute-order/:saleManId/:date/:loadId',
                 pathMatch: 'full',
                 component: ExecuteOrderComponent
             },

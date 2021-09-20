@@ -547,6 +547,7 @@ export class OrderDispatchedComponent implements OnInit {
         this.load.distributor_id = this.distributorId;
         this.load.total_sub_loads = this.load.content.length;
         this.load.processed_date = this.orderDate;
+        this.load.assignmentId = this.assignmentId;
         const order = { load: this.load, payments: this.credits };
         this.showFinalLoad = false;
         this.orderService.saveDispatchOrder(order).subscribe(res => {

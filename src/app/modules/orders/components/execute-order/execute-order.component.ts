@@ -321,6 +321,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.orderDetails.returned_items = this.orderDetails.returned_items.map(x => {
             x.item_trade_price = x.original_price;
             x.stockQty = x.quantity_returned;
+            x.productType = 'returned';
             x.special_discount_pkr = 0;
             x.trade_discount = 0;
             x.trade_discount_pkr = 0;
@@ -415,9 +416,18 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     deleteReturnedProduct(selectedItem: any): void {
         if (selectedItem.id) {
-            selectedItem.stockQty = 0;
-            // this.setQuantity(selectedItem);
-            selectedItem.isDeleted = true;
+            const productAvalableQty = this.inventory.find(x => x.item_id === selectedItem.item_id)?.available_qty;
+            if (productAvalableQty === selectedItem.executed_qty) {
+                selectedItem.stockQty = 0;
+                // this.setQuantity(selectedItem);
+                selectedItem.isDeleted = true;
+            } else {
+                this.toastService.showToaster({
+                    title: 'Returned Product:',
+                    message: 'The selected product is part of other order please remove from other orders and delete!',
+                    type: 'error'
+                });
+            }
         } else {
             this.orderDetails.returned_items = this.orderDetails.returned_items.filter(x => x.item_id !== selectedItem.item_id);
             // this.applySlabOnAllProducts();
@@ -697,11 +707,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
         }
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
-        this.selectedRetailer.order_total = this.totalPayment;
         if (this.currentTab === 2) {
             const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
             retailer.order_total = this.totalPayment;
         }
+        this.selectedRetailer.order_total = this.receivableAmount;
         this.orderDetails.order_total = this.receivableAmount;
         this.orderDetails.total_amount_after_tax = this.receivableAmount;
     }

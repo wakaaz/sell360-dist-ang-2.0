@@ -25,6 +25,7 @@ export class OrderDispatchedComponent implements OnInit {
     showFinalLoad: boolean;
 
     searchText: string;
+    assignmentId: string;
 
     salemanId: number;
     currentTab: number;
@@ -70,11 +71,12 @@ export class OrderDispatchedComponent implements OnInit {
         this.setLoad();
         this.setCurrentLoad(1);
         this.load.content.push(this.currentLoadContent);
+        this.assignmentId = this.route.snapshot.paramMap.get('assignId') || null;
         this.salemanId = +this.route.snapshot.paramMap.get('saleManId') || null;
         this.orderDate = this.route.snapshot.paramMap.get('date');
-        if (!this.salemanId || !this.orderDate) {
+        if (!this.salemanId || !this.orderDate || !this.assignmentId) {
             this.router.navigateByUrl('/orders/dispatch-orders');
-            const toast: Toaster = { type: 'error', message: 'No order selected to dispatch!', title: 'Error:' };
+            const toast: Toaster = { type: 'error', message: 'No order selected to dispatch!', title: 'Dispatch Error:' };
             this.toastService.showToaster(toast);
         } else {
             this.getProducts();
@@ -141,7 +143,7 @@ export class OrderDispatchedComponent implements OnInit {
         this.loading = true;
         this.savingOrder = false;
         this.showFinalLoad = false;
-        this.orderService.getDispatchDetailBySalemanAndDate(this.salemanId, this.orderDate).subscribe(res => {
+        this.orderService.getDispatchDetailBySalemanAndDate(this.assignmentId, this.orderDate).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
                 if (res.data.loadSheet) {

@@ -143,7 +143,7 @@ export class OrderDispatchedComponent implements OnInit {
         this.loading = true;
         this.savingOrder = false;
         this.showFinalLoad = false;
-        this.orderService.getDispatchDetailBySalemanAndDate(this.assignmentId, this.orderDate).subscribe(res => {
+        this.orderService.getDispatchDetailBySalemanAndDate(this.salemanId, this.assignmentId, this.orderDate).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
                 if (res.data.loadSheet) {

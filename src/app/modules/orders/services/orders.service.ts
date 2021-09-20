@@ -135,8 +135,8 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
-    getExectedOrdersListing(salemanId: number, date: string): Observable<any> {
-        const url = `${API_URLS.GET_EXECUTION_DETAILS}/${salemanId}/${date}`;
+    getExectedOrdersListing(salemanId: number, date: string, loadId: number): Observable<any> {
+        const url = `${API_URLS.GET_EXECUTION_DETAILS}/${salemanId}/${date}/${loadId}`;
         return this.baseService.get(url);
     }
 

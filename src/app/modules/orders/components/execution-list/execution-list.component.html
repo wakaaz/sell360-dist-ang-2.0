@@ -44,7 +44,7 @@
                                     <button (click)="loadLoadSheet(order)" class="btn btn-default mb-0">LS</button>
                                     <button (click)="loadBills(order)" class="btn btn-default mb-0">Bills</button>
                                     <button class="btn btn-default red-bg mb-0">Revert</button>
-                                    <button class="btn btn-default mb-0" [routerLink]="['/orders', 'execute-order', order.sales_man_id, order.date]">Execute</button>
+                                    <button class="btn btn-default mb-0" [routerLink]="['/orders', 'execute-order', order.sales_man_id, order.date, order.load_id]">Execute</button>
                                 </td>
                             </tr>
                         </tbody>

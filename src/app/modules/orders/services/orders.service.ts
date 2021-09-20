@@ -90,8 +90,8 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
-    getDispatchOrdersDetail(salemanId: number, date: string): Observable<any> {
-        const url = `${API_URLS.DISPATCH_ORDERS_DETAIL}/${salemanId}/${date}`;
+    getDispatchOrdersDetail(salemanId: number, date: string, assignId: string): Observable<any> {
+        const url = `${API_URLS.DISPATCH_ORDERS_DETAIL}/${salemanId}/${date}/${assignId}`;
         return this.baseService.get(url);
     }
 

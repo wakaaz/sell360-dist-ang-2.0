@@ -259,7 +259,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         product = this.calculateProductSpecialDiscount(product);
 
         // Extra Discount => Booker Discount
-        if (!product.extra_discount) {
+        if (!product.extra_discount || +product.stockQty < 1) {
             product.extra_discount = 0;
             product.extra_discount_pkr = 0;
             this.calculateNetAmountOfProduct(product);

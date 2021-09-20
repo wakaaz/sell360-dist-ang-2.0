@@ -53,15 +53,15 @@
                 [ngClass]="!item.item_quantity_booker && item.isDeleted ? 'd-none' : ''">
                 <td style="width:200px">{{item.item_name}}</td>
                 <td>{{orderType !== 'execution' ? item.item_quantity_booker : item.dispatch_qty || 0}}</td>
-                <td><input type="number" [id]="item.item_name" [disabled]="isChequeAdded || isCreditAdded" [name]="item.item_name" (keyup)="setQuantity(item)"
-                        (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty" [max]="4"
+                <td><input type="number" (paste)="$event.preventDefault()" [id]="item.item_name" [disabled]="isChequeAdded || isCreditAdded" [name]="item.item_name" (keyup)="setQuantity(item)"
+                        (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty" [max]="999"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.item_trade_price | number: '1.2-2'}}</td>
                 <td>{{item.original_amount || 0 | number: '1.2-2'}}</td>
                 <td>{{item.scheme_discount | number: '1.2-2'}}</td>
                 <td>{{item.trade_discount}}%</td>
                 <td>{{item.special_discount * item.stockQty | number: '1.2-2'}}</td>
-                <td><input type="text" [id]="item.item_id" [disabled]="isChequeAdded || isCreditAdded" [name]="item.item_id" [(ngModel)]="item.extra_discount"
+                <td><input type="number" (paste)="$event.preventDefault()" [id]="item.item_id" [disabled]="isChequeAdded || isCreditAdded || +item.stockQty < 1" [name]="item.item_id" [(ngModel)]="item.extra_discount"
                         (keyup)="calculateExtraDiscount(item)" (keydown)="isNumber($event)"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.net_amount || 0 | number: '1.2-2'}}</td>
@@ -73,15 +73,15 @@
             <tr *ngFor="let item of orderDetail?.returned_items; let ind=index" [ngClass]="!item.item_quantity_booker && item.isDeleted ? 'd-none' : ''">
                 <td style="width:200px">{{item.item_name}}</td>
                 <td>{{item.dispatch_qty || 0}}</td>
-                <td><input type="text" [id]="item.item_name" [disabled]="isChequeAdded || isCreditAdded" [name]="item.item_name" (keyup)="setReturnedQty(item)"
-                        (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty" [max]="4"
+                <td><input type="text" (paste)="$event.preventDefault()" [id]="item.item_name" [disabled]="isChequeAdded || isCreditAdded" [name]="item.item_name" (keyup)="setReturnedQty(item)"
+                        (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty" [max]="999"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.item_trade_price | number: '1.2-2'}}</td>
                 <td>{{item.gross_amount || 0 | number: '1.2-2'}}</td>
                 <td>{{item.scheme_discount | number: '1.2-2'}}</td>
                 <td>{{item.trade_discount}}%</td>
                 <td>{{item.special_discount * item.stockQty | number: '1.2-2'}}</td>
-                <td><input type="text" [disabled]="isChequeAdded || isCreditAdded" [id]="item.item_id" [name]="item.item_id" [(ngModel)]="item.extra_discount"
+                <td><input type="text" (paste)="$event.preventDefault()" [disabled]="isChequeAdded || isCreditAdded || +item.stockQty < 1" [id]="item.item_id" [name]="item.item_id" [(ngModel)]="item.extra_discount"
                         (keyup)="setExtraDiscount(item)" (keydown)="isNumber($event)"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.net_amount || 0 | number: '1.2-2'}}</td>

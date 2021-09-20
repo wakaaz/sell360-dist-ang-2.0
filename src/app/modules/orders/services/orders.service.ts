@@ -75,7 +75,7 @@ export class OrdersService {
         return this.baseService.get(url);
     }
 
-    getDispatchDetailBySalemanAndDate(id: number, date: string): Observable<any> {
+    getDispatchDetailBySalemanAndDate(id: string, date: string): Observable<any> {
         const url = `${API_URLS.DISPATCH_DETAIL}/${id}/${date}`;
         return this.baseService.get(url);
     }

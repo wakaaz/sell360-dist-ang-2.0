@@ -35,7 +35,7 @@ const routes: Routes = [
                 component: CreateDispatchedComponent
             },
             {
-                path: 'dispatch/:saleManId/:date',
+                path: 'dispatch/:assignId/:saleManId/:date',
                 pathMatch: 'full',
                 component: OrderDispatchedComponent
             },

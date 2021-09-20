@@ -1,5 +1,7 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { API_URLS } from 'src/app/core/constants/api-urls.constants';
+import { environment } from 'src/environments/environment';
 import { LocalStorageService } from '../../../../core/services/storage.service';
 import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
 import { DataService, GeneralDataService } from '../../../shared/services';
@@ -133,6 +135,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.receivableAmount = 0;
         this.recoveryAmount = 0;
         this.totalPayment = 0;
+        this.paymentDate = new Date().toISOString().split('T')[0];
         this.distributorId = this.storageService.getItem('distributor').id;
     }
 
@@ -182,6 +185,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     };
                     return recovery;
                 });
+                if (res.data.is_dsr) {
+                    this.changeTab(4);
+                }
             } else {
                 this.toastService.showToaster({
                     type: 'error',
@@ -315,6 +321,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.orderDetails.returned_items = this.orderDetails.returned_items.map(x => {
             x.item_trade_price = x.original_price;
             x.stockQty = x.quantity_returned;
+            x.productType = 'returned';
             x.special_discount_pkr = 0;
             x.trade_discount = 0;
             x.trade_discount_pkr = 0;
@@ -409,9 +416,18 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     deleteReturnedProduct(selectedItem: any): void {
         if (selectedItem.id) {
-            selectedItem.stockQty = 0;
-            // this.setQuantity(selectedItem);
-            selectedItem.isDeleted = true;
+            const productAvalableQty = this.inventory.find(x => x.item_id === selectedItem.item_id)?.available_qty;
+            if (productAvalableQty === selectedItem.executed_qty) {
+                selectedItem.stockQty = 0;
+                // this.setQuantity(selectedItem);
+                selectedItem.isDeleted = true;
+            } else {
+                this.toastService.showToaster({
+                    title: 'Returned Product:',
+                    message: 'The selected product is part of other order please remove from other orders and delete!',
+                    type: 'error'
+                });
+            }
         } else {
             this.orderDetails.returned_items = this.orderDetails.returned_items.filter(x => x.item_id !== selectedItem.item_id);
             // this.applySlabOnAllProducts();
@@ -435,10 +451,24 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     openProductsList(): void {
-        this.showProducts = true;
-        document.body.classList.add('no-scroll');
-        document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
-        document.getElementById('order-container').classList.add('blur-div');
+        if (!this.isPaymentAdded()) {
+            this.showProducts = true;
+            document.body.classList.add('no-scroll');
+            document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
+            document.getElementById('order-container').classList.add('blur-div');
+        }
+    }
+
+    isPaymentAdded(): boolean {
+        if (this.isChequeAdded || this.isCreditAdded) {
+            this.toastService.showToaster({
+                title: 'Payment Added:',
+                message: 'Please remove the payment to proceed!',
+                type: 'error'
+            });
+            return true;
+        }
+        return false;
     }
 
     closeNewProducts(): void {
@@ -449,7 +479,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     openReturnedModal(): void {
-        this.showReturned = true;
+        if (!this.isPaymentAdded()) {
+            this.showReturned = true;
+        }
     }
 
     closeReturnedModal(): void {
@@ -522,19 +554,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 };
                 this.toastService.showToaster(toast);
             } else {
-                this.focusForPaymentValues();
+                // this.focusForPaymentValues();
                 document.getElementById('open-modal-payment').click();
             }
-        }
-    }
-
-    focusForPaymentValues(): void {
-        if (this.isCredit && this.creditAmount) {
-            document.getElementById('Amount2').parentElement.classList.add('focused');
-        } else {
-            if (this.chequeAmount) { document.getElementById('Amount1').parentElement.classList.add('focused'); }
-            if (this.bankName) { document.getElementById('chequeBankName').parentElement.classList.add('focused'); }
-            if (this.chequeNumber) { document.getElementById('chequeNum').parentElement.classList.add('focused'); }
         }
     }
 
@@ -619,7 +641,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.cheque = {
                 retailer_id: this.selectedRetailer.retailer_id,
                 distributor_id: this.distributorId,
-                type: 'Counter',
+                type: this.currentTab === 1 ? 'Execution' : 'Spot',
                 payment_mode: 'Cheque',
                 payment_detail: {
                     cheque_amount: this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.receivableAmount)) :
@@ -670,11 +692,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.cash = {
             retailer_id: this.selectedRetailer.retailer_id,
             distributor_id: this.distributorId,
-            type: 'Counter',
+            type: this.currentTab === 1 ? 'Execution' : 'Spot',
             payment_mode: 'Cash',
             payment_detail: '',
             dispatched_bill_amount: 0,
-            return_amount: this.returnAmount,
+            return_amount: this.returnAmount || 0,
             recovery: 0,
             amount_received: Math.round((this.receivableAmount + Number.EPSILON) * 100) / 100,
         };
@@ -685,13 +707,13 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
         }
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
-        this.selectedRetailer.order_total = this.totalPayment;
         if (this.currentTab === 2) {
             const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
             retailer.order_total = this.totalPayment;
         }
-        this.orderDetails.order_total = this.totalPayment;
-        this.orderDetails.total_amount_after_tax = this.totalPayment;
+        this.selectedRetailer.order_total = this.receivableAmount;
+        this.orderDetails.order_total = this.receivableAmount;
+        this.orderDetails.total_amount_after_tax = this.receivableAmount;
     }
 
     saveExecutionQuantity(): void {
@@ -795,20 +817,18 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.savingOrder = true;
         this.orderService.cancelOrder(this.orderDetails.id).subscribe(res => {
             this.savingOrder = false;
-            this.isSpotSaleActive = false;
             if (res.status === 200) {
                 this.toastService.showToaster({
                     message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
-                    title: 'Order dispatched:',
+                    title: 'Order Execution:',
                     type: 'success'
                 });
                 this.orderDetails = null;
+                this.newProduct = null;
                 this.getOrdersBySalemanAndDate();
-                if (this.currentTab === 2) { this.removeSpotOrder(); }
             }
         }, error => {
             this.savingOrder = false;
-            this.isSpotSaleActive = false;
             if (error.status !== 1 && error.status !== 401) {
                 console.log('Error in Save Order for dispatch ::>> ', error);
                 this.toastService.showToaster({
@@ -827,6 +847,36 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.removeSpotOrder();
             document.getElementById('close-del').click();
         }
+    }
+
+    cancelSpotSaleOrder(): void {
+        document.getElementById('close-del').click();
+        this.savingOrder = true;
+        this.orderService.cancelSpotSaleOrder(this.orderDetails.id).subscribe(res => {
+            this.savingOrder = false;
+            this.isSpotSaleActive = false;
+            if (res.status === 200) {
+                this.toastService.showToaster({
+                    message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
+                    title: 'Spot Order:',
+                    type: 'success'
+                });
+                this.orderDetails = null;
+                this.newProduct = null;
+                this.removeSpotOrder();
+            }
+        }, error => {
+            this.savingOrder = false;
+            this.isSpotSaleActive = false;
+            if (error.status !== 1 && error.status !== 401) {
+                console.log('Error in cancel spot sale Order ::>> ', error);
+                this.toastService.showToaster({
+                    message: 'Something went wrong order cannot be canceled at the moment!',
+                    title: 'Error:',
+                    type: 'error'
+                });
+            }
+        });
     }
 
     removeSpotOrder(): void {
@@ -1031,6 +1081,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 });
             }
         });
+    }
+
+    generateDSR(): void {
+        const url = `${environment.apiDomain}${API_URLS.DSR_PDF}/${this.finalLoad.dsr.id}`;
+        window.open(url);
     }
 
     ngOnDestroy(): void {

@@ -418,7 +418,7 @@
                                         ({{product.trade_discount_pkr | number: '1.2-2' }})
                                     </div>
                                     <div class="addItemCell2 _h25">{{ +product.stockQty * product.special_discount || 0.00 | number:'1.2-2'}}</div>
-                                    <div class="addItemCell2 _h25"><input [readonly]="isCreditAdded || isChequeAdded" class="addItemCell2_input" type="text"
+                                    <div class="addItemCell2 _h25"><input [readonly]="isCreditAdded || isChequeAdded || +product.stockQty < 1" class="addItemCell2_input" type="text"
                                             placeholder="0" [(ngModel)]="product.extra_discount"
                                             (keyup)="calculateExtraDiscount(product)" (keydown)="isNumber($event)"
                                             style="font-size: 13px"></div>

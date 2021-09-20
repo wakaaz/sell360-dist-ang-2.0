@@ -316,7 +316,8 @@ export class DataService {
     }
 
     isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
-        if (event.key && event.key.includes('Arrow') || event.key.includes('Backspace') || event.key.includes('Delete') ||
+        if (event.key && event.key.includes('ArrowLeft') || event.key.includes('ArrowRight')
+            || event.key.includes('Backspace') || event.key.includes('Delete') ||
             (type === 'charges' && event.key.includes('.'))) {
             return true;
         } else if (event.key && event.key.trim() === '') {

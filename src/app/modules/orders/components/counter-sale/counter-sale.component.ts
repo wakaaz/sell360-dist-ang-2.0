@@ -293,14 +293,16 @@ export class CounterSaleComponent implements OnInit {
             if (this.paymentTypeCredit === 'full') {
                 return this.paymentTypeCredit.length > 0;
             } else {
-                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1 && this.creditAmount <= this.cash.amount_received;
+                return this.paymentTypeCredit.length > 0 && this.creditAmount &&
+                    this.creditAmount > -1 && this.creditAmount <= this.cash.amount_received;
             }
         } else {
             if (this.paymentTypeCheque === 'full') {
                 return this.paymentTypeCheque.length > 0 && this.bankName.length > 0 &&
                     this.chequeNumber.length > 0 && this.paymentDate.length > 0;
             } else {
-                return this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 && this.chequeAmount <= this.cash.amount_received &&
+                return this.paymentTypeCheque.length > 0 && this.chequeAmount &&
+                    this.chequeAmount > -1 && this.chequeAmount <= this.cash.amount_received &&
                     this.bankName.length > 0 && this.chequeNumber.length > 0 && this.paymentDate.length > 0;
             }
         }
@@ -838,7 +840,8 @@ export class CounterSaleComponent implements OnInit {
     setOrderItems(selectedEmployee: any): void {
         this.selectedProducts.forEach((product, index) => {
             const productTotalDiscount = (+product.stockQty * product.scheme_discount) +
-            (+product.stockQty * product.trade_discount_pkr) + (+product.stockQty * product.special_discount) + product.extra_discount_pkr;
+                (+product.stockQty * product.trade_discount_pkr) + (+product.stockQty * product.special_discount) +
+                product.extra_discount_pkr;
             const item: OrderItem = {
                 item_id: product.item_id,
                 pref_id: product.pref_id,

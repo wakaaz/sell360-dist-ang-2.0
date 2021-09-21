@@ -587,7 +587,7 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     </button>
-                    <button *ngIf="!isOrdering" type="submit" class="btn btn-cancel mr-2" [routerLink]="['/home']">Cancel</button>
+                    <button *ngIf="!isOrdering" type="submit" class="btn btn-primary btn-cancel mr-2" [routerLink]="['/home']">Cancel</button>
                     <button *ngIf="!isOrdering" class="btn btn-primary" (click)="setOrderFields()">Save Order</button>
 
                     <button *ngIf="!isOrdering && !isChequeAdded" class="btn btn-primary float-left mr-2"

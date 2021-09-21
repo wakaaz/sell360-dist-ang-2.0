@@ -931,6 +931,8 @@ export class CounterSaleComponent implements OnInit {
                 this.cash = null;
                 this.retailers = [];
                 this.routes = [];
+                this.isChequeAdded = false;
+                this.isCreditAdded = false;
                 this.resetValues();
                 this.paymentCancelled();
             }

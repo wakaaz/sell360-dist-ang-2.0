@@ -151,9 +151,9 @@
                             <span *ngIf="cheqAmount.errors?.required && isAdded" class="input-error">
                                 Please add Total Amount!
                             </span>
-                            <span *ngIf="!cheqAmount.errors?.required && chequeAmount < 0 && isAdded"
+                            <span *ngIf="+chequeAmount === 0 && isAdded"
                                 class="input-error">
-                                Negative values not allowed
+                                Zero value not allowed
                             </span>
                             <span
                                 *ngIf="!cheqAmount.errors?.required && chequeAmount > cash?.amount_received && isAdded"
@@ -205,9 +205,9 @@
                             <span *ngIf="credAmount.errors?.required && isAdded" class="input-error">
                                 Please add Total Amount!
                             </span>
-                            <span *ngIf="!credAmount.errors?.required && creditAmount < 0 && isAdded"
+                            <span *ngIf="+creditAmount === 0 && isAdded"
                                 class="input-error">
-                                Negative values not allowed
+                                Zero value not allowed
                             </span>
                             <span
                                 *ngIf="!credAmount.errors?.required && creditAmount > cash?.amount_received && isAdded"
@@ -386,7 +386,7 @@
 
 
                             <div *ngFor="let product of selectedProducts;let ind=index" class="row _row-product">
-                                <a href="#" class="dd-handle dd3-handle swap-div"></a>
+                                <a class="dd-handle dd3-handle swap-div"></a>
 
                                 <div class="col-12 p-0">
                                     <div class="addItemCell PL-5">
@@ -408,6 +408,7 @@
                                     </div>
 
                                     <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
+                                            [disabled]="isChequeAdded || isCreditAdded"
                                             (keyup)="setQuantity(product)" (keydown)="isNumber($event, 'quantity')"
                                             placeholder="0" [(ngModel)]="product.stockQty" style="font-size: 13px">
                                     </div>
@@ -426,7 +427,7 @@
                                     </div>
                                     <div class="addItemCell3 _h25">{{product.net_amount || 0.00 | number: '1.2-2'}}
                                     </div>
-                                    <a (click)="removeProductFromOrder(product, ind)" class="btn _order-del"
+                                    <a [disabled]="isChequeAdded || isCreditAdded" (click)="removeProductFromOrder(product, ind)" class="btn _order-del"
                                         title="Delete"><i class="fa fa-trash-alt"></i></a>
                                 </div>
                             </div>
@@ -587,7 +588,7 @@
                             <span class="sr-only">Loading...</span>
                         </div>
                     </button>
-                    <button *ngIf="!isOrdering" type="submit" class="btn btn-cancel mr-2" [routerLink]="['/home']">Cancel</button>
+                    <button *ngIf="!isOrdering" type="submit" class="btn btn-primary btn-cancel mr-2" [routerLink]="['/home']">Cancel</button>
                     <button *ngIf="!isOrdering" class="btn btn-primary" (click)="setOrderFields()">Save Order</button>
 
                     <button *ngIf="!isOrdering && !isChequeAdded" class="btn btn-primary float-left mr-2"

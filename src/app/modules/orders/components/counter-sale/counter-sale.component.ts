@@ -293,14 +293,16 @@ export class CounterSaleComponent implements OnInit {
             if (this.paymentTypeCredit === 'full') {
                 return this.paymentTypeCredit.length > 0;
             } else {
-                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1 && this.creditAmount <= this.cash.amount_received;
+                return this.paymentTypeCredit.length > 0 && this.creditAmount &&
+                    this.creditAmount > -1 && this.creditAmount <= this.cash.amount_received;
             }
         } else {
             if (this.paymentTypeCheque === 'full') {
                 return this.paymentTypeCheque.length > 0 && this.bankName.length > 0 &&
                     this.chequeNumber.length > 0 && this.paymentDate.length > 0;
             } else {
-                return this.paymentTypeCheque.length > 0 && this.chequeAmount > -1 && this.chequeAmount <= this.cash.amount_received &&
+                return this.paymentTypeCheque.length > 0 && this.chequeAmount &&
+                    this.chequeAmount > -1 && this.chequeAmount <= this.cash.amount_received &&
                     this.bankName.length > 0 && this.chequeNumber.length > 0 && this.paymentDate.length > 0;
             }
         }
@@ -557,6 +559,14 @@ export class CounterSaleComponent implements OnInit {
     }
 
     removeProductFromOrder(product: any): void {
+        if (this.isCreditAdded || this.isChequeAdded) {
+            this.toastService.showToaster({
+                title: 'Payment Error:',
+                message: 'Cannot edit or remove current products if payment method added!',
+                type: 'error'
+            });
+            return;
+        }
         this.selectedProducts = this.selectedProducts.filter(x => {
             if (x.item_id === product.item_id && x.unit_name !== product.unit_name) { return x; }
             else if (x.item_id !== product.item_id) { return x; }
@@ -838,7 +848,8 @@ export class CounterSaleComponent implements OnInit {
     setOrderItems(selectedEmployee: any): void {
         this.selectedProducts.forEach((product, index) => {
             const productTotalDiscount = (+product.stockQty * product.scheme_discount) +
-            (+product.stockQty * product.trade_discount_pkr) + (+product.stockQty * product.special_discount) + product.extra_discount_pkr;
+                (+product.stockQty * product.trade_discount_pkr) + (+product.stockQty * product.special_discount) +
+                product.extra_discount_pkr;
             const item: OrderItem = {
                 item_id: product.item_id,
                 pref_id: product.pref_id,
@@ -920,6 +931,8 @@ export class CounterSaleComponent implements OnInit {
                 this.cash = null;
                 this.retailers = [];
                 this.routes = [];
+                this.isChequeAdded = false;
+                this.isCreditAdded = false;
                 this.resetValues();
                 this.paymentCancelled();
             }

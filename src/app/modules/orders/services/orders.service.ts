@@ -152,7 +152,7 @@ export class OrdersService {
 
     markCompeleteExecution(loadId: number, amountReceived: number): Observable<any> {
         const url = `${API_URLS.EXECUTION_COMPLETE}/${loadId}`;
-        return this.baseService.post(url, { amount_received: amountReceived });
+        return this.baseService.post(url, { total_net_after_recovery: amountReceived });
     }
 
 }

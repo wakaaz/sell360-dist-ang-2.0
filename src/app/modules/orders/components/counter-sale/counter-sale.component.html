@@ -151,9 +151,9 @@
                             <span *ngIf="cheqAmount.errors?.required && isAdded" class="input-error">
                                 Please add Total Amount!
                             </span>
-                            <span *ngIf="!cheqAmount.errors?.required && chequeAmount < 0 && isAdded"
+                            <span *ngIf="+chequeAmount === 0 && isAdded"
                                 class="input-error">
-                                Negative values not allowed
+                                Zero value not allowed
                             </span>
                             <span
                                 *ngIf="!cheqAmount.errors?.required && chequeAmount > cash?.amount_received && isAdded"
@@ -205,9 +205,9 @@
                             <span *ngIf="credAmount.errors?.required && isAdded" class="input-error">
                                 Please add Total Amount!
                             </span>
-                            <span *ngIf="!credAmount.errors?.required && creditAmount < 0 && isAdded"
+                            <span *ngIf="+creditAmount === 0 && isAdded"
                                 class="input-error">
-                                Negative values not allowed
+                                Zero value not allowed
                             </span>
                             <span
                                 *ngIf="!credAmount.errors?.required && creditAmount > cash?.amount_received && isAdded"

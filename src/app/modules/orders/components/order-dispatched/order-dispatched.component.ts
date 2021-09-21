@@ -687,6 +687,7 @@ export class OrderDispatchedComponent implements OnInit {
                 return x;
             });
         } else {
+            this.isAllSelected = false;
             this.currentLoadContent = this.dispatchService.removeOrderFromCurrentLoad(order, this.currentLoadContent);
             this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(x => {
                 if (order.id === x.id) {
@@ -695,6 +696,13 @@ export class OrderDispatchedComponent implements OnInit {
                 return x;
             });
         }
+        this.remainingOrders = this.remainingOrders.map(x => {
+            if (x.id === order.id) {
+                x.isSelected = order.isSelected;
+            }
+            return x;
+        });
+        this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
     }
 
     completeDispatch(): void {

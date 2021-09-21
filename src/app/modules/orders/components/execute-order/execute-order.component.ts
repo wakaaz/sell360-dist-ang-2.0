@@ -422,7 +422,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             const productAvalableQty = this.inventory.find(x => x.item_id === selectedItem.item_id)?.available_qty;
             if (productAvalableQty === selectedItem.executed_qty) {
                 selectedItem.stockQty = 0;
-                // this.setQuantity(selectedItem);
                 selectedItem.isDeleted = true;
             } else {
                 this.toastService.showToaster({

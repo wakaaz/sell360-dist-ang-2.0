@@ -489,6 +489,9 @@ export class CounterSaleComponent implements OnInit {
     }
 
     setQuantity(product: any): void {
+        if (+product.stockQty > 1000) {
+            product.stockQty = 0;
+        }
         if (product.item_trade_price) {
             if (this.selectedProducts.find(x => x.item_id === product.item_id)) {
                 this.grossAmount = this.grossAmount - product.original_amount || 0;

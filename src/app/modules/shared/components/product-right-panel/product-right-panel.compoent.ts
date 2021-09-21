@@ -138,6 +138,9 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     }
 
     setQuantity(product: any): void {
+        if (+product.stockQty > 1000) {
+            product.stockQty = 0;
+        }
         if (product.item_trade_price) {
             this.calculateProductDiscounts(product);
             this.calculateProductPrice(product);

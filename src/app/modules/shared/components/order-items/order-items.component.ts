@@ -135,6 +135,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
 
     setQuantity(product: any): void {
+        if (+product.stockQty > 1000) {
+            product.stockQty = 0;
+        }
         if (this.orderType === 'execution') {
             const prod = this.allProducts.find(x => x.item_id === product.item_id);
             if ((product.id && +product.stockQty > (prod.available_qty + product.executed_qty)) ||
@@ -168,6 +171,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
 
     setReturnedQty(product: any): void {
+        if (+product.stockQty > 1000) {
+            product.stockQty = 0;
+        }
         product.gross_amount = -(product.item_trade_price * product.stockQty);
         product.original_amount = -(product.item_trade_price * product.stockQty);
         product.total_retail_price = -(product.item_retail_price * product.stockQty);

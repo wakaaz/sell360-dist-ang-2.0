@@ -408,6 +408,7 @@
                                     </div>
 
                                     <div class="addItemCell2 _h25"><input class="addItemCell2_input" type="text"
+                                            [disabled]="isChequeAdded || isCreditAdded"
                                             (keyup)="setQuantity(product)" (keydown)="isNumber($event, 'quantity')"
                                             placeholder="0" [(ngModel)]="product.stockQty" style="font-size: 13px">
                                     </div>
@@ -426,7 +427,7 @@
                                     </div>
                                     <div class="addItemCell3 _h25">{{product.net_amount || 0.00 | number: '1.2-2'}}
                                     </div>
-                                    <a (click)="removeProductFromOrder(product, ind)" class="btn _order-del"
+                                    <a [disabled]="isChequeAdded || isCreditAdded" (click)="removeProductFromOrder(product, ind)" class="btn _order-del"
                                         title="Delete"><i class="fa fa-trash-alt"></i></a>
                                 </div>
                             </div>

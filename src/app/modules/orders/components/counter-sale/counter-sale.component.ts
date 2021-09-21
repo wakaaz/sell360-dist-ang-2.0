@@ -559,6 +559,14 @@ export class CounterSaleComponent implements OnInit {
     }
 
     removeProductFromOrder(product: any): void {
+        if (this.isCreditAdded || this.isChequeAdded) {
+            this.toastService.showToaster({
+                title: 'Payment Error:',
+                message: 'Cannot edit or remove current products if payment method added!',
+                type: 'error'
+            });
+            return;
+        }
         this.selectedProducts = this.selectedProducts.filter(x => {
             if (x.item_id === product.item_id && x.unit_name !== product.unit_name) { return x; }
             else if (x.item_id !== product.item_id) { return x; }

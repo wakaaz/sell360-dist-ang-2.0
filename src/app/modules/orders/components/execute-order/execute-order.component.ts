@@ -132,6 +132,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     setPaymentInitalValues(): void {
         this.netAmount = 0;
         this.creditAmount = 0;
+        this.amountReceived = 0;
         this.chequeAmount = 0;
         this.returnAmount = 0;
         this.receivableAmount = 0;
@@ -1048,7 +1049,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     checkRecieveable(): void {
-        if (this.amountReceived === null || this.amountReceived === undefined) {
+        if (+this.amountReceived === 0) {
             this.toastService.showToaster({
                 title: 'Execution Error:',
                 message: 'Please add received amount!',
@@ -1062,7 +1063,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     markCompelet(): void {
         document.getElementById('close-complete').click();
         this.loading = true;
-        this.orderService.markCompeleteExecution(this.loadId, this.amountReceived).subscribe(res => {
+        this.orderService.markCompeleteExecution(this.loadId, +this.amountReceived).subscribe(res => {
             this.loading = false;
             if (res.status === 200) {
                 this.toastService.showToaster({

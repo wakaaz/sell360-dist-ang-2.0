@@ -46,7 +46,6 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
                 x.isAdded = false;
                 x.schemes = this.dataService.getSchemes(x.item_id,
                     x.unit_id, x.pref_id, this.productSchemes, this.selectedRetailer.type_id, this.selectedRetailer.retailer_id);
-                x.availableQty = x.available_qty;
                 if (orderedProduct) {
                     x.isAdded = true;
                 }
@@ -64,13 +63,11 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         if (this.orderType === 'execution') {
             const toast: Toaster = {
                 type: 'error',
-                message: `Quantity (${product.stockQty}) should not be greater than available quantity (${product.availableQty})!`,
+                message: `Quantity (${product.stockQty}) should not be greater than available quantity (${product.available_qty})!`,
                 title: 'Quantity Error:'
             };
-            if (+product.stockQty > product.availableQty) {
+            if (+product.stockQty > product.available_qty) {
                 this.toastService.showToaster(toast);
-            } else {
-                product.availableQty = product.available_qty - product.stockQty;
             }
         }
     }

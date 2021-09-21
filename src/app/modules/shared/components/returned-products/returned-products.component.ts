@@ -53,6 +53,9 @@ export class ReturnedProductsComponent implements OnInit, AfterViewInit {
     }
 
     setReturnedQty(): void {
+        if (+this.selectedProduct.stockQty > 1000) {
+            this.selectedProduct.stockQty = 0;
+        }
         this.selectedProduct.item_quantity_booker = 0;
         this.selectedProduct.dispatch_qty = 0;
         this.selectedProduct.scheme_discount = 0;

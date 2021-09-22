@@ -130,7 +130,7 @@
                         id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="ordersRetailers"
+                                <app-retailer-sub-list [retailers]="ordersRetailers" [loading]="loading || loadingProduct"
                                     (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
@@ -145,10 +145,10 @@
                                     <div class="col-12" *ngIf="savingOrder">
                                         <app-loader-white></app-loader-white>
                                     </div>
-                                    <div class="col-12" style="text-align: center;" *ngIf="!savingOrder && !selectedRetailer">
-                                        <div class="pl-20">
-                                            <img style="filter: invert(35%);width: 45%" src="/assets/images/dispatched-order.svg">
-                                            <h3 style="color: lightgray;">Select Order To See Details</h3>
+                                    <div class="no-content" *ngIf="!savingOrder && !selectedRetailer">
+                                        <div class="no-content-container" style="margin: auto;display:table;text-align: center; color:#B7B7B7">
+                                            <img src="assets/images/select order-icon.svg" alt="">
+                                            <strong>Select order to see details</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -479,10 +479,10 @@
                                 [disabled]="currentTab === 1 || currentTab === 4 || loading || savingOrder || load.content[0].items.length > 0"
                                 type="submit" class="btn btn-primary m-0 mr-2">Previous</button>
                             <button *ngIf="currentTab !== 4 && currentTab !== 3"
-                                [disabled]="currentTab === 4 || loading || savingOrder"
+                                [disabled]="currentTab === 4 || loading || loadingProduct || savingOrder"
                                 (click)="currentTab=currentTab+1;tabChanged()" type="submit"
                                 class="btn btn-primary m-0">Next</button>
-                            <button *ngIf="currentTab === 3" [disabled]="loading" (click)="openConfirmationModal()"
+                            <button *ngIf="currentTab === 3" [disabled]="loading || loadingProduct" (click)="openConfirmationModal()"
                                 type="submit" class="btn btn-primary m-0">Next</button>
                             <button style="display: none;" id="open-create-load" data-toggle="modal"
                                 data-target="#create-load">Open Modal</button>

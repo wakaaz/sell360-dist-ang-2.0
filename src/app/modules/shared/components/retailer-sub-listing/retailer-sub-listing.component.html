@@ -4,16 +4,17 @@
             <div class="col-12">
                 <h2 class="w-100">Orders <span> List</span></h2>
             </div>
-            <div class="col-12">
+            <div *ngIf="!loading" class="col-12">
                 <div class="APS-list"><i class="fa fa-search"></i>
                     <input type="text" [(ngModel)]="searchText" (keyup)="searchByRetailer()"
                         class="form-control" id="" placeholder="Search">
                 </div>
             </div>
+            <div *ngIf="loading" class="col-12"><div class="box-list shine mt-10"></div></div>
         </div>
     </div>
 
-    <div class="ProList-div" *ngIf="retailerDispList?.length">
+    <div class="ProList-div" *ngIf="!loading && retailerDispList?.length">
         <div *ngFor="let retailer of retailerDispList; let i=index" [ngClass]="retailer.isActive ? 'active' : ''"
             class="col-12 order-list" id="retailer-{{retailer.id}}" (click)="getOrderDetails(retailer)">
             <div class="ord-no">{{ i + 1 }}</div>
@@ -24,5 +25,11 @@
                         '1.2-2'}}</span></div>
             </div>
         </div>
+    </div>
+    <div class="ProList-div" *ngIf="loading">
+        <div class="col-12"><div class="box-list shine"></div></div>
+        <div class="col-12"><div class="box-list shine"></div></div>	
+        <div class="col-12"><div class="box-list shine"></div></div>
+        <div class="col-12"><div class="box-list shine"></div></div>
     </div>
 </div>

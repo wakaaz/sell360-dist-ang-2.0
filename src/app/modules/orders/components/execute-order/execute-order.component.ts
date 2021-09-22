@@ -326,6 +326,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.orderDetails.returned_items = this.orderDetails.returned_items.map(x => {
             x.item_trade_price = x.original_price;
             x.stockQty = x.quantity_returned;
+            x.extra_discount = x.booker_discount;
+            x.extra_discount_pkr = x.booker_discount * x.quantity_returned;
             x.productType = 'returned';
             x.special_discount_pkr = 0;
             x.trade_discount = 0;
@@ -422,7 +424,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     deleteReturnedProduct(selectedItem: any): void {
         if (selectedItem.id) {
             const productAvalableQty = this.inventory.find(x => x.item_id === selectedItem.item_id)?.available_qty;
-            if (productAvalableQty >= -selectedItem.executed_qty) {
+            if (productAvalableQty >= selectedItem.quantity_returned) {
                 selectedItem.stockQty = 0;
                 selectedItem.isDeleted = true;
             } else {

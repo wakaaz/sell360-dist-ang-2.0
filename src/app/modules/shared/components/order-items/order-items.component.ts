@@ -211,7 +211,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     resetDiscount(product: any): void {
         const toast: Toaster = {
             type: 'error', title: 'Incorrect discount:',
-            message: `The discount cannot be greater than item trade price (${product.item_trade_price})!`
+            message: `Discount should not be greater than item price!`
         };
         this.toastService.showToaster(toast);
         product.extra_discount = 0;

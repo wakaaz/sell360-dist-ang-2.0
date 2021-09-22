@@ -104,7 +104,7 @@ export class ReturnedProductsComponent implements OnInit, AfterViewInit {
 
     resetDiscount(): void {
         const toast: Toaster = { type: 'error', title: 'Incorrect discount:',
-        message: `The discount cannot be greater than item trade price (${this.selectedProduct.item_trade_price})!` };
+        message: `Discount should not be greater than item price!` };
         this.toastService.showToaster(toast);
         this.selectedProduct.extra_discount = 0;
         this.setExtraDiscount();

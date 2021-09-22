@@ -250,7 +250,9 @@ export class OrderDispatchedComponent implements OnInit {
     getOrderDetailsByRetailer(retailer: any): void {
         if (this.selectedRetailer?.id !== retailer.id) {
             this.selectedRetailer = retailer;
+            this.savingOrder = true;
             this.orderService.getOrderDetails(retailer.id).subscribe(res => {
+                this.savingOrder = false;
                 if (res.status === 200) {
                     this.orderDetails = res.data;
                     this.orderDetails.items = this.orderDetails.items.map(prod => {
@@ -285,6 +287,7 @@ export class OrderDispatchedComponent implements OnInit {
                     });
                 }
             }, error => {
+                this.savingOrder = false;
                 this.loading = false;
                 if (error.status !== 1 && error.status !== 401) {
                     console.log('Error while getting order detail data :>> ', error.message);
@@ -755,7 +758,7 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     getBookingSheet(): void {
-       const sheetUrl = `${environment.apiDomain}${API_URLS.BOOKING_SHEET_PDF}?emp=${this.salemanId}&date=${this.orderDate}`;
+       const sheetUrl = `${environment.apiDomain}${API_URLS.BOOKING_SHEET_PDF}?emp=${this.salemanId}&date=${this.orderDate}&loadId=${this.finalLoad.load_id}`;
        window.open(sheetUrl);
     }
 
@@ -764,7 +767,7 @@ export class OrderDispatchedComponent implements OnInit {
             this.orderService.updateDispatchInvoiceDate(this.finalLoad.load_id, this.invoiceDate).subscribe(res => {
                 if (res.status === 200) {
                     document.getElementById('close-bills').click();
-                    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.salemanId}&date=${this.orderDate}&dist_id=${this.distributorId}&size=${size}&status=processed`;
+                    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.salemanId}&date=${this.orderDate}&dist_id=${this.distributorId}&size=${size}&status=processed&loadId=${this.finalLoad.load_id}`;
                     window.open(billsUrl);
                 } else {
                     this.toastService.showToaster({
@@ -792,7 +795,7 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     generateLSPDF(): void {
-        const billsUrl = `${environment.apiDomain}${API_URLS.LS_PDF}/${this.salemanId}/${this.orderDate}`;
+        const billsUrl = `${environment.apiDomain}${API_URLS.LS_PDF}/${this.finalLoad.load_id}/${this.salemanId}/${this.orderDate}`;
         window.open(billsUrl);
     }
 

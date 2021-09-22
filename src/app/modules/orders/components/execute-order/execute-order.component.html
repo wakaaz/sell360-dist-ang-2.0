@@ -317,7 +317,7 @@
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="retailersList" [orderType]="'execution'" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
+                                <app-retailer-sub-list [loading]="loading" [retailers]="retailersList" [orderType]="'execution'" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
@@ -423,7 +423,7 @@
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="spotSaleOrder.retailers" [orderType]="'execution'" [isSpotSaleActive]="isSpotSaleActive" (retailerChanged)="setCurrentSpotSaleOrder($event)"></app-retailer-sub-list>
+                                <app-retailer-sub-list [loading] [retailers]="spotSaleOrder.retailers" [orderType]="'execution'" [isSpotSaleActive]="isSpotSaleActive" (retailerChanged)="setCurrentSpotSaleOrder($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">

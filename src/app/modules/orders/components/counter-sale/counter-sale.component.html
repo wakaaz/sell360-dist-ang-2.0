@@ -361,7 +361,7 @@
                                     {{selectedRetailer?.retailer_name || '--'}}
                                 </div>
                                 <div class="col-md-6"><strong>Channel Type: &nbsp; </strong> {{selectedRetailer?.type ||
-                                    '--'}}</div>
+                                    '--'}} {{selectedRetailer && ' ('+ selectedRetailer?.segment_name+')'}}</div>
                                 <div class="col-md-6"><strong>Location: &nbsp; </strong> {{selectedRetailer?.loc ||
                                     '--'}}</div>
                                 <div class="col-md-6"><strong>Territory: &nbsp; </strong> {{selectedRetailer?.territory

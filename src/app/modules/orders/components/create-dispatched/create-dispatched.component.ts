@@ -53,7 +53,7 @@ export class CreateDispatchedComponent implements OnInit {
     }
 
     loadBookingSheet(order: any): void {
-        const sheetUrl = `${this.bookingSheetUrl}?emp=${order.sales_man_id}&date=${order.date}`;
+        const sheetUrl = `${this.bookingSheetUrl}?emp=${order.sales_man_id}&date=${order.date}&assignmentId=${order.assignment_id}`;
         window.open(sheetUrl);
     }
 }

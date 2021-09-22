@@ -136,7 +136,7 @@
 
                             <div class="col p-0">
                                 <div *ngIf="currentTab === 1" class="rightHeight">
-                                    <app-order-items-list *ngIf="!savingOrder" [orderDetail]="orderDetails"
+                                    <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [orderDetail]="orderDetails"
                                         [schemes]="schemes" [selectedRetailer]="selectedRetailer"
                                         [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
                                         [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
@@ -145,8 +145,14 @@
                                     <div class="col-12" *ngIf="savingOrder">
                                         <app-loader-white></app-loader-white>
                                     </div>
+                                    <div class="col-12" style="text-align: center;" *ngIf="!savingOrder && !selectedRetailer">
+                                        <div class="pl-20">
+                                            <img style="filter: invert(35%);width: 45%" src="/assets/images/dispatched-order.svg">
+                                            <h3 style="color: lightgray;">Select Order To See Details</h3>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-12 bottom-act-btn">
+                                <div *ngIf="selectedRetailer" class="col-md-12 bottom-act-btn">
                                     <button *ngIf="!savingOrder" (click)="setOrderItems()"
                                         [disabled]="!orderDetails?.items?.length"
                                         class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>

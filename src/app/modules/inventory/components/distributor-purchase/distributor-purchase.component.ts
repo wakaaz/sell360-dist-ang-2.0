@@ -156,7 +156,9 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
 
     searchProducts(searchText: string): void {
         if (searchText) {
-            this.productsDispList = this.products.filter(product => product.item_name.toLowerCase().includes(searchText.toLowerCase()));
+            this.productsDispList = this.showFreeProducts ?
+            this.secondaryProducts.filter(product => product.item_name.toLowerCase().includes(searchText.toLowerCase())) :
+            this.primaryProducts.filter(product => product.item_name.toLowerCase().includes(searchText.toLowerCase()));
         } else {
             this.productsDispList = this.showFreeProducts ? JSON.parse(JSON.stringify(this.secondaryProducts)) :
                 JSON.parse(JSON.stringify(this.primaryProducts));

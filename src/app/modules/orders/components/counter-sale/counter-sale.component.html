@@ -361,7 +361,7 @@
                                     {{selectedRetailer?.retailer_name || '--'}}
                                 </div>
                                 <div class="col-md-6"><strong>Channel Type: &nbsp; </strong> {{selectedRetailer?.type ||
-                                    '--'}}</div>
+                                    '--'}} {{selectedRetailer && ' ('+ selectedRetailer?.segment_name+')'}}</div>
                                 <div class="col-md-6"><strong>Location: &nbsp; </strong> {{selectedRetailer?.loc ||
                                     '--'}}</div>
                                 <div class="col-md-6"><strong>Territory: &nbsp; </strong> {{selectedRetailer?.territory
@@ -416,7 +416,7 @@
                                     <div class="addItemCell2 _h25">{{(+product.stockQty * product.scheme_discount) || 0.00 | number: '1.2-2'}}
                                     </div>
                                     <div class="addItemCell2 _h25">{{ product.trade_discount || 0 }}%
-                                        ({{product.trade_discount_pkr | number: '1.2-2' }})
+                                        ({{+product.stockQty * product.trade_discount_pkr | number: '1.2-2' }})
                                     </div>
                                     <div class="addItemCell2 _h25">{{ +product.stockQty * product.special_discount || 0.00 | number:'1.2-2'}}</div>
                                     <div class="addItemCell2 _h25"><input [readonly]="isCreditAdded || isChequeAdded || +product.stockQty < 1" class="addItemCell2_input" type="text"

@@ -185,11 +185,11 @@ export class DataService {
 
     getSDForDOTP(product: any): any {
         if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
-            const percentageDiscount = (product.selectedScheme.discount_on_tp / product.parent_trade_price) * 100;
-            const singleUnitDiscount = this.calculateDiscount(percentageDiscount, 'percentage', product.item_trade_price);
-            product.price = product.item_trade_price - singleUnitDiscount;
-            product.unit_price_after_scheme_discount = product.item_trade_price - singleUnitDiscount;
-            product.scheme_discount = singleUnitDiscount;
+            // const percentageDiscount = (product.selectedScheme.discount_on_tp / product.parent_trade_price) * 100;
+            // const singleUnitDiscount = this.calculateDiscount(percentageDiscount, 'percentage', product.item_trade_price);
+            product.price = product.item_trade_price - product.selectedScheme.discount_on_tp;
+            product.unit_price_after_scheme_discount = product.item_trade_price - product.selectedScheme.discount_on_tp;
+            product.scheme_discount = product.selectedScheme.discount_on_tp;
         } else {
             product.price = product.item_trade_price;
             product.unit_price_after_scheme_discount = product.item_trade_price;

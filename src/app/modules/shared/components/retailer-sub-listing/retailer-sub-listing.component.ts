@@ -28,7 +28,6 @@ export class RetailerSubListComponent implements OnInit, OnChanges, OnDestroy {
     ngOnInit(): void { }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log('changes :>> ', changes);
         // if (changes.retailers.currentValue) {
         this.retailerDispList = this.retailers;
         this.change.detectChanges();

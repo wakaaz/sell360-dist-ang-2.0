@@ -48,6 +48,7 @@ export class OrderDispatchedComponent implements OnInit {
     schemes: Array<any> = [];
     discountSlabs: Array<any> = [];
     credits: Array<any> = [];
+    recoveryRetailers: Array<any> = [];
     remainingOrders: Array<any> = [];
     ordersDispList: Array<any> = [];
 
@@ -178,7 +179,7 @@ export class OrderDispatchedComponent implements OnInit {
                     this.dispatchOrderDetail = res.data;
                     this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(order => {
                         order.isAdded = false;
-                        const isInCredit = this.credits.find(x => x.order_id === order.id);
+                        const isInCredit = this.credits.find(x => x.order_id === order.id && x.recovery > 0);
                         if (isInCredit) {
                             order.isAdded = true;
                         }
@@ -187,6 +188,13 @@ export class OrderDispatchedComponent implements OnInit {
                             recovery: 0, order_id: order.id, retailer_id, dispatched_bill_amount: order.order_total
                         });
                         return order;
+                    });
+                    this.recoveryRetailers = [];
+                    this.dispatchOrderDetail.orders.forEach(order => {
+                        const ord = this.recoveryRetailers.find(x => x.retailer_id === order.retailer_id);
+                        if (!ord) {
+                            this.recoveryRetailers.push(order);
+                        }
                     });
                     if (this.currentTab === 3) {
                         this.setDataForLoad();
@@ -483,7 +491,7 @@ export class OrderDispatchedComponent implements OnInit {
     removeOrderBill(order: any): void {
         order.isAdded = false;
         order.recovery = 0;
-        this.credits = this.credits.filter(ord => ord.order_id !== order.id);
+        // this.credits = this.credits.filter(ord => ord.order_id !== order.id);
     }
 
     searchByRetailer(): void {

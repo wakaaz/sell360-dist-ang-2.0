@@ -83,7 +83,7 @@
                                                 <tr>
                                                     <td>
                                                         <div class="ProListDiv">
-                                                            <div *ngIf="product.scheme?.length" class="lab-promotion">
+                                                            <div *ngIf="product.schemes?.length" class="lab-promotion">
                                                                 Scheme</div>
                                                             <img class="PrList_img" src="{{product.thumbnail}}" alt="" />
                                                             <div class="PR_Name">{{product.item_name}} <span *ngIf="orderType === 'execution'" style="display: block;">available: {{product.available_qty}}</span></div>

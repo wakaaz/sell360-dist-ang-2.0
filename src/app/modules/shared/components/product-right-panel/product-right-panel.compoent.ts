@@ -44,12 +44,19 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
             this.allProducts = this.allProducts.map(x => {
                 const orderedProduct = this.orderedProducts.find(pr => pr.item_id === x.item_id);
                 x.isAdded = false;
-                x.schemes = this.dataService.getSchemes(x.item_id,
-                    x.unit_id, x.pref_id, this.productSchemes, this.selectedRetailer.type_id, this.selectedRetailer.retailer_id);
                 if (orderedProduct) {
                     x.isAdded = true;
                 }
                 return x;
+            });
+            this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
+        }
+        if (change.allProducts?.currentValue) {
+            this.allProducts = this.allProducts.map(product => {
+                product.schemes = this.dataService.getSchemes(product.item_id,
+                    product.unit_id, product.pref_id, this.productSchemes,
+                    this.selectedRetailer.type_id || this.selectedRetailer.retailer_type_id, this.selectedRetailer.retailer_id);
+                return product;
             });
             this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
         }

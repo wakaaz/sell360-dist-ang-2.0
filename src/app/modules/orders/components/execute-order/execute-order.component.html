@@ -680,10 +680,17 @@
 
                                             <div class="report_value">
                                                 <div class="row">
-                                                    <div class="col-12 PB-10"> <a class="btn btn-primary w-100" (click)="generateDSR()">Generate DSR</a> </div>
-                                                    <div class="col-12">
+                                                    <div *ngIf="!loading" class="col-12 PB-10"> <a class="btn btn-primary w-100" (click)="generateDSR()">Generate DSR</a> </div>
+                                                    <div *ngIf="!loading" class="col-12">
                                                         <button [disabled]="+amountReceived === 0" class="btn btn-primary w-100" (click)="checkRecieveable()">Mark
                                                             Complete</button>
+                                                    </div>
+                                                    <div *ngIf="loading" class="col-12">
+                                                        <button type="submit" class="btn btn-primary w-100 mr-2" disabled>
+                                                            <div class="spinner-border text-light" role="status">
+                                                                <span class="sr-only">Loading...</span>
+                                                            </div>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

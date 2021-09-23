@@ -455,14 +455,24 @@
                                                         Bills</button>
                                                 </div>
                                                 <div class="col-6 pl-5 pt-5">
-                                                    <button [disabled]="loading"
+                                                    <button *ngIf="!loading"
                                                         class="btn btn-primary red-bg cancel_dispatch w-100"
                                                         (click)="revertDispatch()">Reset</button>
+                                                    <button *ngIf="loading" type="submit" class="btn btn-primary red-bg w-100 mr-2" disabled>
+                                                        <div class="spinner-border text-light" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </button>
                                                 </div>
                                                 <div class="col-6 pl-0 pr-5 pt-5">
-                                                    <button [disabled]="loading"
+                                                    <button *ngIf="!loading"
                                                         class="btn btn-primary m-0 nextButton w-100"
                                                         (click)="completeDispatch()">Complete</button>
+                                                    <button *ngIf="loading" type="submit" class="btn btn-primary w-100 mr-2" disabled>
+                                                        <div class="spinner-border text-light" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>

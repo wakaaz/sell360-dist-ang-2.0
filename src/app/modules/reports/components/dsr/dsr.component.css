@@ -1,14 +1,11 @@
-._PR_filter{margin-top: -2px; width: 300px!important; float: left}
-._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 30px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
-._PR_filter .form-s2 .select2-container .select2-selection--single, ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__arrow{height: 31px!important;}	
-	
-._PR_filter .select2-container .select2-selection--single {
-    background-color: #fff;
-    border-color: #eae9e9;
-    font-size: 14px;
-    border-radius: 0;
-}
-	
+._PR_filter{margin-top: -2px; width: 270px!important; float: left}
+.ng-select .ng-select-container, .ng-option, .ng-select span { text-transform: capitalize; }
+.ng-select .ng-clear-wrapper {display: none;}
+._PR_filter .form-s2 .ng-select {padding: 0 !important;height: 30px !important;}
+._PR_filter .form-s2 .ng-select .ng-select-container {width: 100%;font-size: 14px;border: none;border-radius: 0;min-height: 30px !important;height: 30px !important;}
+._PR_filter .form-s2 .ng-select .ng-select-container div.ng-input { top: 0 !important; }
+.ng-select.ng-select-single .ng-select-container .ng-value-container .ng-input input {height: 28px;}
+
 .addPR-head h3{font-size: 14px; padding-right: 10px; line-height: 2; margin: 0}
 ._PR_filter input {
 	box-shadow: none;

@@ -1,7 +1,7 @@
 <div *ngIf="!isLoggedIn" class="bg_main">
-  <div *ngIf="showToast" aria-live="polite" aria-atomic="true" style="position: relative; margin-right: 10px;z-index: 1;">
+  <div *ngIf="showToast" aria-live="polite" aria-atomic="true" style="position: absolute; z-index: 1052; left: 30px;">
     <!-- Position it -->
-    <div style="position: absolute; top: 10px; right: 0;">
+    <div style="position: fixed; bottom: 80px;">
   
       <!-- Then put toasts within -->
         <div class="toast  {{toastType}}" [ngClass]="showToast ? 'show ' : ''" role="alert" aria-live="assertive" aria-atomic="true">

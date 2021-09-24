@@ -105,6 +105,7 @@ export class OrdersListComponent implements OnInit {
                     this.selectedOrders.forEach(order => {
                         this.orders = this.orders.filter(ordr => ordr.date !== order.date && order.employee_id);
                     });
+                    this.selectedOrders = [];
                     this.loading = false;
                 }
             }, error => {

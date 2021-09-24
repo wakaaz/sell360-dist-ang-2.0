@@ -398,22 +398,22 @@ export class DistributorPurchaseComponent implements OnInit, AfterViewInit, OnDe
 
     validateForm(): boolean {
         if (
-            !this.distributorPurchase.dcDate ||
-            !this.distributorPurchase.dcNo ||
+            !this.distributorPurchase.dcDate.trim() ||
+            !this.distributorPurchase.dcNo.trim() ||
             this.distributorPurchase.discount === null ||
             this.distributorPurchase.fare === null ||
             this.distributorPurchase.gst === null ||
-            !this.distributorPurchase.invoiceDate ||
-            !this.distributorPurchase.invoiceNo ||
+            !this.distributorPurchase.invoiceDate.trim() ||
+            !this.distributorPurchase.invoiceNo.trim() ||
             (!this.purchasedProducts.length && !this.freeProducts.length) ||
             this.distributorPurchase.net_amount === null ||
             !this.distributorPurchase.original_amount ||
-            !this.distributorPurchase.poDate ||
-            !this.distributorPurchase.poNo ||
-            !this.distributorPurchase.receivedDate ||
-            !this.distributorPurchase.receivedNo ||
-            !this.distributorPurchase.remark ||
-            !this.distributorPurchase.supplier
+            !this.distributorPurchase.poDate.trim() ||
+            !this.distributorPurchase.poNo.trim() ||
+            !this.distributorPurchase.receivedDate.trim() ||
+            !this.distributorPurchase.receivedNo.trim() ||
+            !this.distributorPurchase.remark.trim() ||
+            !this.distributorPurchase.supplier.trim()
         ) {
             this.toastService.showToaster({
                 title: 'Error:',

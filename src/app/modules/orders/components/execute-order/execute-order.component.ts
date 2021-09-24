@@ -304,6 +304,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     this.orderDetails = res.data;
                     this.orderDetails.returned_items = this.orderDetails.returned_items;
                     this.recoveryAmount = this.orderDetails.recovery;
+                    this.orderDetails.recovered = this.orderDetails.recovered > 0 ? this.orderDetails.recovered
+                        : this.orderDetails.recovery;
                     if (this.orderDetails.returned_items.length) {
                         this.setOrderDetailReturnedItems();
                     } else {
@@ -709,9 +711,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             amount_received: Math.round((this.receivableAmount + Number.EPSILON) * 100) / 100,
         };
         if (this.cheque) {
+            this.cheque.return_amount = this.returnAmount || 0;
             this.cash.amount_received = this.cash.amount_received - this.cheque.amount_received;
         }
         if (this.credit) {
+            this.credit.return_amount = this.returnAmount || 0;
             this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
         }
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
@@ -927,7 +931,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             const expenses = JSON.parse(JSON.stringify(this.finalLoad.expense_detail));
             const expIndex = expenses.findIndex(x => x.expense_type === +type.value);
             if (expIndex > -1) {
-                expenses[expIndex].amount = amount;
+                expenses[expIndex].amount = amount.value;
             } else {
                 expenses.push({ expense_type: +type.value, amount: +amount.value });
             }
@@ -946,7 +950,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     removeExpense(type: string): void {
-        this.finalLoad.expense_detail = this.finalLoad.expense_detail.filter(x => x.type !== type);
+        this.finalLoad.expense_detail = this.finalLoad.expense_detail.filter(x => x.expense_type !== type);
         this.setIsExpenseAdded();
     }
 
@@ -958,8 +962,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     saveExpense(): void {
-        if (this.finalLoad.expense_detail) {
-            document.getElementById('close-expense').click();
+        document.getElementById('close-expense').click();
+        if (this.finalLoad.expense_detail.length) {
             this.isAdded = true;
             this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
                 return { expense_type: +x.expense_type, amount: +x.amount };
@@ -1003,6 +1007,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     setRecoveryRetailer(): void {
         this.isAdded = true;
         this.orderService.checkBalance(this.recoveryRetailer.retailer_id).subscribe(res => {
+            this.isAdded = false;
             if (res.status) {
                 if (res.data[0].balance > 0) {
                     this.recoveryRetailer.isAdded = true;

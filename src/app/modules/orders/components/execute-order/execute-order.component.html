@@ -91,7 +91,7 @@
                                         <tr *ngFor="let expense of finalLoad?.expense_detail">
                                             <td>{{getExpense(expense.expense_type)}}</td>
                                             <td>{{expense.amount}}</td>
-                                            <td><button class="btn btn-default red-bg mb-0 remove_expense" [id]="expense.type" (click)="removeExpense(expense.type)">Delete</button></td>
+                                            <td><button class="btn btn-default red-bg mb-0 remove_expense" [id]="expense.type" (click)="removeExpense(expense.expense_type)">Delete</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -586,9 +586,9 @@
                                                 <th>Product Name</th>
                                                 <th>Unit</th>
                                                 <th>Issue QTY.</th>
-                                                <th>Sold QTY.</th>
                                                 <th>Cancellation QTY.</th>
                                                 <th>Return QTY.</th>
+                                                <th>Sold QTY.</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -597,9 +597,9 @@
                                                 <td>{{item.item_name}}</td>
                                                 <td>{{item.unit_name}}</td>
                                                 <td>{{item.total_dispatch_qty}}</td>
-                                                <td>{{item.total_sold_qty}}</td>
                                                 <td>{{item.total_cancel_qty}}</td>
                                                 <td>{{item.total_return_qty}}</td>
+                                                <td>{{item.total_sold_qty}}</td>
                                             </tr>
                                         </tbody>
                                     </table>

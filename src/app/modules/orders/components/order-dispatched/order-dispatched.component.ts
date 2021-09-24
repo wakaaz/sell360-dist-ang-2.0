@@ -258,6 +258,7 @@ export class OrderDispatchedComponent implements OnInit {
     getOrderDetailsByRetailer(retailer: any): void {
         if (this.selectedRetailer?.id !== retailer.id) {
             this.selectedRetailer = retailer;
+            this.newProduct = null;
             this.savingOrder = true;
             this.orderService.getOrderDetails(retailer.id).subscribe(res => {
                 this.savingOrder = false;

@@ -827,7 +827,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     cancelOrder(): void {
         document.getElementById('close-del').click();
         this.savingOrder = true;
-        this.orderService.cancelOrder(this.orderDetails.id).subscribe(res => {
+        this.orderService.canceleExecutionOrder(this.orderDetails.id).subscribe(res => {
             this.savingOrder = false;
             if (res.status === 200) {
                 this.toastService.showToaster({

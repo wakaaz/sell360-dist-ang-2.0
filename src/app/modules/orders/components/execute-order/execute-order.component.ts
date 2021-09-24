@@ -295,6 +295,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     getOrderDetailsByRetailer(retailer: any): void {
         if (this.selectedRetailer?.id !== retailer.id) {
             this.selectedRetailer = retailer;
+            this.newProduct = null;
+            this.returnedProduct = null;
             this.savingOrder = true;
             this.orderService.getOrderDetails(retailer.id).subscribe(res => {
                 this.savingOrder = false;

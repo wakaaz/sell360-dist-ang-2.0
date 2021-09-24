@@ -709,9 +709,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             amount_received: Math.round((this.receivableAmount + Number.EPSILON) * 100) / 100,
         };
         if (this.cheque) {
+            this.cheque.return_amount = this.returnAmount || 0;
             this.cash.amount_received = this.cash.amount_received - this.cheque.amount_received;
         }
         if (this.credit) {
+            this.credit.return_amount = this.returnAmount || 0;
             this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
         }
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;

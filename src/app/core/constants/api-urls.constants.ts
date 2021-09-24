@@ -14,6 +14,7 @@ export const API_URLS = {
     SAVE_EXECUTION: '/saveOrder/execution',
     SAVE_SPOT: '/saveOrder/spot',
     CANCEL_ORDER: '/orderCancel',
+    CANCEL_EXECUTION_ORDER: '/cancelExecutionOrder',
     CANCEL_SPOT_SALE: '/cancelSpotSale',
     GET_SCHEMES: '/getSchemesDiscount',
     GET_EMPLOYEES: '/getEmployees',

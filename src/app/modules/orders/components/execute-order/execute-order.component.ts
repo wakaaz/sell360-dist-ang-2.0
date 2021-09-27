@@ -682,7 +682,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     paymentCancelled(): void {
         this.isAdded = false;
-        this.resetPaymentValues();
+        // this.resetPaymentValues();
         this.paymentTypeCredit = '';
         this.paymentTypeCheque = '';
     }

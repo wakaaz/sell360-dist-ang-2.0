@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 import { environment } from 'src/environments/environment';
 import { Toaster, ToasterService } from '../../../../core/services/toaster.service';
@@ -20,6 +21,7 @@ export class CreateDispatchedComponent implements OnInit {
     ordersList: Array<any> = [];
 
     constructor(
+        private router: Router,
         private toastService: ToasterService,
         private orderService: OrdersService,
     ) {
@@ -50,6 +52,37 @@ export class CreateDispatchedComponent implements OnInit {
                 this.toastService.showToaster(toast);
             }
         });
+    }
+
+
+    revertOrder(order): void {
+      this.loading = true;
+      this.orderService.revertOrder('assignment', order.assignment_id).subscribe(res => {
+        this.loading = false;
+        if (res.status === 200) {
+          this.toastService.showToaster({
+            title: 'Revet Success:',
+            message: 'The order reverted successfully!',
+            type: 'success'
+          });
+          this.router.navigateByUrl('/orders');
+        } else {
+          this.toastService.showToaster({
+            title: 'Revet Error:',
+            message: 'The order cannot be reverted at the momnent, please try again later.',
+            type: 'error'
+          });
+        }
+      }, error => {
+        this.loading = false;
+        if (error.status !== 1 && error.status !== 401) {
+          this.toastService.showToaster({
+            title: 'Revet Error:',
+            message: 'The order cannot be reverted at the momnent, please try again later.',
+            type: 'error'
+          });
+        }
+      });
     }
 
     loadBookingSheet(order: any): void {

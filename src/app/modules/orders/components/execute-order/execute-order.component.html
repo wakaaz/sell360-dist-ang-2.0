@@ -1,3 +1,4 @@
+<!-- Cancel Order -->
 <div class="modal fade" id="order-del" tabindex="-1" role="dialog" aria-labelledby="orderLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content top-borderRed">
@@ -21,6 +22,7 @@
     </div>
 </div>
 
+<!-- Complete Execution -->
 <div class="modal fade" id="order-complete" tabindex="-1" role="dialog" aria-labelledby="orderCompleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -44,6 +46,7 @@
 </div>
 <button hidden data-target="#order-complete" data-toggle="modal" id="show-complete">show complete</button>
 
+<!-- Add Expense -->
 <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 850px;" role="document">
         <div class="modal-content top-borderBlue">
@@ -323,7 +326,7 @@
                             <div class="col p-0">
                                 <div class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
-                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
+                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [orders]="retailersList" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
                                         [newProduct]="newProduct" [orderType]="'execution'" [recoveryAmount]="recoveryAmount" (deleteReturned)="deleteReturnedProduct($event)" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()" (productUpdated)="calculateReceivable()">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">
@@ -435,7 +438,7 @@
                             <div class="col p-0">
                                 <div class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
-                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orderType]="'execution'" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
+                                        [cheque]="cheque" [credit]="credit" [orders]="spotSaleOrder.retailers" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orderType]="'execution'" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
                                         [newProduct]="newProduct" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()" (productUpdated)="calculateReceivable()" (deleteReturned)="deleteReturnedProduct($event)">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">

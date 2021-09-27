@@ -1,18 +1,18 @@
-.dispatch-order{padding:0px!important;}	
+.dispatch-order{padding:0px!important;}
 .dispatch-order .container{max-width: 1220px;}
 .dispatch-order{padding: 0}
 .retailerTable .table thead th { font-size: 12px; border: solid 1px #fff !important; vertical-align: middle; padding: 2px 5px!important; }
 .retailerTable .table tbody td { font-size: 12px!important; padding: 5px 4px!important; vertical-align: middle; line-height: 1 }
 #wrapper #content-wrapper {padding-left: 0!important;}
 .container {max-width: 1280px;}
-.add-stock-input{font-size: 13px; width: 80px; height: 25px; box-shadow: none; border-color:#dddddd; padding: 0px 5px 0 8px;}	 
+.add-stock-input{font-size: 13px; width: 80px; height: 25px; box-shadow: none; border-color:#dddddd; padding: 0px 5px 0 8px;}
 .CP-name{letter-spacing: 1px;}
-.CP-name span{letter-spacing:1px; display: block; margin-top: 4px;}	
+.CP-name span{letter-spacing:1px; display: block; margin-top: 4px;}
 .ProList-div .table img{margin-top: -2px; margin-bottom: -2px; margin-left: 4px;}
-._selectProList .header .add_button {padding: 4px 8px 3px 8px; right: 15px;}	
+._selectProList .header .add_button {padding: 4px 8px 3px 8px; right: 15px;}
 #orderList-id{flex: 0 0 300px; max-width: 300px; width: 300px;}
 #orderList-id2{flex: 0 0 300px; max-width: 300px; width: 300px;}
-.value_input { padding: 2px; margin: 0!important; font-size: 12px; box-shadow: none;height: 22px; width: 52px; border: solid 1px #e2e6ea;}	
+.value_input { padding: 2px; margin: 0!important; font-size: 12px; box-shadow: none;height: 22px; width: 52px; border: solid 1px #e2e6ea;}
 .rightHeight{ height: calc(100vh - 249px); overflow-y: auto;}
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
@@ -33,7 +33,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 }
 .cash-report .report_value span{font-family: 'Rationale', sans-serif; line-height: 1; font-size: 18px; float: right; margin-top: -2px}
 .totalcash span{font-size: 20px!important; color: #0038ba}
-.cash-report .value_input{float: right; width: 85px;} 
+.cash-report .value_input{float: right; width: 85px;}
 .addsalesman{font-size: 11px;width: 100%;line-height: 1; margin-top: 5px;}
 .return-btn{line-height: 1; margin-top: 10px;}
 .add-expense{font-size: 13px;
@@ -42,6 +42,7 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
     right: 0;
 }
 .red-bg{border: solid 1px #f12300}
+.input-error {font-size: 13px; color: red;}
 .act-btn-print{margin: 0px 0 0 0}
 .act-btn-print .col-4{padding: 5px;}
 .print-btn{font-size: 14px; text-align: center; background: linear-gradient(90deg, #fff 0%, #fff 100%); color: #282828 !important; border: solid 1px #0038ba; box-shadow: none; padding: 10px 14px; white-space: normal; width: 100%; min-height: 85px; line-height: 16px;}
@@ -79,9 +80,9 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 ._selectProList .header {padding: 15px 15px !important;}
 .print-icon-div{text-align: center; padding: 15px;}
 .print-icon-div a{display: inline-block; border: solid 1px #e9ecef; padding: 15px; width: 100%; text-align: center; text-decoration: none; color: #282828; font-size: 13px;}
-.print-icon-div a:HOVER{border: solid 1px #0038ba; color: #0038ba; box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);}	
+.print-icon-div a:HOVER{border: solid 1px #0038ba; color: #0038ba; box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);}
 .print-icon{filter: grayscale(1); width: 45px; opacity: 0.7; display: block; margin: auto; margin-top: 10px; margin-bottom: 15px;}
-.print-icon-div a:HOVER .print-icon{filter:none; opacity: 1;}	
+.print-icon-div a:HOVER .print-icon{filter:none; opacity: 1;}
 .heading3{margin: 0; font-size: 16px;}
 .select-date, .select-date:focus{box-shadow: none; border: none; background-color:#f6f6f6; font-size: 14px; height: 30px; width: 200px}
 .no-content {width:100%;height:65vh;display:flex;}

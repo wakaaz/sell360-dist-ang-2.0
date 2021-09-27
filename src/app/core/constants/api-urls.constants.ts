@@ -32,6 +32,7 @@ export const API_URLS = {
     CREATE_DISPATCH: '/createDispatch',
     COMPLETE_DISPATCH: '/completeDispatch',
     REVERT_DISPATCH: '/revertDispatch',
+    REVERT_ORDER: '/RevertExecutionDispacth',
     DISPATCH_ORDERS_DETAIL: '/dispatchOrdersDetail',
     UPDATE_INVOICE_DETAIL: '/updateDispatchInvoiceDate',
     GET_EXECUTION_LIST: '/executionOrderListing',

@@ -77,5 +77,34 @@ export class OrderExecutionListComponent implements OnInit {
         window.open(billsUrl);
     }
 
+    revertOrder(order): void {
+      this.loading = true;
+      this.orderService.revertOrder('load', order.load_id).subscribe(res => {
+        this.loading = false;
+        if (res.status === 200) {
+          this.toastServicer.showToaster({
+            title: 'Revet Success:',
+            message: 'The order reverted successfully!',
+            type: 'success'
+          });
+          this.router.navigateByUrl('/orders');
+        } else {
+          this.toastServicer.showToaster({
+            title: 'Revet Error:',
+            message: 'The order cannot be reverted at the momnent, please try again later.',
+            type: 'error'
+          });
+        }
+      }, error => {
+        this.loading = false;
+        if (error.status !== 1 && error.status !== 401) {
+          this.toastServicer.showToaster({
+            title: 'Revet Error:',
+            message: 'The order cannot be reverted at the momnent, please try again later.',
+            type: 'error'
+          });
+        }
+      });
+    }
 
 }

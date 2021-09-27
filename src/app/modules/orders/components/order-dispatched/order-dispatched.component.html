@@ -137,7 +137,7 @@
                             <div class="col p-0">
                                 <div *ngIf="currentTab === 1" class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [orderDetail]="orderDetails"
-                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer"
+                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orders]="ordersRetailers"
                                         [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
                                         [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
                                         [orderType]="'dispatch'" (openDrawer)="openProductsList()">
@@ -194,7 +194,7 @@
                                                 <input type="number" [readonly]="order.isAdded" [id]="ind"
                                                     [(ngModel)]="order.recovery" (keydown)="isNumber($event)"
                                                     [name]="ind" class="form-control value_input" placeholder="0">
-                                                    <span class="red-bg" *ngIf="+order.recovery > order.balance">
+                                                    <span class="input-error" *ngIf="+order.recovery > order.balance" style="width: 100px;max-width: 100px;">
                                                         The payable amount should not be greater than pending amount!
                                                     </span>
                                             </td>

@@ -323,7 +323,7 @@
                             <div class="col p-0">
                                 <div class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
-                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
+                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [orders]="retailersList" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
                                         [newProduct]="newProduct" [orderType]="'execution'" [recoveryAmount]="recoveryAmount" (deleteReturned)="deleteReturnedProduct($event)" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()" (productUpdated)="calculateReceivable()">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">
@@ -435,7 +435,7 @@
                             <div class="col p-0">
                                 <div class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
-                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orderType]="'execution'" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
+                                        [cheque]="cheque" [credit]="credit" [orders]="spotSaleOrder.retailers" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orderType]="'execution'" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
                                         [newProduct]="newProduct" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()" (productUpdated)="calculateReceivable()" (deleteReturned)="deleteReturnedProduct($event)">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">

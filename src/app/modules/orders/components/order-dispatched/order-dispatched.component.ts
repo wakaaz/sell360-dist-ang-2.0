@@ -257,12 +257,12 @@ export class OrderDispatchedComponent implements OnInit {
 
     getOrderDetailsByRetailer(retailer: any): void {
         if (this.selectedRetailer?.id !== retailer.id) {
-            this.selectedRetailer = retailer;
-            this.newProduct = null;
             this.savingOrder = true;
+            this.newProduct = null;
+            this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
             this.orderService.getOrderDetails(retailer.id).subscribe(res => {
-                this.savingOrder = false;
-                if (res.status === 200) {
+              this.savingOrder = false;
+              if (res.status === 200) {
                     this.orderDetails = res.data;
                     this.orderDetails.items = this.orderDetails.items.map(prod => {
                         const product = this.inventory.find(x => x.item_id === prod.item_id);

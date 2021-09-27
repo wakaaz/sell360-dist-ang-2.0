@@ -253,7 +253,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.generalDataService.getRetailersByRoute(routeId).subscribe(res => {
             if (res.status === 200) {
                 this.routeRetailers = res.data;
-                if (this.currentTab === 2 && this.spotSaleOrder.retailers.length) {
+                if (this.spotSaleOrder.retailers.length) {
                     this.routeRetailers = this.routeRetailers.map(x => {
                         const index = this.spotSaleOrder.retailers.findIndex(y => y.retailer_id === x.retailer_id);
                         if (index > -1) {
@@ -261,6 +261,15 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                         }
                         return x;
                     });
+                }
+                if (this.retailersList.length) {
+                  this.routeRetailers = this.routeRetailers.map(x => {
+                    const index = this.retailersList.findIndex(y => y.retailer_id === x.retailer_id);
+                    if (index > -1) {
+                        x.isAdded = true;
+                    }
+                    return x;
+                });
                 }
             }
         }, error => {

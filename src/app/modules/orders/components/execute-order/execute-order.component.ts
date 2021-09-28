@@ -854,6 +854,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 });
                 this.orderDetails = null;
                 this.newProduct = null;
+                this.selectedRetailer = null;
+                this.orderDetails.items = [];
                 this.getOrdersBySalemanAndDate();
             }
         }, error => {

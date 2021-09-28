@@ -365,6 +365,7 @@ export class OrderDispatchedComponent implements OnInit {
             }
             this.orderDetails.items = [];
             this.selectedRetailer.isActive = false;
+            this.ordersRetailers.find(x => x.id === this.selectedRetailer.id).isActive = false;
             this.selectedRetailer = JSON.parse(JSON.stringify(null));
         }, error => {
             this.savingOrder = false;

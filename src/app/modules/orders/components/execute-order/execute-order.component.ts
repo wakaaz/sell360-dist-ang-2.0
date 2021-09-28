@@ -437,7 +437,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     deleteReturnedProduct(selectedItem: any): void {
         if (selectedItem.id) {
             const productAvalableQty = this.inventory.find(x => x.item_id === selectedItem.item_id)?.available_qty;
-            if (productAvalableQty >= selectedItem.quantity_returned) {
+            if (productAvalableQty >= selectedItem.quantity_returned || selectedItem.return_type === 'damage') {
                 selectedItem.stockQty = 0;
                 selectedItem.isDeleted = true;
             } else {
@@ -509,9 +509,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     changeTab(selectedTab: number): void {
         this.currentTab = selectedTab;
+        if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).isActive = false; }
         if (this.currentTab === 2) {
             if (this.selectedRetailer) {
                 this.selectedRetailer.isActive = false;
+                this.spotSaleOrder.retailers.find(x => x.id === this.selectedRetailer.id).isActive = false;
                 this.selectedRetailer = null;
                 this.orderDetails.items = [];
                 this.orderDetails.returned_items = [];
@@ -769,7 +771,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.orderDetails.items = [];
                 this.orderDetails.returned_items = [];
                 this.selectedRetailer.isActive = false;
-                this.selectedRetailer = JSON.parse(JSON.stringify(null));
+                if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).isActive = false; }
+                if (this.currentTab === 2) { this.spotSaleOrder.retailers.find(x => x.id === this.selectedRetailer.id).isActive = false; }
+                this.selectedRetailer = null;
                 this.resetPaymentValues();
                 this.setPaymentInitalValues();
             }

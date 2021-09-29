@@ -511,19 +511,25 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     changeTab(selectedTab: number): void {
         this.currentTab = selectedTab;
-        if (this.currentTab === 1 && this.selectedRetailer) {
-          this.retailersList.find(x => x.id === this.selectedRetailer.id).isActive = false;
+        if (this.currentTab === 1) {
+          this.retailersList = this.retailersList.map(x => {
+            x.isActive = false;
+            return x;
+          });
+          this.selectedRetailer = null;
+          this.orderDetails = null;
         }
         if (this.currentTab === 2) {
             if (this.selectedRetailer) {
                 this.orderDetails.items = [];
                 this.orderDetails.returned_items = [];
                 this.selectedRetailer.isActive = false;
-                const retailer = this.spotSaleOrder.retailers.find(x => x.id === this.selectedRetailer.id);
-                if (retailer) {
-                    retailer.isActive = false;
-                }
+                this.spotSaleOrder.retailers = this.spotSaleOrder.retailers.map(x => {
+                  x.isActive = false;
+                  return x;
+                });
                 this.selectedRetailer = null;
+                this.orderDetails = null;
             }
             this.resetPaymentValues();
             this.setPaymentInitalValues();

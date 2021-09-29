@@ -48,7 +48,8 @@ export class RetailerSubListComponent implements OnInit, OnChanges, OnDestroy {
                 if (ret.isActive) {
                     ret.isActive = false;
                 }
-                if (ret.id === retailer.id) {
+                if ((this.orderType !== 'execution' && ret.id === retailer.id)
+                || (this.orderType === 'execution' && ret.retailer_id === retailer.retailer_id)) {
                     ret.isActive = true;
                 }
                 return ret;

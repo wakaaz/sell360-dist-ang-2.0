@@ -364,7 +364,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         // Net Amount
         prices = this.orderDetail.items.map(product => product.net_amount);
         this.netAmount = this.dataService.calculateItemsBill(prices);
-        if (this.selectedRetailer) {
+        if (this.selectedRetailer && this.orderType !== 'execution') {
             // this.selectedRetailer.order_total = this.netAmount;
             this.orders.find(x => x.id === this.selectedRetailer.id).order_total = this.netAmount;
         }
@@ -391,7 +391,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         if (this.orderType === 'execution') {
             if (this.selectedRetailer) {
                 // this.selectedRetailer.order_total = this.totalPayment;
-                this.orders.find(x => x.id === this.selectedRetailer.id).order_total = this.totalPayment;
+                const order = this.orders.find(x => x.id === this.selectedRetailer.id);
+                if (order) {
+                  order.order_total = this.totalPayment;
+                }
             }
             this.orderDetail.order_total = this.totalPayment;
             this.orderDetail.total_amount_after_tax = this.totalPayment;

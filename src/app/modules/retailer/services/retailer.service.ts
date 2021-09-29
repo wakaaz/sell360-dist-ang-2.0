@@ -33,4 +33,9 @@ export class RetailerService {
         return this.httpBaseService.get(url);
     }
 
+    getOrderDetail(id: string): Observable<any> {
+        const url = `${API_URLS.RETAILER_ORDER_DETAIL}/${id}`;
+        return this.httpBaseService.get(url);
+    }
+
 }

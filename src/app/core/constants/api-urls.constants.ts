@@ -71,6 +71,7 @@ export const API_URLS = {
     RETAILER_CORE: '/retailers/core',
     RETAILER_ORDERS: '/retailers/orders',
     RETAILER_VISITS: '/retailers/visits',
+    RETAILER_ORDER_DETAIL: '/orderBooker/orderDetail',
 
     // Reports
     DISTRIBUTOR_PURCHASE_HISTORY: '/distributorPurchaseHistory',

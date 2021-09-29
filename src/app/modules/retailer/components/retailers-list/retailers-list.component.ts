@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToasterService } from 'src/app/core/services/toaster.service';
 import { RetailerService } from '../../services/retailer.service';
 
@@ -24,6 +25,7 @@ export class RetalersListComponent implements OnInit {
     constructor(
         private retailerService: RetailerService,
         private toastService: ToasterService,
+        private router: Router,
     ) {
         this.dtOptions = {
             pagingType: 'simple_numbers'
@@ -46,6 +48,7 @@ export class RetalersListComponent implements OnInit {
         this.retailerService.getRetailerListing(queryParams).subscribe(res => {
             this.loading = false;
             this.retailers = res;
+            console.log(this.retailers[0])
         }, error => {
             this.loading = false;
             this.retailers = [];
@@ -94,5 +97,7 @@ export class RetalersListComponent implements OnInit {
 
         this.getRetailerListing(params);
     }
-
+    getQueryParam(retailer: any) {
+        return JSON.stringify(retailer);
+    }
 }

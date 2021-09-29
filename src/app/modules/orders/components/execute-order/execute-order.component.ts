@@ -138,6 +138,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.receivableAmount = 0;
         this.recoveryAmount = 0;
         this.totalPayment = 0;
+        this.isChequeAdded = false;
+        this.isCreditAdded = false;
         this.paymentDate = new Date().toISOString().split('T')[0];
         this.distributorId = this.storageService.getItem('distributor').id;
     }
@@ -509,14 +511,25 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     changeTab(selectedTab: number): void {
         this.currentTab = selectedTab;
-        if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).isActive = false; }
+        if (this.currentTab === 1) {
+          this.retailersList = this.retailersList.map(x => {
+            x.isActive = false;
+            return x;
+          });
+          this.selectedRetailer = null;
+          this.orderDetails = null;
+        }
         if (this.currentTab === 2) {
             if (this.selectedRetailer) {
-                this.selectedRetailer.isActive = false;
-                this.spotSaleOrder.retailers.find(x => x.id === this.selectedRetailer.id).isActive = false;
-                this.selectedRetailer = null;
                 this.orderDetails.items = [];
                 this.orderDetails.returned_items = [];
+                this.selectedRetailer.isActive = false;
+                this.spotSaleOrder.retailers = this.spotSaleOrder.retailers.map(x => {
+                  x.isActive = false;
+                  return x;
+                });
+                this.selectedRetailer = null;
+                this.orderDetails = null;
             }
             this.resetPaymentValues();
             this.setPaymentInitalValues();
@@ -852,10 +865,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     title: 'Order Execution:',
                     type: 'success'
                 });
-                this.orderDetails = null;
+                // this.orderDetails = null;
                 this.newProduct = null;
                 this.selectedRetailer = null;
                 this.orderDetails.items = [];
+                this.setPaymentInitalValues();
                 this.getOrdersBySalemanAndDate();
             }
         }, error => {
@@ -873,7 +887,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     cancelSpotSale(): void {
         if (this.orderDetails.id) {
-            this.cancelOrder();
+            this.cancelSpotSaleOrder();
         } else {
             this.removeSpotOrder();
             document.getElementById('close-del').click();
@@ -892,7 +906,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     title: 'Spot Order:',
                     type: 'success'
                 });
-                this.orderDetails = null;
                 this.newProduct = null;
                 this.removeSpotOrder();
             }
@@ -911,7 +924,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     removeSpotOrder(): void {
-        this.spotRetailer.isAdded = false;
+        this.selectedRetailer.isAdded = false;
         this.spotSaleOrder.retailers = this.spotSaleOrder.retailers.filter(x => x.retailer_id !== this.selectedRetailer.retailer_id);
         this.orderDetails.items = [];
         this.orderDetails.returned_items = [];

@@ -31,12 +31,6 @@ export const ordersSubMenu = {
             link: '/orders/booking-vs-execution',
             icon: '/assets/images/complete-orders.svg'
         },
-        {
-            title: 'Order Booker List',
-            link: '/orders/order-booker-list',
-            icon: '/assets/images/complete-orders.svg'
-            
-        },
     ]
 };
 export const salesmanSubMenu = {
@@ -126,7 +120,12 @@ export const reportsSubMenu = {
             title: 'Stock Out Report',
             link: '/reports/stock-report',
             icon: '/assets/images/reports-icon.svg'
-        }
+        },
+        {
+          title: 'Sale Order History',
+          link: '/reports/sale-order-history',
+          icon: '/assets/images/complete-orders.svg'
+      },
     ]
 };
 export const paymentsSubMenu = {

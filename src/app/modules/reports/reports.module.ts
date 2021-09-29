@@ -16,6 +16,7 @@ import { CashSummaryComponent } from './components/cash-summary/cash-summary.com
 import { RateListComponent } from './components/export-rate-list/export-rate-list.component';
 import { SpotSaleComponent } from './components/spot-sale/spot-sale.component';
 import { StockOutReportComponent } from './components/stock-out-report/stock-out-report.component';
+import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component';
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import { StockOutReportComponent } from './components/stock-out-report/stock-out
         RateListComponent,
         SpotSaleComponent,
         StockOutReportComponent,
+        OrderBookerListComponent,
     ],
     providers: [
         ReportsService,

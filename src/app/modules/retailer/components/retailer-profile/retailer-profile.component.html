@@ -768,26 +768,28 @@
                                                 class="table table-hover dt-responsive nowrap" id="ordersTable"
                                                 style="width:100%">
                                                 <thead>
-                                                    <th>Date</th>
-                                                    <th>Invoice#</th>
-                                                    <th>Shop ID</th>
-                                                    <th>Shop Name</th>
-                                                    <th>Segment </th>
-                                                    <th>Order Booker</th>
-                                                    <th>Salesman</th>
-                                                    <th>Invoice Total</th>
-                                                    <th>Action</th>
+                                                    <tr>
+                                                      <th>Date</th>
+                                                      <th>Invoice#</th>
+                                                      <th>Shop ID</th>
+                                                      <th>Shop Name</th>
+                                                      <th>Segment </th>
+                                                      <th>Order Booker</th>
+                                                      <th>Salesman</th>
+                                                      <th>Invoice Total</th>
+                                                      <th>Action</th>
+                                                    </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr *ngFor="let order of orders">
-                                                        <td>8/31/2020</td>
+                                                        <td>{{order.date}}</td>
                                                         <td>{{order.invoice_number}}</td>
                                                         <td>8758</td>
                                                         <td>Kiryana Store</td>
                                                         <td>General Store</td>
                                                         <td>{{order.order_booker}}</td>
                                                         <td>{{order.salesman}}</td>
-                                                        <td>{{order.invoice_total}}</td>
+                                                        <td>{{order.invoice_total | number: '1.2-2'}}</td>
                                                         <td><button data-toggle="modal" data-target="#OrderDetailModal"
                                                                 class="btn btn-default btn-line">Order Detail</button>
                                                         </td>

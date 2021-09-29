@@ -311,12 +311,14 @@ export class CounterSaleComponent implements OnInit {
     removeCheque(): void {
         this.cheque = null;
         this.isChequeAdded = false;
+        this.paymentTypeCheque = '';
         this.calculatePayments();
     }
 
     removeCredit(): void {
         this.credit = null;
         this.isCreditAdded = false;
+        this.paymentTypeCredit = '';
         this.calculatePayments();
     }
 

@@ -63,19 +63,48 @@ export class OrderExecutionListComponent implements OnInit {
     }
 
     loadBookingSheet(order: any): void {
-        const sheetUrl = `${this.bookingSheetUrl}?emp=${order.sales_man_id}&date=${order.date}`;
+        const sheetUrl = `${this.bookingSheetUrl}?emp=${order.sales_man_id}&date=${order.date}&loadId=${order.load_id}`;
         window.open(sheetUrl);
     }
 
     loadLoadSheet(order: any): void {
-        const sheetUrl = `${environment.apiDomain}${API_URLS.LS_PDF}/${order.sales_man_id}/${order.date}`;
+        const sheetUrl = `${environment.apiDomain}${API_URLS.LS_PDF}/${order.load_id}/${order.sales_man_id}/${order.date}`;
         window.open(sheetUrl);
     }
 
     loadBills(order: any): void {
-        const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${order.sales_man_id}&date=${order.date}&dist_id=${this.distributorId}&size=A4&status=processed`;
+        const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${order.sales_man_id}&date=${order.date}&dist_id=${this.distributorId}&size=A4&status=processed&loadId=${order.load_id}`;
         window.open(billsUrl);
     }
 
+    revertOrder(order): void {
+      this.loading = true;
+      this.orderService.revertOrder('load', order.load_id).subscribe(res => {
+        this.loading = false;
+        if (res.status === 200) {
+          this.toastServicer.showToaster({
+            title: 'Revet Success:',
+            message: 'The order reverted successfully!',
+            type: 'success'
+          });
+          this.router.navigateByUrl('/orders');
+        } else {
+          this.toastServicer.showToaster({
+            title: 'Revet Error:',
+            message: 'The order cannot be reverted at the momnent, please try again later.',
+            type: 'error'
+          });
+        }
+      }, error => {
+        this.loading = false;
+        if (error.status !== 1 && error.status !== 401) {
+          this.toastServicer.showToaster({
+            title: 'Revet Error:',
+            message: 'The order cannot be reverted at the momnent, please try again later.',
+            type: 'error'
+          });
+        }
+      });
+    }
 
 }

@@ -9,6 +9,7 @@ import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 })
 
 export class RetailerSubListComponent implements OnInit, OnChanges, OnDestroy {
+    @Input() loading: boolean;
     @Input() retailers: Array<any>;
     @Input() orderType: string;
     @Input() isSpotSaleActive: boolean;
@@ -27,7 +28,6 @@ export class RetailerSubListComponent implements OnInit, OnChanges, OnDestroy {
     ngOnInit(): void { }
 
     ngOnChanges(changes: SimpleChanges): void {
-        console.log('changes :>> ', changes);
         // if (changes.retailers.currentValue) {
         this.retailerDispList = this.retailers;
         this.change.detectChanges();

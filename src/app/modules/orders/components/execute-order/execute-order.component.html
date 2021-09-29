@@ -1,3 +1,4 @@
+<!-- Cancel Order -->
 <div class="modal fade" id="order-del" tabindex="-1" role="dialog" aria-labelledby="orderLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content top-borderRed">
@@ -21,6 +22,7 @@
     </div>
 </div>
 
+<!-- Complete Execution -->
 <div class="modal fade" id="order-complete" tabindex="-1" role="dialog" aria-labelledby="orderCompleteLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -44,6 +46,7 @@
 </div>
 <button hidden data-target="#order-complete" data-toggle="modal" id="show-complete">show complete</button>
 
+<!-- Add Expense -->
 <div class="modal fade" id="expenseModal" tabindex="-1" role="dialog" aria-labelledby="expenseLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" style="max-width: 850px;" role="document">
         <div class="modal-content top-borderBlue">
@@ -91,7 +94,7 @@
                                         <tr *ngFor="let expense of finalLoad?.expense_detail">
                                             <td>{{getExpense(expense.expense_type)}}</td>
                                             <td>{{expense.amount}}</td>
-                                            <td><button class="btn btn-default red-bg mb-0 remove_expense" [id]="expense.type" (click)="removeExpense(expense.type)">Delete</button></td>
+                                            <td><button class="btn btn-default red-bg mb-0 remove_expense" [id]="expense.type" (click)="removeExpense(expense.expense_type)">Delete</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -317,21 +320,27 @@
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="retailersList" [orderType]="'execution'" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
+                                <app-retailer-sub-list [loading]="loading" [retailers]="retailersList" [orderType]="'execution'" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
                                 <div class="rightHeight">
-                                    <app-order-items-list *ngIf="!savingOrder" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
-                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
+                                    <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
+                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [orders]="retailersList" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
                                         [newProduct]="newProduct" [orderType]="'execution'" [recoveryAmount]="recoveryAmount" (deleteReturned)="deleteReturnedProduct($event)" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()" (productUpdated)="calculateReceivable()">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">
                                         <app-loader-white></app-loader-white>
                                     </div>
+                                    <div class="no-content" *ngIf="!savingOrder && !selectedRetailer">
+                                        <div class="no-content-container" style="margin: auto;display:table;text-align: center; color:#B7B7B7">
+                                            <img src="assets/images/select order-icon.svg" alt="">
+                                            <strong>Select order to see details</strong>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="col-md-12 bottom-act-btn">
+                                <div *ngIf="!savingOrder && selectedRetailer" class="col-md-12 bottom-act-btn">
                                     <button *ngIf="!savingOrder && !isChequeAdded" class="btn btn-primary float-left mr-2 font13" [disabled]="!selectedRetailer" (click)="isCredit = false;isFullyPaymentAdded('Cheque Payment')">Add
                                         Cheque</button>
                                     <button *ngIf="!savingOrder && isChequeAdded" [disabled]="!selectedRetailer" class="btn btn-primary float-left font13 mr-2 red-bg" (click)="removeCheque()">Remove Cheque</button>
@@ -427,18 +436,23 @@
                             </div>
 
                             <div class="col p-0">
-
                                 <div class="rightHeight">
-                                    <app-order-items-list *ngIf="!savingOrder" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
-                                        [cheque]="cheque" [credit]="credit" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orderType]="'execution'" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
+                                    <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
+                                        [cheque]="cheque" [credit]="credit" [orders]="spotSaleOrder.retailers" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orderType]="'execution'" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
                                         [newProduct]="newProduct" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()" (productUpdated)="calculateReceivable()" (deleteReturned)="deleteReturnedProduct($event)">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">
                                         <app-loader-white></app-loader-white>
                                     </div>
+                                    <div class="no-content" *ngIf="!savingOrder && !selectedRetailer">
+                                        <div class="no-content-container" style="margin: auto;display:table;text-align: center; color:#B7B7B7">
+                                            <img src="assets/images/select order-icon.svg" alt="">
+                                            <strong>Select order to see details</strong>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <div class="col-md-12 bottom-act-btn">
+                                <div *ngIf="!savingOrder && selectedRetailer" class="col-md-12 bottom-act-btn">
                                     <button *ngIf="!savingOrder && !isChequeAdded" class="btn btn-primary float-left mr-2 font13" (click)="isCredit = false;isFullyPaymentAdded('Cheque Payment')">Add
                                         Cheque</button>
                                     <button *ngIf="!savingOrder && isChequeAdded" class="btn btn-primary float-left font13 mr-2 red-bg" (click)="removeCheque()">Remove Cheque</button>
@@ -525,6 +539,9 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <div class="col-12" *ngIf="isAdded">
+                                <app-loader-white></app-loader-white>
+                            </div>
                         </div>
                     </div>
 
@@ -574,6 +591,7 @@
                                                 <th>Issue QTY.</th>
                                                 <th>Cancellation QTY.</th>
                                                 <th>Return QTY.</th>
+                                                <th>Sold QTY.</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -584,6 +602,7 @@
                                                 <td>{{item.total_dispatch_qty}}</td>
                                                 <td>{{item.total_cancel_qty}}</td>
                                                 <td>{{item.total_return_qty}}</td>
+                                                <td>{{item.total_sold_qty}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -666,10 +685,17 @@
 
                                             <div class="report_value">
                                                 <div class="row">
-                                                    <div class="col-12 PB-10"> <a class="btn btn-primary w-100" (click)="generateDSR()">Generate DSR</a> </div>
-                                                    <div class="col-12">
+                                                    <div *ngIf="!loading" class="col-12 PB-10"> <a class="btn btn-primary w-100" (click)="generateDSR()">Generate DSR</a> </div>
+                                                    <div *ngIf="!loading" class="col-12">
                                                         <button [disabled]="+amountReceived === 0" class="btn btn-primary w-100" (click)="checkRecieveable()">Mark
                                                             Complete</button>
+                                                    </div>
+                                                    <div *ngIf="loading" class="col-12">
+                                                        <button type="submit" class="btn btn-primary w-100 mr-2" disabled>
+                                                            <div class="spinner-border text-light" role="status">
+                                                                <span class="sr-only">Loading...</span>
+                                                            </div>
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>

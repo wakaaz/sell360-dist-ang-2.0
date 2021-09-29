@@ -49,7 +49,7 @@ export class InventoryService {
 
     addDistributorOpeningStock(stock: Array<any>): Observable<any> {
         const url = `${API_URLS.ADD_OPENING_STOCK}`;
-        return this.httpService.post(url, stock);
+        return this.httpService.post(url, {opening_stock: stock});
     }
 
 }

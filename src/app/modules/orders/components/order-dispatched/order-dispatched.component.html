@@ -130,14 +130,14 @@
                         id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="ordersRetailers"
+                                <app-retailer-sub-list [retailers]="ordersRetailers" [loading]="loading || loadingProduct"
                                     (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
                                 <div *ngIf="currentTab === 1" class="rightHeight">
-                                    <app-order-items-list *ngIf="!savingOrder" [orderDetail]="orderDetails"
-                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer"
+                                    <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [orderDetail]="orderDetails"
+                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orders]="ordersRetailers"
                                         [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
                                         [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
                                         [orderType]="'dispatch'" (openDrawer)="openProductsList()">
@@ -145,8 +145,14 @@
                                     <div class="col-12" *ngIf="savingOrder">
                                         <app-loader-white></app-loader-white>
                                     </div>
+                                    <div class="no-content" *ngIf="!savingOrder && !selectedRetailer">
+                                        <div class="no-content-container" style="margin: auto;display:table;text-align: center; color:#B7B7B7">
+                                            <img src="assets/images/select order-icon.svg" alt="">
+                                            <strong>Select order to see details</strong>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-12 bottom-act-btn">
+                                <div *ngIf="selectedRetailer" class="col-md-12 bottom-act-btn">
                                     <button *ngIf="!savingOrder" (click)="setOrderItems()"
                                         [disabled]="!orderDetails?.items?.length"
                                         class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>
@@ -167,7 +173,7 @@
                     <div [ngClass]="currentTab === 2 ? 'active show' : ''" class="tab-pane p-0 PT-20 tab_M fade"
                         id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
                         <div class="col-12 PT-15">
-                            <table datatable [dtOptions]="dtOptions" *ngIf="dispatchOrderDetail?.orders"
+                            <table datatable [dtOptions]="dtOptions" *ngIf="recoveryRetailers?.length && !loading"
                                 class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
                                 <thead>
                                     <tr>
@@ -179,7 +185,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <ng-container *ngFor="let order of dispatchOrderDetail.orders;let ind=index">
+                                    <ng-container *ngFor="let order of recoveryRetailers;let ind=index">
                                         <tr *ngIf="order.balance > 0">
                                             <td>{{order.retailer_name | titlecase }}</td>
                                             <td>Rs. {{order.balance | number: '1.2-2'}}</td>
@@ -188,7 +194,7 @@
                                                 <input type="number" [readonly]="order.isAdded" [id]="ind"
                                                     [(ngModel)]="order.recovery" (keydown)="isNumber($event)"
                                                     [name]="ind" class="form-control value_input" placeholder="0">
-                                                    <span class="red-bg" *ngIf="+order.recovery > order.balance">
+                                                    <span class="input-error" *ngIf="+order.recovery > order.balance" style="width: 100px;max-width: 100px;">
                                                         The payable amount should not be greater than pending amount!
                                                     </span>
                                             </td>
@@ -449,14 +455,24 @@
                                                         Bills</button>
                                                 </div>
                                                 <div class="col-6 pl-5 pt-5">
-                                                    <button [disabled]="loading"
+                                                    <button *ngIf="!loading"
                                                         class="btn btn-primary red-bg cancel_dispatch w-100"
                                                         (click)="revertDispatch()">Reset</button>
+                                                    <button *ngIf="loading" type="submit" class="btn btn-primary red-bg w-100 mr-2" disabled>
+                                                        <div class="spinner-border text-light" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </button>
                                                 </div>
                                                 <div class="col-6 pl-0 pr-5 pt-5">
-                                                    <button [disabled]="loading"
+                                                    <button *ngIf="!loading"
                                                         class="btn btn-primary m-0 nextButton w-100"
                                                         (click)="completeDispatch()">Complete</button>
+                                                    <button *ngIf="loading" type="submit" class="btn btn-primary w-100 mr-2" disabled>
+                                                        <div class="spinner-border text-light" role="status">
+                                                            <span class="sr-only">Loading...</span>
+                                                        </div>
+                                                    </button>
                                                 </div>
                                             </div>
                                         </div>
@@ -473,10 +489,10 @@
                                 [disabled]="currentTab === 1 || currentTab === 4 || loading || savingOrder || load.content[0].items.length > 0"
                                 type="submit" class="btn btn-primary m-0 mr-2">Previous</button>
                             <button *ngIf="currentTab !== 4 && currentTab !== 3"
-                                [disabled]="currentTab === 4 || loading || savingOrder"
+                                [disabled]="currentTab === 4 || loading || loadingProduct || savingOrder"
                                 (click)="currentTab=currentTab+1;tabChanged()" type="submit"
                                 class="btn btn-primary m-0">Next</button>
-                            <button *ngIf="currentTab === 3" [disabled]="loading" (click)="openConfirmationModal()"
+                            <button *ngIf="currentTab === 3" [disabled]="loading || loadingProduct" (click)="openConfirmationModal()"
                                 type="submit" class="btn btn-primary m-0">Next</button>
                             <button style="display: none;" id="open-create-load" data-toggle="modal"
                                 data-target="#create-load">Open Modal</button>

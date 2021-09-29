@@ -14,6 +14,7 @@ export const API_URLS = {
     SAVE_EXECUTION: '/saveOrder/execution',
     SAVE_SPOT: '/saveOrder/spot',
     CANCEL_ORDER: '/orderCancel',
+    CANCEL_EXECUTION_ORDER: '/cancelExecutionOrder',
     CANCEL_SPOT_SALE: '/cancelSpotSale',
     GET_SCHEMES: '/getSchemesDiscount',
     GET_EMPLOYEES: '/getEmployees',
@@ -31,6 +32,7 @@ export const API_URLS = {
     CREATE_DISPATCH: '/createDispatch',
     COMPLETE_DISPATCH: '/completeDispatch',
     REVERT_DISPATCH: '/revertDispatch',
+    REVERT_ORDER: '/RevertExecutionDispacth',
     DISPATCH_ORDERS_DETAIL: '/dispatchOrdersDetail',
     UPDATE_INVOICE_DETAIL: '/updateDispatchInvoiceDate',
     GET_EXECUTION_LIST: '/executionOrderListing',
@@ -72,6 +74,8 @@ export const API_URLS = {
     RETAILER_ORDERS: '/retailers/orders',
     RETAILER_VISITS: '/retailers/visits',
     RETAILER_ORDER_DETAIL: '/orderBooker/orderDetail',
+    GET_DAILY_SALE_REPORTS: '/GetDailySaleReportList',
+    GET_DSR_DETAIL: '/GetDSRDetailByID',
 
     // Reports
     DISTRIBUTOR_PURCHASE_HISTORY: '/distributorPurchaseHistory',

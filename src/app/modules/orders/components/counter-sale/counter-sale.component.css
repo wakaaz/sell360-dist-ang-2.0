@@ -40,9 +40,9 @@
 ._product-name{margin-top: 5px; position: relative; padding-right: 0px; color: #282828; font-size: 12px;  line-height: normal;}
 .lab-promotion{position: absolute;top:-8px;left: -.438rem;padding:2px 6px;font-size: 10.5px;z-index: 3;background-color: #fed02a;color: #282828;line-height: 1;}
 .lab-promotion:before {border-top: 4px solid #000;border-left: 7px solid transparent;content: "";left: 0;position: absolute;top: 14px;z-index: -1;}
-._row-product {padding: 12px 0px 10px 0px !important;}
 .lab-promotion-l {position: absolute;top:-15px;left: -13px;padding: 1px 6px;font-size: 10.5px;z-index: 3;background-color: #fed02a;color: #282828;line-height: 1; letter-spacing: 1px;}
 .lab-promotion-l:before {border-top: 4px solid #000;border-left: 7px solid transparent;content: "";left: 0;position: absolute; top: 12px;z-index: -1;}	
+._row-product {padding: 12px 0px 10px 0px !important;}
 ._order-container { max-width: 1270px; }
 .loader { text-align: center; padding: 30px; }
 .loading { color: #b5b5b5; font-size: 24px; margin: 0 auto;}

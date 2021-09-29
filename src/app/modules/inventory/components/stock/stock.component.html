@@ -54,7 +54,7 @@
                                     <td>{{hs.status}}</td>
                                     <td>{{hs.created_at}}</td>
                                     <td>
-                                        <button *ngIf="hs.type==='purchase'" class="btn btn-default mb-0" (click)="closePopup()" [routerLink]="['/reports', 'purchase', hs.table_id]">View Details</button>
+                                        <button *ngIf="hs.type==='purchase'" class="btn btn-default mb-0" (click)="closePopup()" [routerLink]="['/reports', 'purchase', hs.purchase_id]">View Details</button>
                                     </td>
                                 </tr>
                             </tbody>

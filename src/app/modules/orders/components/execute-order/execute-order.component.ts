@@ -138,6 +138,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.receivableAmount = 0;
         this.recoveryAmount = 0;
         this.totalPayment = 0;
+        this.isChequeAdded = false;
+        this.isCreditAdded = false;
         this.paymentDate = new Date().toISOString().split('T')[0];
         this.distributorId = this.storageService.getItem('distributor').id;
     }
@@ -253,7 +255,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.generalDataService.getRetailersByRoute(routeId).subscribe(res => {
             if (res.status === 200) {
                 this.routeRetailers = res.data;
-                if (this.currentTab === 2 && this.spotSaleOrder.retailers.length) {
+                if (this.spotSaleOrder.retailers.length) {
                     this.routeRetailers = this.routeRetailers.map(x => {
                         const index = this.spotSaleOrder.retailers.findIndex(y => y.retailer_id === x.retailer_id);
                         if (index > -1) {
@@ -261,6 +263,15 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                         }
                         return x;
                     });
+                }
+                if (this.retailersList.length) {
+                  this.routeRetailers = this.routeRetailers.map(x => {
+                    const index = this.retailersList.findIndex(y => y.retailer_id === x.retailer_id);
+                    if (index > -1) {
+                        x.isAdded = true;
+                    }
+                    return x;
+                });
                 }
             }
         }, error => {
@@ -294,12 +305,18 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     getOrderDetailsByRetailer(retailer: any): void {
         if (this.selectedRetailer?.id !== retailer.id) {
-            this.selectedRetailer = retailer;
-            this.orderService.getOrderDetails(retailer.id).subscribe(res => {
-                if (res.status === 200) {
+          this.savingOrder = true;
+          this.newProduct = null;
+          this.returnedProduct = null;
+          this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
+          this.orderService.getOrderDetails(retailer.id).subscribe(res => {
+            this.savingOrder = false;
+            if (res.status === 200) {
                     this.orderDetails = res.data;
                     this.orderDetails.returned_items = this.orderDetails.returned_items;
                     this.recoveryAmount = this.orderDetails.recovery;
+                    this.orderDetails.recovered = this.orderDetails.recovered > 0 ? this.orderDetails.recovered
+                        : this.orderDetails.recovery;
                     if (this.orderDetails.returned_items.length) {
                         this.setOrderDetailReturnedItems();
                     } else {
@@ -309,14 +326,14 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     this.calculateReceivable();
                 }
             }, error => {
-                this.loading = false;
+                this.savingOrder = false;
                 if (error.status !== 1 && error.status !== 401) {
                     console.log('Error while getting order detail data :>> ', error.message);
                     const toast: Toaster = { type: 'error', message: 'Cannot fetch Order Detail. Please try again', title: 'Error:' };
                     this.toastService.showToaster(toast);
                 }
             });
-            this.getDiscountSlabs();
+          this.getDiscountSlabs();
         }
     }
 
@@ -324,6 +341,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.orderDetails.returned_items = this.orderDetails.returned_items.map(x => {
             x.item_trade_price = x.original_price;
             x.stockQty = x.quantity_returned;
+            x.extra_discount = x.booker_discount;
+            x.extra_discount_pkr = x.booker_discount * x.quantity_returned;
             x.productType = 'returned';
             x.special_discount_pkr = 0;
             x.trade_discount = 0;
@@ -420,7 +439,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     deleteReturnedProduct(selectedItem: any): void {
         if (selectedItem.id) {
             const productAvalableQty = this.inventory.find(x => x.item_id === selectedItem.item_id)?.available_qty;
-            if (productAvalableQty === selectedItem.executed_qty) {
+            if (productAvalableQty >= selectedItem.quantity_returned || selectedItem.return_type === 'damage') {
                 selectedItem.stockQty = 0;
                 selectedItem.isDeleted = true;
             } else {
@@ -492,12 +511,25 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     changeTab(selectedTab: number): void {
         this.currentTab = selectedTab;
+        if (this.currentTab === 1) {
+          this.retailersList = this.retailersList.map(x => {
+            x.isActive = false;
+            return x;
+          });
+          this.selectedRetailer = null;
+          this.orderDetails = null;
+        }
         if (this.currentTab === 2) {
             if (this.selectedRetailer) {
-                this.selectedRetailer.isActive = false;
-                this.selectedRetailer = null;
                 this.orderDetails.items = [];
                 this.orderDetails.returned_items = [];
+                this.selectedRetailer.isActive = false;
+                this.spotSaleOrder.retailers = this.spotSaleOrder.retailers.map(x => {
+                  x.isActive = false;
+                  return x;
+                });
+                this.selectedRetailer = null;
+                this.orderDetails = null;
             }
             this.resetPaymentValues();
             this.setPaymentInitalValues();
@@ -674,7 +706,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     paymentCancelled(): void {
         this.isAdded = false;
-        this.resetPaymentValues();
+        // this.resetPaymentValues();
         this.paymentTypeCredit = '';
         this.paymentTypeCheque = '';
     }
@@ -703,9 +735,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             amount_received: Math.round((this.receivableAmount + Number.EPSILON) * 100) / 100,
         };
         if (this.cheque) {
+            this.cheque.return_amount = this.returnAmount || 0;
             this.cash.amount_received = this.cash.amount_received - this.cheque.amount_received;
         }
         if (this.credit) {
+            this.credit.return_amount = this.returnAmount || 0;
             this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
         }
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
@@ -714,6 +748,10 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             retailer.order_total = this.totalPayment;
         }
         this.selectedRetailer.order_total = this.receivableAmount;
+        if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).order_total = this.receivableAmount; }
+        if (this.currentTab === 2) {
+          this.spotSaleOrder.retailers.find(x => x.id === this.selectedRetailer.id).order_total = this.receivableAmount;
+        }
         this.orderDetails.order_total = this.receivableAmount;
         this.orderDetails.total_amount_after_tax = this.receivableAmount;
     }
@@ -746,7 +784,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.orderDetails.items = [];
                 this.orderDetails.returned_items = [];
                 this.selectedRetailer.isActive = false;
-                this.selectedRetailer = JSON.parse(JSON.stringify(null));
+                if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).isActive = false; }
+                if (this.currentTab === 2) { this.spotSaleOrder.retailers.find(x => x.id === this.selectedRetailer.id).isActive = false; }
+                this.selectedRetailer = null;
                 this.resetPaymentValues();
                 this.setPaymentInitalValues();
             }
@@ -817,7 +857,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     cancelOrder(): void {
         document.getElementById('close-del').click();
         this.savingOrder = true;
-        this.orderService.cancelOrder(this.orderDetails.id).subscribe(res => {
+        this.orderService.canceleExecutionOrder(this.orderDetails.id).subscribe(res => {
             this.savingOrder = false;
             if (res.status === 200) {
                 this.toastService.showToaster({
@@ -825,8 +865,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     title: 'Order Execution:',
                     type: 'success'
                 });
-                this.orderDetails = null;
+                // this.orderDetails = null;
                 this.newProduct = null;
+                this.selectedRetailer = null;
+                this.orderDetails.items = [];
+                this.setPaymentInitalValues();
                 this.getOrdersBySalemanAndDate();
             }
         }, error => {
@@ -844,7 +887,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     cancelSpotSale(): void {
         if (this.orderDetails.id) {
-            this.cancelOrder();
+            this.cancelSpotSaleOrder();
         } else {
             this.removeSpotOrder();
             document.getElementById('close-del').click();
@@ -863,7 +906,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     title: 'Spot Order:',
                     type: 'success'
                 });
-                this.orderDetails = null;
                 this.newProduct = null;
                 this.removeSpotOrder();
             }
@@ -882,11 +924,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     removeSpotOrder(): void {
-        this.spotRetailer.isAdded = false;
+        this.selectedRetailer.isAdded = false;
         this.spotSaleOrder.retailers = this.spotSaleOrder.retailers.filter(x => x.retailer_id !== this.selectedRetailer.retailer_id);
         this.orderDetails.items = [];
         this.orderDetails.returned_items = [];
         this.isSpotSaleActive = false;
+        this.selectedRetailer = null;
         this.resetPaymentValues();
         this.setPaymentInitalValues();
     }
@@ -920,7 +963,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             const expenses = JSON.parse(JSON.stringify(this.finalLoad.expense_detail));
             const expIndex = expenses.findIndex(x => x.expense_type === +type.value);
             if (expIndex > -1) {
-                expenses[expIndex].amount = amount;
+                expenses[expIndex].amount = amount.value;
             } else {
                 expenses.push({ expense_type: +type.value, amount: +amount.value });
             }
@@ -939,7 +982,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     removeExpense(type: string): void {
-        this.finalLoad.expense_detail = this.finalLoad.expense_detail.filter(x => x.type !== type);
+        this.finalLoad.expense_detail = this.finalLoad.expense_detail.filter(x => x.expense_type !== type);
         this.setIsExpenseAdded();
     }
 
@@ -951,8 +994,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     saveExpense(): void {
-        if (this.finalLoad.expense_detail) {
-            document.getElementById('close-expense').click();
+        document.getElementById('close-expense').click();
+        if (this.finalLoad.expense_detail.length) {
             this.isAdded = true;
             this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
                 return { expense_type: +x.expense_type, amount: +x.amount };
@@ -967,7 +1010,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                             type: 'success'
                         });
                         this.finalLoad = res.data;
-                        this.claculateBalanceAmount();
                     }
                 }, error => {
                     this.isAdded = false;
@@ -981,9 +1023,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     }
                 });
         }
-    }
-
-    claculateBalanceAmount(): void {
     }
 
     checkRecovery(retailer): void {
@@ -1000,6 +1039,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     setRecoveryRetailer(): void {
         this.isAdded = true;
         this.orderService.checkBalance(this.recoveryRetailer.retailer_id).subscribe(res => {
+            this.isAdded = false;
             if (res.status) {
                 if (res.data[0].balance > 0) {
                     this.recoveryRetailer.isAdded = true;

@@ -29,6 +29,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     @Input() newProduct: any;
     @Input() returnedProduct: any;
     @Input() specialDiscounts: Array<any>;
+    @Input() orders: Array<any>;
     @Input() allProducts: Array<any>;
 
     showProducts: boolean;
@@ -211,7 +212,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     resetDiscount(product: any): void {
         const toast: Toaster = {
             type: 'error', title: 'Incorrect discount:',
-            message: `The discount cannot be greater than item trade price (${product.item_trade_price})!`
+            message: `Discount should not be greater than item price!`
         };
         this.toastService.showToaster(toast);
         product.extra_discount = 0;
@@ -292,8 +293,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
             this.toastService.showToaster(toast);
         }
         this.calculateNetAmountOfProduct(product);
-        this.calculateTotalBill();
         this.productUpdated.emit();
+        this.calculateTotalBill();
     }
 
     calculateNetAmountOfProduct(product: any): any {
@@ -360,12 +361,12 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         // Gross Amount
         let prices = this.orderDetail.items.map(product => product.original_amount);
         this.grossAmount = this.dataService.calculateItemsBill(prices);
-
         // Net Amount
         prices = this.orderDetail.items.map(product => product.net_amount);
         this.netAmount = this.dataService.calculateItemsBill(prices);
-        if (this.selectedRetailer) {
-            this.selectedRetailer.order_total = this.netAmount;
+        if (this.selectedRetailer && this.orderType !== 'execution') {
+            // this.selectedRetailer.order_total = this.netAmount;
+            this.orders.find(x => x.id === this.selectedRetailer.id).order_total = this.netAmount;
         }
         // Total Retail Price
         prices = this.orderDetail.items.map(product => +product.stockQty * product.item_retail_price);
@@ -386,9 +387,14 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         const taxes = this.orderDetail.items.map(product => product.tax_amount_pkr);
         this.totalTax = this.dataService.calculateItemsBill(taxes);
         this.orderDetail.total_amount_after_tax = this.netAmount;
+        console.log(`this.totalPayment items ::>> `, this.totalPayment);
         if (this.orderType === 'execution') {
             if (this.selectedRetailer) {
-                this.selectedRetailer.order_total = this.totalPayment;
+                // this.selectedRetailer.order_total = this.totalPayment;
+                const order = this.orders.find(x => x.id === this.selectedRetailer.id);
+                if (order) {
+                  order.order_total = this.totalPayment;
+                }
             }
             this.orderDetail.order_total = this.totalPayment;
             this.orderDetail.total_amount_after_tax = this.totalPayment;

@@ -83,7 +83,7 @@ export class OrdersListDetailsComponent implements OnInit {
 
     openDetailsModal(orderId: number): void {
         this.orderDetail = null;
-        document.body.classList.add('no-scroll');
+        // document.body.classList.add('no-scroll');
         this.getViewOrderDetailById(orderId);
     }
 

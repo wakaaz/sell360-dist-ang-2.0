@@ -308,6 +308,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
           this.savingOrder = true;
           this.newProduct = null;
           this.returnedProduct = null;
+          this.resetPaymentValues();
+          this.setPaymentInitalValues();
           this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
           this.orderService.getOrderDetails(retailer.id).subscribe(res => {
             this.savingOrder = false;
@@ -390,8 +392,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     setCurrentSpotSaleOrder(retailer: any): void {
         if (!this.isSpotSaleActive) {
             if (retailer.id) {
+                this.isSpotSaleActive = true;
                 this.getOrderDetailsByRetailer(retailer);
             } else {
+                this.resetPaymentValues();
+                this.setPaymentInitalValues();
                 this.selectedRetailer = { ...retailer };
                 this.isSpotSaleActive = true;
                 this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
@@ -750,7 +755,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.selectedRetailer.order_total = this.receivableAmount;
         if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).order_total = this.receivableAmount; }
         if (this.currentTab === 2) {
-          this.spotSaleOrder.retailers.find(x => x.id === this.selectedRetailer.id).order_total = this.receivableAmount;
+          this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id).order_total = this.receivableAmount;
         }
         this.orderDetails.order_total = this.receivableAmount;
         this.orderDetails.total_amount_after_tax = this.receivableAmount;

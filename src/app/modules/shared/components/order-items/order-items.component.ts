@@ -391,7 +391,12 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         if (this.orderType === 'execution') {
             if (this.selectedRetailer) {
                 // this.selectedRetailer.order_total = this.totalPayment;
-                const order = this.orders.find(x => x.id === this.selectedRetailer.id);
+                let order;
+                if (this.currentTab === 1) {
+                  order = this.orders.find(x => x.id === this.selectedRetailer.id);
+                } else {
+                  order = this.orders.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
+                }
                 if (order) {
                   order.order_total = this.totalPayment;
                 }

@@ -19,7 +19,6 @@ import { CounterSaleComponent } from './components/counter-sale/counter-sale.com
 import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
 import { CompletedOrdersDetailComponent } from './components/completed-orders-detail/completed-orders-detail.component';
 import { OrderDispatchedComponent } from './components/order-dispatched/order-dispatched.component';
-import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component';
 
 import { OrdersService } from './services/orders.service';
 
@@ -49,7 +48,6 @@ import { SpotSaleService } from './services/spot-sale.service';
     CounterSaleComponent,
     BookingVsExecutionComponent,
     CompletedOrdersDetailComponent,
-    OrderBookerListComponent,
   ],
   providers: [
     OrderDispatchService,

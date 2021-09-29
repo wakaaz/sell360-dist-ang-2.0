@@ -337,7 +337,7 @@
             </div>
             <div id="floating-label" class="modal-body">
                 <div class="row">
-                    <div class="col-md-12"> <img class="Visit-img" src="/assets/images/store-img.jpg" alt="" /> </div>
+                    <div class="col-md-12"> <img class="Visit-img" [src]="visitIamge" alt="" /> </div>
                 </div>
             </div>
             <div class="modal-footer border-0 pt-0">
@@ -365,7 +365,9 @@
                                     <div class="row m-0">
                                         <div class="col-8 OrderLogo"> <img src="/assets/images/sell-360.svg" alt="" />
                                         </div>
-                                        <div class="col-4 ord-no"> Invoice# <strong>05485</strong> </div>
+                                        <div class="col-4 ord-no"> Invoice#
+                                            <strong>{{orderDetail?.invoice_number}}</strong>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="body" style="padding:15px 20px">
@@ -374,18 +376,20 @@
                                             <div class="form-body">
                                                 <div class="row OrderInfo">
                                                     <div class="col-md-9">
-                                                        <span>Retailer Name: </span> <strong>Chohan Store
-                                                            Township</strong><br>
-                                                        <span>Segment: </span> <strong>Sement Here</strong><br>
-                                                        <span>Phone No: </span> <strong>02222222221</strong><br>
-                                                        <span>Address: </span> <strong>Madina Market Township,
-                                                            Lahore</strong>
+                                                        <span>Retailer Name: </span>
+                                                        <strong>
+                                                            {{retailer?.retailer_name}}
+                                                        </strong><br>
+                                                        <span>Segment: </span> <strong>{{retailer?.segment}}</strong><br>
+                                                        <span>Phone No: </span> <strong>{{retailer?.retailer_phone}}</strong><br>
+                                                        <span>Address: </span> <strong>{{retailer?.retailer_address}}
+                                                            </strong>
                                                     </div>
                                                     <div class="col-md-3 p-0">
-                                                        <span>Status: </span> <strong>Awaiting</strong><br>
-                                                        <span>Date: </span> <strong>12/04/2020</strong><br>
-                                                        <span>Order Booker: </span> <strong>Asad Ali</strong><br>
-                                                        <span>Salesman: </span> <strong>Asad Ali</strong>
+                                                        <span>Status: </span> <strong>{{orderDetail?.status}}</strong><br>
+                                                        <span>Date: </span> <strong>{{orderDetail?.date}}</strong><br>
+                                                        <span>Order Booker: </span> <strong>{{orderDetail?.order_booker}}</strong><br>
+                                                        <span>Salesman: </span> <strong>{{orderDetail?.salesman}}</strong>
                                                     </div>
                                                 </div>
                                                 <div class="seprator-block"></div>
@@ -410,36 +414,23 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody class="order_items_body">
-                                                            <tr>
-                                                                <td>5261</td>
-                                                                <td>AasPas R5 (Chocolate BTNT) (24x36)</td>
-                                                                <td>0</td>
-                                                                <td>1</td>
-                                                                <td>4</td>
-                                                                <td>5</td>
-                                                                <td>0</td>
-                                                                <td>0</td>
-                                                                <td>0</td>
-                                                                <td>-</td>
-                                                                <td>-</td>
-                                                                <td>-</td>
-                                                                <td>-</td>
-                                                                <td>100.00</td>
+                                                            <tr *ngFor="let item of orderDetail?.items">
+                                                                <td>{{item.pref_id}}</td>
+                                                                <td>{{item.item_name}}</td>
+                                                                <td>{{item.booked_qty}}</td>
+                                                                <td>{{item.delivered_qty}}</td>
+                                                                <td>{{item.executed_qty}}</td>
+                                                                <td>{{item.tax_in_percentage > 0 ? item.tax_in_percentage : 0}}</td>
+                                                                <td>{{item.gr_amount}}</td>
+                                                                <td>{{item.trade_offer}}</td>
+                                                                <td>{{item.trade_discount}}</td>
+                                                                <td>{{item.special_discount}}</td>
+                                                                <td>{{item.extra_discount}}</td>
+                                                                <td>{{item.tax_in_percentage > 0 ? item.tax_in_percentage : 0}}</td>
+                                                                <td>{{item.tax_in_value > 0 ? item.tax_in_value : 0}}</td>
+                                                                <td>{{item.final_price | decimal}}</td>
                                                             </tr>
-                                                            <td>5261</td>
-                                                            <td>AasPas R5 (Chocolate BTNT) (24x36)</td>
-                                                            <td>0</td>
-                                                            <td>1</td>
-                                                            <td>5</td>
-                                                            <td>5</td>
-                                                            <td>0</td>
-                                                            <td>0</td>
-                                                            <td>0</td>
-                                                            <td>-</td>
-                                                            <td>-</td>
-                                                            <td>-</td>
-                                                            <td>-</td>
-                                                            <td>100.00</td>
+                                                            
                                                             <tr>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
@@ -454,7 +445,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>G.AMNT</strong></td>
-                                                                <td><strong>1115.20</strong></td>
+                                                                <td><strong>{{ getGrAmount(orderDetail?.items) | decimal}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -486,7 +477,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Trade Disc.</strong></td>
-                                                                <td><strong>1115.20</strong></td>
+                                                                <td><strong>{{ getToAmount(orderDetail?.items) | decimal}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -502,7 +493,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Spc. Disc.</strong></td>
-                                                                <td><strong>1115.20</strong></td>
+                                                                <td><strong>{{ getSpcDiscAmount(orderDetail?.items) | decimal}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -518,7 +509,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Extra. Disc.</strong></td>
-                                                                <td><strong>1115.20</strong></td>
+                                                                <td><strong>{{ getExtraDiscAmount(orderDetail?.items) | decimal}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -534,7 +525,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Discount PKR.</strong></td>
-                                                                <td><strong>-40.18</strong></td>
+                                                                <td><strong>-{{ getExtraDiscAmount(orderDetail?.items) | decimal}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -566,9 +557,11 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td style="background-color:#dfdfdf; color:#000">
-                                                                    <strong>Total AMNT.</strong></td>
+                                                                    <strong>Total AMNT.</strong>
+                                                                </td>
                                                                 <td style="background-color:#dfdfdf; color:#000">
-                                                                    <strong>1075.02</strong></td>
+                                                                    <strong>1075.02</strong>
+                                                                </td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -584,9 +577,11 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td style="background-color:#dfdfdf; color:#000">
-                                                                    <strong>Recovery AMNT.</strong></td>
+                                                                    <strong>Recovery AMNT.</strong>
+                                                                </td>
                                                                 <td style="background-color:#d3d3d3; color:#000">
-                                                                    <strong>1075.02</strong></td>
+                                                                    <strong>1075.02</strong>
+                                                                </td>
                                                             </tr>
                                                         </tbody>
 
@@ -655,16 +650,24 @@
                             <div class="topstats">
                                 <div class="row m-0">
                                     <div class="col-3 pr-0">
-                                        <div class="gary-box"><strong>Segment:</strong> <span>Samnaabad</span></div>
+                                        <div class="gary-box"><strong>Segment:</strong>
+                                            <span>{{retailer?.segment}}</span>
+                                        </div>
                                     </div>
                                     <div class="col-3 pr-0">
-                                        <div class="gary-box"><strong>Channel:</strong> <span>Here</span></div>
+                                        <div class="gary-box"><strong>Channel:</strong>
+                                            <span>{{retailer?.channel}}</span>
+                                        </div>
                                     </div>
                                     <div class="col-3 pr-0">
-                                        <div class="gary-box"><strong>Added By:</strong> <span>Atif</span></div>
+                                        <div class="gary-box"><strong>Added By:</strong>
+                                            <span>{{retailer?.added_by}}</span>
+                                        </div>
                                     </div>
                                     <div class="col-3">
-                                        <div class="gary-box"><strong>Added Date:</strong> <span>5/2/2021</span></div>
+                                        <div class="gary-box"><strong>Added Date:</strong>
+                                            <span>{{retailer?.added_date}}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -674,15 +677,15 @@
                             <div class="row">
 
                                 <div class="col-md-12 POCDetail">
-                                    <p><strong>Phone:</strong> 03111111111</p>
-                                    <p><strong>POC Name:</strong> Aslam</p>
-                                    <p><strong>CNIC:</strong> 5454554</p>
-                                    <p><strong>NTN:</strong> 4545</p>
-                                    <p><strong>STRN:</strong> 5784</p>
-                                    <p><strong>Email:</strong> Aslam@mail.com</p>
-                                    <p><strong>Address:</strong> Main Bazar Khanpur mehar</p>
-                                    <p><strong>Locallity:</strong> Here... neighborhood</p>
-                                    <p><strong>Neighbourhood:</strong> Here... neighborhood</p>
+                                    <p><strong>Phone:</strong> {{retailer?.retailer_phone}}</p>
+                                    <p><strong>POC Name:</strong> {{retailer?.poc}}</p>
+                                    <p><strong>CNIC:</strong> {{retailer?.cnic}}</p>
+                                    <p><strong>NTN:</strong> {{retailer?.ntn}}</p>
+                                    <p><strong>STRN:</strong> {{retailer?.strn}}</p>
+                                    <p><strong>Email:</strong> {{retailer?.retailer_email}}</p>
+                                    <p><strong>Address:</strong> {{retailer?.retailer_address}}</p>
+                                    <p><strong>Locallity:</strong> {{retailer?.locality}}</p>
+                                    <p><strong>Neighbourhood:</strong> {{retailer?.neighbourhood}}</p>
                                 </div>
 
                                 <div class="col-12">
@@ -696,7 +699,7 @@
                                 <div class="col">
                                 </div>
                                 <div class="col-md-12">
-                                    <img class="Warehouse-img" src="/assets/images/mHelnQotSu_1546423434.jpg" alt="" />
+                                    <img class="Warehouse-img" [src]="retailer?.retailer_image" alt="" />
                                 </div>
                             </div>
                         </div>
@@ -715,9 +718,10 @@
                                             class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
                                             href="#nav-home" role="tab" aria-controls="nav-home"
                                             aria-selected="true">VISITS <span class="_cus-val"> {{visits?.length}}
-                                            </span></a> <a (click)="getRetailerOrders()" class="nav-item nav-link" id="nav-profile-tab"
-                                            data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile"
-                                            aria-selected="false">ORDERS<span class="_cus-val"> {{orders?.length}}
+                                            </span></a> <a (click)="getRetailerOrders()" class="nav-item nav-link"
+                                            id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
+                                            aria-controls="nav-profile" aria-selected="false">ORDERS<span
+                                                class="_cus-val"> {{orders?.length}}
                                             </span></a> </div>
                                 </div>
                                 <div class="tab-content" id="nav-tabContent">
@@ -748,7 +752,7 @@
                                                     <td>{{visit.distance}}</td>
                                                     <td>{{visit.deviation}}</td>
                                                     <td>
-                                                        <button data-toggle="modal" data-target="#ViewVISITimg"
+                                                        <button data-toggle="modal" (click)="showVisitStorePicture(visit.id)" data-target="#ViewVISITimg"
                                                             class="btn btn-default mb-0">
                                                             <i class="fa fa-image"></i> View Picture</button>
                                                         <button class="btn btn-default mb-0"><i
@@ -784,14 +788,16 @@
                                                     <tr *ngFor="let order of orders">
                                                         <td>{{order.date}}</td>
                                                         <td>{{order.invoice_number}}</td>
-                                                        <td>8758</td>
-                                                        <td>Kiryana Store</td>
-                                                        <td>General Store</td>
+                                                        <td>{{retailer.id}}</td>
+                                                        <td>{{retailer.retailer_name}}</td>
+                                                        <td>{{retailer.channel}}</td>
                                                         <td>{{order.order_booker}}</td>
                                                         <td>{{order.salesman}}</td>
                                                         <td>{{order.invoice_total | number: '1.2-2'}}</td>
                                                         <td><button data-toggle="modal" data-target="#OrderDetailModal"
-                                                                class="btn btn-default btn-line">Order Detail</button>
+                                                                class="btn btn-default btn-line"
+                                                                (click)="getOrderDetail(order.order_id, order.order_booker, order.salesman, order.date, order.invoice_number, order.status)">Order
+                                                                Detail</button>
                                                         </td>
                                                     </tr>
                                                 </tbody>

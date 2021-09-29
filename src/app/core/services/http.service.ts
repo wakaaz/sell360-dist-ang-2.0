@@ -15,8 +15,8 @@ export class HttpBaseService {
         this.httpOptions = new HttpHeaders().set('Content-type', 'application/json');
     }
 
-    get(url: string): Observable<any> {
-        url = `${this.baseUrl}${url}`;
+    get(url: string, isApiDomain = false): Observable<any> {
+        url = `${isApiDomain ? environment.apiDomain : this.baseUrl}${url}`;
         return this.httpClient.get(url, { headers: this.httpOptions });
     }
 

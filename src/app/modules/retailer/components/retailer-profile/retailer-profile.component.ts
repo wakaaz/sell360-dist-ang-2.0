@@ -18,8 +18,11 @@ export class RetailerProfileComponent implements OnInit {
     profileId: string;
     visits = [];
     orders = [];
+    retailer = null;
     loading = false;
     loadingOrders = false;
+    orderDetail = null;
+    visitIamge = null;
 
     // Payment Chart
     public paymentChartOptions: ChartOptions = {
@@ -122,6 +125,8 @@ export class RetailerProfileComponent implements OnInit {
     ngOnInit(): void {
         this.loading = true;
         this.profileId = this.route.snapshot.paramMap.get('id');
+        this.retailer = JSON.parse(this.route.snapshot.queryParams.retailer);
+        console.log('retiler -- ', this.retailer)
         this.dtOptions = {
             pagingType: 'simple_numbers',
         };
@@ -130,7 +135,6 @@ export class RetailerProfileComponent implements OnInit {
                 this.visits = data;
                 this.loading = false;
                 console.log('this.visits => ', this.visits[0]);
-                // this.getRetailerOrders();
             },
             (error) => {
                 this.loading = false;
@@ -489,5 +493,46 @@ export class RetailerProfileComponent implements OnInit {
             .getElementsByClassName('overlay-blure')[0]
             .classList.remove('d-block');
         document.getElementById('profile').classList.remove('blur-div');
+    }
+
+    getOrderDetail(
+        orderId: string,
+        orderBooker: string,
+        salesman: string,
+        date: string,
+        invoice_number: string,
+        status: string,
+    )
+        : void {
+        this.orderDetail = null;
+        this.retailerService.getOrderDetail(orderId).subscribe(res => {
+            const data = {
+                items: res,
+                order_booker: orderBooker,
+                salesman: salesman,
+                date: date,
+                invoice_number,
+                status,
+            }
+            this.orderDetail = { ...data };
+            console.log('res =>', JSON.stringify(this.orderDetail));
+        });
+    }
+
+    showVisitStorePicture(id) {
+        const visit = this.visits.find(x => x.id === id);
+        this.visitIamge = visit.picture;
+    }
+    getGrAmount(items: any) {
+        return items?.map(x => x.final_price).reduce((accumulator, cur) => accumulator + cur);
+    }
+    getToAmount(items: any) {
+        return items?.map(x => x.trade_offer).reduce((accumulator, cur) => accumulator + cur);
+    }
+    getSpcDiscAmount(items: any) {
+        return items?.map(x => x.special_discount).reduce((accumulator, cur) => accumulator + cur);
+    }
+    getExtraDiscAmount(items: any) {
+        return items?.map(x => x.extra_discount).reduce((accumulator, cur) => accumulator + cur);
     }
 }

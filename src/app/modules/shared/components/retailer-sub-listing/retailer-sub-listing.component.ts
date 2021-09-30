@@ -10,6 +10,7 @@ import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 
 export class RetailerSubListComponent implements OnInit, OnChanges, OnDestroy {
     @Input() loading: boolean;
+    @Input() currentTab: number;
     @Input() retailers: Array<any>;
     @Input() orderType: string;
     @Input() isSpotSaleActive: boolean;
@@ -48,8 +49,9 @@ export class RetailerSubListComponent implements OnInit, OnChanges, OnDestroy {
                 if (ret.isActive) {
                     ret.isActive = false;
                 }
-                if ((this.orderType !== 'execution' && ret.id === retailer.id)
-                || (this.orderType === 'execution' && ret.retailer_id === retailer.retailer_id)) {
+                if (((this.orderType !== 'execution' || (this.orderType === 'execution' && this.currentTab === 1))
+                && ret.id === retailer.id)
+                || (this.orderType === 'execution' && this.currentTab === 2 && ret.retailer_id === retailer.retailer_id)) {
                     ret.isActive = true;
                 }
                 return ret;

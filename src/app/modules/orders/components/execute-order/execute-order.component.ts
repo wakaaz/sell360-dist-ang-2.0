@@ -1000,34 +1000,60 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     saveExpense(): void {
         document.getElementById('close-expense').click();
-        if (this.finalLoad.expense_detail.length) {
-            this.isAdded = true;
-            this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
-                return { expense_type: +x.expense_type, amount: +x.amount };
-            });
-            this.orderService.saveExecutionExpense(this.loadId, this.salemanId, this.orderDate, this.finalLoad.expense_detail)
-                .subscribe(res => {
-                    this.isAdded = false;
-                    if (res.status === 200) {
-                        this.toastService.showToaster({
-                            title: 'Expense Saved:',
-                            message: 'Expense saved successfully!',
-                            type: 'success'
-                        });
-                        this.finalLoad = res.data;
-                    }
-                }, error => {
-                    this.isAdded = false;
-                    if (error.status !== 1 && error.status !== 401) {
-                        console.log('Error while saving expenses :>> ', error);
-                        this.toastService.showToaster({
-                            title: 'Expense Error:',
-                            message: 'Expense not saved, please try again before marking complete!',
-                            type: 'error'
-                        });
-                    }
+        // if (this.finalLoad.expense_detail.length) {
+        //     this.isAdded = true;
+        //     this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
+        //         return { expense_type: +x.expense_type, amount: +x.amount };
+        //     });
+        //     this.orderService.saveExecutionExpense(this.loadId, this.salemanId, this.orderDate, this.finalLoad.expense_detail)
+        //         .subscribe(res => {
+        //             this.isAdded = false;
+        //             if (res.status === 200) {
+        //                 this.toastService.showToaster({
+        //                     title: 'Expense Saved:',
+        //                     message: 'Expense saved successfully!',
+        //                     type: 'success'
+        //                 });
+        //                 this.finalLoad = res.data;
+        //             }
+        //         }, error => {
+        //             this.isAdded = false;
+        //             if (error.status !== 1 && error.status !== 401) {
+        //                 console.log('Error while saving expenses :>> ', error);
+        //                 this.toastService.showToaster({
+        //                     title: 'Expense Error:',
+        //                     message: 'Expense not saved, please try again before marking complete!',
+        //                     type: 'error'
+        //                 });
+        //             }
+        //         });
+        // }
+        this.isAdded = true;
+        this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
+            return { expense_type: +x.expense_type, amount: +x.amount };
+        });
+        this.orderService.saveExecutionExpense(this.loadId, this.salemanId, this.orderDate, this.finalLoad.expense_detail)
+        .subscribe(res => {
+            this.isAdded = false;
+            if (res.status === 200) {
+                this.toastService.showToaster({
+                    title: 'Expense Saved:',
+                    message: 'Expense saved successfully!',
+                    type: 'success'
                 });
-        }
+                this.finalLoad = res.data;
+            }
+        }, error => {
+            this.isAdded = false;
+            if (error.status !== 1 && error.status !== 401) {
+                console.log('Error while saving expenses :>> ', error);
+                this.toastService.showToaster({
+                    title: 'Expense Error:',
+                    message: 'Expense not saved, please try again before marking complete!',
+                    type: 'error'
+                });
+            }
+        });
     }
 
     checkRecovery(retailer): void {

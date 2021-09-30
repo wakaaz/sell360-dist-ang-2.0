@@ -18,6 +18,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     @Input() currentTab: number;
     @Input() recoveryAmount: number;
     @Input() receivableAmount: number;
+    @Input() dueAmount: number;
     @Input() totalPayment: number;
     @Input() cheque: PaymentDetail;
     @Input() credit: PaymentDetail;
@@ -387,7 +388,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         const taxes = this.orderDetail.items.map(product => product.tax_amount_pkr);
         this.totalTax = this.dataService.calculateItemsBill(taxes);
         this.orderDetail.total_amount_after_tax = this.netAmount;
-        console.log(`this.totalPayment items ::>> `, this.totalPayment);
         if (this.orderType === 'execution') {
             if (this.selectedRetailer) {
                 // this.selectedRetailer.order_total = this.totalPayment;
@@ -398,11 +398,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
                   order = this.orders.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
                 }
                 if (order) {
-                  order.order_total = this.totalPayment;
+                  order.order_total = this.dueAmount;
                 }
             }
-            this.orderDetail.order_total = this.totalPayment;
-            this.orderDetail.total_amount_after_tax = this.totalPayment;
+            this.orderDetail.order_total = this.dueAmount;
+            this.orderDetail.total_amount_after_tax = this.dueAmount;
         }
 
         this.orderDetail.total_discount = this.totalSchemeDiscount +

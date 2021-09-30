@@ -319,6 +319,17 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     this.recoveryAmount = this.orderDetails.recovery;
                     this.orderDetails.recovered = this.orderDetails.recovered > 0 ? this.orderDetails.recovered
                         : this.orderDetails.recovery;
+                    if (this.orderDetails.payment && this.orderDetails.payment.length) {
+                        this.orderDetails.payment.forEach(pay => {
+                            if (pay.payment_mode === 'Cheque') {
+                              this.setCheque(pay);
+                            } else if (pay.payment_mode === 'Credit') {
+                              this.setCredit(pay);
+                            } else if (pay.payment_mode === 'Cash') {
+                              this.setCash(pay);
+                            }
+                        });
+                    }
                     if (this.orderDetails.returned_items.length) {
                         this.setOrderDetailReturnedItems();
                     } else {
@@ -337,6 +348,56 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             });
           this.getDiscountSlabs();
         }
+    }
+
+    setCash(payment: any): void {
+      this.cash = {
+        retailer_id: this.selectedRetailer.retailer_id,
+        distributor_id: this.distributorId,
+        type: this.currentTab === 1 ? 'Execution' : 'Spot',
+        payment_mode: 'Cash',
+        payment_detail: '',
+        dispatched_bill_amount: 0,
+        return_amount: this.returnAmount || 0,
+        recovery: 0,
+        amount_received: payment.amount_received
+      };
+    }
+
+    setCredit(payment: any): void {
+      this.paymentTypeCredit = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
+      this.credit = {
+        retailer_id: this.selectedRetailer.retailer_id,
+        distributor_id: this.distributorId,
+        type: this.currentTab === 1 ? 'Execution' : 'Spot',
+        payment_mode: 'Credit',
+        payment_detail: '',
+        dispatched_bill_amount: 0,
+        recovery: 0,
+        amount_received: payment.amount_received
+      };
+      this.isCreditAdded = true;
+    }
+
+    setCheque(payment: any): void {
+      this.paymentTypeCheque = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
+      const paymentDetail = JSON.parse(payment.payment_detail);
+      this.cheque = {
+        retailer_id: this.selectedRetailer.retailer_id,
+        distributor_id: this.distributorId,
+        type: this.currentTab === 1 ? 'Execution' : 'Spot',
+        payment_mode: 'Cheque',
+        payment_detail: {
+            cheque_amount: payment.amount_received,
+            bank_name: paymentDetail.bank_name,
+            cheque_number: paymentDetail.cheque_number,
+            cheque_date: paymentDetail.cheque_date
+        },
+        dispatched_bill_amount: 0,
+        recovery: 0,
+        amount_received: payment.amount_received
+      };
+      this.isChequeAdded = true;
     }
 
     setOrderDetailReturnedItems(): void {

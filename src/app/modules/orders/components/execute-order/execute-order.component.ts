@@ -32,6 +32,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     isAdded: boolean;
     isSpotSaleActive: boolean;
     isExpenseAdded: boolean;
+    showAddRetailer: boolean;
 
     paymentDate: string;
     orderDate: string;
@@ -104,6 +105,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.dtOPtions = {
             pagingType: 'simple_numbers',
         };
+        this.showAddRetailer = true;
         this.getSchemesData();
         this.setPaymentInitalValues();
         this.setSpotSaleOrder();
@@ -301,6 +303,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             const retailers = JSON.parse(JSON.stringify(this.spotSaleOrder.retailers));
             retailers.push(this.spotRetailer);
             this.spotSaleOrder.retailers = JSON.parse(JSON.stringify(retailers));
+            this.showAddRetailer = false;
             this.change.detectChanges();
         }
     }
@@ -913,6 +916,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.spotSaleOrder.retailers[retailerIndex].order_total = res.data.order.order_total;
                 this.spotSaleOrder.orders[orderIndex] = JSON.parse(JSON.stringify(res.data.order));
                 this.orderDetails = JSON.parse(JSON.stringify(res.data.order));
+                const emptyOrder = this.spotSaleOrder.orders.find(x => x.order_total === 0);
+                if (emptyOrder) {
+                  this.showAddRetailer = false;
+                } else {
+                  this.showAddRetailer = true;
+                }
                 this.setOrderDetailItems();
                 this.setOrderDetailReturnedItems();
             }
@@ -1001,10 +1010,17 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     removeSpotOrder(): void {
         this.selectedRetailer.isAdded = false;
         this.spotSaleOrder.retailers = this.spotSaleOrder.retailers.filter(x => x.retailer_id !== this.selectedRetailer.retailer_id);
+        this.spotSaleOrder.orders = this.spotSaleOrder.orders.filter(x => x.retailer_id !== this.selectedRetailer.retailer_id);
         this.orderDetails.items = [];
         this.orderDetails.returned_items = [];
         this.isSpotSaleActive = false;
         this.selectedRetailer = null;
+        const emptyOrder = this.spotSaleOrder.orders.find(x => x.order_total === 0);
+        if (emptyOrder) {
+          this.showAddRetailer = false;
+        } else {
+          this.showAddRetailer = true;
+        }
         this.resetPaymentValues();
         this.setPaymentInitalValues();
     }

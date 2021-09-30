@@ -1015,6 +1015,20 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.loading = false;
             if (res.status === 200) {
                 this.finalLoad = res.data;
+                this.recoveryListing = res.data.out_of_route_recovery.map(x => {
+                  x.recovery = x.amount_received;
+                  x.retailer_id = x.id;
+                  x.recoveryAdded = true;
+                  return x;
+                });
+                this.outOfRouteRecovery = res.data.out_of_route_recovery.map(x => {
+                    const recovery = {
+                        retailer_id: x.id,
+                        amount: x.amount_received,
+                        booker_id: x.booker_id
+                    };
+                    return recovery;
+                });
             }
         }, error => {
             this.loading = false;
@@ -1183,9 +1197,14 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     resetRecoveryValues(retailer: any): void {
+        this.isAdded = true;
         retailer.recoveryAdded = false;
         retailer.recovery = 0;
         this.outOfRouteRecovery = this.outOfRouteRecovery.filter(x => x.retailer_id !== retailer.retailer_id);
+        this.recoveryListing = this.recoveryListing.filter(x => x.retailer_id !== retailer.retailer_id);
+        setTimeout(() => {
+          this.isAdded = false;
+        }, 500);
     }
 
     checkRecieveable(): void {

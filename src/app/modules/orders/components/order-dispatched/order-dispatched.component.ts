@@ -627,6 +627,9 @@ export class OrderDispatchedComponent implements OnInit {
     }
 
     updateDispatchedQty(item: any): void {
+        if (+item.issued_qty > 1000) {
+          item.issued_qty = 0;
+        }
         item.dispatched_qty = +item.issued_qty + item.actual_qty;
     }
 

@@ -46,6 +46,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     creditAmount: number;
     chequeAmount: number;
     returnAmount: number;
+    dueAmount: number;
     receivableAmount: number;
     amountReceived: number;
     netAmount: number;
@@ -135,6 +136,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.amountReceived = 0;
         this.chequeAmount = 0;
         this.returnAmount = 0;
+        this.dueAmount = 0;
         this.receivableAmount = 0;
         this.recoveryAmount = 0;
         this.totalPayment = 0;
@@ -319,10 +321,21 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     this.recoveryAmount = this.orderDetails.recovery;
                     this.orderDetails.recovered = this.orderDetails.recovered > 0 ? this.orderDetails.recovered
                         : this.orderDetails.recovery;
+                    if (this.orderDetails.payment && this.orderDetails.payment.length) {
+                        this.orderDetails.payment.forEach(pay => {
+                            if (pay.payment_mode === 'Cheque') {
+                              this.setCheque(pay);
+                            } else if (pay.payment_mode === 'Credit') {
+                              this.setCredit(pay);
+                            } else if (pay.payment_mode === 'Cash') {
+                              this.setCash(pay);
+                            }
+                        });
+                    }
                     if (this.orderDetails.returned_items.length) {
                         this.setOrderDetailReturnedItems();
                     } else {
-                        this.receivableAmount = this.orderDetails.total_amount_after_tax;
+                        this.receivableAmount = this.orderDetails.total_amount_after_tax + this.orderDetails.recovered;
                     }
                     this.setOrderDetailItems();
                     this.calculateReceivable();
@@ -337,6 +350,56 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             });
           this.getDiscountSlabs();
         }
+    }
+
+    setCash(payment: any): void {
+      this.cash = {
+        retailer_id: this.selectedRetailer.retailer_id,
+        distributor_id: this.distributorId,
+        type: this.currentTab === 1 ? 'Execution' : 'Spot',
+        payment_mode: 'Cash',
+        payment_detail: '',
+        dispatched_bill_amount: 0,
+        return_amount: this.returnAmount || 0,
+        recovery: 0,
+        amount_received: payment.amount_received
+      };
+    }
+
+    setCredit(payment: any): void {
+      this.paymentTypeCredit = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
+      this.credit = {
+        retailer_id: this.selectedRetailer.retailer_id,
+        distributor_id: this.distributorId,
+        type: this.currentTab === 1 ? 'Execution' : 'Spot',
+        payment_mode: 'Credit',
+        payment_detail: '',
+        dispatched_bill_amount: 0,
+        recovery: 0,
+        amount_received: payment.amount_received
+      };
+      this.isCreditAdded = true;
+    }
+
+    setCheque(payment: any): void {
+      this.paymentTypeCheque = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
+      const paymentDetail = JSON.parse(payment.payment_detail);
+      this.cheque = {
+        retailer_id: this.selectedRetailer.retailer_id,
+        distributor_id: this.distributorId,
+        type: this.currentTab === 1 ? 'Execution' : 'Spot',
+        payment_mode: 'Cheque',
+        payment_detail: {
+            cheque_amount: payment.amount_received,
+            bank_name: paymentDetail.bank_name,
+            cheque_number: paymentDetail.cheque_number,
+            cheque_date: paymentDetail.cheque_date
+        },
+        dispatched_bill_amount: 0,
+        recovery: 0,
+        amount_received: payment.amount_received
+      };
+      this.isChequeAdded = true;
     }
 
     setOrderDetailReturnedItems(): void {
@@ -467,11 +530,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.returnAmount = this.dataService.calculateItemsBill(returnPrices);
         const price = this.orderDetails.items.map(x => x.net_amount);
         this.netAmount = this.dataService.calculateItemsBill(price);
+        this.dueAmount = this.netAmount + this.returnAmount;
         this.receivableAmount = this.netAmount + this.orderDetails.recovered + this.returnAmount;
-        this.selectedRetailer.order_total = this.totalPayment;
+        this.selectedRetailer.order_total = this.dueAmount;
         if (this.currentTab === 2) {
             const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
-            retailer.order_total = this.totalPayment;
+            retailer.order_total = this.dueAmount;
         }
         this.calculatePayments();
     }
@@ -634,7 +698,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             if (this.paymentTypeCredit === 'full') {
                 return this.paymentTypeCredit.length > 0;
             } else {
-                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1 && this.creditAmount <= this.cash.amount_received;
+                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1 &&
+                this.creditAmount <= this.dueAmount - (this.cheque ? this.cheque.amount_received : 0);
             }
         } else {
             if (this.paymentTypeCheque === 'full') {
@@ -671,7 +736,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 payment_detail: '',
                 dispatched_bill_amount: 0,
                 recovery: 0,
-                amount_received: this.paymentTypeCredit === 'full' ? JSON.parse(JSON.stringify(this.receivableAmount)) :
+                amount_received: this.paymentTypeCredit === 'full' ?
+                JSON.parse(JSON.stringify(this.dueAmount - (this.cheque ? this.cheque.amount_received : 0))) :
                     JSON.parse(JSON.stringify(this.creditAmount))
             };
             this.isCreditAdded = true;
@@ -750,15 +816,15 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
         if (this.currentTab === 2) {
             const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
-            retailer.order_total = this.totalPayment;
+            retailer.order_total = this.dueAmount;
         }
-        this.selectedRetailer.order_total = this.receivableAmount;
-        if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).order_total = this.receivableAmount; }
+        this.selectedRetailer.order_total = this.dueAmount;
+        if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).order_total = this.dueAmount; }
         if (this.currentTab === 2) {
-          this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id).order_total = this.receivableAmount;
+          this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id).order_total = this.dueAmount;
         }
-        this.orderDetails.order_total = this.receivableAmount;
-        this.orderDetails.total_amount_after_tax = this.receivableAmount;
+        this.orderDetails.order_total = this.dueAmount;
+        this.orderDetails.total_amount_after_tax = this.dueAmount;
     }
 
     saveExecutionQuantity(): void {
@@ -841,8 +907,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.toastService.showToaster(toast);
                 this.inventory = res.data.executed_products;
                 this.selectedRetailer.id = res.data.order.id;
-                const index = this.spotSaleOrder.orders.findIndex(x => x.retailer_id === this.orderDetails.retailer_id);
-                this.spotSaleOrder.orders[index] = JSON.parse(JSON.stringify(res.data.order));
+                const orderIndex = this.spotSaleOrder.orders.findIndex(x => x.retailer_id === this.orderDetails.retailer_id);
+                const retailerIndex = this.spotSaleOrder.retailers.findIndex(x => x.retailer_id === this.selectedRetailer.retailer_id);
+                this.spotSaleOrder.retailers[retailerIndex].id = res.data.order.id;
+                this.spotSaleOrder.retailers[retailerIndex].order_total = res.data.order.order_total;
+                this.spotSaleOrder.orders[orderIndex] = JSON.parse(JSON.stringify(res.data.order));
                 this.orderDetails = JSON.parse(JSON.stringify(res.data.order));
                 this.setOrderDetailItems();
                 this.setOrderDetailReturnedItems();
@@ -912,6 +981,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     type: 'success'
                 });
                 this.newProduct = null;
+                this.inventory = res.data.executed_products;
                 this.removeSpotOrder();
             }
         }, error => {
@@ -1128,6 +1198,18 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         } else {
             document.getElementById('show-complete').click();
         }
+    }
+
+    amountReceivedMax(): void {
+      const receiable = this.finalLoad.dsr.total_amount_recieveable.toFixed(2);
+      if (+this.amountReceived > +receiable) {
+        this.toastService.showToaster({
+            title: 'Execution Error:',
+            message: `Received amount cannot be greater than ${this.finalLoad.dsr.total_amount_recieveable}!`,
+            type: 'error'
+        });
+        this.amountReceived = 0;
+      }
     }
 
     markCompelet(): void {

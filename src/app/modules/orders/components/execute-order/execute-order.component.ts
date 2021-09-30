@@ -322,8 +322,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     this.orderDetails = res.data;
                     this.orderDetails.returned_items = this.orderDetails.returned_items;
                     this.recoveryAmount = this.orderDetails.recovery;
-                    this.orderDetails.recovered = this.orderDetails.recovered > 0 ? this.orderDetails.recovered
-                        : this.orderDetails.recovery;
+                    // this.orderDetails.recovered = this.orderDetails.recovered > 0 ? this.orderDetails.recovered
+                        // : this.orderDetails.recovery;
                     if (this.orderDetails.payment && this.orderDetails.payment.length) {
                         this.orderDetails.payment.forEach(pay => {
                             if (pay.payment_mode === 'Cheque') {

@@ -50,7 +50,7 @@
         </thead>
         <tbody>
             <tr *ngFor="let item of orderDetail?.items; let i=index"
-                [ngClass]="!item.item_quantity_booker && item.isDeleted ? 'd-none' : ''">
+                [ngClass]="((orderType !== 'execution' && !item.item_quantity_booker) || (orderType === 'execution' && !item.dispatch_qty)) && item.isDeleted ? 'd-none' : ''">
                 <td style="width:200px">{{item.item_name}}</td>
                 <td>{{orderType !== 'execution' ? item.item_quantity_booker : item.dispatch_qty || 0}}</td>
                 <td><input type="number" (paste)="$event.preventDefault()" [id]="item.item_name" [disabled]="isChequeAdded || isCreditAdded" [name]="item.item_name" (keyup)="setQuantity(item)"
@@ -122,6 +122,10 @@
                     <div class="col-6">Tax:</div>
                     <div class="col-6"><span>{{totalTax | number: '1.2-2'}}</span></div>
                 </div>
+                <div *ngIf="orderType === 'execution'" class="row">
+                  <div class="col-6">Less Return:</div>
+                  <div class="col-6"><span>{{returnAmount | number: '1.2-2'}}</span></div>
+                </div>
                 <div *ngIf="orderType!=='execution'" class="row">
                     <div class="col-6" style="color:#0038ba;">Total Amount Due:
                     </div>
@@ -136,6 +140,7 @@
                         - totalMerchantDiscount
                         - totalSpecialDiscount
                         - totalBookerDiscount
+                        + returnAmount
                         + totalTax) | number: '1.2-2'}}</span>
                     </div>
                 </div>
@@ -145,13 +150,9 @@
             <div class="total-valu-div">
                 <div class="row">
                     <div class="col-6">Amount Due:</div>
-                    <div class="col-6"><span>{{netAmount | number: '1.2-2'}}</span></div>
+                    <div class="col-6"><span>{{dueAmount | number: '1.2-2'}}</span></div>
                 </div>
-                <div class="row">
-                    <div class="col-6">Less Return:</div>
-                    <div class="col-6"><span>{{returnAmount | number: '1.2-2'}}</span></div>
-                </div>
-                <div class="row">
+                <div *ngIf="currentTab === 1" class="row">
                     <div class="col-6">Recovery:</div>
                     <div class="col-6">
                         <div class="col-6" style="float: right;">

@@ -229,7 +229,7 @@
                         <div *ngIf="paymentTypeCredit !== 'full'" class="col-md-6 PT-10">
                             <div class="form-group focused">
                                 <label class="control-label mb-10">Amount*</label>
-                                <input type="number" min="0" [max]="cash?.amount_received" name="cheque_amount" (focus)="focused($event)" required (blur)="left($event)" [(ngModel)]="creditAmount" #credAmount="ngModel" autocomplete="off" class="form-control cheque_amount">
+                                <input type="number" min="0" [max]="dueAmount - (cheque?.amount_received || 0)" name="cheque_amount" (focus)="focused($event)" required (blur)="left($event)" [(ngModel)]="creditAmount" #credAmount="ngModel" autocomplete="off" class="form-control cheque_amount">
                             </div>
                             <span *ngIf="credAmount.errors?.required && isAdded" class="input-error">
                                 Please add Total Amount!
@@ -237,8 +237,8 @@
                             <span *ngIf="!credAmount.errors?.required && creditAmount < 0 && isAdded" class="input-error">
                                 Negative values not allowed
                             </span>
-                            <span *ngIf="!credAmount.errors?.required && creditAmount > cash?.amount_received && isAdded" class="input-error">
-                                Amount should not be greater than {{cash?.amount_received | number: '1.2-2'}}
+                            <span *ngIf="!credAmount.errors?.required && creditAmount > dueAmount - (cheque?.amount_received || 0) && isAdded" class="input-error">
+                                Amount should not be greater than {{dueAmount - (cheque?.amount_received || 0) | number: '1.2-2'}}
                             </span>
                         </div>
                     </div>
@@ -320,12 +320,12 @@
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [loading]="loading" [retailers]="retailersList" [orderType]="'execution'" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
+                                <app-retailer-sub-list [loading]="loading" [currentTab]="currentTab" [retailers]="retailersList" [orderType]="'execution'" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
                                 <div class="rightHeight">
-                                    <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
+                                    <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [dueAmount]="dueAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
                                         [cheque]="cheque" [credit]="credit" [cash]="cash" [orders]="retailersList" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [returnedProduct]="returnedProduct" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
                                         [newProduct]="newProduct" [orderType]="'execution'" [recoveryAmount]="recoveryAmount" (deleteReturned)="deleteReturnedProduct($event)" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()" (productUpdated)="calculateReceivable()">
                                     </app-order-items-list>
@@ -424,7 +424,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <button *ngIf="spotRetailer" (click)="setSpotSaleRetailer()" class="btn add_button addpr addReturn add-ordr">Add Order</button>
+                                    <button *ngIf="spotRetailer && showAddRetailer" (click)="setSpotSaleRetailer()" class="btn add_button addpr addReturn add-ordr">Add Order</button>
 
                                 </div>
                             </div>
@@ -432,13 +432,13 @@
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="spotSaleOrder.retailers" [orderType]="'execution'" [isSpotSaleActive]="isSpotSaleActive" (retailerChanged)="setCurrentSpotSaleOrder($event)"></app-retailer-sub-list>
+                                <app-retailer-sub-list [retailers]="spotSaleOrder.retailers" [currentTab]="currentTab" [orderType]="'execution'" [isSpotSaleActive]="isSpotSaleActive" (retailerChanged)="setCurrentSpotSaleOrder($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">
                                 <div class="rightHeight">
                                     <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [currentTab]="currentTab" [orderDetail]="orderDetails" [returnAmount]="returnAmount" [isChequeAdded]="isChequeAdded" [isCreditAdded]="isCreditAdded" [receivableAmount]="receivableAmount" [totalPayment]="totalPayment"
-                                        [cheque]="cheque" [credit]="credit" [orders]="spotSaleOrder.retailers" [cash]="cash" [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orderType]="'execution'" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
+                                        [cheque]="cheque" [credit]="credit" [orders]="spotSaleOrder.retailers" [cash]="cash" [schemes]="schemes" [dueAmount]="dueAmount" [selectedRetailer]="selectedRetailer" [orderType]="'execution'" [allProducts]="inventory" [specialDiscounts]="specialDiscounts" [merchantDiscount]="merchantDiscount"
                                         [newProduct]="newProduct" (openDrawer)="openProductsList()" (openReturnedModal)="openReturnedModal()" (productUpdated)="calculateReceivable()" (deleteReturned)="deleteReturnedProduct($event)">
                                     </app-order-items-list>
                                     <div class="col-12" *ngIf="savingOrder">
@@ -589,9 +589,9 @@
                                                 <th>Product Name</th>
                                                 <th>Unit</th>
                                                 <th>Issue QTY.</th>
-                                                <th>Cancellation QTY.</th>
                                                 <th>Return QTY.</th>
                                                 <th>Sold QTY.</th>
+                                                <th>Inventory Return</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -600,9 +600,9 @@
                                                 <td>{{item.item_name}}</td>
                                                 <td>{{item.unit_name}}</td>
                                                 <td>{{item.total_dispatch_qty}}</td>
-                                                <td>{{item.total_cancel_qty}}</td>
                                                 <td>{{item.total_return_qty}}</td>
                                                 <td>{{item.total_sold_qty}}</td>
+                                                <td>{{item.total_cancel_qty}}</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -675,11 +675,11 @@
                                             </div>
 
                                             <div class="report_value" style="height:40px; line-height:22px;">
-                                                <strong>AMT. Received:</strong> <input type="number" [(ngModel)]="amountReceived" (keydown)="isNumber($event)" class="form-control value_input amount_recieved_cashReport" placeholder="0">
+                                                <strong>AMT. Received:</strong> <input type="number" [(ngModel)]="amountReceived" (keydown)="isNumber($event)" (keyup)="amountReceivedMax()" class="form-control value_input amount_recieved_cashReport" placeholder="0">
                                             </div>
                                             <div class="report_value" style="color:#0038ba">
                                                 <strong>Balance AMT:</strong>
-                                                <span>{{finalLoad?.dsr?.total_net_after_recovery - amountReceived || 0 | number: '1.2-2'}}</span>
+                                                <span>{{finalLoad?.dsr?.total_amount_recieveable - amountReceived || 0 | number: '1.2-2'}}</span>
                                             </div>
 
 

@@ -32,6 +32,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     isAdded: boolean;
     isSpotSaleActive: boolean;
     isExpenseAdded: boolean;
+    showAddRetailer: boolean;
 
     paymentDate: string;
     orderDate: string;
@@ -46,6 +47,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     creditAmount: number;
     chequeAmount: number;
     returnAmount: number;
+    dueAmount: number;
     receivableAmount: number;
     amountReceived: number;
     netAmount: number;
@@ -103,6 +105,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.dtOPtions = {
             pagingType: 'simple_numbers',
         };
+        this.showAddRetailer = true;
         this.getSchemesData();
         this.setPaymentInitalValues();
         this.setSpotSaleOrder();
@@ -135,6 +138,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.amountReceived = 0;
         this.chequeAmount = 0;
         this.returnAmount = 0;
+        this.dueAmount = 0;
         this.receivableAmount = 0;
         this.recoveryAmount = 0;
         this.totalPayment = 0;
@@ -299,6 +303,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             const retailers = JSON.parse(JSON.stringify(this.spotSaleOrder.retailers));
             retailers.push(this.spotRetailer);
             this.spotSaleOrder.retailers = JSON.parse(JSON.stringify(retailers));
+            this.showAddRetailer = false;
             this.change.detectChanges();
         }
     }
@@ -317,12 +322,22 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     this.orderDetails = res.data;
                     this.orderDetails.returned_items = this.orderDetails.returned_items;
                     this.recoveryAmount = this.orderDetails.recovery;
-                    this.orderDetails.recovered = this.orderDetails.recovered > 0 ? this.orderDetails.recovered
-                        : this.orderDetails.recovery;
+                    this.orderDetails.recovered = +this.orderDetails.recovered.toFixed(2);
+                    if (this.orderDetails.payment && this.orderDetails.payment.length) {
+                        this.orderDetails.payment.forEach(pay => {
+                            if (pay.payment_mode === 'Cheque') {
+                              this.setCheque(pay);
+                            } else if (pay.payment_mode === 'Credit') {
+                              this.setCredit(pay);
+                            } else if (pay.payment_mode === 'Cash') {
+                              this.setCash(pay);
+                            }
+                        });
+                    }
                     if (this.orderDetails.returned_items.length) {
                         this.setOrderDetailReturnedItems();
                     } else {
-                        this.receivableAmount = this.orderDetails.total_amount_after_tax;
+                        this.receivableAmount = this.orderDetails.total_amount_after_tax + this.orderDetails.recovered;
                     }
                     this.setOrderDetailItems();
                     this.calculateReceivable();
@@ -337,6 +352,56 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             });
           this.getDiscountSlabs();
         }
+    }
+
+    setCash(payment: any): void {
+      this.cash = {
+        retailer_id: this.selectedRetailer.retailer_id,
+        distributor_id: this.distributorId,
+        type: this.currentTab === 1 ? 'Execution' : 'Spot',
+        payment_mode: 'Cash',
+        payment_detail: '',
+        dispatched_bill_amount: 0,
+        return_amount: this.returnAmount || 0,
+        recovery: 0,
+        amount_received: payment.amount_received
+      };
+    }
+
+    setCredit(payment: any): void {
+      this.paymentTypeCredit = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
+      this.credit = {
+        retailer_id: this.selectedRetailer.retailer_id,
+        distributor_id: this.distributorId,
+        type: this.currentTab === 1 ? 'Execution' : 'Spot',
+        payment_mode: 'Credit',
+        payment_detail: '',
+        dispatched_bill_amount: 0,
+        recovery: 0,
+        amount_received: payment.amount_received
+      };
+      this.isCreditAdded = true;
+    }
+
+    setCheque(payment: any): void {
+      this.paymentTypeCheque = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
+      const paymentDetail = JSON.parse(payment.payment_detail);
+      this.cheque = {
+        retailer_id: this.selectedRetailer.retailer_id,
+        distributor_id: this.distributorId,
+        type: this.currentTab === 1 ? 'Execution' : 'Spot',
+        payment_mode: 'Cheque',
+        payment_detail: {
+            cheque_amount: payment.amount_received,
+            bank_name: paymentDetail.bank_name,
+            cheque_number: paymentDetail.cheque_number,
+            cheque_date: paymentDetail.cheque_date
+        },
+        dispatched_bill_amount: 0,
+        recovery: 0,
+        amount_received: payment.amount_received
+      };
+      this.isChequeAdded = true;
     }
 
     setOrderDetailReturnedItems(): void {
@@ -467,11 +532,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.returnAmount = this.dataService.calculateItemsBill(returnPrices);
         const price = this.orderDetails.items.map(x => x.net_amount);
         this.netAmount = this.dataService.calculateItemsBill(price);
+        this.dueAmount = this.netAmount + this.returnAmount;
         this.receivableAmount = this.netAmount + this.orderDetails.recovered + this.returnAmount;
-        this.selectedRetailer.order_total = this.totalPayment;
+        this.selectedRetailer.order_total = this.dueAmount;
         if (this.currentTab === 2) {
             const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
-            retailer.order_total = this.totalPayment;
+            retailer.order_total = this.dueAmount;
         }
         this.calculatePayments();
     }
@@ -634,7 +700,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             if (this.paymentTypeCredit === 'full') {
                 return this.paymentTypeCredit.length > 0;
             } else {
-                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1 && this.creditAmount <= this.cash.amount_received;
+                return this.paymentTypeCredit.length > 0 && this.creditAmount > -1 &&
+                this.creditAmount <= this.dueAmount - (this.cheque ? this.cheque.amount_received : 0);
             }
         } else {
             if (this.paymentTypeCheque === 'full') {
@@ -671,7 +738,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 payment_detail: '',
                 dispatched_bill_amount: 0,
                 recovery: 0,
-                amount_received: this.paymentTypeCredit === 'full' ? JSON.parse(JSON.stringify(this.receivableAmount)) :
+                amount_received: this.paymentTypeCredit === 'full' ?
+                JSON.parse(JSON.stringify(this.dueAmount - (this.cheque ? this.cheque.amount_received : 0))) :
                     JSON.parse(JSON.stringify(this.creditAmount))
             };
             this.isCreditAdded = true;
@@ -750,15 +818,15 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.totalPayment = this.cheque ? this.cash.amount_received + this.cheque.amount_received : this.cash.amount_received;
         if (this.currentTab === 2) {
             const retailer = this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id);
-            retailer.order_total = this.totalPayment;
+            retailer.order_total = this.dueAmount;
         }
-        this.selectedRetailer.order_total = this.receivableAmount;
-        if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).order_total = this.receivableAmount; }
+        this.selectedRetailer.order_total = this.dueAmount;
+        if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).order_total = this.dueAmount; }
         if (this.currentTab === 2) {
-          this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id).order_total = this.receivableAmount;
+          this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id).order_total = this.dueAmount;
         }
-        this.orderDetails.order_total = this.receivableAmount;
-        this.orderDetails.total_amount_after_tax = this.receivableAmount;
+        this.orderDetails.order_total = this.dueAmount;
+        this.orderDetails.total_amount_after_tax = this.dueAmount;
     }
 
     saveExecutionQuantity(): void {
@@ -841,9 +909,18 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.toastService.showToaster(toast);
                 this.inventory = res.data.executed_products;
                 this.selectedRetailer.id = res.data.order.id;
-                const index = this.spotSaleOrder.orders.findIndex(x => x.retailer_id === this.orderDetails.retailer_id);
-                this.spotSaleOrder.orders[index] = JSON.parse(JSON.stringify(res.data.order));
+                const orderIndex = this.spotSaleOrder.orders.findIndex(x => x.retailer_id === this.orderDetails.retailer_id);
+                const retailerIndex = this.spotSaleOrder.retailers.findIndex(x => x.retailer_id === this.selectedRetailer.retailer_id);
+                this.spotSaleOrder.retailers[retailerIndex].id = res.data.order.id;
+                this.spotSaleOrder.retailers[retailerIndex].order_total = res.data.order.order_total;
+                this.spotSaleOrder.orders[orderIndex] = JSON.parse(JSON.stringify(res.data.order));
                 this.orderDetails = JSON.parse(JSON.stringify(res.data.order));
+                const emptyOrder = this.spotSaleOrder.orders.find(x => x.order_total === 0);
+                if (emptyOrder) {
+                  this.showAddRetailer = false;
+                } else {
+                  this.showAddRetailer = true;
+                }
                 this.setOrderDetailItems();
                 this.setOrderDetailReturnedItems();
             }
@@ -912,6 +989,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     type: 'success'
                 });
                 this.newProduct = null;
+                this.inventory = res.data.executed_products;
                 this.removeSpotOrder();
             }
         }, error => {
@@ -931,10 +1009,17 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     removeSpotOrder(): void {
         this.selectedRetailer.isAdded = false;
         this.spotSaleOrder.retailers = this.spotSaleOrder.retailers.filter(x => x.retailer_id !== this.selectedRetailer.retailer_id);
+        this.spotSaleOrder.orders = this.spotSaleOrder.orders.filter(x => x.retailer_id !== this.selectedRetailer.retailer_id);
         this.orderDetails.items = [];
         this.orderDetails.returned_items = [];
         this.isSpotSaleActive = false;
         this.selectedRetailer = null;
+        const emptyOrder = this.spotSaleOrder.orders.find(x => x.order_total === 0);
+        if (emptyOrder) {
+          this.showAddRetailer = false;
+        } else {
+          this.showAddRetailer = true;
+        }
         this.resetPaymentValues();
         this.setPaymentInitalValues();
     }
@@ -945,6 +1030,20 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.loading = false;
             if (res.status === 200) {
                 this.finalLoad = res.data;
+                this.recoveryListing = res.data.out_of_route_recovery.map(x => {
+                  x.recovery = x.amount_received;
+                  x.retailer_id = x.id;
+                  x.recoveryAdded = true;
+                  return x;
+                });
+                this.outOfRouteRecovery = res.data.out_of_route_recovery.map(x => {
+                    const recovery = {
+                        retailer_id: x.id,
+                        amount: x.amount_received,
+                        booker_id: x.booker_id
+                    };
+                    return recovery;
+                });
             }
         }, error => {
             this.loading = false;
@@ -1000,34 +1099,60 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     saveExpense(): void {
         document.getElementById('close-expense').click();
-        if (this.finalLoad.expense_detail.length) {
-            this.isAdded = true;
-            this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
-                return { expense_type: +x.expense_type, amount: +x.amount };
-            });
-            this.orderService.saveExecutionExpense(this.loadId, this.salemanId, this.orderDate, this.finalLoad.expense_detail)
-                .subscribe(res => {
-                    this.isAdded = false;
-                    if (res.status === 200) {
-                        this.toastService.showToaster({
-                            title: 'Expense Saved:',
-                            message: 'Expense saved successfully!',
-                            type: 'success'
-                        });
-                        this.finalLoad = res.data;
-                    }
-                }, error => {
-                    this.isAdded = false;
-                    if (error.status !== 1 && error.status !== 401) {
-                        console.log('Error while saving expenses :>> ', error);
-                        this.toastService.showToaster({
-                            title: 'Expense Error:',
-                            message: 'Expense not saved, please try again before marking complete!',
-                            type: 'error'
-                        });
-                    }
+        // if (this.finalLoad.expense_detail.length) {
+        //     this.isAdded = true;
+        //     this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
+        //         return { expense_type: +x.expense_type, amount: +x.amount };
+        //     });
+        //     this.orderService.saveExecutionExpense(this.loadId, this.salemanId, this.orderDate, this.finalLoad.expense_detail)
+        //         .subscribe(res => {
+        //             this.isAdded = false;
+        //             if (res.status === 200) {
+        //                 this.toastService.showToaster({
+        //                     title: 'Expense Saved:',
+        //                     message: 'Expense saved successfully!',
+        //                     type: 'success'
+        //                 });
+        //                 this.finalLoad = res.data;
+        //             }
+        //         }, error => {
+        //             this.isAdded = false;
+        //             if (error.status !== 1 && error.status !== 401) {
+        //                 console.log('Error while saving expenses :>> ', error);
+        //                 this.toastService.showToaster({
+        //                     title: 'Expense Error:',
+        //                     message: 'Expense not saved, please try again before marking complete!',
+        //                     type: 'error'
+        //                 });
+        //             }
+        //         });
+        // }
+        this.isAdded = true;
+        this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
+            return { expense_type: +x.expense_type, amount: +x.amount };
+        });
+        this.orderService.saveExecutionExpense(this.loadId, this.salemanId, this.orderDate, this.finalLoad.expense_detail)
+        .subscribe(res => {
+            this.isAdded = false;
+            if (res.status === 200) {
+                this.toastService.showToaster({
+                    title: 'Expense Saved:',
+                    message: 'Expense saved successfully!',
+                    type: 'success'
                 });
-        }
+                this.finalLoad = res.data;
+            }
+        }, error => {
+            this.isAdded = false;
+            if (error.status !== 1 && error.status !== 401) {
+                console.log('Error while saving expenses :>> ', error);
+                this.toastService.showToaster({
+                    title: 'Expense Error:',
+                    message: 'Expense not saved, please try again before marking complete!',
+                    type: 'error'
+                });
+            }
+        });
     }
 
     checkRecovery(retailer): void {
@@ -1087,9 +1212,14 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     resetRecoveryValues(retailer: any): void {
+        this.isAdded = true;
         retailer.recoveryAdded = false;
         retailer.recovery = 0;
         this.outOfRouteRecovery = this.outOfRouteRecovery.filter(x => x.retailer_id !== retailer.retailer_id);
+        this.recoveryListing = this.recoveryListing.filter(x => x.retailer_id !== retailer.retailer_id);
+        setTimeout(() => {
+          this.isAdded = false;
+        }, 500);
     }
 
     checkRecieveable(): void {
@@ -1102,6 +1232,18 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         } else {
             document.getElementById('show-complete').click();
         }
+    }
+
+    amountReceivedMax(): void {
+      const receiable = this.finalLoad.dsr.total_amount_recieveable.toFixed(2);
+      if (+this.amountReceived > +receiable) {
+        this.toastService.showToaster({
+            title: 'Execution Error:',
+            message: `Received amount cannot be greater than ${this.finalLoad.dsr.total_amount_recieveable}!`,
+            type: 'error'
+        });
+        this.amountReceived = 0;
+      }
     }
 
     markCompelet(): void {

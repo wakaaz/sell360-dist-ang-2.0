@@ -82,7 +82,7 @@
                                                                 <td>{{item.parent_type === 1 ? item.quantity : 0}}</td>
                                                                 <td>{{item.parent_type === 2 ?item.quantity : 0}}</td>
                                                                 <td>{{item.tp}}</td>
-                                                                <td>{{item.tp * item.quantity}}</td>
+                                                                <td>{{(item.tp * item.quantity) | decimal}}</td>
                                                                 <td>{{item.scheme_discount}}</td>
                                                                 <td>{{item.merchant_discount}}</td>
                                                                 <td>{{item.special_discount}}</td>
@@ -110,7 +110,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Discount PKR.</strong></td>
-                                                                <td><strong>-{{orderDetail?.totalDiscount | number: '1.2-2'}}</strong></td>
+                                                                <td><strong>-{{orderDetail?.totalDiscount | decimal}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>

@@ -79,6 +79,7 @@ export const API_URLS = {
 
     // Reports
     DISTRIBUTOR_PURCHASE_HISTORY: '/distributorPurchaseHistory',
+    CASH_SUMMARY: '/CashSummaryReport',
     PURCHASE_DETAIL: '/distributorPurchaseDetail'
 
     // Payments

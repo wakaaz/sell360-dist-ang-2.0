@@ -19,6 +19,7 @@ export class OrderExecutionListComponent implements OnInit {
     bookingSheetUrl: string;
     showExecuteOrder: boolean;
     loading: boolean;
+    selectedLoadId: number;
     distributorId: number;
 
     ordersList: Array<any> = [];
@@ -77,9 +78,10 @@ export class OrderExecutionListComponent implements OnInit {
         window.open(billsUrl);
     }
 
-    revertOrder(order): void {
+    revertOrder(): void {
       this.loading = true;
-      this.orderService.revertOrder('load', order.load_id).subscribe(res => {
+      document.getElementById('close-revert').click();
+      this.orderService.revertOrder('load', this.selectedLoadId).subscribe(res => {
         this.loading = false;
         if (res.status === 200) {
           this.toastServicer.showToaster({

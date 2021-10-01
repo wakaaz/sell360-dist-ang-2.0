@@ -1,3 +1,27 @@
+<!-- Confirmation Modal -->
+<div class="modal fade" id="order-revert" tabindex="-1" role="dialog" aria-labelledby="orderLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content top-borderRed">
+          <div class="modal-header">
+              <h5 class="modal-title" id="orderLabel">Cancel Order <span></span></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+              </button>
+          </div>
+          <div class="modal-body">
+              <div class="col-md-12">
+                  <p>Are you sure you want to revert the order? {{selectedAssignmentId}}</p>
+              </div>
+          </div>
+          <div class="modal-footer border-0">
+              <button type="submit" class="btn btn-primary" (click)="revertOrder()">Yes</button>
+              <button type="button" id="close-revert" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">No</button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<!-- Orders list -->
 <div class="container">
 
     <div class="row mt-2 mb-2">
@@ -41,7 +65,7 @@
                                 <td>{{order.order_total | number: '1.2-2'}}</td>
                                 <td><button (click)="loadBookingSheet(order)" class="btn btn-default mb-0">BS</button>
                                     <a [routerLink]="['/orders', 'dispatch', order.assignment_id, order.sales_man_id, order.date]" class="btn btn-default btn-line mb-0">Dispatch</a>
-                                    <button (click)="revertOrder(order)" class="btn btn-default red-bg mb-0">Revert</button>
+                                    <button (click)="selectedAssignmentId=order.assignment_id" data-toggle="modal" data-target="#order-revert" class="btn btn-default red-bg mb-0">Revert</button>
                                 </td>
                             </tr>
                         </tbody>

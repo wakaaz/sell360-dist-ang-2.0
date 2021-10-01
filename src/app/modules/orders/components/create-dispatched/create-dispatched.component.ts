@@ -16,6 +16,7 @@ export class CreateDispatchedComponent implements OnInit {
 
     bookingSheetUrl: string;
 
+    selectedAssignmentId: number;
     loading: boolean;
 
     ordersList: Array<any> = [];
@@ -55,9 +56,10 @@ export class CreateDispatchedComponent implements OnInit {
     }
 
 
-    revertOrder(order): void {
+    revertOrder(): void {
       this.loading = true;
-      this.orderService.revertOrder('assignment', order.assignment_id).subscribe(res => {
+      document.getElementById('close-revert').click();
+      this.orderService.revertOrder('assignment', this.selectedAssignmentId).subscribe(res => {
         this.loading = false;
         if (res.status === 200) {
           this.toastService.showToaster({

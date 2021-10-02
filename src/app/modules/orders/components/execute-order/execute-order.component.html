@@ -320,7 +320,7 @@
 
                         <div class="row m-0 grayTopborder">
                             <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [loading]="loading" [currentTab]="currentTab" [retailers]="retailersList" [orderType]="'execution'" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
+                                <app-retailer-sub-list [loading]="loading || savingOrder" [currentTab]="currentTab" [retailers]="retailersList" [orderType]="'execution'" (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
                             </div>
 
                             <div class="col p-0">

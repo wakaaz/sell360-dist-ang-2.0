@@ -65,7 +65,7 @@
                         (keyup)="calculateExtraDiscount(item)" (keydown)="isNumber($event)"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.net_amount || 0 | number: '1.2-2'}}</td>
-                <td><button *ngIf="!item.isDeleted" type="button" (click)="selectedItem=item;"
+                <td><button *ngIf="!item.isDeleted" [disabled]="isChequeAdded || isCreditAdded" type="button" (click)="selectedItem=item;"
                         class="del_item btn smBTN red-bg" data-toggle="modal"
                         data-target="#exampleModal-del">Delete</button>
                 </td>
@@ -156,7 +156,7 @@
                     <div class="col-6">Recovery:</div>
                     <div class="col-6">
                         <div class="col-6" style="float: right;">
-                            <input type="number" style="text-align: right;" name="recovered" id="recovered" class="form-control recovered" [(ngModel)]="orderDetail.recovered" (keydown)="isNumber($event)" (keyup)="checkRecovery()">
+                            <input type="number" style="text-align: right;" [disabled]="isChequeAdded || isCreditAdded" name="recovered" id="recovered" class="form-control recovered" [(ngModel)]="orderDetail.recovered" (keydown)="isNumber($event)" (keyup)="checkRecovery()">
                         </div>
                     </div>
                 </div>

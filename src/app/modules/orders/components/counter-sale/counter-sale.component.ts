@@ -530,6 +530,10 @@ export class CounterSaleComponent implements OnInit {
     }
 
     addProductToOrder(): void {
+        if (this.selectedProduct.selectedScheme && !this.selectedProduct.selectedScheme.applied) {
+          this.dataService.schemeCannotApplied();
+          return;
+        }
         this.isAdded = true;
         if (+this.selectedProduct.stockQty > 0 && this.selectedProduct.pref_id) {
             const pr = this.selectedProducts.find(x => x.item_id === this.selectedProduct.item_id &&

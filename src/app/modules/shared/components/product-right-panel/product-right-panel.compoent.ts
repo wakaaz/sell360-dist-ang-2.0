@@ -80,6 +80,10 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     }
 
     addProductToOrder(): void {
+        if (this.selectedProduct.selectedScheme && !this.selectedProduct.selectedScheme.applied) {
+          this.dataService.schemeCannotApplied();
+          return;
+        }
         if (+this.selectedProduct.stockQty > 0 &&
             (this.orderType !== 'execution' ||
                 this.orderType === 'execution' && +this.selectedProduct.stockQty <= this.selectedProduct.available_qty)) {

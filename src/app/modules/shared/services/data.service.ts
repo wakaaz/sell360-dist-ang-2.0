@@ -80,6 +80,7 @@ export class DataService {
         product.scheme_discount = discounted.schemeDiscount;
         product.price = discounted.singleItemPrice;
         product.unit_price_after_scheme_discount = discounted.singleItemPrice;
+        product.selectedScheme.applied = true;
         return product;
     }
 
@@ -90,10 +91,13 @@ export class DataService {
             product.scheme_discount = discounted.schemeDiscount;
             product.price = discounted.singleItemPrice;
             product.unit_price_after_scheme_discount = discounted.singleItemPrice;
+            product.selectedScheme.applied = true;
         } else {
+            product.selectedScheme.applied = false;
             product.scheme_discount = 0;
             product.price = product.item_trade_price;
             product.unit_price_after_scheme_discount = product.item_trade_price;
+            this.schemeCannotApplied();
         }
         return product;
     }
@@ -105,10 +109,13 @@ export class DataService {
             product.scheme_discount = discounted.schemeDiscount;
             product.price = discounted.singleItemPrice;
             product.unit_price_after_scheme_discount = discounted.singleItemPrice;
+            product.selectedScheme.applied = true;
         } else {
+            product.selectedScheme.applied = false;
             product.scheme_discount = 0;
             product.price = product.item_trade_price;
             product.unit_price_after_scheme_discount = product.item_trade_price;
+            this.schemeCannotApplied();
         }
         return product;
     }
@@ -190,10 +197,13 @@ export class DataService {
             product.price = product.item_trade_price - product.selectedScheme.discount_on_tp;
             product.unit_price_after_scheme_discount = product.item_trade_price - product.selectedScheme.discount_on_tp;
             product.scheme_discount = product.selectedScheme.discount_on_tp;
-        } else {
+            product.selectedScheme.applied = true;
+          } else {
+            product.selectedScheme.applied = false;
             product.price = product.item_trade_price;
             product.unit_price_after_scheme_discount = product.item_trade_price;
             product.scheme_discount = 0;
+            this.schemeCannotApplied();
         }
         return product;
     }
@@ -202,10 +212,13 @@ export class DataService {
         if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
             product.scheme_discount = product.item_trade_price - (product.selectedScheme.gift_value / product.stockQty);
             product.gift_value = product.selectedScheme.gift_value;
+            product.selectedScheme.applied = true;
         } else {
+            product.selectedScheme.applied = false;
             product.price = product.item_trade_price;
             product.unit_price_after_scheme_discount = product.item_trade_price;
             product.scheme_discount = 0;
+            this.schemeCannotApplied();
         }
         return product;
     }

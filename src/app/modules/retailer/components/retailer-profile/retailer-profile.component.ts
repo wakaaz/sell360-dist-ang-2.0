@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ChartType, ChartOptions, Chart } from 'chart.js';
 import { SingleDataSet, Label, Color } from 'ng2-charts';
 import * as echarts from 'echarts';
+import { Loader, LoaderOptions } from 'google-maps';
 import { ActivatedRoute } from '@angular/router';
 import { RetailerService } from '../../services/retailer.service';
 import { ToasterService } from 'src/app/core/services/toaster.service';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
     selector: 'app-retailer-profile',
@@ -12,6 +14,8 @@ import { ToasterService } from 'src/app/core/services/toaster.service';
     styleUrls: ['./retailer-profile.component.css'],
 })
 export class RetailerProfileComponent implements OnInit {
+    options: LoaderOptions = {/* todo */ };
+    loader = new Loader('AIzaSyAPx6ZyRZ1B8SoBCDMZ89LQ5TyQTr-pgN8', this.options);
     dtOptions: DataTables.Settings = {};
     dtOptionsOrders: DataTables.Settings = {};
     openReport: boolean;
@@ -23,7 +27,7 @@ export class RetailerProfileComponent implements OnInit {
     loadingOrders = false;
     orderDetail = null;
     visitIamge = null;
-
+    mapURL = null;
     // Payment Chart
     public paymentChartOptions: ChartOptions = {
         rotation: 1 * Math.PI,
@@ -119,14 +123,23 @@ export class RetailerProfileComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private retailerService: RetailerService,
-        private toastService: ToasterService
+        private toastService: ToasterService,
+        private sanitizer: DomSanitizer
     ) { }
 
     ngOnInit(): void {
         this.loading = true;
         this.profileId = this.route.snapshot.paramMap.get('id');
         this.retailer = JSON.parse(this.route.snapshot.queryParams.retailer);
-        console.log('retiler -- ', this.retailer)
+        // this.mapURL = this.sanitizer.bypassSecurityTrustUrl
+        // (`https://maps.google.com/?q="${this.retailer?.retailer_lats},${this.retailer?.retailer_longs}`);
+        console.log('retiler -- ', this.retailer);
+        this.loader.load().then(function (google) {
+            const map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: -34.397, lng: 150.644 },
+                zoom: 8,
+            });
+        });
         this.dtOptions = {
             pagingType: 'simple_numbers',
         };
@@ -158,8 +171,8 @@ export class RetailerProfileComponent implements OnInit {
         this.retailerService.getRetailerOrdersById(this.profileId).subscribe(
             (data) => {
                 this.orders = data;
+                console.log('orders => ', this.orders);
                 this.loadingOrders = false;
-                console.log('this.orders => ', this.orders[0]);
             },
             (error) => {
                 this.loadingOrders = false;

@@ -286,10 +286,10 @@
                     <div class="col-md-12">
                         <!-- Map Start -->
                         <div class="mapouter">
-                            <div class="gmap_canvas">
-                                <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0"
+                            <div class="gmap_canvas" id="map">
+                                <!-- <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0"
                                     marginwidth="0"
-                                    src="https://maps.google.com/maps?&amp;hl=en&amp;q=mochipuralahorepunjabpakistan&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                                    src="https://www.google.com/maps/search/?api=1&query=28.6139,77.2090"></iframe> -->
                             </div>
                         </div>
                         <!-- Map End -->
@@ -631,7 +631,7 @@
 <div class="container" id="profile">
     <div class="row mt-2 mb-2">
         <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Retailer: <span> Bismillah Farmaan Store</span></h2>
+            <h2 class="_head01">Retailer: <span> {{retailer?.retailer_name}}</span></h2>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6">
             <ol class="breadcrumb">

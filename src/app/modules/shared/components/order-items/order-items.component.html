@@ -53,7 +53,7 @@
                 [ngClass]="((orderType !== 'execution' && !item.item_quantity_booker) || (orderType === 'execution' && !item.dispatch_qty)) && item.isDeleted ? 'd-none' : ''">
                 <td style="width:200px">{{item.item_name}}</td>
                 <td>{{orderType !== 'execution' ? item.item_quantity_booker : item.dispatch_qty || 0}}</td>
-                <td><input type="number" (paste)="$event.preventDefault()" [id]="item.item_name" [disabled]="isChequeAdded || isCreditAdded" [name]="item.item_name" (keyup)="setQuantity(item)"
+                <td><input type="number" (paste)="$event.preventDefault()" [id]="item.item_name" [disabled]="isChequeAdded || isCreditAdded || item.item_status == 0" [name]="item.item_name" (keyup)="setQuantity(item)"
                         (keydown)="isNumber($event, 'quantity')" [(ngModel)]="item.stockQty" [max]="999"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.item_trade_price | number: '1.2-2'}}</td>
@@ -61,13 +61,14 @@
                 <td>{{item.scheme_discount | number: '1.2-2'}}</td>
                 <td>{{item.trade_discount}}%</td>
                 <td>{{item.special_discount * item.stockQty | number: '1.2-2'}}</td>
-                <td><input type="number" (paste)="$event.preventDefault()" [id]="item.item_id" [disabled]="isChequeAdded || isCreditAdded || +item.stockQty < 1" [name]="item.item_id" [(ngModel)]="item.extra_discount"
+                <td><input type="number" (paste)="$event.preventDefault()" [id]="item.item_id" [disabled]="isChequeAdded || isCreditAdded || item.item_status == 0 || +item.stockQty < 1" [name]="item.item_id" [(ngModel)]="item.extra_discount"
                         (keyup)="calculateExtraDiscount(item)" (keydown)="isNumber($event)"
                         class="form-control value_input" placeholder="0"></td>
                 <td>{{item.net_amount || 0 | number: '1.2-2'}}</td>
-                <td><button *ngIf="!item.isDeleted" [disabled]="isChequeAdded || isCreditAdded" type="button" (click)="selectedItem=item;"
+                <td><button *ngIf="!item.isDeleted && item.item_status == 1" [disabled]="isChequeAdded || isCreditAdded" type="button" (click)="selectedItem=item;"
                         class="del_item btn smBTN red-bg" data-toggle="modal"
                         data-target="#exampleModal-del">Delete</button>
+                        <span style="font-weight: bold;" *ngIf="item.item_status == 0">Cancelled</span>
                 </td>
             </tr>
             <tr *ngFor="let item of orderDetail?.returned_items; let ind=index" [ngClass]="!item.item_quantity_booker && item.isDeleted ? 'd-none' : ''">

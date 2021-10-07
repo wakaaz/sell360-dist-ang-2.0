@@ -62,9 +62,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.showProducts = false;
+    debugger;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    debugger;
     if (changes.orderDetail && changes.orderDetail.currentValue?.items) {
       this.calculateTotalBill();
     }

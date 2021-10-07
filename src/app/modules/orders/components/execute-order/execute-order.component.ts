@@ -455,6 +455,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   setCurrentSpotSaleOrder(retailer: any): void {
+    debugger;
     if (!this.isSpotSaleActive) {
       if (retailer.id) {
         this.isSpotSaleActive = true;
@@ -466,6 +467,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.isSpotSaleActive = true;
         this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
         this.getDiscountSlabs();
+        this.newProduct = null;
       }
     } else {
       const toast: Toaster = {
@@ -901,6 +903,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     if (this.cheque) {
       this.orderDetails.payment.detail.push(this.cheque);
     }
+    debugger;
     this.orderService.saveSpotSaleOrder(this.orderDetails).subscribe(res => {
       this.savingOrder = false;
       this.isSpotSaleActive = false;
@@ -983,6 +986,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   cancelSpotSaleOrder(): void {
     document.getElementById('close-del').click();
     this.savingOrder = true;
+    debugger;
     this.orderService.cancelSpotSaleOrder(this.orderDetails.id).subscribe(res => {
       this.savingOrder = false;
       this.isSpotSaleActive = false;
@@ -995,6 +999,14 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.newProduct = null;
         this.inventory = res.data.executed_products;
         this.removeSpotOrder();
+
+        // this.resetPaymentValues();
+        // this.setPaymentInitalValues();
+        // this.selectedRetailer = { ...retailer };
+        // this.isSpotSaleActive = true;
+        // this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
+        // this.getDiscountSlabs();
+
       }
     }, error => {
       this.savingOrder = false;

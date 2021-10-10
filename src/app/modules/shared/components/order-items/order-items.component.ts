@@ -175,7 +175,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   setReturnedQty(product: any): void {
     const productAvalableQty = this.allProducts.find(x => x.item_id === product.item_id)?.available_qty;
-    if (productAvalableQty < product.quantity_returned && +product.stockQty < product.quantity_returned && product.return_type !== 'damage') {
+    if (productAvalableQty < product.quantity_returned && +product.stockQty < product.quantity_returned &&
+      product.return_type !== 'damage') {
       this.toastService.showToaster({
         title: 'Returned Product:',
         message: 'The selected product is part of other order please remove from other orders to update the quantity!',

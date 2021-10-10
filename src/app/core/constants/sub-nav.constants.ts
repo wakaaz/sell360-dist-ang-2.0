@@ -16,21 +16,23 @@ export const ordersSubMenu = {
             link: '/orders/execution-list',
             icon: '/assets/images/dispatched-order.svg'
         },
-        {
-            title: 'Completed Orders',
-            link: '/orders/completed-orders',
-            icon: '/assets/images/complete-orders.svg'
-        },
+        // Hidden for first version
+        // {
+        //     title: 'Completed Orders',
+        //     link: '/orders/completed-orders',
+        //     icon: '/assets/images/complete-orders.svg'
+        // },
         {
             title: 'Counter Sale',
             link: '/orders/counter-sale',
             icon: '/assets/images/complete-orders.svg'
         },
-        {
-            title: 'Booking VS Execution',
-            link: '/orders/booking-vs-execution',
-            icon: '/assets/images/complete-orders.svg'
-        },
+        // Hidden for first version
+        // {
+        //     title: 'Booking VS Execution',
+        //     link: '/orders/booking-vs-execution',
+        //     icon: '/assets/images/complete-orders.svg'
+        // },
     ]
 };
 export const salesmanSubMenu = {
@@ -101,40 +103,44 @@ export const reportsSubMenu = {
             link: '/reports/cash-summary',
             icon: '/assets/images/reports-icon.svg'
         },
+        // Hidden for first version
+        // {
+        //     title: 'Export Rate List',
+        //     link: '/reports/export-rate-list',
+        //     icon: '/assets/images/reports-icon.svg'
+        // },
+        // Hidden for first version
+        // {
+          //     title: 'Spot Sale',
+        //     link: '/reports/spot-sale',
+        //     icon: '/assets/images/reports-icon.svg'
+        // },
         {
-            title: 'Export Rate List',
-            link: '/reports/export-rate-list',
-            icon: '/assets/images/reports-icon.svg'
+          title: 'Purchase History',
+          link: '/reports/purchase-history',
+          icon: '/assets/images/reports-icon.svg'
         },
-        {
-            title: 'Spot Sale',
-            link: '/reports/spot-sale',
-            icon: '/assets/images/reports-icon.svg'
-        },
-        {
-            title: 'Purchase History',
-            link: '/reports/purchase-history',
-            icon: '/assets/images/reports-icon.svg'
-        },
-        {
-            title: 'Stock Out Report',
-            link: '/reports/stock-report',
-            icon: '/assets/images/reports-icon.svg'
-        },
-        {
-          title: 'Sale Order History',
-          link: '/reports/sale-order-history',
-          icon: '/assets/images/complete-orders.svg'
-      },
+        // Hidden for first version
+        //   {
+      //       title: 'Stock Out Report',
+      //       link: '/reports/stock-report',
+      //       icon: '/assets/images/reports-icon.svg'
+      //   },
+      //   {
+      //     title: 'Sale Order History',
+      //     link: '/reports/sale-order-history',
+      //     icon: '/assets/images/complete-orders.svg'
+      // },
     ]
 };
 export const paymentsSubMenu = {
     title: 'Payments',
     subMenu: [
-        {
-            title: 'Manage Cheque Payments',
-            link: '/payments',
-            icon: '/assets/images/payment-icon.svg'
-        }
+        // Hidden for first version
+        // {
+        //     title: 'Manage Cheque Payments',
+        //     link: '/payments',
+        //     icon: '/assets/images/payment-icon.svg'
+        // }
     ]
 };

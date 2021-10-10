@@ -173,8 +173,18 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
 
     setReturnedQty(product: any): void {
+        const productAvalableQty = this.allProducts.find(x => x.item_id === product.item_id)?.available_qty;
+        if (productAvalableQty < product.quantity_returned && +product.stockQty < product.quantity_returned && product.return_type !== 'damage') {
+            this.toastService.showToaster({
+                title: 'Returned Product:',
+                message: 'The selected product is part of other order please remove from other orders to update the quantity!',
+                type: 'error'
+            });
+            product.stockQty = product.quantity_returned;
+            return;
+        }
         if (+product.stockQty > 1000) {
-            product.stockQty = 0;
+            product.stockQty = product.quantity_returned;
         }
         product.gross_amount = -(product.item_trade_price * product.stockQty);
         product.original_amount = -(product.item_trade_price * product.stockQty);

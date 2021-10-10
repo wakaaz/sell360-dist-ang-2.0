@@ -126,6 +126,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         this.selectedItem.stockQty = 0;
         this.setQuantity(this.selectedItem);
         this.selectedItem.isDeleted = true;
+        // this.selectedItem.item_status = 0;
       } else {
         this.orderDetail.items = this.orderDetail.items.filter(x => x.item_id !== this.selectedItem.item_id);
         this.grossAmount = this.grossAmount - this.selectedItem.original_amount;

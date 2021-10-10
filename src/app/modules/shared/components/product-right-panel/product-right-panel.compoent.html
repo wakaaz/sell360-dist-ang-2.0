@@ -90,14 +90,16 @@
                                                         </div>
                                                     </td>
                                                     <td>
-                                                        <button *ngIf="!product.isAdded"
+                                                        <button *ngIf="!product.isAdded "
                                                             class="btn btn-default mb-0 dont-close-quantity"
                                                             data-toggle="modal" data-target="#exampleModal"
                                                             (click)="openQuantityModal(product)">Add</button>
-                                                        <span *ngIf="product.isAdded"
+                                                            <span *ngIf="product.isAdded"
                                                             class="btn btn-added mb-0 dont-close-quantity">Added</span>
+                                                            <!-- <span *ngIf="product.isDeleted"
+                                                            class="btn btn-added mb-0 dont-close-quantity">Cancelled</span> -->
                                                     </td>
-                                                </tr>                                                
+                                                </tr>
                                             </ng-container>
                                         </tbody>
                                     </table>

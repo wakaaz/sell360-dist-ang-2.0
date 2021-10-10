@@ -210,7 +210,7 @@
                                 Zero value not allowed
                             </span>
                             <span
-                                *ngIf="!credAmount.errors?.required && creditAmount > cash?.amount_received && isAdded"
+                                *ngIf="!credAmount.errors?.required && +creditAmount > cash?.amount_received && isAdded"
                                 class="input-error">
                                 Amount should not be greater than {{cash?.amount_received | number: '1.2-2'}}
                             </span>

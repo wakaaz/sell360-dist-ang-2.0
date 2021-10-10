@@ -1,10 +1,8 @@
-<div class="modal fade" style="overflow-y: auto;" [ngClass]="showDetails ? 'show active' : ''" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-    aria-hidden="true">
+<div class="modal fade" style="overflow-y: auto;" [ngClass]="showDetails ? 'show active' : ''" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-full modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header border-0">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="showDetails = false;closeDetailsModal()"
-                    style="font-size:30px; outline: none;">×</button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="showDetails = false;closeDetailsModal()" style="font-size:30px; outline: none;">×</button>
             </div>
             <div class="modal-body p-0">
                 <div class="container">
@@ -79,13 +77,13 @@
                                                             <tr *ngFor="let item of orderDetail?.order_detail">
                                                                 <td>{{item.item_sku}}</td>
                                                                 <td>{{item.item_name}}</td>
-                                                                <td>{{item.parent_type === 1 ? item.quantity : 0}}</td>
-                                                                <td>{{item.parent_type === 2 ?item.quantity : 0}}</td>
-                                                                <td>{{item.tp}}</td>
-                                                                <td>{{(item.tp * item.quantity) | decimal}}</td>
-                                                                <td>{{item.scheme_discount}}</td>
-                                                                <td>{{item.merchant_discount}}</td>
-                                                                <td>{{item.special_discount}}</td>
+                                                                <td>{{item.parent_qty}}</td>
+                                                                <td>{{item.child_qty}}</td>
+                                                                <td>{{item.original_price}}</td>
+                                                                <td>{{(item.original_price * item.quantity) | decimal}}</td>
+                                                                <td>{{(item.scheme_discount * item.quantity) | number: '1.2-2'}}</td>
+                                                                <td>{{(item.merchant_discount_pkr * item.quantity) | number: '1.2-2'}}</td>
+                                                                <td>{{(item.special_discount * item.quantity) | number: '1.2-2'}}</td>
                                                                 <td>{{item.final_price | number: '1.2-2'}}</td>
                                                             </tr>
                                                             <tr>
@@ -142,8 +140,8 @@
                             </div>
                         </div>
                         <div *ngIf="loading" class="col-12">
-                          <app-loader-white></app-loader-white>
-                      </div>
+                            <app-loader-white></app-loader-white>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -201,8 +199,7 @@
                                 <td>{{order.channel}} </td>
                                 <td>{{order.emp_name}}</td>
                                 <td>{{order.order_total}}</td>
-                                <td><button (click)="showDetails = true;openDetailsModal(order.id)"
-                                        class="btn btn-default btn-line mb-0">Detail</button></td>
+                                <td><button (click)="showDetails = true;openDetailsModal(order.id)" class="btn btn-default btn-line mb-0">Detail</button></td>
                             </tr>
 
                         </tbody>

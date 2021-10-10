@@ -15,7 +15,7 @@
                                             <img src="assets/images/sell-360.svg" alt="" />
                                         </div>
                                         <div class="col-4 ord-no">
-                                            Order # <strong>{{orderDetail?.order_detail[0]?.order_number}}</strong>
+                                            Order # <strong>{{orderDetail?.retailer_detail?.id}}</strong>
                                         </div>
                                     </div>
                                 </div>
@@ -86,7 +86,7 @@
                                                                 <td>{{(item.special_discount * item.quantity) | number: '1.2-2'}}</td>
                                                                 <td>{{item.final_price | number: '1.2-2'}}</td>
                                                             </tr>
-                                                            <tr>
+                                                            <!-- <tr>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
@@ -97,7 +97,7 @@
                                                                 <td class="border-0"></td>
                                                                 <td><strong>Subtotal PKR.</strong></td>
                                                                 <td><strong>{{orderDetail?.subTotal | number: '1.2-2'}}</strong></td>
-                                                            </tr>
+                                                            </tr> -->
                                                             <tr>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
@@ -107,8 +107,8 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
-                                                                <td><strong>Discount PKR.</strong></td>
-                                                                <td><strong>-{{orderDetail?.totalDiscount | decimal}}</strong></td>
+                                                                <td><strong>Total Discount PKR.</strong></td>
+                                                                <td><strong>{{orderDetail?.totalDiscount | decimal}}</strong></td>
                                                             </tr>
                                                             <tr>
                                                                 <td class="border-0"></td>
@@ -123,7 +123,7 @@
                                                                     <strong>Total PKR.</strong>
                                                                 </td>
                                                                 <td style="background-color:#000; color:#fff">
-                                                                    <strong>{{orderDetail?.subTotal - orderDetail?.totalDiscount | number: '1.2-2'}}</strong>
+                                                                    <strong>{{orderDetail?.retailer_detail?.order_total | number: '1.2-2'}}</strong>
                                                                 </td>
                                                             </tr>
                                                         </tbody>

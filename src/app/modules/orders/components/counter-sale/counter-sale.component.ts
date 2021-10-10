@@ -699,6 +699,7 @@ export class CounterSaleComponent implements OnInit {
     }
 
     calculatePayments(): void {
+        const cash = +this.dueAmount.toFixed(2);
         this.cash = {
             retailer_id: this.selectedRetailer.retailer_id,
             distributor_id: this.distributorId,
@@ -707,7 +708,7 @@ export class CounterSaleComponent implements OnInit {
             payment_detail: '',
             dispatched_bill_amount: 0,
             recovery: 0,
-            amount_received: JSON.parse(JSON.stringify(this.dueAmount))
+            amount_received: cash
         };
         if (this.cheque) {
             this.cash.amount_received = this.cash.amount_received - this.cheque.amount_received;

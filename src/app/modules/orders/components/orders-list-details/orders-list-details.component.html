@@ -198,7 +198,7 @@
                                 <td>{{order.retailer}}</td>
                                 <td>{{order.channel}} </td>
                                 <td>{{order.emp_name}}</td>
-                                <td>{{order.order_total}}</td>
+                                <td>{{order.order_total | number: '1.2-2'}}</td>
                                 <td><button (click)="showDetails = true;openDetailsModal(order.id)" class="btn btn-default btn-line mb-0">Detail</button></td>
                             </tr>
 

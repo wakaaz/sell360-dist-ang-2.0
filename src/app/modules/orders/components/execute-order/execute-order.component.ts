@@ -269,13 +269,13 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     });
                 }
                 if (this.retailersList.length) {
-                  this.routeRetailers = this.routeRetailers.map(x => {
-                    const index = this.retailersList.findIndex(y => y.retailer_id === x.retailer_id);
-                    if (index > -1) {
-                        x.isAdded = true;
-                    }
-                    return x;
-                });
+                    this.routeRetailers = this.routeRetailers.map(x => {
+                        const index = this.retailersList.findIndex(y => y.retailer_id === x.retailer_id);
+                        if (index > -1) {
+                            x.isAdded = true;
+                        }
+                        return x;
+                    });
                 }
             }
         }, error => {
@@ -310,15 +310,15 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     getOrderDetailsByRetailer(retailer: any): void {
         if (this.selectedRetailer?.id !== retailer.id) {
-          this.savingOrder = true;
-          this.newProduct = null;
-          this.returnedProduct = null;
-          this.resetPaymentValues();
-          this.setPaymentInitalValues();
-          this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
-          this.orderService.getOrderDetails(retailer.id).subscribe(res => {
-            this.savingOrder = false;
-            if (res.status === 200) {
+            this.savingOrder = true;
+            this.newProduct = null;
+            this.returnedProduct = null;
+            this.resetPaymentValues();
+            this.setPaymentInitalValues();
+            this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
+            this.orderService.getOrderDetails(retailer.id).subscribe(res => {
+                this.savingOrder = false;
+                if (res.status === 200) {
                     this.orderDetails = res.data;
                     this.orderDetails.returned_items = this.orderDetails.returned_items;
                     this.recoveryAmount = this.orderDetails.recovery;
@@ -326,11 +326,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     if (this.orderDetails.payment && this.orderDetails.payment.length) {
                         this.orderDetails.payment.forEach(pay => {
                             if (pay.payment_mode === 'Cheque') {
-                              this.setCheque(pay);
+                                this.setCheque(pay);
                             } else if (pay.payment_mode === 'Credit') {
-                              this.setCredit(pay);
+                                this.setCredit(pay);
                             } else if (pay.payment_mode === 'Cash') {
-                              this.setCash(pay);
+                                this.setCash(pay);
                             }
                         });
                     }
@@ -350,58 +350,58 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                     this.toastService.showToaster(toast);
                 }
             });
-          this.getDiscountSlabs();
+            this.getDiscountSlabs();
         }
     }
 
     setCash(payment: any): void {
-      this.cash = {
-        retailer_id: this.selectedRetailer.retailer_id,
-        distributor_id: this.distributorId,
-        type: this.currentTab === 1 ? 'Execution' : 'Spot',
-        payment_mode: 'Cash',
-        payment_detail: '',
-        dispatched_bill_amount: 0,
-        return_amount: this.returnAmount || 0,
-        recovery: 0,
-        amount_received: payment.amount_received
-      };
+        this.cash = {
+            retailer_id: this.selectedRetailer.retailer_id,
+            distributor_id: this.distributorId,
+            type: this.currentTab === 1 ? 'Execution' : 'Spot',
+            payment_mode: 'Cash',
+            payment_detail: '',
+            dispatched_bill_amount: 0,
+            return_amount: this.returnAmount || 0,
+            recovery: 0,
+            amount_received: payment.amount_received
+        };
     }
 
     setCredit(payment: any): void {
-      this.paymentTypeCredit = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
-      this.credit = {
-        retailer_id: this.selectedRetailer.retailer_id,
-        distributor_id: this.distributorId,
-        type: this.currentTab === 1 ? 'Execution' : 'Spot',
-        payment_mode: 'Credit',
-        payment_detail: '',
-        dispatched_bill_amount: 0,
-        recovery: 0,
-        amount_received: payment.amount_received
-      };
-      this.isCreditAdded = true;
+        this.paymentTypeCredit = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
+        this.credit = {
+            retailer_id: this.selectedRetailer.retailer_id,
+            distributor_id: this.distributorId,
+            type: this.currentTab === 1 ? 'Execution' : 'Spot',
+            payment_mode: 'Credit',
+            payment_detail: '',
+            dispatched_bill_amount: 0,
+            recovery: 0,
+            amount_received: payment.amount_received
+        };
+        this.isCreditAdded = true;
     }
 
     setCheque(payment: any): void {
-      this.paymentTypeCheque = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
-      const paymentDetail = JSON.parse(payment.payment_detail);
-      this.cheque = {
-        retailer_id: this.selectedRetailer.retailer_id,
-        distributor_id: this.distributorId,
-        type: this.currentTab === 1 ? 'Execution' : 'Spot',
-        payment_mode: 'Cheque',
-        payment_detail: {
-            cheque_amount: payment.amount_received,
-            bank_name: paymentDetail.bank_name,
-            cheque_number: paymentDetail.cheque_number,
-            cheque_date: paymentDetail.cheque_date
-        },
-        dispatched_bill_amount: 0,
-        recovery: 0,
-        amount_received: payment.amount_received
-      };
-      this.isChequeAdded = true;
+        this.paymentTypeCheque = payment.amount_received < this.orderDetails.order_total ? 'partial' : 'full';
+        const paymentDetail = JSON.parse(payment.payment_detail);
+        this.cheque = {
+            retailer_id: this.selectedRetailer.retailer_id,
+            distributor_id: this.distributorId,
+            type: this.currentTab === 1 ? 'Execution' : 'Spot',
+            payment_mode: 'Cheque',
+            payment_detail: {
+                cheque_amount: payment.amount_received,
+                bank_name: paymentDetail.bank_name,
+                cheque_number: paymentDetail.cheque_number,
+                cheque_date: paymentDetail.cheque_date
+            },
+            dispatched_bill_amount: 0,
+            recovery: 0,
+            amount_received: payment.amount_received
+        };
+        this.isChequeAdded = true;
     }
 
     setOrderDetailReturnedItems(): void {
@@ -583,12 +583,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     changeTab(selectedTab: number): void {
         this.currentTab = selectedTab;
         if (this.currentTab === 1) {
-          this.retailersList = this.retailersList.map(x => {
-            x.isActive = false;
-            return x;
-          });
-          this.selectedRetailer = null;
-          this.orderDetails = null;
+            this.retailersList = this.retailersList.map(x => {
+                x.isActive = false;
+                return x;
+            });
+            this.selectedRetailer = null;
+            this.orderDetails = null;
         }
         if (this.currentTab === 2) {
             if (this.selectedRetailer) {
@@ -596,8 +596,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.orderDetails.returned_items = [];
                 this.selectedRetailer.isActive = false;
                 this.spotSaleOrder.retailers = this.spotSaleOrder.retailers.map(x => {
-                  x.isActive = false;
-                  return x;
+                    x.isActive = false;
+                    return x;
                 });
                 this.selectedRetailer = null;
                 this.orderDetails = null;
@@ -701,7 +701,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 return this.paymentTypeCredit.length > 0;
             } else {
                 return this.paymentTypeCredit.length > 0 && this.creditAmount > -1 &&
-                this.creditAmount <= this.dueAmount - (this.cheque ? this.cheque.amount_received : 0);
+                    this.creditAmount <= this.dueAmount - (this.cheque ? this.cheque.amount_received : 0);
             }
         } else {
             if (this.paymentTypeCheque === 'full') {
@@ -739,7 +739,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 dispatched_bill_amount: 0,
                 recovery: 0,
                 amount_received: this.paymentTypeCredit === 'full' ?
-                JSON.parse(JSON.stringify(this.dueAmount - (this.cheque ? this.cheque.amount_received : 0))) :
+                    JSON.parse(JSON.stringify(this.dueAmount - (this.cheque ? this.cheque.amount_received : 0))) :
                     JSON.parse(JSON.stringify(this.creditAmount))
             };
             this.isCreditAdded = true;
@@ -823,7 +823,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.selectedRetailer.order_total = this.dueAmount;
         if (this.currentTab === 1) { this.retailersList.find(x => x.id === this.selectedRetailer.id).order_total = this.dueAmount; }
         if (this.currentTab === 2) {
-          this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id).order_total = this.dueAmount;
+            this.spotSaleOrder.retailers.find(x => x.retailer_id === this.selectedRetailer.retailer_id).order_total = this.dueAmount;
         }
         this.orderDetails.order_total = this.dueAmount;
         this.orderDetails.total_amount_after_tax = this.dueAmount;
@@ -917,9 +917,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
                 this.orderDetails = JSON.parse(JSON.stringify(res.data.order));
                 const emptyOrder = this.spotSaleOrder.orders.find(x => x.order_total === 0);
                 if (emptyOrder) {
-                  this.showAddRetailer = false;
+                    this.showAddRetailer = false;
                 } else {
-                  this.showAddRetailer = true;
+                    this.showAddRetailer = true;
                 }
                 this.setOrderDetailItems();
                 this.setOrderDetailReturnedItems();
@@ -937,59 +937,59 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     validateCancel(): any {
-      if (!this.orderDetails.returned_items?.length) {
-        return true;
-      } else {
-        let isOrderValid = true;
-        const returnedProduct = this.orderDetails.returned_items.find(product => {
-          const productAvalableQty = this.inventory.find(x => x.item_id === product.item_id)?.available_qty;
-          if (productAvalableQty < product.quantity_returned && product.return_type !== 'damage') {
-              isOrderValid = false;
-              return product;
-          }
-        });
-        if (!isOrderValid && returnedProduct) {
-          this.toastService.showToaster({
-            title: 'Returned Product:',
-            message: 'The selected order has returned products which or part of other orders, cannot cancel the order!',
-            type: 'error'
-          });
+        if (!this.orderDetails.returned_items?.length) {
+            return true;
+        } else {
+            let isOrderValid = true;
+            const returnedProduct = this.orderDetails.returned_items.find(product => {
+                const productAvalableQty = this.inventory.find(x => x.item_id === product.item_id)?.available_qty;
+                if (productAvalableQty < product.quantity_returned && product.return_type !== 'damage') {
+                    isOrderValid = false;
+                    return product;
+                }
+            });
+            if (!isOrderValid && returnedProduct) {
+                this.toastService.showToaster({
+                    title: 'Returned Product:',
+                    message: 'The selected order has returned products which or part of other orders, cannot cancel the order!',
+                    type: 'error'
+                });
+            }
+            return isOrderValid;
         }
-        return isOrderValid;
-      }
     }
 
     cancelOrder(): void {
         document.getElementById('close-del').click();
         if (this.validateCancel()) {
-          this.savingOrder = true;
-          this.orderService.canceleExecutionOrder(this.orderDetails.id).subscribe(res => {
-              this.savingOrder = false;
-              if (res.status === 200) {
-                  this.toastService.showToaster({
-                      message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
-                      title: 'Order Execution:',
-                      type: 'success'
-                  });
-                  // this.orderDetails = null;
-                  this.newProduct = null;
-                  this.selectedRetailer = null;
-                  this.orderDetails.items = [];
-                  this.orderDetails.returned_items = [];
-                  this.setPaymentInitalValues();
-                  this.getOrdersBySalemanAndDate();
-              }
-          }, error => {
-              this.savingOrder = false;
-              if (error.status !== 1 && error.status !== 401) {
-                  console.log('Error in Save Order for dispatch ::>> ', error);
-                  this.toastService.showToaster({
-                      message: 'Something went wrong order cannot be canceled at the moment!',
-                      title: 'Error:',
-                      type: 'error'
-                  });
-              }
-          });
+            this.savingOrder = true;
+            this.orderService.canceleExecutionOrder(this.orderDetails.id).subscribe(res => {
+                this.savingOrder = false;
+                if (res.status === 200) {
+                    this.toastService.showToaster({
+                        message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
+                        title: 'Order Execution:',
+                        type: 'success'
+                    });
+                    // this.orderDetails = null;
+                    this.newProduct = null;
+                    this.selectedRetailer = null;
+                    this.orderDetails.items = [];
+                    this.orderDetails.returned_items = [];
+                    this.setPaymentInitalValues();
+                    this.getOrdersBySalemanAndDate();
+                }
+            }, error => {
+                this.savingOrder = false;
+                if (error.status !== 1 && error.status !== 401) {
+                    console.log('Error in Save Order for dispatch ::>> ', error);
+                    this.toastService.showToaster({
+                        message: 'Something went wrong order cannot be canceled at the moment!',
+                        title: 'Error:',
+                        type: 'error'
+                    });
+                }
+            });
         }
     }
 
@@ -1005,32 +1005,32 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     cancelSpotSaleOrder(): void {
         document.getElementById('close-del').click();
         if (this.validateCancel()) {
-          this.savingOrder = true;
-          this.orderService.cancelSpotSaleOrder(this.orderDetails.id).subscribe(res => {
-              this.savingOrder = false;
-              this.isSpotSaleActive = false;
-              if (res.status === 200) {
-                  this.toastService.showToaster({
-                      message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
-                      title: 'Spot Order:',
-                      type: 'success'
-                  });
-                  this.newProduct = null;
-                  this.inventory = res.data.executed_products;
-                  this.removeSpotOrder();
-              }
-          }, error => {
-              this.savingOrder = false;
-              this.isSpotSaleActive = false;
-              if (error.status !== 1 && error.status !== 401) {
-                  console.log('Error in cancel spot sale Order ::>> ', error);
-                  this.toastService.showToaster({
-                      message: 'Something went wrong order cannot be canceled at the moment!',
-                      title: 'Error:',
-                      type: 'error'
-                  });
-              }
-          });
+            this.savingOrder = true;
+            this.orderService.cancelSpotSaleOrder(this.orderDetails.id).subscribe(res => {
+                this.savingOrder = false;
+                this.isSpotSaleActive = false;
+                if (res.status === 200) {
+                    this.toastService.showToaster({
+                        message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
+                        title: 'Spot Order:',
+                        type: 'success'
+                    });
+                    this.newProduct = null;
+                    this.inventory = res.data.executed_products;
+                    this.removeSpotOrder();
+                }
+            }, error => {
+                this.savingOrder = false;
+                this.isSpotSaleActive = false;
+                if (error.status !== 1 && error.status !== 401) {
+                    console.log('Error in cancel spot sale Order ::>> ', error);
+                    this.toastService.showToaster({
+                        message: 'Something went wrong order cannot be canceled at the moment!',
+                        title: 'Error:',
+                        type: 'error'
+                    });
+                }
+            });
         }
     }
 
@@ -1044,9 +1044,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.selectedRetailer = null;
         const emptyOrder = this.spotSaleOrder.orders.find(x => x.order_total === 0);
         if (emptyOrder) {
-          this.showAddRetailer = false;
+            this.showAddRetailer = false;
         } else {
-          this.showAddRetailer = true;
+            this.showAddRetailer = true;
         }
         this.resetPaymentValues();
         this.setPaymentInitalValues();
@@ -1059,10 +1059,10 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             if (res.status === 200) {
                 this.finalLoad = res.data;
                 this.recoveryListing = res.data.out_of_route_recovery.map(x => {
-                  x.recovery = x.amount_received;
-                  x.retailer_id = x.id;
-                  x.recoveryAdded = true;
-                  return x;
+                    x.recovery = x.amount_received;
+                    x.retailer_id = x.id;
+                    x.recoveryAdded = true;
+                    return x;
                 });
                 this.outOfRouteRecovery = res.data.out_of_route_recovery.map(x => {
                     const recovery = {
@@ -1160,27 +1160,27 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             return { expense_type: +x.expense_type, amount: +x.amount };
         });
         this.orderService.saveExecutionExpense(this.loadId, this.salemanId, this.orderDate, this.finalLoad.expense_detail)
-        .subscribe(res => {
-            this.isAdded = false;
-            if (res.status === 200) {
-                this.toastService.showToaster({
-                    title: 'Expense Saved:',
-                    message: 'Expense saved successfully!',
-                    type: 'success'
-                });
-                this.finalLoad = res.data;
-            }
-        }, error => {
-            this.isAdded = false;
-            if (error.status !== 1 && error.status !== 401) {
-                console.log('Error while saving expenses :>> ', error);
-                this.toastService.showToaster({
-                    title: 'Expense Error:',
-                    message: 'Expense not saved, please try again before marking complete!',
-                    type: 'error'
-                });
-            }
-        });
+            .subscribe(res => {
+                this.isAdded = false;
+                if (res.status === 200) {
+                    this.toastService.showToaster({
+                        title: 'Expense Saved:',
+                        message: 'Expense saved successfully!',
+                        type: 'success'
+                    });
+                    this.finalLoad = res.data;
+                }
+            }, error => {
+                this.isAdded = false;
+                if (error.status !== 1 && error.status !== 401) {
+                    console.log('Error while saving expenses :>> ', error);
+                    this.toastService.showToaster({
+                        title: 'Expense Error:',
+                        message: 'Expense not saved, please try again before marking complete!',
+                        type: 'error'
+                    });
+                }
+            });
     }
 
     checkRecovery(retailer): void {
@@ -1246,7 +1246,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.outOfRouteRecovery = this.outOfRouteRecovery.filter(x => x.retailer_id !== retailer.retailer_id);
         this.recoveryListing = this.recoveryListing.filter(x => x.retailer_id !== retailer.retailer_id);
         setTimeout(() => {
-          this.isAdded = false;
+            this.isAdded = false;
         }, 500);
     }
 
@@ -1263,15 +1263,15 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
 
     amountReceivedMax(): void {
-      const receiable = this.finalLoad.dsr.total_amount_recieveable.toFixed(2);
-      if (+this.amountReceived > +receiable) {
-        this.toastService.showToaster({
-            title: 'Execution Error:',
-            message: `Received amount cannot be greater than ${this.finalLoad.dsr.total_amount_recieveable}!`,
-            type: 'error'
-        });
-        this.amountReceived = 0;
-      }
+        const receiable = this.finalLoad.dsr.total_amount_recieveable.toFixed(2);
+        if (+this.amountReceived > +receiable) {
+            this.toastService.showToaster({
+                title: 'Execution Error:',
+                message: `Received amount cannot be greater than ${this.finalLoad.dsr.total_amount_recieveable}!`,
+                type: 'error'
+            });
+            this.amountReceived = 0;
+        }
     }
 
     markCompelet(): void {

@@ -699,7 +699,6 @@ export class CounterSaleComponent implements OnInit {
     }
 
     calculatePayments(): void {
-        const cash = +this.dueAmount.toFixed(2);
         this.cash = {
             retailer_id: this.selectedRetailer.retailer_id,
             distributor_id: this.distributorId,
@@ -708,7 +707,7 @@ export class CounterSaleComponent implements OnInit {
             payment_detail: '',
             dispatched_bill_amount: 0,
             recovery: 0,
-            amount_received: cash
+            amount_received: this.dueAmount
         };
         if (this.cheque) {
             this.cash.amount_received = this.cash.amount_received - this.cheque.amount_received;
@@ -716,6 +715,7 @@ export class CounterSaleComponent implements OnInit {
         if (this.credit) {
             this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
         }
+        this.cash.amount_received = +this.cash.amount_received.toFixed(2);
     }
 
     applyScheme(product: any): any {

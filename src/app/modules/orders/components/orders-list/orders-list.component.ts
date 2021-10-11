@@ -103,11 +103,11 @@ export class OrdersListComponent implements OnInit {
                         type: 'success'
                     });
                     this.selectedOrders.forEach(order => {
-                        this.orders = this.orders.filter(ordr => ordr.date !== order.date && order.employee_id);
+                        this.orders = this.orders.filter(ordr => ordr.id !== order.id);
                     });
-                    this.selectedOrders = [];
                     this.loading = false;
-                }
+                    this.selectedOrders = [];
+                  }
             }, error => {
                 this.loading = false;
                 if (error.status !== 401 && error.status !== 1) {

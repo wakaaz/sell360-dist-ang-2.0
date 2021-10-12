@@ -1,3 +1,4 @@
+import { OrdersService } from './../orders/services/orders.service';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -19,27 +20,27 @@ import { StockOutReportComponent } from './components/stock-out-report/stock-out
 import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        DataTablesModule,
-        NgSelectModule,
-        SharedModule,
-        ReportsRoutingModule,
-    ],
-    declarations: [
-        ReportsComponent,
-        PurchaseHisotryComponent,
-        PurchasedDetailComponent,
-        DSReportComponent,
-        CashSummaryComponent,
-        RateListComponent,
-        SpotSaleComponent,
-        StockOutReportComponent,
-        OrderBookerListComponent,
-    ],
-    providers: [
-        ReportsService,
-    ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DataTablesModule,
+    NgSelectModule,
+    SharedModule,
+    ReportsRoutingModule,
+  ],
+  declarations: [
+    ReportsComponent,
+    PurchaseHisotryComponent,
+    PurchasedDetailComponent,
+    DSReportComponent,
+    CashSummaryComponent,
+    RateListComponent,
+    SpotSaleComponent,
+    StockOutReportComponent,
+    OrderBookerListComponent,
+  ],
+  providers: [
+    ReportsService, OrdersService
+  ],
 })
 export class ReportsModule { }

@@ -455,7 +455,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   setCurrentSpotSaleOrder(retailer: any): void {
-    debugger;
     if (!this.isSpotSaleActive) {
       if (retailer.id) {
         this.isSpotSaleActive = true;
@@ -640,7 +639,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.toastService.showToaster(toast);
       return;
     }
-    debugger;
     if (current === 'Credit') {
       this.paymentTypeCredit = '';
       this.paymentTypeCheque = '';
@@ -671,7 +669,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   currentFullPayment(current: string, other: string): void {
-    debugger;
     if ((this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full') && this.addedPayment !== current) {
       const toast: Toaster = {
         type: 'error',
@@ -903,7 +900,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     if (this.cheque) {
       this.orderDetails.payment.detail.push(this.cheque);
     }
-    debugger;
     this.orderService.saveSpotSaleOrder(this.orderDetails).subscribe(res => {
       this.savingOrder = false;
       this.isSpotSaleActive = false;
@@ -986,7 +982,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   cancelSpotSaleOrder(): void {
     document.getElementById('close-del').click();
     this.savingOrder = true;
-    debugger;
     this.orderService.cancelSpotSaleOrder(this.orderDetails.id).subscribe(res => {
       this.savingOrder = false;
       this.isSpotSaleActive = false;

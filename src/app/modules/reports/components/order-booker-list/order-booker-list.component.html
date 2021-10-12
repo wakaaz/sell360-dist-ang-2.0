@@ -1,440 +1,423 @@
  <!-- Order Detail Modal -->
-<div class="modal fade" id="OrderDetailModal" tabindex="-1" role="dialog" aria-labelledby="OrderDetailModalLabel"
-aria-hidden="true">
-<div class="modal-dialog modal-full modal-dialog-centered" role="document">
-<div class="modal-content">
-<div class="modal-header border-0">
-<button type="button" class="close" data-dismiss="modal" aria-label="Close"
-style="font-size:30px">×</button>
-</div>
-<div class="modal-body p-0">
-<div class="container">
-  <div class="row">
-    <div class="col-12">
-      <div class="card mb-20">
-        <div class="p-10" style="border-bottom: solid 2px #000">
-          <div class="row m-0">
-            <div class="col-8 OrderLogo"> <img src="/assets/images/sell-360.svg" alt=""/> </div>
-            <div class="col-4 ord-no"> Invoice# <strong>05485</strong> </div>
-          </div>
-        </div>
-        <div class="body" style="padding:15px 20px">
-          <div class="row">
-            <div class="col-12">
-              <div class="form-body">
-                <div class="row OrderInfo">
-                  <div class="col-md-9">
-                    <span>Retailer Name: </span> <strong>Chohan Store Township</strong><br>
-                    <span>Segment: </span> <strong>Sement Here</strong><br>
-                    <span>Phone No: </span> <strong>02222222221</strong><br>
-                    <span>Address: </span> <strong>Madina Market Township, Lahore</strong> </div>
-                  <div class="col-md-3 p-0">
-                    <span>Status: </span> <strong>Awaiting</strong><br>
-                    <span>Date: </span> <strong>12/04/2020</strong><br>
-                    <span>Order Booker: </span> <strong>Asad Ali</strong><br>
-                    <span>Salesman: </span> <strong>Asad Ali</strong>
-                </div>
-                </div>
-                <div class="seprator-block"></div>
-                <div class="Order-Detail-table mt-20">
-                  <table class="table">
-                    <thead>
-                      <tr>
-                        <th><strong>Code</strong></th>
-                        <th><strong>Product Name</strong></th>
-                        <th><strong>B.QTY.</strong></th>
-                        <th><strong>D.QTY.</strong></th>
-                        <th><strong>E.QTY.</strong></th>
-                        <th><strong>T.P</strong></th>
-                        <th><strong>GR.AMNT.</strong></th>
-                        <th><strong>T.O</strong></th>
-                        <th><strong>T.Disc</strong></th>
-                        <th><strong>SPC.Disc</strong></th>
-                        <th><strong>Extra.Disc</strong></th>
-                        <th><strong>TAX %</strong></th>
-                        <th><strong>TAX AMNT.</strong></th>
-                        <th><strong>Net.AMNT</strong></th>
-                      </tr>
-                    </thead>
-                    <tbody class="order_items_body">
-                      <tr>
-                        <td>5261</td>
-                        <td>AasPas R5 (Chocolate BTNT) (24x36)</td>
-                        <td>0</td>
-                        <td>1</td>
-                        <td>4</td>
-                        <td>5</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>0</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>-</td>
-                        <td>100.00</td>
-                      </tr>
-                    <td>5261</td>
-                      <td>AasPas R5 (Chocolate BTNT) (24x36)</td>
-                      <td>0</td>
-                      <td>1</td>
-                      <td>5</td>
-                      <td>5</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>0</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>-</td>
-                      <td>100.00</td>
-                    <tr>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td><strong>G.AMNT</strong></td>
-                      <td><strong>1115.20</strong></td>
-                    </tr>
-                    <tr>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td><strong>T.O.Disc.</strong></td>
-                      <td><strong>1115.20</strong></td>
-                    </tr>
-                    <tr>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td><strong>Trade Disc.</strong></td>
-                      <td><strong>1115.20</strong></td>
-                    </tr>
-                    <tr>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td><strong>Spc. Disc.</strong></td>
-                      <td><strong>1115.20</strong></td>
-                    </tr>
-                    <tr>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td><strong>Extra. Disc.</strong></td>
-                      <td><strong>1115.20</strong></td>
-                    </tr>
-                    <tr>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td><strong>Discount PKR.</strong></td>
-                      <td><strong>-40.18</strong></td>
-                    </tr>
-                    <tr>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td><strong>Total TAX</strong></td>
-                      <td><strong>1115.20</strong></td>
-                    </tr>
-                    <tr>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td style="background-color:#dfdfdf; color:#000"><strong>Total AMNT.</strong></td>
-                      <td style="background-color:#dfdfdf; color:#000"><strong>1075.02</strong></td>
-                    </tr>
-                    <tr>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td class="border-0"></td>
-                      <td style="background-color:#dfdfdf; color:#000"><strong>Recovery AMNT.</strong></td>
-                      <td style="background-color:#d3d3d3; color:#000"><strong>1075.02</strong></td>
-                    </tr>
-                      </tbody>
+ <div class="modal fade" id="OrderDetailModal" tabindex="-1" role="dialog" aria-labelledby="OrderDetailModalLabel"
+   aria-hidden="true">
+   <div class="modal-dialog modal-full modal-dialog-centered" role="document">
+     <div class="modal-content">
+       <div class="modal-header border-0">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="font-size:30px">×</button>
+       </div>
+       <div class="modal-body p-0">
+         <div class="container">
+           <div class="row">
+             <div class="col-12">
+               <div class="card mb-20">
+                 <div class="p-10" style="border-bottom: solid 2px #000">
+                   <div class="row m-0">
+                     <div class="col-8 OrderLogo"> <img src="/assets/images/sell-360.svg" alt="" /> </div>
+                     <div class="col-4 ord-no"> Invoice# <strong>05485</strong> </div>
+                   </div>
+                 </div>
+                 <div class="body" style="padding:15px 20px">
+                   <div class="row">
+                     <div class="col-12">
+                       <div class="form-body">
+                         <div class="row OrderInfo">
+                           <div class="col-md-9">
+                             <span>Retailer Name: </span> <strong>Chohan Store Township</strong><br>
+                             <span>Segment: </span> <strong>Sement Here</strong><br>
+                             <span>Phone No: </span> <strong>02222222221</strong><br>
+                             <span>Address: </span> <strong>Madina Market Township, Lahore</strong> </div>
+                           <div class="col-md-3 p-0">
+                             <span>Status: </span> <strong>Awaiting</strong><br>
+                             <span>Date: </span> <strong>12/04/2020</strong><br>
+                             <span>Order Booker: </span> <strong>Asad Ali</strong><br>
+                             <span>Salesman: </span> <strong>Asad Ali</strong>
+                           </div>
+                         </div>
+                         <div class="seprator-block"></div>
+                         <div class="Order-Detail-table mt-20">
+                           <table class="table">
+                             <thead>
+                               <tr>
+                                 <th><strong>Code</strong></th>
+                                 <th><strong>Product Name</strong></th>
+                                 <th><strong>B.QTY.</strong></th>
+                                 <th><strong>D.QTY.</strong></th>
+                                 <th><strong>E.QTY.</strong></th>
+                                 <th><strong>T.P</strong></th>
+                                 <th><strong>GR.AMNT.</strong></th>
+                                 <th><strong>T.O</strong></th>
+                                 <th><strong>T.Disc</strong></th>
+                                 <th><strong>SPC.Disc</strong></th>
+                                 <th><strong>Extra.Disc</strong></th>
+                                 <th><strong>TAX %</strong></th>
+                                 <th><strong>TAX AMNT.</strong></th>
+                                 <th><strong>Net.AMNT</strong></th>
+                               </tr>
+                             </thead>
+                             <tbody class="order_items_body">
+                               <tr>
+                                 <td>5261</td>
+                                 <td>AasPas R5 (Chocolate BTNT) (24x36)</td>
+                                 <td>0</td>
+                                 <td>1</td>
+                                 <td>4</td>
+                                 <td>5</td>
+                                 <td>0</td>
+                                 <td>0</td>
+                                 <td>0</td>
+                                 <td>-</td>
+                                 <td>-</td>
+                                 <td>-</td>
+                                 <td>-</td>
+                                 <td>100.00</td>
+                               </tr>
+                               <td>5261</td>
+                               <td>AasPas R5 (Chocolate BTNT) (24x36)</td>
+                               <td>0</td>
+                               <td>1</td>
+                               <td>5</td>
+                               <td>5</td>
+                               <td>0</td>
+                               <td>0</td>
+                               <td>0</td>
+                               <td>-</td>
+                               <td>-</td>
+                               <td>-</td>
+                               <td>-</td>
+                               <td>100.00</td>
+                               <tr>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td><strong>G.AMNT</strong></td>
+                                 <td><strong>1115.20</strong></td>
+                               </tr>
+                               <tr>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td><strong>T.O.Disc.</strong></td>
+                                 <td><strong>1115.20</strong></td>
+                               </tr>
+                               <tr>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td><strong>Trade Disc.</strong></td>
+                                 <td><strong>1115.20</strong></td>
+                               </tr>
+                               <tr>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td><strong>Spc. Disc.</strong></td>
+                                 <td><strong>1115.20</strong></td>
+                               </tr>
+                               <tr>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td><strong>Extra. Disc.</strong></td>
+                                 <td><strong>1115.20</strong></td>
+                               </tr>
+                               <tr>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td><strong>Discount PKR.</strong></td>
+                                 <td><strong>-40.18</strong></td>
+                               </tr>
+                               <tr>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td><strong>Total TAX</strong></td>
+                                 <td><strong>1115.20</strong></td>
+                               </tr>
+                               <tr>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td style="background-color:#dfdfdf; color:#000"><strong>Total AMNT.</strong></td>
+                                 <td style="background-color:#dfdfdf; color:#000"><strong>1075.02</strong></td>
+                               </tr>
+                               <tr>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td class="border-0"></td>
+                                 <td style="background-color:#dfdfdf; color:#000"><strong>Recovery AMNT.</strong></td>
+                                 <td style="background-color:#d3d3d3; color:#000"><strong>1075.02</strong></td>
+                               </tr>
+                             </tbody>
 
-                  </table>
-                  <div class="clearfix"></div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row justify-content-end">
-            <div class="col-4 Order-Detail-table">
-              <h3 class="font16">Payment Details</h3>
-              <table class="table mb-0">
-                <tbody class="order_items_body">
-                  <tr>
-                    <td><strong>Cash</strong></td>
-                    <td><strong>2545</strong></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Cheque</strong></td>
-                    <td><strong>2545</strong></td>
-                  </tr>
-                  <tr>
-                    <td><strong>Total Payment</strong></td>
-                    <td><strong>2545</strong></td>
-                  </tr>
-                <tr>
-                  <td><strong>Credit</strong></td>
-                  <td><strong>2545</strong></td>
-                </tr>
-                  </tbody>
+                           </table>
+                           <div class="clearfix"></div>
+                         </div>
+                       </div>
+                     </div>
+                   </div>
+                   <div class="row justify-content-end">
+                     <div class="col-4 Order-Detail-table">
+                       <h3 class="font16">Payment Details</h3>
+                       <table class="table mb-0">
+                         <tbody class="order_items_body">
+                           <tr>
+                             <td><strong>Cash</strong></td>
+                             <td><strong>2545</strong></td>
+                           </tr>
+                           <tr>
+                             <td><strong>Cheque</strong></td>
+                             <td><strong>2545</strong></td>
+                           </tr>
+                           <tr>
+                             <td><strong>Total Payment</strong></td>
+                             <td><strong>2545</strong></td>
+                           </tr>
+                           <tr>
+                             <td><strong>Credit</strong></td>
+                             <td><strong>2545</strong></td>
+                           </tr>
+                         </tbody>
 
-              </table>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-</div>
-</div>
-</div>
-</div>
+                       </table>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
 
-<!-- Order Booker List -->
-<div class="container" id="retailer-list">
+ <!-- Order Booker List -->
+ <div class="container" id="retailer-list">
 
-    <div class="row mt-2 mb-2">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-          <h2 class="_head01">Sale Order <span>Histroy</span></h2>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
-          <ol class="breadcrumb">
-            <li><a href="#"><span>Order Booker</span></a></li>
-            <li><span>List</span></li>
-          </ol>
-        </div>
-      </div>
+   <div class="row mt-2 mb-2">
+     <div class="col-lg-6 col-md-6 col-sm-6">
+       <h2 class="_head01">Sale Order <span>History</span></h2>
+     </div>
+     <div class="col-lg-6 col-md-6 col-sm-6">
+       <ol class="breadcrumb">
+         <li><a href="#"><span>Order Booker</span></a></li>
+         <li><span>List</span></li>
+       </ol>
+     </div>
+   </div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="header-tabs">
-                <div class="Product-Filter">
-                    <div class="row">
-                      <div class="col-12 mb-10">
-                        <div class="CL-Product" style="width: 100%; padding-right:0"><i class="fa fa-search"></i>
-                          <input type="text" class="form-control" id="" placeholder="Search by Invoice No or Shop ID">
-                        </div>
-                      </div>
-                      <div class="col-12">
-                        <div class="CL-Product" style="width: 116px!important;">
-                            <input placeholder="Start Date" type="text" onfocus="(this.type = 'date')" id="date" class="form-control pad-date">
-                        </div>
-                        <div class="CL-Product" style="width: 116px!important;">
-                         <input placeholder="End Date" type="text" onfocus="(this.type = 'date')" id="date" class="form-control pad-date">
-                        </div>
+   <div class="row" [style.display]="loading ? 'none' : ''">
+     <div class="col-lg-12">
+       <div class="header-tabs">
+         <div class="Product-Filter">
+           <div class="row">
+             <div class="col-12 mb-10">
+               <div class="CL-Product" style="width: 100%; padding-right:0"><i class="fa fa-search"></i>
+                 <input type="text" class="form-control" id="" placeholder="Search by Invoice No or Shop ID">
+               </div>
+             </div>
+             <div class="col-12">
+               <div class="CL-Product" style="width: 116px!important;">
+                 <input placeholder="Start Date" type="text" onfocus="(this.type = 'date')" id="date"
+                   class="form-control pad-date" [(ngModel)]="startDate">
+               </div>
+               <div class="CL-Product" style="width: 116px!important;">
+                 <input placeholder="End Date" type="text" onfocus="(this.type = 'date')" id="date"
+                   class="form-control pad-date" [(ngModel)]="endDate">
+               </div>
+
+               <div class="_cust_filter">
+                 <div class="form-s2">
+                   <ng-select class="formselect" [multiple]="false" id="OrderType" placeholder="All Order Types"
+                     name="order-type" [(ngModel)]="OrderType" required>
+                     <ng-option value="0" selected>
+                       All
+                     </ng-option>
+                     <ng-option value="executed">
+                       Executed
+                     </ng-option>
+                     <ng-option value="counter_sale">
+                       Counter Sale
+                     </ng-option>
+                     <ng-option value="spot_sale">
+                       Spot Sale
+                     </ng-option>
+                   </ng-select>
+                 </div>
+               </div>
+
+               <div class="_cust_filter">
+                 <div class="form-s2">
+                   <ng-select class="formselect" [multiple]="false" id="AllSalesmen" placeholder="All Salesmen"
+                     name="all-salesmen" [(ngModel)]="salesmanId" required>
+                     <ng-option value="0">
+                       All Salesmen
+                     </ng-option>
+                     <ng-option *ngFor="let sman of criterias.salesmen" value="{{ sman.id }}">
+                       {{ sman.name }}
+                     </ng-option>
+                   </ng-select>
+                 </div>
+               </div>
+
+               <div class="_cust_filter">
+                 <div class="form-s2">
+                   <ng-select class="formselect" [multiple]="false" id="OrderBooker" placeholder="All Order Bookers"
+                     name="OrderBooker" [(ngModel)]="OrderBooker" required>
+                     <ng-option *ngFor="let ob of criterias.order_booker" value="{{ob.employee_id}}">
+                       {{ ob.employee_name }}
+                     </ng-option>
+                   </ng-select>
+                 </div>
+               </div>
+
+               <div class="_cust_filter">
+                 <div class="form-s2">
+                   <ng-select class="formselect" [multiple]="false" id="segment" placeholder="All Segments"
+                     name="segment" [(ngModel)]="segment" required>
+                     <ng-option value="0">
+                       All
+                     </ng-option>
+                     <ng-option *ngFor="let s of criterias.segments" value="{{s.id}}">
+                       {{s.name}}
+                     </ng-option>
+                   </ng-select>
+                 </div>
+               </div>
 
 
-                        <div class="_cust_filter">
-                            <div class="form-s2">
-                                <ng-select class="formselect" [multiple]="false" id="OrderType" placeholder="All Order Types"
-                                    name="order-type" [(ngModel)]="OrderType" required>
-                                    <ng-option value="Asif Ali">
-                                        Asif Ali
-                                    </ng-option>
-                                    <ng-option value="Utba Aziz">
-                                        Utba Aziz
-                                    </ng-option>
-                                </ng-select>
-                            </div>
-                        </div>
+               <button class="btn btn-primary" (click)="getOrderBookersList()"><i class="fa fa-search"></i> Search</button>
+             </div>
+           </div>
+           <div class="clearfix"></div>
+         </div>
+       </div>
+     </div>
+   </div>
 
-                        <div class="_cust_filter">
-                            <div class="form-s2">
-                                <ng-select class="formselect" [multiple]="false" id="AllSalesmen" placeholder="All Salesmen"
-                                    name="all-salesmen" [(ngModel)]="AllSalesmen" required>
-                                    <ng-option value="Asif Ali">
-                                        Asif Ali
-                                    </ng-option>
-                                    <ng-option value="Utba Aziz">
-                                        Utba Aziz
-                                    </ng-option>
-                                </ng-select>
-                            </div>
-                        </div>
-
-                        <div class="_cust_filter">
-                            <div class="form-s2">
-                                <ng-select class="formselect" [multiple]="false" id="OrderBooker" placeholder="All Order Bookers"
-                                    name="OrderBooker" [(ngModel)]="OrderBooker" required>
-                                    <ng-option value="Asif Ali">
-                                        Asif Ali
-                                    </ng-option>
-                                    <ng-option value="Utba Aziz">
-                                        Utba Aziz
-                                    </ng-option>
-                                </ng-select>
-                            </div>
-                        </div>
-
-                        <div class="_cust_filter">
-                            <div class="form-s2">
-                                <ng-select class="formselect" [multiple]="false" id="segment" placeholder="All Segments"
-                                    name="segment" [(ngModel)]="segment" required>
-                                    <ng-option value="Asif Ali">
-                                        Asif Ali
-                                    </ng-option>
-                                    <ng-option value="Utba Aziz">
-                                        Utba Aziz
-                                    </ng-option>
-                                </ng-select>
-                            </div>
-                        </div>
-
-
-                        <button class="btn btn-primary"><i class="fa fa-search"></i> Search</button>
-                      </div>
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="body">
-
-                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Invoice#</th>
-                                <th>Shop ID</th>
-                                <th>Shop Name</th>
-                                <th>Segment </th>
-                                <th>Order Booker</th>
-                                <th>Salesman</th>
-                                <th>Invoice Total</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>8/31/2020</td>
-                                <td>455454</td>
-                                <td>8758</td>
-                                <td>Kiryana Store</td>
-                                <td>General Store</td>
-                                <td>Waqar</td>
-                                <td>Rafique</td>
-                                <td>54</td>
-                                <td><button data-toggle="modal" data-target="#OrderDetailModal" class="btn btn-default btn-line mb-0">Order Detail</button>
-                                     <button class="btn btn-default mb-0">Bill</button></td>
-                              </tr>
-                              <tr>
-                                <td>8/31/2020</td>
-                                <td>455454</td>
-                                <td>8758</td>
-                                <td>Kiryana Store</td>
-                                <td>General Store</td>
-                                <td>Waqar</td>
-                                <td>Rafique</td>
-                                <td>54</td>
-                                <td><button data-toggle="modal" data-target="#OrderDetailModal" class="btn btn-default btn-line mb-0">Order Detail</button>
-                                     <button class="btn btn-default mb-0">Bill</button></td>
-                              </tr>
-                              <tr>
-                                <td>8/31/2020</td>
-                                <td>455454</td>
-                                <td>8758</td>
-                                <td>Kiryana Store</td>
-                                <td>General Store</td>
-                                <td>Waqar</td>
-                                <td>Rafique</td>
-                                <td>54</td>
-                                <td><button data-toggle="modal" data-target="#OrderDetailModal" class="btn btn-default btn-line mb-0">Order Detail</button>
-                                     <button class="btn btn-default mb-0">Bill</button></td>
-                              </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+   <div class="row">
+     <div class="col-md-12">
+       <div class="card">
+         <div class="body">
+           <table [style.display]="loading ? 'none' : ''" [dtTrigger]="dtTrigger" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap"
+             id="example" style="width:100%">
+             <thead>
+               <tr>
+                 <th>Date</th>
+                 <th>Invoice#</th>
+                 <th>Shop ID</th>
+                 <th>Shop Name</th>
+                 <th>Segment </th>
+                 <th>Order Booker</th>
+                 <th>Salesman</th>
+                 <th>Invoice Total</th>
+                 <th>Action</th>
+               </tr>
+             </thead>
+             <tbody>
+              <tr *ngFor="let order of orders; let i=index">
+                 <td>{{ order.date }}</td>
+                 <td>{{ order.invoice_number }}</td>
+                 <td>{{ order.shop_id }}</td>
+                 <td>{{ order.shop_name }}</td>
+                 <td>{{ order.segment }}</td>
+                 <td>{{ order.order_booker }}</td>
+                 <td>{{ order.salesman }}</td>
+                 <td>{{ order.order_total }}</td>
+                 <td><button data-toggle="modal" data-target="#OrderDetailModal"
+                     class="btn btn-default btn-line mb-0">Detail</button>
+                   <button class="btn btn-default mb-0">Bill</button></td>
+               </tr>
+             </tbody>
+           </table>
+           <div [style.display]="!loading ? 'none' : ''" class="col-md-12">
+             <app-loader-white></app-loader-white>
+           </div>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>

@@ -1,0 +1,71 @@
+<div class="container" id="retailer-list" style="height: 100vh;">
+  <div class="row mt-2 mb-2">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <h2 class="_head01">Retailers <span>Management</span></h2>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <ol class="breadcrumb">
+        <li>
+          <a><span>Retailers</span></a>
+        </li>
+        <li><span>List</span></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row">
+    <div *ngIf="loading" class="col-md-12">
+      <app-loader-white></app-loader-white>
+    </div>
+    <div [style.display]="loading ? 'none' : ''" class="col-lg-12">
+      <div class="header-tabs">
+        <div class="Product-Filter">
+          <div class="row">
+            <div class="col-12">
+              <div class="_cust_filter">
+                <div class="form-s2">
+                  <ng-select class="formselect" [multiple]="false" id="order-booker" placeholder="All Order Bookers"
+                    name="order-booker" (change)="filterRetailers()" [(ngModel)]="filter.orderBooker" required>
+                    <ng-option value="">All Order Bookers</ng-option>
+                    <ng-option *ngFor="let booker of retailerCore?.order_booker" [value]="booker.employee_id">
+                      {{booker.employee_name}} </ng-option>
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="_cust_filter">
+                <div class="form-s2">
+                  <ng-select class="formselect" [multiple]="false" id="retailers" placeholder="Retailer" name="retailer"
+                    [(ngModel)]="retailerSelected" required>
+                    <ng-option *ngFor="let r of retailers" [value]="r.id">
+                      {{ r.id }} - {{r.retailer_name}}
+                    </ng-option>
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="_cust_filter">
+                <div class="form-s2">
+                  <input type="date" id="datepicker" [(ngModel)]="filter.startDate" name="gen-date" class="form-control"
+                    placeholder="">
+                </div>
+              </div>
+
+              <div class="_cust_filter">
+                <div class="form-s2">
+                  <input type="date" id="datepicker" [(ngModel)]="filter.endDate" name="gen-date" class="form-control"
+                    placeholder="">
+                </div>
+              </div>
+
+              <button type="button" (click)="generateLedger()" class="btn btn-primary">
+                <i class="fa fa-search"></i> Generate
+              </button>
+            </div>
+          </div>
+          <div class="clearfix"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -14,6 +14,7 @@ import { RetalersListComponent } from './components/retailers-list/retailers-lis
 import { RetailerProfileComponent } from './components/retailer-profile/retailer-profile.component';
 import { OpeningBalanceComponent } from './components/opening-balance/opening-balance.component';
 import { RetailerService } from './services/retailer.service';
+import { LedgerComponent } from './components/ledger/ledger.component';
 
 @NgModule({
     imports: [
@@ -31,6 +32,7 @@ import { RetailerService } from './services/retailer.service';
         RetalersListComponent,
         RetailerProfileComponent,
         OpeningBalanceComponent,
+        LedgerComponent,
     ],
     providers: [
         RetailerService

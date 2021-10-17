@@ -939,35 +939,61 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     });
   }
 
-  cancelOrder(): void {
-    document.getElementById('close-del').click();
-    this.savingOrder = true;
-    this.orderService.canceleExecutionOrder(this.orderDetails.id).subscribe(res => {
-      this.savingOrder = false;
-      if (res.status === 200) {
+
+  validateCancel(): any {
+    if (!this.orderDetails.returned_items?.length) {
+      return true;
+    } else {
+      let isOrderValid = true;
+      const returnedProduct = this.orderDetails.returned_items.find(product => {
+        const productAvalableQty = this.inventory.find(x => x.item_id === product.item_id)?.available_qty;
+        if (productAvalableQty < product.quantity_returned && product.return_type !== 'damage') {
+          isOrderValid = false;
+          return product;
+        }
+      });
+      if (!isOrderValid && returnedProduct) {
         this.toastService.showToaster({
-          message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
-          title: 'Order Execution:',
-          type: 'success'
-        });
-        // this.orderDetails = null;
-        this.newProduct = null;
-        this.selectedRetailer = null;
-        this.orderDetails.items = [];
-        this.setPaymentInitalValues();
-        this.getOrdersBySalemanAndDate();
-      }
-    }, error => {
-      this.savingOrder = false;
-      if (error.status !== 1 && error.status !== 401) {
-        console.log('Error in Save Order for dispatch ::>> ', error);
-        this.toastService.showToaster({
-          message: 'Something went wrong order cannot be canceled at the moment!',
-          title: 'Error:',
+          title: 'Returned Product:',
+          message: 'The selected order has returned products which or part of other orders, cannot cancel the order!',
           type: 'error'
         });
       }
-    });
+      return isOrderValid;
+    }
+  }
+
+  cancelOrder(): void {
+    document.getElementById('close-del').click();
+    if (this.validateCancel()) {
+      this.savingOrder = true;
+      this.orderService.canceleExecutionOrder(this.orderDetails.id).subscribe(res => {
+        this.savingOrder = false;
+        if (res.status === 200) {
+          this.toastService.showToaster({
+            message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
+            title: 'Order Execution:',
+            type: 'success'
+          });
+          // this.orderDetails = null;
+          this.newProduct = null;
+          this.selectedRetailer = null;
+          this.orderDetails.items = [];
+          this.setPaymentInitalValues();
+          this.getOrdersBySalemanAndDate();
+        }
+      }, error => {
+        this.savingOrder = false;
+        if (error.status !== 1 && error.status !== 401) {
+          console.log('Error in Save Order for dispatch ::>> ', error);
+          this.toastService.showToaster({
+            message: 'Something went wrong order cannot be canceled at the moment!',
+            title: 'Error:',
+            type: 'error'
+          });
+        }
+      });
+    }
   }
 
   cancelSpotSale(): void {
@@ -981,40 +1007,42 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
   cancelSpotSaleOrder(): void {
     document.getElementById('close-del').click();
-    this.savingOrder = true;
-    this.orderService.cancelSpotSaleOrder(this.orderDetails.id).subscribe(res => {
-      this.savingOrder = false;
-      this.isSpotSaleActive = false;
-      if (res.status === 200) {
-        this.toastService.showToaster({
-          message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
-          title: 'Spot Order:',
-          type: 'success'
-        });
-        this.newProduct = null;
-        this.inventory = res.data.executed_products;
-        this.removeSpotOrder();
+    if (this.validateCancel()) {
+      this.savingOrder = true;
+      this.orderService.cancelSpotSaleOrder(this.orderDetails.id).subscribe(res => {
+        this.savingOrder = false;
+        this.isSpotSaleActive = false;
+        if (res.status === 200) {
+          this.toastService.showToaster({
+            message: `Order for ${(this.selectedRetailer.retailer_name as string).toUpperCase()} canceled!`,
+            title: 'Spot Order:',
+            type: 'success'
+          });
+          this.newProduct = null;
+          this.inventory = res.data.executed_products;
+          this.removeSpotOrder();
 
-        // this.resetPaymentValues();
-        // this.setPaymentInitalValues();
-        // this.selectedRetailer = { ...retailer };
-        // this.isSpotSaleActive = true;
-        // this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
-        // this.getDiscountSlabs();
+          // this.resetPaymentValues();
+          // this.setPaymentInitalValues();
+          // this.selectedRetailer = { ...retailer };
+          // this.isSpotSaleActive = true;
+          // this.orderDetails = this.spotSaleOrder.orders.find(x => x.retailer_id === retailer.retailer_id);
+          // this.getDiscountSlabs();
 
-      }
-    }, error => {
-      this.savingOrder = false;
-      this.isSpotSaleActive = false;
-      if (error.status !== 1 && error.status !== 401) {
-        console.log('Error in cancel spot sale Order ::>> ', error);
-        this.toastService.showToaster({
-          message: 'Something went wrong order cannot be canceled at the moment!',
-          title: 'Error:',
-          type: 'error'
-        });
-      }
-    });
+        }
+      }, error => {
+        this.savingOrder = false;
+        this.isSpotSaleActive = false;
+        if (error.status !== 1 && error.status !== 401) {
+          console.log('Error in cancel spot sale Order ::>> ', error);
+          this.toastService.showToaster({
+            message: 'Something went wrong order cannot be canceled at the moment!',
+            title: 'Error:',
+            type: 'error'
+          });
+        }
+      });
+    }
   }
 
   removeSpotOrder(): void {

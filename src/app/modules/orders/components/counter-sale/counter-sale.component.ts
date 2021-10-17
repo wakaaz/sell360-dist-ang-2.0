@@ -707,7 +707,7 @@ export class CounterSaleComponent implements OnInit {
             payment_detail: '',
             dispatched_bill_amount: 0,
             recovery: 0,
-            amount_received: JSON.parse(JSON.stringify(this.dueAmount))
+            amount_received: this.dueAmount
         };
         if (this.cheque) {
             this.cash.amount_received = this.cash.amount_received - this.cheque.amount_received;
@@ -715,6 +715,7 @@ export class CounterSaleComponent implements OnInit {
         if (this.credit) {
             this.cash.amount_received = this.cash.amount_received - this.credit.amount_received;
         }
+        this.cash.amount_received = +this.cash.amount_received.toFixed(2);
     }
 
     applyScheme(product: any): any {

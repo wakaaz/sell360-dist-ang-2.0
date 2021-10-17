@@ -16,21 +16,23 @@ export const ordersSubMenu = {
       link: '/orders/execution-list',
       icon: '/assets/images/dispatched-order.svg'
     },
-    {
-      title: 'Completed Orders',
-      link: '/orders/completed-orders',
-      icon: '/assets/images/complete-orders.svg'
-    },
+    // Hidden for first version
+    // {
+    //     title: 'Completed Orders',
+    //     link: '/orders/completed-orders',
+    //     icon: '/assets/images/complete-orders.svg'
+    // },
     {
       title: 'Counter Sale',
       link: '/orders/counter-sale',
       icon: '/assets/images/complete-orders.svg'
     },
-    {
-      title: 'Booking VS Execution',
-      link: '/orders/booking-vs-execution',
-      icon: '/assets/images/complete-orders.svg'
-    },
+    // Hidden for first version
+    // {
+    //     title: 'Booking VS Execution',
+    //     link: '/orders/booking-vs-execution',
+    //     icon: '/assets/images/complete-orders.svg'
+    // },
   ]
 };
 export const salesmanSubMenu = {

@@ -2,7 +2,7 @@
   <div *ngIf="showToast" aria-live="polite" aria-atomic="true" style="position: absolute; z-index: 1052; left: 30px;">
     <!-- Position it -->
     <div style="position: fixed; bottom: 80px;">
-  
+
       <!-- Then put toasts within -->
         <div class="toast  {{toastType}}" [ngClass]="showToast ? 'show ' : ''" role="alert" aria-live="assertive" aria-atomic="true">
         <div class="toast-header">
@@ -15,11 +15,11 @@
           {{toastMessage}}
         </div>
       </div>
-  
+
     </div>
   </div>
   <div id="wrapper" class="EbobBGImg">
-    
+
     <div class="container mt-0 mb-0">
       <router-outlet></router-outlet>
     </div>
@@ -28,7 +28,7 @@
     </div>
   </div>
 </div>
-  
+
 <div *ngIf="isLoggedIn && !isSideNavHidden" class="sidebarblue">
   <div class="aside-primary">
     <div class="sell360"><a routerLink="/home"><img alt="Sell360" src="/assets/images/logo-w.svg"></a></div>
@@ -39,7 +39,8 @@
         <li><a (click)="openSubmenu($event, 'inventory')"><img src="/assets/images/inventory-icon.svg" alt="" /> Inventory</a></li>
         <li><a (click)="openSubmenu($event, 'retailer')"><img src="/assets/images/retailar-icon.svg" alt="" /> Retailer</a></li>
         <li><a (click)="openSubmenu($event, 'reports')"><img src="/assets/images/reports-icon.svg" alt="" /> Reports</a></li>
-        <li><a (click)="openSubmenu($event, 'payments')"><img src="/assets/images/payment-icon.svg" alt="" /> Payments</a></li>
+        <!-- Hidden for first version -->
+        <!-- <li><a (click)="openSubmenu($event, 'payments')"><img src="/assets/images/payment-icon.svg" alt="" /> Payments</a></li> -->
       </ul>
     </div>
     <div class="_user-nav"> <a href="#"><img src="/assets/images/bell-icon-2.svg" alt="Notification"
@@ -69,7 +70,7 @@
     <div *ngIf="showToast" aria-live="polite" aria-atomic="true" style="position: absolute; z-index: 1052; left: 30px;">
       <!-- Position it -->
       <div style="position: fixed; bottom: 80px;">
-    
+
         <!-- Then put toasts within -->
           <div class="toast {{toastType}}" [ngClass]="showToast ? 'show ' : ''" role="alert" aria-live="assertive" aria-atomic="true">
           <div class="toast-header">
@@ -82,10 +83,10 @@
             {{toastMessage}}
           </div>
         </div>
-    
+
       </div>
     </div>
-    
+
     <div id="blureEffct">
       <div class="overlay-blure"></div>
       <button id="Close-All" (click)="closeEverything()" hidden data-dismiss="modal"  aria-label="Close">

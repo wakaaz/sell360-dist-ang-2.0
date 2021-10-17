@@ -65,7 +65,8 @@ export class OrdersListDetailsComponent implements OnInit {
                 this.orderDetail = res.data;
                 this.orderDetail.subTotal = this.orderDetail.order_detail.map(x => x.final_price).reduce((a, b) => a + b, 0);
                 this.orderDetail.totalDiscount = this.orderDetail.order_detail
-                    .map(x => (x.tp * x.quantity) - x.final_price).reduce((a, b) => a + b, 0);
+                    .map(x => (x.original_price * x.quantity) - (x.unit_price_after_individual_discount * x.quantity))
+                    .reduce((a, b) => a + b, 0);
                 this.showDetails = true;
             }
         }, error => {

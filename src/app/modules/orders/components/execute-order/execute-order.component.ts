@@ -641,10 +641,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
     if (current === 'Credit') {
       this.paymentTypeCredit = '';
-      this.paymentTypeCheque = '';
     } else {
       this.paymentTypeCheque = '';
-      this.paymentTypeCredit = '';
     }
     if (!this.selectedRetailer) {
       const toast: Toaster = {
@@ -880,6 +878,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   saveSpotSaleOrder(): void {
+    if (this.orderDetails.items.map(i => i.stockQty).filter(x => !x).length)
+      return this.toastService.showToaster({
+        message: 'Please provide quantities for all the items',
+        title: 'Error:',
+        type: 'error'
+      });
     this.savingOrder = true;
     this.orderDetails.load_id = this.loadId;
     this.orderDetails.processed_at = this.orderDate;

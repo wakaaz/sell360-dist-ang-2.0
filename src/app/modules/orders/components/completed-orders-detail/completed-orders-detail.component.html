@@ -14,72 +14,63 @@
     </div>
 
     <div class="row">
+      <div class="col-lg-12">
+        <div class="header-tabs">
+          <div class="Product-Filter">
+            <div class="row">
+              <div class="col-12">
+                <div class="CL-Product">
+                  <input placeholder="Start Date" type="text" onfocus="(this.type = 'date')" id="date"
+                    class="form-control pad-date" (change)="getData()" [(ngModel)]="date">
+                </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <div class="header">
                     <h2>Completed <span> Orders</span>
-                        <div class="_list-total">145</div>
+                        <div class="_list-total">{{ loadsheets.length }}</div>
                     </h2>
                 </div>
                 <div class="body">
-                    <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example"
-                        style="width:100%">
+                  <table [style.display]="loading ? 'none' : ''" [dtTrigger]="dtTrigger" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap"
+                    id="example" style="width:100%">
                         <thead>
                             <tr>
-                                <th>Date</th>
+                                <th>Load ID</th>
                                 <th>Salesman</th>
-                                <th>Order Booker</th>
+                                <th>Order Booker(s)</th>
                                 <th>Orders</th>
+                                <th>Sales Amount</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>2021-02-18</td>
-                                <td>Atif</td>
-                                <td>Utba</td>
-                                <td>16</td>
-                                <td><button class="btn btn-default mb-0">Load Sheet</button>
-                                    <button class="btn btn-default mb-0">BS</button>
-                                    <button class="btn btn-default mb-0">Bills</button>
-                                    <button class="btn btn-default mb-0">DSR</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2021-02-18</td>
-                                <td>Atif</td>
-                                <td>Utba</td>
-                                <td>16</td>
-                                <td><button class="btn btn-default mb-0">Load Sheet</button>
-                                    <button class="btn btn-default mb-0">BS</button>
-                                    <button class="btn btn-default mb-0">Bills</button>
-                                    <button class="btn btn-default mb-0">DSR</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2021-02-18</td>
-                                <td>Atif</td>
-                                <td>Utba</td>
-                                <td>16</td>
-                                <td><button class="btn btn-default mb-0">Load Sheet</button>
-                                    <button class="btn btn-default mb-0">BS</button>
-                                    <button class="btn btn-default mb-0">Bills</button>
-                                    <button class="btn btn-default mb-0">DSR</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>2021-02-18</td>
-                                <td>Atif</td>
-                                <td>Utba</td>
-                                <td>16</td>
-                                <td><button class="btn btn-default mb-0">Load Sheet</button>
-                                    <button class="btn btn-default mb-0">BS</button>
-                                    <button class="btn btn-default mb-0">Bills</button>
-                                    <button class="btn btn-default mb-0">DSR</button>
+                            <tr *ngFor="let sheet of loadsheets">
+                                <td>{{ sheet.id }}</td>
+                                <td>{{ sheet.salesman }}</td>
+                                <td>{{ sheet.order_bookers }}</td>
+                                <td>{{ sheet.total_orders }}</td>
+                                <td>Rs. {{ sheet.total_net_sale }}</td>
+                                <td>
+                                    <button (click)="routeToPdf('ls', sheet)" class="btn btn-default mb-0">Load Sheet</button>
+                                    <button (click)="routeToPdf('bs', sheet)" class="btn btn-default mb-0">BS</button>
+                                    <button (click)="routeToPdf('bills', sheet)" class="btn btn-default mb-0">Bills</button>
+                                    <button (click)="routeToPdf('dsr', sheet)" class="btn btn-default mb-0">DSR</button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
+                    <div [style.display]="!loading ? 'none' : ''" class="col-md-12">
+                      <app-loader-white></app-loader-white>
+                    </div>
                 </div>
             </div>
         </div>

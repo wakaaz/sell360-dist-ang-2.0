@@ -8,6 +8,7 @@ export const API_URLS = {
   HOME_MONTHLY: '/reports/home/monthly',
 
   // Orders
+  COMPLETED_ORDERS_LOAD_SHEETS: '/getCompletedOrdersLoadSheetWise',
   COUNTER_SALE_DATA: '/counterSaleData',
   ADD_COUNTER_SALE: '/saveOrder/counter',
   SAVE_DISPATCH: '/saveOrder/dispatch',
@@ -81,6 +82,7 @@ export const API_URLS = {
 
   // Reports
   DISTRIBUTOR_PURCHASE_HISTORY: '/distributorPurchaseHistory',
+  RATE_LIST_CORE: '/rateListCore',
   CASH_SUMMARY: '/CashSummaryReport',
   PURCHASE_DETAIL: '/distributorPurchaseDetail'
 

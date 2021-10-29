@@ -37,7 +37,7 @@ import { OrderBookerListComponent } from './components/order-booker-list/order-b
     RateListComponent,
     SpotSaleComponent,
     StockOutReportComponent,
-    OrderBookerListComponent,
+    OrderBookerListComponent
   ],
   providers: [
     ReportsService, OrdersService

@@ -17,11 +17,11 @@ export const ordersSubMenu = {
       icon: '/assets/images/dispatched-order.svg'
     },
     // Hidden for first version
-    // {
-    //     title: 'Completed Orders',
-    //     link: '/orders/completed-orders',
-    //     icon: '/assets/images/complete-orders.svg'
-    // },
+    {
+      title: 'Completed Orders',
+      link: '/orders/completed-orders',
+      icon: '/assets/images/complete-orders.svg'
+    },
     {
       title: 'Counter Sale',
       link: '/orders/counter-sale',

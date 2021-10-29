@@ -16,6 +16,10 @@ export class OrdersService {
     return this.baseService.get(API_URLS.COUNTER_SALE_DATA);
   }
 
+  getCompletedOrdersLoadsheets(date): Observable<any> {
+    return this.baseService.get(API_URLS.COMPLETED_ORDERS_LOAD_SHEETS + "?date=" + date);
+  }
+
   getSchemes(): Observable<any> {
     return this.baseService.get(API_URLS.GET_SCHEMES);
   }

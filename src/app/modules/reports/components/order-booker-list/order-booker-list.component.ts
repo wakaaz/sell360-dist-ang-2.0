@@ -104,7 +104,7 @@ export class OrderBookerListComponent implements OnInit {
     }
 
     this.loading = true;
-    let filters = `employee=${this.OrderBooker}&start_date=${this.startDate}&end_date${this.endDate}`;
+    let filters = `order_booker=${this.OrderBooker}&start_date=${this.startDate}&end_date=${this.endDate}`;
     if (this.OrderType && this.OrderType != "0")
       filters += `&order_type=${this.OrderType}`
     if (this.salesmanId && this.salesmanId != "0")

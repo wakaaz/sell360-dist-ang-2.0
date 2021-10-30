@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container" style="height: 100vh">
 
     <div class="row mt-2 mb-2">
         <div class="col-lg-6 col-md-6 col-sm-6">
@@ -34,7 +34,7 @@
                             <div class="form-s2">
                                 <ng-select class="formselect" name="division" [(ngModel)]="selectedDivision" placeholder="Select Divisions">
                                     <ng-option value="All">All</ng-option>
-                                    <ng-option *ngFor="let s of core.segment" [value]="s.id">{{ s.name }}</ng-option>
+                                    <ng-option *ngFor="let d of core.divisions" [value]="d.id">{{ d.division }}</ng-option>
                                 </ng-select>
                             </div>
                         </div>
@@ -52,8 +52,8 @@
                         <div class="col-3 pl-0 rate-act">
                             <button type="button" class="btn btn-primary btn-line"
                                 style="line-height:1; height: 34px; box-shadow:none" (click)="downloadPDF()">Download PDF</button>&nbsp;
-                            <button type="button" class="btn btn-primary btn-line"
-                                style="line-height:1; height: 34px; box-shadow:none" (click)="downloadExecel()">Export Excel</button>
+                            <!-- <button type="button" class="btn btn-primary btn-line"
+                                style="line-height:1; height: 34px; box-shadow:none" (click)="downloadExecel()">Export Excel</button> -->
                         </div>
                     </div>
                 </div>

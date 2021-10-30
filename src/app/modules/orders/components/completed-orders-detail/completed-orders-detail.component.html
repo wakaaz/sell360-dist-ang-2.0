@@ -46,8 +46,8 @@
                             <tr>
                                 <th>Load ID</th>
                                 <th>Salesman</th>
-                                <th>Order Booker(s)</th>
-                                <th>Orders</th>
+                                <!-- <th>Order Booker(s)</th>
+                                <th>Orders</th> -->
                                 <th>Sales Amount</th>
                                 <th>Action</th>
                             </tr>
@@ -56,12 +56,12 @@
                             <tr *ngFor="let sheet of loadsheets">
                                 <td>{{ sheet.id }}</td>
                                 <td>{{ sheet.salesman }}</td>
-                                <td>{{ sheet.order_bookers }}</td>
-                                <td>{{ sheet.total_orders }}</td>
+                                <!-- <td>{{ sheet.order_bookers }}</td>
+                                <td>{{ sheet.total_orders }}</td> -->
                                 <td>Rs. {{ sheet.total_net_sale }}</td>
                                 <td>
                                     <button (click)="routeToPdf('ls', sheet)" class="btn btn-default mb-0">Load Sheet</button>
-                                    <button (click)="routeToPdf('bs', sheet)" class="btn btn-default mb-0">BS</button>
+                                    <!-- <button (click)="routeToPdf('bs', sheet)" class="btn btn-default mb-0">BS</button> -->
                                     <button (click)="routeToPdf('bills', sheet)" class="btn btn-default mb-0">Bills</button>
                                     <button (click)="routeToPdf('dsr', sheet)" class="btn btn-default mb-0">DSR</button>
                                 </td>

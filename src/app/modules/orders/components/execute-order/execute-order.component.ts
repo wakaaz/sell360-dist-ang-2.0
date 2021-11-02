@@ -313,6 +313,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.savingOrder = true;
       this.newProduct = null;
       this.returnedProduct = null;
+      this.paymentTypeCredit = '';
+      this.paymentTypeCheque = '';
       this.resetPaymentValues();
       this.setPaymentInitalValues();
       this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
@@ -877,6 +879,18 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     });
   }
 
+  openBillsModal() {
+    (document.getElementById("billsPrintPaperModalTrigger") as HTMLButtonElement).click();
+  }
+
+  getBills(size: string = 'A4'): void {
+    document.getElementById('close-bills').click();
+    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.billsData.salesman_id}&date=${this.billsData.order_date}&dist_id=${this.billsData.distributorId}&size=${size}&status=processed&loadId=${this.billsData.load_id}`;
+    window.open(billsUrl, "_blank");
+  }
+
+  billsData = null;
+
   saveSpotSaleOrder(): void {
     if (this.orderDetails.items.map(i => i.stockQty).filter(x => !x).length)
       return this.toastService.showToaster({
@@ -892,6 +906,14 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     this.orderDetails.dispatched_by = this.distributorId;
     this.orderDetails.dispatched_at = this.orderDate;
     this.orderDetails.status = 'Processed';
+
+    this.billsData = {
+      load_id: this.loadId,
+      distributorId: this.distributorId,
+      salesman_id: this.salemanId,
+      order_date: this.orderDate
+    }
+
     this.orderDetails.items = this.executionService.setOrderPayloadItems(this.orderDetails, this.selectedRetailer);
     this.orderDetails.returned_items = this.executionService.setOrderPayloadReturnedItems(this.orderDetails, this.selectedRetailer);
     this.orderDetails.payment = {
@@ -908,6 +930,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.savingOrder = false;
       this.isSpotSaleActive = false;
       if (res.status === 200) {
+
+        this.openBillsModal();
+
         const toast: Toaster = {
           type: 'success', message: `Spot Sale for ${this.selectedRetailer.retailer_name.toUpperCase()} saved successfully!`,
           title: 'Spot Sale Saved:'

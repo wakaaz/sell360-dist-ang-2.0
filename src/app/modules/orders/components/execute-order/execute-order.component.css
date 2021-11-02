@@ -1,16 +1,16 @@
 .mw-1280 {max-width: 1280px;}
 .retailerTable .table thead th{font-size: 12px;  padding: 5px 8px!important}
-.retailerTable .table td{font-size: 12px!important; padding: 5px 4px!important; vertical-align: middle; line-height: 1}	
+.retailerTable .table td{font-size: 12px!important; padding: 5px 4px!important; vertical-align: middle; line-height: 1}
 .ProList-div { max-height: 57vh; flex: 1; overflow-y: auto; overflow-x: hidden; padding: 10px; font-size: 14px; }
 .ProList-div .table img{margin-top: -2px; margin-bottom: -2px; margin-left: 4px;}
 .APS-list input {height: 32px; border: solid 1px #eae9e9; -webkit-box-shadow: none; -moz-box-shadow: none; box-shadow: none; padding-left: 30px; font-size: 13px; letter-spacing: 1px;}
 .APS-list .fa {position: absolute;  top: 8px; left: 8px; color: #b5b5b5;}
-._selectProList .header .add_button {padding: 4px 8px 3px 8px; right: 15px;}	
+._selectProList .header .add_button {padding: 4px 8px 3px 8px; right: 15px;}
 ._selectProList .APS-list { padding: 0; width: 100%; margin-top: 10px; position: relative; float: right;}
 .topstats{margin-top: 10px; font-size: 13px; margin-bottom: 5px;}
 .topstats .gary-box{line-height: 1;background-color: #f9f9f9;border-bottom: solid 1px #d1d1d1;padding: 10px;}
 .topstats .gary-box span{font-family: 'Rationale', sans-serif; color:#0038ba; font-size: 18px; float: right; margin-top: -4px;}
-.min-w{min-width:240px }	
+.min-w{min-width:240px }
 .order-list{font-size: 12px; background: #fff; padding: 6px 10px; border: solid 1px #eaeaea; position: relative;
 	transition: all 0.2s; transform: translateZ(0);-ms-transform: scale(0.97);-webkit-transform: scale(0.97); transform: scale(0.97); cursor: pointer;}
 .order-list.active{	border-color:#0038ba;}
@@ -21,7 +21,7 @@
 .order-list .ord-no{font-family: 'Poppins', sans-serif;line-height: 1;font-size: 35px; font-weight: 800; padding-top: 0; color: #ececec;  position: absolute; right:80px; top: 7px}
 .addPR-head { padding: 15px 15px 0px 20px !important; background:none!important }
 #orderList-id{flex: 0 0 300px; max-width: 300px; width: 300px;}
-.value_input { padding: 2px; margin: 0!important; font-size: 12px;  box-shadow: none;height: 22px; width: 52px;}	
+.value_input { padding: 2px; margin: 0!important; font-size: 12px;  box-shadow: none;height: 22px; width: 52px;}
 .total-valu-div{width:280px; min-height: 173px; font-size: 13px; padding-left: 20px; padding-right: 20px; margin-left: auto; margin-right: 0; padding-top: 5px; background-color: #f7f7f7; border: solid 1px #ececec}
 .total-valu-div .row{border-bottom:solid 1px #e8e6e6}
 .total-valu-div .row .col-6{padding:2px; line-height: 1.5;font-family: proximanova-semibold, sans-serif!important; }
@@ -54,7 +54,7 @@
 ._cust_filter {padding-left: 0 !important;padding-top: 0 !important;float: left;}
 ._cust_filter .form-s2 .ng-select {padding: 0 !important;height: 30px !important;}
 ._cust_filter .form-s2 .ng-select .ng-select-container {width: 100%;font-size: 14px;border: none;border-radius: 0;min-height: 30px !important;height: 30px !important;}
-.cash-report .value_input{float: right; width: 85px;} 
+.cash-report .value_input{float: right; width: 85px;}
 .addsalesman { font-size: 11px; width: 100%; line-height: 1; margin-top: 5px;}
 .add-expense{font-size: 13px;padding: 2px 10px;position: absolute;right: 0;}
 .red-bg{border: solid 1px #f12300}
@@ -70,6 +70,18 @@
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
 /* Firefox */input[type=number] {-moz-appearance: textfield;}
 .red-bg {background: red!important; color: #fff !important;}
+.no-content {width:100%;height:65vh;display:flex;}
+.no-content .no-content-container {margin: auto;display:table;text-align: center; color:#B7B7B7}
+.no-content .no-content-container img {width: 70px; height: 70px; margin: auto auto 10px auto; display: block}
+.print-icon-div{text-align: center; padding: 15px;}
+.print-icon-div a{display: inline-block; border: solid 1px #e9ecef; padding: 15px; width: 100%; text-align: center; text-decoration: none; color: #282828; font-size: 13px;}
+.print-icon-div a:HOVER{border: solid 1px #0038ba; color: #0038ba; box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);}
+.print-icon{filter: grayscale(1); width: 45px; opacity: 0.7; display: block; margin: auto; margin-top: 10px; margin-bottom: 15px;}
+.print-icon-div a:HOVER .print-icon{filter:none; opacity: 1;}
+
+
+.heading3{margin: 0; font-size: 16px;}
+.select-date, .select-date:focus{box-shadow: none; border: none; background-color:#f6f6f6; font-size: 14px; height: 30px; width: 200px}
 .no-content {width:100%;height:65vh;display:flex;}
 .no-content .no-content-container {margin: auto;display:table;text-align: center; color:#B7B7B7}
 .no-content .no-content-container img {width: 70px; height: 70px; margin: auto auto 10px auto; display: block}

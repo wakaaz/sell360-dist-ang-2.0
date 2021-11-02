@@ -1,3 +1,4 @@
+import { RetailerService } from './../retailer/services/retailer.service';
 import { OrdersService } from './../orders/services/orders.service';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
@@ -40,7 +41,7 @@ import { OrderBookerListComponent } from './components/order-booker-list/order-b
     OrderBookerListComponent
   ],
   providers: [
-    ReportsService, OrdersService
+    ReportsService, OrdersService, RetailerService
   ],
 })
 export class ReportsModule { }

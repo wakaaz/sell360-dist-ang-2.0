@@ -169,28 +169,30 @@ export class OrderBookerListComponent implements OnInit {
   activeOrder = null;
 
   getBills(size: string = 'A4'): void {
-    if (this.invoiceDate) {
-      this.orderService.updateDispatchInvoiceDate(this.activeOrder.load_id, this.invoiceDate).subscribe(res => {
-        if (res.status === 200) {
-          document.getElementById('close-bills').click();
-          const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.activeOrder.sales_man_id}&date=${this.activeOrder.date}&dist_id=${this.distributorId}&size=${size}&status=processed&loadId=${this.activeOrder.load_id}`;
-          window.open(billsUrl, "_blank");
-          this.invoiceDate = null;
-        } else {
-          this.toastService.showToaster({
-            type: 'error',
-            message: 'Bill cannot be generated at the moment, please try again later!',
-            title: 'Bill cannot be generated:'
-          });
-        }
-      });
-    } else {
-      this.toastService.showToaster({
-        type: 'error',
-        message: 'Please select invoice date to generate bill(s)!',
-        title: 'Please select invoice date:'
-      });
-    }
+    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.activeOrder.sales_man_id}&date=${this.activeOrder.date}&dist_id=${this.distributorId}&size=${size}&status=processed&loadId=${this.activeOrder.load_id}`;
+    window.open(billsUrl, "_blank");
+    // if (this.invoiceDate) {
+    //   this.orderService.updateDispatchInvoiceDate(this.activeOrder.load_id, this.invoiceDate).subscribe(res => {
+    //     if (res.status === 200) {
+    //       document.getElementById('close-bills').click();
+    //       const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.activeOrder.sales_man_id}&date=${this.activeOrder.date}&dist_id=${this.distributorId}&size=${size}&status=processed&loadId=${this.activeOrder.load_id}`;
+    //       window.open(billsUrl, "_blank");
+    //       this.invoiceDate = null;
+    //     } else {
+    //       this.toastService.showToaster({
+    //         type: 'error',
+    //         message: 'Bill cannot be generated at the moment, please try again later!',
+    //         title: 'Bill cannot be generated:'
+    //       });
+    //     }
+    //   });
+    // } else {
+    //   this.toastService.showToaster({
+    //     type: 'error',
+    //     message: 'Please select invoice date to generate bill(s)!',
+    //     title: 'Please select invoice date:'
+    //   });
+    // }
   }
 
   openBillsModal(order: any) {

@@ -426,6 +426,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   setOrderDetailItems(): void {
     this.orderDetails.items = this.orderDetails.items.map(prod => {
       const product = this.inventory.find(x => x.item_id === prod.item_id);
+      if (!product)
+        return;
       prod.parent_trade_price = JSON.parse(JSON.stringify(product.parent_trade_price));
       prod.parent_unit_id = JSON.parse(JSON.stringify(product.parent_unit_id));
       prod.parent_quantity = JSON.parse(JSON.stringify(product.quantity));
@@ -454,6 +456,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       prod.selectedScheme = this.schemes.find(scheme => scheme.id === prod.scheme_id);
       return prod;
     });
+
+    this.orderDetails.items = this.orderDetails.items.filter(x => x);
   }
 
   setCurrentSpotSaleOrder(retailer: any): void {

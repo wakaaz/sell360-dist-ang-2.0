@@ -716,9 +716,9 @@
                                             <div class="report_value"> <strong>Cash:</strong>
                                                 <span>{{finalLoad?.dsr?.total_cash_amount | number: '1.2-2'}}</span>
                                             </div>
-
+                                            <!-- (keyup)="amountReceivedMax()" -->
                                             <div class="report_value" style="height:40px; line-height:22px;">
-                                                <strong>AMT. Received:</strong> <input type="number" [(ngModel)]="amountReceived" (keydown)="isNumber($event)" (keyup)="amountReceivedMax()" class="form-control value_input amount_recieved_cashReport" placeholder="0">
+                                                <strong>AMT. Received:</strong> <input type="number" [(ngModel)]="amountReceived" (keydown)="isNumber($event)" class="form-control value_input amount_recieved_cashReport" placeholder="0">
                                             </div>
                                             <div class="report_value" style="color:#0038ba">
                                                 <strong>Balance AMT:</strong>

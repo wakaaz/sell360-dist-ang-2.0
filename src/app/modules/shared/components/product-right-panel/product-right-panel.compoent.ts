@@ -40,9 +40,8 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges(change: SimpleChanges): void {
-    debugger;
     if (change.orderedProducts?.currentValue) {
-
+      debugger;
       this.allProducts = this.allProducts.map(x => {
         const orderedProduct = this.orderedProducts.find(pr => pr.item_id === x.item_id);
         // if (orderedProduct?.item_status == 0)

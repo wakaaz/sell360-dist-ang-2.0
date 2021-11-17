@@ -108,11 +108,11 @@ export const reportsSubMenu = {
       link: '/reports/export-rate-list',
       icon: '/assets/images/reports-icon.svg'
     },
-    {
-      title: 'Spot Sale',
-      link: '/reports/spot-sale',
-      icon: '/assets/images/reports-icon.svg'
-    },
+    // {
+    //   title: 'Spot Sale',
+    //   link: '/reports/spot-sale',
+    //   icon: '/assets/images/reports-icon.svg'
+    // },
     {
       title: 'Purchase History',
       link: '/reports/purchase-history',

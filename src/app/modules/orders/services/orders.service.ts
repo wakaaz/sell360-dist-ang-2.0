@@ -174,9 +174,9 @@ export class OrdersService {
     return this.baseService.get(url);
   }
 
-  markCompeleteExecution(loadId: number, amountReceived: number): Observable<any> {
+  markCompeleteExecution(loadId: number, payload): Observable<any> {
     const url = `${API_URLS.EXECUTION_COMPLETE}/${loadId}`;
-    return this.baseService.post(url, { total_net_after_recovery: amountReceived });
+    return this.baseService.post(url, payload);
   }
 
 }

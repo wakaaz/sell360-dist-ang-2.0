@@ -1,0 +1,89 @@
+    ._PR_filter {
+        margin-top: -2px;
+        width: 220px !important;
+        float: left;
+        padding-right: 10px;
+    }
+
+    .datefiled {
+        width: 155px !important;
+    }
+
+    ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__rendered {
+        line-height: 30px !important;
+        font-family: 'proximanova-light', sans-serif !important;
+        font-size: 13px !important;
+    }
+
+    ._PR_filter .form-s2 .select2-container .select2-selection--single,
+    ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__arrow {
+        height: 31px !important;
+    }
+
+    ._PR_filter .select2-container .select2-selection--single {
+        background-color: #fff;
+        border-color: #eae9e9;
+        font-size: 14px;
+        border-radius: 0;
+    }
+
+    .addPR-head h3 {
+        font-size: 13px;
+        padding-right: 8px;
+        line-height: 29px;
+        margin: 0
+    }
+
+    ._PR_filter input {
+        box-shadow: none;
+        font-size: 13px;
+        height: 31px;
+        border-color: #eae9e9;
+        padding-right: 3px;
+        padding-left: 8px;
+    }
+
+    .addPR-head {
+        font-size: 16px;
+        padding: 15px 15px 15px 20px !important;
+        border-bottom: solid 1px #eae9e9;
+        margin-bottom: 0px;
+    }
+
+    .btn-report {
+        font-size: 14px;
+        padding: 4px 15px;
+        box-shadow: none;
+        margin-top: -2px;
+        letter-spacing: 1px;
+    }
+
+    ::-webkit-calendar-picker-indicator {
+        margin-left: 0px;
+    }
+
+    .topstats {
+        margin-top: 15px;
+        font-size: 14px;
+    }
+
+    .topstats .gary-box {
+        line-height: 1;
+        background-color: #f9f9f9;
+        border-bottom: solid 1px #d1d1d1;
+        padding: 10px;
+        letter-spacing: 1px;
+    }
+
+    .topstats .gary-box span {
+        font-family: 'Rationale', sans-serif;
+        color: #0038ba;
+        font-size: 18px;
+        float: right;
+        margin-top: -2px;
+        padding-left: 15px;
+    }
+
+    .topstats strong {
+        padding: 0
+    }

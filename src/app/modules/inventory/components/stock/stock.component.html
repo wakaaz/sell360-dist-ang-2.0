@@ -49,9 +49,9 @@
                             <tbody>
                                 <tr *ngFor="let hs of stockHistory; let in=index">
                                     <td>{{hs.item_name}}</td>
-                                    <td>{{hs.child_quantity || 0 | number}}</td>
+                                    <td>{{hs.balance || 0 | number}}</td>
                                     <td>{{hs.type}}</td>
-                                    <td>{{hs.module === 'Return Market' ? 'Damage' : hs.status}}</td>
+                                    <td>{{hs.module === 'Return Market' && hs.status === 'out' ? 'Damage' : (hs.module === 'Return Market' && hs.status === 'in' ? 'Sellable' : hs.status)}}</td>
                                     <td>{{hs.created_at}}</td>
                                     <td>
                                         <button *ngIf="hs.type==='purchase'" class="btn btn-default mb-0" (click)="closePopup()" [routerLink]="['/reports', 'purchase', hs.purchase_id]">View Details</button>

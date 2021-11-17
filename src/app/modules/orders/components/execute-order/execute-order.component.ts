@@ -889,11 +889,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
   getBills(size: string = 'A4'): void {
     document.getElementById('close-bills').click();
-    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.billsData.salesman_id}&date=${this.billsData.order_date}&dist_id=${this.billsData.distributorId}&size=${size}&status=processed&loadId=${this.billsData.load_id}`;
+    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.billsData.salesman_id}&date=${this.billsData.order_date}&dist_id=${this.billsData.distributorId}&size=${size}&status=processed&orderID=${this.spotSaleOrderId}`;
     window.open(billsUrl, "_blank");
   }
 
   billsData = null;
+  spotSaleOrderId = null;
 
   saveSpotSaleOrder(): void {
     if (this.orderDetails.items.map(i => i.stockQty).filter(x => !x).length)
@@ -945,6 +946,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.toastService.showToaster(toast);
         this.inventory = res.data.executed_products;
         this.selectedRetailer.id = res.data.order.id;
+        this.spotSaleOrderId = res.data.order.id;
         const orderIndex = this.spotSaleOrder.orders.findIndex(x => x.retailer_id === this.orderDetails.retailer_id);
         const retailerIndex = this.spotSaleOrder.retailers.findIndex(x => x.retailer_id === this.selectedRetailer.retailer_id);
         this.spotSaleOrder.retailers[retailerIndex].id = res.data.order.id;
@@ -1321,7 +1323,15 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   markCompelet(): void {
     document.getElementById('close-complete').click();
     this.loading = true;
-    this.orderService.markCompeleteExecution(this.loadId, +this.amountReceived).subscribe(res => {
+    this.orderService.markCompeleteExecution(this.loadId, {
+      saleman_id: this.salemanId,
+      total_amount_recieved: +this.amountReceived,
+      dsr_id: this.finalLoad?.dsr?.id,
+      net_receivable: this.finalLoad?.dsr?.total_net_after_recovery,
+      balance: this.finalLoad?.dsr?.total_net_after_recovery - this.amountReceived,
+      execution_date: this.orderDate
+    }).subscribe(res => {
+
       this.loading = false;
       if (res.status === 200) {
         this.toastService.showToaster({

@@ -168,7 +168,7 @@ export class OrderBookerListComponent implements OnInit {
   activeOrder = null;
 
   getBills(size: string = 'A4'): void {
-    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.activeOrder.sales_man_id}&date=${this.activeOrder.date}&dist_id=${this.distributorId}&size=${size}&status=processed&loadId=${this.activeOrder.load_id}`;
+    const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.activeOrder.sales_man_id}&date=${this.activeOrder.date}&dist_id=${this.distributorId}&size=${size}&status=processed&orderID=${this.activeOrder.id}`;
     window.open(billsUrl, "_blank");
     // if (this.invoiceDate) {
     //   this.orderService.updateDispatchInvoiceDate(this.activeOrder.load_id, this.invoiceDate).subscribe(res => {

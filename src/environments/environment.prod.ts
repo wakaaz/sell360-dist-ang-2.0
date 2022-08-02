@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiDomain: 'https://mtek.allomate.solutions',
-  apiUrl: 'https://mtek.allomate.solutions/distributor-api',
+  apiDomain: 'https://shahi.sell360.app',
+  apiUrl: 'https://shahi.sell360.app/distributor-api',
 };

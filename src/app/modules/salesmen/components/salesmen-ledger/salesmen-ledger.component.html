@@ -26,7 +26,7 @@
           </div>
           <div class="_PR_filter datefiled">
             <div class="form-group mb-0" style="height: auto">
-              <input type="month" class="form-control" autocomplete="off">
+              <input type="month" [(ngModel)]="month" class="form-control" autocomplete="off">
             </div>
           </div>
 
@@ -42,7 +42,7 @@
               </ng-select>
             </div>
           </div>
-          <button class="btn btn-primary btn-report"><i class="fa fa-search"></i>
+          <button [disabled]="!month || !smSelected || loading" (click)="getLedger()" class="btn btn-primary btn-report"><i class="fa fa-search"></i>
             <span>Search</span>
           </button>
         </div>
@@ -50,13 +50,13 @@
         <div class="topstats">
           <div class="row m-0">
             <div class="col-3 pr-0">
-              <div class="gary-box"><strong>Salary:</strong> <span>PKR.{{ salesman?.salary | number:'1.0' }}</span></div>
+              <div class="gary-box"><strong>Salary:</strong> <span>PKR.{{ salesman?.salary | number }}</span></div>
             </div>
             <div class="col-3 pr-0">
-              <div class="gary-box"><strong>Balance:</strong> <span>PKR.0</span></div>
+              <div class="gary-box"><strong>Balance:</strong> <span>PKR.{{ salesman?.balance | number }}</span></div>
             </div>
             <div class="col-3 pr-0">
-              <div class="gary-box"><strong>Amount Due:</strong> <span>PKR.0</span></div>
+              <div class="gary-box"><strong>Amount Due:</strong> <span>PKR.{{ amountDue | number }}</span></div>
             </div>
             <div class="col-3 text-right">
               <button class="btn btn-primary btn-report"><i class="fa fa-file-pdf"></i>
@@ -78,6 +78,13 @@
               </tr>
             </thead>
             <tbody>
+              <tr *ngFor="let item of ledger">
+                <td>{{ item.date }}</td>
+                <td>Rs. {{ item.net_sale | number }}</td>
+                <td>Rs. {{ item.cash_payable | number }}</td>
+                <td>Rs. {{ item.cash_received | number }}</td>
+                <td>Rs. {{ item.balance | number }}</td>
+              </tr>
             </tbody>
           </table>
 

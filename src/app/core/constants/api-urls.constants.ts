@@ -50,6 +50,7 @@ export const API_URLS = {
 
   // Salesmen
   GET_ALL_SALESMEN: '/getAllSalesman',
+  GET_SALESMAN_LEDGER: '/salesmanLedger',
   GET_SEGMENTS: '/segments',
   ADD_SALEMAN: '/storeSalesman',
   UPDATE_SALEMAN: '/updateSalesman',

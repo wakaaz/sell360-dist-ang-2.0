@@ -85,7 +85,7 @@ export class LedgerComponent implements OnInit {
     }
 
     window.open(
-      `${environment.apiDomain}/retailerBalanceSheetPdf/${
+      `${environment.apiDomain}/distributor-api/retailerBalanceSheetPdf/${
         this.retailerSelected
       }/${this.filter.startDate}/${
         this.filter.endDate

@@ -1,505 +1,914 @@
-<app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [orderedProducts]="orderDetails?.items"
-    [loadingProducts]="loadingProduct" [allProducts]="inventory" [productSchemes]="schemes"
-    [productMerchantDiscount]="merchantDiscount" [specialDiscounts]="specialDiscounts"
-    (drawerClosed)="closeNewProducts()" (productSelected)="addNewProductToOrder($event)">
+<app-products-drawer
+  *ngIf="showProducts"
+  [selectedRetailer]="selectedRetailer"
+  [orderedProducts]="orderDetails?.items"
+  [loadingProducts]="loadingProduct"
+  [allProducts]="inventory"
+  [productSchemes]="schemes"
+  [productMerchantDiscount]="merchantDiscount"
+  [specialDiscounts]="specialDiscounts"
+  (drawerClosed)="closeNewProducts()"
+  (productSelected)="addNewProductToOrder($event)"
+>
 </app-products-drawer>
 
-<div class="modal fade" id="order-del" tabindex="-1" role="dialog" aria-labelledby="orderLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content top-borderRed">
-            <div class="modal-header">
-                <h5 class="modal-title" id="orderLabel">Cancel Order <span></span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="col-md-12">
-                    <p>Are you sure you want to cancel the order?</p>
-                </div>
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-primary" (click)="cancelOrder()">Yes</button>
-                <button type="submit" id="close-del" class="btn btn-cancel" data-dismiss="modal"
-                    aria-label="Close">No</button>
-            </div>
+<div
+  class="modal fade"
+  id="order-del"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="orderLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top-borderRed">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderLabel">Cancel Order <span></span></h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12">
+          <p>Are you sure you want to cancel the order?</p>
         </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-primary" (click)="cancelOrder()">
+          Yes
+        </button>
+        <button
+          type="submit"
+          id="close-del"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          No
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
-<div class="modal fade" id="billsModal" tabindex="-1" role="dialog" aria-labelledby="billsModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content top_border">
-            <div class="modal-header">
-                <h5 class="modal-title" id="billsModalLabel">Please chose invoice date<span></span></h5>
-                <button type="button" id="close-bills" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-auto" style="padding-top:6px;font-size:14px">Select Date</div>
-                    <div class="col"> <input type="date" id="invoice-date" [(ngModel)]="invoiceDate"
-                            class="form-control select-date" name="invoice-date" placeholder="">
-                    </div>
-                    <div class="col-12">
-                        <hr>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <h3 class="heading3">Select paper size for print</h3>
-                    </div>
-                </div>
-                <div class="row print-icon-div pb-0">
-                    <div class="col-6 pl-0">
-                        <a (click)="getBills('A4')"><img class="print-icon" src="assets/images/a4.svg" alt="">
-                            <strong>A4 Portrait
-                                Paper</strong></a>
-                    </div>
-                    <div class="col-6 pr-0">
-                        <a (click)="getBills('A5')"><img class="print-icon" src="assets/images/a5.svg" alt="">
-                            <strong>A5 Landscape
-                                Paper</strong></a>
-                    </div>
-                </div>
-            </div>
-
+<div
+  class="modal fade"
+  id="billsModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="billsModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top_border">
+      <div class="modal-header">
+        <h5 class="modal-title" id="billsModalLabel">
+          Please chose invoice date<span></span>
+        </h5>
+        <button
+          type="button"
+          id="close-bills"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-auto" style="padding-top: 6px; font-size: 14px">
+            Select Date
+          </div>
+          <div class="col">
+            <input
+              type="date"
+              id="invoice-date"
+              [(ngModel)]="invoiceDate"
+              class="form-control select-date"
+              name="invoice-date"
+              placeholder=""
+            />
+          </div>
+          <div class="col-12">
+            <hr />
+          </div>
         </div>
+        <div class="row">
+          <div class="col-12">
+            <h3 class="heading3">Select paper size for print</h3>
+          </div>
+        </div>
+        <div class="row print-icon-div pb-0">
+          <div class="col-6 pl-0">
+            <a (click)="getBills('A4')"
+              ><img class="print-icon" src="assets/images/a4.svg" alt="" />
+              <strong>A4 Portrait Paper</strong></a
+            >
+          </div>
+          <div class="col-6 pr-0">
+            <a (click)="getBills('A5')"
+              ><img class="print-icon" src="assets/images/a5.svg" alt="" />
+              <strong>A5 Landscape Paper</strong></a
+            >
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
-<div class="modal fade" id="create-load" tabindex="-1" role="dialog" aria-labelledby="create-loadLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content top-borderRed">
-            <div class="modal-header">
-                <h5 class="modal-title" id="create-loadLabel">Confirm Load <span></span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="col-md-12">
-                    <p>Are you sure you want to create New Load?</p>
-                </div>
-
-            </div>
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-primary" (click)="addCurrentLoad()">Yes</button>
-                <button type="submit" id="close-confirm-load" class="btn btn-cancel" data-dismiss="modal"
-                    aria-label="Close">No</button>
-            </div>
+<div
+  class="modal fade"
+  id="create-load"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="create-loadLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top-borderRed">
+      <div class="modal-header">
+        <h5 class="modal-title" id="create-loadLabel">
+          Confirm Load <span></span>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12">
+          <p>Are you sure you want to create New Load?</p>
         </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="addCurrentLoad()"
+        >
+          Yes
+        </button>
+        <button
+          type="submit"
+          id="close-confirm-load"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          No
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 <div id="order-contaienr" class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card daily-operations">
-                <ul class="nav nav-pills nav_M mb-3" id="pills-tab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 1 ? 'active' : ''"
-                            id="pills-home-tab"><span>Orders</span>
-                            <span class="wz-icon"><i class="fa fa-list-ul"></i></span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 2 ? 'active' : ''"
-                            id="pills-contact-tab"><span>Credit</span>
-                            <span class="wz-icon"><i class="fa  fa-dollar-sign"></i></span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 3 ? 'active' : ''"
-                            id="pills-load-tab"><span>Load</span>
-                            <span class="wz-icon"><i class="fa fa-truck"></i></span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" [ngClass]="currentTab === 4 ? 'active' : ''"
-                            id="pills-final-tab"><span>Final</span>
-                            <span class="wz-icon"><i class="fa fa-check"></i></span>
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    <div [ngClass]="currentTab === 1 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
-                        id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                        <div class="row m-0 grayTopborder">
-                            <div id="orderList-id" class="col-4 p-0">
-                                <app-retailer-sub-list [retailers]="ordersRetailers" [loading]="loading || loadingProduct || savingOrder"
-                                    (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
-                            </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card daily-operations">
+        <ul class="nav nav-pills nav_M mb-3" id="pills-tab" role="tablist">
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [ngClass]="currentTab === 1 ? 'active' : ''"
+              id="pills-home-tab"
+              ><span>Orders</span>
+              <span class="wz-icon"><i class="fa fa-list-ul"></i></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [ngClass]="currentTab === 2 ? 'active' : ''"
+              id="pills-contact-tab"
+              ><span>Credit</span>
+              <span class="wz-icon"><i class="fa fa-dollar-sign"></i></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [ngClass]="currentTab === 3 ? 'active' : ''"
+              id="pills-load-tab"
+              ><span>Load</span>
+              <span class="wz-icon"><i class="fa fa-truck"></i></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [ngClass]="currentTab === 4 ? 'active' : ''"
+              id="pills-final-tab"
+              ><span>Final</span>
+              <span class="wz-icon"><i class="fa fa-check"></i></span>
+            </a>
+          </li>
+        </ul>
+        <div class="tab-content" id="pills-tabContent">
+          <div
+            [ngClass]="currentTab === 1 ? 'active show' : ''"
+            class="tab-pane tab_M p-0 PT-15 fade"
+            id="pills-home"
+            role="tabpanel"
+            aria-labelledby="pills-home-tab"
+          >
+            <div class="row m-0 grayTopborder">
+              <div id="orderList-id" class="col-4 p-0">
+                <app-retailer-sub-list
+                  [retailers]="ordersRetailers"
+                  [loading]="loading || loadingProduct || savingOrder"
+                  (retailerChanged)="getOrderDetailsByRetailer($event)"
+                ></app-retailer-sub-list>
+              </div>
 
-                            <div class="col p-0">
-                                <div *ngIf="currentTab === 1" class="rightHeight">
-                                    <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [orderDetail]="orderDetails"
-                                        [schemes]="schemes" [selectedRetailer]="selectedRetailer" [orders]="ordersRetailers"
-                                        [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
-                                        [merchantDiscount]="merchantDiscount" [newProduct]="newProduct"
-                                        [orderType]="'dispatch'" (openDrawer)="openProductsList()">
-                                    </app-order-items-list>
-                                    <div class="col-12" *ngIf="savingOrder">
-                                        <app-loader-white></app-loader-white>
-                                    </div>
-                                    <div class="no-content" *ngIf="!savingOrder && !selectedRetailer">
-                                        <div class="no-content-container" style="margin: auto;display:table;text-align: center; color:#B7B7B7">
-                                            <img src="assets/images/select order-icon.svg" alt="">
-                                            <strong>Select order to see details</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="selectedRetailer" class="col-md-12 bottom-act-btn">
-                                    <button *ngIf="!savingOrder" (click)="setOrderItems()"
-                                        [disabled]="!orderDetails?.items?.length"
-                                        class="btn btn-primary mr-2 save_order_execution font13">Save Order</button>
-
-                                    <button [disabled]="!orderDetails?.items?.length" *ngIf="!savingOrder"
-                                        data-toggle="modal" data-target="#order-del"
-                                        class="btn btn-cancel cancel_order_btn font13">Cancel Order</button>
-
-                                    <button *ngIf="savingOrder" type="submit" class="btn btn-primary mr-2" disabled>
-                                        <div class="spinner-border text-light" role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+              <div class="col p-0">
+                <div *ngIf="currentTab === 1" class="rightHeight">
+                  <app-order-items-list
+                    *ngIf="!savingOrder && selectedRetailer"
+                    [orderDetail]="orderDetails"
+                    [schemes]="schemes"
+                    [selectedRetailer]="selectedRetailer"
+                    [orders]="ordersRetailers"
+                    [allProducts]="inventory"
+                    [specialDiscounts]="specialDiscounts"
+                    [merchantDiscount]="merchantDiscount"
+                    [newProduct]="newProduct"
+                    [orderType]="'dispatch'"
+                    (openDrawer)="openProductsList()"
+                  >
+                  </app-order-items-list>
+                  <div class="col-12" *ngIf="savingOrder">
+                    <app-loader-white></app-loader-white>
+                  </div>
+                  <div
+                    class="no-content"
+                    *ngIf="!savingOrder && !selectedRetailer"
+                  >
+                    <div
+                      class="no-content-container"
+                      style="
+                        margin: auto;
+                        display: table;
+                        text-align: center;
+                        color: #b7b7b7;
+                      "
+                    >
+                      <img src="assets/images/select order-icon.svg" alt="" />
+                      <strong>Select order to see details</strong>
                     </div>
-                    <div [ngClass]="currentTab === 2 ? 'active show' : ''" class="tab-pane p-0 PT-20 tab_M fade"
-                        id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-                        <div class="col-12 PT-15">
-                            <table datatable [dtOptions]="dtOptions" *ngIf="recoveryRetailers?.length && !loading"
-                                class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>Retailer Name</th>
-                                        <th>Pending Amount</th>
-                                        <th>Aging</th>
-                                        <th>Add to Current</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <ng-container *ngFor="let order of recoveryRetailers;let ind=index">
-                                        <tr *ngIf="order.balance > 0">
-                                            <td>{{order.retailer_name | titlecase }}</td>
-                                            <td>Rs. {{order.balance | number: '1.2-2'}}</td>
-                                            <td>{{order.aging || 0}} Days</td>
-                                            <td>
-                                                <input type="number" [readonly]="order.isAdded" [id]="ind"
-                                                    [(ngModel)]="order.recovery" (keydown)="isNumber($event)"
-                                                    [name]="ind" class="form-control value_input" placeholder="0">
-                                                    <span class="input-error" *ngIf="+order.recovery > order.balance" style="width: 100px;max-width: 100px;">
-                                                        The payable amount should not be greater than pending amount!
-                                                    </span>
-                                            </td>
-                                            <td>
-                                                <button class="btn btn-default btn-line" *ngIf="!order.isAdded"
-                                                    [disabled]="!order.recovery || +order.recovery === 0 || +order.recovery > order.balance"
-                                                    (click)="this.id='hello';addOrderBill(order)">Add to Bill</button>
-                                                <button class="btn btn-default red-bg" *ngIf="order.isAdded"
-                                                    (click)="removeOrderBill(order)">
-                                                    Remove From Bill
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    </ng-container>
-                                </tbody>
-                            </table>
-                            <div class="col-12" *ngIf="loading">
-                                <app-loader-white></app-loader-white>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div [ngClass]="currentTab === 3 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
-                        id="pills-load" role="tabpanel" aria-labelledby="pills-load-tab">
-
-                        <div *ngIf="currentTab === 3" class="row m-0 grayTopborder">
-                            <div *ngIf="!loading" id="orderList-id2" class="col-4 p-0">
-                                <div class="_selectProList ProListHeight">
-
-                                    <div class="header ProListHD">
-                                        <div class="row">
-                                            <div class="col-12">
-                                                <h2 class="w-100">Orders <span> List</span></h2>
-
-                                                <div class="select-all-op">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" [(ngModel)]="isAllSelected"
-                                                            name="all-selected" id="all-selected"
-                                                            class="custom-control-input" (change)="allSelected()"
-                                                            id="all-s">
-                                                        <label class="custom-control-label" for="all-s">Select
-                                                            All</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12">
-                                                <div class="APS-list"><i class="fa fa-search"></i>
-                                                    <input type="text" class="form-control" id="" placeholder="Search">
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="ProList-div">
-
-                                        <div *ngFor="let order of ordersDispList;let ind=index"
-                                            class="col-12 order-list select-checkmark">
-                                            <div class="ord-no">{{ind+1}}</div>
-                                            <div class="row">
-                                                <div class="col-8 pr-0"><strong
-                                                        style="margin-bottom:2px">{{order.retailer_name}}</strong>
-                                                    <span><strong>Order Booker:</strong> {{order.emp_name}}</span>
-                                                    <span><i class="fa fa-map-marker-alt"></i>
-                                                        {{order.retailer_address}}</span>
-                                                </div>
-                                                <div class="col-4 pl-0">
-                                                    <div class="custom-control custom-checkbox">
-                                                        <input type="checkbox" [name]="ind"
-                                                            (change)="retailerSelected(order)"
-                                                            class="custom-control-input" [(ngModel)]="order.isSelected"
-                                                            [id]="'ord'+ind">
-                                                        <label class="custom-control-label" [for]="'ord'+ind"></label>
-                                                    </div>
-                                                    <div class="text-right">Total Sales<span class="or-val">Rs.
-                                                            {{order.order_total || 0 | number: '1.2-2'}}</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div *ngIf="!loading" class="col p-0">
-                                <div class="rightHeight PT-5">
-                                    <div class="header-tabs">
-                                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                                            <a class="nav-item nav-link" [id]="cont.loadNumber"
-                                                [ngClass]="cont.loadNumber === currentLoadContent.loadNumber ? 'active' : ''"
-                                                (click)="changeCurrentLoad(cont.loadNumber)"
-                                                *ngFor="let cont of load?.content;let i=index" id="nav-load1-tab">Load
-                                                {{cont.loadNumber}}</a>
-
-                                        </div>
-                                    </div>
-
-                                    <div class="tab-content" id="nav-tabContent">
-
-                                        <div class="tab-pane fade show active body_sales_agants" id="nav-load1"
-                                            role="tabpanel" aria-labelledby="nav-load1-tab">
-                                            <div class="col-12 retailerTable">
-                                                <table class="table table-hover dt-responsive nowrap th-boarder"
-                                                    style="width:100%">
-                                                    <thead>
-                                                        <tr>
-                                                            <th rowspan="2">SN</th>
-                                                            <th rowspan="2">Product Name</th>
-                                                            <th colspan="1" style="text-align: center">Actual</th>
-                                                            <th colspan="1" style="text-align: center">Issuance</th>
-                                                        </tr>
-                                                        <tr>
-                                                            <th style="text-align: center">BOX/PIECE</th>
-                                                            <th style="text-align: center">BOX/PIECE</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        <tr *ngFor="let item of currentLoadContent.items;let i=index">
-                                                            <td>{{item.item_id}}</td>
-                                                            <td>{{getItemName(item.item_id)}}</td>
-                                                            <td>{{item.actual_qty | number}}</td>
-                                                            <td><input class="value_input" [(ngModel)]="item.issued_qty"
-                                                                    [name]="item.item_id" [id]="item.item_id"
-                                                                    type="number" (keyup)="updateDispatchedQty(item)"
-                                                                    (keydown)="isNumber($event, 'quantity')"></td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-12" *ngIf="loading">
-                                <app-loader-white></app-loader-white>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div [ngClass]="currentTab === 4 ? 'active show' : ''" class="tab-pane tab_M p-0 PT-15 fade"
-                        id="pills-final" role="tabpanel" aria-labelledby="pills-final-tab">
-                        <div class="col-12">
-                            <div class="row">
-                                <div class="col-8 PB-30">
-                                    <div class="header PT-10 PB-10 mb-15">
-                                        <h2 class="w-100">Load <span> Sheet</span></h2>
-                                    </div>
-
-                                    <table *ngIf="showFinalLoad" datatable [dtOptions]="dtOptions"
-                                        class="table table-hover dt-responsive nowrap dc-table" id="example2"
-                                        style="width:100%">
-                                        <thead>
-                                            <tr>
-                                                <th rowspan="2" style="vertical-align: middle">SN</th>
-                                                <th rowspan="2" style="vertical-align: middle">Product Name</th>
-                                                <th colspan="2" style="text-align:center"
-                                                    *ngFor="let number of finalLoad.load[0].content; let i = index">
-                                                   Load {{i+1}}</th>
-                                                <th colspan="2" style="text-align:center">
-                                                    Total Issuance</th>
-                                            </tr>
-                                            <tr *ngIf="finalLoad.count==3">
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                            </tr>
-                                            <tr *ngIf="finalLoad.count==2">
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                            </tr>
-                                            <tr *ngIf="finalLoad.count==1">
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                                <th>CTN/Bundle</th>
-                                                <th>Box/Piece</th>
-                                            </tr>
-
-                                        </thead>
-                                        <tbody>
-                                            <tr *ngFor="let product of finalLoad.load">
-                                                <td>{{product.item_sku}}</td>
-                                                <td>{{product.item_name}}</td>
-                                                <ng-container *ngFor="let loadContent of product.content">
-                                                    <td>{{loadContent.parent_qty | number}}</td>
-                                                    <td>{{loadContent.child_qty}}</td>
-                                                </ng-container>
-                                                <td>{{product.total_primary_qty | number }}</td>
-                                                <td>{{product.total_secondary_qty | number }}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-
-                                <div class="col-4">
-                                    <div class="cash-report" *ngIf="finalLoad">
-                                        <div class="header">
-                                            <div class="report_value"> <strong>Gross Total:</strong>
-                                                <span>{{finalLoad.summary.total_gross_amount | number: '1.2-2'}}</span>
-                                            </div>
-                                            <div class="report_value"> <strong>Trade Offer:</strong>
-                                                <span>{{finalLoad.summary.total_trade_offer | number: '1.2-2'}}</span>
-                                            </div>
-                                            <div class="report_value"> <strong>Trade Discount:</strong>
-                                                <span>{{finalLoad.summary.total_trade_discount | number:
-                                                    '1.2-2'}}</span>
-                                            </div>
-                                            <div class="report_value"> <strong>Special Discount:</strong>
-                                                <span>{{finalLoad.summary.total_special_discount | number:
-                                                    '1.2-2'}}</span>
-                                            </div>
-                                            <div class="report_value"> <strong>Booker Discount:</strong>
-                                                <span>{{finalLoad.summary.total_booker_discount | number:
-                                                    '1.2-2'}}</span>
-                                            </div>
-                                            <div class="report_value"> <strong>Total:</strong>
-                                                <span>{{finalLoad.summary.total_gross_amount -
-                                                    finalLoad.summary.total_trade_offer -
-                                                    finalLoad.summary.total_trade_discount -
-                                                    finalLoad.summary.total_special_discount -
-                                                    finalLoad.summary.total_booker_discount | number: '1.2-2'}}</span>
-                                            </div>
-                                            <div class="report_value"> <strong>Tax:</strong>
-                                                <span>{{finalLoad.summary.total_tax_amount | number: '1.2-2'}}</span>
-                                            </div>
-                                            <div class="report_value" style="color:#0038ba"> <strong>Total Amount
-                                                    Due:</strong> <span>{{finalLoad.summary.total_net_sale | number:
-                                                    '1.2-2'}}</span> </div>
-                                            <div class="report_value"> <strong>Recovery:</strong>
-                                                <span>{{finalLoad.summary.total_recovery_amount | number:
-                                                    '1.2-2'}}</span>
-                                            </div>
-                                            <div class="report_value" style="color:#0038ba"> <strong>Total Issued
-                                                    Amount:</strong> <span>{{finalLoad.summary.issued_total_price |
-                                                    number: '1.2-2'}}</span> </div>
-                                        </div>
-                                        <div style="padding: 10px 15px;">
-                                            <div class="row act-btn-print">
-                                                <div class="col-4"> <a (click)="getBookingSheet()"
-                                                        class="btn btn-primary print-btn fontSize"><i
-                                                            class="fa fa-print"></i> Booking Sheet</a> </div>
-                                                <div class="col-4"> <a (click)="generateLSPDF()"
-                                                        class="btn btn-primary print-btn fontSize"><i
-                                                            class="fa fa-print"></i> Load Sheet</a> </div>
-                                                <div class="col-4">
-                                                    <button class="btn btn-primary print-btn fontSize"
-                                                        data-toggle="modal" data-target="#billsModal"><i
-                                                            class="fa fa-print"></i>
-                                                        Bills</button>
-                                                </div>
-                                                <div class="col-6 pl-5 pt-5">
-                                                    <button *ngIf="!loading"
-                                                        class="btn btn-primary red-bg cancel_dispatch w-100"
-                                                        (click)="revertDispatch()">Reset</button>
-                                                    <button *ngIf="loading" type="submit" class="btn btn-primary red-bg w-100 mr-2" disabled>
-                                                        <div class="spinner-border text-light" role="status">
-                                                            <span class="sr-only">Loading...</span>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                                <div class="col-6 pl-0 pr-5 pt-5">
-                                                    <button *ngIf="!loading"
-                                                        class="btn btn-primary m-0 nextButton w-100"
-                                                        (click)="completeDispatch()">Complete</button>
-                                                    <button *ngIf="loading" type="submit" class="btn btn-primary w-100 mr-2" disabled>
-                                                        <div class="spinner-border text-light" role="status">
-                                                            <span class="sr-only">Loading...</span>
-                                                        </div>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-
-                    <div *ngIf="currentTab !== 4" class="col-md-12 pl-10 pr-10 text-center">
-                        <div class="execFooter">
-                            <button (click)="currentTab=currentTab-1;tabChanged()"
-                                [disabled]="currentTab === 1 || currentTab === 4 || loading || savingOrder || load.content[0].items.length > 0"
-                                type="submit" class="btn btn-primary m-0 mr-2">Previous</button>
-                            <button *ngIf="currentTab !== 4 && currentTab !== 3"
-                                [disabled]="currentTab === 4 || loading || loadingProduct || savingOrder"
-                                (click)="currentTab=currentTab+1;tabChanged()" type="submit"
-                                class="btn btn-primary m-0">Next</button>
-                            <button *ngIf="currentTab === 3" [disabled]="loading || loadingProduct" (click)="openConfirmationModal()"
-                                type="submit" class="btn btn-primary m-0">Next</button>
-                            <button style="display: none;" id="open-create-load" data-toggle="modal"
-                                data-target="#create-load">Open Modal</button>
-                        </div>
-                    </div>
+                  </div>
                 </div>
+                <div *ngIf="selectedRetailer" class="col-md-12 bottom-act-btn">
+                  <button
+                    *ngIf="!savingOrder"
+                    (click)="setOrderItems()"
+                    [disabled]="!orderDetails?.items?.length"
+                    class="btn btn-primary mr-2 save_order_execution font13"
+                  >
+                    Save Order
+                  </button>
+
+                  <button
+                    [disabled]="!orderDetails?.items?.length"
+                    *ngIf="!savingOrder"
+                    data-toggle="modal"
+                    data-target="#order-del"
+                    class="btn btn-cancel cancel_order_btn font13"
+                  >
+                    Cancel Order
+                  </button>
+
+                  <button
+                    *ngIf="savingOrder"
+                    type="submit"
+                    class="btn btn-primary mr-2"
+                    disabled
+                  >
+                    <div class="spinner-border text-light" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
             </div>
+          </div>
+          <div
+            [ngClass]="currentTab === 2 ? 'active show' : ''"
+            class="tab-pane p-0 PT-20 tab_M fade"
+            id="pills-contact"
+            role="tabpanel"
+            aria-labelledby="pills-contact-tab"
+          >
+            <div class="col-12 PT-15">
+              <table
+                datatable
+                [dtOptions]="dtOptions"
+                *ngIf="retailer_credit_Invoices?.length && !loading"
+                class="table table-hover dt-responsive nowrap"
+                id="example"
+                style="width: 100%"
+              >
+                <thead>
+                  <tr>
+                    <th>Shop Code</th>
+                    <th>Invoice</th>
+                    <th>Shop Name</th>
+                    <!-- <th>Sales Man</th> -->
+                    <th>Aging</th>
+                    <th>Pending AMNT</th>
+                    <th>Invoice DISC</th>
+                    <th>Balance</th>
+                    <th>Add To Current</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    *ngFor="
+                      let inv of retailer_credit_Invoices;
+                      let ind = index
+                    "
+                  >
+                    <th>{{ inv.shop_code }}</th>
+                    <th>
+                      {{
+                        inv.invoice_number
+                          ? inv.invoice_number
+                          : "Opening Balance"
+                      }}
+                    </th>
+                    <th>{{ inv.retailer_name }}</th>
+                    <th>{{ inv.agingValue }}</th>
+                    <th>{{ inv.amount | number: "1.2-2" }}</th>
+                    <th>
+                      <input
+                        type="number"
+                        [id]="ind"
+                        [(ngModel)]="inv.invoice_discount"
+                        (keydown)="isNumber($event)"
+                        [name]="ind"
+                        class="form-control value_input"
+                        placeholder="0"
+                      />
+                    </th>
+                    <th>{{ inv.balance | number: "1.2-2" }}</th>
+                    <th>
+                      <input
+                        type="number"
+                        [id]="ind"
+                        [disabled]="inv.balance === 0"
+                        [(ngModel)]="inv.added_to_current"
+                        (keydown)="isNumber($event)"
+                        [name]="ind"
+                        max="{{ inv.balance }}"
+                        class="form-control value_input"
+                        placeholder="0"
+                      />
+                    </th>
+                    <th>
+                      <button
+                        class="btn btn-default"
+                        [ngClass]="inv.is_added ? 'red-bg' : 'btn-line'"
+                        (click)="addOrderBill(ind, inv.isAdded)"
+                      >
+                        {{ inv.is_added ? "Remove Bill" : "Add to Bill" }}
+                      </button>
+                    </th>
+                  </tr>
+
+                  <!-- <ng-container
+                    *ngFor="let order of recoveryRetailers; let ind = index"
+                  >
+                    <tr *ngIf="order.balance > 0">
+                      <td>{{ order.retailer_name | titlecase }}</td>
+                      <td>Rs. {{ order.balance | number: "1.2-2" }}</td>
+                      <td>{{ order.aging || 0 }} Days</td>
+                      <td>
+                        <input
+                          type="number"
+                          [readonly]="order.isAdded"
+                          [id]="ind"
+                          [(ngModel)]="order.recovery"
+                          (keydown)="isNumber($event)"
+                          [name]="ind"
+                          class="form-control value_input"
+                          placeholder="0"
+                        />
+                        <span
+                          class="input-error"
+                          *ngIf="+order.recovery > order.balance"
+                          style="width: 100px; max-width: 100px"
+                        >
+                          The payable amount should not be greater than pending
+                          amount!
+                        </span>
+                      </td>
+                      <td>
+                        <button
+                          class="btn btn-default btn-line"
+                          *ngIf="!order.isAdded"
+                          [disabled]="
+                            !order.recovery ||
+                            +order.recovery === 0 ||
+                            +order.recovery > order.balance
+                          "
+                          (click)="this.id = 'hello'; addOrderBill(order)"
+                        >
+                          Add to Bill
+                        </button>
+                        <button
+                          class="btn btn-default red-bg"
+                          *ngIf="order.isAdded"
+                          (click)="removeOrderBill(order)"
+                        >
+                          Remove From Bill
+                        </button>
+                      </td>
+                    </tr>
+                  </ng-container> -->
+                </tbody>
+              </table>
+              <div class="col-12" *ngIf="loading">
+                <app-loader-white></app-loader-white>
+              </div>
+            </div>
+          </div>
+
+          <div
+            [ngClass]="currentTab === 3 ? 'active show' : ''"
+            class="tab-pane tab_M p-0 PT-15 fade"
+            id="pills-load"
+            role="tabpanel"
+            aria-labelledby="pills-load-tab"
+          >
+            <div *ngIf="currentTab === 3" class="row m-0 grayTopborder">
+              <div *ngIf="!loading" id="orderList-id2" class="col-4 p-0">
+                <div class="_selectProList ProListHeight">
+                  <div class="header ProListHD">
+                    <div class="row">
+                      <div class="col-12">
+                        <h2 class="w-100">Orders <span> List</span></h2>
+
+                        <div class="select-all-op">
+                          <div class="custom-control custom-checkbox">
+                            <input
+                              type="checkbox"
+                              [(ngModel)]="isAllSelected"
+                              name="all-selected"
+                              id="all-selected"
+                              class="custom-control-input"
+                              (change)="allSelected()"
+                              id="all-s"
+                            />
+                            <label class="custom-control-label" for="all-s"
+                              >Select All</label
+                            >
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <div class="APS-list">
+                          <i class="fa fa-search"></i>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id=""
+                            placeholder="Search"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="ProList-div">
+                    <div
+                      *ngFor="let order of ordersDispList; let ind = index"
+                      class="col-12 order-list select-checkmark"
+                    >
+                      <div class="ord-no">{{ ind + 1 }}</div>
+                      <div class="row">
+                        <div class="col-8 pr-0">
+                          <strong style="margin-bottom: 2px">{{
+                            order.retailer_name
+                          }}</strong>
+                          <span
+                            ><strong>Order Booker:</strong>
+                            {{ order.emp_name }}</span
+                          >
+                          <span
+                            ><i class="fa fa-map-marker-alt"></i>
+                            {{ order.retailer_address }}</span
+                          >
+                        </div>
+                        <div class="col-4 pl-0">
+                          <div class="custom-control custom-checkbox">
+                            <input
+                              type="checkbox"
+                              [name]="ind"
+                              (change)="retailerSelected(order)"
+                              class="custom-control-input"
+                              [(ngModel)]="order.isSelected"
+                              [id]="'ord' + ind"
+                            />
+                            <label
+                              class="custom-control-label"
+                              [for]="'ord' + ind"
+                            ></label>
+                          </div>
+                          <div class="text-right">
+                            Total Sales<span class="or-val"
+                              >Rs.
+                              {{
+                                order.order_total || 0 | number: "1.2-2"
+                              }}</span
+                            >
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div *ngIf="!loading" class="col p-0">
+                <div class="rightHeight PT-5">
+                  <div class="header-tabs">
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                      <a
+                        class="nav-item nav-link"
+                        [id]="cont.loadNumber"
+                        [ngClass]="
+                          cont.loadNumber === currentLoadContent.loadNumber
+                            ? 'active'
+                            : ''
+                        "
+                        (click)="changeCurrentLoad(cont.loadNumber)"
+                        *ngFor="let cont of load?.content; let i = index"
+                        id="nav-load1-tab"
+                        >Load {{ cont.loadNumber }}</a
+                      >
+                    </div>
+                  </div>
+
+                  <div class="tab-content" id="nav-tabContent">
+                    <div
+                      class="tab-pane fade show active body_sales_agants"
+                      id="nav-load1"
+                      role="tabpanel"
+                      aria-labelledby="nav-load1-tab"
+                    >
+                      <div class="col-12 retailerTable">
+                        <table
+                          class="table table-hover dt-responsive nowrap th-boarder"
+                          style="width: 100%"
+                        >
+                          <thead>
+                            <tr>
+                              <th rowspan="2">SN</th>
+                              <th rowspan="2">Product Name</th>
+                              <th colspan="1" style="text-align: center">
+                                Actual
+                              </th>
+                              <th colspan="1" style="text-align: center">
+                                Issuance
+                              </th>
+                            </tr>
+                            <tr>
+                              <th style="text-align: center">BOX/PIECE</th>
+                              <th style="text-align: center">BOX/PIECE</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr
+                              *ngFor="
+                                let item of currentLoadContent.items;
+                                let i = index
+                              "
+                            >
+                              <td>{{ item.item_id }}</td>
+                              <td>{{ getItemName(item.item_id) }}</td>
+                              <td>{{ item.actual_qty | number }}</td>
+                              <td>
+                                <input
+                                  class="value_input"
+                                  [(ngModel)]="item.issued_qty"
+                                  [name]="item.item_id"
+                                  [id]="item.item_id"
+                                  type="number"
+                                  (keyup)="updateDispatchedQty(item)"
+                                  (keydown)="isNumber($event, 'quantity')"
+                                />
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12" *ngIf="loading">
+                <app-loader-white></app-loader-white>
+              </div>
+            </div>
+          </div>
+
+          <div
+            [ngClass]="currentTab === 4 ? 'active show' : ''"
+            class="tab-pane tab_M p-0 PT-15 fade"
+            id="pills-final"
+            role="tabpanel"
+            aria-labelledby="pills-final-tab"
+          >
+            <div class="col-12">
+              <div class="row">
+                <div class="col-8 PB-30">
+                  <div class="header PT-10 PB-10 mb-15">
+                    <h2 class="w-100">Load <span> Sheet</span></h2>
+                  </div>
+
+                  <table
+                    *ngIf="showFinalLoad"
+                    datatable
+                    [dtOptions]="dtOptions"
+                    class="table table-hover dt-responsive nowrap dc-table"
+                    id="example2"
+                    style="width: 100%"
+                  >
+                    <thead>
+                      <tr>
+                        <th rowspan="2" style="vertical-align: middle">SN</th>
+                        <th rowspan="2" style="vertical-align: middle">
+                          Product Name
+                        </th>
+                        <th
+                          colspan="2"
+                          style="text-align: center"
+                          *ngFor="
+                            let number of finalLoad.load[0].content;
+                            let i = index
+                          "
+                        >
+                          Load {{ i + 1 }}
+                        </th>
+                        <th colspan="2" style="text-align: center">
+                          Total Issuance
+                        </th>
+                      </tr>
+                      <tr *ngIf="finalLoad.count == 3">
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                      </tr>
+                      <tr *ngIf="finalLoad.count == 2">
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                      </tr>
+                      <tr *ngIf="finalLoad.count == 1">
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let product of finalLoad.load">
+                        <td>{{ product.item_sku }}</td>
+                        <td>{{ product.item_name }}</td>
+                        <ng-container
+                          *ngFor="let loadContent of product.content"
+                        >
+                          <td>{{ loadContent.parent_qty | number }}</td>
+                          <td>{{ loadContent.child_qty }}</td>
+                        </ng-container>
+                        <td>{{ product.total_primary_qty | number }}</td>
+                        <td>{{ product.total_secondary_qty | number }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="col-4">
+                  <div class="cash-report" *ngIf="finalLoad">
+                    <div class="header">
+                      <div class="report_value">
+                        <strong>Gross Total:</strong>
+                        <span>{{
+                          finalLoad.summary.total_gross_amount | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value">
+                        <strong>Trade Offer:</strong>
+                        <span>{{
+                          finalLoad.summary.total_trade_offer | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value">
+                        <strong>Trade Discount:</strong>
+                        <span>{{
+                          finalLoad.summary.total_trade_discount
+                            | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value">
+                        <strong>Special Discount:</strong>
+                        <span>{{
+                          finalLoad.summary.total_special_discount
+                            | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value">
+                        <strong>Booker Discount:</strong>
+                        <span>{{
+                          finalLoad.summary.total_booker_discount
+                            | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value">
+                        <strong>Total:</strong>
+                        <span>{{
+                          finalLoad.summary.total_gross_amount -
+                            finalLoad.summary.total_trade_offer -
+                            finalLoad.summary.total_trade_discount -
+                            finalLoad.summary.total_special_discount -
+                            finalLoad.summary.total_booker_discount
+                            | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value">
+                        <strong>Tax:</strong>
+                        <span>{{
+                          finalLoad.summary.total_tax_amount | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value" style="color: #0038ba">
+                        <strong>Total Amount Due:</strong>
+                        <span>{{
+                          finalLoad.summary.total_net_sale | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value">
+                        <strong>Recovery:</strong>
+                        <span>{{
+                          finalLoad.summary.total_recovery_amount
+                            | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value" style="color: #0038ba">
+                        <strong>Total Issued Amount:</strong>
+                        <span>{{
+                          finalLoad.summary.issued_total_price | number: "1.2-2"
+                        }}</span>
+                      </div>
+                    </div>
+                    <div style="padding: 10px 15px">
+                      <div class="row act-btn-print">
+                        <div class="col-4">
+                          <a
+                            (click)="getBookingSheet()"
+                            class="btn btn-primary print-btn fontSize"
+                            ><i class="fa fa-print"></i> Booking Sheet</a
+                          >
+                        </div>
+                        <div class="col-4">
+                          <a
+                            (click)="generateLSPDF()"
+                            class="btn btn-primary print-btn fontSize"
+                            ><i class="fa fa-print"></i> Load Sheet</a
+                          >
+                        </div>
+                        <div class="col-4">
+                          <button
+                            class="btn btn-primary print-btn fontSize"
+                            data-toggle="modal"
+                            data-target="#billsModal"
+                          >
+                            <i class="fa fa-print"></i> Bills
+                          </button>
+                        </div>
+                        <div class="col-6 pl-5 pt-5">
+                          <button
+                            *ngIf="!loading"
+                            class="btn btn-primary red-bg cancel_dispatch w-100"
+                            (click)="revertDispatch()"
+                          >
+                            Reset
+                          </button>
+                          <button
+                            *ngIf="loading"
+                            type="submit"
+                            class="btn btn-primary red-bg w-100 mr-2"
+                            disabled
+                          >
+                            <div
+                              class="spinner-border text-light"
+                              role="status"
+                            >
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                          </button>
+                        </div>
+                        <div class="col-6 pl-0 pr-5 pt-5">
+                          <button
+                            *ngIf="!loading"
+                            class="btn btn-primary m-0 nextButton w-100"
+                            (click)="completeDispatch()"
+                          >
+                            Complete
+                          </button>
+                          <button
+                            *ngIf="loading"
+                            type="submit"
+                            class="btn btn-primary w-100 mr-2"
+                            disabled
+                          >
+                            <div
+                              class="spinner-border text-light"
+                              role="status"
+                            >
+                              <span class="sr-only">Loading...</span>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            *ngIf="currentTab !== 4"
+            class="col-md-12 pl-10 pr-10 text-center"
+          >
+            <div class="execFooter">
+              <button
+                (click)="currentTab = currentTab - 1; tabChanged()"
+                [disabled]="
+                  currentTab === 1 ||
+                  currentTab === 4 ||
+                  loading ||
+                  savingOrder ||
+                  load.content[0].items.length > 0
+                "
+                type="submit"
+                class="btn btn-primary m-0 mr-2"
+              >
+                Previous
+              </button>
+              <button
+                *ngIf="currentTab !== 4 && currentTab !== 3"
+                [disabled]="
+                  currentTab === 4 || loading || loadingProduct || savingOrder
+                "
+                (click)="currentTab = currentTab + 1; tabChanged()"
+                type="submit"
+                class="btn btn-primary m-0"
+              >
+                Next
+              </button>
+              <button
+                *ngIf="currentTab === 3"
+                [disabled]="loading || loadingProduct"
+                (click)="openConfirmationModal()"
+                type="submit"
+                class="btn btn-primary m-0"
+              >
+                Next
+              </button>
+              <button
+                style="display: none"
+                id="open-create-load"
+                data-toggle="modal"
+                data-target="#create-load"
+              >
+                Open Modal
+              </button>
+            </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>

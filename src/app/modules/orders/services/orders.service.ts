@@ -6,18 +6,16 @@ import { CounterSale } from '../models/counter-sale.model';
 
 @Injectable()
 export class OrdersService {
-
-  constructor(
-    private baseService: HttpBaseService
-  ) {
-  }
+  constructor(private baseService: HttpBaseService) {}
 
   getCounterSaleData(): Observable<any> {
     return this.baseService.get(API_URLS.COUNTER_SALE_DATA);
   }
 
   getCompletedOrdersLoadsheets(date): Observable<any> {
-    return this.baseService.get(API_URLS.COMPLETED_ORDERS_LOAD_SHEETS + "?date=" + date);
+    return this.baseService.get(
+      API_URLS.COMPLETED_ORDERS_LOAD_SHEETS + '?date=' + date
+    );
   }
 
   getSchemes(): Observable<any> {
@@ -34,7 +32,10 @@ export class OrdersService {
     return this.baseService.get(url);
   }
 
-  getDiscountSlabsByChannel(segementId: number, channelId: number): Observable<any> {
+  getDiscountSlabsByChannel(
+    segementId: number,
+    channelId: number
+  ): Observable<any> {
     const url = `${API_URLS.GET_SLABS_BY_CHANNEL}/${segementId}/${channelId}`;
     return this.baseService.get(url);
   }
@@ -69,7 +70,7 @@ export class OrdersService {
     return this.baseService.get(url);
   }
 
-  getSaleHistory(params = ""): Observable<any> {
+  getSaleHistory(params = ''): Observable<any> {
     const url = `${API_URLS.GET_SALE_HISTORY}?${params}`;
     return this.baseService.get(url);
   }
@@ -94,7 +95,11 @@ export class OrdersService {
     return this.baseService.get(url);
   }
 
-  getDispatchDetailBySalemanAndDate(id: number, assignId: string, date: string): Observable<any> {
+  getDispatchDetailBySalemanAndDate(
+    id: number,
+    assignId: string,
+    date: string
+  ): Observable<any> {
     const url = `${API_URLS.DISPATCH_DETAIL}/${date}/${id}/${assignId}`;
     return this.baseService.get(url);
   }
@@ -109,9 +114,23 @@ export class OrdersService {
     return this.baseService.get(url);
   }
 
-  getDispatchOrdersDetail(salemanId: number, date: string, assignId: string): Observable<any> {
+  getDispatchOrdersDetail(
+    salemanId: number,
+    date: string,
+    assignId: string
+  ): Observable<any> {
     const url = `${API_URLS.DISPATCH_ORDERS_DETAIL}/${salemanId}/${date}/${assignId}`;
     return this.baseService.get(url);
+  }
+
+  getCreditdatailsData(assignId: string): Observable<any> {
+    const url = `${API_URLS.RETAILER_CREDIT_INVOICES}/${assignId}`;
+    return this.baseService.get(url);
+  }
+
+  postRetailersCreditInvoices(model: any): Observable<any> {
+    const url = `${API_URLS.ADD_RETAILE_RCREDIT_INVOICES}`;
+    return this.baseService.post(url, model);
   }
 
   saveDispatchQuantityOrder(order: any): Observable<any> {
@@ -149,7 +168,12 @@ export class OrdersService {
     return this.baseService.get(url);
   }
 
-  saveExecutionExpense(loadId: number, saleManId: number, date: string, expenses: Array<any>): Observable<any> {
+  saveExecutionExpense(
+    loadId: number,
+    saleManId: number,
+    date: string,
+    expenses: Array<any>
+  ): Observable<any> {
     const url = `${API_URLS.SAVE_EXPENSE}/${loadId}/${saleManId}/${date}`;
     return this.baseService.post(url, { expenses });
   }
@@ -159,14 +183,23 @@ export class OrdersService {
     return this.baseService.get(url);
   }
 
-  getExectedOrdersListing(salemanId: number, date: string, loadId: number): Observable<any> {
+  getExectedOrdersListing(
+    salemanId: number,
+    date: string,
+    loadId: number
+  ): Observable<any> {
     const url = `${API_URLS.GET_EXECUTION_DETAILS}/${salemanId}/${date}/${loadId}`;
     return this.baseService.get(url);
   }
 
-  getExecutionFinalLoad(loadId: number, outOfRouteRecovery: Array<any>): Observable<any> {
+  getExecutionFinalLoad(
+    loadId: number,
+    outOfRouteRecovery: Array<any>
+  ): Observable<any> {
     const url = `${API_URLS.EXECUTION_FINAL_SAVE}/${loadId}`;
-    return this.baseService.post(url, { out_of_route_recovery: outOfRouteRecovery });
+    return this.baseService.post(url, {
+      out_of_route_recovery: outOfRouteRecovery,
+    });
   }
 
   removeOutOfRuoteRecovery(paymentId: number): Observable<any> {
@@ -178,5 +211,4 @@ export class OrdersService {
     const url = `${API_URLS.EXECUTION_COMPLETE}/${loadId}`;
     return this.baseService.post(url, payload);
   }
-
 }

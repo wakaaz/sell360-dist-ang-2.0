@@ -37,6 +37,9 @@ export const API_URLS = {
   REVERT_DISPATCH: '/revertDispatch',
   REVERT_ORDER: '/RevertExecutionDispacth',
   DISPATCH_ORDERS_DETAIL: '/dispatchOrdersDetail',
+  RETAILER_CREDIT_INVOICES: '/retailersCreditInvoices',
+  ADD_RETAILE_RCREDIT_INVOICES: '/addRetailersCreditInvoices',
+
   UPDATE_INVOICE_DETAIL: '/updateDispatchInvoiceDate',
   GET_EXECUTION_LIST: '/executionOrderListing',
   GET_EXECUTION_DETAILS: '/executionDetail',
@@ -85,7 +88,7 @@ export const API_URLS = {
   DISTRIBUTOR_PURCHASE_HISTORY: '/distributorPurchaseHistory',
   RATE_LIST_CORE: '/rateListCore',
   CASH_SUMMARY: '/CashSummaryReport',
-  PURCHASE_DETAIL: '/distributorPurchaseDetail'
+  PURCHASE_DETAIL: '/distributorPurchaseDetail',
 
   // Payments
 };

@@ -726,11 +726,13 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       }
       this.resetPaymentValues();
       this.setPaymentInitalValues();
-    } else if (this.currentTab === 3) {
+    }
+    if (this.currentTab === 3) {
+    } else if (this.currentTab === 4) {
       this.selectedOrderBooker = null;
       this.selectedRoute = null;
       this.recoveryRetailer = null;
-    } else if (this.currentTab === 4) {
+    } else if (this.currentTab === 5) {
       this.isAdded = false;
       this.getExecutionFinalLoad();
     }

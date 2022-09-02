@@ -971,16 +971,7 @@ export class CounterSaleComponent implements OnInit {
             .includes(this.productSearchText.toLowerCase())
       );
     } else {
-      this.dispProducts = this.allProducts.filter((prod) =>
-        prod.item_name
-          .toLowerCase()
-          .includes(
-            this.productSearchText.toLowerCase() ||
-              prod.item_sku
-                .toLowerCase()
-                .includes(this.productSearchText.toLowerCase())
-          )
-      );
+      this.dispProducts = this.allProducts;
     }
   }
 

@@ -356,6 +356,7 @@
                         type="number"
                         [id]="ind"
                         [(ngModel)]="inv.invoice_discount"
+                        [disabled]="inv.is_added"
                         (keydown)="isNumber($event)"
                         [name]="ind"
                         class="form-control value_input"
@@ -367,7 +368,7 @@
                       <input
                         type="number"
                         [id]="ind"
-                        [disabled]="inv.balance === 0"
+                        [disabled]="inv.balance === 0 || inv.is_added"
                         [(ngModel)]="inv.added_to_current"
                         (keydown)="isNumber($event)"
                         [name]="ind"

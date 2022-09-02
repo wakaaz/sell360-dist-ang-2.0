@@ -1,35 +1,58 @@
 <div class="_selectProList ProListHeight">
-    <div class="header ProListHD">
-        <div class="row">
-            <div class="col-12">
-                <h2 class="w-100">Orders <span> List</span></h2>
-            </div>
-            <div *ngIf="!loading" class="col-12">
-                <div class="APS-list"><i class="fa fa-search"></i>
-                    <input type="text" [(ngModel)]="searchText" (keyup)="searchByRetailer()"
-                        class="form-control" id="" placeholder="Search">
-                </div>
-            </div>
-            <div *ngIf="loading" class="col-12"><div class="box-list shine mt-10"></div></div>
+  <div class="header ProListHD">
+    <div class="row">
+      <div class="col-12">
+        <h2 class="w-100">Orders <span> List</span></h2>
+      </div>
+      <div *ngIf="!loading" class="col-12">
+        <div class="APS-list">
+          <i class="fa fa-search"></i>
+          <input
+            type="text"
+            [(ngModel)]="searchText"
+            (keyup)="searchByRetailer()"
+            class="form-control"
+            id=""
+            placeholder="Search"
+          />
         </div>
+      </div>
+      <div *ngIf="loading" class="col-12">
+        <div class="box-list shine mt-10"></div>
+      </div>
     </div>
+  </div>
 
-    <div class="ProList-div" *ngIf="!loading && retailerDispList?.length">
-        <div *ngFor="let retailer of retailerDispList; let i=index" [ngClass]="retailer.isActive ? 'active' : ''"
-            class="col-12 order-list" id="retailer-{{retailer.id}}" (click)="getOrderDetails(retailer)">
-            <div class="ord-no">{{ i + 1 }}</div>
-            <div class="row">
-                <div class="col-8 pr-0"><strong>{{retailer.retailer_name}}</strong><span><i
-                            class="fa fa-map-marker-alt"></i> {{retailer.retailer_address || retailer.loc}}</span></div>
-                <div class="col-4 pl-0 text-right">Total Value <span class="or-val">Rs. {{retailer.order_total || 0 | number:
-                        '1.2-2'}}</span></div>
-            </div>
+  <div class="ProList-div" *ngIf="!loading && retailerDispList?.length">
+    <div
+      *ngFor="let retailer of retailerDispList; let i = index"
+      [ngClass]="retailer.isActive ? 'active' : ''"
+      class="col-12 order-list"
+      id="retailer-{{ retailer.id }}"
+      (click)="getOrderDetails(retailer)"
+    >
+      <div class="ord-no">{{ i + 1 }}</div>
+      <div class="row">
+        <div class="col-8 pr-0">
+          <strong>{{ retailer.retailer_name }}</strong
+          ><span
+            ><i class="fa fa-map-marker-alt"></i>
+            {{ retailer.retailer_neighbourhood }}</span
+          >
         </div>
+        <div class="col-4 pl-0 text-right">
+          Total Value
+          <span class="or-val"
+            >Rs. {{ retailer.order_total || 0 | number: "1.2-2" }}</span
+          >
+        </div>
+      </div>
     </div>
-    <div class="ProList-div" *ngIf="loading">
-        <div class="col-12"><div class="box-list shine"></div></div>
-        <div class="col-12"><div class="box-list shine"></div></div>	
-        <div class="col-12"><div class="box-list shine"></div></div>
-        <div class="col-12"><div class="box-list shine"></div></div>
-    </div>
+  </div>
+  <div class="ProList-div" *ngIf="loading">
+    <div class="col-12"><div class="box-list shine"></div></div>
+    <div class="col-12"><div class="box-list shine"></div></div>
+    <div class="col-12"><div class="box-list shine"></div></div>
+    <div class="col-12"><div class="box-list shine"></div></div>
+  </div>
 </div>

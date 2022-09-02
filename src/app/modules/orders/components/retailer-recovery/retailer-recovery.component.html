@@ -17,7 +17,7 @@
         <th>Pending AMNT</th>
         <th>Invoice DISC</th>
         <th>Balance</th>
-        <th>Add To Current</th>
+        <th>{{ executionData === null ? "Add To Current" : "Recovery" }}</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -35,9 +35,11 @@
             type="number"
             [id]="ind"
             [(ngModel)]="inv.invoice_discount"
-            [disabled]="inv.is_added"
+            [disabled]="inv.is_added && executionData === null"
             (keydown)="isNumber($event)"
-            [name]="ind"
+            name="recoveryDiscount"
+            ngModel
+            #recoveryDiscount="ngModel"
             class="form-control value_input"
             placeholder="0"
           />
@@ -47,10 +49,14 @@
           <input
             type="number"
             [id]="ind"
-            [disabled]="inv.balance === 0 || inv.is_added"
+            [disabled]="
+              (inv.balance === 0 || inv.is_added) && executionData === null
+            "
+            ngModel
+            #recoveryAmount="ngModel"
             [(ngModel)]="inv.added_to_current"
             (keydown)="isNumber($event)"
-            [name]="ind"
+            name="recoveryAmount"
             max="{{ inv.balance }}"
             class="form-control value_input"
             placeholder="0"
@@ -58,12 +64,27 @@
         </th>
         <th>
           <button
+            *ngIf="executionData === null"
             class="btn btn-default"
             [disabled]="inv.isAddToBill"
-            [ngClass]="inv.is_added ? 'red-bg' : 'btn-line'"
+            [ngClass]="
+              inv.is_addedc && executionData === null ? 'red-bg' : 'btn-line'
+            "
             (click)="addOrderBill(ind, inv.is_added)"
           >
             {{ inv.is_added ? "Remove Bill" : "Add to Bill" }}
+          </button>
+
+          <button
+            *ngIf="executionData !== null"
+            class="btn btn-default"
+            [disabled]="!recoveryAmount.dirty && !recoveryDiscount.dirty"
+            [ngClass]="
+              inv.is_addedc && executionData === null ? 'red-bg' : 'btn-line'
+            "
+            (click)="addOrderBill(ind, false)"
+          >
+            {{ "save" }}
           </button>
         </th>
       </tr>

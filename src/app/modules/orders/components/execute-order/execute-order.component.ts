@@ -28,6 +28,7 @@ import { SpotSaleService } from '../../services/spot-sale.service';
 export class ExecuteOrderComponent implements OnInit, OnDestroy {
   dtOPtions: DataTables.Settings = {};
 
+  executionData: any;
   loading: boolean;
   savingOrder: boolean;
   showReturned: boolean;
@@ -189,6 +190,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         (res) => {
           this.loading = false;
           if (res.status === 200) {
+            this.executionData = { assignment_id: res.data.assignment_id };
             this.retailersList = res.data.retailers;
             this.allProducts = res.data.all_products;
             this.loadId = res.data.load_id;

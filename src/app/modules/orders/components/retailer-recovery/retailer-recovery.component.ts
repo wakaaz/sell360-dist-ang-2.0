@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   deleteRetailerCreditInvoice,
@@ -16,6 +16,7 @@ import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
   styleUrls: ['./retailer-recovery.component.css'],
 })
 export class RetailerRecoveryComponent implements OnInit {
+  @Input() executionData: any = null;
   ordersRetailers: any[];
   dtOptions: DataTables.Settings;
   loading: boolean;
@@ -25,19 +26,26 @@ export class RetailerRecoveryComponent implements OnInit {
     private orderService: OrdersService,
     private route: ActivatedRoute,
     private readonly dataService: DataService,
-
     private toastService: ToasterService
   ) {}
 
   ngOnInit(): void {
-    this.assignmentId = this.route.snapshot.paramMap.get('assignId') || null;
-    this.getCreditTabData();
+    this.assignmentId = null;
     this.dtOptions = {
       pagingType: 'simple_numbers',
     };
-    this.orderService.orderRetailers.subscribe((x: any[]) => {
-      this.ordersRetailers = [...x];
-    });
+
+    if (!this.executionData) {
+      this.assignmentId = this.route.snapshot.paramMap.get('assignId') || null;
+      this.orderService.orderRetailers.subscribe((x: any[]) => {
+        this.ordersRetailers = [...x];
+      });
+      this.getCreditTabData();
+    }
+    if (this.executionData) {
+      this.assignmentId = this.executionData.assignment_id;
+      this.getCreditTabData();
+    }
   }
 
   getCreditTabData() {
@@ -59,9 +67,14 @@ export class RetailerRecoveryComponent implements OnInit {
   addOrderBill(index: number, isAdded: boolean): void {
     const retailer_credit_Invoices = this.retailer_credit_Invoices[index];
     if (!isAdded) {
-      const parentOrderId = this.ordersRetailers.find(
-        (x) => x.retailer_id === retailer_credit_Invoices.retailer_id
-      ).id;
+      let parentOrderId = retailer_credit_Invoices.parent_order_id;
+      if (this.executionData === null) {
+        parentOrderId = this.ordersRetailers.find(
+          (x) => x.retailer_id === retailer_credit_Invoices.retailer_id
+        ).id;
+      } else {
+        console.log('retailer_credit_Invoices', retailer_credit_Invoices);
+      }
       const postModel = getRetailersCreditInvoice(
         retailer_credit_Invoices,
         parentOrderId,

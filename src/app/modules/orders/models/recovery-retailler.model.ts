@@ -134,6 +134,14 @@ export class RecoveryRetailer {
     this._order_Id = v;
   }
 
+  private _parent_order_id: string;
+  public get parent_order_id(): string {
+    return this._parent_order_id;
+  }
+  public set parent_order_id(v: string) {
+    this._parent_order_id = v;
+  }
+
   public get isAddToBill(): boolean {
     return this.invoice_discount > 0 || this.added_to_current > 0
       ? false
@@ -160,6 +168,7 @@ export const getRecoveRetailerObject = (recoveryRetailerData: any) => {
   recoveryRetailerObj.invoice_discount = recoveryRetailerData.invoice_discount;
   recoveryRetailerObj.invoice_number = recoveryRetailerData.invoice_number;
   recoveryRetailerObj.is_added = recoveryRetailerData.is_added;
+  recoveryRetailerObj.parent_order_id = recoveryRetailerData.parent_order_id;
 
   recoveryRetailerObj.retailer_id = recoveryRetailerData.retailer_id;
   recoveryRetailerObj.retailer_name = recoveryRetailerData.retailer_name;

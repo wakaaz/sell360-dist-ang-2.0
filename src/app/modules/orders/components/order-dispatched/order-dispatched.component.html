@@ -379,8 +379,9 @@
                     <th>
                       <button
                         class="btn btn-default"
+                        [disabled]="inv.isAddToBill"
                         [ngClass]="inv.is_added ? 'red-bg' : 'btn-line'"
-                        (click)="addOrderBill(ind, inv.isAdded)"
+                        (click)="addOrderBill(ind, inv.is_added)"
                       >
                         {{ inv.is_added ? "Remove Bill" : "Add to Bill" }}
                       </button>

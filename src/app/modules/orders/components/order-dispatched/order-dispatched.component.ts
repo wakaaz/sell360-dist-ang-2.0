@@ -11,6 +11,7 @@ import { LocalStorageService } from '../../../../core/services/storage.service';
 import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 import { environment } from 'src/environments/environment';
 import {
+  deleteRetailerCreditInvoice,
   getRetailersCreditInvoice,
   RecoveryRetailer,
   set_retailer_credit_Invoices_data,
@@ -150,12 +151,14 @@ export class OrderDispatchedComponent implements OnInit {
     }
   }
   getCreditTabData() {
+    this.loading = true;
     this.orderService.getCreditdatailsData(this.assignmentId).subscribe((x) => {
       this.retailer_credit_Invoices = [];
       this.retailer_credit_Invoices = set_retailer_credit_Invoices_data(
         x.data,
         this.retailer_credit_Invoices
       );
+      this.loading = false;
     });
   }
 
@@ -638,17 +641,45 @@ export class OrderDispatchedComponent implements OnInit {
 
   addOrderBill(index: number, isAdded: boolean): void {
     const retailer_credit_Invoices = this.retailer_credit_Invoices[index];
-    const parentOrderId = this.ordersRetailers.find(
-      (x) => x.retailer_id === retailer_credit_Invoices.retailer_id
-    ).id;
-    const postModel = getRetailersCreditInvoice(
-      retailer_credit_Invoices,
-      parentOrderId,
-      this.assignmentId
-    );
-    this.orderService.postRetailersCreditInvoices(postModel).subscribe((x) => {
-      console.log('postRetailersCreditInvoices => ', x.data);
-    });
+    if (!isAdded) {
+      const parentOrderId = this.ordersRetailers.find(
+        (x) => x.retailer_id === retailer_credit_Invoices.retailer_id
+      ).id;
+      const postModel = getRetailersCreditInvoice(
+        retailer_credit_Invoices,
+        parentOrderId,
+        this.assignmentId
+      );
+      this.orderService
+        .postRetailersCreditInvoices(postModel)
+        .subscribe((x) => {
+          console.log('postRetailersCreditInvoices => ', x.result);
+          this.retailer_credit_Invoices[index].id = x.result.id;
+          this.retailer_credit_Invoices[index].is_added = 1;
+          const toast: Toaster = {
+            type: 'success',
+            message: 'Added Successfully',
+            title: 'Success:',
+          };
+          this.toastService.showToaster(toast);
+        });
+    } else {
+      const postModel = deleteRetailerCreditInvoice(
+        retailer_credit_Invoices.id
+      );
+      this.orderService
+        .postRetailersCreditInvoices(postModel)
+        .subscribe((x) => {
+          this.getCreditTabData();
+          const toast: Toaster = {
+            type: 'success',
+            message: 'Remove Successfully',
+            title: 'Success:',
+          };
+          this.toastService.showToaster(toast);
+        });
+    }
+
     // order.isAdded = true;
     // let payment = this.credits.find((x) => x.order_id === order.id);
     // if (payment) {

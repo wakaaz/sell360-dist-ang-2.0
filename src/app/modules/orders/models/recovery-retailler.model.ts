@@ -9,6 +9,14 @@ export class RecoveryRetailer {
   //   return RecoveryRetailer.instance;
   // }
 
+  private _id: number;
+  public get id(): number {
+    return this._id || 0;
+  }
+  public set id(v: number) {
+    this._id = v;
+  }
+
   private _shop_code: string;
   public get shop_code(): string {
     return this._shop_code;
@@ -125,6 +133,12 @@ export class RecoveryRetailer {
   public set order_Id(v: number) {
     this._order_Id = v;
   }
+
+  public get isAddToBill(): boolean {
+    return this.invoice_discount > 0 || this.added_to_current > 0
+      ? false
+      : true;
+  }
 }
 
 export const set_retailer_credit_Invoices_data = (
@@ -149,9 +163,17 @@ export const getRecoveRetailerObject = (recoveryRetailerData: any) => {
 
   recoveryRetailerObj.retailer_id = recoveryRetailerData.retailer_id;
   recoveryRetailerObj.retailer_name = recoveryRetailerData.retailer_name;
-  recoveryRetailerData.order_Id = recoveryRetailerData.order_Id;
+  recoveryRetailerObj.order_Id = recoveryRetailerData.order_Id;
+  recoveryRetailerObj.id = recoveryRetailerData.id;
   recoveryRetailerObj.shop_code = recoveryRetailerData.shop_code;
   return recoveryRetailerObj;
+};
+
+export const deleteRetailerCreditInvoice = (id: number) => {
+  return {
+    id,
+    operation: 'remove',
+  };
 };
 
 export const getRetailersCreditInvoice = (

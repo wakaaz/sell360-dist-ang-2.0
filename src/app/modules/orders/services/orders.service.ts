@@ -1,12 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 import { HttpBaseService } from 'src/app/core/services/http.service';
 import { CounterSale } from '../models/counter-sale.model';
 
 @Injectable()
 export class OrdersService {
+  private _ordersRetailers = new BehaviorSubject<any[]>([]);
   constructor(private baseService: HttpBaseService) {}
+
+  get orderRetailers(): Observable<any> {
+    return this._ordersRetailers.asObservable();
+  }
+
+  setOrderRetailers(orderRetailers: any[]) {
+    this._ordersRetailers.next(orderRetailers);
+  }
 
   getCounterSaleData(): Observable<any> {
     return this.baseService.get(API_URLS.COUNTER_SALE_DATA);

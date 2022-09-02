@@ -140,7 +140,7 @@ export class OrderDispatchedComponent implements OnInit {
       case 2:
         this.dispatchOrderDetail = null;
         // this.getDispatchOrdersDetail();
-        this.getCreditTabData();
+        // this.getCreditTabData();
         break;
       case 3:
         this.setDataForLoad();
@@ -191,6 +191,7 @@ export class OrderDispatchedComponent implements OnInit {
                 ret.isActive = false;
                 return ret;
               });
+              this.orderService.setOrderRetailers([...this.ordersRetailers]);
             }
           }
         },

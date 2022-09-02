@@ -25,6 +25,7 @@ import { OrdersService } from './services/orders.service';
 import { OrderDispatchService } from './services/dispatch.service';
 import { ExecutionService } from './services/execution.service';
 import { SpotSaleService } from './services/spot-sale.service';
+import { RetailerRecoveryComponent } from './components/retailer-recovery/retailer-recovery.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { SpotSaleService } from './services/spot-sale.service';
     CounterSaleComponent,
     BookingVsExecutionComponent,
     CompletedOrdersDetailComponent,
+    RetailerRecoveryComponent,
   ],
   providers: [
     OrderDispatchService,

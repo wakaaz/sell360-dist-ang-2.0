@@ -1,0 +1,75 @@
+<div class="col-12 PT-15">
+  <table
+    datatable
+    [dtOptions]="dtOptions"
+    *ngIf="retailer_credit_Invoices?.length && !loading"
+    class="table table-hover dt-responsive nowrap"
+    id="example"
+    style="width: 100%"
+  >
+    <thead>
+      <tr>
+        <th>Shop Code</th>
+        <th>Invoice</th>
+        <th>Shop Name</th>
+        <!-- <th>Sales Man</th> -->
+        <th>Aging</th>
+        <th>Pending AMNT</th>
+        <th>Invoice DISC</th>
+        <th>Balance</th>
+        <th>Add To Current</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let inv of retailer_credit_Invoices; let ind = index">
+        <th>{{ inv.shop_code }}</th>
+        <th>
+          {{ inv.invoice_number ? inv.invoice_number : "Opening Balance" }}
+        </th>
+        <th>{{ inv.retailer_name }}</th>
+        <th>{{ inv.agingValue }}</th>
+        <th>{{ inv.amount | number: "1.2-2" }}</th>
+        <th>
+          <input
+            type="number"
+            [id]="ind"
+            [(ngModel)]="inv.invoice_discount"
+            [disabled]="inv.is_added"
+            (keydown)="isNumber($event)"
+            [name]="ind"
+            class="form-control value_input"
+            placeholder="0"
+          />
+        </th>
+        <th>{{ inv.balance | number: "1.2-2" }}</th>
+        <th>
+          <input
+            type="number"
+            [id]="ind"
+            [disabled]="inv.balance === 0 || inv.is_added"
+            [(ngModel)]="inv.added_to_current"
+            (keydown)="isNumber($event)"
+            [name]="ind"
+            max="{{ inv.balance }}"
+            class="form-control value_input"
+            placeholder="0"
+          />
+        </th>
+        <th>
+          <button
+            class="btn btn-default"
+            [disabled]="inv.isAddToBill"
+            [ngClass]="inv.is_added ? 'red-bg' : 'btn-line'"
+            (click)="addOrderBill(ind, inv.is_added)"
+          >
+            {{ inv.is_added ? "Remove Bill" : "Add to Bill" }}
+          </button>
+        </th>
+      </tr>
+    </tbody>
+  </table>
+  <div class="col-12" *ngIf="loading">
+    <app-loader-white></app-loader-white>
+  </div>
+</div>

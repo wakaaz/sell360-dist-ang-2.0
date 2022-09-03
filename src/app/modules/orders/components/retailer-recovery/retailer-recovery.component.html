@@ -17,7 +17,14 @@
         <th>Pending AMNT</th>
         <th>Invoice DISC</th>
         <th>Balance</th>
-        <th>{{ executionData === null ? "Add To Current" : "Recovery" }}</th>
+        <th *ngIf="executionData !== null">Assigned</th>
+        <th>
+          {{
+            executionData === null && retailerId === 0
+              ? "Add To Current"
+              : "Recovery"
+          }}
+        </th>
         <th>Action</th>
       </tr>
     </thead>
@@ -35,7 +42,9 @@
             type="number"
             [id]="ind"
             [(ngModel)]="inv.invoice_discount"
-            [disabled]="inv.is_added && executionData === null"
+            [disabled]="
+              inv.is_added && executionData === null && !assignment_idOutRoute
+            "
             (keydown)="isNumber($event)"
             name="recoveryDiscount"
             ngModel
@@ -45,8 +54,12 @@
           />
         </th>
         <th>{{ inv.balance | number: "1.2-2" }}</th>
+        <th *ngIf="executionData !== null">
+          {{ inv.added_to_current | number: "1.2-2" }}
+        </th>
         <th>
           <input
+            *ngIf="executionData === null && !assignment_idOutRoute"
             type="number"
             [id]="ind"
             [disabled]="
@@ -61,10 +74,28 @@
             class="form-control value_input"
             placeholder="0"
           />
+          <input
+            *ngIf="executionData !== null || assignment_idOutRoute"
+            type="number"
+            [id]="ind"
+            [disabled]="
+              (inv.balance === 0 || inv.is_added) &&
+              executionData === null &&
+              !assignment_idOutRoute
+            "
+            ngModel
+            #recoveryAmount="ngModel"
+            [(ngModel)]="inv.recoverd_amount"
+            (keydown)="isNumber($event)"
+            name="recoveryAmount"
+            max="{{ inv.balance }}"
+            class="form-control value_input"
+            placeholder="0"
+          />
         </th>
         <th>
           <button
-            *ngIf="executionData === null"
+            *ngIf="executionData === null && retailerId === 0"
             class="btn btn-default"
             [disabled]="inv.isAddToBill"
             [ngClass]="
@@ -76,15 +107,18 @@
           </button>
 
           <button
-            *ngIf="executionData !== null"
-            class="btn btn-default"
-            [disabled]="!recoveryAmount.dirty && !recoveryDiscount.dirty"
-            [ngClass]="
-              inv.is_addedc && executionData === null ? 'red-bg' : 'btn-line'
-            "
+            *ngIf="executionData !== null || retailerId > 0"
+            class="btn btn-default btn-line"
             (click)="addOrderBill(ind, false)"
           >
-            {{ "save" }}
+            <!-- [ngClass]="
+              inv.is_added && executionData === null ? 'red-bg' : 'btn-line'
+            " -->
+            <!-- [disabled]="
+              (recoveryAmount ? !recoveryAmount?.dirty : true) &&
+              !recoveryDiscount.dirty
+            " -->
+            Save
           </button>
         </th>
       </tr>

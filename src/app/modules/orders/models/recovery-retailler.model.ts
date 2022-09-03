@@ -126,12 +126,12 @@ export class RecoveryRetailer {
     this._is_added = v;
   }
 
-  private _order_Id: number;
-  public get order_Id(): number {
-    return this._order_Id;
+  private _order_id: number;
+  public get order_id(): number {
+    return this._order_id;
   }
-  public set order_Id(v: number) {
-    this._order_Id = v;
+  public set order_id(v: number) {
+    this._order_id = v;
   }
 
   private _parent_order_id: string;
@@ -146,6 +146,22 @@ export class RecoveryRetailer {
     return this.invoice_discount > 0 || this.added_to_current > 0
       ? false
       : true;
+  }
+
+  private _recoverd_amount: number;
+  public get recoverd_amount(): number {
+    return this._recoverd_amount;
+  }
+  public set recoverd_amount(v: number) {
+    if (v > this.amount) {
+      this._recoverd_amount = 0;
+      setTimeout(() => {
+        this._recoverd_amount = this.balance;
+      }, 0);
+    } else {
+      this._recoverd_amount = v || 0;
+    }
+    // this._recoverd_amount = v || 0;
   }
 }
 
@@ -169,10 +185,11 @@ export const getRecoveRetailerObject = (recoveryRetailerData: any) => {
   recoveryRetailerObj.invoice_number = recoveryRetailerData.invoice_number;
   recoveryRetailerObj.is_added = recoveryRetailerData.is_added;
   recoveryRetailerObj.parent_order_id = recoveryRetailerData.parent_order_id;
+  recoveryRetailerObj.recoverd_amount = recoveryRetailerData.recoverd_amount;
 
   recoveryRetailerObj.retailer_id = recoveryRetailerData.retailer_id;
   recoveryRetailerObj.retailer_name = recoveryRetailerData.retailer_name;
-  recoveryRetailerObj.order_Id = recoveryRetailerData.order_Id;
+  recoveryRetailerObj.order_id = recoveryRetailerData.order_id;
   recoveryRetailerObj.id = recoveryRetailerData.id;
   recoveryRetailerObj.shop_code = recoveryRetailerData.shop_code;
   return recoveryRetailerObj;
@@ -194,11 +211,12 @@ export const getRetailersCreditInvoice = (
     invoice_number: recoveryRetailerData.invoice_number,
     parent_order_id: parentOrderId,
     retailer_id: recoveryRetailerData.retailer_id,
-    order_id: recoveryRetailerData.order_Id || null,
+    order_id: recoveryRetailerData.order_id || null,
     assignment_id: assignmentId,
     invoice_balance: recoveryRetailerData.amount,
     added_amount: recoveryRetailerData.added_to_current,
     invoice_discount: recoveryRetailerData.invoice_discount,
+    recoverd_amount: recoveryRetailerData.recoverd_amount,
     operation: 'add',
   };
   return postModel;

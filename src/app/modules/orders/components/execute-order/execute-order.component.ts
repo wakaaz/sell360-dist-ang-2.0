@@ -93,7 +93,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   allProducts: Array<any> = [];
   specialDiscounts: Array<any> = [];
   discountSlabs: Array<any> = [];
-
+  isRecvoryRetailerCanged = false;
   constructor(
     private change: ChangeDetectorRef,
     private route: ActivatedRoute,
@@ -730,6 +730,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.setPaymentInitalValues();
     }
     if (this.currentTab === 3) {
+      this.orderService.setLoadRetaillersRecovery(true);
     } else if (this.currentTab === 4) {
       this.selectedOrderBooker = null;
       this.selectedRoute = null;
@@ -1509,28 +1510,39 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   setRecoveryRetailer(): void {
-    this.isAdded = true;
-    this.orderService
-      .checkBalance(this.recoveryRetailer.retailer_id)
-      .subscribe((res) => {
-        this.isAdded = false;
-        if (res.status) {
-          if (res.data[0].balance > 0) {
-            this.recoveryRetailer.isAdded = true;
-            this.recoveryRetailer.balance = res.data[0].balance;
-            this.recoveryRetailer.recovery = 0;
-            this.recoveryRetailer.recoveryAdded = false;
-            this.recoveryListing.push(this.recoveryRetailer);
-            this.isAdded = false;
-          } else {
-            this.toastService.showToaster({
-              title: 'Recovery:',
-              message: `${this.recoveryRetailer.retailer_name.toUpperCase()} has no credit to add recovery!`,
-              type: 'error',
-            });
-          }
-        }
-      });
+    // this.isAdded = true;
+    // this.orderService
+    //   .checkBalance(this.recoveryRetailer.retailer_id)
+    //   .subscribe((res) => {
+    //     this.isAdded = false;
+    //     if (res.status) {
+    //       if (res.data[0].balance > 0) {
+    //         this.recoveryRetailer.isAdded = true;
+    //         this.recoveryRetailer.balance = res.data[0].balance;
+    //         this.recoveryRetailer.recovery = 0;
+    //         this.recoveryRetailer.recoveryAdded = false;
+    //         this.recoveryListing.push(this.recoveryRetailer);
+    //         this.isAdded = false;
+    //       } else {
+    //         this.toastService.showToaster({
+    //           title: 'Recovery:',
+    //           message: `${this.recoveryRetailer.retailer_name.toUpperCase()} has no credit to add recovery!`,
+    //           type: 'error',
+    //         });
+    //       }
+    //     }
+    //   });
+    this.isRecvoryRetailerCanged = false;
+    console.log(
+      'recovery retailer changed id = ',
+      this.recoveryRetailer.retailer_id
+    );
+    setTimeout(() => {
+      this.isRecvoryRetailerCanged = true;
+    }, 0);
+    // this.orderService.setLoadOutOfRouteRecovery(
+    //   this.recoveryRetailer.retailer_id
+    // );
   }
 
   addRevoery(retaielr: any): void {

@@ -139,7 +139,9 @@ export class OrderDispatchedComponent implements OnInit {
         break;
       case 2:
         this.dispatchOrderDetail = null;
-        // this.getDispatchOrdersDetail();
+        // this.getDispatchDetails();
+        this.getDispatchOrdersDetail();
+        this.orderService.setLoadRetaillersRecovery(true);
         // this.getCreditTabData();
         break;
       case 3:

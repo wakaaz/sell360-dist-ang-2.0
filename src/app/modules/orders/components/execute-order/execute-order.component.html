@@ -1292,61 +1292,11 @@
             </div>
 
             <div class="col-12 PT-10">
-              <table
-                *ngIf="!isAdded"
-                datatable
-                [dtOptions]="dtOPtions"
-                class="table table-hover dt-responsive nowrap"
-                id="example2"
-                style="width: 100%"
-              >
-                <thead>
-                  <tr>
-                    <th>Retailer Name</th>
-                    <th>Recovery Amount</th>
-                    <th>Received Amount</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let retailer of recoveryListing">
-                    <td>{{ retailer.retailer_name }}</td>
-                    <td>Rs. {{ retailer.balance | number: "1.2-2" }}</td>
-                    <td>
-                      <input
-                        type="text"
-                        [readonly]="retailer.recoveryAdded"
-                        [(ngModel)]="retailer.recovery"
-                        name="{{ retailer.retailer_name }}"
-                        id="{{ retailer.retailer_name }}"
-                        class="form-control value_input"
-                        style="width: 90px"
-                        (keydown)="isNumber($event)"
-                        (keyup)="checkRecovery(retailer)"
-                        placeholder="0"
-                      />
-                    </td>
-                    <td>
-                      <button
-                        *ngIf="!retailer.recoveryAdded"
-                        [disabled]="+retailer.recovery < 1"
-                        (click)="addRevoery(retailer)"
-                        class="btn btn-default btn-line"
-                      >
-                        Add Recovery
-                      </button>
-                      <button
-                        *ngIf="retailer.recoveryAdded"
-                        (click)="removeRecovery(retailer)"
-                        class="btn btn-default red-bg"
-                        style="color: white"
-                      >
-                        Remove Recovery
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <app-retailer-recovery
+                *ngIf="isRecvoryRetailerCanged"
+                [retailerId]="this.recoveryRetailer?.retailer_id"
+                [assignment_idOutRoute]="this.executionData.assignment_id"
+              ></app-retailer-recovery>
               <div class="col-12" *ngIf="isAdded">
                 <app-loader-white></app-loader-white>
               </div>

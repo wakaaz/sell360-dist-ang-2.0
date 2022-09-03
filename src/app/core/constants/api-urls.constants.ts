@@ -47,6 +47,7 @@ export const API_URLS = {
   SAVE_EXPENSE: '/executionSaveExpense',
   EXECUTION_FINAL_SAVE: '/executionFinalSave',
   REMOVE_OUT_OF_ROUE_RECOVERY: '/executionRemoveOutOfRouteRecovery',
+  EXECUTION_CHECK_RETAILER_BALANCE: '/executionCheckRetailerBalance',
   EXECUTION_COMPLETE: '/executionComplete',
   LS_PDF: '/LoadSheetDataPdf',
   DSR_PDF: '/pdfDSRNew',

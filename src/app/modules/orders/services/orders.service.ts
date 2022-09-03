@@ -7,14 +7,34 @@ import { CounterSale } from '../models/counter-sale.model';
 @Injectable()
 export class OrdersService {
   private _ordersRetailers = new BehaviorSubject<any[]>([]);
+  private _loadRetaillersRecovery = new BehaviorSubject<any>({});
+
+  private _loadOutOfRouteRecovery = new BehaviorSubject<number>(-1);
   constructor(private baseService: HttpBaseService) {}
 
   get orderRetailers(): Observable<any> {
     return this._ordersRetailers.asObservable();
   }
 
+  get loadOutOfRouteRecovery(): any {
+    return this._loadOutOfRouteRecovery;
+  }
+
+  get loadRetaillersRecovery(): Observable<any> {
+    return this._loadRetaillersRecovery.asObservable();
+  }
+
   setOrderRetailers(orderRetailers: any[]) {
     this._ordersRetailers.next(orderRetailers);
+  }
+
+  setLoadOutOfRouteRecovery(outOfRouteData: any) {
+    console.log('servce out of route id = ', outOfRouteData);
+    this._ordersRetailers.next(outOfRouteData);
+  }
+
+  setLoadRetaillersRecovery(isLoad: boolean) {
+    this._loadRetaillersRecovery.next(isLoad);
   }
 
   getCounterSaleData(): Observable<any> {
@@ -209,6 +229,11 @@ export class OrdersService {
     return this.baseService.post(url, {
       out_of_route_recovery: outOfRouteRecovery,
     });
+  }
+
+  getOutOfRouteRecovery(retailerId: number): Observable<any> {
+    const url = `${API_URLS.EXECUTION_CHECK_RETAILER_BALANCE}/${retailerId}`;
+    return this.baseService.get(url);
   }
 
   removeOutOfRuoteRecovery(paymentId: number): Observable<any> {

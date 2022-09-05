@@ -1,167 +1,260 @@
 <!-- History Modal -->
-<div class="modal fade" id="historyModal" tabindex="-1" role="dialog"
-    aria-labelledby="historyModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" (clickOutside)="clickOutSide($event)">
-        <div class="modal-content  top_border">
-            <div class="modal-header">
-                <h5 class="modal-title" id="historyModalLabel">History List<span></span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeHistory()">
-                    <span aria-hidden="true">&times;</span> </button>
+<div
+  class="modal fade"
+  id="historyModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="historyModalLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered modal-lg"
+    role="document"
+    (clickOutside)="clickOutSide($event)"
+  >
+    <div class="modal-content top_border">
+      <div class="modal-header">
+        <h5 class="modal-title" id="historyModalLabel">
+          History List<span></span>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="closeHistory()"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row m-0 mb-10">
+          <div class="col-4">
+            <div class="gary-box">
+              <strong>Filter:</strong>
+              <select
+                class="form-control"
+                name="filter"
+                id="filter"
+                [(ngModel)]="historyFilter"
+                (change)="dateChanged()"
+              >
+                <option value="monthly">Monthly</option>
+                <option value="daily">Daily</option>
+                <option value="range">Date Range</option>
+              </select>
             </div>
-            <div class="modal-body">
-                <div class="row m-0 mb-10">
-                    <div class="col-4">
-                        <div class="gary-box">
-                            <strong>Filter:</strong>
-                            <select class="form-control" name="filter" id="filter" [(ngModel)]="historyFilter" (change)="dateChanged()">
-                                <option value="monthly">Monthly</option>
-                                <option value="daily">Daily</option>
-                                <option value="range">Date Range</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-4">
-                        <div class="gary-box"><strong>From:</strong>
-                            <input class="form-control" type="date" name="date-from" id="date-from" [(ngModel)]="historyDateFrom" required (change)="dateChanged()">
-                        </div>
-                    </div>
-                    <div *ngIf="historyFilter === 'range'" class="col-4">
-                        <div class="gary-box"><strong>To:</strong>
-                            <input class="form-control" type="date" name="date-to" id="date-to" [(ngModel)]="historyDateTo" required (change)="dateChanged()">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-
-                        <table *ngIf="stockHistory && !historyLoading" class="table table-hover dt-responsive nowrap" datatable [dtOptions]="dtOptions"
-                            id="history-table" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>ITEM</th>
-                                    <th>STOCK</th>
-                                    <th>TYPE</th>
-                                    <th>STATE</th>
-                                    <th>LAST ADDED ON</th>
-                                    <th>ACTION</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let hs of stockHistory; let in=index">
-                                    <td>{{hs.item_name}}</td>
-                                    <td>{{hs.balance || 0 | number}}</td>
-                                    <td>{{hs.type}}</td>
-                                    <td>{{hs.module === 'Return Market' && hs.status === 'out' ? 'Damage' : (hs.module === 'Return Market' && hs.status === 'in' ? 'Sellable' : hs.status)}}</td>
-                                    <td>{{hs.created_at}}</td>
-                                    <td>
-                                        <button *ngIf="hs.type==='purchase'" class="btn btn-default mb-0" (click)="closePopup()" [routerLink]="['/reports', 'purchase', hs.purchase_id]">View Details</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="col-md-12" style="text-align: center;padding: 30px;">
-                            <div *ngIf="historyLoading" class="spinner-border" style="width: 5rem; height: 5rem;color: #0038ba" role="status">
-                                <span class="sr-only">Loading...</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
+          </div>
+          <div class="col-4">
+            <div class="gary-box">
+              <strong>From:</strong>
+              <input
+                class="form-control"
+                type="date"
+                name="date-from"
+                id="date-from"
+                [(ngModel)]="historyDateFrom"
+                required
+                (change)="dateChanged()"
+              />
             </div>
-            <div class="modal-footer border-0" style="background-color: #f6f6f6">
-                <button type="submit" id="close-history-btn" class="btn btn-cancel" data-dismiss="modal" aria-label="Close"
-                    (click)="closeHistory()">Close</button>
+          </div>
+          <div *ngIf="historyFilter === 'range'" class="col-4">
+            <div class="gary-box">
+              <strong>To:</strong>
+              <input
+                class="form-control"
+                type="date"
+                name="date-to"
+                id="date-to"
+                [(ngModel)]="historyDateTo"
+                required
+                (change)="dateChanged()"
+              />
             </div>
+          </div>
         </div>
+        <div class="row">
+          <div class="col-12">
+            <table
+              *ngIf="stockHistory && !historyLoading"
+              class="table table-hover dt-responsive nowrap"
+              datatable
+              [dtOptions]="dtOptions"
+              id="history-table"
+              style="width: 100%"
+            >
+              <thead>
+                <tr>
+                  <th>ITEM</th>
+                  <th>STOCK</th>
+                  <th>TYPE</th>
+                  <th>STATE</th>
+                  <th>LAST ADDED ON</th>
+                  <th>ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let hs of stockHistory; let in = index">
+                  <td>{{ hs.item_name }}</td>
+                  <td>{{ hs.balance || 0 | number }}</td>
+                  <td>{{ hs.type }}</td>
+                  <td>
+                    {{
+                      hs.module === "Return Market" && hs.status === "out"
+                        ? "Damage"
+                        : hs.module === "Return Market" && hs.status === "in"
+                        ? "Sellable"
+                        : hs.status
+                    }}
+                  </td>
+                  <td>{{ hs.created_at }}</td>
+                  <td>
+                    <button
+                      *ngIf="hs.type === 'purchase'"
+                      class="btn btn-default mb-0"
+                      (click)="closePopup()"
+                      [routerLink]="['/reports', 'purchase', hs.purchase_id]"
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="col-md-12" style="text-align: center; padding: 30px">
+              <div
+                *ngIf="historyLoading"
+                class="spinner-border"
+                style="width: 5rem; height: 5rem; color: #0038ba"
+                role="status"
+              >
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0" style="background-color: #f6f6f6">
+        <button
+          type="submit"
+          id="close-history-btn"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="closeHistory()"
+        >
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Stock List -->
 <div class="container">
-
-    <div class="row mt-2 mb-3">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Stock <span> Report</span></h2>
-        </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <ol class="breadcrumb">
-                <li><a><span>Stock Management</span></a></li>
-                <li><span>Stock Report</span></li>
-            </ol>
-        </div>
+  <div class="row mt-2 mb-3">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <h2 class="_head01">Stock <span> Report</span></h2>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <ol class="breadcrumb">
+        <li>
+          <a><span>Stock Management</span></a>
+        </li>
+        <li><span>Stock Report</span></li>
+      </ol>
+    </div>
+  </div>
 
-                <div class="col-12 p-0">
-                    <div class="topstats">
-                        <div class="row m-0">
-                            <div class="col-4">
-                                <div class="gary-box"><strong>Total Products:</strong>
-                                    <span>{{productsStock?.length}}</span>
-                                </div>
-                            </div>
-                            <!-- <div class="col-4">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="col-12 p-0">
+          <div class="topstats">
+            <div class="row m-0">
+              <div class="col-4">
+                <div class="gary-box">
+                  <strong>Total Products:</strong>
+                  <span>{{ productsStock?.length }}</span>
+                </div>
+              </div>
+              <!-- <div class="col-4">
                                 <div class="gary-box"><strong>Total Amount:</strong> <span>170,542</span></div>
                             </div>
                             <div class="col-4">
                                 <div class="gary-box"><strong>Stock Audits:</strong> <span>0</span></div>
                             </div> -->
-                        </div>
+            </div>
 
-                        <!-- <div class="col-12">
+            <!-- <div class="col-12">
                             <div class="row qty-units">
                                 <div class="col"><strong>Cartons:</strong> 450</div>
                                 <div class="col"><strong>Dozen:</strong> 450</div>
                                 <div class="col"><strong>Half Dozen:</strong> 450</div>
                             </div>
                         </div> -->
-
-                    </div>
-                </div>
-
-
-                <div class="body">
-                    <table *ngIf="productsStock && productsStock.length && !loading" id="stock-table" datatable
-                        [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>ITEM</th>
-                                <th>CURRENT STOCK</th>
-                                <th>STOCK DETAILS</th>
-                                <th>STATE</th>
-                                <th>LAST ADDED ON</th>
-                                <th>ACTION</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let product of productsStock; let i=index">
-                                <td>{{product.item_name}}</td>
-                                <td>{{product.stock || 0 | number}}</td>
-                                <td>
-                                    <span *ngFor="let dt of product.stockDetail; let in=index">
-                                        {{dt.type}}: {{dt.exact | number}}{{in!==product.stockDetail.length -1 ? ',' : ''}}
-                                    </span>
-                                </td>
-                                <td>{{product.state}}</td>
-                                <td>{{product.created_at}}</td>
-                                <td><button class="btn btn-default mb-0"
-                                        (click)="getHistory(product.item_id, $event)">View History</button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div *ngIf="loading">
-                        <app-loader-white></app-loader-white>
-                    </div>
-                    <button hidden id="open-history" data-toggle="modal" data-target="#historyModal">
-                        Open History
-                    </button>
-                </div>
-            </div>
+          </div>
         </div>
+
+        <div class="body">
+          <table
+            *ngIf="productsStock && productsStock.length && !loading"
+            id="stock-table"
+            datatable
+            [dtOptions]="dtOptions"
+            class="table table-hover dt-responsive nowrap"
+            style="width: 100%"
+          >
+            <thead>
+              <tr>
+                <th>SKU</th>
+                <th>ITEM</th>
+                <th>CURRENT STOCK</th>
+                <th>STOCK DETAILS</th>
+                <th>STATE</th>
+                <th>LAST ADDED ON</th>
+                <th>ACTION</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of productsStock; let i = index">
+                <td>{{ product.item_sku }}</td>
+                <td>{{ product.item_name }}</td>
+                <td>{{ product.stock || 0 | number }}</td>
+                <td>
+                  <span *ngFor="let dt of product.stockDetail; let in = index">
+                    {{ dt.type }}: {{ dt.exact | number
+                    }}{{ in !== product.stockDetail.length - 1 ? "," : "" }}
+                  </span>
+                </td>
+                <td>{{ product.state }}</td>
+                <td>{{ product.created_at }}</td>
+                <td>
+                  <button
+                    class="btn btn-default mb-0"
+                    (click)="getHistory(product.item_id, $event)"
+                  >
+                    View History
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div *ngIf="loading">
+            <app-loader-white></app-loader-white>
+          </div>
+          <button
+            hidden
+            id="open-history"
+            data-toggle="modal"
+            data-target="#historyModal"
+          >
+            Open History
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 </div>

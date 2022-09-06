@@ -9,6 +9,11 @@ export const API_URLS = {
 
   // Orders
   COMPLETED_ORDERS_LOAD_SHEETS: '/getCompletedOrdersLoadSheetWise',
+  PENDING_ORDERS: '/orders-list/',
+  GET_PRODUCTS_META_DATA: '/fetch-order-meta-data',
+  FETCH_ORDER_BY_ID: '/fetch-order-data/',
+  UPDATE_PRIMARY_ORDER: '/update-order/',
+  PURCHASE_ORDERS: '/purchase-history',
   COUNTER_SALE_DATA: '/counterSaleData',
   ADD_COUNTER_SALE: '/saveOrder/counter',
   SAVE_DISPATCH: '/saveOrder/dispatch',
@@ -91,5 +96,15 @@ export const API_URLS = {
   CASH_SUMMARY: '/CashSummaryReport',
   PURCHASE_DETAIL: '/distributorPurchaseDetail',
 
-  // Payments
+  SAVE_PRIMARY_ORDER: '/save-order',
+
+  RETURN_PRIMARY_ORDER: '/return-order',
+
+  UPDATE_ORDER_STATUS: '/update-order-status/',
+
+  // SUB DISTRIBUTORS
+  SUB_DISTRIBUTORS: '/sub-distributors',
+
+  // Employee
+  DISTRIBUTORS_EMPLOYEES: '/distributors-employees/',
 };

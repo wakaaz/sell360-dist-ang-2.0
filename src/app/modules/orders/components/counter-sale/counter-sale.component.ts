@@ -1011,6 +1011,16 @@ export class CounterSaleComponent implements OnInit {
   }
 
   setOrderFields(): void {
+    const itemsQtyCounter = this.selectedProducts.map((x) => +x.stockQty > 0);
+    if (itemsQtyCounter.length === 0 || itemsQtyCounter.includes(true)) {
+      const toast: Toaster = {
+        type: 'error',
+        message: 'Product Quantity cannot be zero',
+        title: 'Error:',
+      };
+      this.toastService.showToaster(toast);
+      return;
+    }
     if (!this.isDataValid()) {
       const toast: Toaster = {
         type: 'error',

@@ -1,0 +1,506 @@
+<!-- // cancel order yes no confirmation -->
+<div
+  class="modal fade"
+  id="cancelYesNo"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="cancelYesNoLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top-borderRed">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cancelYesNoLabel">Delete <span></span></h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-12">
+            <strong>Are you sure you want to cancel this Order?</strong>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="
+            onUpdateOrderStatus(
+              confirmDeleteOrderID,
+              PRIMARY_ORDER_STATUS_UPDATE.CANCELED
+            )
+          "
+        >
+          Yes
+        </button>
+        <button
+          type="submit"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Order details Popup -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-full modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          style="font-size: 30px"
+        >
+          ×
+        </button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <!-- <div *ngIf="loading" class="col-md-12">
+                <app-loader-white></app-loader-white>
+              </div> -->
+              <div class="card" *ngIf="!loading && order">
+                <div class="p-10" style="border-bottom: solid 2px #000">
+                  <div class="row m-0">
+                    <div class="col-8 OrderLogo">
+                      <img
+                        src="../../../../../assests/images/sell-360.svg"
+                        alt=""
+                      />
+                    </div>
+                    <div class="col-4 ord-no">
+                      Order # <strong>{{ order.id }}</strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="body" style="padding: 15px 20px">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-body">
+                        <div class="row OrderInfo">
+                          <div class="col-md-9">
+                            <span>Dist Name: </span>
+                            <strong class="retailer_name">{{
+                              order.distributor_name
+                            }}</strong
+                            ><br />
+                            <span>Phone No: </span>
+                            <strong class="retailer_phone">{{
+                              order.distributor_phone
+                            }}</strong
+                            ><br />
+                            <span>Location: </span>
+                            <strong class="retailer_location">{{
+                              order.distributor_address
+                            }}</strong>
+                          </div>
+
+                          <div class="col-md-3 p-0">
+                            <span>Status: </span>
+                            <strong class="status">
+                              {{ order.status ? order?.status : "--" }} </strong
+                            ><br />
+                            <span>Booking Date: </span>
+                            <strong class="booking_date">{{
+                              order.date
+                            }}</strong
+                            ><br />
+                            <span>Employee: </span>
+                            <strong class="employee_name">{{
+                              order.employee_name
+                            }}</strong>
+                          </div>
+                        </div>
+
+                        <div class="seprator-block"></div>
+
+                        <div class="Order-Detail-table mt-30">
+                          <div class="Order-Detail-table mt-30">
+                            <table class="table">
+                              <thead>
+                                <tr>
+                                  <th><strong>Code</strong></th>
+                                  <th><strong>Product Name</strong></th>
+                                  <th><strong>Qty</strong></th>
+                                  <th><strong>T.P</strong></th>
+                                  <th><strong>GR Amt</strong></th>
+                                  <th><strong>T.O</strong></th>
+                                  <th><strong>Dist.Disc%</strong></th>
+                                  <th><strong>SPC.Disc</strong></th>
+                                  <th><strong>B.Disc</strong></th>
+                                  <th><strong>Tax</strong></th>
+                                  <th><strong>Net.Amt</strong></th>
+                                </tr>
+                              </thead>
+                              <tbody class="order_items_body">
+                                <tr *ngFor="let item of order.orderContent">
+                                  <td>{{ item.item_sku }}</td>
+                                  <!--Code -->
+                                  <td>{{ item.item_name }}</td>
+                                  <!--Product Name -->
+                                  <td>
+                                    {{ item.parent_qty_sold }}
+                                    {{
+                                      item.schemeFreeProdsCount
+                                        ? "+" + item.schemeFreeProdsCount
+                                        : ""
+                                    }}
+                                  </td>
+                                  <!--Qty -->
+                                  <td>
+                                    {{ item.parent_tp | number: "1.2-2" }}
+                                  </td>
+                                  <!--T.P -->
+                                  <td>
+                                    {{ item.grossPrice | number: "1.2-2" }}
+                                  </td>
+                                  <!-- GR Amt -->
+                                  <td>
+                                    {{ item.tradeOffer | number: "1.2-2" }}
+                                  </td>
+                                  <!--T.O -->
+                                  <td>
+                                    {{
+                                      item.distributor_discount
+                                        | number: "1.2-2"
+                                    }}
+                                  </td>
+                                  <!-- DIST.Disc % -->
+                                  <td>
+                                    {{
+                                      item?.specialDiscount | number: "1.2-2"
+                                    }}
+                                  </td>
+                                  <!--SPC.DIST -->
+                                  <td>
+                                    {{ item.booker_discount }}
+                                  </td>
+                                  <!--B.Disc -->
+                                  <td>
+                                    {{ item.tax_amount | number: "1.2-2" }}
+                                  </td>
+                                  <!--Tax -->
+                                  <td>
+                                    <!-- gross amt - trade offer - trade discount - 
+                                      speacial discount - extra discount -->
+                                    {{ item.totalBill | number: "1.2-2" }}
+                                  </td>
+                                  <!--Net.Amt -->
+                                </tr>
+                                <tr>
+                                  <td class="bold_text" colspan="2">Total:</td>
+                                  <td class="bold_text">
+                                    {{ order.totalItemsQty }}
+                                  </td>
+                                  <td class="bold_text"></td>
+                                  <td class="bold_text">
+                                    {{ order.grossPrice | number: "1.2-2" }}
+                                  </td>
+                                  <td class="bold_text" colspan="6"></td>
+                                </tr>
+                                <tr>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td><strong>Gross PKR.</strong></td>
+                                  <td>
+                                    <strong>{{
+                                      order.grossPrice | number: "1.2-2"
+                                    }}</strong>
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td><strong>Discount PKR.</strong></td>
+                                  <td>
+                                    <strong>
+                                      <!-- t.o + dist disc% + spc dist + b dist -->
+                                      {{ order.discount > 0 ? "-" : "" }}
+                                      {{
+                                        order.discount | number: "1.2-2"
+                                      }}</strong
+                                    >
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td><strong>Frieght Price PKR.</strong></td>
+                                  <td>
+                                    <strong>
+                                      + {{ order.frieght_price }}</strong
+                                    >
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td><strong>Tax PKR.</strong></td>
+                                  <td>
+                                    <strong
+                                      >+
+                                      {{ order.tax | number: "1.2-2" }}</strong
+                                    >
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td class="border-0"></td>
+                                  <td
+                                    style="background-color: #000; color: #fff"
+                                  >
+                                    <strong>Total PKR.</strong>
+                                  </td>
+                                  <td
+                                    style="background-color: #000; color: #fff"
+                                  >
+                                    <strong>{{
+                                      order.total | number: "1.2-2"
+                                    }}</strong>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                            <div class="clearfix"></div>
+                          </div>
+
+                          <div class="clearfix"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--
+      <div class="modal-footer button-list"> 
+	 <button type="button" class="btn btn-primary btn-outline"><i class="fa fa-file-pdf"> </i> <span> Save PDF</span>  </button> <button type="button" class="btn btn-primary btn-outline">  <i class="fa fa-envelope"> </i> <span> Send Email</span>  </button> <button type="button" class="btn btn-primary btn-outline"><i class="fa fa-print"></i> <span> Print</span>  </button> 
+
+      </div>
+-->
+    </div>
+  </div>
+</div>
+
+<!-- Order Booked -->
+<div class="container">
+  <div class="row mt-2 mb-3">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <h2 *ngIf="isReports" class="_head01">Reports</h2>
+      <h2 *ngIf="!isReports" class="_head01">Order <span> Management</span></h2>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <ol class="breadcrumb">
+        <li>
+          <a
+            ><span>{{ isReports ? "Reports" : "Order Management" }}</span></a
+          >
+        </li>
+        <li>
+          <span>{{ orderStatus | titlecase }} Orders</span>
+        </li>
+      </ol>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header">
+          <h2>{{ orderStatus | titlecase }} <span> Orders List</span></h2>
+        </div>
+        <div class="body PT-15">
+          <div id="floating-label">
+            <div class="form-wrap p-0">
+              <div class="row">
+                <div class="col-md-12">
+                  <table
+                    datatable
+                    [dtOptions]="dtOptions"
+                    *ngIf="!loading"
+                    class="table table-hover dt-responsive nowrap"
+                    id="primaryOrdersId"
+                    style="width: 100%"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Distributor</th>
+                        <th>Employee</th>
+                        <th>Order Total</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let order of primaryOrders">
+                        <td>{{ order.id }}</td>
+                        <td>{{ order.created_at }}</td>
+                        <td>{{ order.distributor_name }}</td>
+                        <td>{{ order.employee_name }}</td>
+                        <td>{{ order.order_total | number: "1.2-2" }}</td>
+                        <td>
+                          <button
+                            type="button"
+                            (click)="onOrderDetail(order.id)"
+                            data-toggle="modal"
+                            data-target="#exampleModal"
+                            class="btn btn-default btn-line"
+                          >
+                            Detail
+                          </button>
+                          <button
+                            *ngIf="PRIMARY_ORDER_CONST.BOOKED === orderStatus"
+                            (click)="
+                              onUpdateOrderStatus(
+                                order.id,
+                                PRIMARY_ORDER_STATUS_UPDATE.PROCESSED
+                              )
+                            "
+                            class="btn btn-default"
+                          >
+                            Process
+                          </button>
+
+                          <button
+                            *ngIf="
+                              PRIMARY_ORDER_CONST.PROCESSED === orderStatus
+                            "
+                            class="btn btn-default"
+                            (click)="
+                              onUpdateOrderStatus(
+                                order.id,
+                                PRIMARY_ORDER_STATUS_UPDATE.EXECUTE
+                              )
+                            "
+                          >
+                            Execute
+                          </button>
+                          <button
+                            *ngIf="PRIMARY_ORDER_CONST.EXECUTE === orderStatus"
+                            (click)="
+                              onUpdateOrderStatus(
+                                order.id,
+                                PRIMARY_ORDER_STATUS_UPDATE.COMPLETED
+                              )
+                            "
+                            class="btn btn-default"
+                          >
+                            Complete
+                          </button>
+                          <button
+                            class="btn btn-default"
+                            *ngIf="
+                              !(
+                                PRIMARY_ORDER_CONST.COMPLETED === orderStatus ||
+                                PRIMARY_ORDER_CONST.CANCELED === orderStatus
+                              ) &&
+                              orderStatus !== 'purchased' &&
+                              orderStatus !== 'returned'
+                            "
+                            [routerLink]="['edit', order.id]"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            class="btn btn-default"
+                            *ngIf="
+                              !(
+                                PRIMARY_ORDER_CONST.COMPLETED === orderStatus ||
+                                PRIMARY_ORDER_CONST.CANCELED === orderStatus
+                              ) &&
+                              orderStatus !== 'purchased' &&
+                              orderStatus !== 'returned'
+                            "
+                            data-toggle="modal"
+                            data-target="#cancelYesNo"
+                            (click)="onConfirmationDelete(order.id)"
+                          >
+                            Cancel
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div *ngIf="loading" class="col-md-12">
+                    <app-loader-white></app-loader-white>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="sticky-footer">
+    <div class="container my-auto">
+      <div class="copyright text-center my-auto">
+        2019 Sell3sixty All rights reserved
+      </div>
+    </div>
+  </footer>
+</div>

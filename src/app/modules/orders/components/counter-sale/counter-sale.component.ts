@@ -17,6 +17,7 @@ import {
 import { CounterSale, PaymentDetail } from '../../models/counter-sale.model';
 import { OrderItem } from '../../models/order-item.model';
 import { GeneralDataService } from '../../../shared/services';
+import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 
 @Component({
   selector: 'app-counter-sale',
@@ -25,6 +26,8 @@ import { GeneralDataService } from '../../../shared/services';
   encapsulation: ViewEncapsulation.None,
 })
 export class CounterSaleComponent implements OnInit {
+  permissions: any;
+
   showProducts: boolean;
   showQuantityModal: boolean;
   isCredit: boolean;
@@ -94,7 +97,11 @@ export class CounterSaleComponent implements OnInit {
     private ordersService: OrdersService,
     private toastService: ToasterService,
     private dataService: DataService
-  ) {}
+  ) {
+    this.permissions = this.storageService.getItem(
+      localStorageKeys.permissions
+    );
+  }
 
   ngOnInit(): void {
     this.grossAmount = 0.0;

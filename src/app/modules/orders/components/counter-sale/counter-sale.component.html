@@ -775,7 +775,12 @@
                 <div class="addItemCell2">T.O</div>
                 <div class="addItemCell2">T. Dis. (%)</div>
                 <div class="addItemCell2">S. Disc.</div>
-                <div class="addItemCell2">E. Disc.</div>
+                <div
+                  class="addItemCell2"
+                  *ngIf="permissions.Secondary_Orders.extra_discount"
+                >
+                  E. Disc.
+                </div>
                 <div class="addItemCell2">Tax</div>
                 <div class="addItemCell3">Net Amount</div>
               </div>
@@ -843,7 +848,10 @@
                         | number: "1.2-2"
                     }}
                   </div>
-                  <div class="addItemCell2 _h25">
+                  <div
+                    *ngIf="permissions.extra_discount"
+                    class="addItemCell2 _h25"
+                  >
                     <input
                       [readonly]="
                         isCreditAdded || isChequeAdded || +product.stockQty < 1

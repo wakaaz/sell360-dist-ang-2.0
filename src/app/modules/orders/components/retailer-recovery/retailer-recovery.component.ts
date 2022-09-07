@@ -10,6 +10,8 @@ import { OrdersService } from '../../services/orders.service';
 import { DataService } from '../../../shared/services/data.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { Subscription } from 'rxjs';
+import { LocalStorageService } from 'src/app/core/services/storage.service';
+import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 
 @Component({
   selector: 'app-retailer-recovery',
@@ -17,6 +19,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./retailer-recovery.component.css'],
 })
 export class RetailerRecoveryComponent implements OnInit {
+  permissions: any;
   @Input() executionData: any = null;
   @Input() retailerId: number = 0;
   @Input() assignment_idOutRoute: string = '';
@@ -24,13 +27,21 @@ export class RetailerRecoveryComponent implements OnInit {
   dtOptions: DataTables.Settings;
   loading: boolean;
   assignmentId: string;
+  isRecoverydiscountActivated: boolean;
   retailer_credit_Invoices: RecoveryRetailer[] = [];
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
+    private storageService: LocalStorageService,
     private readonly dataService: DataService,
     private toastService: ToasterService
-  ) {}
+  ) {
+    this.permissions = this.storageService.getItem(
+      localStorageKeys.permissions
+    );
+    this.isRecoverydiscountActivated =
+      this.permissions.Secondary_Orders.recovery_invoice_discount;
+  }
 
   ngOnInit(): void {
     // if (this.retailerId) {

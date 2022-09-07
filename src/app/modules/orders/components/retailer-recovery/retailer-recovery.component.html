@@ -15,8 +15,8 @@
         <!-- <th>Sales Man</th> -->
         <th>Aging</th>
         <th>Pending AMNT</th>
-        <th>Invoice DISC</th>
-        <th>Balance</th>
+        <th *ngIf="isRecoverydiscountActivated">Invoice DISC</th>
+        <th *ngIf="isRecoverydiscountActivated">Balance</th>
         <th *ngIf="executionData !== null">Assigned</th>
         <th>
           {{
@@ -37,7 +37,7 @@
         <th>{{ inv.retailer_name }}</th>
         <th>{{ inv.agingValue }}</th>
         <th>{{ inv.amount | number: "1.2-2" }}</th>
-        <th>
+        <th *ngIf="isRecoverydiscountActivated">
           <input
             type="number"
             [id]="ind"
@@ -53,7 +53,9 @@
             placeholder="0"
           />
         </th>
-        <th>{{ inv.balance | number: "1.2-2" }}</th>
+        <th *ngIf="isRecoverydiscountActivated">
+          {{ inv.balance | number: "1.2-2" }}
+        </th>
         <th *ngIf="executionData !== null">
           {{ inv.added_to_current | number: "1.2-2" }}
         </th>

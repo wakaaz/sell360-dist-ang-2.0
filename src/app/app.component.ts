@@ -22,6 +22,7 @@ import { localStorageKeys } from './core/constants/localstorage.constants';
 })
 export class AppComponent {
   @ViewChild('subNav') subNav: ElementRef;
+  permissions: any;
   isLoggedIn: boolean;
   isSideNavHidden: boolean;
 
@@ -40,10 +41,13 @@ export class AppComponent {
     private storageService: LocalStorageService,
     private toasterService: ToasterService
   ) {
+    this.permissions = this.storageService.getItem(
+      localStorageKeys.permissions
+    );
     this.isLoggedIn = this.storageService.getItem('dist_session')
       ? true
       : false;
-    if (!this.isLoggedIn) {
+    if (!this.isLoggedIn && !this.permissions) {
       this.router.navigateByUrl('/login');
     } else if (location.pathname === '/') {
       this.router.navigateByUrl('/home');

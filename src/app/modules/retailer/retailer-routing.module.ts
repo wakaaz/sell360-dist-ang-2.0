@@ -6,6 +6,7 @@ import { RetailerComponent } from './retailer.component';
 import { RetalersListComponent } from './components/retailers-list/retailers-list.component';
 import { RetailerProfileComponent } from './components/retailer-profile/retailer-profile.component';
 import { OpeningBalanceComponent } from './components/opening-balance/opening-balance.component';
+import { DistLedgerComponent } from './components/dist-ledger/ledger.component';
 
 const routes: Routes = [
   {
@@ -14,7 +15,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'list'
+        redirectTo: 'list',
       },
       {
         path: 'list',
@@ -36,12 +37,17 @@ const routes: Routes = [
         pathMatch: 'full',
         component: LedgerComponent,
       },
-    ]
-  }
+      {
+        path: 'historical-ledger',
+        pathMatch: 'full',
+        component: DistLedgerComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class RetailerRoutingModule { }
+export class RetailerRoutingModule {}

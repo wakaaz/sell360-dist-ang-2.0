@@ -14,35 +14,29 @@ import { PipeModule } from './pipes/pipe.module';
 import { DataService, GeneralDataService } from './services';
 
 const components = [
-    RetailerSubListComponent,
-    OrderItemsListComponent,
-    WhiteLoaderComponent,
-    ProductsRightPanelComponent,
-    ReturnedProductsComponent,
+  RetailerSubListComponent,
+  OrderItemsListComponent,
+  WhiteLoaderComponent,
+  ProductsRightPanelComponent,
+  ReturnedProductsComponent,
 ];
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ClickOutsideModule,
-        NgSelectModule,
-        PipeModule,
-    ],
-    exports: [
-        ...components,
-        Decimal],
-    declarations: [...components],
-    providers: [
-        GeneralDataService,
-        DataService,
-        PipeModule,
-    ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ClickOutsideModule,
+    NgSelectModule,
+    PipeModule,
+  ],
+  exports: [...components, Decimal],
+  declarations: [...components],
+  providers: [GeneralDataService, DataService, PipeModule],
 })
 export class SharedModule {
-    static forRoot(): any {
-        return {
-            ngModule: PipeModule,
-            providers: [],
-        };
-    }
+  static forRoot(): any {
+    return {
+      ngModule: PipeModule,
+      providers: [],
+    };
+  }
 }

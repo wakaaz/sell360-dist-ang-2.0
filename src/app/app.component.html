@@ -54,12 +54,12 @@
     </div>
     <div class="main-links">
       <ul>
-        <li *ngIf="permissions.Tabs.primary_orders">
+        <li *ngIf="permissions?.Tabs?.primary_orders">
           <a (click)="openSubmenu($event, 'primaryOrders')"
             ><img src="/assets/images/order-icon.svg" alt="" />Primary Sales</a
           >
         </li>
-        <li *ngIf="permissions.Tabs.secondary_orders">
+        <li *ngIf="permissions?.Tabs?.secondary_orders">
           <a (click)="openSubmenu($event, 'orders')"
             ><img src="/assets/images/order-icon.svg" alt="" /> Secondary
             Sales</a

@@ -18,8 +18,6 @@ import { LoginService } from './services/login.service';
     RecaptchaFormsModule,
   ],
   declarations: [LoginComponent],
-  providers: [
-    LoginService,
-  ]
+  providers: [LoginService],
 })
-export class LoginModule { }
+export class LoginModule {}

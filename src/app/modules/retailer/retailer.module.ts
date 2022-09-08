@@ -14,28 +14,28 @@ import { RetalersListComponent } from './components/retailers-list/retailers-lis
 import { RetailerProfileComponent } from './components/retailer-profile/retailer-profile.component';
 import { OpeningBalanceComponent } from './components/opening-balance/opening-balance.component';
 import { RetailerService } from './services/retailer.service';
+import { DistLedgerComponent } from './components/dist-ledger/ledger.component';
 import { LedgerComponent } from './components/ledger/ledger.component';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        SharedModule,
-        DataTablesModule,
-        ClickOutsideModule,
-        NgSelectModule,
-        ChartsModule,
-        RetailerRoutingModule,
-    ],
-    declarations: [
-        RetailerComponent,
-        RetalersListComponent,
-        RetailerProfileComponent,
-        OpeningBalanceComponent,
-        LedgerComponent,
-    ],
-    providers: [
-        RetailerService
-    ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    SharedModule,
+    DataTablesModule,
+    ClickOutsideModule,
+    NgSelectModule,
+    ChartsModule,
+    RetailerRoutingModule,
+  ],
+  declarations: [
+    DistLedgerComponent,
+    RetailerComponent,
+    RetalersListComponent,
+    RetailerProfileComponent,
+    OpeningBalanceComponent,
+    LedgerComponent,
+  ],
+  providers: [RetailerService],
 })
-export class RetailerModule { }
+export class RetailerModule {}

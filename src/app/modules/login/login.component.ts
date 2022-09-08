@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 
 import { LocalStorageService } from 'src/app/core/services/storage.service';
+import { GeneralDataService } from '../shared/services';
 import { LoginService } from './services/login.service';
 
 @Component({
@@ -61,7 +62,7 @@ export class LoginComponent implements OnInit {
                 localStorageKeys.permissions,
                 res.data.permissions
               );
-
+              this.storageService.setCheckPermissions();
               this.storageService.setItem(localStorageKeys.session, token);
               this.router.navigateByUrl('/home');
             }

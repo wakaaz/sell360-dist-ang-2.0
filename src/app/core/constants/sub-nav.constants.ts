@@ -168,6 +168,11 @@ export const reportsSubMenu = {
       link: '/retailer/ledger',
       icon: '/assets/images/complete-orders.svg',
     },
+    {
+      title: 'Historical Ledger',
+      link: '/retailer/historical-ledger',
+      icon: '/assets/images/complete-orders.svg',
+    },
   ],
 };
 export const paymentsSubMenu = {

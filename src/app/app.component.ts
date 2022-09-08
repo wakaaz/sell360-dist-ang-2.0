@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { LocalStorageService } from './core/services/storage.service';
 
@@ -14,13 +14,15 @@ import {
 import { Toaster, ToasterService } from './core/services/toaster.service';
 import { leftBarHidden } from './core/constants/no-left-bar.constants';
 import { localStorageKeys } from './core/constants/localstorage.constants';
+import { LoginService } from './modules/login/services/login.service';
+import { GeneralDataService } from './modules/shared/services';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   @ViewChild('subNav') subNav: ElementRef;
   permissions: any;
   isLoggedIn: boolean;
@@ -39,11 +41,8 @@ export class AppComponent {
   constructor(
     private router: Router,
     private storageService: LocalStorageService,
-    private toasterService: ToasterService
+    private toasterService: ToasterService // private generalDataService: GeneralDataService
   ) {
-    this.permissions = this.storageService.getItem(
-      localStorageKeys.permissions
-    );
     this.isLoggedIn = this.storageService.getItem('dist_session')
       ? true
       : false;
@@ -70,6 +69,13 @@ export class AppComponent {
       }
     });
     this.toasterHandler();
+  }
+  ngOnInit(): void {
+    this.storageService.checkPermissions.subscribe(() => {
+      this.permissions = this.storageService.getItem(
+        localStorageKeys.permissions
+      );
+    });
   }
 
   toasterHandler(): void {

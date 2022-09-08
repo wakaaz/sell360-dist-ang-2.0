@@ -24,7 +24,7 @@ export class AuthGuard implements CanActivate {
     const permissions = this.storageService.getItem(
       localStorageKeys.permissions
     );
-    console.log('permissions => ', permissions.Secondary_Orders);
+    console.log('permissions => ', permissions);
     const isPrimaryOrder =
       route.url[0].path === 'primaryOrders'
         ? permissions.Tabs.primary_orders

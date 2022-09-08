@@ -134,6 +134,7 @@ export class AppComponent {
 
   logout(): void {
     this.storageService.removeItem(localStorageKeys.session);
+    this.storageService.removeItem(localStorageKeys.permissions);
     this.storageService.removeItem(localStorageKeys.distributor);
     this.storageService.removeItem(localStorageKeys.saleman);
     this.storageService.removeItem(localStorageKeys.actions);

@@ -1019,7 +1019,7 @@ export class CounterSaleComponent implements OnInit {
 
   setOrderFields(): void {
     const itemsQtyCounter = this.selectedProducts.map((x) => +x.stockQty > 0);
-    if (itemsQtyCounter.length === 0 || itemsQtyCounter.includes(true)) {
+    if (itemsQtyCounter.length === 0 || itemsQtyCounter.includes(false)) {
       const toast: Toaster = {
         type: 'error',
         message: 'Product Quantity cannot be zero',
@@ -1145,6 +1145,7 @@ export class CounterSaleComponent implements OnInit {
         unit_price_after_individual_discount:
           product.unit_price_after_individual_discount || product.price,
         scheme_min_quantity: product.selectedScheme?.min_qty || 0,
+        scheme_discount_type: product.selectedScheme?.discount_type || 0,
         scheme_quantity_free: product.selectedScheme?.quantity_free || 0,
         scheme_rule: product.selectedScheme?.rule_name || '',
         parent_pref_id: product.child,

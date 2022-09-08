@@ -495,7 +495,6 @@ export class OrderDispatchedComponent implements OnInit {
 
   saveOrder(): void {
     this.savingOrder = true;
-    console.log('this.orderDetails :>> ', this.orderDetails);
     this.orderService.saveDispatchQuantityOrder(this.orderDetails).subscribe(
       (res) => {
         this.newProduct = null;
@@ -561,6 +560,8 @@ export class OrderDispatchedComponent implements OnInit {
         scheme_id: item.selectedScheme?.id || 0,
         scheme_min_quantity: item.selectedScheme?.min_qty || 0,
         scheme_quantity_free: item.selectedScheme?.quantity_free || 0,
+
+        scheme_discount_type: item.selectedScheme?.discount_type || 0,
         scheme_rule: item.selectedScheme?.rule_name || '',
         gift_value: item.gift_value || 0,
         parent_pref_id: item.child,

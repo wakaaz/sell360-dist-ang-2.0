@@ -160,6 +160,7 @@ export class RecoveryRetailer {
       }, 0);
     } else {
       this._recoverd_amount = v || 0;
+      console.log(' _recoverd_amount => ', this._recoverd_amount);
     }
     // this._recoverd_amount = v || 0;
   }

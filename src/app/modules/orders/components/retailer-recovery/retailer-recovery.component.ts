@@ -129,6 +129,7 @@ export class RetailerRecoveryComponent implements OnInit {
       } else {
         console.log('retailer_credit_Invoices', retailer_credit_Invoices);
       }
+      console.log('retailer_credit_Invoices ', retailer_credit_Invoices[0]);
       const postModel = getRetailersCreditInvoice(
         retailer_credit_Invoices,
         parentOrderId,
@@ -140,7 +141,6 @@ export class RetailerRecoveryComponent implements OnInit {
       this.orderService
         .postRetailersCreditInvoices(postModel)
         .subscribe((x) => {
-          console.log('postRetailersCreditInvoices => ', x.result);
           this.retailer_credit_Invoices[index].id = x.result.id;
           this.retailer_credit_Invoices[index].is_added = 1;
           const toast: Toaster = {

@@ -72,7 +72,7 @@
         <th>T.O.</th>
         <th>T.Disc</th>
         <th>Spec.Disc</th>
-        <th>B.Disc</th>
+        <th *ngIf="permissions?.Secondary_Orders?.extra_discount">B.Disc</th>
         <th>Net Amt</th>
         <th style="width: 48px">Action</th>
       </tr>
@@ -116,7 +116,7 @@
         <td>{{ +item.stockQty * item.scheme_discount | number: "1.2-2" }}</td>
         <td>{{ item.trade_discount }}%</td>
         <td>{{ item.special_discount * item.stockQty | number: "1.2-2" }}</td>
-        <td>
+        <td *ngIf="permissions?.Secondary_Orders?.extra_discount">
           <input
             type="number"
             (paste)="$event.preventDefault()"

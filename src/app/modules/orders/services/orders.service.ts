@@ -8,8 +8,8 @@ import { CounterSale } from '../models/counter-sale.model';
 export class OrdersService {
   private _ordersRetailers = new BehaviorSubject<any[]>([]);
   private _loadRetaillersRecovery = new BehaviorSubject<any>({});
-
   private _loadOutOfRouteRecovery = new BehaviorSubject<number>(-1);
+
   constructor(private baseService: HttpBaseService) {}
 
   get orderRetailers(): Observable<any> {

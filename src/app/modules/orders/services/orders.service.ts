@@ -245,4 +245,31 @@ export class OrdersService {
     const url = `${API_URLS.EXECUTION_COMPLETE}/${loadId}`;
     return this.baseService.post(url, payload);
   }
+
+  // '/extraLoadItemAllocation/{assignment_id}/{pref_id}'   BODY :: {"allocated_qty":"1"}
+  extraLoadItemAllocation(
+    assignment_id: string,
+    pref_id: number,
+    allocated_qty: number
+  ): Observable<any> {
+    const url = `${API_URLS.EXTRA_LOAD_ITEM_COMPLETE}/${assignment_id}/${pref_id}`;
+    return this.baseService.post(url, { allocated_qty });
+  }
+
+  // getLoadOrdersPrefs/{assignment_id}/{pref_id}
+  getLoadOrdersPrefs(assignment_id: string, pref_id: number): Observable<any> {
+    const url = `${API_URLS.GET_LOAD_ORDERS_PREFS}/${assignment_id}/${pref_id}`;
+    return this.baseService.get(url);
+  }
+
+  // /updateLoadOrderItemAllocation/{assignment_id}/{order_id}/{pref_id}    BODY :: {"allocated_qty":"1"}
+  updateLoadOrderItemAllocation(
+    assignment_id: string,
+    order_id: number,
+    pref_id: number,
+    allocated_qty: number
+  ): Observable<any> {
+    const url = `${API_URLS.UPDATE_LOAD_ORDER_ITEM_ALLOCATION}/${assignment_id}/${order_id}/${pref_id}`;
+    return this.baseService.post(url, { allocated_qty });
+  }
 }

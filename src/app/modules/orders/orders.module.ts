@@ -26,6 +26,7 @@ import { OrderDispatchService } from './services/dispatch.service';
 import { ExecutionService } from './services/execution.service';
 import { SpotSaleService } from './services/spot-sale.service';
 import { RetailerRecoveryComponent } from './components/retailer-recovery/retailer-recovery.component';
+import { StockAllocationComponent } from './components/order-dispatched/stock-allocation/stock-allocation.component';
 
 @NgModule({
   imports: [
@@ -50,12 +51,13 @@ import { RetailerRecoveryComponent } from './components/retailer-recovery/retail
     BookingVsExecutionComponent,
     CompletedOrdersDetailComponent,
     RetailerRecoveryComponent,
+    StockAllocationComponent,
   ],
   providers: [
     OrderDispatchService,
     ExecutionService,
     SpotSaleService,
-    OrdersService
+    OrdersService,
   ],
 })
-export class OrderModule { }
+export class OrderModule {}

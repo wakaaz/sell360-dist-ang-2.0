@@ -1,0 +1,46 @@
+#product-cl-sec {
+  width: 880px;
+}
+.label-text {
+  font-size: 13px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.label-text strong {
+  font-size: 14px;
+  display: block;
+  line-height: 1;
+}
+.topstats .gary-box {
+  line-height: 1;
+  background-color: #f9f9f9;
+  border-bottom: solid 1px #d1d1d1;
+  padding: 10px;
+  letter-spacing: 1px;
+}
+.topstats .gary-box span {
+  font-family: "Rationale", sans-serif;
+  color: #0038ba;
+  font-size: 22px;
+  float: right;
+  margin-top: -2px;
+}
+.AddProductTable {
+  padding: 0;
+  margin: 0;
+}
+.AddProductTable tr {
+  border-bottom: solid 1px #eeeeee;
+}
+.AddProductTable td {
+  padding-bottom: 7px;
+  padding-top: 7px;
+}
+.value_input {
+  padding: 2px;
+  margin: 0 !important;
+  font-size: 12px;
+  box-shadow: none;
+  height: 22px;
+  width: 85px;
+}

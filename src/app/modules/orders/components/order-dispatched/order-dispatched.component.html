@@ -183,7 +183,8 @@
               class="nav-link"
               [ngClass]="currentTab === 1 ? 'active' : ''"
               id="pills-home-tab"
-              ><span>Orders</span>
+            >
+              <span>Stock Allocation</span>
               <span class="wz-icon"><i class="fa fa-list-ul"></i></span>
             </a>
           </li>
@@ -191,6 +192,15 @@
             <a
               class="nav-link"
               [ngClass]="currentTab === 2 ? 'active' : ''"
+              id="pills-home-tab"
+              ><span>Orders</span>
+              <span class="wz-icon"><i class="fa fa-list-ul"></i></span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              [ngClass]="currentTab === 3 ? 'active' : ''"
               id="pills-contact-tab"
               ><span>Credit</span>
               <span class="wz-icon"><i class="fa fa-dollar-sign"></i></span>
@@ -199,7 +209,7 @@
           <li class="nav-item">
             <a
               class="nav-link"
-              [ngClass]="currentTab === 3 ? 'active' : ''"
+              [ngClass]="currentTab === 4 ? 'active' : ''"
               id="pills-load-tab"
               ><span>Load</span>
               <span class="wz-icon"><i class="fa fa-truck"></i></span>
@@ -208,16 +218,29 @@
           <li class="nav-item">
             <a
               class="nav-link"
-              [ngClass]="currentTab === 4 ? 'active' : ''"
+              [ngClass]="currentTab === 5 ? 'active' : ''"
               id="pills-final-tab"
               ><span>Final</span>
               <span class="wz-icon"><i class="fa fa-check"></i></span>
             </a>
           </li>
         </ul>
+
+        <div
+          [ngClass]="currentTab === 1 ? 'active show' : ''"
+          class="tab-pane p-0 PT-20 tab_M fade"
+          id="pills-contact"
+          role="tabpanel"
+          aria-labelledby="pills-contact-tab"
+        >
+          <app-stock-allocation
+            *ngIf="stockAllocation"
+            [stockAllocation]="stockAllocation"
+          ></app-stock-allocation>
+        </div>
         <div class="tab-content" id="pills-tabContent">
           <div
-            [ngClass]="currentTab === 1 ? 'active show' : ''"
+            [ngClass]="currentTab === 2 ? 'active show' : ''"
             class="tab-pane tab_M p-0 PT-15 fade"
             id="pills-home"
             role="tabpanel"
@@ -233,7 +256,7 @@
               </div>
 
               <div class="col p-0">
-                <div *ngIf="currentTab === 1" class="rightHeight">
+                <div *ngIf="currentTab === 2" class="rightHeight">
                   <app-order-items-list
                     *ngIf="!savingOrder && selectedRetailer"
                     [orderDetail]="orderDetails"
@@ -304,7 +327,7 @@
             </div>
           </div>
           <div
-            [ngClass]="currentTab === 2 ? 'active show' : ''"
+            [ngClass]="currentTab === 3 ? 'active show' : ''"
             class="tab-pane p-0 PT-20 tab_M fade"
             id="pills-contact"
             role="tabpanel"
@@ -314,13 +337,13 @@
           </div>
 
           <div
-            [ngClass]="currentTab === 3 ? 'active show' : ''"
+            [ngClass]="currentTab === 5 ? 'active show' : ''"
             class="tab-pane tab_M p-0 PT-15 fade"
             id="pills-load"
             role="tabpanel"
             aria-labelledby="pills-load-tab"
           >
-            <div *ngIf="currentTab === 3" class="row m-0 grayTopborder">
+            <div *ngIf="currentTab === 4" class="row m-0 grayTopborder">
               <div *ngIf="!loading" id="orderList-id2" class="col-4 p-0">
                 <div class="_selectProList ProListHeight">
                   <div class="header ProListHD">
@@ -493,7 +516,7 @@
           </div>
 
           <div
-            [ngClass]="currentTab === 4 ? 'active show' : ''"
+            [ngClass]="currentTab === 5 ? 'active show' : ''"
             class="tab-pane tab_M p-0 PT-15 fade"
             id="pills-final"
             role="tabpanel"
@@ -727,7 +750,7 @@
           </div>
 
           <div
-            *ngIf="currentTab !== 4"
+            *ngIf="currentTab !== 5"
             class="col-md-12 pl-10 pr-10 text-center"
           >
             <div class="execFooter">
@@ -735,7 +758,7 @@
                 (click)="currentTab = currentTab - 1; tabChanged()"
                 [disabled]="
                   currentTab === 1 ||
-                  currentTab === 4 ||
+                  currentTab === 5 ||
                   loading ||
                   savingOrder ||
                   load.content[0].items.length > 0
@@ -746,9 +769,9 @@
                 Previous
               </button>
               <button
-                *ngIf="currentTab !== 4 && currentTab !== 3"
+                *ngIf="currentTab !== 5 && currentTab !== 4"
                 [disabled]="
-                  currentTab === 4 || loading || loadingProduct || savingOrder
+                  currentTab === 5 || loading || loadingProduct || savingOrder
                 "
                 (click)="currentTab = currentTab + 1; tabChanged()"
                 type="submit"
@@ -757,7 +780,7 @@
                 Next
               </button>
               <button
-                *ngIf="currentTab === 3"
+                *ngIf="currentTab === 4"
                 [disabled]="loading || loadingProduct"
                 (click)="openConfirmationModal()"
                 type="submit"

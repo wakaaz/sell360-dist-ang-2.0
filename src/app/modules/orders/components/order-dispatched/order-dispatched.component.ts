@@ -23,6 +23,7 @@ import {
   styleUrls: ['./order-dispatched.component.css'],
 })
 export class OrderDispatchedComponent implements OnInit {
+  stockAllocation: any;
   dtOptions: DataTables.Settings;
   loading: boolean;
   loadingProduct: boolean;
@@ -138,13 +139,19 @@ export class OrderDispatchedComponent implements OnInit {
         this.getDispatchDetails();
         break;
       case 2:
+        this.savingOrder = true;
+        this.selectedRetailer = JSON.parse(JSON.stringify(null));
+        this.orderDetails.items = [];
+        this.getDispatchDetails();
+        break;
+      case 3:
         this.dispatchOrderDetail = null;
         // this.getDispatchDetails();
         this.getDispatchOrdersDetail();
         this.orderService.setLoadRetaillersRecovery(true);
         // this.getCreditTabData();
         break;
-      case 3:
+      case 4:
         this.setDataForLoad();
         break;
 
@@ -182,9 +189,10 @@ export class OrderDispatchedComponent implements OnInit {
         (res) => {
           this.loading = false;
           if (res.status === 200) {
+            this.stockAllocation = res.data.allocated_stock;
             if (res.data.loadSheet) {
               this.finalLoad = res.data.loadSheetData;
-              this.currentTab = 4;
+              this.currentTab = 5;
               setTimeout(() => {
                 this.showFinalLoad = true;
               }, 500);
@@ -253,7 +261,7 @@ export class OrderDispatchedComponent implements OnInit {
               //       this.recoveryRetailers.push(order);
               //     }
               //   });
-              if (this.currentTab === 3) {
+              if (this.currentTab === 4) {
                 this.setDataForLoad();
               }
             }
@@ -800,7 +808,7 @@ export class OrderDispatchedComponent implements OnInit {
             message: 'Payments and Load saved successfully!',
             title: 'Payments and Load saved:',
           });
-          this.currentTab = 4;
+          this.currentTab = 5;
           this.tabChanged();
         }
       },

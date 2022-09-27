@@ -129,10 +129,14 @@ export class OrderDispatchedComponent implements OnInit {
       items: [],
     };
   }
-
+  closeSideBarEvent(value: any) {
+    this.stockAllocation = null;
+    this.getDispatchDetails();
+  }
   tabChanged(): void {
     switch (this.currentTab) {
       case 1:
+        this.stockAllocation = null;
         this.savingOrder = true;
         this.selectedRetailer = JSON.parse(JSON.stringify(null));
         this.orderDetails.items = [];

@@ -234,8 +234,9 @@
           aria-labelledby="pills-contact-tab"
         >
           <app-stock-allocation
-            *ngIf="stockAllocation"
+            *ngIf="currentTab === 1 && stockAllocation"
             [stockAllocation]="stockAllocation"
+            (closeSideBar)="closeSideBarEvent($event)"
           ></app-stock-allocation>
         </div>
         <div class="tab-content" id="pills-tabContent">

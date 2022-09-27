@@ -1,13 +1,8 @@
 <!-- <div id="content-wrapper"> -->
 
 <!-- SIDE BAR -->
-<div
-  id="blureEffct-1"
-  id="product-cl-sec"
-  [ngClass]="showSideBar ? 'active' : ''"
->
-  <div class="overlay-blure"></div>
-  <a href="#" id="pl-close" class="close-btn-pl"></a>
+<div id="product-cl-sec" [ngClass]="showSideBar ? 'active' : ''">
+  <a id="pl-close" class="close-btn-pl" (click)="closeProductsList()"></a>
   <div class="pro-header-text">Orders <span>List</span></div>
   <div class="pc-cartlist">
     <div class="overflow-plist">
@@ -49,7 +44,7 @@
                         <!-- <td>{{ order.booked_qty }}</td> -->
                         <td>
                           <button
-                            class="btn btn-default mb-0"
+                            class="btn smBTN btn-line mb-0"
                             (click)="onUpdateLoadOrderItemAllocation(order)"
                           >
                             Update
@@ -68,14 +63,21 @@
   </div>
   <div class="_cl-bottom">
     <!-- <button type="submit" class="btn btn-primary mr-2">Update</button> -->
-    <button id="pl-close" type="submit" class="btn btn-cancel mr-2">
+    <button
+      (click)="closeProductsList()"
+      id="pl-close"
+      type="button"
+      class="btn btn-cancel mr-2"
+    >
       Close
     </button>
   </div>
 </div>
+
+<div class="overlay-blure"></div>
 <!-- END SIDEBAR -->
 
-<div id="blureEffct" class="container">
+<!-- <div id="blureEffct" class="container">
   <div class="row mt-2 mb-3">
     <div class="col-lg-6 col-md-6 col-sm-6">
       <h2 class="_head01">Bulk <span>Dispatch Update</span></h2>
@@ -88,9 +90,9 @@
         <li><span>Update</span></li>
       </ol>
     </div>
-  </div>
+  </div> -->
 
-  <div class="row">
+<!-- <div class="row">
     <div class="col-lg-12">
       <div class="Product-Filter pt-0 pb-0">
         <div class="row">
@@ -106,89 +108,91 @@
         <div class="clearfix"></div>
       </div>
     </div>
-  </div>
+  </div> -->
 
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="header">
-          <h2>Products <span>List</span></h2>
-        </div>
-        <div class="body">
-          <table
-            datatable
-            [dtOptions]="dtOptions"
-            class="table table-hover dt-responsive nowrap"
-            id="example"
-            style="width: 100%"
-          >
-            <thead>
-              <tr>
-                <th>SKU</th>
-                <th>Name</th>
-                <th>Available Stock</th>
-                <th>Allocated Stock</th>
-                <th>Available QTY.</th>
-                <th>Curernt Load Booked QTY.</th>
-                <th>Curernt Load Allocated QTY.</th>
-                <!-- Input field -->
-                <th>ACTIONS</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of stockAllocation; let ind">
-                <td>{{ item.item_sku }}</td>
-                <td>{{ item.item_main_description }}</td>
-                <td>{{ item.availble_stock_qty }}</td>
-                <td>{{ item.allocated_stock_qty }}</td>
-                <td>{{ item.allocated_stock_qty }}</td>
-                <td>{{ item.current_load_booked_qty }}</td>
-                <td>
-                  <input
-                    type="number"
-                    [id]="item.item_name"
-                    [name]="item.item_name"
-                    [(ngModel)]="item.current_load_allocated_qty"
-                    (keydown)="isNumber($event, 'quantity')"
-                    class="form-control value_input"
-                    placeholder="0"
-                  />
-                </td>
-                <td *ngIf="item.current_load_booked_qty > 0">
-                  <button
-                    type="button"
-                    id="productlist01"
-                    class="btn smBTN btn-line mb-0"
-                    (click)="onShowViewOrders($event, item.pref_id)"
-                  >
-                    View Orders
-                  </button>
-                  <button type="submit" class="btn smBTN red-bg mb-0">
-                    Cancel All
-                  </button>
-                </td>
-                <td *ngIf="item.current_load_booked_qty == 0">
-                  <button
-                    type="button"
-                    class="btn smBTN btn-line mb-0"
-                    (click)="onExtraLoadItemAllocation(item)"
-                  >
-                    Update
-                  </button>
-                  <!-- <button
+<div id="stock-allocation" class="row">
+  <div class="col-md-12">
+    <div class="">
+      <div class="header">
+        <h2>Products <span>List</span></h2>
+      </div>
+      <div class="body">
+        <table
+          datatable
+          [dtOptions]="dtOptions"
+          class="table table-hover dt-responsive nowrap"
+          id="example"
+          style="width: 100%"
+        >
+          <thead>
+            <tr>
+              <th>SKU</th>
+              <th>Name</th>
+              <th>Available Stock</th>
+              <th>Allocated Stock</th>
+              <th>Available QTY.</th>
+              <th>Curernt Load Booked QTY.</th>
+              <th>Curernt Load Allocated QTY.</th>
+              <!-- Input field -->
+              <th>ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of stockAllocation; let ind">
+              <td>{{ item.item_sku }}</td>
+              <td>{{ item.item_main_description }}</td>
+              <td>{{ item.availble_stock_qty }}</td>
+              <td>{{ item.allocated_stock_qty }}</td>
+              <td>{{ item.allocated_stock_qty }}</td>
+              <td>{{ item.current_load_booked_qty }}</td>
+              <td>
+                <input
+                  type="number"
+                  [id]="item.item_name"
+                  [name]="item.item_name"
+                  (keyup)="setQuantity(item)"
+                  [(ngModel)]="item.current_load_allocated_qty"
+                  (keydown)="isNumber($event, 'quantity')"
+                  class="form-control value_input"
+                  placeholder="0"
+                  minlength="0"
+                />
+              </td>
+              <td style="width: 154px" *ngIf="item.current_load_booked_qty > 0">
+                <button
+                  type="button"
+                  id="productlist01"
+                  class="btn smBTN btn-line mb-0"
+                  (click)="onShowViewOrders($event, item.pref_id)"
+                >
+                  View Orders
+                </button>
+                <button type="submit" class="btn smBTN red-bg mb-0">
+                  Cancel All
+                </button>
+              </td>
+              <td *ngIf="item.current_load_booked_qty == 0">
+                <button
+                  type="button"
+                  class="btn smBTN btn-line mb-0"
+                  (click)="onExtraLoadItemAllocation(item)"
+                >
+                  Update
+                </button>
+                <!-- <button
                     type="submit"
                     class="btn smBTN red-bg mb-0"
                     *ngIf="item.current_load_allocated_qty > 0"
                   >
                     Update
                   </button> -->
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
 </div>
+<!-- </div> -->
 <!-- </div> -->

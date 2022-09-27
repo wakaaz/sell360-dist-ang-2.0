@@ -44,3 +44,7 @@
   height: 22px;
   width: 85px;
 }
+
+.blureEffct-3 {
+  filter: blur(3px);
+}

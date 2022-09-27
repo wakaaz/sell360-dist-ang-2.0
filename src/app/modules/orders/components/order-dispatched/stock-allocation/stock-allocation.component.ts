@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/modules/shared/services';
 import { OrdersService } from '../../../services/orders.service';
@@ -10,6 +10,7 @@ import { OrdersService } from '../../../services/orders.service';
 })
 export class StockAllocationComponent implements OnInit {
   @Input() stockAllocation: any;
+  @Output() closeSideBar = new EventEmitter<boolean>();
   orders: any = [];
   assignmentId: string;
   dtOptions: DataTables.Settings;
@@ -48,16 +49,35 @@ export class StockAllocationComponent implements OnInit {
         this.showSideBar = true;
         document.body.classList.add('no-scroll');
         document
+          .getElementById('stock-allocation')
+          .classList.add('blureEffct-3');
+        document
           .getElementsByClassName('overlay-blure')[0]
           .classList.add('d-block');
-        document.getElementById('blureEffct-1').classList.add('blur-div');
+        // document.getElementById('blureEffct-1').classList.add('blur-div');
       });
   }
   //#endregion
+
+  closeProductsList(): void {
+    this.showSideBar = false;
+    document.body.classList.remove('no-scroll');
+    document
+      .getElementsByClassName('overlay-blure')[0]
+      .classList.remove('d-block');
+    document
+      .getElementById('stock-allocation')
+      .classList.remove('blureEffct-3');
+  }
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
   }
 
+  setQuantity(item: any): void {
+    if (+item.current_load_allocated_qty > item.availble_stock_qty) {
+      item.current_load_allocated_qty = item.availble_stock_qty;
+    }
+  }
   onExtraLoadItemAllocation(item: any) {
     // console.log('item => ', item.current_load_allocated_qty);
     this.orderService
@@ -81,6 +101,7 @@ export class StockAllocationComponent implements OnInit {
       )
       .subscribe((x) => {
         console.log('success');
+        this.closeSideBar.emit(true);
       });
   }
 }

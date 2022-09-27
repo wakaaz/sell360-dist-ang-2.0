@@ -272,4 +272,13 @@ export class OrdersService {
     const url = `${API_URLS.UPDATE_LOAD_ORDER_ITEM_ALLOCATION}/${assignment_id}/${order_id}/${pref_id}`;
     return this.baseService.post(url, { allocated_qty });
   }
+
+  // GET:: /clearLoadItemAllocation/{assignment_id}/{pref_id}
+  clearLoadItemAllocation(
+    assignment_id: string,
+    pref_id: number
+  ): Observable<any> {
+    const url = `${API_URLS.CLEAR_LOAD_ITEM_ALLOCATION}/${assignment_id}/${pref_id}`;
+    return this.baseService.get(url);
+  }
 }

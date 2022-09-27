@@ -45,7 +45,7 @@ export class StockAllocationComponent implements OnInit {
       .getLoadOrdersPrefs(this.assignmentId, pref_id)
       .subscribe((x) => {
         console.log('getLoadOrdersPrefs => ', x);
-        this.orders = x.data;
+        this.orders = x.data.map((x) => ({ ...x, updateLoading: false }));
         this.showSideBar = true;
         document.body.classList.add('no-scroll');
         document
@@ -68,30 +68,43 @@ export class StockAllocationComponent implements OnInit {
     document
       .getElementById('stock-allocation')
       .classList.remove('blureEffct-3');
+    this.closeSideBar.emit(true);
   }
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
   }
 
   setQuantity(item: any): void {
-    if (+item.current_load_allocated_qty > item.availble_stock_qty) {
+    if (
+      +item.current_load_allocated_qty >
+      item.availble_stock_qty - item.allocated_stock_qty
+    ) {
       item.current_load_allocated_qty = item.availble_stock_qty;
     }
   }
   onExtraLoadItemAllocation(item: any) {
-    // console.log('item => ', item.current_load_allocated_qty);
+    // console.log('item => ', item.updateLoading);
+    item.updateLoading = true;
+
     this.orderService
       .extraLoadItemAllocation(
         this.assignmentId,
         item.pref_id,
         item.current_load_allocated_qty
       )
-      .subscribe((x) => {
-        console.log('success');
-      });
+      .subscribe(
+        (x) => {
+          item.updateLoading = false;
+          console.log('success');
+        },
+        (errr) => {
+          item.updateLoading = false;
+        }
+      );
   }
 
   onUpdateLoadOrderItemAllocation(order: any) {
+    order.updateLoading = true;
     this.orderService
       .updateLoadOrderItemAllocation(
         this.assignmentId,
@@ -100,7 +113,16 @@ export class StockAllocationComponent implements OnInit {
         order.booked_qty
       )
       .subscribe((x) => {
-        console.log('success');
+        order.updateLoading = false;
+      });
+  }
+
+  clearLoadItemAllocation(item: any) {
+    item.cancelLoading = true;
+    this.orderService
+      .clearLoadItemAllocation(this.assignmentId, item.pref_id)
+      .subscribe((x) => {
+        item.cancelLoading = false;
         this.closeSideBar.emit(true);
       });
   }

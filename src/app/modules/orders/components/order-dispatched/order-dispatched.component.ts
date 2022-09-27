@@ -10,6 +10,7 @@ import { OrderDispatchService } from '../../services/dispatch.service';
 import { LocalStorageService } from '../../../../core/services/storage.service';
 import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
 import {
   deleteRetailerCreditInvoice,
   getRetailersCreditInvoice,
@@ -193,7 +194,19 @@ export class OrderDispatchedComponent implements OnInit {
         (res) => {
           this.loading = false;
           if (res.status === 200) {
-            this.stockAllocation = res.data.allocated_stock;
+            if (res.data.allocated_stock) {
+              const allocation = res.data.allocated_stock.sort(
+                (a, b) =>
+                  parseFloat(b.current_load_booked_qty) -
+                  parseFloat(b.current_load_booked_qty)
+              );
+
+              this.stockAllocation = allocation.map((x) => ({
+                ...x,
+                updateLoading: false,
+                cancelLoading: false,
+              }));
+            }
             if (res.data.loadSheet) {
               this.finalLoad = res.data.loadSheetData;
               this.currentTab = 5;

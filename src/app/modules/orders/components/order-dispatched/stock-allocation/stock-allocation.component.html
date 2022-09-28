@@ -148,10 +148,12 @@
               <td>{{ item.item_sku }}</td>
               <td>{{ item.item_main_description }}</td>
               <td>
-                {{ +item.availble_stock_qty - +item.allocated_stock_qty }}
+                {{ +item.availble_stock_qty }}
               </td>
               <td>{{ item.allocated_stock_qty }}</td>
-              <td>{{ item.allocated_stock_qty }}</td>
+              <td>
+                {{ +item.availble_stock_qty - +item.allocated_stock_qty }}
+              </td>
               <td>{{ item.current_load_booked_qty }}</td>
               <td>
                 <input
@@ -166,31 +168,7 @@
                   minlength="0"
                 />
               </td>
-              <td style="width: 154px" *ngIf="item.current_load_booked_qty > 0">
-                <button
-                  type="button"
-                  id="productlist01"
-                  class="btn smBTN btn-line mb-0"
-                  (click)="onShowViewOrders($event, item.pref_id)"
-                >
-                  View Orders
-                </button>
-                <button
-                  type="submit"
-                  class="btn smBTN red-bg mb-0"
-                  (click)="clearLoadItemAllocation(item)"
-                >
-                  <div
-                    *ngIf="item.cancelLoading"
-                    class="spinner-border text-success"
-                    role="status"
-                  >
-                    <span class="sr-only"></span>
-                  </div>
-                  {{ item.cancelLoading ? "" : "Cancel All" }}
-                </button>
-              </td>
-              <td *ngIf="item.current_load_booked_qty == 0">
+              <td style="width: 213px">
                 <button
                   type="button"
                   class="btn smBTN btn-line mb-0"
@@ -205,6 +183,33 @@
                   </div>
                   {{ item.updateLoading ? "" : "Update" }}
                 </button>
+                <button
+                  *ngIf="item.current_load_booked_qty > 0"
+                  type="button"
+                  id="productlist01"
+                  class="btn smBTN btn-line mb-0"
+                  (click)="onShowViewOrders($event, item.pref_id)"
+                >
+                  View Orders
+                </button>
+                <button
+                  *ngIf="item.current_load_booked_qty > 0"
+                  type="submit"
+                  class="btn smBTN red-bg mb-0"
+                  (click)="clearLoadItemAllocation(item)"
+                >
+                  <div
+                    *ngIf="item.cancelLoading"
+                    class="spinner-border text-success"
+                    role="status"
+                  >
+                    <span class="sr-only"></span>
+                  </div>
+                  {{ item.cancelLoading ? "" : "Cancel All" }}
+                </button>
+                <!-- </td>
+              <td> -->
+
                 <!-- <button
                     type="submit"
                     class="btn smBTN red-bg mb-0"

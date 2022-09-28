@@ -157,7 +157,10 @@ export class OrderDispatchedComponent implements OnInit {
         // this.getCreditTabData();
         break;
       case 4:
-        this.setDataForLoad();
+        {
+          this.setDataForLoad();
+          console.log('tab -> ', this.currentTab);
+        }
         break;
 
       default:
@@ -303,6 +306,7 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   setDataForLoad(): void {
+    debugger;
     if (!this.dispatchOrderDetail?.orders) {
       this.getDispatchOrdersDetail();
     } else {

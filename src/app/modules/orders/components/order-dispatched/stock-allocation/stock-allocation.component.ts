@@ -77,9 +77,12 @@ export class StockAllocationComponent implements OnInit {
   setQuantity(item: any): void {
     if (
       +item.current_load_allocated_qty >
-      item.availble_stock_qty - item.allocated_stock_qty
+      +item.availble_stock_qty - +item.allocated_stock_qty
     ) {
       item.current_load_allocated_qty = item.availble_stock_qty;
+    }
+    if (+item.current_load_allocated_qty < item.current_load_booked_qty) {
+      item.current_load_allocated_qty = item.current_load_booked_qty;
     }
   }
   onExtraLoadItemAllocation(item: any) {

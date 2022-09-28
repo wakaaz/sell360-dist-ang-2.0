@@ -249,14 +249,18 @@
                   >{{ product.item_trade_price | decimal }}</span
                 >
               </div>
-              <!-- <div class="col-6">
-                <span>{{ product.ctns_booked }} <small>CTNS</small></span
+              <div class="col-6">
+                <span
+                  >{{ product.ctns_booked }}
+                  <small>{{ product.unit_name }}</small></span
                 >Booked
               </div>
               <div class="col-6">
-                <span>{{ product.available_qty }} <small>Dozens</small></span
+                <span
+                  >{{ product.available_qty }}
+                  <small>{{ product.unit_name }}</small></span
                 >Available
-              </div> -->
+              </div>
             </div>
           </div>
         </div>

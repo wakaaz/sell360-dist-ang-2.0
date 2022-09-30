@@ -48,3 +48,7 @@
 .blureEffct-3 {
   filter: blur(3px);
 }
+.spinner-border {
+  width: 0.8rem;
+  height: 0.8rem;
+}

@@ -178,6 +178,14 @@
                                   style="display: block"
                                   >available: {{product.available_qty}}</span
                                 >
+                                <span
+                                  *ngIf="product?.current_load_allocated_qty"
+                                  style="display: block; opacity: 0.6"
+                                >
+                                  available:
+                                  {{product?.current_load_allocated_qty -
+                                  product?.current_load_booked_qty}}
+                                </span>
                               </div>
                             </div>
                           </td>

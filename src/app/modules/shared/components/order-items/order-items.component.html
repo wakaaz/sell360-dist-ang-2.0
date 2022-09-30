@@ -106,7 +106,6 @@
             (keyup)="setQuantity(item)"
             (keydown)="isNumber($event, 'quantity')"
             [(ngModel)]="item.stockQty"
-            [max]="999999"
             class="form-control value_input"
             placeholder="0"
           />

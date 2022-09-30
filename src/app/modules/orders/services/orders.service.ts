@@ -37,8 +37,14 @@ export class OrdersService {
     this._loadRetaillersRecovery.next(isLoad);
   }
 
-  getCounterSaleData(): Observable<any> {
-    return this.baseService.get(API_URLS.COUNTER_SALE_DATA);
+  getCounterSaleData(assignmentId = '0'): Observable<any> {
+    if (assignmentId !== '0') {
+      return this.baseService.get(
+        API_URLS.COUNTER_SALE_DATA + `?assignment_id=${assignmentId}`
+      );
+    } else {
+      return this.baseService.get(API_URLS.COUNTER_SALE_DATA);
+    }
   }
 
   getCompletedOrdersLoadsheets(date): Observable<any> {
@@ -279,6 +285,12 @@ export class OrdersService {
     pref_id: number
   ): Observable<any> {
     const url = `${API_URLS.CLEAR_LOAD_ITEM_ALLOCATION}/${assignment_id}/${pref_id}`;
+    return this.baseService.get(url);
+  }
+
+  // GET:: /saveLoadItemAllocation/{assignment_id}
+  saveLoadItemAllocation(assignment_id: string): Observable<any> {
+    const url = `${API_URLS.SAVE_LOAD_ITEM_ALLOCATION}/${assignment_id}`;
     return this.baseService.get(url);
   }
 }

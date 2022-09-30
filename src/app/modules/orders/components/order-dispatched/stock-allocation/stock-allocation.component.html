@@ -1,7 +1,11 @@
 <!-- <div id="content-wrapper"> -->
 
 <!-- SIDE BAR -->
-<div id="product-cl-sec" [ngClass]="showSideBar ? 'active' : ''">
+<div
+  id="product-cl-sec"
+  *ngIf="showSideBar"
+  [ngClass]="showSideBar ? 'active' : ''"
+>
   <a id="pl-close" class="close-btn-pl" (click)="closeProductsList()"></a>
   <div class="pro-header-text">Orders <span>List</span></div>
   <div class="pc-cartlist">
@@ -15,7 +19,7 @@
                   <table
                     class="table table-hover nowrap AddProductTable"
                     id="example2"
-                    style="width: 100%"
+                    style="width: 100%; font-size: 12px"
                   >
                     <thead>
                       <tr>
@@ -49,7 +53,7 @@
                           >
                             <div
                               *ngIf="order.updateLoading"
-                              class="spinner-border text-success"
+                              class="spinner-border"
                               role="status"
                             >
                               <span class="sr-only"></span>
@@ -176,7 +180,7 @@
                 >
                   <div
                     *ngIf="item.updateLoading"
-                    class="spinner-border text-success"
+                    class="spinner-border"
                     role="status"
                   >
                     <span class="sr-only"></span>
@@ -200,7 +204,7 @@
                 >
                   <div
                     *ngIf="item.cancelLoading"
-                    class="spinner-border text-success"
+                    class="spinner-border"
                     role="status"
                   >
                     <span class="sr-only"></span>

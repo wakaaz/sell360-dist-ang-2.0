@@ -269,6 +269,7 @@
                     [merchantDiscount]="merchantDiscount"
                     [newProduct]="newProduct"
                     [orderType]="'dispatch'"
+                    [stockAllocation]="stockAllocation"
                     (openDrawer)="openProductsList()"
                   >
                   </app-order-items-list>
@@ -778,7 +779,10 @@
                 type="submit"
                 class="btn btn-primary m-0"
               >
-                Next
+                <div *ngIf="tabLoading" class="spinner-border" role="status">
+                  <span class="sr-only"></span>
+                </div>
+                {{ tabLoading ? "" : "Next" }}
               </button>
               <button
                 *ngIf="currentTab === 4"

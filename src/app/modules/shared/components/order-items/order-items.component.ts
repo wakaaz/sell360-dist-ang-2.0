@@ -20,6 +20,7 @@ import { DataService } from '../../services';
   styleUrls: ['./order-items.component.css'],
 })
 export class OrderItemsListComponent implements OnInit, OnChanges {
+  @Input() stockAllocation: any;
   @Input() orderType: string;
   @Input() returnAmount: number;
   @Input() isChequeAdded: boolean;
@@ -154,8 +155,12 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   }
 
   setQuantity(product: any): void {
-    if (+product.stockQty > 1000) {
-      product.stockQty = 0;
+    debugger;
+    const foundProd = this.stockAllocation.find(
+      (x) => x.item_id === product.item_id
+    );
+    if (+product.stockQty > foundProd.current_load_allocated_qty) {
+      product.stockQty = foundProd.current_load_allocated_qty;
     }
     if (this.orderType === 'execution') {
       const prod = this.allProducts.find((x) => x.item_id === product.item_id);

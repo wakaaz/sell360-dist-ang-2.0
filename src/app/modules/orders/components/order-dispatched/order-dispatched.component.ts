@@ -25,6 +25,7 @@ import {
 })
 export class OrderDispatchedComponent implements OnInit {
   stockAllocation: any;
+  tabLoading = false;
   dtOptions: DataTables.Settings;
   loading: boolean;
   loadingProduct: boolean;
@@ -144,10 +145,7 @@ export class OrderDispatchedComponent implements OnInit {
         this.getDispatchDetails();
         break;
       case 2:
-        this.savingOrder = true;
-        this.selectedRetailer = JSON.parse(JSON.stringify(null));
-        this.orderDetails.items = [];
-        this.getDispatchDetails();
+        this.onTabTwo();
         break;
       case 3:
         this.dispatchOrderDetail = null;
@@ -166,6 +164,24 @@ export class OrderDispatchedComponent implements OnInit {
       default:
         break;
     }
+  }
+
+  onTabTwo(): void {
+    this.tabLoading = true;
+    this.orderService.saveLoadItemAllocation(this.assignmentId).subscribe(
+      (x) => {
+        this.getProducts();
+        this.tabLoading = false;
+        console.log('I am onTabTwo() on going call the api there');
+        this.savingOrder = true;
+        this.selectedRetailer = JSON.parse(JSON.stringify(null));
+        this.orderDetails.items = [];
+        this.getDispatchDetails();
+      },
+      (err) => {
+        this.tabLoading = false;
+      }
+    );
   }
   getCreditTabData() {
     this.loading = true;
@@ -319,7 +335,7 @@ export class OrderDispatchedComponent implements OnInit {
 
   getProducts(): void {
     this.loadingProduct = true;
-    this.orderService.getCounterSaleData().subscribe(
+    this.orderService.getCounterSaleData(this.assignmentId).subscribe(
       (res) => {
         this.loadingProduct = false;
         if (res.status === 200) {
@@ -520,6 +536,7 @@ export class OrderDispatchedComponent implements OnInit {
       .getElementsByClassName('overlay-blure')[0]
       .classList.remove('d-block');
     document.getElementById('order-contaienr').classList.remove('blur-div');
+    this.getProducts();
   }
 
   saveOrder(): void {

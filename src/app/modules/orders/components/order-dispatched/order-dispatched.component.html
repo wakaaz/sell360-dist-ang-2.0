@@ -321,7 +321,7 @@
                     disabled
                   >
                     <div class="spinner-border text-light" role="status">
-                      <span class="sr-only">Loading...</span>
+                      <span class="sr-only"></span>
                     </div>
                   </button>
                 </div>
@@ -773,7 +773,11 @@
               <button
                 *ngIf="currentTab !== 5 && currentTab !== 4"
                 [disabled]="
-                  currentTab === 5 || loading || loadingProduct || savingOrder
+                  currentTab === 5 ||
+                  loading ||
+                  loadingProduct ||
+                  savingOrder ||
+                  !checkAllocationSuccess
                 "
                 (click)="currentTab = currentTab + 1; tabChanged()"
                 type="submit"

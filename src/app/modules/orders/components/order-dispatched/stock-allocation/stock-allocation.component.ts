@@ -12,6 +12,7 @@ export class StockAllocationComponent implements OnInit {
   @Input() stockAllocation: any;
   @Output() closeSideBar = new EventEmitter<boolean>();
   orders: any = [];
+  tabLoading = false;
   assignmentId: string;
   dtOptions: DataTables.Settings;
   loading: false;
@@ -24,13 +25,29 @@ export class StockAllocationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.orderService.setCheckAllocationSuccess(false);
     console.log('stockAllocation => ', this.stockAllocation);
     this.dtOptions = {
       pagingType: 'simple_numbers',
+      order: [[5, 'desc']],
     };
     this.assignmentId = this.route.snapshot.paramMap.get('assignId');
 
     console.log('this.assignmentId ', this.assignmentId);
+  }
+
+  onCheckAllocation() {
+    this.tabLoading = true;
+    this.orderService.saveLoadItemAllocation(this.assignmentId).subscribe(
+      (x) => {
+        this.tabLoading = false;
+        this.orderService.setCheckAllocationSuccess(true);
+      },
+      (err) => {
+        this.tabLoading = false;
+        this.orderService.setCheckAllocationSuccess(false);
+      }
+    );
   }
 
   //#region  show product list

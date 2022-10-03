@@ -24,6 +24,7 @@ import {
   styleUrls: ['./order-dispatched.component.css'],
 })
 export class OrderDispatchedComponent implements OnInit {
+  checkAllocationSuccess: boolean = false;
   stockAllocation: any;
   tabLoading = false;
   dtOptions: DataTables.Settings;
@@ -81,6 +82,9 @@ export class OrderDispatchedComponent implements OnInit {
     this.dtOptions = {
       pagingType: 'simple_numbers',
     };
+    this.orderService.checkAllocationSuccess.subscribe((x) => {
+      this.checkAllocationSuccess = x;
+    });
     this.currentTab = 1;
     this.setLoad();
     this.setCurrentLoad(1);
@@ -168,20 +172,12 @@ export class OrderDispatchedComponent implements OnInit {
 
   onTabTwo(): void {
     this.tabLoading = true;
-    this.orderService.saveLoadItemAllocation(this.assignmentId).subscribe(
-      (x) => {
-        this.getProducts();
-        this.tabLoading = false;
-        console.log('I am onTabTwo() on going call the api there');
-        this.savingOrder = true;
-        this.selectedRetailer = JSON.parse(JSON.stringify(null));
-        this.orderDetails.items = [];
-        this.getDispatchDetails();
-      },
-      (err) => {
-        this.tabLoading = false;
-      }
-    );
+    this.getProducts();
+    this.savingOrder = true;
+    this.selectedRetailer = JSON.parse(JSON.stringify(null));
+    this.orderDetails.items = [];
+    this.getDispatchDetails();
+    this.tabLoading = false;
   }
   getCreditTabData() {
     this.loading = true;

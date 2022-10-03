@@ -9,11 +9,20 @@ export class OrdersService {
   private _ordersRetailers = new BehaviorSubject<any[]>([]);
   private _loadRetaillersRecovery = new BehaviorSubject<any>({});
   private _loadOutOfRouteRecovery = new BehaviorSubject<number>(-1);
+  private _checkAllocationSuccess = new BehaviorSubject<boolean>(false);
 
   constructor(private baseService: HttpBaseService) {}
 
   get orderRetailers(): Observable<any> {
     return this._ordersRetailers.asObservable();
+  }
+
+  get checkAllocationSuccess(): Observable<any> {
+    return this._checkAllocationSuccess.asObservable();
+  }
+
+  setCheckAllocationSuccess(isCheckAllocationSuccess: boolean) {
+    this._checkAllocationSuccess.next(isCheckAllocationSuccess);
   }
 
   get loadOutOfRouteRecovery(): any {

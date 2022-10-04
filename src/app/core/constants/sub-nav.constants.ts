@@ -123,6 +123,11 @@ export const retailerSubMenu = {
       link: '/retailer/opening-balance',
       icon: '/assets/images/opening-balance.svg',
     },
+    {
+      title: 'Credit Invoices',
+      link: '/retailer/credit-invoices',
+      icon: '/assets/images/opening-balance.svg',
+    },
   ],
 };
 export const reportsSubMenu = {

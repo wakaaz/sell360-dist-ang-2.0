@@ -16,6 +16,7 @@ import { OpeningBalanceComponent } from './components/opening-balance/opening-ba
 import { RetailerService } from './services/retailer.service';
 import { DistLedgerComponent } from './components/dist-ledger/ledger.component';
 import { LedgerComponent } from './components/ledger/ledger.component';
+import { RetailerInvoicesComponent } from './components/retailer-invoices/retailer-invoices.component';
 
 @NgModule({
   imports: [
@@ -35,6 +36,7 @@ import { LedgerComponent } from './components/ledger/ledger.component';
     RetailerProfileComponent,
     OpeningBalanceComponent,
     LedgerComponent,
+    RetailerInvoicesComponent,
   ],
   providers: [RetailerService],
 })

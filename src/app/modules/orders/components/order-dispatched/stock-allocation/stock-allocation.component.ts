@@ -14,7 +14,7 @@ export class StockAllocationComponent implements OnInit {
   orders: any = [];
   tabLoading = false;
   assignmentId: string;
-  dtOptions: DataTables.Settings;
+  dtOptions: any;
   loading: false;
   showSideBar = false;
   retailer_credit_Invoices = [];
@@ -30,6 +30,22 @@ export class StockAllocationComponent implements OnInit {
     this.dtOptions = {
       pagingType: 'simple_numbers',
       order: [[5, 'desc']],
+      processing: true,
+      dom: 'Bfrtip',
+      buttons: [
+        {
+          extend: 'excel',
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5, 6],
+          },
+        },
+        {
+          extend: 'print',
+          exportOptions: {
+            columns: [0, 1, 2, 3, 4, 5, 6],
+          },
+        },
+      ],
     };
     this.assignmentId = this.route.snapshot.paramMap.get('assignId');
 

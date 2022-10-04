@@ -10,6 +10,7 @@ import { RateListComponent } from './components/export-rate-list/export-rate-lis
 import { SpotSaleComponent } from './components/spot-sale/spot-sale.component';
 import { StockOutReportComponent } from './components/stock-out-report/stock-out-report.component';
 import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component';
+import { AllReportComponent } from './components/all-report/all-report.component';
 
 const routes: Routes = [
   {
@@ -23,12 +24,12 @@ const routes: Routes = [
       {
         path: 'purchase-history',
         pathMatch: 'full',
-        component: PurchaseHisotryComponent
+        component: PurchaseHisotryComponent,
       },
       {
         path: 'purchase/:id',
         pathMatch: 'full',
-        component: PurchasedDetailComponent
+        component: PurchasedDetailComponent,
       },
       {
         path: 'cash-summary',
@@ -49,19 +50,24 @@ const routes: Routes = [
       {
         path: 'sale-order-history',
         pathMatch: 'full',
-        component: OrderBookerListComponent
+        component: OrderBookerListComponent,
       },
       {
         path: 'dsr',
         pathMatch: 'full',
-        component: DSReportComponent
-      }
-    ]
-  }
+        component: DSReportComponent,
+      },
+      {
+        path: 'all-reports',
+        pathMatch: 'full',
+        component: AllReportComponent,
+      },
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class ReportsRoutingModule { }
+export class ReportsRoutingModule {}

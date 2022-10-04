@@ -19,6 +19,7 @@ import { RateListComponent } from './components/export-rate-list/export-rate-lis
 import { SpotSaleComponent } from './components/spot-sale/spot-sale.component';
 import { StockOutReportComponent } from './components/stock-out-report/stock-out-report.component';
 import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component';
+import { AllReportComponent } from './components/all-report/all-report.component';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import { OrderBookerListComponent } from './components/order-booker-list/order-b
     RateListComponent,
     SpotSaleComponent,
     StockOutReportComponent,
-    OrderBookerListComponent
+    OrderBookerListComponent,
+    AllReportComponent
   ],
   providers: [
     ReportsService, OrdersService, RetailerService

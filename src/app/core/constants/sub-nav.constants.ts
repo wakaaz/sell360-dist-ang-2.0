@@ -134,6 +134,11 @@ export const reportsSubMenu = {
   title: 'Reports',
   subMenu: [
     {
+      title: 'All Reports',
+      link: '/reports/all-reports',
+      icon: '/assets/images/reports-icon.svg',
+    },
+    {
       title: 'DSR',
       link: '/reports/dsr',
       icon: '/assets/images/reports-icon.svg',

@@ -16,7 +16,7 @@ export const ordersSubMenu = {
     {
       title: 'Execution',
       link: '/orders/execution-list',
-      icon: '/assets/images/dispatched-order.svg',
+      icon: '/assets/images/opening-balance.svg',
     },
     // Hidden for first version
     {
@@ -27,7 +27,7 @@ export const ordersSubMenu = {
     {
       title: 'Counter Sale',
       link: '/orders/counter-sale',
-      icon: '/assets/images/complete-orders.svg',
+      icon: '/assets/images/counter-sale.svg',
     },
     // Hidden for first version
     // {
@@ -44,13 +44,13 @@ export const primaryOrderSubMenu = {
     {
       title: 'New Order',
       link: `/primaryOrders/order/${PRIMARY_ORDER.NEW}`,
-      icon: '/assets/images/dispatched-order.svg',
+      icon: '/assets/images/new-orders.svg',
       queryParams: { order: 'new' },
     },
     {
       title: 'Booked',
       link: `/primaryOrders/${PRIMARY_ORDER.BOOKED}`,
-      icon: '/assets/images/dispatched-order.svg',
+      icon: '/assets/images/order-icon-b.svg',
       queryParams: { order: 'booked' },
     },
     {
@@ -61,12 +61,12 @@ export const primaryOrderSubMenu = {
     {
       title: 'Executed',
       link: `/primaryOrders/${PRIMARY_ORDER.EXECUTE}`,
-      icon: '/assets/images/dispatched-order.svg',
+      icon: '/assets/images/opening-balance.svg',
     },
     {
       title: 'Return Order',
       link: `/primaryOrders/order/${PRIMARY_ORDER.RETURN_ORDER}`,
-      icon: '/assets/images/complete-orders.svg',
+      icon: '/assets/images/order-return.svg',
     },
   ],
 };
@@ -91,22 +91,22 @@ export const inventorySubMenu = {
     {
       title: 'Products',
       link: '/inventory/gallery',
-      icon: '/assets/images/gallary-icon.svg',
+      icon: '/assets/images/product-icon.svg',
     },
     {
       title: 'Add Opening Stock',
       link: '/inventory/add-stock',
-      icon: '/assets/images/add-stock.svg',
+      icon: '/assets/images/product-items-icon.svg',
     },
     {
       title: 'Distributor Purchase',
       link: '/inventory/distributor-purchase',
-      icon: '/assets/images/add-stock.svg',
+      icon: '/assets/images/brand-products-icon.svg',
     },
     {
       title: 'Stock',
       link: '/inventory/stock',
-      icon: '/assets/images/add-stock.svg',
+      icon: '/assets/images/stock.svg',
     },
   ],
 };
@@ -126,7 +126,7 @@ export const retailerSubMenu = {
     {
       title: 'Credit Invoices',
       link: '/retailer/credit-invoices',
-      icon: '/assets/images/opening-balance.svg',
+      icon: '/assets/images/invoice-management-icon.svg',
     },
   ],
 };

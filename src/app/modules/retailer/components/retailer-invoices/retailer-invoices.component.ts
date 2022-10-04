@@ -6,10 +6,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./retailer-invoices.component.css']
 })
 export class RetailerInvoicesComponent implements OnInit {
-
+  dtOptions: DataTables.Settings;  
   constructor() { }
 
   ngOnInit(): void {
+    this.dtOptions = {
+      pagingType: 'simple_numbers',
+    };
   }
 
 }

@@ -1,0 +1,87 @@
+ .topstats {
+     margin-top: 15px;
+     font-size: 14px;
+ }
+
+ .topstats .gary-box {
+     line-height: 1;
+     background-color: #f9f9f9;
+     border-bottom: solid 1px #d1d1d1;
+     padding: 10px;
+     letter-spacing: 1px;
+ }
+
+ .topstats .gary-box span {
+     font-family: 'Rationale', sans-serif;
+     color: #0038ba;
+     font-size: 18px;
+     float: right;
+     margin-top: -2px;
+     padding-left: 15px;
+ }
+
+ .btn-generate {
+     float: right;
+     font-size: 13px;
+     padding: 5px 14px;
+ }
+
+ .table thead th {
+     border: solid 1px #fff !important;
+ }
+
+ .table-inv-report {
+     font-size: 13px;
+ }
+
+ .table-inv-report th {
+     font-size: 13px;
+     font-family: proximanova-semibold, sans-serif !important;
+     text-align: center
+ }
+
+ .table td,
+ .table th {
+     padding: 5px
+ }
+
+ .dataTable .btn-pdf {
+     background: none !important;
+     padding: 0;
+     margin-right: 5px;
+     line-height: 1;
+ }
+
+ .dataTable .btn-pdf svg {
+     height: 18px;
+     width: 18px;
+     color: #282828;
+ }
+
+ .dataTable .btn-pdf:hover svg {
+     color: #0038ba;
+ }
+
+ .modal-title svg {
+     width: 20px;
+     height: 20px;
+     margin-top: -2px;
+     color: #0038ba;
+     margin-right: 5px;
+ }
+ .RecoveryAMT{padding-bottom: 0;  line-height: 1; }
+ .RecoveryAMT .col-6{ 
+    padding: 10px 10px;
+    font-size: 14px
+ }
+
+ .amt-due-v {
+     font-size: 16px !important; 
+     font-family: proximanova-semibold, sans-serif!important;
+     display: block;
+    
+ }
+ .RecoveryAMT .form-control{ height: 31px; margin-top: -5px;
+    font-size: 15px;
+    width: 170px;
+   }

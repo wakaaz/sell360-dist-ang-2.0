@@ -19,9 +19,10 @@ import { LocalStorageSalemanEffects } from './core/effects/salesmen.effects';
 
 import { environment } from '../environments/environment';
 import { SharedModule } from './modules/shared/shared.module';
+import { DashboardComponent } from './modules/dashboard/dashboard.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, DashboardComponent],
   imports: [
     BrowserModule,
     FormsModule,

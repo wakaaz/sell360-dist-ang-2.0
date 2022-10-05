@@ -153,9 +153,14 @@ export class OrdersService {
     return this.baseService.get(url);
   }
 
-  getOrderDetails(orderId: number): Observable<any> {
-    const url = `${API_URLS.ORDER_DETAIL}/${orderId}`;
-    return this.baseService.get(url);
+  getOrderDetails(orderId: number, assignmentId = ''): Observable<any> {
+    if (assignmentId !== '') {
+      const url = `${API_URLS.ORDER_DETAIL}/${orderId}?assignment_id=${assignmentId}`;
+      return this.baseService.get(url);
+    } else {
+      const url = `${API_URLS.ORDER_DETAIL}/${orderId}`;
+      return this.baseService.get(url);
+    }
   }
 
   getDispatchOrdersDetail(

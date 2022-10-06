@@ -2,7 +2,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './core/guard/auth.guard';
 
+import{ DashboardComponent} from './modules/dashboard/dashboard.component';
+
 const routes: Routes = [
+  { path: 'dashboard', component:DashboardComponent },
   {
     path: 'login',
     loadChildren: () =>

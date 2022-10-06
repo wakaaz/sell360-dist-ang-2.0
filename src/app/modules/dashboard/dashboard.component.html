@@ -1,0 +1,811 @@
+<div class="container">
+    
+    <div class="row mt-1 mb-10">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01 text-uppercase">Monthly <span> Sales Analysis</span></h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 text-right">
+            <a href="#" class="expand-btn"><i class="fa fa-expand"></i></a>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="header-tabs">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="heading-ht">Retail Sales</h2> 
+                    </div>
+
+                    <div class="col-auto pl-0">
+                        <div class="dashboard-date">
+                            <input type="date" id="datepicker" class="form-control" placeholder="">
+                            <!-- <i class="fa fa-angle-down"></i> -->
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-12">
+            <div class="card total-sale mb-30 p-20">
+                <div class="row">
+                    <div class="col-7">
+                        <div class="row">
+                            <div class="col-12 position-relative"
+                                style="background-image: url(../../../assets/images/kpi-achive-img.jpg); background-position:bottom right; background-repeat:no-repeat">
+                        
+                                <h2 class="card-heading">Net <span>Sales</span></h2>
+                                <div class="total-amount" style="border-bottom:solid 1px #e1e1e1; line-height: 1;"><span>Rs.</span>
+                                    80,00,00,000<span class="per-v"><i class="fa fa-long-arrow-alt-up"></i> 32%</span></div>
+                            </div>
+                            <div class="col unit-v">Cartons<span>999,999 <small>CTNS</small></span></div>
+                            <!-- <div class="col unit-v">Dozens<span>999,999 <small>DZNS</small></span></div>
+                            <div class="col unit-v">Half Dozens<span>999,999 <small>HDZNS</small></span></div> -->
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="row m-0">
+                            <div class="col-6 total-val border-bottom"><span>23,550</span> TTL. Booking</div>
+                            <div class="col-6 total-val border-left border-bottom"><span>10,123,550</span> TTL. Dispatch</div>
+                            <div class="col-6 total-val pb-0"><span>13,550</span>Pending Sales</div>
+                            <div class="col-6 total-val  pb-0 border-left"><span>20%</span> Execution</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+           
+            <div class="card mb-30">
+                <h2 class="card-heading">Daily <span>Sales Trends</span></h2>
+            
+                <div class="row">
+                    <div class="col-12">
+                        <div class="avg-booking-day">
+                            <h2>AVG. Sales/Day <span>$2,390,000</span></h2>
+                        </div>
+                    </div>
+            
+                </div>
+                <canvas id="BookingTrends" height="200"></canvas>            
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-30">
+                    <div class="card mh-100">
+                        <h2 class="card-heading font20">Retail <span>  Market Analysis</span></h2>
+                        <div class="col-12 key-trend">
+                            <div class="row">
+                                <div class="col-6 key-lab pr-0"><strong>TTL Retail Outlets</strong></div>
+                                <div class="col-6 key-val pl-0">420</div>
+                            </div>
+                        </div>
+                        <div class="col-12 key-trend">
+                            <div class="row">
+                                <div class="col-6 key-lab pr-0"><strong>Productive Outlets</strong></div>
+                                <div class="col-6 key-val pl-0">375</div>
+                            </div>
+                        </div>
+                        <div class="col-12 key-trend">
+                            <div class="row">
+                                <div class="col-6 key-lab pr-0"><strong>Un Productive Outlets</strong></div>
+                                <div class="col-6 key-val pl-0">141</div>
+                            </div>
+                        </div>
+                        <div class="col-12 key-trend">
+                            <div class="row">
+                                <div class="col-6 key-lab pr-0"><strong>AVG. Sales/Outlet</strong>
+                                </div>
+                                <div class="col-6 key-val pl-0">15,450</div>
+                            </div>
+                        </div>
+                        <div class="col-12 key-trend  mb-0">
+                            <div class="row">
+                                <div class="col-6 key-lab pr-0"><strong>Newly Registered</strong>
+                                </div>
+                                <div class="col-6 key-val pl-0">85</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="col-md-6 mb-30">
+                    <div class="card mh-100">
+                        <h2 class="card-heading font20">Key <span>Trends</span></h2>
+                         <a href="#" class="key-trend">
+                            <div class="row">
+                                <div class="col key-lab pr-0"><strong>AVG. Order Value</strong></div>
+                                <div class="col-3 key-growth text-success"><i
+                                        class="fa fa-long-arrow-alt-up"></i>+32% Growth</div>
+                                <div class="col key-val pl-0">Rs.29,000,000</div>
+                            </div>
+                        </a> <a href="#" class="key-trend">
+                            <div class="row">
+                                <div class="col key-lab pr-0"><strong>Avg. SKUs/Order</strong></div>
+                                <div class="col-3 key-growth text-warning">
+                                    <!--<i class="fa fa-long-arrow-alt-up"></i>-->- No Change
+                                </div>
+                                <div class="col key-val pl-0">35<small>%</small></div>
+                            </div>
+                        </a> 
+                        <a href="#" class="key-trend">
+                            <div class="row">
+                                <div class="col key-lab pr-0"><strong>AVG. Drop Size</strong></div>
+                                <div class="col-3 key-growth text-danger"><i
+                                        class="fa fa-long-arrow-alt-down"></i>+32% Growth</div>
+                                <div class="col key-val pl-0">35<small>%</small></div>
+                            </div>
+                        </a> 
+                        <a href="#" class="key-trend">
+                            <div class="row">
+                                <div class="col key-lab pr-0"><strong>Spot Sale</strong></div>
+                                <div class="col-3 key-growth text-success"><i
+                                        class="fa fa-long-arrow-alt-up"></i>+32% Growth</div>
+                                <div class="col key-val pl-0">Rs.29,000,000</div>
+                            </div>
+                        </a>
+                        <a href="#" class="key-trend mb-0">
+                            <div class="row">
+                                <div class="col key-lab pr-0"><strong>Counter Sale</strong></div>
+                                <div class="col-3 key-growth text-success"><i
+                                        class="fa fa-long-arrow-alt-up"></i>+32% Growth</div>
+                                <div class="col key-val pl-0">Rs.29,000,000</div>
+                            </div>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="_head01 text-uppercase mb-20">Market <span>Credit Analysis</span></h2>
+                </div>
+            </div>
+            
+            <div class="card mb-30">
+                <div class="row">
+            
+                    <div class="col-12">
+            
+                        <div class="row">
+            
+                            <div class="col-4">
+                                <div class="total-pc border-right mb-0">
+                                    <h3>Opening <span>Credit AMNT</span></h3>
+                                    <span class="avg-val"><small>Rs.</small> 222,323,123 </span>
+                                </div>
+                                <img class="tp-img-icon" src="../../../assets/images/Credit-Icon.svg" alt="">
+                            </div>
+            
+                            <div class="col-4">
+                                <div class="total-pc border-right mb-0">
+                                    <h3>Recovery <span></span></h3>
+                                    <span class="avg-val"><small>Rs.</small> 222,323,123 </span>
+                                </div>
+                                <img class="tp-img-icon" src="../../../assets/images/Recovery-Icon.svg" alt="">
+                            </div>
+            
+                            <div class="col-4">
+                                <div class="total-pc mb-0">
+                                    <h3>Net <span>Credit AMNT</span></h3>
+                                    <span class="avg-val"><small>Rs.</small> 222,323,123 </span>
+                                </div>
+                                <img class="tp-img-icon" src="../../../assets/images/Net-Credit.svg" alt="">
+                            </div>
+            
+                        </div>
+            
+                    </div>
+            
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="_head01 text-uppercase mb-20">Stock <span> Analysis</span></h2>
+                </div>
+            </div>
+
+            <div class="card mb-30">
+                <div class="row">
+
+                    <div class="col-12">
+
+                        <div class="row">
+
+                            <div class="col">
+                                <div class="total-pc border-right mb-0">
+                                    <h3>Opening  <span>Stock</span></h3>
+                                    <b>Unit: Cartons</b>
+                                    <span class="avg-val"><small>Rs.</small> 222,323,123 </span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="total-pc border-right mb-0">
+                                    <h3>Net <span> Purchase</span></h3>
+                                    <b>Unit: Cartons</b>
+                                    <span class="avg-val"><small>Rs.</small> 222,323,123 </span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="total-pc border-right mb-0">
+                                    <h3>Sold  <span>Stock</span></h3>
+                                    <b>Unit: Cartons</b>
+                                    <span class="avg-val"><small>Rs.</small> 222,323,123 </span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="total-pc border-right mb-0">
+                                    <h3>Available  <span>Stock</span></h3>
+                                    <b>Unit: Cartons</b>
+                                    <span class="avg-val"><small>Rs.</small> 222,323,123 </span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="total-pc mb-0">
+                                    <h3>Damage <span>Stock</span></h3>
+                                    <b>Unit: Cartons</b>
+                                    <span class="avg-val"><small>Rs.</small> 222,323,123 </span>
+                                </div>
+                            </div>
+
+                       
+                            
+
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="_head01 text-uppercase mb-20">Salesman <span>Sales Analysis</span></h2>
+                </div>
+            </div>
+
+
+            <div class="card mb-30">
+
+                <table class="table table-dist table-hover nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left !important">Salesman</th>
+                            <th>Total DSRs</th>
+                            <th>Unit Sales</th>
+                            <th>CTN Sales</th>
+                            <th>Gross Value</th>
+                            <th>Net Revenue</th>
+                            <th>NET Cash AMNT</th>
+                            <th>NET Cheque AMNT</th>
+                            <th>NET Credit</th>
+                            <th>Net Recovery</th>
+                            <th>Net Expense</th>
+                            <th>Shortage AMNT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                        </tr>
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="font-no">Total:</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <h2 class="_head01 text-uppercase mb-20">SR Wise <span>Sales Analysis</span></h2>
+                </div>
+            </div>
+
+
+            <div class="card mb-30">
+
+                <table class="table table-dist table-hover nowrap" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th style="text-align:left !important">SR Name</th>
+                            <th>TTL. Shops</th>
+                            <th>Unit Sales</th>
+                            <th>CTN Sales</th>
+                            <th>Gross Value</th>
+                            <th>Net Revenue</th>
+                            <th>TGT</th>
+                            <th>ACH%</th>
+                            <th>U. PROD %</th>
+                            <th>S. PROD %</th>
+                            <th>AVG. Order Value</th>
+                            <th>AVG. SKUs/ Order</th>
+                            <th>AVG. Drop Size</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+                        <tr>
+                            <td class="font-no" style="text-align:left">Junaid Ul Qayyum</td>
+                            <td class="font-no">450</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">9,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">99,999,999</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">100%</td>
+                            <td class="font-no">99.99</td>
+                            <td class="font-no">99,999</td>
+                            <td class="font-no"> 99.99</td>
+                        </tr>
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th class="font-no">Total:</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                            <th class="font-no">0</th>
+                        </tr>
+                    </tfoot>
+                </table>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

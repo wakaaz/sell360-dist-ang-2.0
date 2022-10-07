@@ -7,6 +7,7 @@ import { RetalersListComponent } from './components/retailers-list/retailers-lis
 import { RetailerProfileComponent } from './components/retailer-profile/retailer-profile.component';
 import { OpeningBalanceComponent } from './components/opening-balance/opening-balance.component';
 import { DistLedgerComponent } from './components/dist-ledger/ledger.component';
+import { RetailersInvListComponent } from './components/retailers-invoices-list/retailers-invoices-list.component';
 import { RetailerInvoicesComponent } from './components/retailer-invoices/retailer-invoices.component';
 
 const routes: Routes = [
@@ -32,6 +33,11 @@ const routes: Routes = [
         path: 'opening-balance',
         pathMatch: 'full',
         component: OpeningBalanceComponent,
+      },
+      {
+        path: 'retailers-invoices-list',
+        pathMatch: 'full',
+        component: RetailersInvListComponent,
       },
       {
         path: 'credit-invoices',

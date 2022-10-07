@@ -42,7 +42,7 @@
 
  .table td,
  .table th {
-     padding: 5px
+     padding: 5px; font-size: 12px;
  }
 
  .dataTable .btn-pdf {
@@ -85,3 +85,12 @@
     font-size: 15px;
     width: 170px;
    }
+
+
+   
+.table td,
+.table th {
+    padding: 5px
+}
+
+ 

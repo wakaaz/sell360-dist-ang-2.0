@@ -16,6 +16,7 @@ import { OpeningBalanceComponent } from './components/opening-balance/opening-ba
 import { RetailerService } from './services/retailer.service';
 import { DistLedgerComponent } from './components/dist-ledger/ledger.component';
 import { LedgerComponent } from './components/ledger/ledger.component';
+import { RetailersInvListComponent } from './components/retailers-invoices-list/retailers-invoices-list.component';
 import { RetailerInvoicesComponent } from './components/retailer-invoices/retailer-invoices.component';
 
 @NgModule({
@@ -37,6 +38,7 @@ import { RetailerInvoicesComponent } from './components/retailer-invoices/retail
     OpeningBalanceComponent,
     LedgerComponent,
     RetailerInvoicesComponent,
+    RetailersInvListComponent,
   ],
   providers: [RetailerService],
 })

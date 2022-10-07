@@ -58,6 +58,7 @@ export const API_URLS = {
   UPDATE_LOAD_ORDER_ITEM_ALLOCATION: '/updateLoadOrderItemAllocation',
   CLEAR_LOAD_ITEM_ALLOCATION: '/clearLoadItemAllocation',
   SAVE_LOAD_ITEM_ALLOCATION: '/saveLoadItemAllocation',
+  GET_ALL_RETAILERS_CREDITS: '/getAllRetailersCredits',
   GET_LOAD_ORDERS_PREFS: '/getLoadOrdersPrefs',
   LS_PDF: '/LoadSheetDataPdf',
   DSR_PDF: '/pdfDSRNew',

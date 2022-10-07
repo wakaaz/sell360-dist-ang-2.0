@@ -125,9 +125,17 @@ export const retailerSubMenu = {
     },
     {
       title: 'Credit Invoices',
-      link: '/retailer/credit-invoices',
+      link: '/retailer/retailers-invoices-list',
       icon: '/assets/images/invoice-management-icon.svg',
     },
+    
+    // {
+    //   title: 'Credit Invoices',
+    //   link: '/retailer/credit-invoices',
+    //   icon: '/assets/images/invoice-management-icon.svg',
+    // },
+
+     
   ],
 };
 export const reportsSubMenu = {

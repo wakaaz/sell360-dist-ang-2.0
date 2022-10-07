@@ -1452,7 +1452,6 @@ font-family: 'proximanova-light', sans-serif !important; font-size: 18px;
 .expand-btn{font-size: 18px; color: #a2a2a2}
 .expand-btn:hover{color: #282828}
 
-
 .table-dist {
 	margin: 0;
 }
@@ -1477,8 +1476,8 @@ font-family: 'proximanova-light', sans-serif !important; font-size: 18px;
 .table-dist tfoot th {
 	border-top: solid 1px #282828; background-color: #f6f6f6;
 }
-/* ::-webkit-calendar-picker-indicator {
-	background: url(../../../assets/images/calendar3.svg) center/75% no-repeat;
+::-webkit-calendar-picker-indicator {
+	background: url(../../../assets/images/calendar-icon002.svg) center/75% no-repeat;
 	color: #0038ba !important;	 
 
-} */
+}

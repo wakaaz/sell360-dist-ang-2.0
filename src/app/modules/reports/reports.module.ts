@@ -20,6 +20,7 @@ import { SpotSaleComponent } from './components/spot-sale/spot-sale.component';
 import { StockOutReportComponent } from './components/stock-out-report/stock-out-report.component';
 import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component';
 import { AllReportComponent } from './components/all-report/all-report.component';
+import { InvoiceAgingReportComponent } from './components/invoice-aging-report/invoice-aging-report.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import { AllReportComponent } from './components/all-report/all-report.component
     SpotSaleComponent,
     StockOutReportComponent,
     OrderBookerListComponent,
-    AllReportComponent
+    AllReportComponent,
+    InvoiceAgingReportComponent
   ],
   providers: [
     ReportsService, OrdersService, RetailerService

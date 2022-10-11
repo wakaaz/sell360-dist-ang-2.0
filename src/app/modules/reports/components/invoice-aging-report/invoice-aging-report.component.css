@@ -1,0 +1,30 @@
+@import '../../../../../styles/product.css';
+.topstats {
+    margin-top: 15px;
+    font-size: 14px;
+}
+.topstats .gary-box {
+    line-height: 1;
+    background-color: #f9f9f9;
+    border-bottom: solid 1px #d1d1d1;
+    padding: 10px;
+    letter-spacing: 1px;
+}
+.topstats .gary-box span {
+    font-family: 'Rationale', sans-serif;
+    color: #0038ba;
+    font-size: 18px;
+    float: right;
+    margin-top: -2px;
+    padding-left: 15px;
+}
+._cust_filter {
+    width: 260px;
+    margin-bottom: 10px;
+}
+.filter-title {
+    float: left;
+    padding-top: 7px;
+    padding-right: 15px;
+    font-size: 14px;
+}

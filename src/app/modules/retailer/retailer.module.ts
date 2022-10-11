@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DataTablesModule } from 'angular-datatables';
 import { ClickOutsideModule } from 'ng-click-outside';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChartsModule } from 'ng2-charts';
 
 import { SharedModule } from '../shared/shared.module';
@@ -24,6 +24,7 @@ import { RetailerInvoicesComponent } from './components/retailer-invoices/retail
     CommonModule,
     FormsModule,
     SharedModule,
+    ReactiveFormsModule,
     DataTablesModule,
     ClickOutsideModule,
     NgSelectModule,

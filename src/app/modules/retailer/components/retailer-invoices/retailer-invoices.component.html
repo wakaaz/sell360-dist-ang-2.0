@@ -31,6 +31,7 @@
           Add Recovery<span></span>
         </h5>
         <button
+          id="closemodelrecovery"
           type="button"
           class="close"
           data-dismiss="modal"
@@ -39,51 +40,93 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body RecoveryAMT">
-        <div class="row">
-          <div class="col-6 pl-20">Total Invoice Amount:</div>
-          <div class="col-6 amt-due-v">58,558</div>
-        </div>
-        <div class="row">
-          <div class="col-6 pl-20">Paid Amount:</div>
-          <div class="col-6 amt-due-v">4,350</div>
-        </div>
-        <div class="row">
-          <div class="col-6 pl-20">Amount Due:</div>
-          <div class="col-6 amt-due-v">25,000</div>
-        </div>
+      <form>
+        <div class="modal-body RecoveryAMT">
+          <div class="row">
+            <div class="col-6 pl-20">Total Invoice Amount:</div>
+            <div class="col-6 amt-due-v">
+              {{ recoverModel?.invoice_amount | number: "1.2-2" }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 pl-20">Paid Amount:</div>
+            <div class="col-6 amt-due-v">
+              {{ recoverModel?.paid_amount | number: "1.2-2" }}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6 pl-20">Amount Due:</div>
+            <div class="col-6 amt-due-v">
+              {{ recoverModel?.amount_due | number: "1.2-2" }}
+            </div>
+          </div>
 
-        <div class="row">
-          <div class="col-6 pl-20 PT-15">Add Recovery Amount.:</div>
-          <div class="col-6">
-            <input type="text" class="form-control" />
+          <div class="row">
+            <div class="col-6 pl-20 PT-15">Add Recovery Amount.:</div>
+            <div class="col-6">
+              <input
+                type="text"
+                name="recoverd_amount"
+                class="form-control"
+                (keyup)="setQuantity(recoveryForm)"
+                required
+                (keydown)="isNumber($event, 'quantity')"
+                [(ngModel)]="recoveryForm.recoverd_amount"
+                #selectedRecoverd_amount="ngModel"
+              />
+              <span
+                *ngIf="selectedRecoverd_amount.errors?.required"
+                class="input-error"
+              >
+                Please Add Recovery Ammount!
+              </span>
+            </div>
+          </div>
+          <div class="row" *ngIf="permissions.Secondary_Orders.extra_discount">
+            <div class="col-6 pl-20 PT-15">Add Dicsount Amount.:</div>
+            <div class="col-6">
+              <input
+                type="text"
+                name="invoice_discount"
+                class="form-control"
+                (keyup)="setDiscpunt(recoveryForm)"
+                (keydown)="isNumber($event, 'quantity')"
+                [(ngModel)]="recoveryForm.invoice_discount"
+                #selectedinvoice_discount="ngModel"
+              />
+              <!-- <span
+                *ngIf="selectedinvoice_discount.errors?.required"
+                class="input-error"
+              >
+                Please Add Discount Ammount!
+              </span> -->
+            </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-6 pl-20 PT-15">Add Dicsount Amount.:</div>
-          <div class="col-6">
-            <input type="text" class="form-control" />
-          </div>
+        <div class="modal-footer border-0">
+          <button
+            type="button"
+            [disabled]="recoveryForm.recoverd_amount > 0 ? false : true"
+            (click)="onAddRecovery()"
+            class="btn btn-primary w-100"
+            style="letter-spacing: 1px"
+          >
+            <div
+              *ngIf="recoveryBtnLoading"
+              class="spinner-border"
+              role="status"
+            >
+              <span class="sr-only"></span>
+            </div>
+            {{ recoveryBtnLoading ? "" : "Add" }}
+          </button>
         </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button
-          type="button"
-          (click)="onAddRecovery()"
-          class="btn btn-primary w-100"
-          style="letter-spacing: 1px"
-        >
-          <div *ngIf="recoveryBtnLoading" class="spinner-border" role="status">
-            <span class="sr-only"></span>
-          </div>
-          {{ recoveryBtnLoading ? "" : "Add" }}
-        </button>
-      </div>
+      </form>
     </div>
   </div>
 </div>
 
-<div class="container">
+<div class="container" *ngIf="!showDetails">
   <div class="row mt-2 mb-3">
     <div class="col-lg-6 col-md-6 col-sm-6">
       <h2 class="_head01">Credit <span>Invoices</span></h2>
@@ -162,14 +205,33 @@
                 <td>{{ totalValues.shop_code }}</td>
                 <td>{{ totalValues?.retailer_name }}</td>
                 <td>{{ item?.op_balance }}</td>
-                <td>{{ item?.invoice_number ? item?.invoice_number : "-" }}</td>
-                <td>{{ item?.created_at | date: "mediumDate" }}</td>
-                <td>{{ item.aging }}</td>
-                <td>{{ item.amount | number: "1.2-2" }}</td>
-                <td>15,000</td>
-                <td>15,000</td>
                 <td>
-                  <button class="btn btn-pdf" title="View Bill">
+                  {{
+                    item?.invoice_number
+                      ? item?.invoice_number
+                      : "Opening Balance"
+                  }}
+                </td>
+                <td>
+                  {{
+                    item?.invoice_date
+                      ? (item?.invoice_date | date: "mediumDate")
+                      : "N/A"
+                  }}
+                </td>
+                <td>{{ item.aging }}</td>
+                <td>{{ item.invoice_amount | number: "1.2-2" }}</td>
+                <td>{{ item?.paid_amount | number: "1.2-2" }}</td>
+                <td>{{ item?.amount_due | number: "1.2-2" }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-pdf"
+                    title="View Bill"
+                    data-toggle="modal"
+                    data-target="#exampleModal2"
+                    (click)="showDetails = true; openDetailsModal(item.id)"
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -188,6 +250,7 @@
                   </button>
 
                   <button
+                    type="button"
                     class="btn btn-pdf"
                     title="Add Recovery"
                     data-toggle="modal"
@@ -238,6 +301,221 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="modal fade"
+  style="overflow-y: auto"
+  [ngClass]="showDetails ? 'show active' : ''"
+  id="exampleModal2"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModal2Label"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-full modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          (click)="showDetails = false; closeDetailsModal()"
+          style="font-size: 30px; outline: none"
+        >
+          ×
+        </button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="container">
+          <div class="row">
+            <div *ngIf="!loading" class="col-12">
+              <div class="card">
+                <div class="p-10" style="border-bottom: solid 2px #000">
+                  <div class="row m-0">
+                    <div class="col-8 OrderLogo">
+                      <img src="assets/images/sell-360.svg" alt="" />
+                    </div>
+                    <div class="col-4 ord-no">
+                      Order #
+                      <strong>{{ orderDetail?.retailer_detail?.id }}</strong>
+                    </div>
+                  </div>
+                </div>
+                <div class="body" style="padding: 15px 20px">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-body">
+                        <div class="row OrderInfo">
+                          <div class="col-md-9">
+                            <span>Retailer Name: </span>
+                            <strong>
+                              {{
+                                orderDetail?.retailer_detail.retailer_name
+                              }} </strong
+                            ><br />
+                            <span>Phone No: </span>
+                            <strong>
+                              {{
+                                orderDetail?.retailer_detail.retailer_phone
+                              }} </strong
+                            ><br />
+                            <span>Location: </span>
+                            <strong>
+                              {{
+                                orderDetail?.retailer_detail.retailer_address
+                              }}
+                            </strong>
+                          </div>
+
+                          <div class="col-md-3 p-0">
+                            <span>Status: </span>
+                            <strong>
+                              {{ orderDetail?.retailer_detail.status }} </strong
+                            ><br />
+                            <span>Booking Date: </span>
+                            <strong>
+                              {{
+                                orderDetail?.retailer_detail.order_date
+                              }} </strong
+                            ><br />
+                            <span>Employee: </span>
+                            <strong>
+                              {{ orderDetail?.retailer_detail.employee_name }}
+                            </strong>
+                          </div>
+                        </div>
+
+                        <div class="seprator-block"></div>
+
+                        <div class="Order-Detail-table mt-30">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th><strong>Code</strong></th>
+                                <th><strong>Product Name</strong></th>
+                                <th><strong>CTN</strong></th>
+                                <th><strong>BOX/PCS</strong></th>
+                                <th><strong>T.P</strong></th>
+                                <th><strong>GR Amt</strong></th>
+                                <th><strong>T.O</strong></th>
+                                <th><strong>T.Disc</strong></th>
+                                <th><strong>SPC.Disc</strong></th>
+                                <th><strong>Net.Amt</strong></th>
+                              </tr>
+                            </thead>
+                            <tbody class="order_items_body">
+                              <tr
+                                *ngFor="let item of orderDetail?.order_detail"
+                              >
+                                <td>{{ item.item_sku }}</td>
+                                <td>{{ item.item_name }}</td>
+                                <td>{{ item.parent_qty }}</td>
+                                <td>{{ item.child_qty }}</td>
+                                <td>{{ item.original_price }}</td>
+                                <td>
+                                  {{
+                                    item.original_price * item.quantity
+                                      | decimal
+                                  }}
+                                </td>
+                                <td>
+                                  {{
+                                    item.scheme_discount * item.quantity
+                                      | number: "1.2-2"
+                                  }}
+                                </td>
+                                <td>
+                                  {{
+                                    item.merchant_discount_pkr * item.quantity
+                                      | number: "1.2-2"
+                                  }}
+                                </td>
+                                <td>
+                                  {{
+                                    item.special_discount * item.quantity
+                                      | number: "1.2-2"
+                                  }}
+                                </td>
+                                <td>
+                                  {{ item.final_price | number: "1.2-2" }}
+                                </td>
+                              </tr>
+                              <!-- <tr>
+                                                              <td class="border-0"></td>
+                                                              <td class="border-0"></td>
+                                                              <td class="border-0"></td>
+                                                              <td class="border-0"></td>
+                                                              <td class="border-0"></td>
+                                                              <td class="border-0"></td>
+                                                              <td class="border-0"></td>
+                                                              <td class="border-0"></td>
+                                                              <td><strong>Subtotal PKR.</strong></td>
+                                                              <td><strong>{{orderDetail?.subTotal | number: '1.2-2'}}</strong></td>
+                                                          </tr> -->
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td><strong>Total Discount PKR.</strong></td>
+                                <td>
+                                  <strong>{{
+                                    orderDetail?.totalDiscount | decimal
+                                  }}</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td style="background-color: #000; color: #fff">
+                                  <strong>Total PKR.</strong>
+                                </td>
+                                <td style="background-color: #000; color: #fff">
+                                  <strong>{{
+                                    orderDetail?.retailer_detail?.order_total
+                                      | number: "1.2-2"
+                                  }}</strong>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+
+                          <div class="clearfix"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="loading" class="col-12">
+              <app-loader-white></app-loader-white>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <div class="modal-footer button-list">
+              <button type="button" class="btn btn-primary btn-outline"><i class="fa fa-file-pdf"> </i> <span> Save
+                      PDF</span> </button> <button type="button" class="btn btn-primary btn-outline"> <i
+                      class="fa fa-envelope"> </i> <span> Send Email</span> </button> <button type="button"
+                  class="btn btn-primary btn-outline"><i class="fa fa-print"></i> <span> Print</span> </button>
+
+          </div> -->
     </div>
   </div>
 </div>

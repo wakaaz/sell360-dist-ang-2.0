@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RetailerService } from '../../services/retailer.service';
-
 @Component({
   selector: 'app-retailers-invoices-list',
   templateUrl: './retailers-invoices-list.component.html',
@@ -11,6 +10,7 @@ export class RetailersInvListComponent implements OnInit {
   dtOptions: DataTables.Settings;
   subscriptions: Subscription[] = [];
   creditInvoicesData: any = [];
+  total: any = {};
   loading = false;
 
   constructor(private retailerService: RetailerService) {}
@@ -25,8 +25,9 @@ export class RetailersInvListComponent implements OnInit {
   getRetailerInvoices() {
     this.loading = true;
     this.retailerService.getAllRetailersCredits().subscribe((data: any) => {
-      this.creditInvoicesData = data.data;
-      console.log('credit invoices -> ', this.creditInvoicesData);
+      this.creditInvoicesData = data.data.retailers;
+      this.total = data.data.total;
+      console.log('credit invoices -> ', this.total);
       this.loading = false;
     });
   }

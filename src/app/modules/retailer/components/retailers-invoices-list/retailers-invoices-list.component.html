@@ -23,25 +23,27 @@
               <div class="col pr-0">
                 <div class="gary-box">
                   <strong>TTL. Credit Retailers:</strong>
-                  <span>5485</span>
+                  <span>{{
+                    total?.ttl_credit_retialer | number: "1.2-2"
+                  }}</span>
                 </div>
               </div>
               <div class="col pr-0">
                 <div class="gary-box">
                   <strong>TTL. O.B Due:</strong>
-                  <span>Rs. 5485</span>
+                  <span>Rs. {{ total?.ttl_ob_credit | number: "1.2-2" }}</span>
                 </div>
               </div>
               <div class="col pr-0">
                 <div class="gary-box">
                   <strong>TTL. INVs:</strong>
-                  <span>5485</span>
+                  <span>{{ total?.ttl_invoices | number: "1.2-2" }}</span>
                 </div>
               </div>
               <div class="col">
                 <div class="gary-box">
                   <strong>TTL. INV AMNT:</strong>
-                  <span>Rs. 5485</span>
+                  <span>Rs. {{ total?.ttl_inv_amount | number: "1.2-2" }}</span>
                 </div>
               </div>
             </div>

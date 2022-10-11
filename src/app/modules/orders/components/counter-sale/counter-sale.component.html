@@ -96,7 +96,6 @@
               required
               (keydown)="isNumber($event, 'quantity')"
               [(ngModel)]="selectedProduct.stockQty"
-              [max]="999999"
               #selectedQty="ngModel"
               style="font-size: 13px"
             />

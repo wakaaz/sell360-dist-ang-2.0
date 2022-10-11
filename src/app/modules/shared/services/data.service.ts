@@ -1,10 +1,16 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { API_URLS } from 'src/app/core/constants/api-urls.constants';
+import { HttpBaseService } from 'src/app/core/services/http.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { environment } from '../../../../environments/environment';
 
 @Injectable()
 export class DataService {
-  constructor(private toastService: ToasterService) {}
+  constructor(
+    private toastService: ToasterService,
+    private baseService: HttpBaseService
+  ) {}
 
   calculateUnitPrice(unitPurchased: number, perUnitPrice: number): number {
     return unitPurchased * perUnitPrice;
@@ -481,5 +487,10 @@ export class DataService {
       return false;
     }
     return !isNaN(Number(event.key.trim()));
+  }
+
+  getViewOrderDetailById(orderid: number): Observable<any> {
+    const url = `${API_URLS.VIEW_ORDER_DETAIL}/${orderid}`;
+    return this.baseService.get(url);
   }
 }

@@ -39,4 +39,23 @@ export class RetailerService {
     const url = `${API_URLS.GET_ALL_RETAILERS_CREDITS}`;
     return this.httpBaseService.get(url);
   }
+
+  // GET:: /getRetailersCreditInvoices/{retailer_id}
+  getRetailersCreditInvoices(retailer_id: number): Observable<any> {
+    const url = `${API_URLS.GET_RETAILER_CREDIT_INVOICES}/${retailer_id}`;
+    return this.httpBaseService.get(url);
+  }
+
+  //   POST:: /addRetailersCreditRecovery
+  // payload:: {
+  // 'id'                => 'Retailer credit invoice id (primary)',
+  //                                         'retailer_id'       => 'Retailer id (primary)' ,
+  //                                         'recoverd_amount'   => 'Recoverd amount( must be greater than zero )' ,
+  //                                         'invoice_discount'  => 'Invoice Discount is optional' ,
+  // }
+
+  addRetailersCreditRecovery(model: any): Observable<any> {
+    const url = `${API_URLS.ADD_RETAILER_CREDIT_RECOVERY}`;
+    return this.httpBaseService.post(url, model);
+  }
 }

@@ -40,7 +40,7 @@ const routes: Routes = [
         component: RetailersInvListComponent,
       },
       {
-        path: 'credit-invoices',
+        path: 'credit-invoices/:retailerId',
         pathMatch: 'full',
         component: RetailerInvoicesComponent,
       },

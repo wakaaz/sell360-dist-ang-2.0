@@ -55,16 +55,28 @@
 
         <div class="row">
           <div class="col-6 pl-20 PT-15">Add Recovery Amount.:</div>
-          <div class="col-6"><input type="text" class="form-control" /></div>
+          <div class="col-6">
+            <input type="text" class="form-control" />
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-6 pl-20 PT-15">Add Dicsount Amount.:</div>
+          <div class="col-6">
+            <input type="text" class="form-control" />
+          </div>
         </div>
       </div>
       <div class="modal-footer border-0">
         <button
           type="button"
+          (click)="onAddRecovery()"
           class="btn btn-primary w-100"
           style="letter-spacing: 1px"
         >
-          Add
+          <div *ngIf="recoveryBtnLoading" class="spinner-border" role="status">
+            <span class="sr-only"></span>
+          </div>
+          {{ recoveryBtnLoading ? "" : "Add" }}
         </button>
       </div>
     </div>
@@ -96,25 +108,25 @@
               <div class="col pr-0">
                 <div class="gary-box">
                   <strong>TTL. Credit Retailers:</strong>
-                  <span>5485</span>
+                  <span>{{ totalValues.ttl_credit_retialer }}</span>
                 </div>
               </div>
               <div class="col pr-0">
                 <div class="gary-box">
                   <strong>TTL. O.B Due:</strong>
-                  <span>Rs. 5485</span>
+                  <span>Rs. {{ totalValues.ttl_ob_credit }}</span>
                 </div>
               </div>
               <div class="col pr-0">
                 <div class="gary-box">
                   <strong>TTL. INVs:</strong>
-                  <span>5485</span>
+                  <span>{{ totalValues.ttl_invoices }}</span>
                 </div>
               </div>
               <div class="col">
                 <div class="gary-box">
                   <strong>TTL. INV AMNT:</strong>
-                  <span>Rs. 5485</span>
+                  <span>Rs. {{ totalValues.ttl_inv_amount }}</span>
                 </div>
               </div>
             </div>
@@ -123,6 +135,9 @@
 
         <div class="body">
           <table
+            *ngIf="!loading"
+            datatable
+            [dtOptions]="dtOptions"
             class="table table-hover dt-responsive nowrap"
             id="example"
             style="width: 100%"
@@ -144,13 +159,13 @@
 
             <tbody>
               <tr *ngFor="let item of creditInvoicesData">
-                <td>{{ item?.shop_code }}</td>
-                <td>{{ item?.retailer_name }}</td>
+                <td>{{ totalValues.shop_code }}</td>
+                <td>{{ totalValues?.retailer_name }}</td>
                 <td>{{ item?.op_balance }}</td>
-                <td>{{ 12 }}</td>
-                <td>15,000</td>
-                <td>15,000</td>
-                <td>15,000</td>
+                <td>{{ item?.invoice_number ? item?.invoice_number : "-" }}</td>
+                <td>{{ item?.created_at | date: "mediumDate" }}</td>
+                <td>{{ item.aging }}</td>
+                <td>{{ item.amount | number: "1.2-2" }}</td>
                 <td>15,000</td>
                 <td>15,000</td>
                 <td>
@@ -177,6 +192,7 @@
                     title="Add Recovery"
                     data-toggle="modal"
                     data-target="#exampleModal"
+                    (click)="onOpenRecoveryModel(item)"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -216,6 +232,10 @@
               </tr>
             </tbody>
           </table>
+
+          <div class="col-12" *ngIf="loading">
+            <app-loader-white></app-loader-white>
+          </div>
         </div>
       </div>
     </div>

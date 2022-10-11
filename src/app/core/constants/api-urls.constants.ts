@@ -59,6 +59,7 @@ export const API_URLS = {
   CLEAR_LOAD_ITEM_ALLOCATION: '/clearLoadItemAllocation',
   SAVE_LOAD_ITEM_ALLOCATION: '/saveLoadItemAllocation',
   GET_ALL_RETAILERS_CREDITS: '/getAllRetailersCredits',
+  GET_RETAILER_CREDIT_INVOICES: '/getRetailersCreditInvoices',
   GET_LOAD_ORDERS_PREFS: '/getLoadOrdersPrefs',
   LS_PDF: '/LoadSheetDataPdf',
   DSR_PDF: '/pdfDSRNew',
@@ -95,6 +96,7 @@ export const API_URLS = {
   RETAILER_ORDER_DETAIL: '/orderBooker/orderDetail',
   GET_DAILY_SALE_REPORTS: '/GetDailySaleReportList',
   GET_DSR_DETAIL: '/GetDSRDetailByID',
+  ADD_RETAILER_CREDIT_RECOVERY: '/addRetailersCreditRecovery',
 
   // Reports
   DISTRIBUTOR_PURCHASE_HISTORY: '/distributorPurchaseHistory',

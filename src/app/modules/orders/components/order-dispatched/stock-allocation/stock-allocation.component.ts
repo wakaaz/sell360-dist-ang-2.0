@@ -31,21 +31,21 @@ export class StockAllocationComponent implements OnInit {
       pagingType: 'simple_numbers',
       order: [[5, 'desc']],
       processing: true,
-      dom: 'Bfrtip',
-      buttons: [
-        {
-          extend: 'excel',
-          exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6],
-          },
-        },
-        {
-          extend: 'print',
-          exportOptions: {
-            columns: [0, 1, 2, 3, 4, 5, 6],
-          },
-        },
-      ],
+      // dom: 'Bfrtip',
+      // buttons: [
+      //   {
+      //     extend: 'excel',
+      //     exportOptions: {
+      //       columns: [0, 1, 2, 3, 4, 5, 6],
+      //     },
+      //   },
+      //   {
+      //     extend: 'print',
+      //     exportOptions: {
+      //       columns: [0, 1, 2, 3, 4, 5, 6],
+      //     },
+      //   },
+      // ],
     };
     this.assignmentId = this.route.snapshot.paramMap.get('assignId');
 

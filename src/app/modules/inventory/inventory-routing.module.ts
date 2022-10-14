@@ -14,7 +14,7 @@ const routes: Routes = [
     children: [
       {
         path: '',
-        redirectTo: 'gallery'
+        redirectTo: 'gallery',
       },
       {
         path: 'gallery',
@@ -36,12 +36,12 @@ const routes: Routes = [
         pathMatch: 'full',
         component: AddStockComponent,
       },
-    ]
-  }
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class InvenotryRoutingModule { }
+export class InvenotryRoutingModule {}

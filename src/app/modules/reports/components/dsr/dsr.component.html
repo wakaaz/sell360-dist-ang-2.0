@@ -1,55 +1,104 @@
 <div class="container">
-
-    <div class="row mt-2 mb-2">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Daily <span> Sales Report</span></h2>
-        </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <ol class="breadcrumb">
-                <li><a><span>Report</span></a></li>
-                <li><span>DSR</span></li>
-            </ol>
-        </div>
+  <div class="row mt-2 mb-2">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <h2 class="_head01">Daily <span> Sales Report</span></h2>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <ol class="breadcrumb">
+        <li>
+          <a><span>Report</span></a>
+        </li>
+        <li><span>DSR</span></li>
+      </ol>
+    </div>
+  </div>
 
-                <div class="header addPR-head">
-                    <div class="float-left">
-                        <h3>Select Date</h3>
-                    </div>
-                    <div class="_PR_filter pr-15" style="width: 170px!important;">
-                        <div class="form-group mb-0" style="height: auto">
-                            <input type="date" [(ngModel)]="orderDate" (change)="getSaleReportsBySalemanAndDate()" id="datepicker" class="form-control" placeholder="">
-                        </div>
-                    </div>
-                    <div class="float-left">
-                        <h3>Select Salesman</h3>
-                    </div>
-                    <div class="_PR_filter pr-15">
-                        <div class="form-s2">
-                            <ng-select class="form-control formselect" [(ngModel)]="selecetdSalemanId" (change)="getSaleReportsBySalemanAndDate()" placeholder="Select Salesman"
-                                style="width: 100%!important">
-                                <ng-option *ngFor="let saleman of salesmen;let i=index" [value]="saleman.id">{{saleman.name}}</ng-option>
-                            </ng-select>
-                        </div>
-                    </div>
-                    <div *ngIf="selecetdSalemanId && salemanDSR.length" class="float-left">
-                        <h3>Select DSR</h3>
-                    </div>
-                    <div *ngIf="selecetdSalemanId && salemanDSR.length" class="_PR_filter pr-15">
-                        <div class="form-s2">
-                            <ng-select class="form-control formselect" placeholder="Select DSR"
-                                style="width: 100%!important" (change)="getDSRDetail($event)">
-                                <ng-option *ngFor="let dsr of salemanDSR;let i=index" [value]="dsr.id">{{dsr.unique_id}}</ng-option>
-                            </ng-select>
-                        </div>
-                    </div>
-                </div>
-
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header addPR-head">
+          <div class="float-left">
+            <h3>Select Date</h3>
+          </div>
+          <div class="_PR_filter pr-15" style="width: 170px !important">
+            <div class="form-group mb-0" style="height: auto">
+              <input
+                type="date"
+                [(ngModel)]="orderDate"
+                (change)="getSaleReportsBySalemanAndDate()"
+                id="datepicker"
+                class="form-control"
+                placeholder=""
+              />
+            </div>
+          </div>
+          <div class="float-left">
+            <h3>Select Salesman</h3>
+          </div>
+          <div class="_PR_filter pr-15">
+            <div class="form-s2">
+              <ng-select
+                class="form-control formselect"
+                [(ngModel)]="selecetdSalemanId"
+                (change)="getSaleReportsBySalemanAndDate()"
+                placeholder="Select Salesman"
+                style="width: 100% !important"
+              >
+                <ng-option
+                  *ngFor="let saleman of salesmen; let i = index"
+                  [value]="saleman.id"
+                  >{{ saleman.name }}</ng-option
+                >
+              </ng-select>
+            </div>
+          </div>
+          <div
+            *ngIf="selecetdSalemanId && salemanDSR.length"
+            class="float-left"
+          >
+            <h3>Select DSR</h3>
+          </div>
+          <div
+            *ngIf="selecetdSalemanId && salemanDSR.length"
+            class="_PR_filter pr-15"
+          >
+            <div class="form-s2">
+              <ng-select
+                class="form-control formselect"
+                placeholder="Select DSR"
+                style="width: 100% !important"
+                (change)="getDSRDetail($event)"
+              >
+                <ng-option
+                  *ngFor="let dsr of salemanDSR; let i = index"
+                  [value]="dsr.id"
+                  >{{ dsr.unique_id }}</ng-option
+                >
+              </ng-select>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div
+            class="col-md-12 text-right"
+            style="
+              background-color: #f3f3f3;
+              padding: 10px 15px;
+              margin-top: 5px;
+              margin-bottom: 5px;
+            "
+          >
+            <button
+              *ngIf="selectedDSR"
+              (click)="generateDSR()"
+              class="btn btn-primary"
+            >
+              Generate DSR
+            </button>
+          </div>
+        </div>
+        <!-- 
                 <div class="body pb-0">
                     <table *ngIf="!loading" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
                         <thead>
@@ -108,9 +157,114 @@
                         </div>
                     </div>
 
-                </div>
-            </div>
-        </div>
+                </div> -->
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-2 mb-2">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <h2 class="_head01">Custom <span> Sales Report</span></h2>
     </div>
 
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <ol class="breadcrumb">
+        <li>
+          <a><span>Report</span></a>
+        </li>
+        <li><span>DSR</span></li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="header addPR-head">
+          <div class="float-left">
+            <h3>Start Date</h3>
+          </div>
+          <div class="_PR_filter pr-15" style="width: 170px !important">
+            <div class="form-group mb-0" style="height: auto">
+              <input
+                type="date"
+                [(ngModel)]="startOrderDate"
+                (change)="getSaleReportsBySalemanAndStartDateEndDate()"
+                id="datepicker"
+                class="form-control"
+                placeholder=""
+              />
+            </div>
+            <div class="float-left">
+              <h3>End Date</h3>
+            </div>
+            <div class="_PR_filter pr-15" style="width: 170px !important">
+              <div class="form-group mb-0" style="height: auto">
+                <input
+                  type="date"
+                  [(ngModel)]="endOrderDate"
+                  (change)="getSaleReportsBySalemanAndStartDateEndDate()"
+                  id="datepicker"
+                  class="form-control"
+                  placeholder=""
+                />
+              </div>
+            </div>
+            <div class="float-left">
+              <h3>Select Salesman</h3>
+            </div>
+            <div class="_PR_filter pr-15">
+              <div class="form-s2">
+                <!-- (change)="getSaleReportsBySalemanAndDate()" -->
+
+                <ng-select
+                  class="form-control formselect"
+                  [(ngModel)]="selectSalemans"
+                  bindLabel="name"
+                  bindValue="id"
+                  [items]="salesmen"
+                  [closeOnSelect]="false"
+                  placeholder="Select Salesman"
+                  style="width: 100% !important"
+                  [multiple]="true"
+                >
+                  <ng-option
+                    *ngFor="let saleman of salesmen; let i = index"
+                    [value]="saleman.id"
+                  >
+                    <!-- {{ saleman.name }} -->
+                    <input
+                      id="item-{{ i }}"
+                      type="checkbox"
+                      [ngModel]="saleman.id"
+                    />
+                    {{ saleman.name }}
+                  </ng-option>
+                </ng-select>
+                <!-- <small>{{ selectSalemans | json }}</small> -->
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div
+              class="col-md-12 text-right"
+              style="
+                background-color: #f3f3f3;
+                padding: 10px 15px;
+                margin-top: 5px;
+                margin-bottom: 5px;
+              "
+            >
+              <button
+                (click)="generateDSRCustomPdfReport()"
+                class="btn btn-primary"
+              >
+                Generate DSR
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

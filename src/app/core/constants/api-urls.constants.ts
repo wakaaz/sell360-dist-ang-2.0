@@ -30,6 +30,7 @@ export const API_URLS = {
   GET_RETAILERS_BY_ROUTE: '/getRetailersByRoute',
   GET_NEW_ORDERS: '/getNewOrders',
   GET_SALE_HISTORY: '/orderBooker',
+  GET_ALL_CREDITED_BOOKERS: '/getAllCreditedBookers',
   GET_SALE_HISTORY_SEARCH_CRITERIA: '/retailers/core',
   ASSIGN_SALESMAN: '/assignSalesman',
   DISPATCH_ORDER_LISTING: '/dispatchOrderListing',
@@ -63,6 +64,8 @@ export const API_URLS = {
   GET_LOAD_ORDERS_PREFS: '/getLoadOrdersPrefs',
   LS_PDF: '/LoadSheetDataPdf',
   DSR_PDF: '/pdfDSRNew',
+  DSRS_PDF_REPORT: '/dsrs-pdf-report',
+  BOOKER_WISE_CREDIT_AGEING_REPORT: '/booker-wise-credit-ageing-report',
 
   // Salesmen
   GET_ALL_SALESMEN: '/getAllSalesman',

@@ -173,16 +173,22 @@
           <h4>Current <span> Stock</span></h4>
           <h2 class="digit">
             <span style="font-size: 22px; margin-right: 30px"
-              ><small>QTY:</small> 254,548 CTNs</span
+              ><small>QTY:</small>
+              {{ homeReportMonthly?.distributor_sellable_qty | decimal }}
+              CTNs</span
             >
-            <small>Rs.</small> 45,000,000
+            <small>Rs.</small>
+            {{ homeReportMonthly?.distributor_gross_value | decimal }}
           </h2>
         </div>
       </div>
       <div class="col-md-6">
         <div class="card mt-0" style="height: 85px">
           <h4>Market <span>Credit</span></h4>
-          <h2 class="digit"><small>Rs.</small> 45,000,000</h2>
+          <h2 class="digit">
+            <small>Rs.</small>
+            {{ homeReportMonthly?.retailer_credits | decimal }}
+          </h2>
         </div>
       </div>
     </div>

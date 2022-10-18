@@ -127,7 +127,7 @@
       <div class="header">
         <h2>Products <span>List</span></h2>
       </div>
-      <div class="body">
+      <div class="body" *ngIf="!loading">
         <table
           datatable
           [dtOptions]="dtOptions"
@@ -228,6 +228,9 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div *ngIf="loading" class="col-12">
+        <app-loader-white></app-loader-white>
       </div>
       <div class="container-fluid p-0">
         <div

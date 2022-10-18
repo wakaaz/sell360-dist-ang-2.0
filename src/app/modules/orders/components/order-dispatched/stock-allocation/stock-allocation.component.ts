@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { DataService } from 'src/app/modules/shared/services';
 import { OrdersService } from '../../../services/orders.service';
 
@@ -21,7 +22,8 @@ export class StockAllocationComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private orderService: OrdersService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private toastService: ToasterService
   ) {}
 
   ngOnInit(): void {
@@ -58,10 +60,22 @@ export class StockAllocationComponent implements OnInit {
       (x) => {
         this.tabLoading = false;
         this.orderService.setCheckAllocationSuccess(true);
+        const toast: Toaster = {
+          type: 'success',
+          message: 'Allocation Quanity Verified',
+          title: 'Success:',
+        };
+        this.toastService.showToaster(toast);
       },
       (err) => {
         this.tabLoading = false;
         this.orderService.setCheckAllocationSuccess(false);
+        const toast: Toaster = {
+          type: 'error',
+          message: err.error.message,
+          title: 'Error:',
+        };
+        this.toastService.showToaster(toast);
       }
     );
   }
@@ -87,6 +101,7 @@ export class StockAllocationComponent implements OnInit {
         document
           .getElementsByClassName('overlay-blure')[0]
           .classList.add('d-block');
+
         // document.getElementById('blureEffct-1').classList.add('blur-div');
       });
   }
@@ -131,10 +146,22 @@ export class StockAllocationComponent implements OnInit {
       .subscribe(
         (x) => {
           item.updateLoading = false;
-          console.log('success');
+          const toast: Toaster = {
+            type: 'success',
+            message: 'Allocated Quanity Updated',
+            title: 'Success:',
+          };
+          this.toastService.showToaster(toast);
         },
-        (errr) => {
+        (err) => {
           item.updateLoading = false;
+          const toast: Toaster = {
+            type: 'error',
+            message:
+              'Requested allocation quantity is greater than available stock.',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
         }
       );
   }
@@ -148,9 +175,27 @@ export class StockAllocationComponent implements OnInit {
         order.pref_id,
         order.booked_qty
       )
-      .subscribe((x) => {
-        order.updateLoading = false;
-      });
+      .subscribe(
+        (x) => {
+          order.updateLoading = false;
+          const toast: Toaster = {
+            type: 'success',
+            message: 'Allocated Quanity Updated',
+            title: 'Success:',
+          };
+          this.toastService.showToaster(toast);
+        },
+        (err) => {
+          order.updateLoading = false;
+          const toast: Toaster = {
+            type: 'error',
+            message:
+              'Requested allocation quantity is greater than available stock.',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      );
   }
 
   clearLoadItemAllocation(item: any) {
@@ -160,6 +205,13 @@ export class StockAllocationComponent implements OnInit {
       .subscribe((x) => {
         item.cancelLoading = false;
         this.closeSideBar.emit(true);
+
+        const toast: Toaster = {
+          type: 'success',
+          message: 'Allocated Quanity Updated',
+          title: 'Success:',
+        };
+        this.toastService.showToaster(toast);
       });
   }
 }

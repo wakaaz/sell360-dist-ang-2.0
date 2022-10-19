@@ -72,7 +72,8 @@ export class StockAllocationComponent implements OnInit {
         this.orderService.setCheckAllocationSuccess(false);
         const toast: Toaster = {
           type: 'error',
-          message: err.error.message,
+          message:
+            'Requested allocation quantity is greater than available stock.',
           title: 'Error:',
         };
         this.toastService.showToaster(toast);

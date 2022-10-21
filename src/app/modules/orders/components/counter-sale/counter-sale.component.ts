@@ -577,31 +577,43 @@ export class CounterSaleComponent implements OnInit {
 
   showProductsList(event: Event): void {
     event.stopPropagation();
-    if (this.selectedRetailer) {
-      this.allProducts = this.allProducts.map((product) => {
-        product.schemes = this.dataService.getSchemes(
-          product.item_id,
-          product.unit_id,
-          product.pref_id,
-          this.schemes,
-          this.selectedRetailer.type_id,
-          this.selectedRetailer.id
-        );
-        return product;
-      });
-      this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
-      this.showProducts = true;
-      document.body.classList.add('no-scroll');
-      document
-        .getElementsByClassName('overlay-blure')[0]
-        .classList.add('d-block');
-      document.getElementById('counter-sale').classList.add('blur-div');
-    } else {
-      this.toastService.showToaster({
+    if (
+      this.paymentTypeCheque === 'full' ||
+      this.paymentTypeCredit === 'full'
+    ) {
+      const toast: Toaster = {
         type: 'error',
-        message: 'Please select Retailer first!',
-        title: 'Fill required fields:',
-      });
+        message: `You selected Full payment for ${this.addedPayment} please remove it if you want to add more products!`,
+        title: `Full Payment selected for ${this.addedPayment}`,
+      };
+      this.toastService.showToaster(toast);
+    } else {
+      if (this.selectedRetailer) {
+        this.allProducts = this.allProducts.map((product) => {
+          product.schemes = this.dataService.getSchemes(
+            product.item_id,
+            product.unit_id,
+            product.pref_id,
+            this.schemes,
+            this.selectedRetailer.type_id,
+            this.selectedRetailer.id
+          );
+          return product;
+        });
+        this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
+        this.showProducts = true;
+        document.body.classList.add('no-scroll');
+        document
+          .getElementsByClassName('overlay-blure')[0]
+          .classList.add('d-block');
+        document.getElementById('counter-sale').classList.add('blur-div');
+      } else {
+        this.toastService.showToaster({
+          type: 'error',
+          message: 'Please select Retailer first!',
+          title: 'Fill required fields:',
+        });
+      }
     }
   }
 

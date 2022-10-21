@@ -473,13 +473,13 @@
                               <th colspan="1" style="text-align: center">
                                 Actual
                               </th>
-                              <th colspan="1" style="text-align: center">
+                              <!-- <th colspan="1" style="text-align: center">
                                 Issuance
-                              </th>
+                              </th> -->
                             </tr>
                             <tr>
                               <th style="text-align: center">BOX/PIECE</th>
-                              <th style="text-align: center">BOX/PIECE</th>
+                              <!-- <th style="text-align: center">BOX/PIECE</th> -->
                             </tr>
                           </thead>
                           <tbody>
@@ -492,7 +492,7 @@
                               <td>{{ item.item_id }}</td>
                               <td>{{ getItemName(item.item_id) }}</td>
                               <td>{{ item.actual_qty | number }}</td>
-                              <td>
+                              <!-- <td>
                                 <input
                                   class="value_input"
                                   [(ngModel)]="item.issued_qty"
@@ -502,7 +502,7 @@
                                   (keyup)="updateDispatchedQty(item)"
                                   (keydown)="isNumber($event, 'quantity')"
                                 />
-                              </td>
+                              </td> -->
                             </tr>
                           </tbody>
                         </table>

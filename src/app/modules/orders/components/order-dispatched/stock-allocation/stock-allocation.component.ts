@@ -130,41 +130,54 @@ export class StockAllocationComponent implements OnInit {
     ) {
       item.current_load_allocated_qty = item.availble_stock_qty;
     }
-    if (+item.current_load_allocated_qty < item.current_load_booked_qty) {
-      item.current_load_allocated_qty = item.current_load_booked_qty;
-    }
+    // if (+item.current_load_allocated_qty < item.current_load_booked_qty) {
+    //   item.current_load_allocated_qty = item.current_load_booked_qty;
+    // }
   }
   onExtraLoadItemAllocation(item: any) {
     // console.log('item => ', item.updateLoading);
-    item.updateLoading = true;
 
-    this.orderService
-      .extraLoadItemAllocation(
-        this.assignmentId,
-        item.pref_id,
-        item.current_load_allocated_qty
-      )
-      .subscribe(
-        (x) => {
-          item.updateLoading = false;
-          const toast: Toaster = {
-            type: 'success',
-            message: 'Allocated Quanity Updated',
-            title: 'Success:',
-          };
-          this.toastService.showToaster(toast);
-        },
-        (err) => {
-          item.updateLoading = false;
-          const toast: Toaster = {
-            type: 'error',
-            message:
-              'Requested allocation quantity is greater than available stock.',
-            title: 'Error:',
-          };
-          this.toastService.showToaster(toast);
-        }
-      );
+    item.updateLoading = true;
+    if (+item.current_load_allocated_qty < item.current_load_booked_qty) {
+      // item.current_load_allocated_qty = item.current_load_booked_qty;
+      item.updateLoading = false;
+      const toast: Toaster = {
+        type: 'error',
+        message:
+          'Requested allocation quantity is less than Booked Qty. Minimum Booked Qty is ' +
+          item.current_load_booked_qty,
+        title: 'Error:',
+      };
+      this.toastService.showToaster(toast);
+    } else {
+      this.orderService
+        .extraLoadItemAllocation(
+          this.assignmentId,
+          item.pref_id,
+          item.current_load_allocated_qty
+        )
+        .subscribe(
+          (x) => {
+            item.updateLoading = false;
+            const toast: Toaster = {
+              type: 'success',
+              message: 'Allocated Quanity Updated',
+              title: 'Success:',
+            };
+            this.toastService.showToaster(toast);
+          },
+          (err) => {
+            item.updateLoading = false;
+            const toast: Toaster = {
+              type: 'error',
+              message:
+                'Requested allocation quantity is greater than available stock.',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+        );
+    }
   }
 
   onUpdateLoadOrderItemAllocation(order: any) {

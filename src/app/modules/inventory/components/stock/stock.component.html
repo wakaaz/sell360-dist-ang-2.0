@@ -210,11 +210,14 @@
             <thead>
               <tr>
                 <th>SKU</th>
-                <th>ITEM</th>
+                <th>{{ "Product Name" | uppercase }}</th>
+                <th>BRAND</th>
+                <th>{{ "Sub Category" | uppercase }}</th>
+                <!-- <th>STOCK DETAILS</th> -->
+                <!-- <th>STATE</th>
+                <th>LAST ADDED ON</th> -->
                 <th>CURRENT STOCK</th>
-                <th>STOCK DETAILS</th>
-                <th>STATE</th>
-                <th>LAST ADDED ON</th>
+
                 <th>ACTION</th>
               </tr>
             </thead>
@@ -222,15 +225,18 @@
               <tr *ngFor="let product of productsStock; let i = index">
                 <td>{{ product.item_sku }}</td>
                 <td>{{ product.item_name }}</td>
-                <td>{{ product.stock || 0 | number }}</td>
-                <td>
+                <td>{{ product.brand_name }}</td>
+                <td>{{ product.sub_cat }}</td>
+                <!-- <td>
                   <span *ngFor="let dt of product.stockDetail; let in = index">
                     {{ dt.type }}: {{ dt.exact | number
                     }}{{ in !== product.stockDetail.length - 1 ? "," : "" }}
                   </span>
-                </td>
-                <td>{{ product.state }}</td>
-                <td>{{ product.created_at }}</td>
+                </td> -->
+                <!-- <td>{{ product.state }}</td>
+                <td>{{ product.created_at }}</td> -->
+                <td>{{ product.stock || 0 | number }}</td>
+
                 <td>
                   <button
                     class="btn btn-default mb-0"

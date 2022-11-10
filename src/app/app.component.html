@@ -54,15 +54,16 @@
     </div>
     <div class="main-links">
       <ul>
-        <li>
+        <!-- <li>
           <a [routerLink]="['dashboard']"
             ><img src="/assets/images/daily-dashboard.svg" alt="" />
              Dashboard</a
           >
-        </li>
+        </li> -->
         <li *ngIf="permissions?.Tabs?.primary_orders">
           <a (click)="openSubmenu($event, 'primaryOrders')"
-            ><img src="/assets/images/new-primary-order.svg" alt="" /> Primary Sales</a
+            ><img src="/assets/images/new-primary-order.svg" alt="" /> Primary
+            Sales</a
           >
         </li>
         <li *ngIf="permissions?.Tabs?.secondary_orders">

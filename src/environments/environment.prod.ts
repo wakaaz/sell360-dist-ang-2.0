@@ -12,4 +12,7 @@ export const environment = {
     NORMAL: 1, // noramal means flat value * qty
     PERCENTAGE: 2, // Percentage means (value/100) * qty
   },
+  ORDER_TYPE: {
+    COUNTER_SALE: 'CounterSale',
+  },
 };

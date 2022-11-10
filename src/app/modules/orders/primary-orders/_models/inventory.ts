@@ -1,0 +1,36 @@
+export interface Inventory {
+  brand_id: number;
+  brand_name: string;
+  child: number;
+  division_id: number;
+  division_nane: string;
+  is_active: number;
+  is_exclusive: number;
+  is_tax: number;
+  item_id: number;
+  item_main_description: string;
+  item_name: string;
+  item_retail_price: number;
+  item_sku: string;
+  item_trade_price: number;
+  item_warehouse_price: number;
+  main_cat: string;
+  name: string;
+  parent_pref_id: number;
+  parent_trade_price: number;
+  parent_unit_id: number;
+  pref_id: number;
+  quantity: number;
+  short_name: string;
+  sub_cat: string;
+  tax_class_amount: number;
+  tax_class_id: number;
+  tax_class_type: string;
+  thumbnail: string;
+  type: string;
+  unit_id: number;
+  unit_name: string;
+  net_amount: number;
+  isAdded: boolean;
+  schemes: any;
+}

@@ -27,6 +27,7 @@ import { ExecutionService } from './services/execution.service';
 import { SpotSaleService } from './services/spot-sale.service';
 import { RetailerRecoveryComponent } from './components/retailer-recovery/retailer-recovery.component';
 import { StockAllocationComponent } from './components/order-dispatched/stock-allocation/stock-allocation.component';
+import { NewCounterSaleComponent } from './components/new-counter-sale/new-counter-sale.component';
 
 @NgModule({
   imports: [
@@ -48,6 +49,7 @@ import { StockAllocationComponent } from './components/order-dispatched/stock-al
     ExecuteOrderComponent,
     CompletedOrdersComponent,
     CounterSaleComponent,
+    NewCounterSaleComponent,
     BookingVsExecutionComponent,
     CompletedOrdersDetailComponent,
     RetailerRecoveryComponent,

@@ -1,0 +1,269 @@
+<!-- Counter Sale -->
+<div id="counter-sale" class="container _order-container">
+  <div class="row mt-2 mb-2">
+    <div class="col-md-12">
+      <h2 class="_head01 float-left">New <span>Order</span></h2>
+    </div>
+  </div>
+
+  <div class="row mt-2">
+    <div class="col-md-12">
+      <div class="card p-20 top_border mb-3 _INV-h">
+        <div class="row _add-customer">
+          <div class="col-12">
+            <div class="row">
+              <div class="_sa-customer">
+                <div class="form-s2">
+                  <ng-select
+                    [multiple]="false"
+                    class="formselect"
+                    [(ngModel)]="selectedEmployee"
+                    (change)="getRoutes()"
+                    placeholder="Select Employee"
+                  >
+                    <ng-option disabled>Select Employee</ng-option>
+                    <ng-option
+                      *ngFor="let orderBooker of orderBookers"
+                      [value]="orderBooker"
+                      >{{
+                        orderBooker.employee_first_name +
+                          " " +
+                          orderBooker.employee_last_name
+                      }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="_sa-customer">
+                <div class="form-s2">
+                  <ng-select
+                    [multiple]="false"
+                    class="formselect"
+                    [(ngModel)]="selectedRoute"
+                    (change)="getRetailerByRoute()"
+                    placeholder="Select Route"
+                  >
+                    <ng-option *ngIf="!selectedEmployee" disabled
+                      >Select Employee First</ng-option
+                    >
+                    <ng-option *ngIf="selectedEmployee" disabled
+                      >Select Route</ng-option
+                    >
+                    <ng-option *ngFor="let route of routes" [value]="route"
+                      >{{ route.name }}
+                    </ng-option>
+                  </ng-select>
+                </div>
+              </div>
+
+              <div class="_sa-customer">
+                <div class="form-s2">
+                  <ng-select
+                    [multiple]="false"
+                    class="formselect"
+                    (change)="getDiscountSlabs()"
+                    [(ngModel)]="selectedRetailer"
+                    placeholder="Select Retailer"
+                  >
+                    <!-- (change)="getDiscountSlabs()" -->
+
+                    <ng-option disabled *ngIf="!selectedRoute"
+                      >Select Route First</ng-option
+                    >
+                    <ng-option disabled *ngIf="selectedRoute"
+                      >Select Retailer</ng-option
+                    >
+                    <ng-option
+                      *ngFor="let retailer of retailers"
+                      [value]="retailer"
+                    >
+                      {{ retailer.retailer_name }}</ng-option
+                    >
+                  </ng-select>
+                </div>
+              </div>
+
+              <button
+                id="productlist01"
+                class="btn btn-primary ml-15"
+                (click)="showProductsList($event)"
+              >
+                Add Product
+              </button>
+            </div>
+
+            <div class="_cut-detail">
+              <div class="row">
+                <div class="col-md-6">
+                  <strong>Retailer Name: &nbsp; </strong>
+                  {{ selectedRetailer ? selectedRetailer.retailer_name : "--" }}
+                </div>
+                <div class="col-md-6">
+                  <strong>Channel Type: &nbsp; </strong>
+                  {{ selectedRetailer ? selectedRetailer.type : "--" }}
+                  {{
+                    selectedRetailer &&
+                      " (" + selectedRetailer?.segment_name + ")"
+                  }}
+                </div>
+                <div class="col-md-6">
+                  <strong>Location: &nbsp; </strong>
+
+                  {{ selectedRetailer ? selectedRetailer?.loc : "--" }}
+                </div>
+                <div class="col-md-6">
+                  <strong>Territory: &nbsp; </strong>
+                  {{
+                    selectedRetailer
+                      ? selectedRetailer?.territory || "--"
+                      : "--"
+                  }}
+                </div>
+              </div>
+            </div>
+            <h1>Product Details</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="Action_bottom">
+      <div class="container-fluid p-0">
+        <div class="align-right">
+          <button type="submit" class="btn btn-primary mr-2" disabled>
+            <div class="spinner-border text-light" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </button>
+          <button
+            type="submit"
+            class="btn btn-primary btn-cancel mr-2"
+            [routerLink]="['/home']"
+          >
+            Cancel
+          </button>
+          <button class="btn btn-primary">Save Order</button>
+
+          <button class="btn btn-primary float-left mr-2">Add Cheque</button>
+          <button class="btn btn-primary float-left mr-2 red-bg">
+            Remove Cheque
+          </button>
+          <button class="btn btn-primary float-left">Add Credit</button>
+          <button class="btn btn-primary float-left red-bg">
+            Remove Credit
+          </button>
+          <button
+            id="open-modal-payment"
+            style="display: none"
+            data-toggle="modal"
+            data-target="#exampleModal2"
+          >
+            Show Modal
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Products Listing -->
+<div
+  id="product-cl-sec"
+  (clickOutside)="clickedOutSide($event)"
+  [ngClass]="showProducts ? 'active' : ''"
+>
+  <a id="pl-close" (click)="closeProductsList()" class="close-btn-pl"></a>
+  <div class="pro-header-text">Add <span>Product</span></div>
+  <div class="se_cus-type form-wrap p-15">
+    <div class="row">
+      <div class="col-12">
+        <div class="productSearch">
+          <i class="fa fa-search"></i>
+          <input type="text" class="form-control" id="" placeholder="Search" />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pc-cartlist">
+    <div class="overflow-plist">
+      <div class="plist-content">
+        <div class="_left-filter pt-0">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <div class="card top_border p-15">
+                  <table class="AddProductTable" width="100%">
+                    <tbody>
+                      <tr *ngFor="let product of dispProducts; let i = index">
+                        <td>
+                          <div class="ProListDiv">
+                            <div
+                              *ngIf="product.schemes?.length"
+                              class="lab-promotion"
+                            >
+                              Scheme
+                            </div>
+                            <img
+                              class="PrList_img"
+                              src="{{ product.thumbnail }}"
+                              alt=""
+                            />
+                            <div class="PR_Name">
+                              {{ product.item_name }}
+                              <span
+                                style="
+                                  display: block;
+                                  opacity: 0.6;
+                                  padding-top: 5px;
+                                "
+                              >
+                                SKU: {{ product.item_sku }}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                        <td>
+                          <button
+                            *ngIf="!product.isAdded"
+                            data-toggle="modal"
+                            data-target="#exampleModal"
+                            class="btn btn-default mb-0 dont-close-quantity"
+                            (click)="openQuantityModal(product)"
+                          >
+                            Add
+                          </button>
+                          <button
+                            *ngIf="product.isAdded"
+                            class="btn btn-default mb-0 red-bg dont-close-product"
+                            (click)="removeProductFromOrder(product)"
+                          >
+                            Remove
+                          </button>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="col-md-12 loader" *ngIf="loadingProducts">
+                    <h2 class="loading">Loading Products...</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="_cl-bottom">
+    <!-- <button type="submit" class="btn btn-primary mr-2">Add</button> -->
+    <button
+      id="pl-prod-close"
+      type="butotn"
+      class="btn btn-cancel mr-2"
+      (click)="closeProductsList()"
+    >
+      Cancel
+    </button>
+    <!-- (click)="closeProductsList()" -->
+  </div>
+</div>

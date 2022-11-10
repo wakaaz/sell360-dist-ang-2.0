@@ -31,6 +31,22 @@ export interface IPrimaryOrder {
 }
 
 export class PrimaryOrder {
+  private _route_id: number;
+  public get route_id(): number {
+    return this._route_id;
+  }
+  public set route_id(v: number) {
+    this._route_id = v;
+  }
+
+  private _orderType: string;
+  public get orderType(): string {
+    return this._orderType;
+  }
+  public set orderType(v: string) {
+    this._orderType = v;
+  }
+
   private _id: number;
   public get id(): number {
     return this._id;

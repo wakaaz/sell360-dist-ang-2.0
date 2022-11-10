@@ -15,7 +15,7 @@
     <div class="modal-content top_border">
       <div class="modal-header">
         <h5 class="modal-title" id="historyModalLabel">
-          History List<span></span>
+          {{ selectedName }}<span></span>
         </h5>
         <button
           type="button"
@@ -87,17 +87,16 @@
               <thead>
                 <tr>
                   <th>ITEM</th>
-                  <th>STOCK</th>
-                  <th>TYPE</th>
+                  <th>TRX TYPE</th>
                   <th>STATE</th>
-                  <th>LAST ADDED ON</th>
-                  <th>ACTION</th>
+                  <th>QUANTITY</th>
+                  <th>BALANCE</th>
+                  <th>DATE</th>
                 </tr>
               </thead>
               <tbody>
                 <tr *ngFor="let hs of stockHistory; let in = index">
                   <td>{{ hs.item_name }}</td>
-                  <td>{{ hs.balance || 0 | number }}</td>
                   <td>{{ hs.type }}</td>
                   <td>
                     {{
@@ -108,17 +107,10 @@
                         : hs.status
                     }}
                   </td>
+                  <td>{{ hs.child_quantity || 0 | number }}</td>
+                  <td>{{ hs.balance || 0 | number }}</td>
+
                   <td>{{ hs.created_at }}</td>
-                  <td>
-                    <button
-                      *ngIf="hs.type === 'purchase'"
-                      class="btn btn-default mb-0"
-                      (click)="closePopup()"
-                      [routerLink]="['/reports', 'purchase', hs.purchase_id]"
-                    >
-                      View Details
-                    </button>
-                  </td>
                 </tr>
               </tbody>
             </table>

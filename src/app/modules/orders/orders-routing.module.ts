@@ -12,6 +12,7 @@ import { CounterSaleComponent } from './components/counter-sale/counter-sale.com
 import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
 import { CompletedOrdersDetailComponent } from './components/completed-orders-detail/completed-orders-detail.component';
 import { OrderDispatchedComponent } from './components/order-dispatched/order-dispatched.component';
+import { NewCounterSaleComponent } from './components/new-counter-sale/new-counter-sale.component';
 
 const routes: Routes = [
   {
@@ -21,37 +22,37 @@ const routes: Routes = [
       {
         path: '',
         pathMatch: 'full',
-        component: OrdersListComponent
+        component: OrdersListComponent,
       },
       {
         path: 'order-list-details/:employeeId/:date',
         pathMatch: 'full',
-        component: OrdersListDetailsComponent
+        component: OrdersListDetailsComponent,
       },
       {
         path: 'dispatch-orders',
         pathMatch: 'full',
-        component: CreateDispatchedComponent
+        component: CreateDispatchedComponent,
       },
       {
         path: 'dispatch/:assignId/:saleManId/:date',
         pathMatch: 'full',
-        component: OrderDispatchedComponent
+        component: OrderDispatchedComponent,
       },
       {
         path: 'execution-list',
         pathMatch: 'full',
-        component: OrderExecutionListComponent
+        component: OrderExecutionListComponent,
       },
       {
         path: 'execute-order/:saleManId/:date/:loadId',
         pathMatch: 'full',
-        component: ExecuteOrderComponent
+        component: ExecuteOrderComponent,
       },
       {
         path: 'completed-orders',
         pathMatch: 'full',
-        component: CompletedOrdersDetailComponent
+        component: CompletedOrdersDetailComponent,
       },
       {
         path: 'completed-orders/:id',
@@ -61,19 +62,25 @@ const routes: Routes = [
       {
         path: 'counter-sale',
         pathMatch: 'full',
-        component: CounterSaleComponent
+        component: CounterSaleComponent,
+      },
+
+      {
+        path: 'new-counter-sale',
+        pathMatch: 'full',
+        component: NewCounterSaleComponent,
       },
       {
         path: 'booking-vs-execution',
         pathMatch: 'full',
-        component: BookingVsExecutionComponent
+        component: BookingVsExecutionComponent,
       },
-    ]
-  }
+    ],
+  },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class OrdersRoutingModule { }
+export class OrdersRoutingModule {}

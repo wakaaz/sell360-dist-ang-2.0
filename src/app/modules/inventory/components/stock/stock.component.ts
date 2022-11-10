@@ -5,11 +5,9 @@ import { InventoryService } from '../../services/inventory.service';
 @Component({
   selector: 'app-distributor-stock',
   templateUrl: 'stock.component.html',
-  styleUrls: ['./stock.component.css']
+  styleUrls: ['./stock.component.css'],
 })
-
 export class StockComponent implements OnInit {
-
   dtOptions: DataTables.Settings = {};
   loading: boolean;
   historyLoading: boolean;
@@ -20,45 +18,52 @@ export class StockComponent implements OnInit {
   historyDateTo: string;
   selectedProductId: number;
   timer: any;
+  selectedName: string;
 
   stockHistory: Array<any> = [];
 
   constructor(
     private inventoryService: InventoryService,
-    private toasterService: ToasterService,
-  ) {
-  }
+    private toasterService: ToasterService
+  ) {}
 
   ngOnInit(): void {
     this.historyFilter = 'monthly';
     this.dtOptions = {
-      pagingType: 'simple_numbers'
+      pagingType: 'simple_numbers',
     };
     this.getProductsWithStock();
   }
 
   getProductsWithStock(): void {
     this.loading = true;
-    this.inventoryService.getProductsWithStock().subscribe(res => {
-      this.loading = false;
-      if (res.status === 200) {
-        this.productsStock = res.data;
+    this.inventoryService.getProductsWithStock().subscribe(
+      (res) => {
+        this.loading = false;
+        if (res.status === 200) {
+          this.productsStock = res.data;
+        }
+      },
+      (error) => {
+        this.loading = false;
+        if (error.status !== 1 && error.status !== 401) {
+          const toast: Toaster = {
+            title: 'Error:',
+            message:
+              'Something went wrong while getting stock please try again!',
+            type: 'error',
+          };
+          this.toasterService.showToaster(toast);
+        }
       }
-    }, error => {
-      this.loading = false;
-      if (error.status !== 1 && error.status !== 401) {
-        const toast: Toaster = {
-          title: 'Error:',
-          message: 'Something went wrong while getting stock please try again!',
-          type: 'error'
-        };
-        this.toasterService.showToaster(toast);
-      }
-    });
+    );
   }
 
   getHistory(itemId: number, event: Event): void {
     event.stopPropagation();
+    this.selectedName = this.productsStock.find(
+      (x) => x.item_id === itemId
+    ).item_name;
     this.selectedProductId = itemId;
     this.showHistory = true;
     this.historyDateFrom = new Date().toISOString().split('T')[0];
@@ -68,8 +73,13 @@ export class StockComponent implements OnInit {
 
   dateChanged(): void {
     this.resetTimer();
-    if (((this.historyFilter === 'monthly' || this.historyFilter === 'daily') && this.historyDateFrom) ||
-      (this.historyFilter === 'range' && this.historyDateFrom && this.historyDateTo)) {
+    if (
+      ((this.historyFilter === 'monthly' || this.historyFilter === 'daily') &&
+        this.historyDateFrom) ||
+      (this.historyFilter === 'range' &&
+        this.historyDateFrom &&
+        this.historyDateTo)
+    ) {
       this.getStockHistory();
     }
   }
@@ -82,35 +92,45 @@ export class StockComponent implements OnInit {
       if (this.historyFilter === 'monthly') {
         value = {
           month: new Date(this.historyDateFrom).getMonth() + 1,
-          year: new Date(this.historyDateFrom).getFullYear()
+          year: new Date(this.historyDateFrom).getFullYear(),
         };
       } else if (this.historyFilter === 'daily') {
         value = { date: this.historyDateFrom };
       } else {
         value = {
           from: this.historyDateFrom,
-          to: this.historyDateTo
+          to: this.historyDateTo,
         };
       }
       this.timer = setTimeout(() => {
-        this.inventoryService.getProductStockHistory(this.selectedProductId, this.historyFilter, value).subscribe(res => {
-          this.historyLoading = false;
-          if (res.status === 200) {
-            this.stockHistory = res.data.history;
-          }
-          this.resetTimer();
-        }, error => {
-          this.historyLoading = false;
-          this.resetTimer();
-          if (error.status !== 1 && error.status !== 401) {
-            const toast: Toaster = {
-              title: 'Error:',
-              message: 'Something went wrong while getting stock history please try again!',
-              type: 'error'
-            };
-            this.toasterService.showToaster(toast);
-          }
-        });
+        this.inventoryService
+          .getProductStockHistory(
+            this.selectedProductId,
+            this.historyFilter,
+            value
+          )
+          .subscribe(
+            (res) => {
+              this.historyLoading = false;
+              if (res.status === 200) {
+                this.stockHistory = res.data.history;
+              }
+              this.resetTimer();
+            },
+            (error) => {
+              this.historyLoading = false;
+              this.resetTimer();
+              if (error.status !== 1 && error.status !== 401) {
+                const toast: Toaster = {
+                  title: 'Error:',
+                  message:
+                    'Something went wrong while getting stock history please try again!',
+                  type: 'error',
+                };
+                this.toasterService.showToaster(toast);
+              }
+            }
+          );
       }, 2000);
     }
   }
@@ -138,5 +158,4 @@ export class StockComponent implements OnInit {
       this.historyDateFrom = '';
     }
   }
-
 }

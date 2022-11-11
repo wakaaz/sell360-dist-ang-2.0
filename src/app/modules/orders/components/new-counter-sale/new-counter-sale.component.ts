@@ -92,6 +92,7 @@ export class NewCounterSaleComponent implements OnInit {
 
   getRoutes(): void {
     this.order.employee_id = this.selectedEmployee.employee_id;
+    this.order.retailerRegionId = this.selectedEmployee.region_id;
     this.order.employee_name = this.selectedEmployee.employee_full_name;
     this.generalDataService
       .getOrderBookerRoutes(this.selectedEmployee.employee_id)
@@ -276,29 +277,32 @@ export class NewCounterSaleComponent implements OnInit {
 
   getDiscountSlabs(): void {
     // this.selectedSegment = this.selectedRetailer.segment_id;
-    // // this.resetValues();
-    // this.ordersService.getDiscountSlabs().subscribe(
-    //   (res) => {
-    //     if (res.status === 200) {
-    //       this.discountSlabs = res.data;
-    //       this.merchantDiscount = this.discountSlabs.find(
-    //         (x) =>
-    //           x.region_id === this.selectedRegion &&
-    //           this.selectedSegment === x.segment_id &&
-    //           x.channel_id === this.selectedRetailer.type_id
-    //       );
-    //     }
-    //   },
-    //   (error) => {
-    //     if (error.status !== 1 && error.status !== 401) {
-    //       const toast: Toaster = {
-    //         type: 'error',
-    //         message: 'Cannot fetch Trade Discount. Please try again',
-    //         title: 'Error:',
-    //       };
-    //       this.toastService.showToaster(toast);
-    //     }
-    //   }
-    // );
+    // this.resetValues();
+    this.order.retailerSegmentId = this.selectedRetailer.segment_id;
+    this.order.retailerTypeId = this.selectedRetailer.type_id;
+    this.ordersService.getDiscountSlabs().subscribe(
+      (res) => {
+        if (res.status === 200) {
+          this.discountSlabs = res.data;
+          this.order.discountslabs = res.data;
+          // this.merchantDiscount = this.discountSlabs.find(
+          //   (x) =>
+          //     x.region_id === this.selectedRegion &&
+          //     this.selectedSegment === x.segment_id &&
+          //     x.channel_id === this.selectedRetailer.type_id
+          // );
+        }
+      },
+      (error) => {
+        if (error.status !== 1 && error.status !== 401) {
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Cannot fetch Trade Discount. Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      }
+    );
   }
 }

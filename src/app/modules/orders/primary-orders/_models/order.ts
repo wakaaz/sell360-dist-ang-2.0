@@ -1,3 +1,4 @@
+import { IDiscountSlabs } from './IDiscountSlabs';
 import { PrimaryOrderItem } from './orderItems';
 
 export interface IPrimaryOrder {
@@ -31,6 +32,52 @@ export interface IPrimaryOrder {
 }
 
 export class PrimaryOrder {
+  private _retailerSegmentId: number;
+  public get retailerSegmentId(): number {
+    return this._retailerSegmentId;
+  }
+  public set retailerSegmentId(v: number) {
+    this._retailerSegmentId = v;
+  }
+
+  private _merchantDiscount: IDiscountSlabs;
+  public get merchantDiscount(): IDiscountSlabs {
+    return this._merchantDiscount;
+  }
+  public set merchantDiscount(v: IDiscountSlabs) {
+    this._merchantDiscount = v;
+  }
+
+  private _retailerTypeId: number;
+  public get retailerTypeId(): number {
+    return this._retailerTypeId;
+  }
+  public set retailerTypeId(v: number) {
+    this._retailerTypeId = v;
+  }
+
+  private _retailerRegionId: number;
+  public get retailerRegionId(): number {
+    return this._retailerRegionId;
+  }
+  public set retailerRegionId(v: number) {
+    this._retailerRegionId = v;
+  }
+
+  private _discountslabs: IDiscountSlabs[];
+  public get discountslabs(): IDiscountSlabs[] {
+    return this._discountslabs;
+  }
+  public set discountslabs(v: IDiscountSlabs[]) {
+    this._discountslabs = v;
+    this.merchantDiscount = this.discountslabs.find(
+      (x) =>
+        x.segment_id === this.retailerSegmentId &&
+        x.channel_id === this.retailerTypeId &&
+        x.region_id === this.retailerRegionId
+    );
+  }
+
   private _route_id: number;
   public get route_id(): number {
     return this._route_id;

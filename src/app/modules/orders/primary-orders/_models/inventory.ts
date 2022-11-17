@@ -32,5 +32,13 @@ export interface Inventory {
   unit_name: string;
   net_amount: number;
   isAdded: boolean;
-  schemes: any;
+  schemes: any[];
+  selectedScheme: any;
+  avaialableSchemes: any;
+  selectedQty: number;
 }
+
+// export class Inventory {
+//   products: Inventory[];
+//   allSchemes: any[];
+// }

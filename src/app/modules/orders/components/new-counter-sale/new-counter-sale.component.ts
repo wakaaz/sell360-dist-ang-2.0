@@ -16,6 +16,11 @@ import { environment } from '../../../../../environments/environment';
 import { IRoute } from '../../primary-orders/_models/IRoute';
 import { IRetailer } from '../../primary-orders/_models/IRetailer';
 import { Inventory } from '../../primary-orders/_models/inventory';
+import {
+  freeProductsRules,
+  schemes,
+} from 'src/app/core/constants/schemes.constant';
+import { getNewPrimaryOderItem } from '../../primary-orders/_models/orderItems';
 
 @Component({
   selector: 'app-counter-sale',
@@ -25,6 +30,8 @@ import { Inventory } from '../../primary-orders/_models/inventory';
 })
 export class NewCounterSaleComponent implements OnInit {
   permissions: any;
+  selectedProduct: Inventory = null;
+  showQuantityModal: boolean = false;
   loadingProducts: boolean = false;
   showProducts: boolean = false;
   distributorId: number;
@@ -156,6 +163,7 @@ export class NewCounterSaleComponent implements OnInit {
       (res) => {
         if (res.status === 200) {
           this.schemes = res.data;
+          this.allProducts;
         } else {
           const toast: Toaster = {
             type: 'error',
@@ -200,8 +208,27 @@ export class NewCounterSaleComponent implements OnInit {
           this.selectedRetailer.type_id,
           this.selectedRetailer.id
         );
+
+        if (product.schemes?.length) {
+          product.schemes = product.schemes.map((scheme) => {
+            switch (scheme.scheme_type) {
+              case 'free_product':
+                scheme.name = schemes.free_products;
+                scheme.rule_name = freeProductsRules[scheme.scheme_rule];
+                break;
+              case 'dotp':
+                scheme.name = schemes.dotp;
+                break;
+              default:
+                scheme.name = schemes.gift;
+                break;
+            }
+            return scheme;
+          });
+        }
         return product;
       });
+
       this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
       this.showProducts = true;
       document.body.classList.add('no-scroll');
@@ -219,13 +246,13 @@ export class NewCounterSaleComponent implements OnInit {
   }
 
   clickedOutSide(event: Event): void {
-    // if (
-    //   this.showProducts &&
-    //   !this.showQuantityModal &&
-    //   !(event.target as HTMLElement).classList.contains('dont-close-products')
-    // ) {
-    this.closeProductsList();
-    // }
+    if (
+      this.showProducts &&
+      !this.showQuantityModal &&
+      !(event.target as HTMLElement).classList.contains('dont-close-products')
+    ) {
+      this.closeProductsList();
+    }
   }
   closeProductsList(): void {
     this.showProducts = false;
@@ -235,7 +262,9 @@ export class NewCounterSaleComponent implements OnInit {
       .classList.remove('d-block');
     document.getElementById('counter-sale').classList.remove('blur-div');
   }
-
+  isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
+    return this.dataService.isNumber(event, type);
+  }
   getCounterSaleData(): void {
     this.loadingProducts = true;
     this.ordersService.getCounterSaleData().subscribe(
@@ -304,5 +333,35 @@ export class NewCounterSaleComponent implements OnInit {
         }
       }
     );
+  }
+
+  openQuantityModal(product: any): void {
+    this.showQuantityModal = true;
+    console.log('product -> ', product);
+    // if (product.schemes?.length) {
+    //   product.schemes = product.schemes.map((scheme) => {
+    //     switch (scheme.scheme_type) {
+    //       case 'free_product':
+    //         scheme.name = schemes.free_products;
+    //         scheme.rule_name = freeProductsRules[scheme.scheme_rule];
+    //         break;
+    //       case 'dotp':
+    //         scheme.name = schemes.dotp;
+    //         break;
+    //       default:
+    //         scheme.name = schemes.gift;
+    //         break;
+    //     }
+    //     return scheme;
+    //   });
+    // }
+    this.selectedProduct = { ...product };
+    // this.selectedProduct.selectedScheme = null;
+  }
+
+  addProductToOrder() {
+    console.log('this.selectedProduct -> ', this.selectedProduct);
+    const orderItem = getNewPrimaryOderItem(this.selectedProduct);
+    console.log('orderItem -> ', orderItem);
   }
 }

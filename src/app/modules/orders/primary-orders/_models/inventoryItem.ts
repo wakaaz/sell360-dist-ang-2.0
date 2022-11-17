@@ -39,6 +39,7 @@ export interface IInventoryItem {
   unit_price_after_scheme_discount;
   updated_at: Date;
   updated_by: number;
+  selectedQty: number;
 }
 
 //#endregion

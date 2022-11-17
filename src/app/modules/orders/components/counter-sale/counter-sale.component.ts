@@ -589,6 +589,7 @@ export class CounterSaleComponent implements OnInit {
       this.toastService.showToaster(toast);
     } else {
       if (this.selectedRetailer) {
+        debugger;
         this.allProducts = this.allProducts.map((product) => {
           product.schemes = this.dataService.getSchemes(
             product.item_id,

@@ -3,6 +3,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 import { HttpBaseService } from 'src/app/core/services/http.service';
 import { CounterSale } from '../models/counter-sale.model';
+import { Scheme } from '../primary-orders/_models/scheme.model';
 
 @Injectable()
 export class OrdersService {
@@ -13,6 +14,7 @@ export class OrdersService {
 
   constructor(private baseService: HttpBaseService) {}
 
+  private _schemes$ = new BehaviorSubject<Scheme[]>([]);
   get orderRetailers(): Observable<any> {
     return this._ordersRetailers.asObservable();
   }
@@ -20,7 +22,12 @@ export class OrdersService {
   get checkAllocationSuccess(): Observable<any> {
     return this._checkAllocationSuccess.asObservable();
   }
-
+  get schemes$() {
+    return this._schemes$.asObservable();
+  }
+  get schemesList() {
+    return this._schemes$.value;
+  }
   setCheckAllocationSuccess(isCheckAllocationSuccess: boolean) {
     this._checkAllocationSuccess.next(isCheckAllocationSuccess);
   }
@@ -28,7 +35,6 @@ export class OrdersService {
   get loadOutOfRouteRecovery(): any {
     return this._loadOutOfRouteRecovery;
   }
-
   get loadRetaillersRecovery(): Observable<any> {
     return this._loadRetaillersRecovery.asObservable();
   }
@@ -54,6 +60,15 @@ export class OrdersService {
     } else {
       return this.baseService.get(API_URLS.COUNTER_SALE_DATA);
     }
+  }
+
+  getProdSchemes() {
+    this.baseService.get(API_URLS.GET_SCHEMES).subscribe((res) => {
+      if (res.status === 200) {
+        debugger;
+        this._schemes$.next(res.data);
+      }
+    });
   }
 
   getCompletedOrdersLoadsheets(date): Observable<any> {

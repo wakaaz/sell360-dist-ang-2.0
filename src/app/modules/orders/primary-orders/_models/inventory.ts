@@ -35,7 +35,8 @@ export interface Inventory {
   schemes: any[];
   selectedScheme: any;
   avaialableSchemes: any;
-  selectedQty: number;
+  stockQty: number;
+  parentPrefId: number;
 }
 
 // export class Inventory {

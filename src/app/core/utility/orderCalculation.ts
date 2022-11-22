@@ -1,9 +1,75 @@
+import { SecondaryOrder } from '../../modules/orders/primary-orders/_models/secondaryOrder.model';
+import {
+  Slab,
+  SlabDetail,
+} from 'src/app/modules/orders/primary-orders/_models/slab.model';
 import {
   FREE_PRODUCT_RULES,
   SCHEME_RULES,
 } from '../constants/schemes.constant';
 
 class Utility {
+  public static calTradeDiscountPrice(
+    quantity: number,
+    unit_price_after_scheme_discount: number,
+    total_unit_price_after_scheme_discount: number
+  ): any {
+    let discount = {
+      dicsountValuePkr: 0,
+      tradeDiscount: 0,
+    };
+    if (quantity <= 0) {
+      return discount;
+    }
+
+    // get slabs that are saved in order model
+    const order = SecondaryOrder.getInstance;
+    const slabs: Slab[] = [...order.slabs] || [];
+
+    // TODO: Remmove
+    // const slabType = this.getSlabType(order.order)
+
+    const slabDiscount = slabs.find(
+      (slab: Slab) =>
+        slab.region_id === order.regionId &&
+        slab.segment_id === order.retailer.segment_id &&
+        slab.channel_id === order.retailer.type_id &&
+        slab.slab_type === order.orderContext
+    );
+    if (slabDiscount.discount_filter === 'flat') {
+      // if (slabDiscount.flat === 'percentage' ) {
+      // } else {
+      // }
+    } else if (
+      slabDiscount &&
+      slabDiscount.discount_filter === 'slab' &&
+      order.grossPrice
+    ) {
+      const slabDetail: SlabDetail = this.applyAbleSlab(
+        { ...slabDiscount },
+        order.grossPrice
+      );
+
+      if (slabDetail) {
+        discount.dicsountValuePkr =
+          (slabDetail.value / 100) * unit_price_after_scheme_discount;
+        // discount =
+        // const currentItemPrice = unit_price_after_scheme_discount * quantity;
+        discount.tradeDiscount = slabDetail.value;
+      }
+    }
+
+    return discount;
+  }
+  public static applyAbleSlab(slab: Slab, orderTotal: number): SlabDetail {
+    return slab.slab.find(
+      (slb) =>
+        slb.range_from &&
+        slb.range_to &&
+        slb.range_from <= orderTotal &&
+        slb.range_to >= orderTotal
+    );
+  }
   // @param tradePrice => 1 quanity Price
   // @param totalQuanity => total item qty
   public static calGrossAmount(

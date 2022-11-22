@@ -194,7 +194,7 @@
                 <div class="card top_border p-15">
                   <table class="AddProductTable" width="100%">
                     <tbody>
-                      <tr *ngFor="let product of dispProducts; let i = index">
+                      <tr *ngFor="let product of allProducts; let i = index">
                         <td>
                           <div class="ProListDiv">
                             <div
@@ -306,13 +306,13 @@
               placeholder="Add Quantity"
               required
               (keydown)="isNumber($event, 'quantity')"
-              [(ngModel)]="selectedProduct.selectedQty"
+              [(ngModel)]="selectedProduct.stockQty"
               #selectedQty="ngModel"
               style="font-size: 13px"
             />
             <!-- *ngIf="selectedQty.errors?.required && isAdded" -->
 
-            <span *ngIf="!selectedProduct.selectedQty" class="input-error">
+            <span *ngIf="!selectedProduct.stockQty" class="input-error">
               Please add Quantity!
             </span>
             <!-- *ngIf="
@@ -320,7 +320,7 @@
                 isAdded &&
                 !selectedQty.errors?.required
               " -->
-            <span *ngIf="selectedProduct.selectedQty === 0" class="input-error">
+            <span *ngIf="selectedProduct.stockQty === 0" class="input-error">
               Quantity should be greater than 0!
             </span>
           </div>
@@ -381,7 +381,7 @@
           class="btn btn-primary dont-close-products"
           [disabled]="
             selectedProduct &&
-            (!selectedProduct.selectedQty || selectedProduct.selectedQty == 0)
+            (!selectedProduct.stockQty || selectedProduct.stockQty == 0)
           "
           (click)="addProductToOrder()"
         >

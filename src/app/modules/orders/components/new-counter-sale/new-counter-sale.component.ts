@@ -21,6 +21,7 @@ import {
   schemes,
 } from 'src/app/core/constants/schemes.constant';
 import { getNewPrimaryOderItem } from '../../primary-orders/_models/orderItems';
+import { SecondaryOrder } from '../../primary-orders/_models/secondaryOrder.model';
 
 @Component({
   selector: 'app-counter-sale',
@@ -30,6 +31,7 @@ import { getNewPrimaryOderItem } from '../../primary-orders/_models/orderItems';
 })
 export class NewCounterSaleComponent implements OnInit {
   permissions: any;
+  secondaryOrder: SecondaryOrder;
   selectedProduct: Inventory = null;
   showQuantityModal: boolean = false;
   loadingProducts: boolean = false;
@@ -60,14 +62,22 @@ export class NewCounterSaleComponent implements OnInit {
       localStorageKeys.permissions
     );
     this.order = new PrimaryOrder();
-    this.order.orderType = environment.ORDER_TYPE.COUNTER_SALE;
+    // this.order.orderType = environment.ORDER_TYPE.COUNTER_SALE;
     this.distributorId = this.storageService.getItem('distributor').id;
   }
 
   ngOnInit(): void {
+    this.secondaryOrder = SecondaryOrder.getInstance;
     this.getOrderBookers();
-    this.getCounterSaleData();
+    this.generalDataService.getCounterSaleData();
     this.getSchemesData();
+    const sub = this.generalDataService.dispProducts$.subscribe((products) => {
+      debugger;
+      this.allProducts = products;
+      this.showProducts = true;
+      const prodWithSchemes = this.allProducts.filter((x) => x.schemes.length);
+      console.log('prodWithSchemes => ', prodWithSchemes);
+    });
   }
 
   getOrderBookers(): void {
@@ -158,33 +168,37 @@ export class NewCounterSaleComponent implements OnInit {
         }
       );
   }
+
   getSchemesData(): void {
-    this.ordersService.getSchemes().subscribe(
-      (res) => {
-        if (res.status === 200) {
-          this.schemes = res.data;
-          this.allProducts;
-        } else {
-          const toast: Toaster = {
-            type: 'error',
-            message: res.message,
-            title: 'Error:',
-          };
-          this.toastService.showToaster(toast);
-        }
-      },
-      (error) => {
-        if (error.status !== 1 && error.status !== 401) {
-          const toast: Toaster = {
-            type: 'error',
-            message: 'Cannot fetch Trade Offers. Please try again',
-            title: 'Error:',
-          };
-          this.toastService.showToaster(toast);
-        }
-      }
-    );
+    this.ordersService.getProdSchemes();
   }
+  // getSchemesData(): void {
+  //   this.ordersService.getSchemes().subscribe(
+  //     (res) => {
+  //       if (res.status === 200) {
+  //         this.schemes = res.data;
+  //         this.allProducts;
+  //       } else {
+  //         const toast: Toaster = {
+  //           type: 'error',
+  //           message: res.message,
+  //           title: 'Error:',
+  //         };
+  //         this.toastService.showToaster(toast);
+  //       }
+  //     },
+  //     (error) => {
+  //       if (error.status !== 1 && error.status !== 401) {
+  //         const toast: Toaster = {
+  //           type: 'error',
+  //           message: 'Cannot fetch Trade Offers. Please try again',
+  //           title: 'Error:',
+  //         };
+  //         this.toastService.showToaster(toast);
+  //       }
+  //     }
+  //   );
+  // }
   showProductsList(event: Event): void {
     event.stopPropagation();
     // if (
@@ -199,38 +213,51 @@ export class NewCounterSaleComponent implements OnInit {
     //   this.toastService.showToaster(toast);
     // } else {
     if (this.selectedRetailer) {
-      this.allProducts = this.allProducts.map((product) => {
-        product.schemes = this.dataService.getSchemes(
-          product.item_id,
-          product.unit_id,
-          product.pref_id,
-          this.schemes,
-          this.selectedRetailer.type_id,
-          this.selectedRetailer.id
-        );
+      // this.allProducts = this.allProducts.map((product) => {
+      //   product.schemes = this.dataService.getSchemes(
+      //     product.item_id,
+      //     product.unit_id,
+      //     product.pref_id,
+      //     this.schemes,
+      //     this.selectedRetailer.type_id,
+      //     this.selectedRetailer.id
+      //   );
 
-        if (product.schemes?.length) {
-          product.schemes = product.schemes.map((scheme) => {
-            switch (scheme.scheme_type) {
-              case 'free_product':
-                scheme.name = schemes.free_products;
-                scheme.rule_name = freeProductsRules[scheme.scheme_rule];
-                break;
-              case 'dotp':
-                scheme.name = schemes.dotp;
-                break;
-              default:
-                scheme.name = schemes.gift;
-                break;
-            }
-            return scheme;
-          });
-        }
-        return product;
-      });
+      //   if (product.schemes?.length) {
+      //     product.schemes = product.schemes.map((scheme) => {
+      //       switch (scheme.scheme_type) {
+      //         case 'free_product':
+      //           scheme.name = schemes.free_products;
+      //           scheme.rule_name = freeProductsRules[scheme.scheme_rule];
+      //           break;
+      //         case 'dotp':
+      //           scheme.name = schemes.dotp;
+      //           break;
+      //         default:
+      //           scheme.name = schemes.gift;
+      //           break;
+      //       }
+      //       return scheme;
+      //     });
+      //   }
+      //   return product;
+      // });
 
-      this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
-      this.showProducts = true;
+      this.secondaryOrder.assignedRouteId = this.selectedRoute.route_id;
+
+      // set primaryOrder employeeId
+      this.secondaryOrder.regionId = this.selectedEmployee.region_id;
+      this.secondaryOrder.employeeId = this.selectedEmployee.employee_id;
+      this.secondaryOrder.retailerId = this.selectedRetailer.retailer_id;
+      this.secondaryOrder.retailer = this.selectedRetailer;
+      // this.secondaryOrder.creditOrderType = this.selectedOrderCreditType;
+      // this.secondaryOrder.orderContext = this.selectedOrderContext;
+
+      this.generalDataService.setShowProducts$ = true;
+
+      this.generalDataService.mergeSchemesIntoProducts();
+      // this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
+      // this.showProducts = true;
       document.body.classList.add('no-scroll');
       document
         .getElementsByClassName('overlay-blure')[0]
@@ -265,75 +292,75 @@ export class NewCounterSaleComponent implements OnInit {
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
   }
-  getCounterSaleData(): void {
-    this.loadingProducts = true;
-    this.ordersService.getCounterSaleData().subscribe(
-      (res: any) => {
-        this.loadingProducts = false;
-        if (res.status === 200) {
-          this.allProducts = res.data.inventory.map((pr) => {
-            pr.net_amount = 0.0;
-            pr.isAdded = false;
-            return pr;
-          });
-          console.log('this.allProducts.length', this.allProducts.length);
-          this.specialDiscounts = res.data.special_discount;
-          // this.prefrences = res.data.prefs;
-          this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
-          // this.subInventory = res.data.sub_inventory;
-        } else {
-          const toast: Toaster = {
-            type: 'error',
-            message: res.message,
-            title: 'Error:',
-          };
-          this.toastService.showToaster(toast);
-        }
-      },
-      (error) => {
-        this.loadingProducts = false;
-        if (error.status !== 1 && error.status !== 401) {
-          const toast: Toaster = {
-            type: 'error',
-            message: 'Cannot fetch counter sale data. Please try again',
-            title: 'Error:',
-          };
-          this.toastService.showToaster(toast);
-        }
-      }
-    );
-  }
+  // getCounterSaleData(): void {
+  //   this.loadingProducts = true;
+  //   this.ordersService.getCounterSaleData().subscribe(
+  //     (res: any) => {
+  //       this.loadingProducts = false;
+  //       if (res.status === 200) {
+  //         this.allProducts = res.data.inventory.map((pr) => {
+  //           pr.net_amount = 0.0;
+  //           pr.isAdded = false;
+  //           return pr;
+  //         });
+  //         console.log('this.allProducts.length', this.allProducts.length);
+  //         this.specialDiscounts = res.data.special_discount;
+  //         // this.prefrences = res.data.prefs;
+  //         this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
+  //         // this.subInventory = res.data.sub_inventory;
+  //       } else {
+  //         const toast: Toaster = {
+  //           type: 'error',
+  //           message: res.message,
+  //           title: 'Error:',
+  //         };
+  //         this.toastService.showToaster(toast);
+  //       }
+  //     },
+  //     (error) => {
+  //       this.loadingProducts = false;
+  //       if (error.status !== 1 && error.status !== 401) {
+  //         const toast: Toaster = {
+  //           type: 'error',
+  //           message: 'Cannot fetch counter sale data. Please try again',
+  //           title: 'Error:',
+  //         };
+  //         this.toastService.showToaster(toast);
+  //       }
+  //     }
+  //   );
+  // }
 
-  getDiscountSlabs(): void {
-    // this.selectedSegment = this.selectedRetailer.segment_id;
-    // this.resetValues();
-    this.order.retailerSegmentId = this.selectedRetailer.segment_id;
-    this.order.retailerTypeId = this.selectedRetailer.type_id;
-    this.ordersService.getDiscountSlabs().subscribe(
-      (res) => {
-        if (res.status === 200) {
-          this.discountSlabs = res.data;
-          this.order.discountslabs = res.data;
-          // this.merchantDiscount = this.discountSlabs.find(
-          //   (x) =>
-          //     x.region_id === this.selectedRegion &&
-          //     this.selectedSegment === x.segment_id &&
-          //     x.channel_id === this.selectedRetailer.type_id
-          // );
-        }
-      },
-      (error) => {
-        if (error.status !== 1 && error.status !== 401) {
-          const toast: Toaster = {
-            type: 'error',
-            message: 'Cannot fetch Trade Discount. Please try again',
-            title: 'Error:',
-          };
-          this.toastService.showToaster(toast);
-        }
-      }
-    );
-  }
+  // getDiscountSlabs(): void {
+  //   // this.selectedSegment = this.selectedRetailer.segment_id;
+  //   // this.resetValues();
+  //   this.order.retailerSegmentId = this.selectedRetailer.segment_id;
+  //   this.order.retailerTypeId = this.selectedRetailer.type_id;
+  //   this.ordersService.getDiscountSlabs().subscribe(
+  //     (res) => {
+  //       if (res.status === 200) {
+  //         this.discountSlabs = res.data;
+  //         this.order.discountslabs = res.data;
+  //         // this.merchantDiscount = this.discountSlabs.find(
+  //         //   (x) =>
+  //         //     x.region_id === this.selectedRegion &&
+  //         //     this.selectedSegment === x.segment_id &&
+  //         //     x.channel_id === this.selectedRetailer.type_id
+  //         // );
+  //       }
+  //     },
+  //     (error) => {
+  //       if (error.status !== 1 && error.status !== 401) {
+  //         const toast: Toaster = {
+  //           type: 'error',
+  //           message: 'Cannot fetch Trade Discount. Please try again',
+  //           title: 'Error:',
+  //         };
+  //         this.toastService.showToaster(toast);
+  //       }
+  //     }
+  //   );
+  // }
 
   openQuantityModal(product: any): void {
     this.showQuantityModal = true;
@@ -361,7 +388,12 @@ export class NewCounterSaleComponent implements OnInit {
 
   addProductToOrder() {
     console.log('this.selectedProduct -> ', this.selectedProduct);
-    const orderItem = getNewPrimaryOderItem(this.selectedProduct);
-    console.log('orderItem -> ', orderItem);
+    // const orderItem = getNewPrimaryOderItem(this.selectedProduct);
+    // console.log('orderItem -> ', orderItem);
+
+    this.generalDataService.pushOrderItem(this.selectedProduct);
+  }
+  getDiscountSlabs() {
+    this.generalDataService.getDiscountSlabs();
   }
 }

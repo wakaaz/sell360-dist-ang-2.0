@@ -12,6 +12,14 @@ export const environment = {
     PERCENTAGE: 2, // Percentage means (value/100) * qty
   },
   ORDER_TYPE: {
-    COUNTER_SALE: 'CounterSale',
+    Regular_Order: '0',
+    Credit_Order_Without_Discount: '1',
+    Credit_Order_With_Discount: '2',
+  },
+
+  CREDIT_ORDER_TYPE: {
+    Regular_Order: 0,
+    Credit_Order_Without_Discount: 1,
+    Credit_Order_With_Discount: 2,
   },
 };

@@ -37,6 +37,7 @@ export interface Inventory {
   avaialableSchemes: any;
   stockQty: number;
   parentPrefId: number;
+  sub_category_id: number;
 }
 
 // export class Inventory {

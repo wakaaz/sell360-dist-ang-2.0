@@ -22,4 +22,17 @@ export const environment = {
     Credit_Order_Without_Discount: 1,
     Credit_Order_With_Discount: 2,
   },
+  SLAB_TYPE: {
+    ALL: 0,
+    NORMAL: 1,
+    EXCLUSIVE: 2,
+    SKU_BASE: 3,
+    BRAND_BASE: 4,
+    CATEGORY_BASE: 5,
+  },
+
+  SLAB_RULE: {
+    RULE_1: 1, //Noraml
+    RULE_2: 2, // matching slab ranges with quantity
+  },
 };

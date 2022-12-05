@@ -13,6 +13,7 @@ export interface Slab {
 }
 export interface SlabDetail {
   id: number;
+  slab_rule: number;
   channel_id: number;
   discount_filter: string;
   discount_slab_id: number;

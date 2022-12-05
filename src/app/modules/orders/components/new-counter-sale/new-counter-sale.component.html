@@ -122,7 +122,8 @@
                 </div>
               </div>
             </div>
-            <h1>Product Details</h1>
+            <!-- <h1>Product Details</h1> -->
+            <app-order-content></app-order-content>
           </div>
         </div>
       </div>
@@ -142,14 +143,51 @@
           >
             Cancel
           </button>
-          <button class="btn btn-primary">Save Order</button>
+          <button class="btn btn-primary" (click)="onSaveOrder()">
+            Save Order
+          </button>
 
-          <button class="btn btn-primary float-left mr-2">Add Cheque</button>
-          <button class="btn btn-primary float-left mr-2 red-bg">
+          <button
+            class="btn btn-primary float-left mr-2"
+            *ngIf="
+              secondaryOrder.isShowChequeAndCreditButtons &&
+              secondaryOrder.showCheckButton &&
+              !secondaryOrder.isCheckAdded
+            "
+            id="open-modal-payment"
+            data-toggle="modal"
+            data-target="#exampleModal2"
+            class="btn btn-primary float-left mr-2"
+            (click)="onCheck()"
+          >
+            Add Cheque
+          </button>
+          <button
+            class="btn btn-primary float-left mr-2 red-bg"
+            *ngIf="secondaryOrder.isCheckAdded"
+            (click)="onRemoveCheck()"
+          >
             Remove Cheque
           </button>
-          <button class="btn btn-primary float-left">Add Credit</button>
-          <button class="btn btn-primary float-left red-bg">
+          <button
+            *ngIf="
+              secondaryOrder.isShowChequeAndCreditButtons &&
+              secondaryOrder.isShowCreditBtn &&
+              !secondaryOrder.isCreditPaymentAdded
+            "
+            id="open-modal-payment"
+            data-toggle="modal"
+            data-target="#exampleModal2"
+            class="btn btn-primary float-left mr-2"
+            (click)="onCredit()"
+          >
+            Add Credit
+          </button>
+          <button
+            *ngIf="secondaryOrder.isCreditPaymentAdded"
+            class="btn btn-primary float-left red-bg"
+            (click)="onRemoveCredit()"
+          >
             Remove Credit
           </button>
           <button
@@ -166,6 +204,323 @@
   </div>
 </div>
 
+<!-- Credit and Cheque info -->
+<div
+  class="modal fade"
+  id="exampleModal2"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top_border">
+      <div class="modal-header" *ngIf="f.isCheck.value">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Add <span> Cheque Information</span>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+
+      <form
+        [formGroup]="paymentForm"
+        *ngIf="f.isCheck.value || f.isCredit.value"
+      >
+        <div class="col-12" *ngIf="!f.isCredit.value">
+          <div id="floating-label" class="form-wrap p-0">
+            <div class="row pt-10">
+              <div class="col-4">
+                <div class="custom-control custom-radio">
+                  <input
+                    class="custom-control-input"
+                    type="radio"
+                    name="payment"
+                    id="payment1"
+                    value="full"
+                    (click)="currentFullPayment(true)"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="font-size: 13px; line-height: 25px"
+                    for="payment1"
+                    >Full Amount</label
+                  >
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="custom-control custom-radio">
+                  <input
+                    class="custom-control-input"
+                    type="radio"
+                    name="payment"
+                    id="payment2"
+                    value="partial"
+                    (click)="currentFullPayment(false)"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="font-size: 13px; line-height: 25px"
+                    for="payment2"
+                    >Partial Amount</label
+                  >
+                </div>
+              </div>
+            </div>
+            <div
+              class="col-12 input-error"
+              *ngIf="submitted && f.isfullAmount.errors"
+            >
+              Please select a payment method!
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 PT-10">
+                <div class="form-group">
+                  <label class="control-label mb-10">Cheque Number*</label>
+                  <input
+                    type="text"
+                    id="chequeNum"
+                    name="cheque_num"
+                    required
+                    autocomplete="off"
+                    class="form-control cheque_num"
+                    formControlName="cheque_number"
+                  />
+                </div>
+                <span
+                  class="input-error"
+                  *ngIf="submitted && f.cheque_number.errors"
+                >
+                  Please add Cheque Number!
+                </span>
+              </div>
+              <div class="col-md-6 PT-10">
+                <div class="form-group focused">
+                  <label class="control-label mb-10">Date*</label>
+                  <input
+                    type="date"
+                    id="datepicker"
+                    required
+                    placeholder=""
+                    autocomplete="off"
+                    name="payment_date"
+                    x
+                    class="form-control cheque_date"
+                    formControlName="cheque_date"
+                  />
+                </div>
+                <span
+                  class="input-error"
+                  *ngIf="submitted && f.cheque_date.errors"
+                >
+                  Please add Payment Date!
+                </span>
+              </div>
+              <div class="col-md-6 PT-5">
+                <div class="form-group">
+                  <label class="control-label mb-10">Bank Name*</label>
+                  <input
+                    type="text"
+                    name="cheque_bank_name"
+                    id="chequeBankName"
+                    required
+                    autocomplete="off"
+                    class="form-control cheque_bank_name"
+                    formControlName="bank_name"
+                  />
+                </div>
+                <span
+                  class="input-error"
+                  *ngIf="submitted && f.bank_name.errors"
+                >
+                  Please add Bank Name!
+                </span>
+              </div>
+              <div class="col-md-6 PT-5" *ngIf="!f.isfullAmount.value">
+                <div class="form-group">
+                  <label class="control-label mb-10">Total Amount*</label>
+                  <input
+                    type="number"
+                    min="0"
+                    id="Amount1"
+                    autocomplete="off"
+                    class="form-control cheque_amount"
+                    formControlName="cheque_amount"
+                  />
+                </div>
+                <span
+                  class="input-error"
+                  *ngIf="submitted && f?.cheque_amount?.errors?.required"
+                >
+                  Please add Total Amount!
+                </span>
+                <span
+                  class="input-error"
+                  *ngIf="submitted && f?.cheque_amount?.errors?.equalZero"
+                >
+                  Zero value not allowed
+                </span>
+                <span
+                  class="input-error"
+                  *ngIf="submitted && f?.cheque_amount?.errors?.mustMatch"
+                >
+                  Amount should not be greater than
+                  {{ secondaryOrder.totalDueAmount | number: "1.2-2" }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer border-0" *ngIf="!f.isCredit.value">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onPaymentsubmit(true)"
+          >
+            Add
+          </button>
+          <button
+            type="button"
+            id="close-payment-modal"
+            class="btn btn-cancel"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="onCancelCheque()"
+          >
+            Cancel
+          </button>
+        </div>
+
+        <div *ngIf="f.isCredit.value" class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            Add <span>Credit Information</span>
+          </h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <!-- Credit payment  -->
+        <div *ngIf="f.isCredit.value" id="floating-label" class="form-wrap p-0">
+          <div class="col-12">
+            <div class="row pt-10">
+              <div class="col-6">
+                <div
+                  class="custom-control custom-radio"
+                  *ngIf="!secondaryOrder.isCheckAdded"
+                >
+                  <input
+                    class="custom-control-input"
+                    name="payment"
+                    id="Amount1"
+                    value="full"
+                    (click)="onCreditFullPayment(true)"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="font-size: 13px; line-height: 25px"
+                    for="Amount1"
+                    >Full Amount</label
+                  >
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="custom-control custom-radio">
+                  <input
+                    type="radio"
+                    name="payment"
+                    id="Amount2"
+                    value="partial"
+                    (click)="onCreditFullPayment(false)"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="font-size: 13px; line-height: 25px"
+                    for="Amount2"
+                    >Partial Amount</label
+                  >
+                </div>
+              </div>
+              <div
+                class="col-12 input-error"
+                *ngIf="submitted && f.isfullAmount.errors"
+              >
+                Please select a payment method!
+              </div>
+              <div class="col-md-6 PT-10" *ngIf="!f.isfullAmount.value">
+                <div class="form-group">
+                  <label class="control-label mb-10">Amount*</label>
+                  <input
+                    type="number"
+                    min="0"
+                    autocomplete="off"
+                    class="form-control cheque_amount"
+                    formControlName="cheque_amount"
+                  />
+                </div>
+                <span
+                  class="input-error"
+                  *ngIf="submitted && f?.cheque_amount?.errors?.required"
+                >
+                  Please add Total Amount!
+                </span>
+                <span
+                  class="input-error"
+                  *ngIf="submitted && f?.cheque_amount?.errors?.equalZero"
+                >
+                  Zero value not allowed
+                </span>
+                <span
+                  class="input-error"
+                  *ngIf="submitted && f?.cheque_amount?.errors?.mustMatch"
+                >
+                  Amount should not be greater than
+                  {{ secondaryOrder.totalDueAmount | number: "1.2-2" }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="f.isCredit.value" class="modal-footer border-0">
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="onPaymentsubmit(false)"
+          >
+            Add
+          </button>
+          <button
+            type="button"
+            id="close-payment-modal"
+            class="btn btn-cancel"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="onPaymentCancel()"
+          >
+            Cancel
+          </button>
+        </div>
+
+        <!-- End Credit Payment -->
+      </form>
+    </div>
+  </div>
+</div>
+<!-- End Credit Payment -->
 <!-- Products Listing -->
 <div
   id="product-cl-sec"
@@ -354,9 +709,7 @@
                 <input
                   [(ngModel)]="selectedProduct.selectedScheme"
                   (click)="
-                    selectedProduct.pref_id &&
-                      selectedProduct.stockQty &&
-                      calculateProductDiscounts(selectedProduct, scheme)
+                    (selectedProduct.pref_id && selectedProduct.quantity)
                   "
                   class="custom-control-input"
                   type="radio"

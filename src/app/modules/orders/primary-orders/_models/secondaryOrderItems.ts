@@ -15,6 +15,14 @@ export class SecondaryOrderItems {
     this._prefId = v;
   }
 
+  private _sub_category_id: number;
+  public get sub_category_id(): number {
+    return this._sub_category_id;
+  }
+  public set sub_category_id(v: number) {
+    this._sub_category_id = v;
+  }
+
   private _booker_discount: number;
   public get booker_discount(): number {
     return this._booker_discount || 0;
@@ -234,12 +242,12 @@ export class SecondaryOrderItems {
   public get tradeOffer(): number {
     const order = SecondaryOrder.getInstance;
     if (
-      order.creditOrderType !==
-        environment.CREDIT_ORDER_TYPE.Credit_Order_Without_Discount &&
+      // order.creditOrderType !==
+      //   environment.CREDIT_ORDER_TYPE.Credit_Order_Without_Discount &&
       this.schemeId &&
       this.rule_name !== FREE_PRODUCT_RULES.FREE_PRODUCTS
     ) {
-      return (
+      const tradeDiscountCal =
         Utility.calTradeOfferPrice(
           this.scheme_type,
           this.scheme_min_quantity,
@@ -249,8 +257,8 @@ export class SecondaryOrderItems {
           this.rule_name,
           this.grossPrice,
           this.parentTp
-        ) || 0
-      );
+        ) || 0;
+      return tradeDiscountCal;
     } else {
       return 0;
     }
@@ -296,24 +304,60 @@ export class SecondaryOrderItems {
   public get tradeDiscount(): number {
     const order = SecondaryOrder.getInstance;
     if (
-      order.creditOrderType !==
-      environment.CREDIT_ORDER_TYPE.Credit_Order_Without_Discount
+      order.slabs.length
+      // order.creditOrderType !==
+      // environment.CREDIT_ORDER_TYPE.Credit_Order_Without_Discount
     ) {
       const discount = Utility.calTradeDiscountPrice(
         this.quantity,
         this.unit_price_after_scheme_discount,
-        this.totalPriceAfterSchemeDiscount
+        this.totalPriceAfterSchemeDiscount,
+        this
       );
-      this.unitTradeDiscountPkr = discount.dicsountValuePkr;
-      return discount.tradeDiscount;
+      if (order.orderContext === environment.SLAB_TYPE.ALL) {
+        this.unitTradeDiscountPkr = discount.dicsountValuePkr;
+        return discount.tradeDiscount;
+      }
+      if (
+        order.orderContext === environment.SLAB_TYPE.NORMAL &&
+        this.isExclusive === 0
+      ) {
+        this.unitTradeDiscountPkr = discount.dicsountValuePkr;
+        return discount.tradeDiscount;
+      }
+      if (
+        order.orderContext === environment.SLAB_TYPE.EXCLUSIVE &&
+        this.isExclusive === 1
+      ) {
+        this.unitTradeDiscountPkr = discount.dicsountValuePkr;
+        return discount.tradeDiscount;
+      }
+
+      if (order.orderContext === environment.SLAB_TYPE.CATEGORY_BASE) {
+        this.unitTradeDiscountPkr = discount.dicsountValuePkr;
+        return discount.tradeDiscount;
+      }
+      if (order.orderContext === environment.SLAB_TYPE.BRAND_BASE) {
+        this.unitTradeDiscountPkr = discount.dicsountValuePkr;
+        return discount.tradeDiscount;
+      }
+      if (order.orderContext === environment.SLAB_TYPE.SKU_BASE) {
+        this.unitTradeDiscountPkr = discount.dicsountValuePkr;
+        return discount.tradeDiscount;
+      }
     } else {
-      0;
+      this.unitTradeDiscountPkr = 0;
+      return 0;
+    }
+    if (!this.unitTradeDiscountPkr && this.unitTradeDiscountPkr !== 0) {
+      this.unitTradeDiscountPkr = 0;
+      return 0;
     }
   }
 
-  public get schemeFreeProdsCount(): number {
+  public get(): number {
     if (this.schemeId && this.rule_name === FREE_PRODUCT_RULES.FREE_PRODUCTS) {
-      return Utility.calTradeOfferPrice(
+      const offerDiscount = Utility.calTradeOfferPrice(
         this.scheme_type,
         this.scheme_min_quantity,
         this.scheme_quantity_free,
@@ -323,6 +367,7 @@ export class SecondaryOrderItems {
         this.grossPrice,
         this.parentTp
       );
+      return offerDiscount;
     } else {
       return 0;
     }
@@ -428,12 +473,12 @@ export class SecondaryOrderItems {
     this._giftValue = v;
   }
 
-  private _parentPrefId: number;
-  public get parentPrefId(): number {
-    return this._parentPrefId;
+  private _parent_pref_id: number;
+  public get parent_pref_id(): number {
+    return this._parent_pref_id;
   }
-  public set parentPrefId(v: number) {
-    this._parentPrefId = v;
+  public set parent_pref_id(v: number) {
+    this._parent_pref_id = v;
   }
 
   private _parentUnitId: number;

@@ -326,7 +326,7 @@ export class SecondaryOrder {
 
   private _slabs: Slab[];
   public get slabs(): Slab[] {
-    return this._slabs;
+    return this._slabs || [];
   }
   public set slabs(v: Slab[]) {
     this._slabs = v;
@@ -351,8 +351,16 @@ export class SecondaryOrder {
   }
 
   public get totalCash(): number {
-    const ammount = this.getDiscountByField('totalBill');
-    return ammount - this.creditPayment - this.checkPayment;
+    const totalAmmount = this.getDiscountByField('totalBill');
+    let amount = totalAmmount;
+    if (this.isCreditPaymentAdded) {
+      amount = amount - this.creditPayment;
+    }
+
+    if (this.isCheckAdded) {
+      amount = amount - this.checkPayment;
+    }
+    return amount;
   }
 
   public get totalDueAmount(): number {
@@ -432,6 +440,22 @@ export class SecondaryOrder {
     );
   }
 
+  private _isCreditPaymentFullAmount: boolean;
+  public get isCreditPaymentFullAmount(): boolean {
+    return this._isCreditPaymentFullAmount;
+  }
+  public set isCreditPaymentFullAmount(v: boolean) {
+    this._isCreditPaymentFullAmount = v;
+  }
+
+  private _isChqueFullAmount: boolean;
+  public get isChqueFullAmount(): boolean {
+    return this._isChqueFullAmount;
+  }
+  public set isChqueFullAmount(v: boolean) {
+    this._isChqueFullAmount = v;
+  }
+
   public get showCheckButton(): boolean {
     return this.items ? (this.items.length > 0 ? true : false) : false;
   }
@@ -451,10 +475,37 @@ export class SecondaryOrder {
   }
 
   public get isShowChequeAndCreditButtons(): boolean {
-    return this.creditOrderType === environment.CREDIT_ORDER_TYPE.Regular_Order;
+    // return this.creditOrderType === environment.CREDIT_ORDER_TYPE.Regular_Order;
+    return true;
+  }
+
+  private _bankName: string;
+  public get bankName(): string {
+    return this._bankName;
+  }
+  public set bankName(v: string) {
+    this._bankName = v;
+  }
+
+  private _chequeDate: string;
+  public get chequeDate(): string {
+    return this._chequeDate;
+  }
+  public set chequeDate(v: string) {
+    this._chequeDate = v;
+  }
+
+  private _chequeNumber: string;
+  public get chequeNumber(): string {
+    return this._chequeNumber;
+  }
+  public set chequeNumber(v: string) {
+    this._chequeNumber = v;
   }
 
   private paymentDetailObject(): any {
+    const payments = [];
+
     const cashAcountEntry: any = {
       amount_received: this.totalCash,
       dispatched_bill_amount: 0,
@@ -465,9 +516,42 @@ export class SecondaryOrder {
       retailer_id: this.retailerId,
       type: this.orderType,
     };
+    payments.push(cashAcountEntry);
+    if (this.isCheckAdded) {
+      const chequePaymentAcountEntry: any = {
+        amount_received: this.checkPayment,
+        dispatched_bill_amount: 0,
+        distributor_id: this.distributorId,
+        payment_detail: {
+          bank_name: this.bankName,
+          cheque_amount: this.checkPayment,
+          cheque_date: this.chequeDate,
+          cheque_number: this.chequeNumber,
+        },
+        payment_mode: 'Cheque',
+        recovery: 0,
+        retailer_id: this.retailerId,
+        type: this.orderType,
+      };
+      payments.push(chequePaymentAcountEntry);
+    }
+    if (this.isCreditPaymentAdded) {
+      const creditPaymentAcountEntry: any = {
+        amount_received: this.creditPayment,
+        dispatched_bill_amount: 0,
+        distributor_id: this.distributorId,
+        payment_detail: '',
+        payment_mode: 'Credit',
+        recovery: 0,
+        retailer_id: this.retailerId,
+        type: this.orderType,
+      };
+      payments.push(creditPaymentAcountEntry);
+    }
     const paymentObject: any = {
       total_payment: this.totalBill,
-      detail: [cashAcountEntry],
+      detail: payments,
     };
+    return paymentObject;
   }
 }

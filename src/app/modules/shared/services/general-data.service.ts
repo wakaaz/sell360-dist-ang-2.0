@@ -77,10 +77,12 @@ export class GeneralDataService {
     orderItem.itemName = prod.item_name;
     orderItem.unitName = prod.unit_name;
     orderItem.unitId = prod.unit_id;
+    orderItem.sub_category_id = prod.sub_category_id;
     orderItem.brandId = prod.brand_id;
     orderItem.itemId = prod.item_id;
     orderItem.tradePrice = prod.item_trade_price;
-    orderItem.parentPrefId = prod.parentPrefId;
+    debugger;
+    orderItem.parent_pref_id = prod.parent_pref_id;
     if (prod.selectedScheme) {
       orderItem.schemeId = prod.selectedScheme.id;
       orderItem.rule_name = prod.selectedScheme.rule_name;
@@ -182,6 +184,7 @@ export class GeneralDataService {
       if (res.status === 200) {
         const order = SecondaryOrder.getInstance;
         order.slabs = res.data;
+        console.log('order.slabs -> ', order.slabs);
       }
     });
   }

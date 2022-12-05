@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { OrdersRoutingModule } from './orders-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -34,6 +34,7 @@ import { NewCounterSaleComponent } from './components/new-counter-sale/new-count
     CommonModule,
     OrdersRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     ClickOutsideModule,
     NgSelectModule,
     SharedModule,

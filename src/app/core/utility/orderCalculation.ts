@@ -1,4 +1,6 @@
 import { SecondaryOrder } from '../../modules/orders/primary-orders/_models/secondaryOrder.model';
+import { environment } from '../../../environments/environment';
+import { SecondaryOrderItems } from '../../modules/orders/primary-orders/_models/secondaryOrderItems';
 import {
   Slab,
   SlabDetail,
@@ -12,7 +14,8 @@ class Utility {
   public static calTradeDiscountPrice(
     quantity: number,
     unit_price_after_scheme_discount: number,
-    total_unit_price_after_scheme_discount: number
+    total_unit_price_after_scheme_discount: number,
+    item: SecondaryOrderItems = null
   ): any {
     let discount = {
       dicsountValuePkr: 0,
@@ -29,13 +32,74 @@ class Utility {
     // TODO: Remmove
     // const slabType = this.getSlabType(order.order)
 
-    const slabDiscount = slabs.find(
+    const fileteredSlabs = slabs.filter(
       (slab: Slab) =>
         slab.region_id === order.regionId &&
         slab.segment_id === order.retailer.segment_id &&
-        slab.channel_id === order.retailer.type_id &&
-        slab.slab_type === order.orderContext
+        slab.channel_id === order.retailer.type_id
+      // &&
+      // slab.slab_type === 0
     );
+    const slabTypes = fileteredSlabs.map((x) => x.slab_type);
+
+    let slabDiscount;
+    const SLAB_TYPE = environment.SLAB_TYPE;
+    const SLAB_RULE = environment.SLAB_RULE;
+    switch (true) {
+      case slabTypes.includes(SLAB_TYPE.ALL):
+        order.orderContext = 0;
+        slabDiscount = fileteredSlabs.find(
+          (slab: Slab) => slab.slab_type === order.orderContext
+        );
+        break;
+      case slabTypes.includes(SLAB_TYPE.NORMAL):
+        order.orderContext = 1;
+        slabDiscount = fileteredSlabs.find(
+          (slab: Slab) => slab.slab_type === order.orderContext
+        );
+        break;
+      case slabTypes.includes(SLAB_TYPE.EXCLUSIVE):
+        order.orderContext = 2;
+        slabDiscount = fileteredSlabs.find(
+          (slab: Slab) => slab.slab_type === order.orderContext
+        );
+        break;
+      case slabTypes.includes(SLAB_TYPE.CATEGORY_BASE):
+        order.orderContext = 5;
+        slabDiscount = fileteredSlabs.find(
+          (slab: Slab) => slab.slab_type === order.orderContext
+        );
+        if (!slabDiscount.slab_items.includes(item.sub_category_id)) {
+          slabDiscount = null;
+        }
+        break;
+      case slabTypes.includes(SLAB_TYPE.BRAND_BASE):
+        order.orderContext = 4;
+        slabDiscount = fileteredSlabs.find(
+          (slab: Slab) => slab.slab_type === order.orderContext
+        );
+        if (!slabDiscount.slab_items.includes(item.brandId)) {
+          slabDiscount = null;
+        }
+        break;
+      case slabTypes.includes(SLAB_TYPE.SKU_BASE):
+        order.orderContext = 3;
+        slabDiscount = fileteredSlabs.find(
+          (slab: Slab) => slab.slab_type === order.orderContext
+        );
+        if (!slabDiscount.slab_items.includes(item.itemId)) {
+          slabDiscount = null;
+        }
+        break;
+      default:
+        // do nothing
+        break;
+    }
+    if (!slabDiscount) {
+      discount.dicsountValuePkr = 0;
+      discount.dicsountValuePkr = 0;
+      return discount;
+    }
     if (slabDiscount.discount_filter === 'flat') {
       // if (slabDiscount.flat === 'percentage' ) {
       // } else {
@@ -47,28 +111,44 @@ class Utility {
     ) {
       const slabDetail: SlabDetail = this.applyAbleSlab(
         { ...slabDiscount },
-        order.grossPrice
+        order,
+        quantity
       );
 
       if (slabDetail) {
         discount.dicsountValuePkr =
           (slabDetail.value / 100) * unit_price_after_scheme_discount;
-        // discount =
-        // const currentItemPrice = unit_price_after_scheme_discount * quantity;
         discount.tradeDiscount = slabDetail.value;
       }
     }
 
     return discount;
   }
-  public static applyAbleSlab(slab: Slab, orderTotal: number): SlabDetail {
-    return slab.slab.find(
-      (slb) =>
+  public static applyAbleSlab(
+    slab: Slab,
+    order: SecondaryOrder,
+    quantity = 0
+  ): SlabDetail {
+    let matchedConditionAmount = 0;
+    matchedConditionAmount = order.grossPrice;
+
+    return slab.slab.find((slb) => {
+      if (
+        order.orderContext === environment.SLAB_TYPE.CATEGORY_BASE ||
+        order.orderContext === environment.SLAB_TYPE.BRAND_BASE ||
+        order.orderContext === environment.SLAB_TYPE.SKU_BASE
+      ) {
+        if (slb.slab_rule === environment.SLAB_RULE.RULE_2) {
+          matchedConditionAmount = quantity;
+        }
+      }
+      return (
         slb.range_from &&
         slb.range_to &&
-        slb.range_from <= orderTotal &&
-        slb.range_to >= orderTotal
-    );
+        slb.range_from <= matchedConditionAmount &&
+        slb.range_to >= matchedConditionAmount
+      );
+    });
   }
   // @param tradePrice => 1 quanity Price
   // @param totalQuanity => total item qty
@@ -88,6 +168,7 @@ class Utility {
     grossPrice: number,
     tradePrice: number
   ): number {
+    debugger;
     let schemeDiscountedAmount: number;
     switch (schemeType) {
       case SCHEME_RULES.DOTP:

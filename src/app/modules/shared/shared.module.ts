@@ -5,6 +5,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { ClickOutsideModule } from 'ng-click-outside';
 
 import { WhiteLoaderComponent } from './components/loader-white/loader-white.component';
+import { OrderContentComponent } from './components/order-content/order-content.component';
 import { OrderItemsListComponent } from './components/order-items/order-items.component';
 import { ProductsRightPanelComponent } from './components/product-right-panel/product-right-panel.compoent';
 import { RetailerSubListComponent } from './components/retailer-sub-listing/retailer-sub-listing.component';
@@ -19,6 +20,7 @@ const components = [
   WhiteLoaderComponent,
   ProductsRightPanelComponent,
   ReturnedProductsComponent,
+  OrderContentComponent,
 ];
 @NgModule({
   imports: [

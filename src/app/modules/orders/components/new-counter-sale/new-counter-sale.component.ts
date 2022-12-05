@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { MustMatch } from 'src/app/core/validators/amount-validator';
 import { OrdersService } from '../../services/orders.service';
 import {
   Toaster,
@@ -22,6 +23,9 @@ import {
 } from 'src/app/core/constants/schemes.constant';
 import { getNewPrimaryOderItem } from '../../primary-orders/_models/orderItems';
 import { SecondaryOrder } from '../../primary-orders/_models/secondaryOrder.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CounterSale } from '../../models/counter-sale.model';
+import { OrderItem } from '../../models/order-item.model';
 
 @Component({
   selector: 'app-counter-sale',
@@ -31,6 +35,8 @@ import { SecondaryOrder } from '../../primary-orders/_models/secondaryOrder.mode
 })
 export class NewCounterSaleComponent implements OnInit {
   permissions: any;
+
+  isSavingOrder: boolean;
   secondaryOrder: SecondaryOrder;
   selectedProduct: Inventory = null;
   showQuantityModal: boolean = false;
@@ -49,14 +55,16 @@ export class NewCounterSaleComponent implements OnInit {
   dispProducts: Inventory[];
   discountSlabs: any;
   schemes: any;
-
+  paymentForm: FormGroup;
+  submitted = false;
   constructor(
     private router: Router,
     private generalDataService: GeneralDataService,
     private storageService: LocalStorageService,
     private ordersService: OrdersService,
     private toastService: ToasterService,
-    private dataService: DataService
+    private dataService: DataService,
+    private formBuilder: FormBuilder
   ) {
     this.permissions = this.storageService.getItem(
       localStorageKeys.permissions
@@ -72,12 +80,12 @@ export class NewCounterSaleComponent implements OnInit {
     this.generalDataService.getCounterSaleData();
     this.getSchemesData();
     const sub = this.generalDataService.dispProducts$.subscribe((products) => {
-      debugger;
       this.allProducts = products;
       this.showProducts = true;
       const prodWithSchemes = this.allProducts.filter((x) => x.schemes.length);
       console.log('prodWithSchemes => ', prodWithSchemes);
     });
+    this.initializeForm();
   }
 
   getOrderBookers(): void {
@@ -393,7 +401,395 @@ export class NewCounterSaleComponent implements OnInit {
 
     this.generalDataService.pushOrderItem(this.selectedProduct);
   }
+
+  currentFullPayment(isFull: boolean) {
+    this.paymentForm.patchValue({ isfullAmount: isFull });
+    if (isFull) {
+      this.paymentForm.patchValue({
+        cheque_amount: this.secondaryOrder.totalDueAmount,
+      });
+    } else {
+      this.paymentForm.patchValue({ cheque_amount: '' });
+    }
+  }
+
+  onPaymentsubmit(isCheck: boolean) {
+    this.submitted = true;
+
+    // stop here if form is invalid
+    if (this.paymentForm.invalid) {
+      return;
+    }
+    console.log('this.paymentForm.value =>', this.paymentForm.value);
+
+    // const isFullAmount = this.paymentForm.value.isfullAmount;
+    // if (isFullAmount) {
+    // const paymentDetail = new PaymentDetail();
+    if (isCheck) {
+      this.secondaryOrder.checkPayment = this.f.cheque_amount.value;
+      this.secondaryOrder.isCheckAdded = true;
+      this.secondaryOrder.bankName = this.f.bank_name.value;
+      this.secondaryOrder.chequeNumber = this.f.cheque_number.value;
+      this.secondaryOrder.chequeDate = this.f.cheque_date.value;
+      // if (this.f.isfullAmount) {
+      //   this.secondaryOrder.isCreditPaymentFullAmount = true;
+      // }
+    } else {
+      this.secondaryOrder.creditPayment = this.f.cheque_amount.value;
+      this.secondaryOrder.isCreditPaymentAdded = true;
+      // if (this.f.isfullAmount) {
+      //   this.secondaryOrder.isCreditPaymentFullAmount = true;
+      // }
+    }
+
+    this.paymentForm.reset();
+
+    // const paymentSubDetail = {
+    //   bank_name: this.f.bank_name,
+    //   cheque_amount: this.f.cheque_amount,
+    //   cheque_date: this.f.cheque_date,
+    //   cheque_number: this.f.cheque_number,
+    // };
+
+    // const paymnetDetail = {
+    //   amountReceived: this.paymentForm.value.cheque_amount,
+    //   dispatched_bill_amount: 0,
+    //   distributor_id: this.DISTRIBUTOR_ID,
+    //   payment_mode: 'Cheque',
+    //   recovery: 0,
+    //   retailer_id: this.primaryOrder.retailerId,
+    //   type: 'Counter',
+    //   payment_detail: paymentSubDetail,
+    // };
+    // const cashDetail = {
+    //   amount_received: 0,
+    //   dispatched_bill_amount: 0,
+    //   distributor_id: this.DISTRIBUTOR_ID,
+    //   payment_detail: '',
+    //   payment_mode: 'Cash',
+    //   recovery: 0,
+    //   retailer_id: this.primaryOrder.retailerId,
+    //   type: 'Counter',
+    // };
+
+    // const payment = {
+    //   total_payment: this.paymentForm.value.cheque_amount,
+    //   detail: [paymnetDetail, cashDetail],
+    // };
+
+    // this.primaryOrder.payment = payment;
+    // }
+  }
   getDiscountSlabs() {
     this.generalDataService.getDiscountSlabs();
+  }
+
+  onCredit() {
+    this.submitted = false;
+    this.paymentForm.patchValue({ isCredit: true });
+    console.log('isCredit => ', this.f.isCredit.value);
+    this.paymentForm.patchValue({ isCheck: false });
+    this.onCreditPaymentValuesSettings();
+    if (this.secondaryOrder.isShowCreditBtn) {
+      this.paymentForm.patchValue({ isfullAmount: false });
+    }
+  }
+
+  onCreditPaymentValuesSettings() {
+    this.paymentForm.patchValue({ bank_name: 'pp' });
+    this.paymentForm.patchValue({ cheque_number: 'pp' });
+    this.paymentForm.patchValue({ cheque_date: 'pp' });
+  }
+
+  // convenience getter for easy access to form fields
+  get f(): any {
+    return this.paymentForm.controls;
+  }
+
+  initializeForm(): void {
+    this.paymentForm = this.formBuilder.group(
+      {
+        isCheck: [''],
+        isCredit: [''],
+        isfullAmount: ['', Validators.required],
+        bank_name: ['', Validators.required],
+        cheque_amount: ['', Validators.required],
+        cheque_date: ['', Validators.required],
+        cheque_number: ['', Validators.required],
+      },
+      {
+        // validation for matching password
+        validator: MustMatch(
+          'cheque_amount',
+          this.secondaryOrder.totalDueAmount
+        ),
+      }
+    );
+  }
+  onCheck() {
+    this.submitted = false;
+    this.paymentForm.patchValue({ isCheck: true });
+    this.paymentForm.patchValue({ isCredit: false });
+  }
+  onRemoveCheck() {
+    this.secondaryOrder.isCheckAdded = false;
+  }
+  onCreditFullPayment(isFull: boolean) {
+    this.paymentForm.patchValue({ isfullAmount: isFull });
+    if (isFull) {
+      this.paymentForm.patchValue({
+        cheque_amount: this.secondaryOrder.totalDueAmount,
+      });
+    } else {
+      this.paymentForm.patchValue({ cheque_amount: '' });
+    }
+  }
+  onPaymentCancel() {
+    this.paymentForm.reset();
+  }
+  onRemoveCredit() {
+    this.secondaryOrder.isCreditPaymentAdded = false;
+  }
+
+  onSaveOrder(): void {
+    this.isSavingOrder = true;
+    this.setOrderFields();
+  }
+
+  isDataValid(): boolean {
+    if (
+      (this.secondaryOrder.items && !this.secondaryOrder.items.length) ||
+      (!this.selectedEmployee && !this.selectedRoute) ||
+      !this.selectedRetailer
+    ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  setOrderFields(): void {
+    const distributorId = this.storageService.getItem('distributor').id;
+
+    if (!this.isDataValid()) {
+      const toast: Toaster = {
+        type: 'error',
+        message:
+          'Please select Employee, Route, Retailer and Products to place the order!',
+        title: 'Error:',
+      };
+      this.toastService.showToaster(toast);
+    } else {
+      // const employee = this.orderBookers.find(
+      //   (x) => x.employee_id === this.selectedEmployee
+      // );
+      const newOrder: CounterSale = {
+        area_id: this.selectedEmployee.area_id,
+        assigned_route_id: this.secondaryOrder.assignedRouteId,
+        booked_order_value: 0,
+        booked_total_qty: 0,
+        booked_total_skus: 0,
+        booking_area: this.selectedEmployee.area_id,
+        booking_locality_id: this.selectedRetailer.locality_id,
+        booking_neighbourhood_id: this.selectedRetailer.neighbourhood_id,
+        booking_region: this.selectedEmployee.region_id,
+        booking_territory: this.selectedEmployee.territory_id,
+        booking_zone: this.selectedEmployee.area_id,
+        counter_sale: 1,
+        // credit_order_type: '0',
+        // this.selectedOrderCreditType.toString(),
+        // creditsales_at:
+        //   this.selectedOrderCreditType === this.CREDIT_ORDER_TYPE.Regular_Order
+        //     ? null
+        //     : new Date(),
+        distributor_id: distributorId,
+        employee_id: this.selectedEmployee.employee_id,
+        freight_charges: 0,
+        gross_sale_amount: this.secondaryOrder.grossPrice,
+        invoice_date: new Date().toISOString(),
+        invoice_number: '',
+        items: [], // this. will be added
+        // order_context: this.secondaryOrder.order,
+        order_total: this.secondaryOrder.totalBill,
+        order_type: 'counter',
+        // payment need to be good structure
+        // payment: {
+        //   total_payment: this.secondaryOrder.totalDueAmount,
+        //   detail: [],
+        // },
+        payment: this.secondaryOrder.paymentDetails,
+
+        region_id: this.selectedEmployee.region_id,
+        remarks: 'notes',
+        retailer_id: this.selectedRetailer.retailer_id,
+        sales_man_id: 0,
+        spot_sale: 0,
+        status: 'Completed',
+        // this.selectedOrderCreditType === this.CREDIT_ORDER_TYPE.Regular_Order
+        //   ? 'Completed'
+        //   : environment.Creditsale_Satatus,
+
+        status_code: 0,
+        // this.selectedOrderCreditType === this.CREDIT_ORDER_TYPE.Regular_Order
+        //   ? 0
+        //   : 5,
+        territory_id: this.selectedEmployee.territory_id,
+        total_amount_after_tax: this.secondaryOrder.totalDueAmount,
+        total_discount: this.secondaryOrder.discount,
+        total_retail_price: this.secondaryOrder.totalRetailPrice,
+        total_tax_amount: this.secondaryOrder.tax,
+        ttl_products_sold: this.secondaryOrder.totalItemsCount,
+        ttl_qty_sold: this.secondaryOrder.totalQty,
+        within_radius: 0,
+      };
+      //   if (this.isEdit) {
+      //     newOrder.id = this.orderDetail.id;
+      //     if (this.isCancel) {
+      //       newOrder.status = 'Cancelled';
+      //       newOrder.status_code = 4;
+      //     } else {
+      //       newOrder.status = 'Completed';
+      //       newOrder.status_code = 3;
+      //       newOrder.completed_at = new Date();
+      //     }
+      //   }
+      //   this.order = newOrder;
+      //   if (this.cheque) {
+      //     this.order.payment.detail.push(this.cheque);
+      //   }
+      //   if (this.credit) {
+      //     this.order.payment.detail.push(this.credit);
+      //   }
+      //   this.order.payment.detail.push(this.cash);
+      //   if (this.selectedOrderCreditType !== this.ORDER_TYPE.Regular_Order) {
+      //     const creditEntry = {
+      //       retailer_id: this.selectedRetailer.retailer_id,
+      //       distributor_id: this.distributorId,
+      //       type: 'Counter',
+      //       payment_mode: 'Credit',
+      //       payment_detail: '',
+      //       dispatched_bill_amount: 0,
+      //       recovery: 0,
+      //       amount_received: this.dueAmount,
+      //     };
+      //     this.order.payment.detail.push(creditEntry);
+      //   }
+      this.setOrderItems(newOrder);
+      this.placeOrder(newOrder);
+    }
+  }
+  setOrderItems(newOrder: CounterSale): void {
+    this.secondaryOrder.items.forEach((product, index) => {
+      const item: OrderItem = {
+        area_id: this.secondaryOrder.areaId,
+        assigned_route_id: this.secondaryOrder.assignedRouteId,
+        booked_order_value: 0,
+        booked_total_qty: 0,
+        booker_discount: product.booker_discount,
+        brand_id: product.brandId,
+        campaign_id: product.schemeId || 0,
+        dispatch_status: 0,
+        distributor_id: this.secondaryOrder.distributorId,
+        division_id: product.divisionId,
+        final_price: product.totalBill,
+        gift_value: product.giftValue || 0,
+        gross_sale_amount: product.grossPrice,
+        // is_exclusive: product.isExclusive,
+        item_id: product.itemId,
+        item_name: product.itemName,
+        item_quantity_booker: 0,
+        item_quantity_updated: 0,
+        item_status: 1,
+        merchant_discount: product.tradeDiscount,
+        merchant_discount_pkr: product.total_trade_discount_pkr,
+        order_id: 0,
+        original_price: product.tradePrice,
+        parent_brand_id: product.brandId,
+        parent_pref_id: product.parent_pref_id,
+        parent_qty_sold: product.quantity,
+        parent_tp: product.parentTp,
+        parent_unit_id: product.parentUnitId,
+        parent_value_sold: product.totalBill,
+        pref_id: product.prefId,
+        quantity: product.quantity,
+        quantity_returned: 0,
+        reasoning: '',
+        region_id: this.secondaryOrder.regionId,
+        scheme_discount: product.tradeDiscount,
+        scheme_id: product.schemeId,
+        scheme_min_quantity: product.scheme_min_quantity,
+        scheme_quantity_free: product.scheme_quantity_free,
+        scheme_rule: product.rule_name,
+        scheme_discount_type: 1, // type is hardcoded in that scheme
+        special_discount: product.special_discount,
+        tax_class_id: product.taxClassId,
+        tax_in_percentage: product.tax_amount,
+        tax_in_value: product.tax,
+        territory_id: this.secondaryOrder.territoryId,
+        total_amount_after_tax: product.totalBill,
+        total_discount: product.totalDiscount,
+        total_retail_price: product.totalRetailPrice,
+        total_tax_amount: product.totalTaxAmount,
+        unit_id: product.unitId,
+        unit_name: product.unitName,
+        unit_price_after_individual_discount: 0,
+        unit_price_after_merchant_discount: product.unitTradeDiscountPkr,
+        unit_price_after_scheme_discount:
+          product.unit_price_after_scheme_discount,
+        unit_price_after_special_discount:
+          product.unit_price_after_special_discount || 0,
+      };
+      newOrder.items.push(item);
+    });
+  }
+
+  placeOrder(order: CounterSale): void {
+    // this.isOrdering = true;
+    this.ordersService.counterSaleOrder(order).subscribe(
+      (res) => {
+        // this.isOrdering = false;
+        if (res.status === 200) {
+          let messageOrderStatus = 'Placed';
+
+          // if (this.isEdit) {
+          //   messageOrderStatus = this.isCancel ? 'Canceled' : 'Completed';
+          // }
+          // const toast: Toaster = {
+          //   type: 'success',
+          //   message: `Order ${messageOrderStatus} successfully!`,
+          //   title: 'Order Placed:',
+          // };
+          // this.toastService.showToaster(toast);
+          // if (this.isEdit) {
+          //   const routeUrl = 'reports/credit-counter-sale';
+          //   this.router.navigate([routeUrl]);
+          // }
+          // this.selectedEmployee = null;
+          // this.selectedRoute = null;
+          // this.selectedRetailer = null;
+          // this.selectedOrderCreditType = null;
+          // this.credit = null;
+          // this.cheque = null;
+          // this.cash = null;
+          // this.retailers = [];
+          // this.routes = [];
+          // this.isChequeAdded = false;
+          // this.isCreditAdded = false;
+          // this.resetValues();
+          // this.paymentCancelled();
+        }
+      },
+      (error) => {
+        // this.isOrdering = false;
+        if (error.status !== 1 && error.status !== 401) {
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Order cannot be placed at the moment! Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      }
+    );
   }
 }

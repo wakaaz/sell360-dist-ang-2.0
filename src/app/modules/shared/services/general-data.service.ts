@@ -112,7 +112,8 @@ export class GeneralDataService {
     orderItem.parentUnitId = prod.parent_unit_id;
     // orderItem.parentBrandId = prod.para;
     orderItem.parentTp = prod.item_trade_price;
-    orderItem.parentQtySold = prod.quantity;
+    orderItem.sub_inventory_quantity = prod.sub_inventory_quantity;
+    // orderItem.parentQtySold = prod.quantity;
     // orderItem.parentValueSold = prod.par
     // orderItem.
     if (!primaryOrder.items) {

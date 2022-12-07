@@ -81,9 +81,9 @@ export class NewCounterSaleComponent implements OnInit {
     this.getSchemesData();
     const sub = this.generalDataService.dispProducts$.subscribe((products) => {
       this.allProducts = products;
-      this.showProducts = true;
-      const prodWithSchemes = this.allProducts.filter((x) => x.schemes.length);
-      console.log('prodWithSchemes => ', prodWithSchemes);
+      this.showProducts = false;
+      // const prodWithSchemes = this.allProducts.filter((x) => x.schemes.length);
+      // console.log('prodWithSchemes => ', prodWithSchemes);
     });
     this.initializeForm();
   }
@@ -265,7 +265,7 @@ export class NewCounterSaleComponent implements OnInit {
 
       this.generalDataService.mergeSchemesIntoProducts();
       // this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
-      // this.showProducts = true;
+      this.showProducts = true;
       document.body.classList.add('no-scroll');
       document
         .getElementsByClassName('overlay-blure')[0]
@@ -706,7 +706,7 @@ export class NewCounterSaleComponent implements OnInit {
         original_price: product.tradePrice,
         parent_brand_id: product.brandId,
         parent_pref_id: product.parent_pref_id,
-        parent_qty_sold: product.quantity,
+        parent_qty_sold: product.parentQtySold,
         parent_tp: product.parentTp,
         parent_unit_id: product.parentUnitId,
         parent_value_sold: product.totalBill,

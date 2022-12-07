@@ -131,11 +131,11 @@
     <div class="Action_bottom">
       <div class="container-fluid p-0">
         <div class="align-right">
-          <button type="submit" class="btn btn-primary mr-2" disabled>
+          <!-- <button type="submit" class="btn btn-primary mr-2" disabled>
             <div class="spinner-border text-light" role="status">
               <span class="sr-only">Loading...</span>
             </div>
-          </button>
+          </button> -->
           <button
             type="submit"
             class="btn btn-primary btn-cancel mr-2"
@@ -144,7 +144,14 @@
             Cancel
           </button>
           <button class="btn btn-primary" (click)="onSaveOrder()">
-            Save Order
+            <div
+              *ngIf="isSavingOrder"
+              class="spinner-border text-light"
+              role="status"
+            >
+              <span class="sr-only"></span>
+            </div>
+            {{ isSavingOrder ? "" : "Save Order" }}
           </button>
 
           <button
@@ -372,7 +379,7 @@
                   *ngIf="submitted && f?.cheque_amount?.errors?.mustMatch"
                 >
                   Amount should not be greater than
-                  {{ secondaryOrder.totalDueAmount | number: "1.2-2" }}
+                  {{ secondaryOrder.totalDueAmount | number : "1.2-2" }}
                 </span>
               </div>
             </div>
@@ -488,7 +495,7 @@
                   *ngIf="submitted && f?.cheque_amount?.errors?.mustMatch"
                 >
                   Amount should not be greater than
-                  {{ secondaryOrder.totalDueAmount | number: "1.2-2" }}
+                  {{ secondaryOrder.totalDueAmount | number : "1.2-2" }}
                 </span>
               </div>
             </div>
@@ -732,6 +739,8 @@
         <button
           type="submit"
           class="btn btn-primary dont-close-products"
+          data-dismiss="modal"
+          aria-label="Close"
           [disabled]="
             selectedProduct &&
             (!selectedProduct.stockQty || selectedProduct.stockQty == 0)
@@ -739,7 +748,6 @@
           (click)="addProductToOrder()"
         >
           <!-- (click)="addProductToOrder()" -->
-
           Confirm
         </button>
         <button

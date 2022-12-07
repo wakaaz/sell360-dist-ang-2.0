@@ -15,6 +15,14 @@ export class SecondaryOrderItems {
     this._prefId = v;
   }
 
+  private _sub_inventory_quantity: number;
+  public get sub_inventory_quantity(): number {
+    return this._sub_inventory_quantity;
+  }
+  public set sub_inventory_quantity(v: number) {
+    this._sub_inventory_quantity = v;
+  }
+
   private _sub_category_id: number;
   public get sub_category_id(): number {
     return this._sub_category_id;
@@ -507,11 +515,11 @@ export class SecondaryOrderItems {
 
   private _parentQtySold: number;
   public get parentQtySold(): number {
-    return this._parentQtySold;
+    return this.quantity / this.sub_inventory_quantity;
   }
-  public set parentQtySold(v: number) {
-    this._parentQtySold = v;
-  }
+  // public set parentQtySold(v: number) {
+  //   this._parentQtySold = v;
+  // }
 
   private _parentValueSold: number;
   public get parentValueSold(): number {

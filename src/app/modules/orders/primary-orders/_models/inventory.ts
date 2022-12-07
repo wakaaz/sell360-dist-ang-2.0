@@ -38,6 +38,7 @@ export interface Inventory {
   stockQty: number;
   parentPrefId: number;
   sub_category_id: number;
+  sub_inventory_quantity: number;
 }
 
 // export class Inventory {

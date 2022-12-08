@@ -103,7 +103,6 @@ class Utility {
     if (slabDiscount.discount_filter === 'flat') {
       if (slabDiscount.flat === 'percentage') {
       }
-      debugger;
       const slabDetail = slabDiscount.flat;
       discount.dicsountValuePkr =
         (slabDetail.value / 100) * unit_price_after_scheme_discount;

@@ -84,8 +84,11 @@ class Utility {
         break;
       case slabTypes.includes(SLAB_TYPE.SKU_BASE):
         order.orderContext = 3;
-        slabDiscount = fileteredSlabs.find(
+        const availableSlabs = fileteredSlabs.filter(
           (slab: Slab) => slab.slab_type === order.orderContext
+        );
+        slabDiscount = availableSlabs.find((slab: Slab) =>
+          slab.slab_items.includes(item.itemId)
         );
         if (!slabDiscount.slab_items.includes(item.itemId)) {
           slabDiscount = null;

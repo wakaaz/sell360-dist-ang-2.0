@@ -166,6 +166,7 @@ export class GeneralDataService {
             pr.isAdded = false;
             return pr;
           });
+          debugger;
           counterSaleData.specialDiscount = res.data.special_discount;
           this._counterSaleData$.next(counterSaleData);
         } else {

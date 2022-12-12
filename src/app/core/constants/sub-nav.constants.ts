@@ -29,6 +29,12 @@ export const ordersSubMenu = {
       link: '/orders/counter-sale',
       icon: '/assets/images/counter-sale.svg',
     },
+
+    {
+      title: 'New Counter Sale',
+      link: '/orders/new-counter-sale',
+      icon: '/assets/images/counter-sale.svg',
+    },
     // Hidden for first version
     // {
     //     title: 'Booking VS Execution',
@@ -128,14 +134,12 @@ export const retailerSubMenu = {
       link: '/retailer/retailers-invoices-list',
       icon: '/assets/images/invoice-management-icon.svg',
     },
-    
+
     // {
     //   title: 'Credit Invoices',
     //   link: '/retailer/credit-invoices',
     //   icon: '/assets/images/invoice-management-icon.svg',
     // },
-
-     
   ],
 };
 export const reportsSubMenu = {

@@ -9,6 +9,7 @@ export interface Slab {
   region_id: number;
   segment_id: number;
   slab_type: number;
+  slab_items: number[];
   slab: SlabDetail[];
 }
 export interface SlabDetail {

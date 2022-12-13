@@ -66,30 +66,31 @@ class Utility {
         break;
       case slabTypes.includes(SLAB_TYPE.CATEGORY_BASE):
         order.orderContext = 5;
-        slabDiscount = fileteredSlabs.find(
-          (slab: Slab) => slab.slab_type === order.orderContext
+        slabDiscount = this.getSlabDiscount(
+          fileteredSlabs,
+          item.sub_category_id,
+          order
         );
+
         if (!slabDiscount.slab_items.includes(item.sub_category_id)) {
           slabDiscount = null;
         }
         break;
       case slabTypes.includes(SLAB_TYPE.BRAND_BASE):
         order.orderContext = 4;
-        slabDiscount = fileteredSlabs.find(
-          (slab: Slab) => slab.slab_type === order.orderContext
+        slabDiscount = this.getSlabDiscount(
+          fileteredSlabs,
+          item.brandId,
+          order
         );
+
         if (!slabDiscount.slab_items.includes(item.brandId)) {
           slabDiscount = null;
         }
         break;
       case slabTypes.includes(SLAB_TYPE.SKU_BASE):
         order.orderContext = 3;
-        const availableSlabs = fileteredSlabs.filter(
-          (slab: Slab) => slab.slab_type === order.orderContext
-        );
-        slabDiscount = availableSlabs.find((slab: Slab) =>
-          slab.slab_items.includes(item.itemId)
-        );
+        slabDiscount = this.getSlabDiscount(fileteredSlabs, item.itemId, order);
         if (!slabDiscount.slab_items.includes(item.itemId)) {
           slabDiscount = null;
         }
@@ -118,6 +119,7 @@ class Utility {
       const slabDetail: SlabDetail = this.applyAbleSlab(
         { ...slabDiscount },
         order,
+        item,
         quantity
       );
 
@@ -130,13 +132,31 @@ class Utility {
 
     return discount;
   }
+  static getSlabDiscount(
+    fileteredSlabs: Slab[],
+    id: number,
+    order: SecondaryOrder
+  ): any {
+    const availableSlabs = this.availableSlabs(fileteredSlabs, order);
+    return availableSlabs.find((slab: Slab) => slab.slab_items.includes(id));
+  }
+  static availableSlabs(fileteredSlabs: Slab[], order: SecondaryOrder) {
+    return fileteredSlabs.filter(
+      (slab: Slab) => slab.slab_type === order.orderContext
+    );
+  }
   public static applyAbleSlab(
     slab: Slab,
     order: SecondaryOrder,
+    item: SecondaryOrderItems,
     quantity = 0
   ): SlabDetail {
     let matchedConditionAmount = 0;
-    matchedConditionAmount = order.grossPrice;
+    if (order.orderContext === 0) {
+      matchedConditionAmount = order.grossPrice;
+    } else {
+      matchedConditionAmount = item.grossPrice;
+    }
 
     return slab.slab.find((slb) => {
       if (

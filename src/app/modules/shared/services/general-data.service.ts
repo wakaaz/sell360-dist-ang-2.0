@@ -84,6 +84,7 @@ export class GeneralDataService {
     debugger;
     orderItem.parent_pref_id = prod.parent_pref_id;
     if (prod.selectedScheme) {
+      orderItem.selectedScheme = prod.selectedScheme;
       orderItem.schemeId = prod.selectedScheme.id;
       orderItem.rule_name = prod.selectedScheme.rule_name;
       orderItem.schemeName = prod.selectedScheme.name;

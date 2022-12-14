@@ -255,6 +255,7 @@ export class SecondaryOrderItems {
       this.schemeId &&
       this.rule_name !== FREE_PRODUCT_RULES.FREE_PRODUCTS
     ) {
+      debugger;
       const tradeDiscountCal =
         Utility.calTradeOfferPrice(
           this.scheme_type,
@@ -264,12 +265,21 @@ export class SecondaryOrderItems {
           this.scheme_discount_on_tp,
           this.rule_name,
           this.grossPrice,
-          this.parentTp
+          this.parentTp,
+          this.selectedScheme
         ) || 0;
       return tradeDiscountCal;
     } else {
       return 0;
     }
+  }
+
+  private _selectedScheme: any;
+  public get selectedScheme(): any {
+    return this._selectedScheme;
+  }
+  public set selectedScheme(v: any) {
+    this._selectedScheme = v;
   }
 
   private _special_discount: number;
@@ -373,7 +383,8 @@ export class SecondaryOrderItems {
         this.scheme_discount_on_tp,
         this.rule_name,
         this.grossPrice,
-        this.parentTp
+        this.parentTp,
+        this.selectedScheme
       );
       return offerDiscount;
     } else {

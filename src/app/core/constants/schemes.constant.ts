@@ -14,6 +14,7 @@ export const freeProductsRules = {
 export const SCHEME_RULES = {
   FREE_PRODUCT: 'free_product',
   DOTP: 'dotp', // Discount on trade price
+  BUNDLE_OFFER: 'bundle_offer', // bundle offer apply to the bundle of products if all products are in order if there is miss one of them then its not applyable.
 };
 
 export const FREE_PRODUCT_RULES = {
@@ -22,6 +23,7 @@ export const FREE_PRODUCT_RULES = {
   DISCOUNT_ON_MINIMUM_QUANTITY_RESTRICTION:
     'Discount on Minimum quantity restriction',
   FREE_PRODUCTS: 'Free products',
+  BUNDLE_OFFER: 'bundle_offer', // bundle offer apply to the bundle of products if all products are in order if there is miss one of them then its not applyable.
 };
 
 /** Discount Implementation Rules For Free Products */

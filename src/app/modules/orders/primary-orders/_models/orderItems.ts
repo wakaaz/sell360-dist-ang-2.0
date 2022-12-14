@@ -172,7 +172,8 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
         this.scheme_discount_on_tp,
         this.rule_name,
         this.grossPrice,
-        this.parent_tp
+        this.parent_tp,
+        null
       );
     } else {
       return 0;
@@ -189,7 +190,8 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
         this.scheme_discount_on_tp,
         this.rule_name,
         this.grossPrice,
-        this.parent_tp
+        this.parent_tp,
+        null
       );
     } else {
       return 0;

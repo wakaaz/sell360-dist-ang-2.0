@@ -42,7 +42,7 @@ class Utility {
     );
     const slabTypes = fileteredSlabs.map((x) => x.slab_type);
 
-    let slabDiscount;
+    let slabDiscount: any;
     const SLAB_TYPE = environment.SLAB_TYPE;
     const SLAB_RULE = environment.SLAB_RULE;
     switch (true) {
@@ -192,7 +192,8 @@ class Utility {
     schemeDiscountAmount: number,
     schemeRuleName: string,
     grossPrice: number,
-    tradePrice: number
+    tradePrice: number,
+    selectedSchemeBindleOffer: any
   ): number {
     debugger;
     let schemeDiscountedAmount: number;
@@ -202,6 +203,15 @@ class Utility {
           schemeMinQty,
           totalBookedQuantity,
           schemeDiscountAmount
+        );
+        break;
+      case SCHEME_RULES.BUNDLE_OFFER:
+        schemeDiscountedAmount = this.applyBundleOfferScheme(
+          schemeMinQty,
+          totalBookedQuantity,
+          schemeDiscountAmount,
+          selectedSchemeBindleOffer,
+          tradePrice
         );
         break;
       case SCHEME_RULES.FREE_PRODUCT:
@@ -347,6 +357,45 @@ class Utility {
   ): number {
     const quanitySchemeable: number = totalBookedQuantity / schemeMinQty;
     return parseInt(quanitySchemeable.toString()) * schemeDiscountAmount;
+  }
+
+  // calc trade on trade price discount
+  private static applyBundleOfferScheme(
+    schemeMinQty: number,
+    totalBookedQuantity: number,
+    schemeDiscountAmount: number,
+    selectedSchemeBindleOffer: any,
+    tradePrice: number
+  ): number {
+    const order = SecondaryOrder.getInstance;
+    let isBundle = true;
+    let qty = 0;
+
+    if (!selectedSchemeBindleOffer) {
+      return 0;
+    }
+    for (let i = 0; i < selectedSchemeBindleOffer.items.length; i++) {
+      const itemId = selectedSchemeBindleOffer.items[i].item_id;
+
+      const foundItem = order.items.find((x) => x.itemId == itemId);
+
+      if (foundItem) {
+        qty += foundItem.quantity;
+      } else {
+        isBundle = false;
+        break;
+      }
+    }
+    if (isBundle && qty >= schemeMinQty) {
+      if (selectedSchemeBindleOffer.discount_type === 2) {
+        return (schemeDiscountAmount / 100) * tradePrice;
+      } else {
+        // const quanitySchemeable: number = totalBookedQuantity / schemeMinQty;
+        return schemeMinQty * schemeDiscountAmount;
+      }
+    } else {
+      return 0;
+    }
   }
 
   // distributorDiscountPercentage = distributor disocunt in percentage

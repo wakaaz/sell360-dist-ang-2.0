@@ -2,8 +2,8 @@ export const environment = {
   production: false,
   // apiDomain: 'https://sell360.allomate.solutions',
   // apiUrl: 'https://sell360.allomate.solutions/distributor-api',
-  apiDomain: 'http://127.0.0.1:8000',
-  apiUrl: 'http://127.0.0.1:8000/distributor-api',
+  apiDomain: 'http://marketer.sell360.app',
+  apiUrl: 'http://marketer.sell360.app/distributor-api', 
 
   // apiDomain: ' https://staging.spencer.allomate.solutions',
   // apiUrl: ' https://staging.spencer.allomate.solutions/distributor-api',

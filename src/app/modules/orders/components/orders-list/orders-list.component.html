@@ -309,6 +309,7 @@
                                     <tr>
                                         <th>Date</th>
                                         <th>Order Booker</th>
+                                        <th>Hold Orders</th>
                                         <th>Total Orders</th>
                                         <th>Assign To Salesman</th>
                                         <th>Action</th>
@@ -318,6 +319,7 @@
                                     <tr *ngFor="let order of orders;let i=index">
                                         <td>{{order.date}}</td>
                                         <td>{{order.emp_name}}</td>
+                                        <td>{{order.hold_orders}}</td>
                                         <td>{{order.total_orders}}</td>
                                         <td>
                                             <ng-select class="formselect" (change)="addOrderToAssignment(order)" placeholder="Select Salesman" name="select-saleman-{{i}}" [multiple]="false"

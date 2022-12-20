@@ -1296,6 +1296,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
           }
           this.newProduct = null;
           this.selectedRetailer = null;
+          this.holdOrderParams.order_id = null;
+          this.holdOrderParams.assignment_id = null;
+          this.holdOrderParams.hold_reason = '';
           this.orderDetails.items = [];
           this.setPaymentInitalValues();
           this.getOrdersBySalemanAndDate();

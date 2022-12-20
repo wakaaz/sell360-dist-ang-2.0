@@ -718,6 +718,9 @@ export class OrderDispatchedComponent implements OnInit {
             (x) => x.id !== this.selectedRetailer.id
           );
           this.selectedRetailer = null;
+          this.holdOrderParams.order_id = null;
+          this.holdOrderParams.assignment_id = null;
+          this.holdOrderParams.hold_reason = '';
           this.getDispatchDetails();
         },
         (error) => {

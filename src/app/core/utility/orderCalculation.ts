@@ -42,7 +42,7 @@ class Utility {
     );
     const slabTypes = fileteredSlabs.map((x) => x.slab_type);
 
-    let slabDiscount;
+    let slabDiscount: any;
     const SLAB_TYPE = environment.SLAB_TYPE;
     const SLAB_RULE = environment.SLAB_RULE;
     switch (true) {
@@ -66,30 +66,31 @@ class Utility {
         break;
       case slabTypes.includes(SLAB_TYPE.CATEGORY_BASE):
         order.orderContext = 5;
-        slabDiscount = fileteredSlabs.find(
-          (slab: Slab) => slab.slab_type === order.orderContext
+        slabDiscount = this.getSlabDiscount(
+          fileteredSlabs,
+          item.sub_category_id,
+          order
         );
+
         if (!slabDiscount.slab_items.includes(item.sub_category_id)) {
           slabDiscount = null;
         }
         break;
       case slabTypes.includes(SLAB_TYPE.BRAND_BASE):
         order.orderContext = 4;
-        slabDiscount = fileteredSlabs.find(
-          (slab: Slab) => slab.slab_type === order.orderContext
+        slabDiscount = this.getSlabDiscount(
+          fileteredSlabs,
+          item.brandId,
+          order
         );
+
         if (!slabDiscount.slab_items.includes(item.brandId)) {
           slabDiscount = null;
         }
         break;
       case slabTypes.includes(SLAB_TYPE.SKU_BASE):
         order.orderContext = 3;
-        const availableSlabs = fileteredSlabs.filter(
-          (slab: Slab) => slab.slab_type === order.orderContext
-        );
-        slabDiscount = availableSlabs.find((slab: Slab) =>
-          slab.slab_items.includes(item.itemId)
-        );
+        slabDiscount = this.getSlabDiscount(fileteredSlabs, item.itemId, order);
         if (!slabDiscount.slab_items.includes(item.itemId)) {
           slabDiscount = null;
         }
@@ -118,6 +119,7 @@ class Utility {
       const slabDetail: SlabDetail = this.applyAbleSlab(
         { ...slabDiscount },
         order,
+        item,
         quantity
       );
 
@@ -130,13 +132,31 @@ class Utility {
 
     return discount;
   }
+  static getSlabDiscount(
+    fileteredSlabs: Slab[],
+    id: number,
+    order: SecondaryOrder
+  ): any {
+    const availableSlabs = this.availableSlabs(fileteredSlabs, order);
+    return availableSlabs.find((slab: Slab) => slab.slab_items.includes(id));
+  }
+  static availableSlabs(fileteredSlabs: Slab[], order: SecondaryOrder) {
+    return fileteredSlabs.filter(
+      (slab: Slab) => slab.slab_type === order.orderContext
+    );
+  }
   public static applyAbleSlab(
     slab: Slab,
     order: SecondaryOrder,
+    item: SecondaryOrderItems,
     quantity = 0
   ): SlabDetail {
     let matchedConditionAmount = 0;
-    matchedConditionAmount = order.grossPrice;
+    if (order.orderContext === 0) {
+      matchedConditionAmount = order.grossPrice;
+    } else {
+      matchedConditionAmount = item.grossPrice;
+    }
 
     return slab.slab.find((slb) => {
       if (
@@ -172,7 +192,8 @@ class Utility {
     schemeDiscountAmount: number,
     schemeRuleName: string,
     grossPrice: number,
-    tradePrice: number
+    tradePrice: number,
+    selectedSchemeBindleOffer: any
   ): number {
     debugger;
     let schemeDiscountedAmount: number;
@@ -182,6 +203,15 @@ class Utility {
           schemeMinQty,
           totalBookedQuantity,
           schemeDiscountAmount
+        );
+        break;
+      case SCHEME_RULES.BUNDLE_OFFER:
+        schemeDiscountedAmount = this.applyBundleOfferScheme(
+          schemeMinQty,
+          totalBookedQuantity,
+          schemeDiscountAmount,
+          selectedSchemeBindleOffer,
+          tradePrice
         );
         break;
       case SCHEME_RULES.FREE_PRODUCT:
@@ -327,6 +357,45 @@ class Utility {
   ): number {
     const quanitySchemeable: number = totalBookedQuantity / schemeMinQty;
     return parseInt(quanitySchemeable.toString()) * schemeDiscountAmount;
+  }
+
+  // calc trade on trade price discount
+  private static applyBundleOfferScheme(
+    schemeMinQty: number,
+    totalBookedQuantity: number,
+    schemeDiscountAmount: number,
+    selectedSchemeBindleOffer: any,
+    tradePrice: number
+  ): number {
+    const order = SecondaryOrder.getInstance;
+    let isBundle = true;
+    let qty = 0;
+
+    if (!selectedSchemeBindleOffer) {
+      return 0;
+    }
+    for (let i = 0; i < selectedSchemeBindleOffer.items.length; i++) {
+      const itemId = selectedSchemeBindleOffer.items[i].item_id;
+
+      const foundItem = order.items.find((x) => x.itemId == itemId);
+
+      if (foundItem) {
+        qty += foundItem.quantity;
+      } else {
+        isBundle = false;
+        break;
+      }
+    }
+    if (isBundle && qty >= schemeMinQty) {
+      if (selectedSchemeBindleOffer.discount_type === 2) {
+        return (schemeDiscountAmount / 100) * tradePrice;
+      } else {
+        // const quanitySchemeable: number = totalBookedQuantity / schemeMinQty;
+        return schemeMinQty * schemeDiscountAmount;
+      }
+    } else {
+      return 0;
+    }
   }
 
   // distributorDiscountPercentage = distributor disocunt in percentage

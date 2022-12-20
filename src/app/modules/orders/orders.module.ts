@@ -22,17 +22,21 @@ import { OrderDispatchedComponent } from './components/order-dispatched/order-di
 
 import { OrdersService } from './services/orders.service';
 
+// import { Ng2SearchPipeModule } from 'ng2-search-filter';
 import { OrderDispatchService } from './services/dispatch.service';
 import { ExecutionService } from './services/execution.service';
 import { SpotSaleService } from './services/spot-sale.service';
 import { RetailerRecoveryComponent } from './components/retailer-recovery/retailer-recovery.component';
 import { StockAllocationComponent } from './components/order-dispatched/stock-allocation/stock-allocation.component';
 import { NewCounterSaleComponent } from './components/new-counter-sale/new-counter-sale.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
+// import { Ng2SearchPipeModule } from 'ng2-search-filter/src/ng2-filter.module';
 
 @NgModule({
   imports: [
     CommonModule,
     OrdersRoutingModule,
+    Ng2SearchPipeModule,
     FormsModule,
     ReactiveFormsModule,
     ClickOutsideModule,

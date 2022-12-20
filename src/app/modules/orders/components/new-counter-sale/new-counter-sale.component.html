@@ -87,6 +87,7 @@
               <button
                 id="productlist01"
                 class="btn btn-primary ml-15"
+                [disabled]="!secondaryOrder.slabs?.length"
                 (click)="showProductsList($event)"
               >
                 Add Product
@@ -400,7 +401,6 @@
             class="btn btn-cancel"
             data-dismiss="modal"
             aria-label="Close"
-            (click)="onCancelCheque()"
           >
             Cancel
           </button>
@@ -425,30 +425,73 @@
           <div class="col-12">
             <div class="row pt-10">
               <div class="col-6">
+                <!-- <div class="col-auto"> -->
                 <div
                   class="custom-control custom-radio"
                   *ngIf="!secondaryOrder.isCheckAdded"
                 >
                   <input
+                    type="radio"
+                    id="self-001"
+                    name="customRadio"
                     class="custom-control-input"
-                    name="payment"
-                    id="Amount1"
                     value="full"
                     (click)="onCreditFullPayment(true)"
                   />
                   <label
                     class="custom-control-label"
                     style="font-size: 13px; line-height: 25px"
-                    for="Amount1"
-                    >Full Amount</label
+                    for="self-001"
+                  >
+                    Full Amount</label
                   >
                 </div>
+                <!-- </div> -->
+                <!-- <div class="col-auto"> -->
+                <!-- </div> -->
+                <!-- </div> -->
+                <!-- <div
+                  class="custom-control custom-radio"
+                  *ngIf="!secondaryOrder.isCheckAdded"
+                >
+                  <input
+                    class="custom-control-input"
+                    name="paymentcr"
+                    id="Amount12"
+                    value="full"
+                    (click)="onCreditFullPayment(true)"
+                  />
+                  <label
+                    class="custom-control-label"
+                    style="font-size: 13px; line-height: 25px"
+                    for="Amount12"
+                    >Full Amount</label
+                  >
+                </div> -->
               </div>
               <div class="col-6">
                 <div class="custom-control custom-radio">
                   <input
                     type="radio"
-                    name="payment"
+                    id="f-family"
+                    name="customRadio"
+                    class="custom-control-input"
+                    value="partial"
+                    (click)="onCreditFullPayment(false)"
+                  />
+                  <label
+                    style="font-size: 13px; line-height: 25px"
+                    class="custom-control-label"
+                    for="f-family"
+                    >Partial Amount
+                  </label>
+                </div>
+              </div>
+              <!-- <div class="col-6">
+                <div class="custom-control custom-radio">
+                  <input
+                    type="radio"
+                    name="paymentcr"
                     id="Amount2"
                     value="partial"
                     (click)="onCreditFullPayment(false)"
@@ -457,10 +500,10 @@
                     class="custom-control-label"
                     style="font-size: 13px; line-height: 25px"
                     for="Amount2"
-                    >Partial Amount</label
+                    >Partial Amount 1</label
                   >
                 </div>
-              </div>
+              </div> -->
               <div
                 class="col-12 input-error"
                 *ngIf="submitted && f.isfullAmount.errors"
@@ -516,7 +559,6 @@
             class="btn btn-cancel"
             data-dismiss="modal"
             aria-label="Close"
-            (click)="onPaymentCancel()"
           >
             Cancel
           </button>
@@ -541,7 +583,14 @@
       <div class="col-12">
         <div class="productSearch">
           <i class="fa fa-search"></i>
-          <input type="text" class="form-control" id="" placeholder="Search" />
+          <input
+            type="text"
+            [(ngModel)]="searchProd"
+            name="searchProd"
+            class="form-control"
+            id=""
+            placeholder="Search"
+          />
         </div>
       </div>
     </div>
@@ -556,7 +605,12 @@
                 <div class="card top_border p-15">
                   <table class="AddProductTable" width="100%">
                     <tbody>
-                      <tr *ngFor="let product of allProducts; let i = index">
+                      <tr
+                        *ngFor="
+                          let product of allProducts | filter : searchProd;
+                          let i = index
+                        "
+                      >
                         <td>
                           <div class="ProListDiv">
                             <div

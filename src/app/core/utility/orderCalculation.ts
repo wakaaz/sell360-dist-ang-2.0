@@ -9,6 +9,8 @@ import {
   FREE_PRODUCT_RULES,
   SCHEME_RULES,
 } from '../constants/schemes.constant';
+import getSecondaryOrderItem from './getSecondaryOrderItem';
+import { ComplimentoryProdut } from 'src/app/modules/orders/primary-orders/_models/complimentoryProdut';
 
 class Utility {
   public static calTradeDiscountPrice(
@@ -193,7 +195,8 @@ class Utility {
     schemeRuleName: string,
     grossPrice: number,
     tradePrice: number,
-    selectedSchemeBindleOffer: any
+    selectedSchemeBindleOffer: any,
+    itemId = 0
   ): number {
     debugger;
     let schemeDiscountedAmount: number;
@@ -212,6 +215,16 @@ class Utility {
           schemeDiscountAmount,
           selectedSchemeBindleOffer,
           tradePrice
+        );
+        break;
+      case FREE_PRODUCT_RULES.COMLIMENTRY_PRODUCT_FREE:
+        schemeDiscountedAmount = this.applyComplimentryProductFree(
+          schemeMinQty,
+          schemeFreeQty,
+          grossPrice,
+          tradePrice,
+          totalBookedQuantity,
+          itemId
         );
         break;
       case SCHEME_RULES.FREE_PRODUCT:
@@ -258,6 +271,78 @@ class Utility {
         break;
     }
     return schemeDiscountedAmount;
+  }
+  static applyComplimentryProductFree(
+    schemeMinQty: number,
+    schemeFreeQty: number,
+    grossPrice: number,
+    tradePrice: number,
+    totalBookedQuantity: number,
+    itemId: number
+  ): number {
+    const order = SecondaryOrder.getInstance;
+    const orderItem = order.items.find((x) => (x.itemId = itemId));
+
+    if (orderItem.quantity < schemeMinQty) {
+      orderItem.comlimentoryProds = [];
+      return 0;
+    }
+    const comlimentoryItemIds = orderItem.selectedScheme.items.map(
+      (x) => x.item_id
+    );
+    if (comlimentoryItemIds.includes(itemId)) {
+      const comlimentoryProds = orderItem.selectedScheme.freeitems;
+      const orderItemIndex = order.items.findIndex((x) => x.itemId == itemId);
+
+      debugger;
+      const addCompelimentoryProds = new Array<ComplimentoryProdut>();
+
+      const comlimentoryProdsLength = comlimentoryProds.length;
+      for (let i = 0; i < comlimentoryProdsLength; i++) {
+        const element = comlimentoryProds[i];
+        const prod = order.allItems.find((x) => x.item_id == element.item_id);
+
+        const addCompelimentoryProd = new ComplimentoryProdut();
+        addCompelimentoryProd.name = prod.item_name;
+        const compProdQty = order.items[orderItemIndex].quantity / schemeMinQty;
+        addCompelimentoryProd.qty = parseInt(compProdQty.toString());
+        addCompelimentoryProds.push(addCompelimentoryProd);
+      }
+      order.items[orderItemIndex].comlimentoryProds = addCompelimentoryProds;
+      debugger;
+
+      console.log(order.items[orderItemIndex].comlimentoryProds);
+
+      // const alreadyInOrderItems = order.items.find(
+      //   (x) => x.itemId === comlimentoryProdItemId
+      // );
+      // if (alreadyInOrderItems) {
+      //   return 0;
+      // }
+      // const comProd = order.allItems.find(
+      //   (x) => x.item_id === comlimentoryProdItemId
+      // );
+      // if (comProd) {
+      // const compProductSecondaryOrderItem = getSecondaryOrderItem(comProd);
+      // const orderItemIndex = order.items.findIndex((x) => x.itemId == itemId);
+      // const updatedItems = this.insertIntoSpecificIndex(
+      //   compProductSecondaryOrderItem,
+      //   order.items,
+      //   orderItemIndex + 1
+      // );
+      // order.items = [...updatedItems];
+
+      return 0;
+      // }
+    }
+    return 0;
+  }
+  static insertIntoSpecificIndex(what: any, where: any, index: any) {
+    return [
+      ...where.slice(0, index),
+      what,
+      ...where.slice(index, where.length),
+    ];
   }
   static applyFreeProductMustProdDiscountOnMinQuantity(
     schemeMinQty: number,

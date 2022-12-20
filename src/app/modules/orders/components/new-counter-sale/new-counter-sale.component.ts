@@ -35,7 +35,7 @@ import { OrderItem } from '../../models/order-item.model';
 })
 export class NewCounterSaleComponent implements OnInit {
   permissions: any;
-
+  searchProd: string = '';
   isSavingOrder: boolean;
   secondaryOrder: SecondaryOrder;
   selectedProduct: Inventory = null;
@@ -82,6 +82,8 @@ export class NewCounterSaleComponent implements OnInit {
     const sub = this.generalDataService.dispProducts$.subscribe((products) => {
       this.allProducts = products;
       this.showProducts = false;
+      this.secondaryOrder.allItems = this.allProducts;
+      // this.isAddProduct = true;
       // const prodWithSchemes = this.allProducts.filter((x) => x.schemes.length);
       // console.log('prodWithSchemes => ', prodWithSchemes);
     });
@@ -431,12 +433,16 @@ export class NewCounterSaleComponent implements OnInit {
       this.secondaryOrder.bankName = this.f.bank_name.value;
       this.secondaryOrder.chequeNumber = this.f.cheque_number.value;
       this.secondaryOrder.chequeDate = this.f.cheque_date.value;
+
+      document.getElementById('close-payment-modal').click();
       // if (this.f.isfullAmount) {
       //   this.secondaryOrder.isCreditPaymentFullAmount = true;
       // }
     } else {
       this.secondaryOrder.creditPayment = this.f.cheque_amount.value;
       this.secondaryOrder.isCreditPaymentAdded = true;
+      document.getElementById('close-payment-modal').click();
+
       // if (this.f.isfullAmount) {
       //   this.secondaryOrder.isCreditPaymentFullAmount = true;
       // }
@@ -485,6 +491,7 @@ export class NewCounterSaleComponent implements OnInit {
   }
 
   onCredit() {
+    this.paymentForm.reset();
     this.submitted = false;
     this.paymentForm.patchValue({ isCredit: true });
     console.log('isCredit => ', this.f.isCredit.value);
@@ -527,6 +534,7 @@ export class NewCounterSaleComponent implements OnInit {
     );
   }
   onCheck() {
+    this.paymentForm.reset();
     this.submitted = false;
     this.paymentForm.patchValue({ isCheck: true });
     this.paymentForm.patchValue({ isCredit: false });
@@ -749,17 +757,22 @@ export class NewCounterSaleComponent implements OnInit {
       (res) => {
         // this.isOrdering = false;
         if (res.status === 200) {
+          this.isSavingOrder = false;
+
           let messageOrderStatus = 'Placed';
 
           // if (this.isEdit) {
           //   messageOrderStatus = this.isCancel ? 'Canceled' : 'Completed';
           // }
-          // const toast: Toaster = {
-          //   type: 'success',
-          //   message: `Order ${messageOrderStatus} successfully!`,
-          //   title: 'Order Placed:',
-          // };
-          // this.toastService.showToaster(toast);
+          const toast: Toaster = {
+            type: 'success',
+            message: `Order ${messageOrderStatus} successfully!`,
+            title: 'Order Placed:',
+          };
+          this.toastService.showToaster(toast);
+          this.secondaryOrder.items = [];
+          this.secondaryOrder.isCheckAdded = false;
+          this.secondaryOrder.isCreditPaymentAdded = false;
           // if (this.isEdit) {
           //   const routeUrl = 'reports/credit-counter-sale';
           //   this.router.navigate([routeUrl]);
@@ -787,6 +800,7 @@ export class NewCounterSaleComponent implements OnInit {
             message: 'Order cannot be placed at the moment! Please try again',
             title: 'Error:',
           };
+          this.isSavingOrder = false;
           this.toastService.showToaster(toast);
         }
       }

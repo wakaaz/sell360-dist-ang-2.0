@@ -23,6 +23,7 @@ export const FREE_PRODUCT_RULES = {
   DISCOUNT_ON_MINIMUM_QUANTITY_RESTRICTION:
     'Discount on Minimum quantity restriction',
   FREE_PRODUCTS: 'Free products',
+  COMLIMENTRY_PRODUCT_FREE: 'comp_product',
   BUNDLE_OFFER: 'bundle_offer', // bundle offer apply to the bundle of products if all products are in order if there is miss one of them then its not applyable.
 };
 

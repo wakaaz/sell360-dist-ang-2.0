@@ -1,4 +1,5 @@
 import { environment } from 'src/environments/environment';
+import { Inventory } from './inventory';
 import { Retailer } from './retailer.model';
 import { SecondaryOrderItems } from './secondaryOrderItems';
 import { Slab } from './slab.model';
@@ -314,6 +315,14 @@ export class SecondaryOrder {
 
   public get totalTradeDiscount(): number {
     return this.getDiscountByField('total_trade_discount_pkr');
+  }
+
+  private _allItems: Inventory[];
+  public get allItems(): Inventory[] {
+    return this._allItems;
+  }
+  public set allItems(v: Inventory[]) {
+    this._allItems = v;
   }
 
   private _items: SecondaryOrderItems[];

@@ -1,6 +1,7 @@
 import { FREE_PRODUCT_RULES } from 'src/app/core/constants/schemes.constant';
 import Utility from 'src/app/core/utility/orderCalculation';
 import { environment } from 'src/environments/environment';
+import { ComplimentoryProdut } from './complimentoryProdut';
 // import Utility from '../_utility/order-calculation';
 // import { PrimaryOrder } from './order.model';
 // import { environment } from '../../../../environments/environment';
@@ -13,6 +14,14 @@ export class SecondaryOrderItems {
   }
   public set prefId(v: number) {
     this._prefId = v;
+  }
+
+  private _comlimentoryProds: ComplimentoryProdut[];
+  public get comlimentoryProds(): ComplimentoryProdut[] {
+    return this._comlimentoryProds || new Array<ComplimentoryProdut>();
+  }
+  public set comlimentoryProds(v: ComplimentoryProdut[]) {
+    this._comlimentoryProds = v;
   }
 
   private _sub_inventory_quantity: number;
@@ -73,15 +82,16 @@ export class SecondaryOrderItems {
   }
 
   public get unit_price_after_booker_discount(): number {
-    return (this.grossPrice - this.extraDiscount) / this.quantity;
+    return this.quantity
+      ? (this.grossPrice - this.extraDiscount) / this.quantity
+      : 0;
   }
 
   // booker discount and extra discount are the same in this project
   public get extraDiscount(): number {
-    return Utility.calExtraOrBookerDiscount(
-      this.booker_discount,
-      this.quantity
-    );
+    return this.quantity
+      ? Utility.calExtraOrBookerDiscount(this.booker_discount, this.quantity)
+      : 0;
   }
 
   private _quantityReturned: number;
@@ -124,11 +134,9 @@ export class SecondaryOrderItems {
   }
 
   public get tax(): number {
-    return Utility.calTax(
-      this.tax_amount,
-      this.item_retail_price,
-      this.quantity
-    );
+    return this.quantity
+      ? Utility.calTax(this.tax_amount, this.item_retail_price, this.quantity)
+      : 0;
   }
 
   private _item_retail_price: number;
@@ -149,12 +157,19 @@ export class SecondaryOrderItems {
     );
   }
   public set quantity(v: number) {
-    this._quantity = v;
-    this.maxBookerDiscount = this.totalBillWithoutExtraDisocunt / this.quantity;
+    this._quantity = v || 0;
+    if (this._quantity) {
+      this.maxBookerDiscount =
+        this.totalBillWithoutExtraDisocunt / this.quantity;
+    } else {
+      this.maxBookerDiscount = 0;
+    }
   }
 
   public get unit_price_after_distributor_discount(): number {
-    return (this.grossPrice - this.distributorDiscount) / this.quantity;
+    return this.quantity
+      ? (this.grossPrice - this.distributorDiscount) / this.quantity
+      : 0;
   }
 
   private _distributor_discount: number;
@@ -166,13 +181,13 @@ export class SecondaryOrderItems {
   }
 
   public get distributorDiscount(): number {
-    return (
-      Utility.calDistributorDiscount(
-        this.distributor_discount,
-        this.parentTp,
-        this.quantity
-      ) || 0
-    );
+    return this.quantity
+      ? Utility.calDistributorDiscount(
+          this.distributor_discount,
+          this.parentTp,
+          this.quantity
+        ) || 0
+      : 0;
   }
 
   private _tradePrice: number;
@@ -232,7 +247,9 @@ export class SecondaryOrderItems {
   }
 
   public get grossPrice(): number {
-    return Utility.calGrossAmount(this.parentTp, this.quantity);
+    return this.quantity
+      ? Utility.calGrossAmount(this.parentTp, this.quantity)
+      : 0;
   }
 
   public get totalPriceAfterSchemeDiscount(): number {
@@ -253,7 +270,8 @@ export class SecondaryOrderItems {
       // order.creditOrderType !==
       //   environment.CREDIT_ORDER_TYPE.Credit_Order_Without_Discount &&
       this.schemeId &&
-      this.rule_name !== FREE_PRODUCT_RULES.FREE_PRODUCTS
+      this.rule_name !== FREE_PRODUCT_RULES.FREE_PRODUCTS &&
+      this.quantity
     ) {
       debugger;
       const tradeDiscountCal =
@@ -266,7 +284,8 @@ export class SecondaryOrderItems {
           this.rule_name,
           this.grossPrice,
           this.parentTp,
-          this.selectedScheme
+          this.selectedScheme,
+          this.itemId
         ) || 0;
       return tradeDiscountCal;
     } else {
@@ -291,7 +310,9 @@ export class SecondaryOrderItems {
   }
 
   public get specialDiscount(): number {
-    return Utility.calSpeacialDiscount(this.special_discount, this.quantity);
+    return this.quantity
+      ? Utility.calSpeacialDiscount(this.special_discount, this.quantity)
+      : 0;
   }
 
   public get total_trade_discount_pkr(): number {
@@ -299,7 +320,8 @@ export class SecondaryOrderItems {
 
     if (
       order.creditOrderType !==
-      environment.CREDIT_ORDER_TYPE.Credit_Order_Without_Discount
+        environment.CREDIT_ORDER_TYPE.Credit_Order_Without_Discount &&
+      this.quantity
     ) {
       return this.unitTradeDiscountPkr * this.quantity;
     } else {
@@ -316,13 +338,16 @@ export class SecondaryOrderItems {
   }
 
   public get unit_price_after_special_discount(): number {
-    return (this.grossPrice - this.specialDiscount) / this.quantity;
+    return this.quantity
+      ? (this.grossPrice - this.specialDiscount) / this.quantity
+      : 0;
   }
 
   public get tradeDiscount(): number {
     const order = SecondaryOrder.getInstance;
     if (
-      order.slabs.length
+      order.slabs.length &&
+      this.quantity
       // order.creditOrderType !==
       // environment.CREDIT_ORDER_TYPE.Credit_Order_Without_Discount
     ) {
@@ -374,7 +399,11 @@ export class SecondaryOrderItems {
   }
 
   public get(): number {
-    if (this.schemeId && this.rule_name === FREE_PRODUCT_RULES.FREE_PRODUCTS) {
+    if (
+      this.schemeId &&
+      this.rule_name === FREE_PRODUCT_RULES.FREE_PRODUCTS &&
+      this.quantity
+    ) {
       const offerDiscount = Utility.calTradeOfferPrice(
         this.scheme_type,
         this.scheme_min_quantity,
@@ -393,7 +422,9 @@ export class SecondaryOrderItems {
   }
 
   public get unit_price_after_scheme_discount(): number {
-    return (this.grossPrice - this.tradeOffer) / this.quantity;
+    return this.quantity
+      ? (this.grossPrice - this.tradeOffer) / this.quantity
+      : 0;
   }
 
   private _isExclusive: number;
@@ -526,7 +557,7 @@ export class SecondaryOrderItems {
 
   private _parentQtySold: number;
   public get parentQtySold(): number {
-    return this.quantity / this.sub_inventory_quantity;
+    return this.quantity ? this.quantity / this.sub_inventory_quantity : 0;
   }
   // public set parentQtySold(v: number) {
   //   this._parentQtySold = v;

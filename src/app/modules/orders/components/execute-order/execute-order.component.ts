@@ -1276,16 +1276,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     document.getElementById('close-hold-model').click();
   }
   holdOrder(event: Event):void{
-    this.holdOrderParams.hold_reason.trim();
-    debugger
     if(this.holdOrderParams.hold_reason.trim() != ''){
-      debugger
       document.getElementById('close-hold-model').click();
       this.savingOrder = true;
       this.holdOrderParams.order_id = this.orderDetails.id;
       this.holdOrderParams.assignment_id = this.orderDetails.assignment_id;
-      this.holdOrderParams ;
-      debugger;
       this.orderService.holdOrder(this.holdOrderParams).subscribe(
         (res) => { 
           this.newProduct = null;

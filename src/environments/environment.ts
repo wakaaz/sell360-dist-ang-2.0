@@ -35,4 +35,8 @@ export const environment = {
     RULE_1: 1, //Noraml
     RULE_2: 2, // matching slab ranges with quantity
   },
+  SCHEME_RULE: {
+    RULE_5: 5, // Fixed Quantity of the Complimentary Product
+    RULE_6: 6, // Equal Quantity of Complimentary Product w.r.t Primary product
+  },
 };

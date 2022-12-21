@@ -372,6 +372,15 @@ export class NewCounterSaleComponent implements OnInit {
   //   );
   // }
 
+  removeProductFromOrder(product: Inventory) {
+    this.secondaryOrder.items = this.secondaryOrder.items.filter(
+      (x) => x.itemId !== product.item_id
+    );
+    this.generalDataService.displayProductsIsAddedStatus(
+      false,
+      product.item_id
+    );
+  }
   openQuantityModal(product: any): void {
     this.showQuantityModal = true;
     console.log('product -> ', product);
@@ -397,6 +406,7 @@ export class NewCounterSaleComponent implements OnInit {
   }
 
   addProductToOrder() {
+    debugger;
     console.log('this.selectedProduct -> ', this.selectedProduct);
     // const orderItem = getNewPrimaryOderItem(this.selectedProduct);
     // console.log('orderItem -> ', orderItem);

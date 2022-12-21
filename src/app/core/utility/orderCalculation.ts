@@ -281,10 +281,13 @@ class Utility {
     itemId: number
   ): number {
     const order = SecondaryOrder.getInstance;
-    const orderItem = order.items.find((x) => (x.itemId = itemId));
+    const orderItem = order.items.find((x) => x.itemId === itemId);
 
     if (orderItem.quantity < schemeMinQty) {
       orderItem.comlimentoryProds = [];
+      return 0;
+    }
+    if (!orderItem?.selectedScheme?.items?.length) {
       return 0;
     }
     const comlimentoryItemIds = orderItem.selectedScheme.items.map(
@@ -292,9 +295,8 @@ class Utility {
     );
     if (comlimentoryItemIds.includes(itemId)) {
       const comlimentoryProds = orderItem.selectedScheme.freeitems;
-      const orderItemIndex = order.items.findIndex((x) => x.itemId == itemId);
+      const orderItemIndex = order.items.findIndex((x) => x.itemId === itemId);
 
-      debugger;
       const addCompelimentoryProds = new Array<ComplimentoryProdut>();
 
       const comlimentoryProdsLength = comlimentoryProds.length;
@@ -304,14 +306,19 @@ class Utility {
 
         const addCompelimentoryProd = new ComplimentoryProdut();
         addCompelimentoryProd.name = prod.item_name;
-        const compProdQty = order.items[orderItemIndex].quantity / schemeMinQty;
-        addCompelimentoryProd.qty = parseInt(compProdQty.toString());
+        if (
+          environment.SCHEME_RULE.RULE_5 ===
+          orderItem.selectedScheme.scheme_rule
+        ) {
+          const compProdQty =
+            order.items[orderItemIndex].quantity / schemeMinQty;
+          addCompelimentoryProd.qty = parseInt(compProdQty.toString());
+        } else {
+          addCompelimentoryProd.qty = orderItem.quantity;
+        }
         addCompelimentoryProds.push(addCompelimentoryProd);
       }
       order.items[orderItemIndex].comlimentoryProds = addCompelimentoryProds;
-      debugger;
-
-      console.log(order.items[orderItemIndex].comlimentoryProds);
 
       // const alreadyInOrderItems = order.items.find(
       //   (x) => x.itemId === comlimentoryProdItemId

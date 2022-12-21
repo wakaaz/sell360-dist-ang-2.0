@@ -86,6 +86,31 @@
         ><i class="fa fa-trash-alt"></i
       ></a>
     </div>
+    <div
+      *ngFor="let compProd of item.comlimentoryProds"
+      class="col-12 pl-5 pr-5"
+    >
+      <div
+        style="
+          background-color: #e9f7e4;
+          font-size: 12px;
+          border: 0.063rem solid #8cd772;
+          margin-top: 8px;
+          padding: 3px 8px;
+          line-height: 1;
+          color: #16872e;
+        "
+      >
+        <div class="row">
+          <div class="col-md-6">
+            <strong>Free Product:</strong> {{ compProd.name }}
+          </div>
+          <div class="col-md-6 text-right">
+            <strong>QTY: </strong> {{ compProd.qty }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- <div class="row _row-product" *ngIf="!order.totalItemsCount">

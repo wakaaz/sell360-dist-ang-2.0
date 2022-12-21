@@ -189,6 +189,7 @@
                                 <th>Channel</th>
                                 <th>Orders Booker</th>
                                 <th>Order Total</th>
+                                <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -199,6 +200,7 @@
                                 <td>{{order.channel}} </td>
                                 <td>{{order.emp_name}}</td>
                                 <td>{{order.order_total | number: '1.2-2'}}</td>
+                                <td>{{order.order_type ? 'Hold':'New'}}</td>
                                 <td><button (click)="showDetails = true;openDetailsModal(order.id)" class="btn btn-default btn-line mb-0">Detail</button></td>
                             </tr>
 

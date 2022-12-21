@@ -6,6 +6,7 @@ import { ComplimentoryProdut } from './complimentoryProdut';
 // import { PrimaryOrder } from './order.model';
 // import { environment } from '../../../../environments/environment';
 import { SecondaryOrder } from './secondaryOrder.model';
+import { Inventory } from './inventory';
 
 export class SecondaryOrderItems {
   private _prefId: number;
@@ -16,11 +17,11 @@ export class SecondaryOrderItems {
     this._prefId = v;
   }
 
-  private _comlimentoryProds: ComplimentoryProdut[];
-  public get comlimentoryProds(): ComplimentoryProdut[] {
-    return this._comlimentoryProds || new Array<ComplimentoryProdut>();
+  private _comlimentoryProds: Inventory[];
+  public get comlimentoryProds(): Inventory[] {
+    return this._comlimentoryProds || new Array<Inventory>();
   }
-  public set comlimentoryProds(v: ComplimentoryProdut[]) {
+  public set comlimentoryProds(v: Inventory[]) {
     this._comlimentoryProds = v;
   }
 
@@ -273,7 +274,6 @@ export class SecondaryOrderItems {
       this.rule_name !== FREE_PRODUCT_RULES.FREE_PRODUCTS &&
       this.quantity
     ) {
-      debugger;
       const tradeDiscountCal =
         Utility.calTradeOfferPrice(
           this.scheme_type,

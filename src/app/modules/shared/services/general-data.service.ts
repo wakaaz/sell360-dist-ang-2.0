@@ -76,6 +76,11 @@ export class GeneralDataService {
   }
   displayProductsIsAddedStatus(value: boolean = false, itemId: number = 0) {
     const dispProductsLength = this._dispProducts$.value.length;
+    if (itemId === 0) {
+      this._dispProducts$.value.forEach((x) => {
+        x.isAdded = false;
+      });
+    }
     for (let i = 0; i < dispProductsLength; i++) {
       if (this._dispProducts$.value[i].item_id === itemId) {
         this._dispProducts$.value[i].isAdded = value;
@@ -117,7 +122,6 @@ export class GeneralDataService {
             pr.isAdded = false;
             return pr;
           });
-          debugger;
           counterSaleData.specialDiscount = res.data.special_discount;
           this._counterSaleData$.next(counterSaleData);
         } else {

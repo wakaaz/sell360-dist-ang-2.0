@@ -1,3 +1,5 @@
+import { ComplimentoryProdut } from '../primary-orders/_models/complimentoryProdut';
+
 export interface OrderItem {
   pref_id: number;
   item_quantity_booker: number;
@@ -53,4 +55,6 @@ export interface OrderItem {
   total_amount_after_tax: number;
   total_discount: number;
   scheme_discount_type: number;
+  trade_price: number;
+  schemeitems: ComplimentoryProdut[];
 }

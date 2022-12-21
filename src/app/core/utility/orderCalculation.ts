@@ -11,6 +11,7 @@ import {
 } from '../constants/schemes.constant';
 import getSecondaryOrderItem from './getSecondaryOrderItem';
 import { ComplimentoryProdut } from 'src/app/modules/orders/primary-orders/_models/complimentoryProdut';
+import { Inventory } from 'src/app/modules/orders/primary-orders/_models/inventory';
 
 class Utility {
   public static calTradeDiscountPrice(
@@ -198,7 +199,6 @@ class Utility {
     selectedSchemeBindleOffer: any,
     itemId = 0
   ): number {
-    debugger;
     let schemeDiscountedAmount: number;
     switch (schemeType) {
       case SCHEME_RULES.DOTP:
@@ -297,24 +297,23 @@ class Utility {
       const comlimentoryProds = orderItem.selectedScheme.freeitems;
       const orderItemIndex = order.items.findIndex((x) => x.itemId === itemId);
 
-      const addCompelimentoryProds = new Array<ComplimentoryProdut>();
+      const addCompelimentoryProds = new Array<Inventory>();
 
       const comlimentoryProdsLength = comlimentoryProds.length;
       for (let i = 0; i < comlimentoryProdsLength; i++) {
         const element = comlimentoryProds[i];
         const prod = order.allItems.find((x) => x.item_id == element.item_id);
 
-        const addCompelimentoryProd = new ComplimentoryProdut();
-        addCompelimentoryProd.name = prod.item_name;
+        const addCompelimentoryProd = { ...prod };
         if (
           environment.SCHEME_RULE.RULE_5 ===
           orderItem.selectedScheme.scheme_rule
         ) {
           const compProdQty =
             order.items[orderItemIndex].quantity / schemeMinQty;
-          addCompelimentoryProd.qty = parseInt(compProdQty.toString());
+          addCompelimentoryProd.quantity = parseInt(compProdQty.toString());
         } else {
-          addCompelimentoryProd.qty = orderItem.quantity;
+          addCompelimentoryProd.quantity = orderItem.quantity;
         }
         addCompelimentoryProds.push(addCompelimentoryProd);
       }
@@ -344,6 +343,7 @@ class Utility {
     }
     return 0;
   }
+
   static insertIntoSpecificIndex(what: any, where: any, index: any) {
     return [
       ...where.slice(0, index),

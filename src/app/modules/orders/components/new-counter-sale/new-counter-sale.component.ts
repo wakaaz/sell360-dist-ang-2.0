@@ -26,6 +26,8 @@ import { SecondaryOrder } from '../../primary-orders/_models/secondaryOrder.mode
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CounterSale } from '../../models/counter-sale.model';
 import { OrderItem } from '../../models/order-item.model';
+import { SecondaryOrderItems } from '../../primary-orders/_models/secondaryOrderItems';
+import { ComplimentoryProdut } from '../../primary-orders/_models/complimentoryProdut';
 
 @Component({
   selector: 'app-counter-sale',
@@ -45,7 +47,7 @@ export class NewCounterSaleComponent implements OnInit {
   distributorId: number;
   orderBookers: IEmployee[];
   selectedEmployee: IEmployee;
-  order: PrimaryOrder;
+  order: SecondaryOrder;
   selectedRoute: IRoute;
   routes: IRoute[];
   retailers: IRetailer[];
@@ -69,13 +71,15 @@ export class NewCounterSaleComponent implements OnInit {
     this.permissions = this.storageService.getItem(
       localStorageKeys.permissions
     );
-    this.order = new PrimaryOrder();
+    // this.order = new PrimaryOrder();
+    this.order = SecondaryOrder.getInstance;
+    this.secondaryOrder = SecondaryOrder.getInstance;
+
     // this.order.orderType = environment.ORDER_TYPE.COUNTER_SALE;
     this.distributorId = this.storageService.getItem('distributor').id;
   }
 
   ngOnInit(): void {
-    this.secondaryOrder = SecondaryOrder.getInstance;
     this.getOrderBookers();
     this.generalDataService.getCounterSaleData();
     this.getSchemesData();
@@ -406,7 +410,6 @@ export class NewCounterSaleComponent implements OnInit {
   }
 
   addProductToOrder() {
-    debugger;
     console.log('this.selectedProduct -> ', this.selectedProduct);
     // const orderItem = getNewPrimaryOderItem(this.selectedProduct);
     // console.log('orderItem -> ', orderItem);
@@ -731,6 +734,7 @@ export class NewCounterSaleComponent implements OnInit {
         pref_id: product.prefId,
         quantity: product.quantity,
         quantity_returned: 0,
+        trade_price: product.tradePrice,
         reasoning: '',
         region_id: this.secondaryOrder.regionId,
         scheme_discount: product.tradeDiscount,
@@ -756,13 +760,59 @@ export class NewCounterSaleComponent implements OnInit {
           product.unit_price_after_scheme_discount,
         unit_price_after_special_discount:
           product.unit_price_after_special_discount || 0,
+        schemeitems:
+          product.comlimentoryProds.length > 0
+            ? this.getSchemeItems(product)
+            : null,
       };
       newOrder.items.push(item);
     });
   }
+  getSchemeItems(product: SecondaryOrderItems): ComplimentoryProdut[] {
+    const schemeitems: ComplimentoryProdut[] = [];
+
+    product.comlimentoryProds.forEach((x) => {
+      const schemeItem: ComplimentoryProdut = {
+        name: x.item_name,
+        // parent_item_id: x.,
+        item_id: x.item_id,
+        pref_id: x.pref_id,
+        unit_id: x.unit_id,
+        brand_id: x.brand_id,
+        parent_pref_id: x.parent_pref_id,
+        parent_unit_id: x.parent_unit_id,
+        region_id: this.secondaryOrder.bookingRegion,
+        area_id: this.secondaryOrder.bookingArea,
+        territory_id: this.secondaryOrder.bookingTerritory,
+        parent_qty_sold: 0,
+        quantity: x.quantity,
+        scheme_id: product.schemeId,
+        scheme_type: 'comp_product',
+        scheme_rule: product.selectedScheme.scheme_rule,
+        scheme_min_quantity: product.schemeMinQty,
+        scheme_quantity_free: 0,
+        scheme_discount_type: product.selectedScheme.scheme_discount_type,
+        gift_value: 0,
+        dispatch_qty: 0,
+        executed_qty: 0,
+        city_id: 0,
+        locality_id: '0',
+        neighbourhood_id: '0',
+        segment_id: this.order.retailerSegmentId,
+        channel_id: '0',
+        main_category_id: 0,
+        sub_category_id: 0,
+      };
+
+      schemeitems.push(schemeItem);
+    });
+
+    return schemeitems;
+  }
 
   placeOrder(order: CounterSale): void {
     // this.isOrdering = true;
+    debugger;
     this.ordersService.counterSaleOrder(order).subscribe(
       (res) => {
         // this.isOrdering = false;
@@ -783,6 +833,7 @@ export class NewCounterSaleComponent implements OnInit {
           this.secondaryOrder.items = [];
           this.secondaryOrder.isCheckAdded = false;
           this.secondaryOrder.isCreditPaymentAdded = false;
+          this.generalDataService.displayProductsIsAddedStatus(false);
           // if (this.isEdit) {
           //   const routeUrl = 'reports/credit-counter-sale';
           //   this.router.navigate([routeUrl]);

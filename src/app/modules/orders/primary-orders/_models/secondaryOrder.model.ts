@@ -234,6 +234,46 @@ export class SecondaryOrder {
     this._regionId = v;
   }
 
+  private _employee_id: number;
+  public get employee_id(): number {
+    return this._employee_id;
+  }
+  public set employee_id(v: number) {
+    this._employee_id = v;
+  }
+
+  private _retailerRegionId: number;
+  public get retailerRegionId(): number {
+    return this._retailerRegionId;
+  }
+  public set retailerRegionId(v: number) {
+    this._retailerRegionId = v;
+  }
+
+  private _employee_name: string;
+  public get employee_name(): string {
+    return this._employee_name;
+  }
+  public set employee_name(v: string) {
+    this._employee_name = v;
+  }
+
+  private _route_id: number;
+  public get route_id(): number {
+    return this._route_id;
+  }
+  public set route_id(v: number) {
+    this._route_id = v;
+  }
+
+  private _retailerSegmentId: number;
+  public get retailerSegmentId(): number {
+    return this._retailerSegmentId;
+  }
+  public set retailerSegmentId(v: number) {
+    this._retailerSegmentId = v;
+  }
+
   // Selected Employee
   private _areaId: number;
   public get areaId(): number {

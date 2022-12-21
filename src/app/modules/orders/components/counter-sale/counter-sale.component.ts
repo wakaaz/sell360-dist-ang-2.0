@@ -589,7 +589,6 @@ export class CounterSaleComponent implements OnInit {
       this.toastService.showToaster(toast);
     } else {
       if (this.selectedRetailer) {
-        debugger;
         this.allProducts = this.allProducts.map((product) => {
           product.schemes = this.dataService.getSchemes(
             product.item_id,
@@ -1177,6 +1176,8 @@ export class CounterSaleComponent implements OnInit {
         total_discount: productTotalDiscount,
         total_retail_price: product.stockQty * product.item_retail_price,
         total_tax_amount: product.tax_amount_pkr || 0,
+        trade_price: 0,
+        schemeitems: [],
       };
       this.order.items.push(item);
       if (index === this.selectedProducts.length - 1) {

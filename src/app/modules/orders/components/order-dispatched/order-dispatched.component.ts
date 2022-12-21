@@ -318,7 +318,6 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   setDataForLoad(): void {
-    debugger;
     if (!this.dispatchOrderDetail?.orders) {
       this.getDispatchOrdersDetail();
     } else {
@@ -482,7 +481,6 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   getDiscountSlabs(): void {
-    debugger;
     if (!this.discountSlabs.length) {
       this.orderService.getDiscountSlabs().subscribe(
         (res) => {

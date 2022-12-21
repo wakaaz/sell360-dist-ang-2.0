@@ -265,7 +265,6 @@ export class DistributorPurchaseComponent
       ? JSON.parse(JSON.stringify(this.secondaryProducts))
       : JSON.parse(JSON.stringify(this.primaryProducts));
     this.addNewProducts = true;
-    debugger;
     document.body.classList.add('no-scroll');
     document
       .getElementsByClassName('overlay-blure')[0]

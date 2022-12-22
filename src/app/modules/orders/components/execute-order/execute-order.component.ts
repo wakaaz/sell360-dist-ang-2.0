@@ -359,7 +359,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   getOrderDetailsByRetailer(retailer: any): void {
-    debugger;
     if (this.selectedRetailer?.id !== retailer.id) {
       this.savingOrder = true;
       this.newProduct = null;
@@ -416,7 +415,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
           }
         }
       );
-      debugger;
       this.getDiscountSlabs();
     }
   }
@@ -547,7 +545,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   setCurrentSpotSaleOrder(retailer: any): void {
-    debugger;
     if (!this.isSpotSaleActive) {
       if (retailer.id) {
         this.isSpotSaleActive = true;
@@ -560,7 +557,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         this.orderDetails = this.spotSaleOrder.orders.find(
           (x) => x.retailer_id === retailer.retailer_id
         );
-        debugger;
         this.getDiscountSlabs();
         this.newProduct = null;
       }
@@ -575,9 +571,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   getDiscountSlabs(): void {
-    debugger;
     if (!this.discountSlabs.length) {
-      debugger;
       this.orderService.getDiscountSlabs().subscribe(
         (res) => {
           if (res.status === 200) {

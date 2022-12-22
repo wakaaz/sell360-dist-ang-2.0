@@ -26,6 +26,8 @@ import { SecondaryOrder } from '../../primary-orders/_models/secondaryOrder.mode
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CounterSale } from '../../models/counter-sale.model';
 import { OrderItem } from '../../models/order-item.model';
+import { SecondaryOrderItems } from '../../primary-orders/_models/secondaryOrderItems';
+import { ComplimentoryProdut } from '../../primary-orders/_models/complimentoryProdut';
 
 @Component({
   selector: 'app-counter-sale',
@@ -35,7 +37,7 @@ import { OrderItem } from '../../models/order-item.model';
 })
 export class NewCounterSaleComponent implements OnInit {
   permissions: any;
-
+  searchProd: string = '';
   isSavingOrder: boolean;
   secondaryOrder: SecondaryOrder;
   selectedProduct: Inventory = null;
@@ -45,7 +47,7 @@ export class NewCounterSaleComponent implements OnInit {
   distributorId: number;
   orderBookers: IEmployee[];
   selectedEmployee: IEmployee;
-  order: PrimaryOrder;
+  order: SecondaryOrder;
   selectedRoute: IRoute;
   routes: IRoute[];
   retailers: IRetailer[];
@@ -69,19 +71,23 @@ export class NewCounterSaleComponent implements OnInit {
     this.permissions = this.storageService.getItem(
       localStorageKeys.permissions
     );
-    this.order = new PrimaryOrder();
+    // this.order = new PrimaryOrder();
+    this.order = SecondaryOrder.getInstance;
+    this.secondaryOrder = SecondaryOrder.getInstance;
+
     // this.order.orderType = environment.ORDER_TYPE.COUNTER_SALE;
     this.distributorId = this.storageService.getItem('distributor').id;
   }
 
   ngOnInit(): void {
-    this.secondaryOrder = SecondaryOrder.getInstance;
     this.getOrderBookers();
     this.generalDataService.getCounterSaleData();
     this.getSchemesData();
     const sub = this.generalDataService.dispProducts$.subscribe((products) => {
       this.allProducts = products;
       this.showProducts = false;
+      this.secondaryOrder.allItems = this.allProducts;
+      // this.isAddProduct = true;
       // const prodWithSchemes = this.allProducts.filter((x) => x.schemes.length);
       // console.log('prodWithSchemes => ', prodWithSchemes);
     });
@@ -370,6 +376,15 @@ export class NewCounterSaleComponent implements OnInit {
   //   );
   // }
 
+  removeProductFromOrder(product: Inventory) {
+    this.secondaryOrder.items = this.secondaryOrder.items.filter(
+      (x) => x.itemId !== product.item_id
+    );
+    this.generalDataService.displayProductsIsAddedStatus(
+      false,
+      product.item_id
+    );
+  }
   openQuantityModal(product: any): void {
     this.showQuantityModal = true;
     console.log('product -> ', product);
@@ -431,12 +446,16 @@ export class NewCounterSaleComponent implements OnInit {
       this.secondaryOrder.bankName = this.f.bank_name.value;
       this.secondaryOrder.chequeNumber = this.f.cheque_number.value;
       this.secondaryOrder.chequeDate = this.f.cheque_date.value;
+
+      document.getElementById('close-payment-modal').click();
       // if (this.f.isfullAmount) {
       //   this.secondaryOrder.isCreditPaymentFullAmount = true;
       // }
     } else {
       this.secondaryOrder.creditPayment = this.f.cheque_amount.value;
       this.secondaryOrder.isCreditPaymentAdded = true;
+      document.getElementById('close-payment-modal').click();
+
       // if (this.f.isfullAmount) {
       //   this.secondaryOrder.isCreditPaymentFullAmount = true;
       // }
@@ -485,6 +504,7 @@ export class NewCounterSaleComponent implements OnInit {
   }
 
   onCredit() {
+    this.paymentForm.reset();
     this.submitted = false;
     this.paymentForm.patchValue({ isCredit: true });
     console.log('isCredit => ', this.f.isCredit.value);
@@ -527,6 +547,7 @@ export class NewCounterSaleComponent implements OnInit {
     );
   }
   onCheck() {
+    this.paymentForm.reset();
     this.submitted = false;
     this.paymentForm.patchValue({ isCheck: true });
     this.paymentForm.patchValue({ isCredit: false });
@@ -713,6 +734,7 @@ export class NewCounterSaleComponent implements OnInit {
         pref_id: product.prefId,
         quantity: product.quantity,
         quantity_returned: 0,
+        trade_price: product.tradePrice,
         reasoning: '',
         region_id: this.secondaryOrder.regionId,
         scheme_discount: product.tradeDiscount,
@@ -738,28 +760,80 @@ export class NewCounterSaleComponent implements OnInit {
           product.unit_price_after_scheme_discount,
         unit_price_after_special_discount:
           product.unit_price_after_special_discount || 0,
+        schemeitems:
+          product.comlimentoryProds.length > 0
+            ? this.getSchemeItems(product)
+            : null,
       };
       newOrder.items.push(item);
     });
   }
+  getSchemeItems(product: SecondaryOrderItems): ComplimentoryProdut[] {
+    const schemeitems: ComplimentoryProdut[] = [];
+
+    product.comlimentoryProds.forEach((x) => {
+      const schemeItem: ComplimentoryProdut = {
+        name: x.item_name,
+        // parent_item_id: x.,
+        item_id: x.item_id,
+        pref_id: x.pref_id,
+        unit_id: x.unit_id,
+        brand_id: x.brand_id,
+        parent_pref_id: x.parent_pref_id,
+        parent_unit_id: x.parent_unit_id,
+        region_id: this.secondaryOrder.bookingRegion,
+        area_id: this.secondaryOrder.bookingArea,
+        territory_id: this.secondaryOrder.bookingTerritory,
+        parent_qty_sold: 0,
+        quantity: x.quantity,
+        scheme_id: product.schemeId,
+        scheme_type: 'comp_product',
+        scheme_rule: product.selectedScheme.scheme_rule,
+        scheme_min_quantity: product.schemeMinQty,
+        scheme_quantity_free: 0,
+        scheme_discount_type: product.selectedScheme.scheme_discount_type,
+        gift_value: 0,
+        dispatch_qty: 0,
+        executed_qty: 0,
+        city_id: 0,
+        locality_id: '0',
+        neighbourhood_id: '0',
+        segment_id: this.order.retailerSegmentId,
+        channel_id: '0',
+        main_category_id: 0,
+        sub_category_id: 0,
+      };
+
+      schemeitems.push(schemeItem);
+    });
+
+    return schemeitems;
+  }
 
   placeOrder(order: CounterSale): void {
     // this.isOrdering = true;
+    debugger;
     this.ordersService.counterSaleOrder(order).subscribe(
       (res) => {
         // this.isOrdering = false;
         if (res.status === 200) {
+          this.isSavingOrder = false;
+
           let messageOrderStatus = 'Placed';
 
           // if (this.isEdit) {
           //   messageOrderStatus = this.isCancel ? 'Canceled' : 'Completed';
           // }
-          // const toast: Toaster = {
-          //   type: 'success',
-          //   message: `Order ${messageOrderStatus} successfully!`,
-          //   title: 'Order Placed:',
-          // };
-          // this.toastService.showToaster(toast);
+          const toast: Toaster = {
+            type: 'success',
+            message: `Order ${messageOrderStatus} successfully!`,
+            title: 'Order Placed:',
+          };
+          this.toastService.showToaster(toast);
+          this.secondaryOrder.items = [];
+          this.secondaryOrder.isCheckAdded = false;
+          this.secondaryOrder.isCreditPaymentAdded = false;
+          this.generalDataService.displayProductsIsAddedStatus(false);
           // if (this.isEdit) {
           //   const routeUrl = 'reports/credit-counter-sale';
           //   this.router.navigate([routeUrl]);
@@ -787,6 +861,7 @@ export class NewCounterSaleComponent implements OnInit {
             message: 'Order cannot be placed at the moment! Please try again',
             title: 'Error:',
           };
+          this.isSavingOrder = false;
           this.toastService.showToaster(toast);
         }
       }

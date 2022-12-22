@@ -155,7 +155,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   }
 
   setQuantity(product: any): void {
-    debugger;
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
     // );

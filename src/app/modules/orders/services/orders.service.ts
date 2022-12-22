@@ -65,7 +65,6 @@ export class OrdersService {
   getProdSchemes() {
     this.baseService.get(API_URLS.GET_SCHEMES).subscribe((res) => {
       if (res.status === 200) {
-        debugger;
         this._schemes$.next(res.data);
       }
     });

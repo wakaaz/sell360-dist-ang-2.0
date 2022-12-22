@@ -1,0 +1,31 @@
+export interface ComplimentoryProdut {
+  name: string;
+  // parent_item_id: string;
+  item_id: number;
+  pref_id: number;
+  unit_id: number;
+  brand_id: number;
+  parent_pref_id: number;
+  parent_unit_id: number;
+  region_id: number;
+  area_id: number;
+  territory_id: number;
+  parent_qty_sold: number;
+  quantity: number;
+  scheme_id: number;
+  scheme_type: 'comp_product';
+  scheme_rule: number;
+  scheme_min_quantity: number;
+  scheme_quantity_free: number;
+  scheme_discount_type: number;
+  gift_value: number;
+  dispatch_qty: number;
+  executed_qty: number;
+  city_id: number;
+  locality_id: string;
+  neighbourhood_id: string;
+  segment_id: number;
+  channel_id: string;
+  main_category_id: number;
+  sub_category_id: number;
+}

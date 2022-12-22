@@ -49,18 +49,18 @@
         {{ item.schemeFreeProdsCount ? "+" + item.schemeFreeProdsCount : "" }}
       </div>
       <div class="addItemCell2 _h25">
-        {{ item.tradePrice | number: "1.2-2" }}
+        {{ item.tradePrice | number : "1.2-2" }}
       </div>
       <div class="addItemCell2 _h25">
-        {{ item.tradeOffer | number: "1.2-2" }}
+        {{ item.tradeOffer | number : "1.2-2" }}
       </div>
       <div class="addItemCell2 _h25">
         {{ item.tradeDiscount || 0 }}% ({{
-          item.total_trade_discount_pkr || 0 | number: "1.2-2"
+          item.total_trade_discount_pkr || 0 | number : "1.2-2"
         }})
       </div>
       <div class="addItemCell2 _h25">
-        {{ item.specialDiscount || 0.0 | number: "1.2-2" }}
+        {{ item.specialDiscount || 0.0 | number : "1.2-2" }}
       </div>
       <div class="addItemCell2 _h25">
         <input
@@ -74,10 +74,10 @@
         />
       </div>
       <div class="addItemCell2 _h25">
-        {{ item.tax | number: "1.2-2" }}
+        {{ item.tax | number : "1.2-2" }}
       </div>
       <div class="addItemCell3 _h25">
-        {{ item.totalBill | number: "1.2-2" }}
+        {{ item.totalBill | number : "1.2-2" }}
       </div>
       <a
         class="btn _order-del"
@@ -85,6 +85,31 @@
         (click)="deleteOrderItem(item.itemId)"
         ><i class="fa fa-trash-alt"></i
       ></a>
+    </div>
+    <div
+      *ngFor="let compProd of item.comlimentoryProds"
+      class="col-12 pl-5 pr-5"
+    >
+      <div
+        style="
+          background-color: #e9f7e4;
+          font-size: 12px;
+          border: 0.063rem solid #8cd772;
+          margin-top: 8px;
+          padding: 3px 8px;
+          line-height: 1;
+          color: #16872e;
+        "
+      >
+        <div class="row">
+          <div class="col-md-6">
+            <strong>Free Product:</strong> {{ compProd.item_name }}
+          </div>
+          <div class="col-md-6 text-right">
+            <strong>QTY: </strong> {{ compProd.quantity }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -104,7 +129,7 @@
     <div class="addItemCell2 _h25"></div>
     <div class="addItemCell2 _h25 width-t">Gross Amount:</div>
     <div class="addItemCell3 _h25">
-      {{ order.grossPrice | number: "1.2-2" }}
+      {{ order.grossPrice | number : "1.2-2" }}
     </div>
   </div>
 
@@ -118,7 +143,7 @@
     <div class="addItemCell2 _h25"></div>
     <div class="addItemCell2 _h25 width-t">Trade Offer:</div>
     <div class="addItemCell3 _h25">
-      {{ order.totalTradeOffer | number: "1.2-2" }}
+      {{ order.totalTradeOffer | number : "1.2-2" }}
     </div>
   </div>
 
@@ -132,7 +157,7 @@
     <div class="addItemCell2 _h25"></div>
     <div class="addItemCell2 _h25 width-t">Trade Discount:</div>
     <div class="addItemCell3 _h25">
-      {{ order.totalTradeDiscount | number: "1.2-2" }}
+      {{ order.totalTradeDiscount | number : "1.2-2" }}
     </div>
   </div>
 
@@ -147,7 +172,7 @@
     <div class="addItemCell2 _h25 width-t">Special Discount:</div>
 
     <div class="addItemCell3 _h25">
-      {{ order.specialDiscount | number: "1.2-2" }}
+      {{ order.specialDiscount | number : "1.2-2" }}
     </div>
   </div>
 
@@ -162,7 +187,7 @@
     <div class="addItemCell2 _h25 width-t">Extra Discount:</div>
 
     <div class="addItemCell3 _h25">
-      {{ order.bookerOrExtraDiscount | number: "1.2-2" }}
+      {{ order.bookerOrExtraDiscount | number : "1.2-2" }}
     </div>
   </div>
 
@@ -177,7 +202,7 @@
     <div class="addItemCell2 _h25 width-t">Tax:</div>
 
     <div class="addItemCell3 _h25">
-      {{ order.tax | number: "1.2-2" }}
+      {{ order.tax | number : "1.2-2" }}
     </div>
   </div>
 
@@ -194,7 +219,7 @@
     </div>
 
     <div class="addItemCell3 _h25" style="font-size: 18px; color: #0038ba">
-      {{ order.totalBill | number: "1.2-2" }}
+      {{ order.totalBill | number : "1.2-2" }}
     </div>
   </div>
   <div class="row _totalBar2">
@@ -210,7 +235,7 @@
     </div>
 
     <div class="addItemCell3 _h25" style="font-size: 18px; color: #0038ba">
-      {{ order.totalCash | number: "1.2-2" }}
+      {{ order.totalCash | number : "1.2-2" }}
     </div>
   </div>
   <div class="row _totalBar2">
@@ -226,7 +251,7 @@
     </div>
 
     <div class="addItemCell3 _h25" style="font-size: 18px; color: #0038ba">
-      {{ order.checkPayment || 0 | number: "1.2-2" }}
+      {{ order.checkPayment || 0 | number : "1.2-2" }}
     </div>
   </div>
   <div class="row _totalBar2">
@@ -242,7 +267,7 @@
     </div>
 
     <div class="addItemCell3 _h25" style="font-size: 18px; color: #0038ba">
-      {{ order.creditPayment || 0 | number: "1.2-2" }}
+      {{ order.creditPayment || 0 | number : "1.2-2" }}
     </div>
   </div>
   <!-- <div class="row _notesTER">

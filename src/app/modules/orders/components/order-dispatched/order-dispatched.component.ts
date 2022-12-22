@@ -321,7 +321,6 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   setDataForLoad(): void {
-    debugger;
     if (!this.dispatchOrderDetail?.orders) {
       this.getDispatchOrdersDetail();
     } else {
@@ -701,7 +700,7 @@ export class OrderDispatchedComponent implements OnInit {
       this.holdOrderParams.order_id = this.orderDetails.id;
       this.holdOrderParams.assignment_id = this.orderDetails.assignment_id;
       this.orderService.holdOrder(this.holdOrderParams).subscribe(
-        (res) => { 
+        (res) => {
           this.newProduct = null;
           this.savingOrder = false;
           if (res.status === 200) {
@@ -743,7 +742,7 @@ export class OrderDispatchedComponent implements OnInit {
           type: 'error',
         });
     }
-    
+
   }
 
   addOrderBill(index: number, isAdded: boolean): void {

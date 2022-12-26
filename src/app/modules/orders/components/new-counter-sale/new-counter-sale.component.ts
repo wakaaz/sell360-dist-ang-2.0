@@ -160,6 +160,7 @@ export class NewCounterSaleComponent implements OnInit {
       .subscribe(
         (res) => {
           if (res.status === 200) {
+            debugger;
             this.retailers = res.data;
           } else {
             const toast: Toaster = {

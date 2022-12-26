@@ -127,6 +127,8 @@ class Utility {
       );
 
       if (slabDetail) {
+        console.clear();
+        console.log(slabDetail);
         discount.dicsountValuePkr =
           (slabDetail.value / 100) * unit_price_after_scheme_discount;
         discount.tradeDiscount = slabDetail.value;

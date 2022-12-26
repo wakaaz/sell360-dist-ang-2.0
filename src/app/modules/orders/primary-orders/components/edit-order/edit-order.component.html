@@ -657,3 +657,141 @@
     </div>
   </div>
 </div>
+
+<div
+  class="modal fade"
+  id="holdorder-reason"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top_border">
+      <div class="modal-header">
+        <h5 class="modal-title" id="holdOrderModalLabel">
+          Product <span> Detail</span>
+        </h5>
+        <button
+          type="button"
+          class="close dont-close-products"
+          data-dismiss="modal"
+          (click)="closeQuantityModal($event)"
+          aria-label="Close"
+        >
+          <span class="dont-close-products" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div
+        *ngIf="selectedProduct?.parent?.hasOwnProperty('quantity')"
+        class="modal-body AddDetailPR"
+      >
+        <div class="row">
+          <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
+          <div class="col-md-8 mb-15">
+            <input
+              type="text"
+              class="form-control"
+              placeholder=""
+              (keyup)="setQuantity(selectedProduct)"
+              required
+              (keydown)="isNumber($event, 'quantity')"
+              [(ngModel)]="selectedProduct.stockQty"
+              #selectedQty="ngModel"
+              placeholder="0"
+              style="font-size: 13px"
+            />
+            <span
+              *ngIf="selectedQty.errors?.required && isAdded"
+              class="input-error"
+            >
+              Please add Quantity!
+            </span>
+            <span
+              *ngIf="
+                +selectedProduct.stockQty === 0 &&
+                isAdded &&
+                !selectedQty.errors?.required
+              "
+              class="input-error"
+            >
+              Quantity should be greater than 0!
+            </span>
+          </div>
+          <div class="col-md-4 pt-7 mb-15">Unit:</div>
+          <div class="col-md-8 mb-15">
+            {{ selectedProduct.unit_name }}
+            <!-- <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
+                            name="prefrences" (change)="setPrefrence($event.target.value, selectedProduct)"
+                            #selectedPrefs="ngModel">
+                            <option [value]="null" disbaled>Select Unit</option>
+                            <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
+                            </option>
+                        </select> -->
+            <!-- <span *ngIf="selectedProduct.pref_id === null && isAdded" class="input-error">
+                            Please select a Unit!
+                        </span>
+                        <span *ngIf="alreadyAdded && selectedProduct.pref_id !== null" class="input-error">
+                            Selected Unit already added please change unit or update the quantity in the list!
+                        </span> -->
+          </div>
+          <div
+            class="col-md-4"
+            *ngIf="selectedProduct.schemes.length"
+            style="padding-top: 2px"
+          >
+            Trade Offer:
+          </div>
+          <div class="col-md-8">
+            <div *ngFor="let scheme of selectedProduct.schemes; let i = index">
+              <div class="custom-control custom-radio">
+                <input
+                  [(ngModel)]="selectedProduct.selectedScheme"
+                  [disabled]="
+                    !selectedProduct.stockQty || +selectedProduct.stockQty <= 0
+                  "
+                  class="custom-control-input"
+                  type="radio"
+                  name="AssignCatalogue"
+                  id="byTerritory-{{ i }}"
+                  [value]="scheme"
+                />
+                <label
+                  class="custom-control-label font13"
+                  for="byTerritory-{{ i }}"
+                  style="line-height: 25px"
+                  >{{ scheme.title }}</label
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0" style="background-color: #f6f6f6">
+        <button
+          type="button"
+          id="pl-qty-close"
+          class="btn btn-primary"
+          data-dismiss="modal"
+          (click)="addProductToOrder($event)"
+          aria-label="Close"
+          [disabled]="
+            !selectedProduct.stockQty || selectedProduct.stockQty <= 0
+          "
+        >
+          Confirm
+        </button>
+        <button
+          type="button"
+          id="pl-qty-close"
+          class="btn btn-cancel dont-close-products"
+          data-dismiss="modal"
+          (click)="closeQuantityModal($event)"
+          aria-label="Close"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

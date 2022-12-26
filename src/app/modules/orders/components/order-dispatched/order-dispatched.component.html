@@ -173,6 +173,73 @@
   </div>
 </div>
 
+<!-- Hold Order -->
+
+<div
+  class="modal fade"
+  id="order-hold-model"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top_border">
+      <div class="modal-header">
+        <h5 class="modal-title" id="holdOrderModalLabel">
+          Product <span> Detail</span>
+        </h5>
+        <button
+          type="button"
+          class="close dont-close-products"
+          data-dismiss="modal"
+          (click)="closeHoldOrderModal($event)"
+          aria-label="Close"
+        >
+          <span class="dont-close-products" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body AddDetailPR">
+        <div class="row">
+          <div class="col-md-4 pt-7 mb-15">Hold Reason:</div>
+          <div class="col-md-8 mb-15">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Reason"
+              required
+              [(ngModel)]="holdOrderParams.hold_reason"
+              style="font-size: 13px"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0" style="background-color: #f6f6f6">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="holdOrder($event)"
+          aria-label="Close"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          id="close-hold-model"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          (click)="closeHoldOrderModal($event)"
+          aria-label="Close"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <div id="order-contaienr" class="container">
   <div class="row">
     <div class="col-md-12">
@@ -303,6 +370,17 @@
                   >
                     Save Order
                   </button>
+
+                  
+                  <button
+                  [disabled]="!orderDetails?.items?.length"
+                  *ngIf="!savingOrder"
+                  data-toggle="modal"
+                  data-target="#order-hold-model"
+                  class="btn btn-cancel hold_order_btn font13"
+                  > 
+                  Hold Order 
+                 </button>
 
                   <button
                     [disabled]="!orderDetails?.items?.length"
@@ -470,28 +548,26 @@
                             <tr>
                               <th rowspan="2">SN</th>
                               <th rowspan="2">Product Name</th>
-                              <th colspan="1" style="text-align: center">
-                                Actual
-                              </th>
-                              <!-- <th colspan="1" style="text-align: center">
-                                Issuance
-                              </th> -->
+                              <th colspan="2" style="text-align: center">
+                                 BOX/PIECE
+                              </th> 
                             </tr>
                             <tr>
-                              <th style="text-align: center">BOX/PIECE</th>
-                              <!-- <th style="text-align: center">BOX/PIECE</th> -->
+                              <th style="text-align: center">Order QTY</th>
+                              <th style="text-align: center">Extra QTY</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr
                               *ngFor="
-                                let item of currentLoadContent.items;
+                                let item of currentLoadContent.items; 
                                 let i = index
                               "
                             >
                               <td>{{ item.item_id }}</td>
                               <td>{{ getItemName(item.item_id) }}</td>
-                              <td>{{ item.actual_qty | number }}</td>
+                              <td style="text-align: center">{{ item.actual_qty | number }}</td>
+                              <td style="text-align: center">{{ item.issued_qty | number }}</td>
                               <!-- <td>
                                 <input
                                   class="value_input"

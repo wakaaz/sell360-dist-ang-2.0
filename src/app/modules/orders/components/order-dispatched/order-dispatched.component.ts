@@ -17,6 +17,7 @@ import {
   RecoveryRetailer,
   set_retailer_credit_Invoices_data,
 } from '../../models/recovery-retailler.model';
+import { number } from 'echarts';
 
 @Component({
   selector: 'app-dispatch-order',
@@ -47,6 +48,7 @@ export class OrderDispatchedComponent implements OnInit {
   invoiceDate: string;
 
   orderDetails: any = {};
+  holdOrderParams: any = {};
   selectedRetailer: any;
   merchantDiscount: any;
   newProduct: any;
@@ -76,6 +78,7 @@ export class OrderDispatchedComponent implements OnInit {
   ) {
     this.distributorId = this.storageService.getItem('distributor').id;
     this.retailer_credit_Invoices = new Array<RecoveryRetailer>();
+    this.holdOrderParams.hold_reason = '';
   }
 
   ngOnInit(): void {
@@ -382,7 +385,7 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   getOrderDetailsByRetailer(retailer: any): void {
-    if (this.selectedRetailer?.id !== retailer.id) {
+    if (this.selectedRetailer?.iorderDetailsd !== retailer.id) {
       this.savingOrder = true;
       this.newProduct = null;
       this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
@@ -481,6 +484,7 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   getDiscountSlabs(): void {
+    //debugger;
     if (!this.discountSlabs.length) {
       this.orderService.getDiscountSlabs().subscribe(
         (res) => {
@@ -686,6 +690,60 @@ export class OrderDispatchedComponent implements OnInit {
       }
     );
   }
+  closeHoldOrderModal(event: Event):void{
+    document.getElementById('close-hold-model').click();
+  }
+  holdOrder(event: Event):void{
+    if(this.holdOrderParams.hold_reason.trim() != ''){
+      document.getElementById('close-hold-model').click();
+      this.savingOrder = true;
+      this.holdOrderParams.order_id = this.orderDetails.id;
+      this.holdOrderParams.assignment_id = this.orderDetails.assignment_id;
+      this.orderService.holdOrder(this.holdOrderParams).subscribe(
+        (res) => {
+          this.newProduct = null;
+          this.savingOrder = false;
+          if (res.status === 200) {
+            this.toastService.showToaster({
+              message: `Order for ${(
+                this.selectedRetailer.retailer_name as string
+              ).toUpperCase()} holded successfully!`,
+              title: 'Order dispatched:',
+              type: 'success',
+            });
+          }
+          this.orderDetails.items = [];
+          this.ordersRetailers = this.ordersRetailers.filter(
+            (x) => x.id !== this.selectedRetailer.id
+          );
+          this.selectedRetailer = null;
+          this.holdOrderParams.order_id = null;
+          this.holdOrderParams.assignment_id = null;
+          this.holdOrderParams.hold_reason = '';
+          this.getDispatchDetails();
+        },
+        (error) => {
+          this.savingOrder = false;
+          if (error.status !== 1 && error.status !== 401) {
+            console.log('Error in hold Order for dispatch ::>> ', error);
+            this.toastService.showToaster({
+              message:
+                'Something went wrong dispatch cannot be save at the moment!',
+              title: 'Error:',
+              type: 'error',
+            });
+          }
+        }
+      );
+    }else{
+        this.toastService.showToaster({
+          message:'Please add reason!',
+          title: 'Error:',
+          type: 'error',
+        });
+    }
+
+  }
 
   addOrderBill(index: number, isAdded: boolean): void {
     const retailer_credit_Invoices = this.retailer_credit_Invoices[index];
@@ -823,6 +881,7 @@ export class OrderDispatchedComponent implements OnInit {
     this.load.processed_date = this.orderDate;
     this.load.assignmentId = this.assignmentId;
     const order = { load: this.load, payments: this.credits };
+    debugger
     this.showFinalLoad = false;
     this.orderService.saveDispatchOrder(order).subscribe(
       (res) => {
@@ -934,6 +993,9 @@ export class OrderDispatchedComponent implements OnInit {
         this.currentLoadContent
       );
     });
+    //It will return only where actual qty or issue qty should be greater than zero 
+    this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation);
+    debugger; 
   }
 
   getItemName(itemId: number): string {

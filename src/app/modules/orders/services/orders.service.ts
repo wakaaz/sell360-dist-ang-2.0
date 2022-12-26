@@ -215,6 +215,10 @@ export class OrdersService {
     const url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
     return this.baseService.get(url);
   }
+  holdOrder(order: number): Observable<any> {
+    const url = `${API_URLS.HOLD_ORDER}`;
+    return this.baseService.post(url, order);
+  }
 
   canceleExecutionOrder(orderId: number): Observable<any> {
     const url = `${API_URLS.CANCEL_EXECUTION_ORDER}/${orderId}`;

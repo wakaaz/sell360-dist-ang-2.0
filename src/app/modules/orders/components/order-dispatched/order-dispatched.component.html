@@ -548,28 +548,26 @@
                             <tr>
                               <th rowspan="2">SN</th>
                               <th rowspan="2">Product Name</th>
-                              <th colspan="1" style="text-align: center">
-                                Actual
-                              </th>
-                              <!-- <th colspan="1" style="text-align: center">
-                                Issuance
-                              </th> -->
+                              <th colspan="2" style="text-align: center">
+                                 BOX/PIECE
+                              </th> 
                             </tr>
                             <tr>
-                              <th style="text-align: center">BOX/PIECE</th>
-                              <!-- <th style="text-align: center">BOX/PIECE</th> -->
+                              <th style="text-align: center">Order QTY</th>
+                              <th style="text-align: center">Extra QTY</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr
                               *ngFor="
-                                let item of currentLoadContent.items;
+                                let item of currentLoadContent.items; 
                                 let i = index
                               "
                             >
                               <td>{{ item.item_id }}</td>
                               <td>{{ getItemName(item.item_id) }}</td>
-                              <td>{{ item.actual_qty | number }}</td>
+                              <td style="text-align: center">{{ item.actual_qty | number }}</td>
+                              <td style="text-align: center">{{ item.issued_qty | number }}</td>
                               <!-- <td>
                                 <input
                                   class="value_input"

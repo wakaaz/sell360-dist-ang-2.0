@@ -52,6 +52,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges(change: SimpleChanges): void {
+    debugger
     if (change.orderedProducts?.currentValue) {
       this.allProducts = this.allProducts.map((x) => {
         const orderedProduct = this.orderedProducts.find(
@@ -80,6 +81,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       });
       this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
     }
+    debugger
   }
 
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {

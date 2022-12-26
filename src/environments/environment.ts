@@ -3,7 +3,10 @@ export const environment = {
   // apiDomain: 'https://demo.sell360.app',
   // apiUrl: 'https://demo.sell360.app/distributor-api',
   apiDomain: 'https://marketer.sell360.app', 
-  apiUrl: 'https://marketer.sell360.app/distributor-api',  
+  apiUrl: 'https://marketer.sell360.app/distributor-api', 
+  
+  // apiDomain: 'https://aptraders.sell360.app', 
+  // apiUrl: 'https://aptraders.sell360.app/distributor-api',
 
   // apiDomain: ' https://staging.spencer.allomate.solutions',
   // apiUrl: ' https://staging.spencer.allomate.solutions/distributor-api',

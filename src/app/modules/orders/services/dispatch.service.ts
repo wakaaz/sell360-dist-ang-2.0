@@ -51,4 +51,30 @@ export class OrderDispatchService {
         return currentLoadContent;
     }
 
+    setActiveLoadContent(currentLoadContent: any, stockAllocation:any): any {
+        currentLoadContent.items            = currentLoadContent.items.filter(x => (x.actual_qty > 0 || x.issued_qty > 0))
+        stockAllocation.forEach(item => {
+            if(item.current_load_allocated_qty > 0){
+                const loadItem = currentLoadContent.items.find(x => x.item_id === item.item_id);
+                if (!loadItem) {
+                    const newContent = {
+                        item_id: item.item_id,
+                        pref_id: item.pref_id,
+                        unit_id: item.unit_id,
+                        item_trade_price: item.item_trade_price,
+                        actual_qty: 0,
+                        dispatched_qty: item.current_load_allocated_qty,
+                        issued_qty: item.current_load_allocated_qty,
+                    };
+                    currentLoadContent.items.push(newContent);
+                } else {
+                    loadItem.issued_qty = item.current_load_allocated_qty - loadItem.actual_qty;
+                    loadItem.dispatched_qty = item.current_load_allocated_qty;
+                }
+            }
+        }); 
+        currentLoadContent.total_products   = currentLoadContent.items.length;
+        return currentLoadContent;
+    }
+
 }

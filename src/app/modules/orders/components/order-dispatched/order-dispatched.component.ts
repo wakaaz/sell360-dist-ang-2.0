@@ -881,6 +881,7 @@ export class OrderDispatchedComponent implements OnInit {
     this.load.processed_date = this.orderDate;
     this.load.assignmentId = this.assignmentId;
     const order = { load: this.load, payments: this.credits };
+    debugger
     this.showFinalLoad = false;
     this.orderService.saveDispatchOrder(order).subscribe(
       (res) => {
@@ -992,6 +993,9 @@ export class OrderDispatchedComponent implements OnInit {
         this.currentLoadContent
       );
     });
+    //It will return only where actual qty or issue qty should be greater than zero 
+    this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation);
+    debugger; 
   }
 
   getItemName(itemId: number): string {

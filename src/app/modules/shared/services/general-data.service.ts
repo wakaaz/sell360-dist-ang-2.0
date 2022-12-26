@@ -8,12 +8,14 @@ import { SecondaryOrder } from '../../orders/primary-orders/_models/secondaryOrd
 import { OrdersService } from '../../orders/services/orders.service';
 import { DataService } from './data.service';
 import getSecondaryOrderItem from 'src/app/core/utility/getSecondaryOrderItem';
+import { Scheme } from '../../orders/primary-orders/_models/scheme.model';
 const counterSaleData: any = {
   products: [],
   specialDiscount: [],
 };
 @Injectable()
 export class GeneralDataService {
+  private _schemes$ = new BehaviorSubject<Scheme[]>([]);
   private _counterSaleData$ = new BehaviorSubject<any>({});
   private _dispProducts$ = new BehaviorSubject<Inventory[]>([]);
   private _showProducts$ = new BehaviorSubject<Boolean>(false);
@@ -32,12 +34,18 @@ export class GeneralDataService {
   set setShowProducts$(showProd: boolean) {
     this._showProducts$.next(showProd);
   }
+
+  get schemes$() {
+    return this._schemes$.asObservable();
+  }
+  get schemesList() {
+    return this._schemes$.value;
+  }
   constructor(
     private httpBaseService: HttpBaseService,
-
-    private dataService: DataService,
-    private orderService: OrdersService
-  ) {}
+    private dataService: DataService
+  ) // private orderService: OrdersService
+  {}
 
   getProductsWithPrefType(prefType: string): Observable<any> {
     const url = `${API_URLS.PRODUCTS_LIST_BY_PREF_TYPE}/${prefType}`;
@@ -99,7 +107,7 @@ export class GeneralDataService {
           product.item_id,
           product.unit_id,
           product.pref_id,
-          this.orderService.schemesList,
+          this.schemesList,
           primaryOrder.retailer.type_id,
           primaryOrder.retailer.id
         );
@@ -112,6 +120,14 @@ export class GeneralDataService {
       // products.filter((x) => x.is_exclusive === isExclusive)
       products
     );
+  }
+
+  getProdSchemes() {
+    this.httpBaseService.get(API_URLS.GET_SCHEMES).subscribe((res) => {
+      if (res.status === 200) {
+        this._schemes$.next(res.data);
+      }
+    });
   }
   getCounterSaleData() {
     this.httpBaseService.get(API_URLS.COUNTER_SALE_DATA).subscribe(

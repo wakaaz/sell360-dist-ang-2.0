@@ -184,7 +184,7 @@ export class NewCounterSaleComponent implements OnInit {
   }
 
   getSchemesData(): void {
-    this.ordersService.getProdSchemes();
+    this.generalDataService.getProdSchemes();
   }
   // getSchemesData(): void {
   //   this.ordersService.getSchemes().subscribe(
@@ -415,6 +415,7 @@ export class NewCounterSaleComponent implements OnInit {
     // console.log('orderItem -> ', orderItem);
 
     this.generalDataService.pushOrderItem(this.selectedProduct);
+    this.showQuantityModal = false;
   }
 
   currentFullPayment(isFull: boolean) {
@@ -812,7 +813,6 @@ export class NewCounterSaleComponent implements OnInit {
 
   placeOrder(order: CounterSale): void {
     // this.isOrdering = true;
-    debugger;
     this.ordersService.counterSaleOrder(order).subscribe(
       (res) => {
         // this.isOrdering = false;

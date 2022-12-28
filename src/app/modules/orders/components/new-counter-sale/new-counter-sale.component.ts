@@ -421,7 +421,7 @@ export class NewCounterSaleComponent implements OnInit {
     // console.log('orderItem -> ', orderItem);
 
     this.generalDataService.pushOrderItem(this.selectedProduct);
-    this.secondaryOrder = this.generalDataService.applySlabDiscountToOrders(this.secondaryOrder,this.selectedProduct);
+    //this.secondaryOrder = this.generalDataService.applySlabDiscountToOrders(this.secondaryOrder,this.selectedProduct);
     debugger
     this.showQuantityModal = false;
   }
@@ -706,6 +706,7 @@ export class NewCounterSaleComponent implements OnInit {
       //     this.order.payment.detail.push(creditEntry);
       //   }
       this.setOrderItems(newOrder);
+      debugger;
       this.placeOrder(newOrder);
     }
   }
@@ -746,9 +747,12 @@ export class NewCounterSaleComponent implements OnInit {
         quantity_returned: 0,
         trade_price: product.tradePrice,
         reasoning: '',
+        slab_id:product.selectedSlabs ? product.selectedSlabs.id  : 0,
+        slab_type:product.selectedSlabs ? product.selectedSlabs.slab_type  : 0,
+        slab_discount_type: product.selectedSlabs ? product.selectedSlabs.discount_type  : '0',  
         region_id: this.secondaryOrder.regionId,
         scheme_discount: product.tradeDiscount,
-        scheme_id: product.schemeId,
+        scheme_id: product.schemeId, 
         scheme_min_quantity: product.scheme_min_quantity,
         scheme_quantity_free: product.scheme_quantity_free,
         scheme_rule: product.rule_name,
@@ -775,9 +779,13 @@ export class NewCounterSaleComponent implements OnInit {
             ? this.getSchemeItems(product)
             : null,
       };
+      console.log(product.selectedSlabs);
+      debugger
       newOrder.items.push(item);
     });
+    
     debugger  
+
   }
   getSchemeItems(product: SecondaryOrderItems): ComplimentoryProdut[] {
     const schemeitems: ComplimentoryProdut[] = [];

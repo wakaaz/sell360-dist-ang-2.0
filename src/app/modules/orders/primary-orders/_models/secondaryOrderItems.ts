@@ -7,6 +7,7 @@ import { ComplimentoryProdut } from './complimentoryProdut';
 // import { environment } from '../../../../environments/environment';
 import { SecondaryOrder } from './secondaryOrder.model';
 import { Inventory } from './inventory';
+import { Slab, SlabDetail } from './slab.model';
 
 export class SecondaryOrderItems {
   private _prefId: number;
@@ -735,4 +736,15 @@ export class SecondaryOrderItems {
   public get totalRetailPrice(): number {
     return this.quantity * this.item_retail_price;
   }
+
+
+  
+  private _selectedSlabs : SlabDetail;
+  public get selectedSlabs() : SlabDetail {
+    return this._selectedSlabs;
+  }
+  public set selectedSlabs(v : SlabDetail) {
+    this._selectedSlabs = v;
+  }
+  
 }

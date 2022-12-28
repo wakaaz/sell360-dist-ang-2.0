@@ -22,6 +22,9 @@ export interface OrderItem {
   unit_id: number;
   brand_id: number;
   item_id: number;
+  slab_id:number;
+  slab_type:number;
+  slab_discount_type:string;
   scheme_id: number;
   scheme_min_quantity: number;
   scheme_quantity_free: number;

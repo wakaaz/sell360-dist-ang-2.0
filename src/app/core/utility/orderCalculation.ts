@@ -129,12 +129,15 @@ class Utility {
       if (slabDetail) {
         console.clear();
         console.log(slabDetail);
+        const orderItemIndex = order.items.findIndex(x=> x.itemId === item.itemId);
+        order.items[orderItemIndex].selectedSlabs = slabDetail;
         discount.dicsountValuePkr =
           (slabDetail.value / 100) * unit_price_after_scheme_discount;
         discount.tradeDiscount = slabDetail.value;
       }
     }
 
+    
     return discount;
   }
   static getSlabDiscount(

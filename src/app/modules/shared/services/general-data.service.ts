@@ -96,6 +96,12 @@ export class GeneralDataService {
       }
     }
   }
+  empty_dispProducts(){
+    this._dispProducts$.value.forEach((x) => {
+      x.isAdded = false;
+    });
+    return null;
+  }
   checkApiStatus(res: any): boolean {
     return res.status === 200 ? true : false;
   }

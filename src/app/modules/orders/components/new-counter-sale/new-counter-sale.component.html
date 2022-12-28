@@ -87,7 +87,7 @@
               <button
                 id="productlist01"
                 class="btn btn-primary ml-15"
-                [disabled]="!secondaryOrder.slabs?.length"
+                [disabled]="!this.selectedRetailer"
                 (click)="showProductsList($event)"
               >
                 Add Product

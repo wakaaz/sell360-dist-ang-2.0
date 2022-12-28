@@ -124,7 +124,11 @@ export class NewCounterSaleComponent implements OnInit {
   getRoutes(): void {
     this.order.employee_id = this.selectedEmployee.employee_id;
     this.order.retailerRegionId = this.selectedEmployee.region_id;
-    this.order.employee_name = this.selectedEmployee.employee_full_name;
+    this.order.employee_name =  this.selectedEmployee.employee_full_name;
+    this.order.route_id      =  null;
+    this.selectedRoute       =  null;
+    this.selectedRetailer    =  null;
+    this.secondaryOrder.items=  this.generalDataService.empty_dispProducts();
     this.generalDataService
       .getOrderBookerRoutes(this.selectedEmployee.employee_id)
       .subscribe(
@@ -153,8 +157,10 @@ export class NewCounterSaleComponent implements OnInit {
       );
   }
 
-  getRetailerByRoute(): void {
-    this.order.route_id = this.selectedRoute.route_id;
+  getRetailerByRoute(): void { 
+    this.selectedRetailer    = null;
+    this.secondaryOrder.items=  this.generalDataService.empty_dispProducts();
+    this.order.route_id      = this.selectedRoute.route_id;
     this.generalDataService
       .getRetailersByRoute(this.selectedRoute.route_id)
       .subscribe(
@@ -502,6 +508,7 @@ export class NewCounterSaleComponent implements OnInit {
     // }
   }
   getDiscountSlabs() {
+    this.secondaryOrder.items =  this.generalDataService.empty_dispProducts();
     this.generalDataService.getDiscountSlabs();
   }
 

@@ -344,6 +344,7 @@ export class SecondaryOrderItems {
   }
 
   public get tradeDiscount(): number {
+    // debugger
     const order = SecondaryOrder.getInstance;
     if (
       order.slabs.length &&

@@ -166,7 +166,6 @@ export class NewCounterSaleComponent implements OnInit {
       .subscribe(
         (res) => {
           if (res.status === 200) {
-            debugger;
             this.retailers = res.data;
           } else {
             const toast: Toaster = {
@@ -422,6 +421,8 @@ export class NewCounterSaleComponent implements OnInit {
     // console.log('orderItem -> ', orderItem);
 
     this.generalDataService.pushOrderItem(this.selectedProduct);
+    this.secondaryOrder = this.generalDataService.applySlabDiscountToOrders(this.secondaryOrder,this.selectedProduct);
+    debugger
     this.showQuantityModal = false;
   }
 
@@ -776,6 +777,7 @@ export class NewCounterSaleComponent implements OnInit {
       };
       newOrder.items.push(item);
     });
+    debugger  
   }
   getSchemeItems(product: SecondaryOrderItems): ComplimentoryProdut[] {
     const schemeitems: ComplimentoryProdut[] = [];

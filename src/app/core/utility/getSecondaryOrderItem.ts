@@ -18,7 +18,6 @@ const getSecondaryOrderItem = (prod: Inventory) => {
   orderItem.brandId = prod.brand_id;
   orderItem.itemId = prod.item_id;
   orderItem.tradePrice = prod.item_trade_price;
-  debugger;
   orderItem.parent_pref_id = prod.parent_pref_id;
   if (prod.selectedScheme) {
     orderItem.selectedScheme = prod.selectedScheme;

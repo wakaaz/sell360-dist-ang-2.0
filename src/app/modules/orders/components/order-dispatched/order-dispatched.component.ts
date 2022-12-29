@@ -516,7 +516,8 @@ export class OrderDispatchedComponent implements OnInit {
   setMerchantDiscount(): void {
     this.merchantDiscount = this.discountSlabs.find(
       (x) =>
-        x.region_id === this.selectedRetailer.region_id &&
+        x.region_id === this.selectedRetailer.region_id 
+        &&
         this.selectedRetailer.segment_id === x.segment_id &&
         x.channel_id === this.selectedRetailer.retailer_type_id
     );
@@ -590,16 +591,16 @@ export class OrderDispatchedComponent implements OnInit {
         original_price: item.item_trade_price,
         scheme_discount: item.scheme_discount,
         unit_price_after_scheme_discount: item.unit_price_after_scheme_discount,
+        slab_id: item.slab_id,
+        slab_type: item.slab_type,
+        slab_discount_type: item.slab_discount_type,
         merchant_discount: item.trade_discount,
         merchant_discount_pkr: item.trade_discount_pkr,
-        unit_price_after_merchant_discount:
-          item.unit_price_after_merchant_discount,
+        unit_price_after_merchant_discount: item.unit_price_after_merchant_discount,
         special_discount: item.special_discount,
-        unit_price_after_special_discount:
-          item.unit_price_after_special_discount,
+        unit_price_after_special_discount:item.unit_price_after_special_discount,
         booker_discount: item.extra_discount,
-        unit_price_after_individual_discount:
-          item.unit_price_after_individual_discount || item.price,
+        unit_price_after_individual_discount:item.unit_price_after_individual_discount || item.price,
         unit_id: item.unit_id,
         unit_name: item.unit_name,
         brand_id: item.brand_id,
@@ -649,6 +650,7 @@ export class OrderDispatchedComponent implements OnInit {
           item.extra_discount_pkr,
         order_id: this.orderDetails.id,
       };
+      debugger
       return orderItem;
     });
     this.saveOrder();

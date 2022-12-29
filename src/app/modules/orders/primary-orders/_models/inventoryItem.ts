@@ -36,6 +36,7 @@ export interface IInventoryItem {
   total_pieces: number;
   unit_id: number;
   unit_name: string;
+  unit_price_after_merchant_discount;
   unit_price_after_scheme_discount;
   updated_at: Date;
   updated_by: number;
@@ -60,7 +61,7 @@ export interface IParent {
   quantity: number;
   sequence: number;
   sub_category_id: number;
-  unit_id: number;
+  unit_id: number; 
 }
 
 //#endregion

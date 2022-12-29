@@ -36,6 +36,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   @Input() orderDetail: any;
   @Input() selectedRetailer: any;
   @Input() merchantDiscount: any;
+  @Input() discountSlabs: any; 
   @Input() schemes: any;
   @Input() newProduct: any;
   @Input() returnedProduct: any;
@@ -147,14 +148,18 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
           (x) => x.item_id !== this.selectedItem.item_id
         );
         this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
-        this.applySlabOnAllProducts();
+        //apply slabs to all items
+        this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
+        this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items))
+        this.applySpecialDiscountOnAllProducts();
       }
       this.productUpdated.emit();
       document.getElementById('close-prod-del').click();
     }
   }
 
-  setQuantity(product: any): void {
+  setQuantity(product: any): void {  
+    //debugger
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
     // );
@@ -208,7 +213,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       this.calculateProductDiscounts(product);
       this.calculateProductPrice(product);
       this.calculateTotalBill();
-      this.applySlabOnAllProducts();
+      //Apply slab on all products
+      this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
+      this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items))
+      this.applySpecialDiscountOnAllProducts();
       this.productUpdated.emit();
     }
   }
@@ -286,22 +294,25 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     this.setExtraDiscount(product);
   }
 
-  applySlabOnAllProducts(): void {
+  applySpecialDiscountOnAllProducts(): void {
     if (
       this.merchantDiscount &&
       this.merchantDiscount.discount_filter === 'slab'
     ) {
       this.orderDetail.items = this.orderDetail.items.map((product) => {
-        product = this.dataService.applySlabForTotal(
-          product,
-          this.merchantDiscount,
-          this.grossAmount
-        );
+
+        // product = this.dataService.applySlabForTotal(
+        //   product,
+        //   this.merchantDiscount,
+        //   this.grossAmount
+        // );
         product = this.calculateProductSpecialDiscount(product);
         if (product.extra_discount) {
           product.price =
             product.unit_price_after_special_discount - +product.extra_discount;
         }
+
+
         this.calculateNetAmountOfProduct(product);
         return product;
       });
@@ -334,23 +345,44 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
 
     // Trade Discount
-    if (this.merchantDiscount) {
-      product = this.dataService.applyMerchantDiscountForSingleProduct(
-        this.merchantDiscount,
-        product,
-        this.grossAmount
-      );
-    } else {
+    // if (this.merchantDiscount) {
+    //   product = this.dataService.applyMerchantDiscountForSingleProduct(
+    //     this.merchantDiscount,
+    //     product,
+    //     this.grossAmount
+    //   );
+    // } 
+    
+    
+    if (this.discountSlabs) {
+    
+      product = this.dataService.applySlabDiscountToSingleItem(product,this.selectedRetailer,this.discountSlabs);
+      product = JSON.parse(JSON.stringify(product))
+      
+      if(product.slab_id){ 
+       
+      }else{
+        product.slab_id=0;
+        product.slab_type=0;
+        product.slab_discount_type = '0';
+        product.trade_discount = 0;
+        product.trade_discount_pkr = 0;
+        product.unit_price_after_merchant_discount = 123;//JSON.parse(JSON.stringify(product.price));
+      }
+      
+    }
+    else {
       product.trade_discount = 0;
       product.trade_discount_pkr = 0;
       product.unit_price_after_merchant_discount = JSON.parse(
         JSON.stringify(product.price)
       );
     }
-
+    console.log(this.orderDetail);
+    
     // Special Discount
     product = this.calculateProductSpecialDiscount(product);
-
+    
     // Extra Discount => Booker Discount
     if (!product.extra_discount || +product.stockQty < 1) {
       product.extra_discount = 0;
@@ -393,9 +425,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   calculateNetAmountOfProduct(product: any): any {
     product.net_amount = this.dataService.calculateUnitPrice(
-      product.price,
+      product.unit_price_after_special_discount, //product.price
       +product.stockQty
     );
+    debugger
     this.calculateProductTax(product);
   }
 

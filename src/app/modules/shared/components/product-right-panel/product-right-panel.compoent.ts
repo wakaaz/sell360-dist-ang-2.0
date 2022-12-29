@@ -30,6 +30,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   @Input() specialDiscounts: Array<any>;
   @Input() selectedRetailer: any;
   @Input() productMerchantDiscount: any;
+  @Input() discountSlabs: any;
   @Input() orderType: string;
 
   productSearchText: string;
@@ -52,7 +53,6 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges(change: SimpleChanges): void {
-    debugger
     if (change.orderedProducts?.currentValue) {
       this.allProducts = this.allProducts.map((x) => {
         const orderedProduct = this.orderedProducts.find(
@@ -81,7 +81,6 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       });
       this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
     }
-    debugger
   }
 
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
@@ -115,6 +114,9 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         (this.orderType === 'execution' &&
           +this.selectedProduct.stockQty <= this.selectedProduct.available_qty))
     ) {
+      this.allProducts  = this.dataService.applySlabDiscountValuesToItems(this.allProducts,this.discountSlabs)   
+      this.allProducts  = JSON.parse(JSON.stringify(this.allProducts));  
+      
       this.selectedProduct.item_quantity_booker = 0;
       let prod = this.allProducts.find(
         (x) => x.item_id === this.selectedProduct.item_id
@@ -124,10 +126,14 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         (x) => x.item_id === this.selectedProduct.item_id
       );
       prod.isAdded = true;
+
+      
+
       this.productSelected.emit(
         JSON.parse(JSON.stringify(this.selectedProduct))
       );
       document.getElementById('pl-qty-close').click();
+      
     }
   }
 
@@ -193,6 +199,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   }
 
   setQuantity(product: any): void {
+    debugger
     if (
       +product.stockQty >
       +product?.current_load_allocated_qty - +product?.current_load_booked_qty
@@ -202,6 +209,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         +product?.current_load_booked_qty;
     }
     if (product.item_trade_price) {
+      debugger
       this.calculateProductDiscounts(product);
       this.calculateProductPrice(product);
     }
@@ -231,19 +239,40 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       );
     }
 
-    // Trade Discount
-    if (this.productMerchantDiscount) {
+    //Trade Discount
+    if (this.productMerchantDiscount) { 
       product = this.dataService.applyMerchantDiscountForSingleProduct(
         this.productMerchantDiscount,
         product,
         1
       );
-    } else {
+    } 
+    // debugger
+    // if (this.discountSlabs) {
+    
+    //   product = this.dataService.applySlabDiscountToSingleItem(product,this.selectedRetailer,this.discountSlabs);
+    //   product = JSON.parse(JSON.stringify(product))
+    //   if(product.slab_id){ 
+    //     this.orderedProducts  = this.dataService.applySlabDiscountValuesToItems(this.orderedProducts,this.discountSlabs)   
+    //     this.orderedProducts  = JSON.parse(JSON.stringify(this.orderedProducts))
+    //   }else{
+    //     product.slab_id=0;
+    //     product.slab_type=0;
+    //     product.slab_discount_type = '0';
+    //     product.trade_discount = 0;
+    //     product.trade_discount_pkr = 0;
+    //     product.unit_price_after_merchant_discount = 123;//JSON.parse(JSON.stringify(product.price));
+    //   }
+    //   debugger
+    // }
+    else {
+      debugger
+      product.slab_id=0;
+      product.slab_type=0;
+      product.slab_discount_type = '0';
       product.trade_discount = 0;
       product.trade_discount_pkr = 0;
-      product.unit_price_after_merchant_discount = JSON.parse(
-        JSON.stringify(product.price)
-      );
+      product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
     }
 
     // Special Discount
@@ -252,6 +281,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     // Extra Discount => Booker Discount
     product.extra_discount = 0;
     product.extra_discount_pkr = 0;
+    debugger;
     product.unit_price_after_individual_discount = JSON.parse(
       JSON.stringify(product.unit_price_after_special_discount)
     );

@@ -76,18 +76,21 @@ export class DataService {
     let productWithScheme: any = {};
     switch (product.selectedScheme.scheme_rule) {
       case 1:
-        productWithScheme = this.applyFPDOTP(product);
-        break;
+          productWithScheme = this.applyFPDOTP(product);
+          break;
       case 2:
-        productWithScheme = this.applyFPHalfQtyDiscount(product);
-        break;
+          productWithScheme = this.applyFPHalfQtyDiscount(product);
+          break;
       case 3:
-        productWithScheme = this.applyFPMinQtyRestriction(product);
-        break;
+          productWithScheme = this.applyFPMinQtyRestriction(product);
+          break;
+      case 4:
+          productWithScheme = this.applyFPMinQtyRestrictionForRule4(product);
+          break;
 
       default:
-        productWithScheme = product;
-        break;
+          productWithScheme = product;
+          break;
     }
     return productWithScheme;
   }
@@ -159,6 +162,31 @@ export class DataService {
     }
     return product;
   }
+
+  applyFPMinQtyRestrictionForRule4(product: any): void { 
+    if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
+        // const discounted = this.getSDForFPQtyRestrictionDiscount(product.item_trade_price, product.stockQty,
+        //     product.selectedScheme.min_qty, product.selectedScheme.quantity_free);
+        const freeQtyInterval = Math.floor(product.stockQty / product.selectedScheme.min_qty);
+        const orderFreeQty = freeQtyInterval * product.selectedScheme.quantity_free;
+        product.scheme_quantity_free = orderFreeQty;
+        product.scheme_discount = 0;//discounted.schemeDiscount;
+        product.price = product.item_trade_price;//discounted.singleItemPrice;
+        product.unit_price_after_scheme_discount = product.item_trade_price;
+        product.scheme_rule = 4;
+        product.scheme_type = 'free_product'; 
+        product.selectedScheme.applied = true;
+    } else {
+        product.scheme_quantity_free = 0;
+        product.selectedScheme.applied = false;
+        product.scheme_discount = 0;
+        product.price = product.item_trade_price;
+        product.unit_price_after_scheme_discount = product.item_trade_price;
+        this.schemeCannotApplied();
+    }
+    console.log(product);
+    return product;
+}
 
   getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
     const totalTpMinQty = itemTP * minQty;
@@ -547,6 +575,7 @@ export class DataService {
         let ItemTp                =   item.original_price ? item.original_price : item.item_trade_price;
         item.original_price       =   item.original_price ? item.original_price : item.item_trade_price;
         let itemDiscountTp        =   item.unit_price_after_scheme_discount ? item.unit_price_after_scheme_discount : ItemTp;
+        
         if(item.slab_id > 0){
           itemslab  =   slabs.filter(x=> x.discount_slab_id == item.slab_id) ? slabs.filter(x=> x.discount_slab_id == item.slab_id)[0]:null;
         }
@@ -558,7 +587,7 @@ export class DataService {
         slabmodel.discount_pkr            =       0;
         slabmodel.itemDiscountTp          =       itemDiscountTp;
         //debugger
-        if(itemslab && itemslab.id != null){
+        if(itemslab && itemslab.id != null && item.stockQty > 0){
             if(slabmodel.slab_rule == 2){
                 if(slabmodel.slab_type < 3){
                   rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type );

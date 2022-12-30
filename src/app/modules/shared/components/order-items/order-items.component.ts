@@ -140,7 +140,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     } else {
       if (this.selectedItem.id) {
         this.selectedItem.stockQty = 0;
-        this.setQuantity(this.selectedItem);
+        this.selectedItem.trade_discount = 0;
+        this.selectedItem.merchant_discount = 0;
+        this.selectedItem.trade_discount_pkr = 0; 
+        this.selectedItem.merchant_discount_pkr = 0;
+        this.setQuantity(this.selectedItem); 
         this.selectedItem.isDeleted = true;
         // this.selectedItem.item_status = 0;
       } else {
@@ -428,7 +432,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       product.unit_price_after_special_discount, //product.price
       +product.stockQty
     );
-    debugger
+    // debugger
     this.calculateProductTax(product);
   }
 

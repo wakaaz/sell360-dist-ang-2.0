@@ -152,6 +152,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
           (x) => x.item_id !== this.selectedItem.item_id
         );
         this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
+        if(this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
+          this.orderDetail  = this.applyBunldeProductScheme(this.selectedItem,this.orderDetail);
+          this.orderDetail  = JSON.parse(JSON.stringify(this.orderDetail))
+        }
         //apply slabs to all items
         this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
         this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items))
@@ -219,8 +223,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       this.calculateTotalBill();
       //Apply slab on all products
       this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
-      this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items))
+      this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items));
       this.applySpecialDiscountOnAllProducts();
+      //update Scheme Free Products to scheme Items
+      this.orderDetail  = this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
       this.productUpdated.emit();
     }
   }
@@ -335,6 +341,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   calculateProductDiscounts(product: any, scheme?: any): void {
     // Trade Offer
+    product.scheme_id           = 0;
+    product.scheme_rule         = 0;
+    product.scheme_type         = null;
+    product.scheme_quantity_free= 0; 
+    product.scheme_free_items   = null;
     if (scheme) {
       product.selectedScheme = scheme;
     }
@@ -347,6 +358,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         JSON.stringify(product.item_trade_price)
       );
     }
+
 
     // Trade Discount
     // if (this.merchantDiscount) {
@@ -451,13 +463,15 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   applyScheme(product: any): any {
     switch (product.selectedScheme.scheme_type) {
       case 'free_product':
-        product = this.applyFreeProductScheme(product);
+        product   = this.applyFreeProductScheme(product);
         break;
       case 'dotp':
-        product = this.applyDOTPScheme(product);
+        product   = this.applyDOTPScheme(product);
         break;
+      case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
+          break;  
       default:
-        product = this.applyGiftScheme(product);
+        product   = this.applyGiftScheme(product);
         break;
     }
     return product;
@@ -467,6 +481,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     product = this.dataService.applyFreeProductScheme(product);
     return product;
   }
+  applyBunldeProductScheme(product: any,orderDetail:any): any {
+    orderDetail = this.dataService.applyBundleScheme(product,orderDetail);
+    return orderDetail;
+  }
 
   applyDOTPScheme(product: any): any {
     return this.dataService.getSDForDOTP(product);
@@ -475,7 +493,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   applyGiftScheme(product: any): any {
     return this.dataService.getSDForGift(product);
   }
-
   checkRecovery(): void {
     if (+this.orderDetail.recovered > this.recoveryAmount) {
       this.toastService.showToaster({

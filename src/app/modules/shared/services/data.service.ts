@@ -1,9 +1,12 @@
+import { NullTemplateVisitor } from '@angular/compiler';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { filter } from 'jszip';
+import { interval, Observable } from 'rxjs';
 import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 import { HttpBaseService } from 'src/app/core/services/http.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { environment } from '../../../../environments/environment';
+import { ItemModel } from '../../inventory/model/distributor-purchase.model';
 
 @Injectable()
 export class DataService {
@@ -72,6 +75,7 @@ export class DataService {
     return productSchemes;
   }
 
+
   applyFreeProductScheme(product: any): any {
     let productWithScheme: any = {};
     switch (product.selectedScheme.scheme_rule) {
@@ -85,7 +89,7 @@ export class DataService {
           productWithScheme = this.applyFPMinQtyRestriction(product);
           break;
       case 4:
-          productWithScheme = this.applyFPMinQtyRestrictionForRule4(product);
+          productWithScheme = this.applyFPMinQty(product);
           break;
 
       default:
@@ -136,7 +140,7 @@ export class DataService {
     return product;
   }
 
-  applyFPMinQtyRestriction(product: any): void {
+  applyFPMinQtyRestriction(product: any): any {
     if (
       this.isEligibleForMinimumQuantity(
         product.stockQty,
@@ -163,7 +167,7 @@ export class DataService {
     return product;
   }
 
-  applyFPMinQtyRestrictionForRule4(product: any): void { 
+  applyFPMinQty(product: any): any { 
     if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
         // const discounted = this.getSDForFPQtyRestrictionDiscount(product.item_trade_price, product.stockQty,
         //     product.selectedScheme.min_qty, product.selectedScheme.quantity_free);
@@ -173,20 +177,109 @@ export class DataService {
         product.scheme_discount = 0;//discounted.schemeDiscount;
         product.price = product.item_trade_price;//discounted.singleItemPrice;
         product.unit_price_after_scheme_discount = product.item_trade_price;
-        product.scheme_rule = 4;
-        product.scheme_type = 'free_product'; 
+        product.scheme_rule         = 4;
+        product.scheme_type         = 'free_product'; 
+        product.scheme_free_items   = [{
+                                        item_id : product.item_id,
+                                        free_qty: product.scheme_quantity_free
+                                      }];
         product.selectedScheme.applied = true;
     } else {
         product.scheme_quantity_free = 0;
         product.selectedScheme.applied = false;
         product.scheme_discount = 0;
         product.price = product.item_trade_price;
+        product.scheme_free_items = null;
         product.unit_price_after_scheme_discount = product.item_trade_price;
         this.schemeCannotApplied();
     }
-    console.log(product);
+    // console.log(product);
+    // debugger
     return product;
-}
+  }
+
+  /**
+   * Begin: Bundle Offer
+   * 
+   */
+  applyBundleScheme(product: any,orderDetail:any): any {
+    let productWithScheme: any = {};
+    debugger 
+    switch (product.selectedScheme.scheme_rule) {
+      case 1:
+          productWithScheme = this.applyBundleDOTP(product,orderDetail);
+          break;
+      case 5:
+          productWithScheme = this.applyBundleMinQty(product,orderDetail);
+          break;
+
+      default:
+          productWithScheme = product;
+          break;
+    }
+    return productWithScheme;
+  }
+
+  applyBundleDOTP(product: any,orderDetail:any): any {
+    let response  = this.getBundleOfferIntervalsAlgo(product,orderDetail);
+
+    debugger;
+    return orderDetail;
+  }
+  applyBundleMinQty(product: any,orderDetail:any): any { 
+    if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
+        // const discounted = this.getSDForFPQtyRestrictionDiscount(product.item_trade_price, product.stockQty,
+        //     product.selectedScheme.min_qty, product.selectedScheme.quantity_free);
+        const freeQtyInterval = Math.floor(product.stockQty / product.selectedScheme.min_qty);
+        const orderFreeQty = freeQtyInterval * product.selectedScheme.quantity_free;
+        product.scheme_quantity_free = orderFreeQty;
+        product.scheme_discount = 0;//discounted.schemeDiscount;
+        product.price = product.item_trade_price;//discounted.singleItemPrice;
+        product.unit_price_after_scheme_discount = product.item_trade_price;
+        product.scheme_rule         = 4;
+        product.scheme_type         = 'free_product'; 
+        product.scheme_free_items   = [{
+                                        item_id : product.item_id,
+                                        free_qty: product.scheme_quantity_free
+                                      }];
+        product.selectedScheme.applied = true;
+    } else {
+        product.scheme_quantity_free = 0;
+        product.selectedScheme.applied = false;
+        product.scheme_discount = 0;
+        product.price = product.item_trade_price;
+        product.scheme_free_items = null;
+        product.unit_price_after_scheme_discount = product.item_trade_price;
+        this.schemeCannotApplied();
+    }
+    // console.log(product);
+    // debugger
+    return product;
+  }
+  getBundleOfferIntervalsAlgo(product: any,orderDetail:any):any{
+    
+    let   bundleCount       =   0;
+    let   schemeItems       =   []; 
+    const minqty            =   product.selectedScheme.min_qty;
+    const scheme_items      =   product.selectedScheme.scheme_items;
+    const flag              =   scheme_items.every(item_id => orderDetail.items.some(x => x.item_id == item_id && x.stockQty >= minqty));
+    if(flag){
+      let schemeItems       =   orderDetail.items.filter(x => scheme_items.includes(x.item_id));
+      schemeItems.find(x=>{
+                  if(bundleCount > x.stockQty){ 
+                    bundleCount   = x.stockQty;      
+                  }
+      });     
+    }  
+    return  {
+      bundleCount : bundleCount,
+      schemeItems : schemeItems,
+    };
+  }
+  /**
+   * End: Bundle Offer
+   *  
+   */
 
   getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
     const totalTpMinQty = itemTP * minQty;
@@ -286,6 +379,7 @@ export class DataService {
   }
 
   getSDForDOTP(product: any): any {
+    
     if (
       this.isEligibleForMinimumQuantity(
         product.stockQty,
@@ -755,5 +849,59 @@ export class DataService {
   getViewOrderDetailById(orderid: number): Observable<any> {
     const url = `${API_URLS.VIEW_ORDER_DETAIL}/${orderid}`;
     return this.baseService.get(url);
+  }
+
+  updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
+    //debugger;
+    let schemeitems:any = [];
+    orderDetails.items  = orderDetails.items.map((item) => {
+        if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
+          console.log(item.scheme_free_items);
+          if(item.scheme_free_items.length > 0){
+            item.scheme_free_items.forEach(x=>{
+              let stockitem = allProducts.filter(y=> y.item_id === x.item_id ) ? allProducts.filter(y=> y.item_id === x.item_id )[0]:null;
+              if(stockitem){
+                let schemeitem = { 
+                                      
+                                      parent_item_id      :   item.item_id,
+                                      city_id             :   orderDetails.city_id,
+                                      locality_id         :   orderDetails.locality_id,
+                                      neighbourhood_id    :   orderDetails.neighbourhood_id,
+                                      channel_id          :   orderDetails.channel_id,
+                                      main_category_id    :   orderDetails.main_category_id,
+                                      sub_category_id     :   orderDetails.sub_category_id,
+                                      scheme_id           :   item.scheme_id,
+                                      scheme_type         :   item.scheme_type,
+                                      scheme_rule         :   item.scheme_rule,
+                                      scheme_quantity_free:   item.scheme_quantity_free,
+                                      gift_value          :   item.gift_value,
+                                      name                :   stockitem.item_name,
+                                      item_id             :   stockitem.item_id,
+                                      pref_id             :   stockitem.pref_id,
+                                      unit_id             :   stockitem.unit_id,
+                                      brand_id            :   stockitem.brand_id,
+                                      parent_pref_id      :   stockitem.parent_pref_id,
+                                      parent_unit_id      :   stockitem.pare,
+                                      parent_qty_sold     :   x.free_qty/stockitem.sub_inventory_quantity,
+                                      quantity            :   x.free_qty,
+                                      dispatch_qty        :   x.free_qty,
+                                      executed_qty        :   x.free_qty
+                                }
+                schemeitems.push(schemeitem);             
+              }
+            });
+          } 
+        } 
+        return item;                    
+    });
+    orderDetails.schemeitems    = schemeitems;
+    orderDetails.items          = orderDetails.items.map((item) => {
+      item.schemeitems          = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === item.item_id) : null;
+      item.scheme_quantity_free = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x => x.item_id === item.item_id).reduce((a: any, b: any) => a + b.quantity, 0):0;      
+      return item;
+    })
+    orderDetails;
+    debugger
+    return JSON.parse(JSON.stringify(orderDetails));
   }
 }

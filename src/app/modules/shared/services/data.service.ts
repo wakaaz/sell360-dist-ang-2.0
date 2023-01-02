@@ -261,7 +261,8 @@ export class DataService {
     let   bundleCount       =   0;
     let   schemeItems       =   []; 
     const minqty            =   product.selectedScheme.min_qty;
-    const scheme_items      =   product.selectedScheme.scheme_items;
+    debugger
+    const scheme_items      =   product.selectedScheme.items.map(x=> {return x.item_id});
     const flag              =   scheme_items.every(item_id => orderDetail.items.some(x => x.item_id == item_id && x.stockQty >= minqty));
     if(flag){
       let schemeItems       =   orderDetail.items.filter(x => scheme_items.includes(x.item_id));
@@ -901,7 +902,7 @@ export class DataService {
       return item;
     })
     orderDetails;
-    debugger
+    //debugger
     return JSON.parse(JSON.stringify(orderDetails));
   }
 }

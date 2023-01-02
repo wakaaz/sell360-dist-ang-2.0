@@ -221,6 +221,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       this.calculateProductDiscounts(product);
       this.calculateProductPrice(product);
       this.calculateTotalBill();
+      if(product.selectedScheme.scheme_type == 'bundle_offer'){
+        this.orderDetail  = this.applyBunldeProductScheme(product,this.orderDetail);
+        this.orderDetail  = JSON.parse(JSON.stringify(this.orderDetail))
+      }
       //Apply slab on all products
       this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
       this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items));

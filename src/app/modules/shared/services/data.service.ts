@@ -784,7 +784,7 @@ export class DataService {
         orderDetailitems = this.applyBundleDOTP(product,orderDetail);
           break;
       case 5:
-        orderDetailitems = this.applyBundleFreeProduct(product,orderDetail);
+        orderDetailitems = this.applyBundleFixedProduct(product,orderDetail);
           break;
       default:
         orderDetailitems = orderDetail.items;
@@ -819,7 +819,7 @@ export class DataService {
     }
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
-  applyBundleFreeProduct(product: any,orderDetails:any): any {
+  applyBundleFixedProduct(product: any,orderDetails:any): any {
     ////debugger
     const interval  = this.getBundleOfferIntervalsAlgo(product,orderDetails);
     ////debugger
@@ -875,64 +875,7 @@ export class DataService {
       });     
     }
     return  bundleCount
-  }
-  /**
-   * End: Bundle Offer
-   *  
-   */
-
-
-  updateSchemeFreeProductItems_old(orderDetails:any,allProducts:any){
-    ////debugger;
-    let schemeitems:any = [];
-    orderDetails.items  = orderDetails.items.map((item) => {
-        if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
-          //console.log(item.scheme_free_items);
-          if(item.scheme_free_items.length > 0){
-            item.scheme_free_items.forEach(x=>{
-              let stockitem = allProducts.filter(y=> y.item_id === x.item_id ) ? allProducts.filter(y=> y.item_id === x.item_id )[0]:null;
-              if(stockitem){
-                let schemeitem = { 
-                                      
-                                      parent_item_id      :   item.item_id,
-                                      city_id             :   orderDetails.city_id,
-                                      locality_id         :   orderDetails.locality_id,
-                                      neighbourhood_id    :   orderDetails.neighbourhood_id,
-                                      channel_id          :   orderDetails.channel_id,
-                                      main_category_id    :   orderDetails.main_category_id,
-                                      sub_category_id     :   orderDetails.sub_category_id,
-                                      scheme_id           :   item.scheme_id,
-                                      scheme_type         :   item.scheme_type,
-                                      scheme_rule         :   item.scheme_rule,
-                                      scheme_quantity_free:   item.scheme_quantity_free,
-                                      gift_value          :   item.gift_value,
-                                      name                :   stockitem.item_name,
-                                      item_id             :   stockitem.item_id,
-                                      pref_id             :   stockitem.pref_id,
-                                      unit_id             :   stockitem.unit_id,
-                                      brand_id            :   stockitem.brand_id,
-                                      parent_pref_id      :   stockitem.parent_pref_id,
-                                      parent_unit_id      :   stockitem.pare,
-                                      parent_qty_sold     :   x.free_qty/stockitem.sub_inventory_quantity,
-                                      quantity            :   x.free_qty,
-                                      dispatch_qty        :   x.free_qty,
-                                      executed_qty        :   x.free_qty
-                                }
-                schemeitems.push(schemeitem);             
-              }
-            });
-          } 
-        } 
-        return item;                    
-    });
-    orderDetails.schemeitems    = schemeitems;
-    orderDetails.items          = orderDetails.items.map((item) => {
-      item.schemeitems          = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === item.item_id) : null;
-      item.scheme_quantity_free = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x => x.item_id === item.item_id).reduce((a: any, b: any) => a + b.quantity, 0):0;      
-      return item;
-    })
-    return JSON.parse(JSON.stringify(orderDetails.items));
-  }
+  } 
   updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
     let schemeitems:any   = [];
     //debugger
@@ -1058,4 +1001,98 @@ export class DataService {
     //debugger
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
+  /**
+   * End: Bundle Offer
+   *  
+   */
+
+
+
+
+  /**
+   * Begin: Complementary Offer
+   * 
+   */ 
+  applyComplementaryScheme(product: any,orderDetail:any): any {
+ 
+    let orderDetailitems = orderDetail.items;
+    switch (product.selectedScheme.scheme_rule) {
+      case 5:
+        orderDetailitems = this.applyComplementaryFixedProduct(product,orderDetail);
+          break;
+      case 5:
+        orderDetailitems = this.applyComplementaryEquelProduct(product,orderDetail);
+              break;    
+      default:
+        orderDetailitems = orderDetail.items;
+          break;
+    }
+    return orderDetailitems;
+  }
+
+
+  applyComplementaryFixedProduct(item: any,orderDetails:any): any {
+    item.scheme_free_items    =   [];
+    if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
+      let min_qty               =   item.selectedScheme.min_qty ? +item.selectedScheme.min_qty:0;
+      let stockQty              =   item.stockQty ? +item.stockQty:0; 
+      const interval            =   Math.trunc(stockQty / min_qty) ;
+      const freeQty             =   +item.selectedScheme.quantity_free * interval;
+      item.selectedScheme       =   item.selectedScheme;
+      item.scheme_id            =   item.selectedScheme.id;
+      item.scheme_type          =   item.selectedScheme.scheme_type;
+      item.scheme_rule          =   item.selectedScheme.scheme_rule;
+      item.scheme_quantity_free =   0;
+      item.scheme_discount      =   0;
+      item.price                =   item.item_trade_price;
+      item.unit_price_after_scheme_discount = item.item_trade_price;
+      if(item.selectedScheme.freeitems.length > 0){
+        item.selectedScheme.freeitems.forEach(x=>{
+          item.scheme_free_items.push({
+                                        item_id : x.item_id,
+                                        free_qty: freeQty
+                                      })
+        })
+      }
+      item.selectedScheme.applied = true;
+    }else{
+      item.selectedScheme.applied = false;
+    }
+    
+    return JSON.parse(JSON.stringify(orderDetails.items));
+  }
+  applyComplementaryEquelProduct(item: any,orderDetails:any): any {
+    item.scheme_free_items    =   [];
+    if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
+      const freeQty             =  item.stockQty;
+      item.selectedScheme       =   item.selectedScheme;
+      item.scheme_id            =   item.selectedScheme.id;
+      item.scheme_type          =   item.selectedScheme.scheme_type;
+      item.scheme_rule          =   item.selectedScheme.scheme_rule;
+      item.scheme_quantity_free =   0;
+      item.scheme_discount      =   0;
+      item.price                =   item.item_trade_price;
+      item.unit_price_after_scheme_discount = item.item_trade_price;
+      if(item.selectedScheme.freeitems.length > 0){
+        item.selectedScheme.freeitems.forEach(x=>{
+          item.scheme_free_items.push({
+                                        item_id : x.item_id,
+                                        free_qty: freeQty
+                                      })
+        })
+      }
+      item.selectedScheme.applied = true;
+    }else{
+      item.selectedScheme.applied = false;
+    }
+    
+    return JSON.parse(JSON.stringify(orderDetails.items));
+  }
+  /**
+   * End: Complementary Offer
+   *  
+   */
+
+
+  
 }

@@ -326,9 +326,9 @@
 
               <div class="col p-0">
                 <div *ngIf="currentTab === 2" class="rightHeight">
-                  <app-order-items-list
+                  <app-order-items-list 
                     *ngIf="!savingOrder && selectedRetailer"
-                    [orderDetail]="orderDetails"
+                    [orderDetail]="orderDetails" 
                     [schemes]="schemes"
                     [selectedRetailer]="selectedRetailer"
                     [orders]="ordersRetailers"

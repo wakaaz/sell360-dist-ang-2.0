@@ -777,20 +777,19 @@ export class DataService {
    */
   applyBundleScheme(product: any,orderDetail:any): any {
  
-    console.log("Lenth===>"+orderDetail.length) 
+    let orderDetailitems = orderDetail.items;
     switch (product.selectedScheme.scheme_rule) {
       case 1:
-        orderDetail = this.applyBundleDOTP(product,orderDetail);
+        orderDetailitems = this.applyBundleDOTP(product,orderDetail);
           break;
       case 5:
-        orderDetail = this.applyBundleFreeProduct(product,orderDetail);
+        orderDetailitems = this.applyBundleFreeProduct(product,orderDetail);
           break;
       default:
-          console.log('Inavalid rule for budle offer');
+        orderDetailitems = orderDetail.items;
           break;
     }
-    console.log("Lenth===>"+orderDetail.length) 
-    return orderDetail;
+    return orderDetailitems;
   }
 
   applyBundleDOTP(product: any,orderDetails:any): any {
@@ -817,7 +816,7 @@ export class DataService {
           return item;
       })
     }
-    return orderDetails;
+    return JSON.parse(JSON.stringify(orderDetails.items));
   }
   applyBundleFreeProduct(product: any,orderDetails:any): any {
     ////debugger
@@ -857,9 +856,7 @@ export class DataService {
           return item;
       });
     }
-    orderDetails.items;
-    ////debugger
-    return orderDetails;
+    return JSON.parse(JSON.stringify(orderDetails.items));
   }
   getBundleOfferIntervalsAlgo(product: any,orderDetail:any):number {
     
@@ -884,8 +881,7 @@ export class DataService {
    */
 
 
-  updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
-    return JSON.parse(JSON.stringify(orderDetails));
+  updateSchemeFreeProductItems_old(orderDetails:any,allProducts:any){
     ////debugger;
     let schemeitems:any = [];
     orderDetails.items  = orderDetails.items.map((item) => {
@@ -934,8 +930,130 @@ export class DataService {
       item.scheme_quantity_free = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x => x.item_id === item.item_id).reduce((a: any, b: any) => a + b.quantity, 0):0;      
       return item;
     })
-    orderDetails;
-    ////debugger
-    return JSON.parse(JSON.stringify(orderDetails));
+    return JSON.parse(JSON.stringify(orderDetails.items));
+  }
+  updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
+    let schemeitems:any   = [];
+    //debugger
+    let orderDetails_items:any = []; 
+    orderDetails.items  = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x.quantity > 0 || x.stockQty >0))));
+     orderDetails.items.map((item) => {
+        if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
+          // console.log(item.scheme_free_items);
+          if(item.scheme_free_items.length > 0){
+            
+            item.scheme_free_items.forEach(x=>{
+              if(x.free_qty > 0){
+                
+              let stockitem = allProducts.filter(y=> y.item_id == x.item_id ) ? allProducts.filter(y=> y.item_id == x.item_id )[0]:null;
+              if(stockitem){
+                let schemeitem = { 
+                                      parent_item_id      :   item.item_id,
+                                      city_id             :   orderDetails.city_id,
+                                      locality_id         :   orderDetails.locality_id,
+                                      neighbourhood_id    :   orderDetails.neighbourhood_id,
+                                      channel_id          :   orderDetails.channel_id,
+                                      main_category_id    :   orderDetails.main_category_id,
+                                      sub_category_id     :   orderDetails.sub_category_id,
+                                      scheme_id           :   item.scheme_id,
+                                      scheme_type         :   item.scheme_type,
+                                      scheme_rule         :   item.scheme_rule,
+                                      scheme_quantity_free:   item.scheme_quantity_free,
+                                      gift_value          :   item.gift_value,
+                                      name                :   stockitem.item_name,
+                                      item_id             :   stockitem.item_id,
+                                      pref_id             :   stockitem.pref_id,
+                                      unit_id             :   stockitem.unit_id,
+                                      brand_id            :   stockitem.brand_id,
+                                      parent_pref_id      :   stockitem.parent_pref_id,
+                                      parent_unit_id      :   stockitem.pare,
+                                      parent_qty_sold     :   x.free_qty/stockitem.sub_inventory_quantity,
+                                      quantity            :   x.free_qty,
+                                      dispatch_qty        :   x.free_qty,
+                                      executed_qty        :   x.free_qty
+                                }
+                schemeitems.push(schemeitem); 
+                let isOrderItem = orderDetails.items.some(z=> z.item_id == x.item_id);
+                if(!isOrderItem){
+                  let newItem = allProducts.filter(k=> k.item_id == x.item_id ) ? allProducts.filter(k=> k.item_id == x.item_id )[0]:null;
+                  if(newItem){
+                      newItem.item_quantity_booker = 0;
+                      newItem.item_quantity_updated= 0;
+                      newItem.original_price= newItem.item_trade_price;
+                      newItem.scheme_discount= 0;
+                      newItem.unit_price_after_scheme_discount= newItem.original_price;
+                      newItem.slab_id= 0;
+                      newItem.slab_type = 0;
+                      newItem.slab_discount_type= '';
+                      newItem.merchant_discount=0;
+                      newItem.merchant_discount_pkr= 0;
+                      newItem.unit_price_after_merchant_discount= newItem.original_price;
+                      newItem.special_discount= 0;
+                      newItem.unit_price_after_special_discount=newItem.original_price;
+                      newItem.booker_discount= 0;
+                      newItem.unit_price_after_individual_discount=newItem.original_price;
+                      newItem.unit_id= newItem.unit_id;
+                      newItem.unit_name= newItem.unit_name;
+                      newItem.brand_id= newItem.brand_id;
+                      newItem.item_id= newItem.item_id;
+                      newItem.item_name= newItem.item_name;
+                      newItem.scheme_id=  0;
+                      newItem.scheme_min_quantity= 0;
+                      newItem.scheme_quantity_free= 0;
+                      newItem.scheme_discount_type= 0;
+                      newItem.scheme_rule='';
+                      newItem.gift_value= 0;
+                      newItem.parent_pref_id= newItem.child;
+                      newItem.parent_unit_id= newItem.parent_unit_id;
+                      newItem.parent_brand_id= newItem.brand_id;
+                      newItem.parent_tp= 0;
+                      newItem.parent_qty_sold= 0;
+                      newItem.parent_value_sold= 0;
+                      newItem.final_price= 0;
+                      newItem.campaign_id= 0;
+                      newItem.item_status= 1;
+                      newItem.dispatch_status= 2;
+                      newItem.dispatch_qty= 0;
+                      newItem.dispatch_amount= 0;
+                      newItem.reasoning= '';
+                      newItem.distributor_id= newItem.distributor_id;
+                      newItem.division_id= newItem.division_id;
+                      newItem.booked_total_qty= 0;
+                      newItem.quantity= 0;
+                      newItem.stockQty= 0;
+                      newItem.gross_sale_amount= 0;
+                      newItem.total_retail_price= 0;
+                      newItem.tax_class_id=0;
+                      newItem.tax_in_percentage= 0;
+                      newItem.tax_in_value= 0;
+                      newItem.total_tax_amount=0;
+                      newItem.total_amount_after_tax= 0;
+                      newItem.total_discount=0;
+                      console.log(orderDetails_items.length)
+                      //debugger
+                      orderDetails_items.push(newItem);
+                      console.log(orderDetails_items.length)
+                      //debugger
+                    };
+                  }
+                }
+              }             
+              });
+            }
+        }
+        orderDetails_items.push(item);
+        return item;                    
+    });
+    orderDetails.items          = JSON.parse(JSON.stringify(orderDetails_items));
+    //debugger
+    orderDetails.schemeitems    = schemeitems;
+    orderDetails.items          = orderDetails.items.map((item) => { 
+      item.schemeitems          = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === item.item_id) : null;
+      item.scheme_quantity_free = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.item_id === item.item_id).reduce((a: any, b: any) => a + b.quantity, 0):0;      
+      return item;
+    })
+    orderDetails.items;
+    //debugger
+    return JSON.parse(JSON.stringify(orderDetails.items));
   }
 }

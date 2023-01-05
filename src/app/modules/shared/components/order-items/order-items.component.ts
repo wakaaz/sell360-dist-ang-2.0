@@ -152,10 +152,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
           (x) => x.item_id !== this.selectedItem.item_id
         );
         this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
-        if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
-          this.orderDetail  = this.applyBunldeProductScheme(this.selectedItem,this.orderDetail);
-          this.orderDetail  = JSON.parse(JSON.stringify(this.orderDetail))
-        }
+        // if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
+        //   this.orderDetail  = this.apply1BunldeProductScheme(this.selectedItem,this.orderDetail);
+        //   this.orderDetail  = JSON.parse(JSON.stringify(this.orderDetail))
+        // }
         //apply slabs to all items
         this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
         this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items))
@@ -166,7 +166,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
   }
 
-  setQuantity(product: any): void {  
+  setQuantity(product: any): void { 
+    
     ////debugger
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
@@ -221,9 +222,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       this.calculateProductDiscounts(product);
       this.calculateProductPrice(product);
       this.calculateTotalBill();
+      
+      
       if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
-        this.orderDetail  = this.applyBunldeProductScheme(product,this.orderDetail);
-        this.orderDetail  = JSON.parse(JSON.stringify(this.orderDetail))
+        this.orderDetail.items   = this.applyBunldeProductScheme(product,this.orderDetail);
       }
       //Apply slab on all products
     
@@ -231,7 +233,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items));
       this.applySpecialDiscountOnAllProducts();
       //update Scheme Free Products to scheme Items
-      this.orderDetail  = this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
+      console.log("COUNT BFR=>"+this.orderDetail.items.length)
+      this.orderDetail.items  = this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
+      console.log("COUNT AFR=>"+this.orderDetail.items.length)
       this.productUpdated.emit();
     }
   }
@@ -487,8 +491,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     return product;
   }
   applyBunldeProductScheme(product: any,orderDetail:any): any {
-    orderDetail = this.dataService.applyBundleScheme(product,orderDetail);
-    return orderDetail;
+    return this.dataService.applyBundleScheme(product,orderDetail);
   }
 
   applyDOTPScheme(product: any): any {

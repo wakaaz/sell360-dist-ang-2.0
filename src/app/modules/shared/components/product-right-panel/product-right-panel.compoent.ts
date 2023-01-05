@@ -53,11 +53,11 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   ngOnInit(): void {}
 
   ngOnChanges(change: SimpleChanges): void {
+    
     if (change.orderedProducts?.currentValue) {
+      console.log("orderedProducts=> "+this.orderedProducts.length)
       this.allProducts = this.allProducts.map((x) => {
-        const orderedProduct = this.orderedProducts.find(
-          (pr) => pr.item_id === x.item_id
-        );
+        const orderedProduct = this.orderedProducts.some((pr) => pr.item_id === x.item_id );
         // if (orderedProduct?.item_status == 0)
         //   x.isDeleted = true;
         // else if (orderedProduct)
@@ -65,6 +65,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         return x;
       });
       this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
+      console.log("dispProducts => "+this.dispProducts.length)
     }
     if (change.allProducts?.currentValue) {
       this.allProducts = this.allProducts.map((product) => {
@@ -132,6 +133,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       this.productSelected.emit(
         JSON.parse(JSON.stringify(this.selectedProduct))
       );
+
       document.getElementById('pl-qty-close').click();
       
     }
@@ -345,4 +347,33 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   applyGiftScheme(product: any): any {
     return this.dataService.getSDForGift(product);
   }
+
+  checkBundleScheme(scheme:any):boolean{
+    
+    
+    //console.log(scheme.scheme_type);
+    if(scheme.scheme_type == 'bundle_offer'){ 
+      let itemCount  = 0; 
+      const scheme_items      =   scheme.items.map(x=> {return x.item_id});
+      this.orderedProducts.forEach(x=>{
+        
+        if(scheme_items.includes(x.item_id) && scheme.min_qty <= x.stockQty){ 
+          ++itemCount;      
+        }
+       // debugger
+      });
+      //console.log(`COUNT ${scheme_items.length - 1} <= ${itemCount}` )
+      if(scheme_items.length - 1 <= itemCount){
+        //console.log(false);
+          return false
+      }else{
+        //console.log(true);
+        return true;
+      }   
+    //debugger
+    }
+    //console.log(false);
+    return false;
+  }
+
 }

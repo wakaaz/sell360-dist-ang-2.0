@@ -179,6 +179,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     if (+product.stockQty > product.quantity + product.extra_qty) {
       product.stockQty = product.quantity + product.extra_qty;
     }
+
+    if(product.current_load_allocated_qty < (product.stockQty + product.scheme_quantity_free)){
+      product.stockQty = product.current_load_allocated_qty - product.scheme_quantity_free;
+    }
+    
     if (this.orderType === 'execution') {
       const prod = this.allProducts.find((x) => x.item_id === product.item_id);
       if (
@@ -459,8 +464,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   calculateProductTax(product: any): void {
     if (product.tax_class_amount) {
-      product.tax_amount_value =
-        (product.tax_class_amount / 100) * product.item_retail_price;
+      product.tax_amount_value = (product.tax_class_amount / 100) * product.item_retail_price;
       product.tax_amount_pkr = product.tax_amount_value * product.stockQty;
       product.net_amount = product.net_amount + product.tax_amount_pkr;
     } else {

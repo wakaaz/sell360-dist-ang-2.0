@@ -950,11 +950,11 @@ export class DataService {
                 let schemeitem = { 
                                       parent_item_id      :   item.item_id,
                                       city_id             :   orderDetails.city_id,
-                                      locality_id         :   orderDetails.locality_id,
-                                      neighbourhood_id    :   orderDetails.neighbourhood_id,
+                                      locality_id         :   orderDetails.booking_locality_id,
+                                      neighbourhood_id    :   orderDetails.booking_neighbourhood_id,
                                       channel_id          :   orderDetails.channel_id,
-                                      main_category_id    :   orderDetails.main_category_id,
-                                      sub_category_id     :   orderDetails.sub_category_id,
+                                      main_category_id    :   item.main_category_id,
+                                      sub_category_id     :   item.sub_category_id,
                                       scheme_id           :   item.scheme_id,
                                       scheme_type         :   item.scheme_type,
                                       scheme_rule         :   item.scheme_rule,
@@ -966,13 +966,14 @@ export class DataService {
                                       unit_id             :   stockitem.unit_id,
                                       brand_id            :   stockitem.brand_id,
                                       parent_pref_id      :   stockitem.parent_pref_id,
-                                      parent_unit_id      :   stockitem.pare,
+                                      parent_unit_id      :   stockitem.parent_unit_id,
                                       parent_qty_sold     :   x.free_qty/stockitem.sub_inventory_quantity,
                                       quantity            :   x.free_qty,
                                       dispatch_qty        :   x.free_qty,
                                       executed_qty        :   x.free_qty
                                 }
                 schemeitems.push(schemeitem); 
+                debugger
                 let isOrderItem = orderDetails.items.some(z=> z.item_id == x.item_id);
                 if(!isOrderItem){
                   let newItem = allProducts.filter(k=> k.item_id == x.item_id ) ? allProducts.filter(k=> k.item_id == x.item_id )[0]:null;

@@ -582,15 +582,45 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   setOrderItems(): void {
-    this.orderDetails.items = this.orderDetails.items.map((item) => {
+    this.orderDetails.items =   this.orderDetails.items.map((item) => {
+      let free_qty          =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
+      let stockQty          =   +item.stockQty;
+      let gross_sale_amount =   item.original_price * stockQty
+      let finalQty          =   stockQty+free_qty;
+      let total_discount    =   (
+                                  (stockQty * item.scheme_discount) + 
+                                  (stockQty * item.trade_discount_pkr) +
+                                  (stockQty * item.special_discount) + 
+                                  item.extra_discount_pkr ? +item.extra_discount_pkr : 0
+                                );
+      let final_price       =   gross_sale_amount - total_discount;                          
+      let tax_in_value      =   0;                          
+      let total_tax_amount  =   0;   
+      if(item.tax_class_id > 0 && item.tax_class_amount){
+        tax_in_value        =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
+        total_tax_amount    =   tax_in_value*finalQty;  
+      }
+      let ttl_amnt_aftr_tax =   final_price + total_tax_amount;
       const orderItem = {
         id: item.id || 0,
-        employee_id: this.orderDetails.employee_id,
+        unit_id: item.unit_id,
+        unit_name: item.unit_name,
+        brand_id: item.brand_id,
+        item_id: item.item_id,
+        item_name: item.item_name,
         pref_id: item.pref_id,
+        employee_id: this.orderDetails.employee_id,
         item_quantity_booker: item.item_quantity_booker,
-        item_quantity_updated: item.item_quantity_updated || 0,
+        item_quantity_updated: item.item_quantity_booker != finalQty ? finalQty : null ,
         quantity_returned: 0,
-        original_price: item.item_trade_price,
+        original_price: item.original_price,
+        scheme_id: item.scheme_id || 0,
+        scheme_type : item.scheme_type,
+        scheme_rule: item.scheme_rule,
+        scheme_min_quantity: item.scheme_min_quantity || 0,
+        scheme_quantity_free: item.scheme_quantity_free || 0,
+        scheme_discount_type: item.scheme_discount_type || 0,
+        gift_value: item.gift_value || 0,
         scheme_discount: item.scheme_discount,
         unit_price_after_scheme_discount: item.unit_price_after_scheme_discount,
         slab_id: item.slab_id,
@@ -601,32 +631,21 @@ export class OrderDispatchedComponent implements OnInit {
         unit_price_after_merchant_discount: item.unit_price_after_merchant_discount,
         special_discount: item.special_discount,
         unit_price_after_special_discount:item.unit_price_after_special_discount,
-        booker_discount: item.extra_discount,
+        booker_discount: item.extra_discount_pkr ? +item.extra_discount_pkr : 0,
         unit_price_after_individual_discount:item.unit_price_after_individual_discount || item.price,
-        unit_id: item.unit_id,
-        unit_name: item.unit_name,
-        brand_id: item.brand_id,
-        item_id: item.item_id,
-        item_name: item.item_name,
-        scheme_id: item.selectedScheme?.id || 0,
-        scheme_min_quantity: item.selectedScheme?.min_qty || 0,
-        scheme_quantity_free: item.selectedScheme?.quantity_free || 0,
-
-        scheme_discount_type: item.selectedScheme?.discount_type || 0,
-        scheme_rule: item.selectedScheme?.rule_name || '',
-        gift_value: item.gift_value || 0,
+        schemeitems:item.schemeitems ? item.schemeitems :null,
         parent_pref_id: item.child,
         parent_unit_id: item.parent_unit_id,
         parent_brand_id: item.brand_id,
         parent_tp: item.parent_trade_price,
-        parent_qty_sold: item.parent_qty_sold,
-        parent_value_sold: item.net_amount,
-        final_price: item.net_amount,
+        parent_qty_sold: finalQty/item.sub_inventory_quantity,
+        parent_value_sold: final_price,
+        final_price: final_price,
         campaign_id: item.selectedScheme?.id || 0,
         item_status: item.is_active,
         dispatch_status: 2,
-        dispatch_qty: +item.stockQty,
-        dispatch_amount: item.net_amount,
+        dispatch_qty: finalQty,
+        dispatch_amount: final_price,
         reasoning: '',
         distributor_id: this.orderDetails.distributor_id,
         division_id: this.selectedRetailer.division_id || 0,
@@ -637,19 +656,16 @@ export class OrderDispatchedComponent implements OnInit {
         booked_order_value: item.booked_order_value || 0,
         booked_total_qty: item.booked_total_qty || 0,
         is_deleted: item.isDeleted,
-        quantity: +item.stockQty,
-        gross_sale_amount: item.original_amount,
-        total_retail_price: item.item_retail_price * item.stockQty,
+        quantity: finalQty,
+        gross_sale_amount: gross_sale_amount,
+        item_retail_price: item.item_retail_price,
+        total_retail_price: item.item_retail_price * finalQty,
         tax_class_id: item.tax_class_id,
         tax_in_percentage: item.tax_class_amount,
-        tax_in_value: item.tax_amount_value || 0,
-        total_tax_amount: item.tax_amount_pkr || 0,
-        total_amount_after_tax: item.net_amount,
-        total_discount:
-          +item.stockQty * item.scheme_discount +
-          +item.stockQty * item.trade_discount_pkr +
-          +item.stockQty * item.special_discount +
-          item.extra_discount_pkr,
+        tax_in_value: tax_in_value,
+        total_tax_amount: total_tax_amount,
+        total_amount_after_tax: ttl_amnt_aftr_tax,
+        total_discount: total_discount, 
         order_id: this.orderDetails.id,
       };
       //debugger

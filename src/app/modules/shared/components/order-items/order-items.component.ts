@@ -152,13 +152,14 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
           (x) => x.item_id !== this.selectedItem.item_id
         );
         this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
-        // if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
-        //   this.orderDetail  = this.apply1BunldeProductScheme(this.selectedItem,this.orderDetail);
-        //   this.orderDetail  = JSON.parse(JSON.stringify(this.orderDetail))
-        // }
+        if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
+          this.orderDetail.items   = this.applyBunldeProductScheme(this.selectedItem,this.orderDetail);
+        }
+        console.log("COUNT BFR=>"+this.orderDetail.items.length)
+        this.orderDetail.items  = this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
+        console.log("COUNT AFR=>"+this.orderDetail.items.length)
         //apply slabs to all items
         this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
-        this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items))
         this.applySpecialDiscountOnAllProducts();
       }
       this.productUpdated.emit();
@@ -234,13 +235,15 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       }
       //Apply slab on all products
     
-      this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
-      this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items));
-      this.applySpecialDiscountOnAllProducts();
       //update Scheme Free Products to scheme Items
       console.log("COUNT BFR=>"+this.orderDetail.items.length)
       this.orderDetail.items  = this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
       console.log("COUNT AFR=>"+this.orderDetail.items.length)
+
+      
+      this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
+      
+      this.applySpecialDiscountOnAllProducts();
       this.productUpdated.emit();
     }
   }

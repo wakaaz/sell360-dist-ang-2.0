@@ -546,7 +546,7 @@ export class DataService {
 
   applySlabDiscountValuesToItems(items:any, slabs:any){
     //console.log(items)
-   return items.map((item) => {
+    items = items.map((item) => {
     //console.log(item);
       /* App Scenarios In case of exclusiveOrder Access Right = 0:
          If the order booker has "0" Normal Order rights in that case only Normal Product or All Products Slabs shall be applied meaning ( Slab Type 0 or 1, 0 always has the priority )
@@ -693,6 +693,7 @@ export class DataService {
         ////debugger
       return item;
     });
+    return JSON.parse(JSON.stringify(items));
   }
 
   /**
@@ -953,13 +954,6 @@ export class DataService {
                                       locality_id         :   orderDetails.booking_locality_id,
                                       neighbourhood_id    :   orderDetails.booking_neighbourhood_id,
                                       channel_id          :   orderDetails.channel_id,
-                                      main_category_id    :   item.main_category_id,
-                                      sub_category_id     :   item.sub_category_id,
-                                      scheme_id           :   item.scheme_id,
-                                      scheme_type         :   item.scheme_type,
-                                      scheme_rule         :   item.scheme_rule,
-                                      scheme_quantity_free:   item.scheme_quantity_free,
-                                      gift_value          :   item.gift_value,
                                       name                :   stockitem.item_name,
                                       item_id             :   stockitem.item_id,
                                       pref_id             :   stockitem.pref_id,
@@ -967,6 +961,13 @@ export class DataService {
                                       brand_id            :   stockitem.brand_id,
                                       parent_pref_id      :   stockitem.parent_pref_id,
                                       parent_unit_id      :   stockitem.parent_unit_id,
+                                      main_category_id    :   item.main_category_id,
+                                      sub_category_id     :   item.sub_category_id,
+                                      scheme_id           :   item.scheme_id,
+                                      scheme_type         :   item.scheme_type,
+                                      scheme_rule         :   item.scheme_rule,
+                                      gift_value          :   item.gift_value,
+                                      scheme_quantity_free:   x.free_qty,
                                       parent_qty_sold     :   x.free_qty/stockitem.sub_inventory_quantity,
                                       quantity            :   x.free_qty,
                                       dispatch_qty        :   x.free_qty,

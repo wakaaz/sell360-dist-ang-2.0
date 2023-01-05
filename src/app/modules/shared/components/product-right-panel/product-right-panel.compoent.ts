@@ -116,7 +116,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
           +this.selectedProduct.stockQty <= this.selectedProduct.available_qty))
     ) {
       this.allProducts  = this.dataService.applySlabDiscountValuesToItems(this.allProducts,this.discountSlabs)   
-      this.allProducts  = JSON.parse(JSON.stringify(this.allProducts));  
+        
       
       this.selectedProduct.item_quantity_booker = 0;
       let prod = this.allProducts.find(

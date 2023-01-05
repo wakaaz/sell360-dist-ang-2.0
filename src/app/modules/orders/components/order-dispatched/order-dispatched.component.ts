@@ -397,62 +397,31 @@ export class OrderDispatchedComponent implements OnInit {
             if (res.status === 200) {
               this.orderDetails = res.data;
               this.orderDetails.items = this.orderDetails.items.map((prod) => {
-                const product = this.inventory.find(
-                  (x) => x.item_id === prod.item_id
-                );
-                prod.item_trade_price = JSON.parse(
-                  JSON.stringify(product.item_trade_price)
-                );
-                prod.parent_trade_price = JSON.parse(
-                  JSON.stringify(product.parent_trade_price)
-                );
-                prod.parent_unit_id = JSON.parse(
-                  JSON.stringify(product.parent_unit_id)
-                );
-                prod.parent_quantity = JSON.parse(
-                  JSON.stringify(product.quantity)
-                );
-                prod.child = JSON.parse(JSON.stringify(product.child));
-                prod.item_retail_price = JSON.parse(
-                  JSON.stringify(product.item_retail_price)
-                );
-                prod.extra_discount = JSON.parse(
-                  JSON.stringify(prod.booker_discount)
-                );
-                prod.tax_class_amount = JSON.parse(
-                  JSON.stringify(product.tax_class_amount)
-                );
-                prod.tax_class_id = JSON.parse(
-                  JSON.stringify(product.tax_class_id)
-                );
-                prod.tax_class_type = JSON.parse(
-                  JSON.stringify(product.tax_class_type)
-                );
-                prod.pref_id = JSON.parse(JSON.stringify(product.pref_id));
-                prod.unit_id = JSON.parse(JSON.stringify(product.unit_id));
-                prod.unit_name = JSON.parse(JSON.stringify(product.unit_name));
-                prod.brand_id = JSON.parse(JSON.stringify(product.brand_id));
-                prod.is_active = JSON.parse(JSON.stringify(product.is_active));
 
-                prod.stockQty = JSON.parse(JSON.stringify(prod.dispatch_qty));
-                prod.net_amount = JSON.parse(JSON.stringify(prod.final_price));
-                prod.gross_amount =
-                  prod.unit_price_after_scheme_discount * prod.stockQty;
+                const product = this.inventory.find(x => x.item_id === prod.item_id);
+                prod.parent_unit_id = JSON.parse(JSON.stringify(product.parent_unit_id));
+                prod.parent_quantity = JSON.parse(JSON.stringify(product.quantity));
+                prod.sub_inventory_quantity = JSON.parse(JSON.stringify(product.sub_inventory_quantity));
+                prod.child = JSON.parse(JSON.stringify(product.child));
+                prod.tax_class_amount = JSON.parse(JSON.stringify(product.tax_class_amount));
+                prod.tax_class_type = JSON.parse(JSON.stringify(product.tax_class_type));
+                prod.unit_name = JSON.parse(JSON.stringify(product.unit_name));
+                prod.brand_id     = JSON.parse(JSON.stringify(product.brand_id));
+                prod.is_active    = JSON.parse(JSON.stringify(product.is_active));
+
+                prod.item_trade_price = JSON.parse(JSON.stringify(prod.original_price));
+                prod.extra_discount = JSON.parse(JSON.stringify(prod.booker_discount));
+                prod.stockQty     = JSON.parse(JSON.stringify(prod.dispatch_qty));
+                prod.net_amount   = JSON.parse(JSON.stringify(prod.final_price));
+                prod.gross_amount = prod.unit_price_after_scheme_discount * prod.stockQty;
                 prod.extra_discount_pkr = prod.stockQty * prod.extra_discount;
                 prod.original_amount = prod.item_trade_price * prod.stockQty;
                 prod.special_discount_pkr = prod.special_discount;
-                prod.trade_discount = JSON.parse(
-                  JSON.stringify(prod.merchant_discount)
-                );
-                prod.trade_discount_pkr = JSON.parse(
-                  JSON.stringify(prod.merchant_discount_pkr)
-                );
-                prod.tax_amount_pkr = JSON.parse(
-                  JSON.stringify(prod.total_tax_amount || 0)
-                );
-                prod.selectedScheme = this.schemes.find(
-                  (scheme) => scheme.id === prod.scheme_id
-                );
+                prod.trade_discount = JSON.parse(JSON.stringify(prod.merchant_discount));
+                prod.trade_discount_pkr = JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
+                prod.tax_amount_pkr = JSON.parse(JSON.stringify(prod.total_tax_amount || 0));
+                prod.selectedScheme = this.schemes.find((scheme) => scheme.id === prod.scheme_id);
+                debugger
                 return prod;
               });
             }

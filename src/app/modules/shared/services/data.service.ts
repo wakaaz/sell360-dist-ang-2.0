@@ -1013,25 +1013,24 @@ export class DataService {
    * Begin: Complementary Offer
    * 
    */ 
-  applyComplementaryScheme(product: any,orderDetail:any): any {
+  applyComplementaryScheme(product: any): any {
  
-    let orderDetailitems = orderDetail.items;
     switch (product.selectedScheme.scheme_rule) {
       case 5:
-        orderDetailitems = this.applyComplementaryFixedProduct(product,orderDetail);
+        product = this.applyComplementaryFixedProduct(product);
           break;
       case 5:
-        orderDetailitems = this.applyComplementaryEquelProduct(product,orderDetail);
-              break;    
+        product = this.applyComplementaryEquelProduct(product);
+        break;    
       default:
-        orderDetailitems = orderDetail.items;
-          break;
+        product = product;
+        break;
     }
-    return orderDetailitems;
+    return product;
   }
 
 
-  applyComplementaryFixedProduct(item: any,orderDetails:any): any {
+  applyComplementaryFixedProduct(item: any): any {
     item.scheme_free_items    =   [];
     if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
       let min_qty               =   item.selectedScheme.min_qty ? +item.selectedScheme.min_qty:0;
@@ -1059,9 +1058,9 @@ export class DataService {
       item.selectedScheme.applied = false;
     }
     
-    return JSON.parse(JSON.stringify(orderDetails.items));
+    return JSON.parse(JSON.stringify(item));
   }
-  applyComplementaryEquelProduct(item: any,orderDetails:any): any {
+  applyComplementaryEquelProduct(item: any): any {
     item.scheme_free_items    =   [];
     if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
       const freeQty             =  item.stockQty;
@@ -1085,8 +1084,7 @@ export class DataService {
     }else{
       item.selectedScheme.applied = false;
     }
-    
-    return JSON.parse(JSON.stringify(orderDetails.items));
+    return JSON.parse(JSON.stringify(item));
   }
   /**
    * End: Complementary Offer

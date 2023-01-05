@@ -479,34 +479,24 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   applyScheme(product: any): any {
     switch (product.selectedScheme.scheme_type) {
       case 'free_product':
-        product   = this.applyFreeProductScheme(product);
+        product   = this.dataService.applyFreeProductScheme(product);
         break;
       case 'dotp':
-        product   = this.applyDOTPScheme(product);
+        product   = this.dataService.getSDForDOTP(product);
+        break; 
+     case 'comp_product': 
+        product   = this.dataService.applyComplementaryScheme(product);  
         break;
-      case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
-          break;  
+     case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
+            break;       
       default:
-        product   = this.applyGiftScheme(product);
+        product   = this.dataService.getSDForGift(product);
         break;
     }
     return product;
   }
-
-  applyFreeProductScheme(product: any): any {
-    product = this.dataService.applyFreeProductScheme(product);
-    return product;
-  }
   applyBunldeProductScheme(product: any,orderDetail:any): any {
-    return this.dataService.applyBundleScheme(product,orderDetail);
-  }
-
-  applyDOTPScheme(product: any): any {
-    return this.dataService.getSDForDOTP(product);
-  }
-
-  applyGiftScheme(product: any): any {
-    return this.dataService.getSDForGift(product);
+    return this.dataService.applyBundleProductsScheme(product,orderDetail);
   }
   checkRecovery(): void {
     if (+this.orderDetail.recovered > this.recoveryAmount) {

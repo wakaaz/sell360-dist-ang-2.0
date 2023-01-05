@@ -479,6 +479,8 @@ export class OrderDispatchedComponent implements OnInit {
     this.getDispatchDetails();
   }
 
+  
+
   addNewProductToOrder(product: any): void {
     this.newProduct = product;
   }

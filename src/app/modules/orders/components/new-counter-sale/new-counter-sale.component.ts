@@ -422,7 +422,7 @@ export class NewCounterSaleComponent implements OnInit {
 
     this.generalDataService.pushOrderItem(this.selectedProduct);
     //this.secondaryOrder = this.generalDataService.applySlabDiscountToOrders(this.secondaryOrder,this.selectedProduct);
-    debugger
+    //debugger
     this.showQuantityModal = false;
   }
 
@@ -706,7 +706,7 @@ export class NewCounterSaleComponent implements OnInit {
       //     this.order.payment.detail.push(creditEntry);
       //   }
       this.setOrderItems(newOrder);
-      debugger;
+      //debugger;
       this.placeOrder(newOrder);
     }
   }
@@ -780,11 +780,11 @@ export class NewCounterSaleComponent implements OnInit {
             : null,
       };
       console.log(product.selectedSlabs);
-      debugger
+      //debugger
       newOrder.items.push(item);
     });
     
-    debugger  
+    //debugger  
 
   }
   getSchemeItems(product: SecondaryOrderItems): ComplimentoryProdut[] {

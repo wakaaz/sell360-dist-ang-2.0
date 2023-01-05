@@ -479,14 +479,14 @@ export class OrderDispatchedComponent implements OnInit {
     this.getDispatchDetails();
   }
 
-  
+
 
   addNewProductToOrder(product: any): void {
     this.newProduct = product;
   }
 
   getDiscountSlabs(): void {
-    //debugger;
+    ////debugger;
     if (!this.discountSlabs.length) {
       this.orderService.getDiscountSlabs().subscribe(
         (res) => {
@@ -652,7 +652,7 @@ export class OrderDispatchedComponent implements OnInit {
           item.extra_discount_pkr,
         order_id: this.orderDetails.id,
       };
-      debugger
+      //debugger
       return orderItem;
     });
     this.saveOrder();
@@ -885,7 +885,7 @@ export class OrderDispatchedComponent implements OnInit {
     this.load.processed_date = this.orderDate;
     this.load.assignmentId = this.assignmentId;
     const order = { load: this.load, payments: this.credits };
-    debugger
+    //debugger
     this.showFinalLoad = false;
     this.orderService.saveDispatchOrder(order).subscribe(
       (res) => {
@@ -999,7 +999,7 @@ export class OrderDispatchedComponent implements OnInit {
     });
     //It will return only where actual qty or issue qty should be greater than zero 
     this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation);
-    debugger; 
+    //debugger; 
   }
 
   getItemName(itemId: number): string {

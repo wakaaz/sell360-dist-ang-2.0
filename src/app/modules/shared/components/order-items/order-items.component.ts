@@ -152,7 +152,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
           (x) => x.item_id !== this.selectedItem.item_id
         );
         this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
-        if(this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
+        if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
           this.orderDetail  = this.applyBunldeProductScheme(this.selectedItem,this.orderDetail);
           this.orderDetail  = JSON.parse(JSON.stringify(this.orderDetail))
         }
@@ -167,7 +167,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   }
 
   setQuantity(product: any): void {  
-    //debugger
+    ////debugger
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
     // );
@@ -221,11 +221,12 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       this.calculateProductDiscounts(product);
       this.calculateProductPrice(product);
       this.calculateTotalBill();
-      if(product.selectedScheme.scheme_type == 'bundle_offer'){
+      if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
         this.orderDetail  = this.applyBunldeProductScheme(product,this.orderDetail);
         this.orderDetail  = JSON.parse(JSON.stringify(this.orderDetail))
       }
       //Apply slab on all products
+    
       this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
       this.orderDetail.items  = JSON.parse(JSON.stringify(this.orderDetail.items));
       this.applySpecialDiscountOnAllProducts();
@@ -398,7 +399,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         JSON.stringify(product.price)
       );
     }
-    console.log(this.orderDetail);
+    //console.log(this.orderDetail);
     
     // Special Discount
     product = this.calculateProductSpecialDiscount(product);
@@ -448,7 +449,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       product.unit_price_after_special_discount, //product.price
       +product.stockQty
     );
-    // debugger
+    // //debugger
     this.calculateProductTax(product);
   }
 

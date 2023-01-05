@@ -199,7 +199,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   }
 
   setQuantity(product: any): void {
-    debugger
+    //debugger
     if (
       +product.stockQty >
       +product?.current_load_allocated_qty - +product?.current_load_booked_qty
@@ -209,7 +209,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         +product?.current_load_booked_qty;
     }
     if (product.item_trade_price) {
-      debugger
+      //debugger
       this.calculateProductDiscounts(product);
       this.calculateProductPrice(product);
     }
@@ -247,7 +247,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         1
       );
     } 
-    // debugger
+    // //debugger
     // if (this.discountSlabs) {
     
     //   product = this.dataService.applySlabDiscountToSingleItem(product,this.selectedRetailer,this.discountSlabs);
@@ -263,10 +263,10 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     //     product.trade_discount_pkr = 0;
     //     product.unit_price_after_merchant_discount = 123;//JSON.parse(JSON.stringify(product.price));
     //   }
-    //   debugger
+    //   //debugger
     // }
     else {
-      debugger
+      //debugger
       product.slab_id=0;
       product.slab_type=0;
       product.slab_discount_type = '0';
@@ -281,7 +281,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     // Extra Discount => Booker Discount
     product.extra_discount = 0;
     product.extra_discount_pkr = 0;
-    debugger;
+    //debugger;
     product.unit_price_after_individual_discount = JSON.parse(
       JSON.stringify(product.unit_price_after_special_discount)
     );

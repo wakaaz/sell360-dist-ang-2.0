@@ -3,7 +3,7 @@ import { SecondaryOrderItems } from 'src/app/modules/orders/primary-orders/_mode
 
 const getSecondaryOrderItem = (prod: Inventory) => {
   const orderItem: SecondaryOrderItems = new SecondaryOrderItems();
-  // debugger;
+  // //debugger;
   orderItem.prefId = prod.pref_id;
   orderItem.itemQuantityUpdated = 0;
   orderItem.quantityReturned = 0;
@@ -18,7 +18,7 @@ const getSecondaryOrderItem = (prod: Inventory) => {
   orderItem.brandId = prod.brand_id;
   orderItem.itemId = prod.item_id;
   orderItem.tradePrice = prod.item_trade_price;
-  debugger;
+  //debugger;
   orderItem.parent_pref_id = prod.parent_pref_id;
   if (prod.selectedScheme) {
     orderItem.selectedScheme = prod.selectedScheme;

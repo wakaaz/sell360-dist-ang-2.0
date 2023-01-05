@@ -194,93 +194,11 @@ export class DataService {
         this.schemeCannotApplied();
     }
     // console.log(product);
-    // debugger
+    // //debugger
     return product;
   }
 
-  /**
-   * Begin: Bundle Offer
-   * 
-   */
-  applyBundleScheme(product: any,orderDetail:any): any {
-    let productWithScheme: any = {};
-    debugger 
-    switch (product.selectedScheme.scheme_rule) {
-      case 1:
-          productWithScheme = this.applyBundleDOTP(product,orderDetail);
-          break;
-      case 5:
-          productWithScheme = this.applyBundleMinQty(product,orderDetail);
-          break;
-
-      default:
-          productWithScheme = product;
-          break;
-    }
-    return productWithScheme;
-  }
-
-  applyBundleDOTP(product: any,orderDetail:any): any {
-    let response  = this.getBundleOfferIntervalsAlgo(product,orderDetail);
-
-    debugger;
-    return orderDetail;
-  }
-  applyBundleMinQty(product: any,orderDetail:any): any { 
-    if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
-        // const discounted = this.getSDForFPQtyRestrictionDiscount(product.item_trade_price, product.stockQty,
-        //     product.selectedScheme.min_qty, product.selectedScheme.quantity_free);
-        const freeQtyInterval = Math.floor(product.stockQty / product.selectedScheme.min_qty);
-        const orderFreeQty = freeQtyInterval * product.selectedScheme.quantity_free;
-        product.scheme_quantity_free = orderFreeQty;
-        product.scheme_discount = 0;//discounted.schemeDiscount;
-        product.price = product.item_trade_price;//discounted.singleItemPrice;
-        product.unit_price_after_scheme_discount = product.item_trade_price;
-        product.scheme_rule         = 4;
-        product.scheme_type         = 'free_product'; 
-        product.scheme_free_items   = [{
-                                        item_id : product.item_id,
-                                        free_qty: product.scheme_quantity_free
-                                      }];
-        product.selectedScheme.applied = true;
-    } else {
-        product.scheme_quantity_free = 0;
-        product.selectedScheme.applied = false;
-        product.scheme_discount = 0;
-        product.price = product.item_trade_price;
-        product.scheme_free_items = null;
-        product.unit_price_after_scheme_discount = product.item_trade_price;
-        this.schemeCannotApplied();
-    }
-    // console.log(product);
-    // debugger
-    return product;
-  }
-  getBundleOfferIntervalsAlgo(product: any,orderDetail:any):any{
-    
-    let   bundleCount       =   0;
-    let   schemeItems       =   []; 
-    const minqty            =   product.selectedScheme.min_qty;
-    debugger
-    const scheme_items      =   product.selectedScheme.items.map(x=> {return x.item_id});
-    const flag              =   scheme_items.every(item_id => orderDetail.items.some(x => x.item_id == item_id && x.stockQty >= minqty));
-    if(flag){
-      let schemeItems       =   orderDetail.items.filter(x => scheme_items.includes(x.item_id));
-      schemeItems.find(x=>{
-                  if(bundleCount > x.stockQty){ 
-                    bundleCount   = x.stockQty;      
-                  }
-      });     
-    }  
-    return  {
-      bundleCount : bundleCount,
-      schemeItems : schemeItems,
-    };
-  }
-  /**
-   * End: Bundle Offer
-   *  
-   */
+  
 
   getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
     const totalTpMinQty = itemTP * minQty;
@@ -558,7 +476,7 @@ export class DataService {
                                             x.territory_id === selectedRetailer.territory_id &&
                                             x.channel_id === selectedRetailer.retailer_type_id
                                         ); 
-                                        //debugger
+                                        ////debugger
     if(!selecteditem.slab_id || selecteditem.slab_id === null){
       const skuslab        =  fileteredSlabs.filter(x => x.slab_type === 3) ? fileteredSlabs.filter(x => x.slab_type == 3)[0] : null;
       const brandslab      =  fileteredSlabs.filter(x => x.slab_type === 4) ? fileteredSlabs.filter(x => x.slab_type == 4)[0] : null;
@@ -577,7 +495,7 @@ export class DataService {
         selecteditem = this.applySlabToItem(selecteditem,generalslabs,false);
       
     }    
-    //debugger
+    ////debugger
     return selecteditem;
     
   }
@@ -585,8 +503,8 @@ export class DataService {
     
     if(slabs && ( !item.slab_id || item.slab_id === null) ){
       if(productbase){
-        console.log(item.item_id);
-        console.log(slabs.slab_items); 
+        // console.log(item.item_id);
+        // console.log(slabs.slab_items); 
         if(slabs.slab_items && slabs.slab_items.includes(item.item_id)){
           item.slab_id    = slabs.discount_slab_id;
           item.slab_type  = slabs.slab_type;
@@ -627,9 +545,9 @@ export class DataService {
   }
 
   applySlabDiscountValuesToItems(items:any, slabs:any){
-    console.log(items)
+    //console.log(items)
    return items.map((item) => {
-    console.log(item);
+    //console.log(item);
       /* App Scenarios In case of exclusiveOrder Access Right = 0:
          If the order booker has "0" Normal Order rights in that case only Normal Product or All Products Slabs shall be applied meaning ( Slab Type 0 or 1, 0 always has the priority )
          If there are no slab for 0 than apply 1
@@ -660,7 +578,7 @@ export class DataService {
         If exclusive discount slab does not exist than apply all products slab for exclusive products
         In case if both do not exist then no discount slab would be applied for exclusive products
       */
-        //debugger
+        ////debugger
         let slabmodel :any            =   []
         let itemslab:any              =   []
                                       
@@ -681,7 +599,7 @@ export class DataService {
         slabmodel.discount                =       0;
         slabmodel.discount_pkr            =       0;
         slabmodel.itemDiscountTp          =       itemDiscountTp;
-        //debugger
+        ////debugger
         if(itemslab && itemslab.id != null && item.stockQty > 0){
             if(slabmodel.slab_rule == 2){
                 if(slabmodel.slab_type < 3){
@@ -772,7 +690,7 @@ export class DataService {
         item.trade_discount                     = slabmodel.discount; 
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountTp;
-        //debugger
+        ////debugger
       return item;
     });
   }
@@ -852,12 +770,127 @@ export class DataService {
     return this.baseService.get(url);
   }
 
+
+  /**
+   * Begin: Bundle Offer
+   * 
+   */
+  applyBundleScheme(product: any,orderDetail:any): any {
+ 
+    console.log("Lenth===>"+orderDetail.length) 
+    switch (product.selectedScheme.scheme_rule) {
+      case 1:
+        orderDetail = this.applyBundleDOTP(product,orderDetail);
+          break;
+      case 5:
+        orderDetail = this.applyBundleFreeProduct(product,orderDetail);
+          break;
+      default:
+          console.log('Inavalid rule for budle offer');
+          break;
+    }
+    console.log("Lenth===>"+orderDetail.length) 
+    return orderDetail;
+  }
+
+  applyBundleDOTP(product: any,orderDetails:any): any {
+    const interval  = this.getBundleOfferIntervalsAlgo(product,orderDetails);
+    
+    if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
+      const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
+      const total_items       = scheme_items.length;
+      let schemeItemDiscount  = interval*product.selectedScheme.discount_on_tp; 
+      //schemeItemDiscount    = schemeItemDiscount > 0 ? schemeItemDiscount/total_items : 0; 
+      orderDetails.items      = orderDetails.items.map((item) => {
+          if(scheme_items.includes(item.item_id)){
+            item.selectedScheme   = product.selectedScheme;
+            item.scheme_id        = product.selectedScheme.id;
+            item.scheme_type      = product.selectedScheme.scheme_type;
+            item.scheme_rule      = product.selectedScheme.scheme_rule;
+            item.scheme_discount  = schemeItemDiscount;
+            item.price            = product.item_trade_price - schemeItemDiscount;
+            item.unit_price_after_scheme_discount = product.item_trade_price - schemeItemDiscount;
+            item.selectedScheme.applied = true;
+           //console.log(item)
+          // 
+          }
+          return item;
+      })
+    }
+    return orderDetails;
+  }
+  applyBundleFreeProduct(product: any,orderDetails:any): any {
+    ////debugger
+    const interval  = this.getBundleOfferIntervalsAlgo(product,orderDetails);
+    ////debugger
+    if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
+      const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
+      const total_items       = scheme_items.length;
+      let schemeItemDiscount  = interval*product.selectedScheme.discount_on_tp; 
+      //schemeItemDiscount    = schemeItemDiscount > 0 ? schemeItemDiscount/total_items : 0; 
+      orderDetails.items      = orderDetails.items.map((item) => {
+          if(scheme_items.includes(item.item_id)){
+            item.scheme_free_items    =   [];
+            item.selectedScheme       =   product.selectedScheme;
+            item.scheme_id            =   product.selectedScheme.id;
+            item.scheme_type          =   product.selectedScheme.scheme_type;
+            item.scheme_rule          =   product.selectedScheme.scheme_rule;
+            item.scheme_quantity_free =   0;
+            item.scheme_discount      =   0;//discounted.schemeDiscount;
+            item.price                =   item.item_trade_price;//discounted.singleItemPrice;
+            item.unit_price_after_scheme_discount = item.item_trade_price;
+            item.scheme_free_items    =   [];
+            if(product.item_id == item.item_id && product.selectedScheme.freeitems && product.selectedScheme.freeitems.length > 0){
+              let freeQty               =   product.selectedScheme.quantity_free*interval; 
+              product.selectedScheme.freeitems.forEach(x=>{
+                item.scheme_free_items.push({
+                                              item_id : x.item_id,
+                                              free_qty: freeQty
+                                            })
+              })
+            }
+            item.selectedScheme.applied = true;
+            ////debugger
+           //console.log(item)
+          // 
+          }
+          return item;
+      });
+    }
+    orderDetails.items;
+    ////debugger
+    return orderDetails;
+  }
+  getBundleOfferIntervalsAlgo(product: any,orderDetail:any):number {
+    
+    //
+    let   bundleCount       =   0; 
+    const minqty            =   product.selectedScheme.min_qty;
+    const scheme_items      =   product.selectedScheme.items.map(x=> {return x.item_id});
+    const flag              =   scheme_items.every(item_id => orderDetail.items.some(x => x.item_id == item_id && x.stockQty >= minqty));
+    if(flag){
+      let schemeItems       =   orderDetail.items.filter(x => scheme_items.includes(x.item_id));
+      schemeItems.forEach(x=>{
+        if(bundleCount == 0 || bundleCount > x.stockQty){ 
+          bundleCount   = + x.stockQty;      
+        }
+      });     
+    }
+    return  bundleCount
+  }
+  /**
+   * End: Bundle Offer
+   *  
+   */
+
+
   updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
-    //debugger;
+    return JSON.parse(JSON.stringify(orderDetails));
+    ////debugger;
     let schemeitems:any = [];
     orderDetails.items  = orderDetails.items.map((item) => {
         if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
-          console.log(item.scheme_free_items);
+          //console.log(item.scheme_free_items);
           if(item.scheme_free_items.length > 0){
             item.scheme_free_items.forEach(x=>{
               let stockitem = allProducts.filter(y=> y.item_id === x.item_id ) ? allProducts.filter(y=> y.item_id === x.item_id )[0]:null;
@@ -902,7 +935,7 @@ export class DataService {
       return item;
     })
     orderDetails;
-    //debugger
+    ////debugger
     return JSON.parse(JSON.stringify(orderDetails));
   }
 }

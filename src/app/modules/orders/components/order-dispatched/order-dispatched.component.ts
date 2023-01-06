@@ -421,7 +421,7 @@ export class OrderDispatchedComponent implements OnInit {
                 prod.trade_discount_pkr = JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
                 prod.tax_amount_pkr = JSON.parse(JSON.stringify(prod.total_tax_amount || 0));
                 prod.selectedScheme = this.schemes.find((scheme) => scheme.id === prod.scheme_id);
-                debugger
+                //debugger
                 return prod;
               });
             }
@@ -551,26 +551,25 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   setOrderItems(): void {
-    this.orderDetails.items =   this.orderDetails.items.map((item) => {
-      let free_qty          =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
-      let stockQty          =   +item.stockQty;
-      let gross_sale_amount =   item.original_price * stockQty
-      let finalQty          =   stockQty+free_qty;
-      let scheme_discount   =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount)
-      let total_discount    =   (
-                                  +scheme_discount + 
-                                  +(stockQty * item.trade_discount_pkr) +
-                                  +(stockQty * item.special_discount) + 
-                                  item.extra_discount_pkr ? +item.extra_discount_pkr : 0
-                                );
-      let final_price       =   gross_sale_amount - total_discount;                          
-      let tax_in_value      =   0;                          
-      let total_tax_amount  =   0;   
-      if(item.tax_class_id > 0 && item.tax_class_amount){
-        tax_in_value        =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
-        total_tax_amount    =   tax_in_value*finalQty;  
+    this.orderDetails.items   =   this.orderDetails.items.map((item) => {
+      let free_qty            =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
+      let stockQty            =   +item.stockQty;
+      let gross_sale_amount   =   item.original_price * stockQty
+      let finalQty            =   stockQty+free_qty;
+
+      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
+      let ttl_trade_discount  =  + stockQty * item.trade_discount_pkr;
+      let ttl_special_discount=  + stockQty * item.special_discount;
+      let ttl_extra_discount  =  + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+      let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
+      let final_price         =   gross_sale_amount - total_discount;                          
+      let tax_in_value        =   0;                          
+      let total_tax_amount    =   0;    
+      if(item.tax_class_id  > 0 && item.tax_class_amount){
+        tax_in_value          =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
+        total_tax_amount      =   tax_in_value*finalQty;  
       }
-      let ttl_amnt_aftr_tax =   final_price + total_tax_amount;
+      let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
       const orderItem = {
         id: item.id || 0,
         unit_id: item.unit_id,

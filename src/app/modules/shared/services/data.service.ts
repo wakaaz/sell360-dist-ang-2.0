@@ -42,20 +42,17 @@ export class DataService {
     return totalSchemeDiscount;
     
   }
-  calculateproductnetAmount(product:any):number{
-      let stockQty          =   +product.stockQty;
-      let gross_sale_amount =   product.original_price * stockQty;
-      let scheme_discount   =   product.scheme_id && product.scheme_type == 'bundle_offer' ? +product.scheme_discount: +(stockQty * product.scheme_discount) ;
-      let total_discount    =   (
-                                  scheme_discount + 
-                                  (stockQty * product.trade_discount_pkr) +
-                                  (stockQty * product.special_discount) + 
-                                  product.extra_discount_pkr ? product.extra_discount_pkr : 0
-                                );
-
-      let net_amount        = gross_sale_amount - total_discount;
-      if([35,36].includes(product.item_id))
-        debugger
+  calculateproductnetAmount(item:any):number{
+      let stockQty            =   +item.stockQty;
+      let gross_sale_amount   =   item.original_price * stockQty;
+      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
+      let ttl_trade_discount  =  + stockQty * item.trade_discount_pkr;
+      let ttl_special_discount=  + stockQty * item.special_discount;
+      let ttl_extra_discount  =  + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+      let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
+      let net_amount          =   gross_sale_amount - total_discount;
+      // if([35,36].includes(item.item_id))
+      //   debugger
 
 
       return net_amount;

@@ -357,7 +357,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       const scheme_items      =   scheme.items.map(x=> {return x.item_id});
       this.orderedProducts.forEach(x=>{
         
-        if(scheme_items.includes(x.item_id) && scheme.min_qty <= x.stockQty && (x.scheme_id || x.scheme_id == 0)){ 
+        if(scheme_items.includes(x.item_id) && scheme.min_qty <= x.stockQty && (!x.scheme_id || x.scheme_id == 0)){ 
           ++itemCount;      
         }
        // debugger

@@ -556,10 +556,11 @@ export class OrderDispatchedComponent implements OnInit {
       let stockQty          =   +item.stockQty;
       let gross_sale_amount =   item.original_price * stockQty
       let finalQty          =   stockQty+free_qty;
+      let scheme_discount   =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount)
       let total_discount    =   (
-                                  (stockQty * item.scheme_discount) + 
-                                  (stockQty * item.trade_discount_pkr) +
-                                  (stockQty * item.special_discount) + 
+                                  +scheme_discount + 
+                                  +(stockQty * item.trade_discount_pkr) +
+                                  +(stockQty * item.special_discount) + 
                                   item.extra_discount_pkr ? +item.extra_discount_pkr : 0
                                 );
       let final_price       =   gross_sale_amount - total_discount;                          

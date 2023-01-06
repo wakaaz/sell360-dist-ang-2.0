@@ -15,15 +15,13 @@ export class DataService {
     private baseService: HttpBaseService
   ) {}
 
-  calculateUnitPrice(unitPurchased: number, perUnitPrice: number): number {
+  calculateUnitPrice(perUnitPrice: number,unitPurchased: number): number {
     return unitPurchased * perUnitPrice;
   }
 
   calculateItemsBill(prices: Array<number>): number {
     let bill = 0;
-    prices.forEach((price) => {
-      bill += price;
-    });
+    prices.forEach((price) => {bill += price;});
     return bill;
   }
 
@@ -33,6 +31,34 @@ export class DataService {
     } else if (type === 'price') {
       return total - discount;
     }
+  }
+  calculateTotalSchemeDiscount(items :any) :number{
+    let totalSchemeDiscount = 0;
+    if(items){
+      items.forEach(x=>{
+        totalSchemeDiscount = totalSchemeDiscount + (x.scheme_id && x.scheme_type == 'bundle_offer' ? x.scheme_discount:(x.stockQty * x.scheme_discount) )
+      });
+    }
+    return totalSchemeDiscount;
+    
+  }
+  calculateproductnetAmount(product:any):number{
+      let stockQty          =   +product.stockQty;
+      let gross_sale_amount =   product.original_price * stockQty;
+      let scheme_discount   =   product.scheme_id && product.scheme_type == 'bundle_offer' ? +product.scheme_discount: +(stockQty * product.scheme_discount) ;
+      let total_discount    =   (
+                                  scheme_discount + 
+                                  (stockQty * product.trade_discount_pkr) +
+                                  (stockQty * product.special_discount) + 
+                                  product.extra_discount_pkr ? product.extra_discount_pkr : 0
+                                );
+
+      let net_amount        = gross_sale_amount - total_discount;
+      if([35,36].includes(product.item_id))
+        debugger
+
+
+      return net_amount;
   }
 
   /** Schemes Calculation and implementation */
@@ -78,6 +104,7 @@ export class DataService {
 
   applyFreeProductScheme(product: any): any {
     let productWithScheme: any = {};
+    //debugger
     switch (product.selectedScheme.scheme_rule) {
       case 1:
           productWithScheme = this.applyFPDOTP(product);
@@ -168,28 +195,32 @@ export class DataService {
   }
 
   applyFPMinQty(product: any): any { 
+      //debugger
     if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
-        // const discounted = this.getSDForFPQtyRestrictionDiscount(product.item_trade_price, product.stockQty,
-        //     product.selectedScheme.min_qty, product.selectedScheme.quantity_free);
-        const freeQtyInterval = Math.floor(product.stockQty / product.selectedScheme.min_qty);
-        const orderFreeQty = freeQtyInterval * product.selectedScheme.quantity_free;
-        product.scheme_quantity_free = orderFreeQty;
-        product.scheme_discount = 0;//discounted.schemeDiscount;
-        product.price = product.item_trade_price;//discounted.singleItemPrice;
+      //debugger
+        product.scheme_free_items   =   []
+        const freeQtyInterval       =    Math.floor(product.stockQty / product.selectedScheme.min_qty);
+        const orderFreeQty          =    freeQtyInterval * product.selectedScheme.quantity_free;
+        product.scheme_quantity_free=    orderFreeQty;
+        product.selectedScheme      =   product.selectedScheme;
+        product.scheme_id           =   product.selectedScheme.id;
+        product.scheme_type         =   product.selectedScheme.scheme_type;
+        product.scheme_rule         =   product.selectedScheme.scheme_rule;
+        product.scheme_quantity_free=   0;
+        product.scheme_discount     =   0;
+        product.price               =   product.item_trade_price;//discounted.singleItemPrice;
         product.unit_price_after_scheme_discount = product.item_trade_price;
-        product.scheme_rule         = 4;
-        product.scheme_type         = 'free_product'; 
-        product.scheme_free_items   = [{
-                                        item_id : product.item_id,
-                                        free_qty: product.scheme_quantity_free
-                                      }];
+        product.scheme_free_items   =   [{
+                                          item_id : +product.item_id,
+                                          free_qty: +product.scheme_quantity_free
+                                        }];
         product.selectedScheme.applied = true;
     } else {
-        product.scheme_quantity_free = 0;
-        product.selectedScheme.applied = false;
-        product.scheme_discount = 0;
-        product.price = product.item_trade_price;
-        product.scheme_free_items = null;
+        product.scheme_quantity_free    =   0;
+        product.selectedScheme.applied  =   false;
+        product.scheme_discount         =   0;
+        product.price                   =   product.item_trade_price;
+        product.scheme_free_items       =   null;
         product.unit_price_after_scheme_discount = product.item_trade_price;
         this.schemeCannotApplied();
     }
@@ -776,7 +807,7 @@ export class DataService {
    * Begin: Bundle Offer
    * 
    */
-  applyBundleScheme(product: any,orderDetail:any): any {
+  applyBundleProductsScheme(product: any,orderDetail:any): any {
  
     let orderDetailitems = orderDetail.items;
     switch (product.selectedScheme.scheme_rule) {
@@ -800,6 +831,7 @@ export class DataService {
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
       const total_items       = scheme_items.length;
       let schemeItemDiscount  = interval*product.selectedScheme.discount_on_tp; 
+      //debugger
       //schemeItemDiscount    = schemeItemDiscount > 0 ? schemeItemDiscount/total_items : 0; 
       orderDetails.items      = orderDetails.items.map((item) => {
           if(scheme_items.includes(item.item_id)){
@@ -817,6 +849,7 @@ export class DataService {
           return item;
       })
     }
+    
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
   applyBundleFixedProduct(product: any,orderDetails:any): any {
@@ -836,16 +869,16 @@ export class DataService {
             item.scheme_type          =   product.selectedScheme.scheme_type;
             item.scheme_rule          =   product.selectedScheme.scheme_rule;
             item.scheme_quantity_free =   0;
-            item.scheme_discount      =   0;//discounted.schemeDiscount;
-            item.price                =   item.item_trade_price;//discounted.singleItemPrice;
+            item.scheme_discount      =   0;
+            item.price                =   item.item_trade_price;
             item.unit_price_after_scheme_discount = item.item_trade_price;
             item.scheme_free_items    =   [];
             if(product.item_id == item.item_id && product.selectedScheme.freeitems && product.selectedScheme.freeitems.length > 0){
               let freeQty               =   product.selectedScheme.quantity_free*interval; 
               product.selectedScheme.freeitems.forEach(x=>{
                 item.scheme_free_items.push({
-                                              item_id : x.item_id,
-                                              free_qty: freeQty
+                                              item_id : +x.item_id,
+                                              free_qty: +freeQty
                                             })
               })
             }
@@ -875,7 +908,97 @@ export class DataService {
       });     
     }
     return  bundleCount
-  } 
+  }
+  /**
+   * End: Bundle Offer
+   *  
+   */
+
+
+
+
+  /**
+   * Begin: Complementary Offer
+   * 
+   */ 
+  applyComplementaryScheme(product: any): any {
+ 
+    switch (product.selectedScheme.scheme_rule) {
+      case 5:
+        product = this.applyComplementaryFixedProduct(product);
+          break;
+      case 6:
+        product = this.applyComplementaryEquelProduct(product);
+        break;    
+      default:
+        product = product;
+        break;
+    }
+    return product;
+  }
+
+
+  applyComplementaryFixedProduct(item: any): any {
+    item.scheme_free_items    =   [];
+    if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
+      let min_qty               =   item.selectedScheme.min_qty ? +item.selectedScheme.min_qty:0;
+      let stockQty              =   item.stockQty ? +item.stockQty:0; 
+      const interval            =   Math.trunc(stockQty / min_qty) ;
+      const freeQty             =   +item.selectedScheme.quantity_free * interval;
+      item.selectedScheme       =   item.selectedScheme;
+      item.scheme_id            =   item.selectedScheme.id;
+      item.scheme_type          =   item.selectedScheme.scheme_type;
+      item.scheme_rule          =   item.selectedScheme.scheme_rule;
+      item.scheme_quantity_free =   0;
+      item.scheme_discount      =   0;
+      item.price                =   item.item_trade_price;
+      item.unit_price_after_scheme_discount = item.item_trade_price;
+      if(item.selectedScheme.freeitems.length > 0){
+        item.selectedScheme.freeitems.forEach(x=>{
+          item.scheme_free_items.push({
+                                        item_id : +x.item_id,
+                                        free_qty: +freeQty
+                                      })
+        })
+      }
+      item.selectedScheme.applied = true;
+    }else{
+      item.selectedScheme.applied = false;
+    }
+    
+    return JSON.parse(JSON.stringify(item));
+  }
+  applyComplementaryEquelProduct(item: any): any {
+    item.scheme_free_items      =   [];
+    if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
+      const freeQty             =  item.stockQty;
+      item.selectedScheme       =   item.selectedScheme;
+      item.scheme_id            =   item.selectedScheme.id;
+      item.scheme_type          =   item.selectedScheme.scheme_type;
+      item.scheme_rule          =   item.selectedScheme.scheme_rule;
+      item.scheme_quantity_free =   0;
+      item.scheme_discount      =   0;
+      item.price                =   item.item_trade_price;
+      item.unit_price_after_scheme_discount = item.item_trade_price;
+      if(item.selectedScheme.freeitems.length > 0){
+        item.selectedScheme.freeitems.forEach(x=>{
+          item.scheme_free_items.push({
+                                        item_id : +x.item_id,
+                                        free_qty: +freeQty
+                                      })
+        })
+      }
+      item.selectedScheme.applied = true;
+    }else{
+      item.selectedScheme.applied = false;
+    }
+    return JSON.parse(JSON.stringify(item));
+  }
+  /**
+   * End: Complementary Offer
+   *  
+   */
+   
   updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
     let schemeitems:any   = [];
     //debugger
@@ -888,7 +1011,6 @@ export class DataService {
             
             item.scheme_free_items.forEach(x=>{
               if(x.free_qty > 0){
-                
               let stockitem = allProducts.filter(y=> y.item_id == x.item_id ) ? allProducts.filter(y=> y.item_id == x.item_id )[0]:null;
               if(stockitem){
                 let schemeitem = { 
@@ -910,16 +1032,17 @@ export class DataService {
                                       scheme_type         :   item.scheme_type,
                                       scheme_rule         :   item.scheme_rule,
                                       gift_value          :   item.gift_value,
-                                      scheme_quantity_free:   x.free_qty,
-                                      parent_qty_sold     :   x.free_qty/stockitem.sub_inventory_quantity,
-                                      quantity            :   x.free_qty,
-                                      dispatch_qty        :   x.free_qty,
-                                      executed_qty        :   x.free_qty
+                                      scheme_quantity_free:   +x.free_qty,
+                                      parent_qty_sold     :   +x.free_qty/ +stockitem.sub_inventory_quantity,
+                                      quantity            :   +x.free_qty,
+                                      dispatch_qty        :   +x.free_qty,
+                                      executed_qty        :   +x.free_qty
                                 }
                 schemeitems.push(schemeitem); 
-                debugger
-                let isOrderItem = orderDetails.items.some(z=> z.item_id == x.item_id);
-                if(!isOrderItem){
+                
+                let isOrderItem     = orderDetails.items.some(z => z.item_id == x.item_id);
+                let isOrderDetItem  = orderDetails_items.some(z => z.item_id == x.item_id);
+                if(!isOrderItem && !isOrderDetItem){
                   let newItem = allProducts.filter(k=> k.item_id == x.item_id ) ? allProducts.filter(k=> k.item_id == x.item_id )[0]:null;
                   if(newItem){
                       newItem.item_quantity_booker = 0;
@@ -994,102 +1117,13 @@ export class DataService {
     orderDetails.schemeitems    = schemeitems;
     orderDetails.items          = orderDetails.items.map((item) => { 
       item.schemeitems          = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === item.item_id) : null;
-      item.scheme_quantity_free = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.item_id === item.item_id).reduce((a: any, b: any) => a + b.quantity, 0):0;      
+      item.scheme_quantity_free = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.item_id === item.item_id).reduce((a: any, b: any) => +a + +b.quantity, 0):0;      
       return item;
     })
     orderDetails.items;
     //debugger
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
-  /**
-   * End: Bundle Offer
-   *  
-   */
-
-
-
-
-  /**
-   * Begin: Complementary Offer
-   * 
-   */ 
-  applyComplementaryScheme(product: any): any {
- 
-    switch (product.selectedScheme.scheme_rule) {
-      case 5:
-        product = this.applyComplementaryFixedProduct(product);
-          break;
-      case 5:
-        product = this.applyComplementaryEquelProduct(product);
-        break;    
-      default:
-        product = product;
-        break;
-    }
-    return product;
-  }
-
-
-  applyComplementaryFixedProduct(item: any): any {
-    item.scheme_free_items    =   [];
-    if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
-      let min_qty               =   item.selectedScheme.min_qty ? +item.selectedScheme.min_qty:0;
-      let stockQty              =   item.stockQty ? +item.stockQty:0; 
-      const interval            =   Math.trunc(stockQty / min_qty) ;
-      const freeQty             =   +item.selectedScheme.quantity_free * interval;
-      item.selectedScheme       =   item.selectedScheme;
-      item.scheme_id            =   item.selectedScheme.id;
-      item.scheme_type          =   item.selectedScheme.scheme_type;
-      item.scheme_rule          =   item.selectedScheme.scheme_rule;
-      item.scheme_quantity_free =   0;
-      item.scheme_discount      =   0;
-      item.price                =   item.item_trade_price;
-      item.unit_price_after_scheme_discount = item.item_trade_price;
-      if(item.selectedScheme.freeitems.length > 0){
-        item.selectedScheme.freeitems.forEach(x=>{
-          item.scheme_free_items.push({
-                                        item_id : x.item_id,
-                                        free_qty: freeQty
-                                      })
-        })
-      }
-      item.selectedScheme.applied = true;
-    }else{
-      item.selectedScheme.applied = false;
-    }
-    
-    return JSON.parse(JSON.stringify(item));
-  }
-  applyComplementaryEquelProduct(item: any): any {
-    item.scheme_free_items    =   [];
-    if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
-      const freeQty             =  item.stockQty;
-      item.selectedScheme       =   item.selectedScheme;
-      item.scheme_id            =   item.selectedScheme.id;
-      item.scheme_type          =   item.selectedScheme.scheme_type;
-      item.scheme_rule          =   item.selectedScheme.scheme_rule;
-      item.scheme_quantity_free =   0;
-      item.scheme_discount      =   0;
-      item.price                =   item.item_trade_price;
-      item.unit_price_after_scheme_discount = item.item_trade_price;
-      if(item.selectedScheme.freeitems.length > 0){
-        item.selectedScheme.freeitems.forEach(x=>{
-          item.scheme_free_items.push({
-                                        item_id : x.item_id,
-                                        free_qty: freeQty
-                                      })
-        })
-      }
-      item.selectedScheme.applied = true;
-    }else{
-      item.selectedScheme.applied = false;
-    }
-    return JSON.parse(JSON.stringify(item));
-  }
-  /**
-   * End: Complementary Offer
-   *  
-   */
 
 
   

@@ -271,17 +271,12 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
     product.gross_amount = -(product.item_trade_price * product.stockQty);
     product.original_amount = -(product.item_trade_price * product.stockQty);
-    product.total_retail_price = -(
-      product.item_retail_price * product.stockQty
-    );
+    product.total_retail_price = -(product.item_retail_price * product.stockQty);
     if (product.extra_discount) {
       product.booker_discount = +product.extra_discount;
-      product.unit_price_after_individual_discount =
-        product.item_trade_price - product.booker_discount;
+      product.unit_price_after_individual_discount = product.item_trade_price - product.booker_discount;
     }
-    product.net_amount = -(
-      product.unit_price_after_individual_discount * product.stockQty
-    );
+    product.net_amount = -( product.unit_price_after_individual_discount * product.stockQty );
     this.productUpdated.emit();
   }
 
@@ -291,9 +286,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         product.booker_discount = +product.extra_discount;
         product.unit_price_after_individual_discount =
           product.item_trade_price - product.booker_discount;
-        product.net_amount = -(
-          product.unit_price_after_individual_discount * product.stockQty
-        );
+        product.net_amount = -(product.unit_price_after_individual_discount * product.stockQty);
         this.productUpdated.emit();
       }
     }
@@ -352,8 +345,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       +product.stockQty,
       product.item_trade_price
     );
-    product.gross_amount =
-      product.unit_price_after_scheme_discount * +product.stockQty;
+    product.gross_amount = product.unit_price_after_scheme_discount * +product.stockQty;
   }
 
   calculateProductDiscounts(product: any, scheme?: any): void {
@@ -362,18 +354,16 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     product.scheme_rule         = 0;
     product.scheme_type         = null;
     product.scheme_quantity_free= 0; 
-    product.scheme_free_items   = null;
+    product.scheme_free_items   = [];
     if (scheme) {
       product.selectedScheme = scheme;
     }
     if (product.selectedScheme) {
       product = this.applyScheme(product);
     } else {
-      product.scheme_discount = 0;
-      product.price = JSON.parse(JSON.stringify(product.item_trade_price));
-      product.unit_price_after_scheme_discount = JSON.parse(
-        JSON.stringify(product.item_trade_price)
-      );
+      product.scheme_discount                   =   0;
+      product.price                             =   JSON.parse(JSON.stringify(product.item_trade_price));
+      product.unit_price_after_scheme_discount  =   JSON.parse(JSON.stringify(product.item_trade_price));
     }
 
 
@@ -456,11 +446,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     this.calculateTotalBill();
   }
 
-  calculateNetAmountOfProduct(product: any): any {
-    product.net_amount = this.dataService.calculateUnitPrice(
-      product.unit_price_after_special_discount, //product.price
-      +product.stockQty
-    );
+  calculateNetAmountOfProduct(product: any): any { 
+    //product.net_amount = this.dataService.calculateUnitPrice(product.unit_price_after_special_discount,+product.stockQty);
+    product.net_amount = this.dataService.calculateproductnetAmount(product);
     // //debugger
     this.calculateProductTax(product);
   }
@@ -469,7 +457,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     if (product.tax_class_amount) {
       product.tax_amount_value = (product.tax_class_amount / 100) * product.item_retail_price;
       product.tax_amount_pkr = product.tax_amount_value * product.stockQty;
-      product.net_amount = product.net_amount + product.tax_amount_pkr;
+      product.total_amount_after_tax = product.net_amount + product.tax_amount_pkr;
     } else {
       product.tax_amount_value = 0;
       product.tax_amount_pkr = 0;
@@ -538,7 +526,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     let discount = this.orderDetail.items.map(
       (product) => +product.stockQty * product.scheme_discount
     );
-    this.totalSchemeDiscount = this.dataService.calculateItemsBill(discount);
+    //this.totalSchemeDiscount = this.dataService.calculateItemsBill(discount);
+    this.totalSchemeDiscount = this.dataService.calculateTotalSchemeDiscount(this.orderDetail.items);
     // Trade Discount
     discount = this.orderDetail.items.map(
       (product) => +product.stockQty * product.trade_discount_pkr

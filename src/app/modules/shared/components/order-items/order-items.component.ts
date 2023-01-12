@@ -155,10 +155,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
           this.orderDetail.items   = this.applyBunldeProductScheme(this.selectedItem,this.orderDetail);
         }
-        console.log("COUNT BFR=>"+this.orderDetail.items.length)
+        //console.log("COUNT BFR=>"+this.orderDetail.items.length)
         this.orderDetail.items  = this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
-        console.log("COUNT AFR=>"+this.orderDetail.items.length)
-        //apply slabs to all items
+        //console.log("COUNT AFR=>"+this.orderDetail.items.length)
+        //apply slabs to all items 
         this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
         this.applySpecialDiscountOnAllProducts();
       }
@@ -350,9 +350,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   calculateProductDiscounts(product: any, scheme?: any): void {
     // Trade Offer
-    product.scheme_id           = 0;
-    product.scheme_rule         = 0;
-    product.scheme_type         = null;
+    // product.scheme_id           = 0;
+    // product.scheme_rule         = 0;
+    // product.scheme_type         = null;
     product.scheme_quantity_free= 0; 
     product.scheme_free_items   = [];
     if (scheme) {

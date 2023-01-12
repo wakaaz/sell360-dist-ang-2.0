@@ -2851,6 +2851,9 @@ textarea {
   color: orangered;
   font-size: 13px;
 }
+.free-product {
+  background-color: #05C71F6E;
+}
 @media (max-width: 320px) {
   .nav-pills .nav-link.active,
   .nav-pills .show > .nav-link,

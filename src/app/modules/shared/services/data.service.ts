@@ -134,6 +134,7 @@ export class DataService {
     product.price = discounted.singleItemPrice;
     product.unit_price_after_scheme_discount = discounted.singleItemPrice;
     product.selectedScheme.applied = true;
+    debugger
     return product;
   }
 
@@ -194,22 +195,21 @@ export class DataService {
   applyFPMinQty(product: any): any { 
       //debugger
     if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
-      //debugger
+        debugger 
         product.scheme_free_items   =   []
         const freeQtyInterval       =    Math.floor(product.stockQty / product.selectedScheme.min_qty);
         const orderFreeQty          =    freeQtyInterval * product.selectedScheme.quantity_free;
-        product.scheme_quantity_free=    orderFreeQty;
+        product.scheme_quantity_free=    orderFreeQty; 
         product.selectedScheme      =   product.selectedScheme;
         product.scheme_id           =   product.selectedScheme.id;
         product.scheme_type         =   product.selectedScheme.scheme_type;
         product.scheme_rule         =   product.selectedScheme.scheme_rule;
-        product.scheme_quantity_free=   0;
         product.scheme_discount     =   0;
         product.price               =   product.item_trade_price;//discounted.singleItemPrice;
         product.unit_price_after_scheme_discount = product.item_trade_price;
         product.scheme_free_items   =   [{
                                           item_id : +product.item_id,
-                                          free_qty: +product.scheme_quantity_free
+                                          free_qty: +product.scheme_quantity_free 
                                         }];
         product.selectedScheme.applied = true;
     } else {
@@ -229,11 +229,12 @@ export class DataService {
   
 
   getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
+    debugger
     const totalTpMinQty = itemTP * minQty;
     const totalItemBeingGiven = freeQty + minQty;
-    const discountOnEachItem = totalTpMinQty / totalItemBeingGiven;
-    const schemeAmount = itemTP - discountOnEachItem;
-    return schemeAmount;
+    const ItemDiscountedTP = totalTpMinQty / totalItemBeingGiven;
+    const unitdiscount = itemTP - ItemDiscountedTP;
+    return unitdiscount;
   }
 
   /**
@@ -250,15 +251,15 @@ export class DataService {
     minimumQty: number,
     freeQty: number
   ): { singleItemPrice: number; schemeDiscount: number } {
-    const schemeAmount = this.getSchemeAmount(
+    const schemeUnitDscount = this.getSchemeAmount(
       itemTradePrice,
       minimumQty,
       freeQty
     );
-    const tradePriceForSingleItem = itemTradePrice - schemeAmount;
+    const singleItemPrice = itemTradePrice - schemeUnitDscount;
     return {
-      singleItemPrice: tradePriceForSingleItem,
-      schemeDiscount: schemeAmount,
+      singleItemPrice: singleItemPrice,
+      schemeDiscount : schemeUnitDscount,
     };
   }
 
@@ -510,18 +511,18 @@ export class DataService {
       const brandslab      =  fileteredSlabs.filter(x => x.slab_type === 4) ? fileteredSlabs.filter(x => x.slab_type == 4)[0] : null;
       const categoryslab   =  fileteredSlabs.filter(x => x.slab_type === 5) ? fileteredSlabs.filter(x => x.slab_type == 5)[0] : null;  
       const generalslabs   =  fileteredSlabs.filter(x => x.slab_type < 3)  ? fileteredSlabs.filter(x => x.slab_type <= 2)  : null;                                                                    
-      if(skuslab)
-        selecteditem = this.applySlabToItem(selecteditem,skuslab,true); 
-     
-      if(selecteditem.slab_id === null && brandslab)
+      if(skuslab){
+        selecteditem = this.applySlabToItem(selecteditem,skuslab,true);
+      }     
+      if(selecteditem.slab_id === null && brandslab){
         selecteditem = this.applySlabToItem(selecteditem,brandslab,true);
-      
-      if(selecteditem.slab_id === null && categoryslab)
+      }
+      if(selecteditem.slab_id === null && categoryslab){
         selecteditem = this.applySlabToItem(selecteditem,categoryslab,true);
-      
-      if(selecteditem.slab_id === null && generalslabs)  
+      } 
+      if(selecteditem.slab_id === null && generalslabs) {
         selecteditem = this.applySlabToItem(selecteditem,generalslabs,false);
-      
+      }  
     }    
     ////debugger
     return selecteditem;
@@ -561,8 +562,8 @@ export class DataService {
             }
         }
         if(slab){
-          item.slab_id    = slab[0].discount_slab_id;
-          item.slab_type  = slab[0].slab_type;
+          item.slab_id    = slab[0] ? slab[0].discount_slab_id : null;
+          item.slab_type  = slab[0] ? slab[0].slab_type:null;
         }
       }
     }else{
@@ -620,8 +621,9 @@ export class DataService {
         if(item.slab_id > 0){
           itemslab  =   slabs.filter(x=> x.discount_slab_id == item.slab_id) ? slabs.filter(x=> x.discount_slab_id == item.slab_id)[0]:null;
         }
-        slabmodel.slab_type               =       itemslab ? itemslab.slab_type : 0; //   Zero means its is a for all product (Slab Type 0 or 1) can bbe applien periorty is zero
-        slabmodel.slab_rule               =       itemslab ? itemslab.slab_rule : 0;
+        slabmodel.slab_type               =       itemslab ? itemslab.slab_type       : 0; //   Zero means its is a for all product (Slab Type 0 or 1) can bbe applien periorty is zero
+        slabmodel.slab_rule               =       itemslab ? itemslab.slab_rule       : 0; //   Zero means its is a for all product (Slab Type 0 or 1) can bbe applien periorty is zero
+        slabmodel.packaging_type          =       itemslab ? itemslab.packaging_type  : null;
         slabmodel.items                   =       [];
         slabmodel.discount_type           =       0;
         slabmodel.discount                =       0;
@@ -646,6 +648,9 @@ export class DataService {
                   rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.brand_id==item.brand_id );
                   rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty, 0):0;
                   slabmodel.items     =   itemslab.items;
+                }
+                if( slabmodel.packaging_type && slabmodel.packaging_type == 1){
+                  rangevalue  = +rangevalue/+item.sub_inventory_quantity;
                 }
             }
             else{
@@ -676,8 +681,9 @@ export class DataService {
                                                             x.range_to          >=  rangevalue 
                                                            ) 
                                                       ); 
-                if(rangeModel){ 
-                    rangeModel  = rangeModel[0];          
+                if(rangeModel && rangeModel[0]){ 
+                    rangeModel  = rangeModel[0]; 
+                             
                     slabmodel.discount_type       =   rangeModel.discount_type;
                     //dd( $channel_id, $region_id, $rangeModel , $productGrossPrice, $itemDiscountTp,slabmodel.discount_type ,itemslab);
                     if (rangeModel.discount_type  == 'percentage') {
@@ -694,7 +700,7 @@ export class DataService {
                 }
             }
             else if (itemslab.discount_filter == 'flat') {
-                slabmodel.discount_type     =   itemslab.discount_type;
+                slabmodel.discount_type     =  itemslab.discount_type; 
                 rangeModel                  =  itemslab.ranges.filter(x=>x.discount_slab_id  ==  itemslab.id); 
                 slabmodel.discount          =  rangeModel ? rangeModel[0].value:0;
                 if (itemslab.discount_type  == 'percentage') {

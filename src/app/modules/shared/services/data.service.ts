@@ -19,9 +19,19 @@ export class DataService {
     return unitPurchased * perUnitPrice;
   }
 
+  calculateGrossBill(items:any): number {
+    let bill = 0;
+    items.forEach((x) => {
+      bill += x.stockQty * x.original_price;
+    });
+    
+    return bill;
+  }
+
   calculateItemsBill(prices: Array<number>): number {
     let bill = 0;
-    prices.forEach((price) => {bill += price;});
+    prices.forEach((price) => { bill += price ? +price:0; });
+    
     return bill;
   }
 

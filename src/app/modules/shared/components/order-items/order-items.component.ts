@@ -340,12 +340,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
   }
 
-  calculateProductPrice(product): void {
-    product.original_amount = this.dataService.calculateUnitPrice(
-      +product.stockQty,
-      product.item_trade_price
-    );
-    product.gross_amount = product.unit_price_after_scheme_discount * +product.stockQty;
+  calculateProductPrice(product): void { 
+    product.original_amount = this.dataService.calculateUnitPrice(+product.stockQty,product.item_trade_price);
+    product.gross_amount    = product.unit_price_after_scheme_discount * +product.stockQty;
   }
 
   calculateProductDiscounts(product: any, scheme?: any): void {
@@ -508,7 +505,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     let prices = this.orderDetail.items.map(
       (product) => product.original_amount
     );
-    this.grossAmount = this.dataService.calculateItemsBill(prices);
+    this.grossAmount = this.dataService.calculateGrossBill(this.orderDetail.items);
     // Net Amount
     prices = this.orderDetail.items.map((product) => product.net_amount);
     this.netAmount = this.dataService.calculateItemsBill(prices);
@@ -543,6 +540,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       (product) => +product.extra_discount_pkr
     );
     this.totalBookerDiscount = this.dataService.calculateItemsBill(discount);
+    debugger;
     // Tax
     const taxes = this.orderDetail.items.map(
       (product) => product.tax_amount_pkr
@@ -569,13 +567,15 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     }
 
     this.orderDetail.total_discount =
-      this.totalSchemeDiscount +
-      this.totalMerchantDiscount +
-      this.totalSpecialDiscount +
-      this.totalBookerDiscount;
+                this.totalSchemeDiscount +
+                this.totalMerchantDiscount +
+                this.totalSpecialDiscount +
+                this.totalBookerDiscount;
     this.orderDetail.gross_sale_amount = this.grossAmount;
     this.orderDetail.total_retail_price = totalRetailPrice;
     this.orderDetail.ttl_qty_sold = this.selectedProductQuantities;
     this.orderDetail.ttl_products_sold = this.orderDetail.items.length;
+
+    debugger            
   }
 }

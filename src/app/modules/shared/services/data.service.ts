@@ -1006,7 +1006,7 @@ export class DataService {
     let schemeitems:any   = [];
     //debugger
     let orderDetails_items:any = []; 
-    orderDetails.items  = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x.quantity > 0 || x.stockQty >0))));
+    orderDetails.items         = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x.quantity > 0 || x.stockQty >0))));
      orderDetails.items.map((item) => {
         if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
           // console.log(item.scheme_free_items);

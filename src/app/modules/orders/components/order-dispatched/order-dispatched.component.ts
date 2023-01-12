@@ -332,7 +332,7 @@ export class OrderDispatchedComponent implements OnInit {
     }
   }
 
-  getProducts(): void {
+  getProducts(loaddispatch:boolean=true): void {
     this.loadingProduct = true;
     this.orderService.getCounterSaleData(this.assignmentId).subscribe(
       (res) => {
@@ -340,7 +340,10 @@ export class OrderDispatchedComponent implements OnInit {
         if (res.status === 200) {
           this.inventory = res.data.inventory;
           this.specialDiscounts = res.data.special_discount;
-          this.getDispatchDetails();
+          if(loaddispatch){
+            this.getDispatchDetails();
+          }
+          
         }
       },
       (error) => {
@@ -390,9 +393,8 @@ export class OrderDispatchedComponent implements OnInit {
       this.savingOrder = true;
       this.newProduct = null;
       this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
-      this.orderService
-        .getOrderDetails(retailer.id, this.assignmentId)
-        .subscribe(
+      this.getProducts(false);
+      this.orderService.getOrderDetails(retailer.id, this.assignmentId).subscribe(
           (res) => {
             this.savingOrder = false;
             if (res.status === 200) {

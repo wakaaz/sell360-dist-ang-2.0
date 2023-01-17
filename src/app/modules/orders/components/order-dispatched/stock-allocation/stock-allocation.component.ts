@@ -187,7 +187,7 @@ export class StockAllocationComponent implements OnInit {
         this.assignmentId,
         order.order_id,
         order.pref_id,
-        order.booked_qty
+        +order.booked_qty + +order.free_qty
       )
       .subscribe(
         (x) => {
@@ -200,7 +200,7 @@ export class StockAllocationComponent implements OnInit {
           this.toastService.showToaster(toast);
         },
         (err) => {
-          order.updateLoading = false;
+          order.updateLoading  = false;
           const toast: Toaster = {
             type: 'error',
             message:

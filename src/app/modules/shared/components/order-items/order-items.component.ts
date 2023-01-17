@@ -531,16 +531,13 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     );
     this.totalMerchantDiscount = this.dataService.calculateItemsBill(discount);
     // Special Discount
-    discount = this.orderDetail.items.map(
-      (product) => +product.stockQty * product.special_discount_pkr
+    discount = this.orderDetail.items.map( (product) => +product.stockQty * product.special_discount_pkr
     );
     this.totalSpecialDiscount = this.dataService.calculateItemsBill(discount);
     // Extra Discount
-    discount = this.orderDetail.items.map(
-      (product) => +product.extra_discount_pkr
-    );
+    discount = this.orderDetail.items.map( (product) => +product.extra_discount_pkr);
     this.totalBookerDiscount = this.dataService.calculateItemsBill(discount);
-    debugger;
+    // debugger;
     // Tax
     const taxes = this.orderDetail.items.map(
       (product) => product.tax_amount_pkr

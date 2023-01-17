@@ -135,7 +135,7 @@ export class DataService {
 
   applyFPDOTP(product: any): any {
     const discounted = this.getSDForFPTradePriceScheme(
-      product.item_trade_price,
+      product.original_price,
       product.stockQty,
       product.selectedScheme.min_qty,
       product.selectedScheme.quantity_free
@@ -156,7 +156,7 @@ export class DataService {
       )
     ) {
       const discounted = this.getSDForFPHalfQtyDiscount(
-        product.item_trade_price,
+        product.original_price,
         product.stockQty,
         product.selectedScheme.min_qty,
         product.selectedScheme.quantity_free
@@ -168,8 +168,8 @@ export class DataService {
     } else {
       product.selectedScheme.applied = false;
       product.scheme_discount = 0;
-      product.price = product.item_trade_price;
-      product.unit_price_after_scheme_discount = product.item_trade_price;
+      product.price = product.original_price;
+      product.unit_price_after_scheme_discount = product.original_price;
       this.schemeCannotApplied();
     }
     return product;
@@ -183,7 +183,7 @@ export class DataService {
       )
     ) {
       const discounted = this.getSDForFPQtyRestrictionDiscount(
-        product.item_trade_price,
+        product.original_price,
         product.stockQty,
         product.selectedScheme.min_qty,
         product.selectedScheme.quantity_free
@@ -195,8 +195,8 @@ export class DataService {
     } else {
       product.selectedScheme.applied = false;
       product.scheme_discount = 0;
-      product.price = product.item_trade_price;
-      product.unit_price_after_scheme_discount = product.item_trade_price;
+      product.price = product.original_price;
+      product.unit_price_after_scheme_discount = product.original_price;
       this.schemeCannotApplied();
     }
     return product;
@@ -205,7 +205,7 @@ export class DataService {
   applyFPMinQty(product: any): any { 
       //debugger
     if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
-        debugger 
+       
         product.scheme_free_items   =   []
         const freeQtyInterval       =    Math.floor(product.stockQty / product.selectedScheme.min_qty);
         const orderFreeQty          =    freeQtyInterval * product.selectedScheme.quantity_free;
@@ -215,8 +215,8 @@ export class DataService {
         product.scheme_type         =   product.selectedScheme.scheme_type;
         product.scheme_rule         =   product.selectedScheme.scheme_rule;
         product.scheme_discount     =   0;
-        product.price               =   product.item_trade_price;//discounted.singleItemPrice;
-        product.unit_price_after_scheme_discount = product.item_trade_price;
+        product.price               =   product.original_price;//discounted.singleItemPrice;
+        product.unit_price_after_scheme_discount = product.original_price;
         product.scheme_free_items   =   [{
                                           item_id : +product.item_id,
                                           free_qty: +product.scheme_quantity_free 
@@ -226,9 +226,9 @@ export class DataService {
         product.scheme_quantity_free    =   0;
         product.selectedScheme.applied  =   false;
         product.scheme_discount         =   0;
-        product.price                   =   product.item_trade_price;
+        product.price                   =   product.original_price;
         product.scheme_free_items       =   null;
-        product.unit_price_after_scheme_discount = product.item_trade_price;
+        product.unit_price_after_scheme_discount = product.original_price;
         this.schemeCannotApplied();
     }
     // console.log(product);
@@ -345,32 +345,32 @@ export class DataService {
       )
     ) {
       // const percentageDiscount = (product.selectedScheme.discount_on_tp / product.parent_trade_price) * 100;
-      // const singleUnitDiscount = this.calculateDiscount(percentageDiscount, 'percentage', product.item_trade_price);
+      // const singleUnitDiscount = this.calculateDiscount(percentageDiscount, 'percentage', product.original_price);
       if (
         product.selectedScheme.discount_type ===
         environment.DISCOUNT_TYPES.PERCENTAGE
       ) {
         const findDiscount =
-          product.item_trade_price *
+          product.original_price *
           (product.selectedScheme.discount_on_tp / 100);
-        product.price = product.item_trade_price - findDiscount;
+        product.price = product.original_price - findDiscount;
 
         product.unit_price_after_scheme_discount = findDiscount;
 
         product.scheme_discount = findDiscount;
       } else {
         product.price =
-          product.item_trade_price - product.selectedScheme.discount_on_tp;
+          product.original_price - product.selectedScheme.discount_on_tp;
         product.unit_price_after_scheme_discount =
-          product.item_trade_price - product.selectedScheme.discount_on_tp;
+          product.original_price - product.selectedScheme.discount_on_tp;
         product.scheme_discount = product.selectedScheme.discount_on_tp;
       }
 
       product.selectedScheme.applied = true;
     } else {
       product.selectedScheme.applied = false;
-      product.price = product.item_trade_price;
-      product.unit_price_after_scheme_discount = product.item_trade_price;
+      product.price = product.original_price;
+      product.unit_price_after_scheme_discount = product.original_price;
       product.scheme_discount = 0;
       this.schemeCannotApplied();
     }
@@ -385,14 +385,14 @@ export class DataService {
       )
     ) {
       product.scheme_discount =
-        product.item_trade_price -
+        product.original_price -
         product.selectedScheme.gift_value / product.stockQty;
       product.gift_value = product.selectedScheme.gift_value;
       product.selectedScheme.applied = true;
     } else {
       product.selectedScheme.applied = false;
-      product.price = product.item_trade_price;
-      product.unit_price_after_scheme_discount = product.item_trade_price;
+      product.price = product.original_price;
+      product.unit_price_after_scheme_discount = product.original_price;
       product.scheme_discount = 0;
       this.schemeCannotApplied();
     }
@@ -843,18 +843,26 @@ export class DataService {
     if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
       const total_items       = scheme_items.length;
-      let schemeItemDiscount  = interval*product.selectedScheme.discount_on_tp; 
+      
       //debugger
       //schemeItemDiscount    = schemeItemDiscount > 0 ? schemeItemDiscount/total_items : 0; 
       orderDetails.items      = orderDetails.items.map((item) => {
           if(scheme_items.includes(item.item_id)){
-            item.selectedScheme   = product.selectedScheme;
-            item.scheme_id        = product.selectedScheme.id;
-            item.scheme_type      = product.selectedScheme.scheme_type;
-            item.scheme_rule      = product.selectedScheme.scheme_rule;
-            item.scheme_discount  = schemeItemDiscount;
-            item.price            = product.item_trade_price - schemeItemDiscount;
-            item.unit_price_after_scheme_discount = product.item_trade_price - schemeItemDiscount;
+            debugger
+            item.selectedScheme   =   product.selectedScheme;
+            item.scheme_id        =   product.selectedScheme.id;
+            item.scheme_type      =   product.selectedScheme.scheme_type;
+            item.scheme_rule      =   product.selectedScheme.scheme_rule;
+            let schemeItemDiscount=   0;
+            if(product.selectedScheme.discount_type == 1){
+              schemeItemDiscount  = interval*item.selectedScheme.discount_on_tp; 
+            }else{
+              let thisdiscount    = product.selectedScheme.discount_on_tp/100 * item.original_price;
+              schemeItemDiscount  = interval*thisdiscount; 
+            }
+            item.scheme_discount  =   schemeItemDiscount;
+            item.price            =   item.original_price - schemeItemDiscount; 
+            item.unit_price_after_scheme_discount = item.original_price - schemeItemDiscount;
             item.selectedScheme.applied = true;
            //console.log(item)
           // 
@@ -871,9 +879,6 @@ export class DataService {
     ////debugger
     if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
-      const total_items       = scheme_items.length;
-      let schemeItemDiscount  = interval*product.selectedScheme.discount_on_tp; 
-      //schemeItemDiscount    = schemeItemDiscount > 0 ? schemeItemDiscount/total_items : 0; 
       orderDetails.items      = orderDetails.items.map((item) => {
           if(scheme_items.includes(item.item_id)){
             item.scheme_free_items    =   [];
@@ -984,7 +989,7 @@ export class DataService {
   applyComplementaryEquelProduct(item: any): any {
     item.scheme_free_items      =   [];
     if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
-      const freeQty             =  item.stockQty;
+      const freeQty             =   item.stockQty;
       item.selectedScheme       =   item.selectedScheme;
       item.scheme_id            =   item.selectedScheme.id;
       item.scheme_type          =   item.selectedScheme.scheme_type;

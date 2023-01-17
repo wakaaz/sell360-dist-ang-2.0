@@ -114,7 +114,7 @@
         </td>
         <td>{{ item.item_trade_price | number: "1.2-2" }}</td>
         <td>{{ item.original_amount || 0 | number: "1.2-2" }}</td>
-        <td class=" {{item.scheme_quantity_free > 0 ? 'free-product':''}}" >{{ item.scheme_id && item.scheme_type =='bundle_offer' ?  item.scheme_discount : +item.stockQty * item.scheme_discount | number: "1.2-2" }} {{item.scheme_quantity_free > 0 ? "("+item.scheme_quantity_free+")":"" }}</td>
+        <td class=" {{item.scheme_quantity_free > 0 ? 'free-product':''}}" >{{ item.scheme_id && item.scheme_type =='bundle_offer' ?  (+item.scheme_discount  | number: "1.2-2") : +item.stockQty * item.scheme_discount | number: "1.2-2" }} {{item.scheme_quantity_free > 0 ? "("+item.scheme_quantity_free+")":"" }}</td>
         <td>{{ item.trade_discount }}</td>
         <td>{{ item.special_discount * item.stockQty | number: "1.2-2" }}</td>
         <td *ngIf="permissions?.Secondary_Orders?.extra_discount">

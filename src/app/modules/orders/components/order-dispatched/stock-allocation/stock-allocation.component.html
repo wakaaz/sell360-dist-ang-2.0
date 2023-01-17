@@ -26,7 +26,7 @@
                         <th>Id</th>
                         <th style="width: 250px">Retailer Name</th>
                         <th>BKD QTY</th>
-                        <!-- <th>Stock QTY</th> -->
+                        <th>FOC. QTY</th>
                         <th>Actions</th>
                       </tr>
                     </thead>
@@ -45,7 +45,7 @@
                             (keydown)="isNumber($event, 'quantity')"
                           />
                         </td>
-                        <!-- <td>{{ order.booked_qty }}</td> -->
+                        <td>{{ order.free_qty }}</td>  
                         <td>
                           <button
                             class="btn smBTN btn-line mb-0"

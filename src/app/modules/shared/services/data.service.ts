@@ -62,7 +62,7 @@ export class DataService {
       let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
       let net_amount          =   gross_sale_amount - total_discount;
       // if([35,36].includes(item.item_id))
-      //   debugger
+      //   //debugger
 
 
       return net_amount;
@@ -111,7 +111,7 @@ export class DataService {
 
   applyFreeProductScheme(product: any): any {
     let productWithScheme: any = {};
-    //debugger
+    ////debugger
     switch (product.selectedScheme.scheme_rule) {
       case 1:
           productWithScheme = this.applyFPDOTP(product);
@@ -144,7 +144,7 @@ export class DataService {
     product.price = discounted.singleItemPrice;
     product.unit_price_after_scheme_discount = discounted.singleItemPrice;
     product.selectedScheme.applied = true;
-    debugger
+    //debugger
     return product;
   }
 
@@ -203,7 +203,7 @@ export class DataService {
   }
 
   applyFPMinQty(product: any): any { 
-      //debugger
+      ////debugger
     if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
        
         product.scheme_free_items   =   []
@@ -232,14 +232,14 @@ export class DataService {
         this.schemeCannotApplied();
     }
     // console.log(product);
-    // //debugger
+    // ////debugger
     return product;
   }
 
   
 
   getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
-    debugger
+    //debugger
     const totalTpMinQty = itemTP * minQty;
     const totalItemBeingGiven = freeQty + minQty;
     const ItemDiscountedTP = totalTpMinQty / totalItemBeingGiven;
@@ -515,7 +515,7 @@ export class DataService {
                                             x.territory_id === selectedRetailer.territory_id &&
                                             x.channel_id === selectedRetailer.retailer_type_id
                                         ); 
-                                        ////debugger
+                                        //////debugger
     if(!selecteditem.slab_id || selecteditem.slab_id === null){
       const skuslab        =  fileteredSlabs.filter(x => x.slab_type === 3) ? fileteredSlabs.filter(x => x.slab_type == 3)[0] : null;
       const brandslab      =  fileteredSlabs.filter(x => x.slab_type === 4) ? fileteredSlabs.filter(x => x.slab_type == 4)[0] : null;
@@ -534,7 +534,7 @@ export class DataService {
         selecteditem = this.applySlabToItem(selecteditem,generalslabs,false);
       }  
     }    
-    ////debugger
+    //////debugger
     return selecteditem;
     
   }
@@ -617,7 +617,7 @@ export class DataService {
         If exclusive discount slab does not exist than apply all products slab for exclusive products
         In case if both do not exist then no discount slab would be applied for exclusive products
       */
-        ////debugger
+        //////debugger
         let slabmodel :any            =   []
         let itemslab:any              =   []
                                       
@@ -639,7 +639,7 @@ export class DataService {
         slabmodel.discount                =       0;
         slabmodel.discount_pkr            =       0;
         slabmodel.itemDiscountTp          =       itemDiscountTp;
-        ////debugger
+        //////debugger
         if(itemslab && itemslab.id != null && item.stockQty > 0){
             if(slabmodel.slab_rule == 2){
                 if(slabmodel.slab_type < 3){
@@ -734,7 +734,7 @@ export class DataService {
         item.trade_discount                     = slabmodel.discount; 
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountTp;
-        ////debugger
+        //////debugger
       return item;
     });
     return JSON.parse(JSON.stringify(items));
@@ -834,6 +834,7 @@ export class DataService {
         orderDetailitems = orderDetail.items;
           break;
     }
+    //debugger
     return orderDetailitems;
   }
 
@@ -844,11 +845,11 @@ export class DataService {
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
       const total_items       = scheme_items.length;
       
-      //debugger
+      ////debugger
       //schemeItemDiscount    = schemeItemDiscount > 0 ? schemeItemDiscount/total_items : 0; 
       orderDetails.items      = orderDetails.items.map((item) => {
           if(scheme_items.includes(item.item_id)){
-            debugger
+            ////debugger
             item.selectedScheme   =   product.selectedScheme;
             item.scheme_id        =   product.selectedScheme.id;
             item.scheme_type      =   product.selectedScheme.scheme_type;
@@ -874,9 +875,9 @@ export class DataService {
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
   applyBundleFixedProduct(product: any,orderDetails:any): any {
-    ////debugger
+    //////debugger
     const interval  = this.getBundleOfferIntervalsAlgo(product,orderDetails);
-    ////debugger
+    //////debugger
     if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
       orderDetails.items      = orderDetails.items.map((item) => {
@@ -901,7 +902,7 @@ export class DataService {
               })
             }
             item.selectedScheme.applied = true;
-            ////debugger
+            //////debugger
            //console.log(item)
           // 
           }
@@ -1018,128 +1019,130 @@ export class DataService {
    */
    
   updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
-    let schemeitems:any   = [];
-    //debugger
-    let orderDetails_items:any = []; 
-    orderDetails.items         = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x.quantity > 0 || x.stockQty >0))));
-     orderDetails.items.map((item) => {
-        if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
-          // console.log(item.scheme_free_items);
-          if(item.scheme_free_items.length > 0){
-            
-            item.scheme_free_items.forEach(x=>{
-              if(x.free_qty > 0){
-              let stockitem = allProducts.filter(y=> y.item_id == x.item_id ) ? allProducts.filter(y=> y.item_id == x.item_id )[0]:null;
-              if(stockitem){
-                let schemeitem = { 
-                                      parent_item_id      :   item.item_id,
-                                      city_id             :   orderDetails.city_id,
-                                      locality_id         :   orderDetails.booking_locality_id,
-                                      neighbourhood_id    :   orderDetails.booking_neighbourhood_id,
-                                      channel_id          :   orderDetails.channel_id,
-                                      name                :   stockitem.item_name,
-                                      item_id             :   stockitem.item_id,
-                                      pref_id             :   stockitem.pref_id,
-                                      unit_id             :   stockitem.unit_id,
-                                      brand_id            :   stockitem.brand_id,
-                                      parent_pref_id      :   stockitem.parent_pref_id,
-                                      parent_unit_id      :   stockitem.parent_unit_id,
-                                      main_category_id    :   item.main_category_id,
-                                      sub_category_id     :   item.sub_category_id,
-                                      scheme_id           :   item.scheme_id,
-                                      scheme_type         :   item.scheme_type,
-                                      scheme_rule         :   item.scheme_rule,
-                                      gift_value          :   item.gift_value,
-                                      scheme_quantity_free:   +x.free_qty,
-                                      parent_qty_sold     :   +x.free_qty/ +stockitem.sub_inventory_quantity,
-                                      quantity            :   +x.free_qty,
-                                      dispatch_qty        :   +x.free_qty,
-                                      executed_qty        :   +x.free_qty
-                                }
-                schemeitems.push(schemeitem); 
-                
-                let isOrderItem     = orderDetails.items.some(z => z.item_id == x.item_id);
-                let isOrderDetItem  = orderDetails_items.some(z => z.item_id == x.item_id);
-                if(!isOrderItem && !isOrderDetItem){
-                  let newItem = allProducts.filter(k=> k.item_id == x.item_id ) ? allProducts.filter(k=> k.item_id == x.item_id )[0]:null;
-                  if(newItem){
-                      newItem.item_quantity_booker = 0;
-                      newItem.item_quantity_updated= 0;
-                      newItem.original_price= newItem.item_trade_price;
-                      newItem.scheme_discount= 0;
-                      newItem.unit_price_after_scheme_discount= newItem.original_price;
-                      newItem.slab_id= 0;
-                      newItem.slab_type = 0;
-                      newItem.slab_discount_type= '';
-                      newItem.merchant_discount=0;
-                      newItem.merchant_discount_pkr= 0;
-                      newItem.unit_price_after_merchant_discount= newItem.original_price;
-                      newItem.special_discount= 0;
-                      newItem.unit_price_after_special_discount=newItem.original_price;
-                      newItem.booker_discount= 0;
-                      newItem.unit_price_after_individual_discount=newItem.original_price;
-                      newItem.unit_id= newItem.unit_id;
-                      newItem.unit_name= newItem.unit_name;
-                      newItem.brand_id= newItem.brand_id;
-                      newItem.item_id= newItem.item_id;
-                      newItem.item_name= newItem.item_name;
-                      newItem.scheme_id=  0;
-                      newItem.scheme_min_quantity= 0;
-                      newItem.scheme_quantity_free= 0;
-                      newItem.scheme_discount_type= 0;
-                      newItem.scheme_rule='';
-                      newItem.gift_value= 0;
-                      newItem.parent_pref_id= newItem.child;
-                      newItem.parent_unit_id= newItem.parent_unit_id;
-                      newItem.parent_brand_id= newItem.brand_id;
-                      newItem.parent_tp= 0;
-                      newItem.parent_qty_sold= 0;
-                      newItem.parent_value_sold= 0;
-                      newItem.final_price= 0;
-                      newItem.campaign_id= 0;
-                      newItem.item_status= 1;
-                      newItem.dispatch_status= 2;
-                      newItem.dispatch_qty= 0;
-                      newItem.dispatch_amount= 0;
-                      newItem.reasoning= '';
-                      newItem.distributor_id= newItem.distributor_id;
-                      newItem.division_id= newItem.division_id;
-                      newItem.booked_total_qty= 0;
-                      newItem.quantity= 0;
-                      newItem.stockQty= 0;
-                      newItem.gross_sale_amount= 0;
-                      newItem.total_retail_price= 0;
-                      newItem.tax_class_id=0;
-                      newItem.tax_in_percentage= 0;
-                      newItem.tax_in_value= 0;
-                      newItem.total_tax_amount=0;
-                      newItem.total_amount_after_tax= 0;
-                      newItem.total_discount=0;
-                      console.log(orderDetails_items.length)
-                      //debugger
-                      orderDetails_items.push(newItem);
-                      console.log(orderDetails_items.length)
-                      //debugger
-                    };
+    ////debugger
+    if(orderDetails.items && orderDetails.items.length > 0){
+      let schemeitems:any   = [];
+  
+      let orderDetails_items:any = []; 
+      orderDetails.items         = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x.quantity > 0 || x.stockQty >0))));
+       orderDetails.items.map((item) => {
+          if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
+            // console.log(item.scheme_free_items);
+            if(item.scheme_free_items.length > 0){
+              
+              item.scheme_free_items.forEach(x=>{
+                if(x.free_qty > 0){
+                let stockitem = allProducts.filter(y=> y.item_id == x.item_id ) ? allProducts.filter(y=> y.item_id == x.item_id )[0]:null;
+                if(stockitem){
+                  let schemeitem = { 
+                                        parent_item_id      :   item.item_id,
+                                        city_id             :   orderDetails.city_id,
+                                        locality_id         :   orderDetails.booking_locality_id,
+                                        neighbourhood_id    :   orderDetails.booking_neighbourhood_id,
+                                        channel_id          :   orderDetails.channel_id,
+                                        name                :   stockitem.item_name,
+                                        item_id             :   stockitem.item_id,
+                                        pref_id             :   stockitem.pref_id,
+                                        unit_id             :   stockitem.unit_id,
+                                        brand_id            :   stockitem.brand_id,
+                                        parent_pref_id      :   stockitem.parent_pref_id,
+                                        parent_unit_id      :   stockitem.parent_unit_id,
+                                        main_category_id    :   item.main_category_id,
+                                        sub_category_id     :   item.sub_category_id,
+                                        scheme_id           :   item.scheme_id,
+                                        scheme_type         :   item.scheme_type,
+                                        scheme_rule         :   item.scheme_rule,
+                                        gift_value          :   item.gift_value,
+                                        scheme_quantity_free:   +x.free_qty,
+                                        parent_qty_sold     :   +x.free_qty/ +stockitem.sub_inventory_quantity,
+                                        quantity            :   +x.free_qty,
+                                        dispatch_qty        :   +x.free_qty,
+                                        executed_qty        :   +x.free_qty
+                                  }
+                  schemeitems.push(schemeitem); 
+                  
+                  let isOrderItem     = orderDetails.items.some(z => z.item_id == x.item_id);
+                  let isOrderDetItem  = orderDetails_items.some(z => z.item_id == x.item_id);
+                  if(!isOrderItem && !isOrderDetItem){
+                    let newItem = allProducts.filter(k=> k.item_id == x.item_id ) ? allProducts.filter(k=> k.item_id == x.item_id )[0]:null;
+                    if(newItem){
+                        newItem.item_quantity_booker = 0;
+                        newItem.item_quantity_updated= 0;
+                        newItem.original_price= newItem.item_trade_price;
+                        newItem.scheme_discount= 0;
+                        newItem.unit_price_after_scheme_discount= newItem.original_price;
+                        newItem.slab_id= 0;
+                        newItem.slab_type = 0;
+                        newItem.slab_discount_type= '';
+                        newItem.merchant_discount=0;
+                        newItem.merchant_discount_pkr= 0;
+                        newItem.unit_price_after_merchant_discount= newItem.original_price;
+                        newItem.special_discount= 0;
+                        newItem.unit_price_after_special_discount=newItem.original_price;
+                        newItem.booker_discount= 0;
+                        newItem.unit_price_after_individual_discount=newItem.original_price;
+                        newItem.unit_id= newItem.unit_id;
+                        newItem.unit_name= newItem.unit_name;
+                        newItem.brand_id= newItem.brand_id;
+                        newItem.item_id= newItem.item_id;
+                        newItem.item_name= newItem.item_name;
+                        newItem.scheme_id=  0;
+                        newItem.scheme_min_quantity= 0;
+                        newItem.scheme_quantity_free= 0;
+                        newItem.scheme_discount_type= 0;
+                        newItem.scheme_rule='';
+                        newItem.gift_value= 0;
+                        newItem.parent_pref_id= newItem.child;
+                        newItem.parent_unit_id= newItem.parent_unit_id;
+                        newItem.parent_brand_id= newItem.brand_id;
+                        newItem.parent_tp= 0;
+                        newItem.parent_qty_sold= 0;
+                        newItem.parent_value_sold= 0;
+                        newItem.final_price= 0;
+                        newItem.campaign_id= 0;
+                        newItem.item_status= 1;
+                        newItem.dispatch_status= 2;
+                        newItem.dispatch_qty= 0;
+                        newItem.dispatch_amount= 0;
+                        newItem.reasoning= '';
+                        newItem.distributor_id= newItem.distributor_id;
+                        newItem.division_id= newItem.division_id;
+                        newItem.booked_total_qty= 0;
+                        newItem.quantity= 0;
+                        newItem.stockQty= 0;
+                        newItem.gross_sale_amount= 0;
+                        newItem.total_retail_price= 0;
+                        newItem.tax_class_id=0;
+                        newItem.tax_in_percentage= 0;
+                        newItem.tax_in_value= 0;
+                        newItem.total_tax_amount=0;
+                        newItem.total_amount_after_tax= 0;
+                        newItem.total_discount=0;
+                        console.log(orderDetails_items.length)
+                        ////debugger
+                        orderDetails_items.push(newItem);
+                        console.log(orderDetails_items.length)
+                        ////debugger
+                      };
+                    }
                   }
-                }
-              }             
-              });
-            }
-        }
-        orderDetails_items.push(item);
-        return item;                    
-    });
-    orderDetails.items          = JSON.parse(JSON.stringify(orderDetails_items));
-    //debugger
-    orderDetails.schemeitems    = schemeitems;
-    orderDetails.items          = orderDetails.items.map((item) => { 
-      item.schemeitems          = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === item.item_id) : null;
-      item.scheme_quantity_free = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.item_id === item.item_id).reduce((a: any, b: any) => +a + +b.quantity, 0):0;      
-      return item;
-    })
-    orderDetails.items;
-    //debugger
+                }             
+                });
+              }
+          }
+          orderDetails_items.push(item);
+          return item;                    
+      });
+      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails_items));
+     
+      orderDetails.schemeitems    = schemeitems;
+      orderDetails.items          = orderDetails.items.map((item) => { 
+        item.schemeitems          = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === item.item_id) : null;
+        item.scheme_quantity_free = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.item_id === item.item_id).reduce((a: any, b: any) => +a + +b.quantity, 0):0;      
+        return item;
+      })
+    }
+    ////debugger
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
 

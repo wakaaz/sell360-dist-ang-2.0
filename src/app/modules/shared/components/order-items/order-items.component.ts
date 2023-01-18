@@ -152,6 +152,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
           (x) => x.item_id !== this.selectedItem.item_id
         );
         this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
+        
         if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
           this.orderDetail.items   = this.applyBunldeProductScheme(this.selectedItem,this.orderDetail);
         }
@@ -226,8 +227,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         product.parent_quantity || product.quantity
       );
       this.calculateProductDiscounts(product);
-      this.calculateProductPrice(product);
-      this.calculateTotalBill();
       
       
       if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
@@ -242,7 +241,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
       
       this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
-      
+       
+      this.calculateProductPrice(product);
+      this.calculateTotalBill();
       this.applySpecialDiscountOnAllProducts();
       this.productUpdated.emit();
     }
@@ -347,9 +348,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   calculateProductDiscounts(product: any, scheme?: any): void {
     // Trade Offer
-    // product.scheme_id           = 0;
-    // product.scheme_rule         = 0;
-    // product.scheme_type         = null;
     product.scheme_quantity_free= 0; 
     product.scheme_free_items   = [];
     if (scheme) {

@@ -155,12 +155,13 @@
                   name="AssignCatalogue"
                   id="byTerritory-{{ i }}"
                   [value]="scheme"
+                  [disabled]="checkBundleScheme(scheme)"
                 />
                 <label
                   class="custom-control-label font13"
                   for="byTerritory-{{ i }}"
                   style="line-height: 25px"
-                  >{{ scheme.title }}</label
+                  >{{ scheme.title }} (Min QTy:{{scheme.min_qty}})</label
                 >
               </div>
             </div>
@@ -804,12 +805,6 @@
                   <div class="addItemCell unit-w">
                     <div class="addItemCell2 _h25">
                       {{ product.unit_name }}
-                      <!-- <ng-select [multiple]="false" class="formselect"
-                                                [(ngModel)]="product.pref_id" (change)="setPrefrence($event, product)">
-                                                <ng-option [value]="null" disabled>Select Unit</ng-option>
-                                                <ng-option *ngFor="let unit of product.units" value="{{unit.pref_id}}">
-                                                    {{unit.unit_name}}</ng-option>
-                                            </ng-select> -->
                     </div>
                   </div>
 
@@ -828,14 +823,14 @@
                   <div class="addItemCell2 _h25">
                     {{ product.item_trade_price }}
                   </div>
-                  <div class="addItemCell2 _h25">
-                    {{
-                      +product.stockQty * product.scheme_discount || 0.0
-                        | number: "1.2-2"
-                    }}
+
+                  
+
+                  <div class="addItemCell2 _h25 {{product.scheme_quantity_free > 0 ? 'free-product':''}}">
+                    {{ product.scheme_id && product.scheme_type =='bundle_offer' ?  (+product.scheme_discount  | number: "1.2-2") : +product.stockQty * product.scheme_discount | number: "1.2-2" }} {{product.scheme_quantity_free > 0 ? "("+product.scheme_quantity_free+")":"" }}
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.trade_discount || 0 }}% ({{
+                    {{ product.trade_discount }} {{ product.slab_discount_type == 'percentage' ? '%':''}} ({{
                       +product.stockQty * product.trade_discount_pkr
                         | number: "1.2-2"
                     }})

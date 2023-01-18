@@ -553,25 +553,26 @@ export class CounterSaleComponent implements OnInit {
 
   openQuantityModal(product: any): void {
     this.showQuantityModal = true;
-    if (product.schemes?.length) {
-      product.schemes = product.schemes.map((scheme) => {
-        switch (scheme.scheme_type) {
-          case 'free_product':
-            scheme.name = schemes.free_products;
-            scheme.rule_name = freeProductsRules[scheme.scheme_rule];
-            break;
-          case 'dotp':
-            scheme.name = schemes.dotp;
-            break;
-          default:
-            scheme.name = schemes.gift;
-            break;
-        }
-        return scheme;
-      });
-    }
+    // if (product.schemes?.length) {
+    //   product.schemes = product.schemes.map((scheme) => {
+    //     switch (scheme.scheme_type) {
+    //       case 'free_product':
+    //         scheme.name = schemes.free_products;
+    //         scheme.rule_name = freeProductsRules[scheme.scheme_rule];
+    //         break;
+    //       case 'dotp':
+    //         scheme.name = schemes.dotp;
+    //         break;
+    //       default:
+    //         scheme.name = schemes.gift;
+    //         break;
+    //     }
+    //     return scheme;
+    //   });
+    // }
     this.selectedProduct = JSON.parse(JSON.stringify(product));
     this.selectedProduct.selectedScheme = null;
+    //debugger; 
     // this.selectedProduct.units = this.prefrences.filter(x => x.item_id === product.item_id);
   }
 
@@ -652,9 +653,24 @@ export class CounterSaleComponent implements OnInit {
         product.quantity
       );
       this.calculateProductPrice(product);
-      this.calculateProductDiscounts(product);
+      this.calculateProductDiscounts(product);  
+      console.log("COUNT BFR=>"+this.selectedProducts.length)  
+      if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
+        this.selectedRetailer.items = this.selectedProducts;
+        this.selectedProducts   = this.applyBunldeProductScheme(product,this.selectedRetailer);
+      }
+      //Apply slab on all products
+    
+      //update Scheme Free Products to scheme Items
+      console.log("COUNT BFR=>"+this.selectedProducts.length)
+      this.selectedRetailer.items = this.selectedProducts;
+      this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.selectedProducts);
+      console.log("COUNT AFR=>"+this.selectedProducts.length)
+
+      
+      this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
+       
       this.calculateTotalBill();
-      this.applySlabOnAllProducts();
     }
   }
 
@@ -694,9 +710,10 @@ export class CounterSaleComponent implements OnInit {
 
   addProductToOrder(): void {
     if (
-      this.selectedProduct.selectedScheme &&
+      this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type !='bundle_offer' &&
       !this.selectedProduct.selectedScheme.applied
     ) {
+      debugger
       this.dataService.schemeCannotApplied();
       return;
     }
@@ -729,8 +746,23 @@ export class CounterSaleComponent implements OnInit {
         if (!this.selectedProductsIds.includes(this.selectedProduct.item_id)) {
           this.selectedProductsIds.push(this.selectedProduct.item_id);
         }
+
+        console.log("COUNT 750 =>"+this.selectedProducts.length)
+        if(this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type == 'bundle_offer'){
+          this.selectedRetailer.items = this.selectedProducts;
+          this.selectedProducts   = this.applyBunldeProductScheme(this.selectedProduct,this.selectedRetailer);
+        }
+        console.log("COUNT BFR=>"+this.selectedProducts.length)
+        this.selectedRetailer.items = this.selectedProducts;
+        this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.selectedProducts);
+        console.log("COUNT AFR=>"+this.selectedProducts.length)
+        //apply slabs to all items 
+        this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
+        
+
+
         this.calculateTotalBill();
-        this.applySlabOnAllProducts();
+        // this.applySlabOnAllProducts();
         document.getElementById('pl-qty-close').click();
         this.isAdded = false;
       }
@@ -772,9 +804,76 @@ export class CounterSaleComponent implements OnInit {
     );
     // }
     this.calculateTotalBill();
-    this.applySlabOnAllProducts();
+    
+    if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
+      this.selectedRetailer.items = this.selectedProducts;
+      this.selectedProducts   = this.applyBunldeProductScheme(product,this.selectedRetailer);
+    }
+    //console.log("COUNT BFR=>"+this.selectedProducts.length)
+    this.selectedRetailer.items = this.selectedProducts;
+    this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.selectedProducts);
+    //console.log("COUNT AFR=>"+this.selectedProducts.length)
+    //apply slabs to all items 
+    this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
+    
   }
 
+  calculateProductDiscounts_old(product: any, scheme?: any): void {
+    // Trade Offer
+    product.scheme_id = 0; 
+    product.scheme_type= 0; 
+    product.scheme_rule= 0;
+    product.scheme_min_quantity= 0; 
+    product.scheme_discount_type= 0;
+    product.discount_on_tp= 0;  
+    product.scheme_quantity_free= 0; 
+    product.scheme_discount= 0; 
+    product.scheme_free_items   = [];
+    if (scheme) {
+      product.selectedScheme = scheme;
+    }
+    if (product.selectedScheme) {
+      product.scheme_id             =   product.selectedScheme.id ;
+      product.scheme_type           =   product.selectedScheme.scheme_type;
+      product.scheme_rule           =   product.selectedScheme.scheme_rule;
+      product.scheme_min_quantity   =   product.selectedScheme.min_qty;
+      product.scheme_discount_type  =   product.selectedScheme.discount_type;
+      product.discount_on_tp        =   product.selectedScheme.discount_on_tp;
+
+      product = this.applyScheme(product); 
+
+    } else {
+      product.scheme_discount = 0;
+      product.price = JSON.parse(JSON.stringify(product.item_trade_price));
+      product.unit_price_after_scheme_discount = JSON.parse(
+        JSON.stringify(product.item_trade_price)
+      );
+    }
+
+    // Trade Discount
+    if (this.merchantDiscount) {
+      product = this.dataService.applyMerchantDiscountForSingleProduct(
+        this.merchantDiscount,
+        product,
+        this.grossAmount
+      );
+    } else {
+      product.trade_discount = 0;
+      product.trade_discount_pkr = 0;
+      product.unit_price_after_merchant_discount = JSON.parse(
+        JSON.stringify(product.price)
+      );
+    }
+
+    // Special Discount
+    product = this.calculateProductSpecialDiscount(product);
+
+    // Extra Discount => Booker Discount
+    product.extra_discount = 0;
+    product.extra_discount_pkr = 0;
+
+    this.calculateNetAmountOfProduct(product);
+  }
   calculateProductDiscounts(product: any, scheme?: any): void {
     // Trade Offer
     if (scheme) {
@@ -789,7 +888,6 @@ export class CounterSaleComponent implements OnInit {
         JSON.stringify(product.item_trade_price)
       );
     }
-
     // Trade Discount
     if (this.merchantDiscount) {
       product = this.dataService.applyMerchantDiscountForSingleProduct(
@@ -943,31 +1041,25 @@ export class CounterSaleComponent implements OnInit {
   applyScheme(product: any): any {
     switch (product.selectedScheme.scheme_type) {
       case 'free_product':
-        product = this.applyFreeProductScheme(product);
+        product   = this.dataService.applyFreeProductScheme(product);
         break;
       case 'dotp':
-        product = this.applyDOTPScheme(product);
+        product   = this.dataService.getSDForDOTP(product);
+        break; 
+     case 'comp_product': 
+        product   = this.dataService.applyComplementaryScheme(product);  
         break;
+     case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
+            break;       
       default:
-        product = this.applyGiftScheme(product);
+        product   = this.dataService.getSDForGift(product);
         break;
     }
     return product;
   }
-
-  applyFreeProductScheme(product: any): any {
-    product = this.dataService.applyFreeProductScheme(product);
-    return product;
+  applyBunldeProductScheme(product: any,orderDetail:any): any {
+    return this.dataService.applyBundleProductsScheme(product,orderDetail);
   }
-
-  applyDOTPScheme(product: any): any {
-    return this.dataService.getSDForDOTP(product);
-  }
-
-  applyGiftScheme(product: any): any {
-    return this.dataService.getSDForGift(product);
-  }
-
   closeQuantityModal(event: Event): void {
     if (
       this.showQuantityModal &&
@@ -977,7 +1069,6 @@ export class CounterSaleComponent implements OnInit {
       this.selectedProduct = JSON.parse(JSON.stringify({}));
     }
   }
-
   searchProduct(): void {
     if (this.productSearchText) {
       this.dispProducts = this.allProducts.filter(
@@ -1250,5 +1341,37 @@ export class CounterSaleComponent implements OnInit {
         }
       }
     );
+  }
+
+
+
+
+
+  checkBundleScheme(scheme:any):boolean{
+    
+    
+    //console.log(scheme.scheme_type);
+    if(scheme.scheme_type == 'bundle_offer'){ 
+      let itemCount  = 0; 
+      const scheme_items      =   scheme.items.map(x=> {return x.item_id});
+      this.selectedProducts.forEach(x=>{
+        
+        if(scheme_items.includes(x.item_id) && scheme.min_qty <= x.stockQty && (!x.scheme_id || x.scheme_id == 0)){ 
+          ++itemCount;      
+        }
+       // debugger
+      });
+      //console.log(`COUNT ${scheme_items.length - 1} <= ${itemCount}` )
+      if(scheme_items.length - 1 <= itemCount){
+        //console.log(false);
+          return false
+      }else{
+        //console.log(true);
+        return true;
+      }   
+    //debugger
+    }
+    //console.log(false);
+    return false;
   }
 }

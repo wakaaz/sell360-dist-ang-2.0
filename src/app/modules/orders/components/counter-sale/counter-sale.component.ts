@@ -749,8 +749,8 @@ export class CounterSaleComponent implements OnInit {
         this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
         console.log("COUNT AFR  =>"+this.selectedProducts.length)
         //apply slabs to all items 
-        this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
         
+        this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
 
 
         this.calculateTotalBill();
@@ -995,7 +995,12 @@ export class CounterSaleComponent implements OnInit {
   }
 
   calculateTotalBill(): void {
+
+
     if (this.selectedProducts.length) {
+
+      this.selectedProducts = this.dataService.calculateOrderItemsValues(this.selectedProducts);
+
       this.selectedProductQuantities = this.selectedProducts
         .map((product) => +product.parent_qty_sold)
         .reduce((a, b) => a + b);

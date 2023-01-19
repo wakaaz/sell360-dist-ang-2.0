@@ -90,7 +90,7 @@
         
         
       >
-        <td style="width: 200px">{{ item.item_name }} ({{item.selectedScheme ?item.selectedScheme.title:''}} id-{{item.scheme_id}})</td>
+        <td style="width: 200px">{{ item.item_name }} ({{item.selectedScheme ?item.selectedScheme.title:''}} id-{{item.scheme_id}}) (slb-id: {{item.slab_id}})</td>
         <td>
           {{
             orderType !== "execution"

@@ -794,6 +794,7 @@
                   <div class="addItemCell PL-5">
                     <div class="_emp-sele _product-name">
                       {{ product.item_name }}
+                      (slb-id: {{product.slab_id}})
                       <span
                         style="display: block; opacity: 0.6; padding-top: 5px"
                       >
@@ -805,6 +806,7 @@
                   <div class="addItemCell unit-w">
                     <div class="addItemCell2 _h25">
                       {{ product.unit_name }}
+                      ({{product.selectedScheme ?product.selectedScheme.title:''}} id-{{product.scheme_id}})
                     </div>
                   </div>
 

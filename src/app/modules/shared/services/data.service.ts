@@ -62,7 +62,7 @@ export class DataService {
       let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
       let net_amount          =   gross_sale_amount - total_discount;
       // if([35,36].includes(item.item_id))
-      //   //debugger
+      //  
 
 
       return net_amount;
@@ -111,7 +111,7 @@ export class DataService {
 
   applyFreeProductScheme(product: any): any {
     let productWithScheme: any = {};
-    ////debugger
+    ////
     switch (product.selectedScheme.scheme_rule) {
       case 1:
           productWithScheme = this.applyFPDOTP(product);
@@ -144,7 +144,7 @@ export class DataService {
     product.price = discounted.singleItemPrice;
     product.unit_price_after_scheme_discount = discounted.singleItemPrice;
     product.selectedScheme.applied = true;
-    //debugger
+    //
     return product;
   }
 
@@ -203,7 +203,7 @@ export class DataService {
   }
 
   applyFPMinQty(product: any): any { 
-      ////debugger
+      ////
     if (this.isEligibleForMinimumQuantity(product.stockQty, product.selectedScheme.min_qty)) {
        
         product.scheme_free_items   =   []
@@ -232,14 +232,14 @@ export class DataService {
         this.schemeCannotApplied();
     }
     // console.log(product);
-    // ////debugger
+    // ////
     return product;
   }
 
   
 
   getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
-    //debugger
+    //
     const totalTpMinQty = itemTP * minQty;
     const totalItemBeingGiven = freeQty + minQty;
     const ItemDiscountedTP = totalTpMinQty / totalItemBeingGiven;
@@ -536,9 +536,9 @@ export class DataService {
       if(selecteditem.slab_id === null && generalslabs) {
         selecteditem = this.applySlabToItem(selecteditem,generalslabs,false);
       } 
-      //debugger  
+      //  
     }    
-    //////debugger
+    //////
     return selecteditem;
     
   }
@@ -595,6 +595,7 @@ export class DataService {
     //console.log(items)
     items = items.map((item) => {
     console.log(item);
+    
       /* App Scenarios In case of exclusiveOrder Access Right = 0:
          If the order booker has "0" Normal Order rights in that case only Normal Product or All Products Slabs shall be applied meaning ( Slab Type 0 or 1, 0 always has the priority )
          If there are no slab for 0 than apply 1
@@ -625,7 +626,7 @@ export class DataService {
         If exclusive discount slab does not exist than apply all products slab for exclusive products
         In case if both do not exist then no discount slab would be applied for exclusive products
       */
-        //////debugger
+        //////
         let slabmodel :any        =   []
         let itemslab:any          =   []
                                       
@@ -648,25 +649,25 @@ export class DataService {
         slabmodel.discount                =       0;
         slabmodel.discount_pkr            =       0;
         slabmodel.itemDiscountTp          =       itemDiscountTp;
-        //////debugger
-        if(itemslab && itemslab.id != null && item.stockQty > 0){
+        //////
+        if(itemslab && itemslab.discount_slab_id != null && +item.stockQty > 0){
           
             if(slabmodel.slab_rule == 2){
                 if(slabmodel.slab_type < 3){
                   rangecontent        =   items.filter(x=> x.slab_id==item.slab_id); 
-                  rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty, 0):0;
+                  rangevalue          =   rangecontent ? rangecontent.reduce((a: number, b: any) => a + +b.stockQty, 0):0;
                 }else if(slabmodel.slab_type == 3){
                   rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.item_id==item.item_id );
-                  rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty, 0):0;
+                  rangevalue          =   rangecontent ? rangecontent.reduce((a: number, b: any) => a + +b.stockQty, 0):0;
                   slabmodel.items     =   itemslab.items;
                 }else if(slabmodel.slab_type == 4){
                   rangecontent        =   items.filter(x=> x.slab_id==item.slab_id &&   x.slab_type == slabmodel.slab_type  && x.brand_id==item.brand_id );
-                  rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty, 0):0;
+                  rangevalue          =   rangecontent ? rangecontent.reduce((a: number, b: any) => a + +b.stockQty, 0):0;
                   slabmodel.items     =   itemslab.items;
                 }
                 else if(slabmodel.slab_type == 5){
                   rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.brand_id==item.brand_id );
-                  rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty, 0):0;
+                  rangevalue          =   rangecontent ? rangecontent.reduce((a: number, b: any) => a + +b.stockQty, 0):0;
                   slabmodel.items     =   itemslab.items;
                 }
                 if( slabmodel.packaging_type && slabmodel.packaging_type == 1){
@@ -676,22 +677,20 @@ export class DataService {
             else{
               if(slabmodel.slab_type < 3){
                 rangecontent        =   items.filter(x=> x.slab_id==item.slab_id);
-                rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty*b.original_price, 0):0;
               }else if(slabmodel.slab_type == 3){
                 rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.item_id==item.item_id );
-                rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty*b.original_price, 0):0;
                 slabmodel.items     =   itemslab.items;
               }else if(slabmodel.slab_type == 4){
                 rangecontent        =   items.filter(x=> x.slab_id==item.slab_id &&   x.slab_type == slabmodel.slab_type  && x.brand_id==item.brand_id );
-                rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty*b.original_price, 0):0;
                 slabmodel.items     =   itemslab.items;
               }
               else if(slabmodel.slab_type == 5){
                 rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.brand_id==item.brand_id );
-                rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty*b.original_price, 0):0;
                 slabmodel.items     =   itemslab.items;
               }
-            }
+              rangevalue          =   rangecontent ? this.rangecontentGrossAmountSum(rangecontent,item.item_id):0;
+
+            } 
             
             if (itemslab.discount_filter == 'slab' ) {
                 rangeModel   =  itemslab.slab.filter(x=>
@@ -744,10 +743,18 @@ export class DataService {
         item.trade_discount                     = slabmodel.discount; 
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountTp;
-        
       return item;
     });
     return JSON.parse(JSON.stringify(items));
+  }
+  rangecontentGrossAmountSum(rangecontent:any,item_id:number){
+    let ttl_Amnt = 0;
+    rangecontent.forEach(b => {
+      var gr_amnt = (+b.stockQty* b.original_price ? +b.original_price:+b.original_amount);
+    
+      ttl_Amnt  = ttl_Amnt + gr_amnt;
+    }); 
+    return ttl_Amnt ? ttl_Amnt : 0; 
   }
 
   /**
@@ -844,7 +851,7 @@ export class DataService {
         orderDetailitems = orderDetail.items;
           break;
     }
-    //debugger
+    //
     return orderDetailitems;
   }
 
@@ -855,11 +862,11 @@ export class DataService {
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
       const total_items       = scheme_items.length;
       
-      ////debugger
+      ////
       //schemeItemDiscount    = schemeItemDiscount > 0 ? schemeItemDiscount/total_items : 0; 
       orderDetails.items      = orderDetails.items.map((item) => {
           if(scheme_items.includes(item.item_id)){
-            ////debugger
+            ////
             item.selectedScheme   =   product.selectedScheme;
             item.scheme_id        =   product.selectedScheme.id;
             item.scheme_type      =   product.selectedScheme.scheme_type;
@@ -878,6 +885,7 @@ export class DataService {
            //console.log(item)
           // 
           }
+          
           return item;
       })
     }
@@ -885,9 +893,9 @@ export class DataService {
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
   applyBundleFixedProduct(product: any,orderDetails:any): any {
-    //////debugger
+    //////
     const interval  = this.getBundleOfferIntervalsAlgo(product,orderDetails);
-    //////debugger
+    //////
     if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
       orderDetails.items      = orderDetails.items.map((item) => {
@@ -912,7 +920,7 @@ export class DataService {
               })
             }
             item.selectedScheme.applied = true;
-            //////debugger
+            //////
            //console.log(item)
           // 
           }
@@ -1029,7 +1037,7 @@ export class DataService {
    */
    
   updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
-    ////debugger
+    ////
     if(orderDetails.items && orderDetails.items.length > 0){
       let schemeitems:any   = [];
   
@@ -1129,10 +1137,10 @@ export class DataService {
                         newItem.total_amount_after_tax= 0;
                         newItem.total_discount=0;
                         console.log(orderDetails_items.length)
-                        ////debugger
+                        ////
                         orderDetails_items.push(newItem);
                         console.log(orderDetails_items.length)
-                        ////debugger
+                        ////
                       };
                     }
                   }
@@ -1152,10 +1160,38 @@ export class DataService {
         return item;
       })
     }
-    ////debugger
+    ////
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
 
 
   
+
+
+  calculateOrderItemsValues(items:any):any{
+
+    items = items.map(item =>{
+      debugger
+      let stockQty            =   +item.stockQty;
+      let gross_sale_amount   =   (item.original_price ? +item.original_price:+item.original_amount) * +stockQty;
+      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
+      let ttl_trade_discount  =   item.trade_discount_pkr ? + stockQty * +item.trade_discount_pkr : 0;
+      let ttl_special_discount=   item.special_discount ? + stockQty * +item.special_discount :0;
+      let ttl_extra_discount  =   + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+      let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
+      let net_amount          =   gross_sale_amount - total_discount;
+      
+      item.tax_amount_pkr     =   + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+      item.net_amount         =   net_amount; 
+      //debugger
+      return item;
+    }); 
+    items = JSON.parse(JSON.stringify(items));
+    
+    return items;
+
+}
+
+
+
 }

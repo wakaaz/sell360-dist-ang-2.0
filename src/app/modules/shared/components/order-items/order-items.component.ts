@@ -170,7 +170,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   setQuantity(product: any): void { 
     
-    ////debugger
+    //
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
     // );
@@ -322,12 +322,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       this.merchantDiscount.discount_filter === 'slab'
     ) {
       this.orderDetail.items = this.orderDetail.items.map((product) => {
-
-        // product = this.dataService.applySlabForTotal(
-        //   product,
-        //   this.merchantDiscount,
-        //   this.grossAmount
-        // );
         product = this.calculateProductSpecialDiscount(product);
         if (product.extra_discount) {
           product.price =
@@ -445,7 +439,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   calculateNetAmountOfProduct(product: any): any { 
     //product.net_amount = this.dataService.calculateUnitPrice(product.unit_price_after_special_discount,+product.stockQty);
     product.net_amount = this.dataService.calculateproductnetAmount(product);
-    // //debugger
+    
     this.calculateProductTax(product);
   }
 
@@ -536,7 +530,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     // Extra Discount
     discount = this.orderDetail.items.map( (product) => +product.extra_discount_pkr);
     this.totalBookerDiscount = this.dataService.calculateItemsBill(discount);
-    // debugger;
+   
     // Tax
     const taxes = this.orderDetail.items.map(
       (product) => product.tax_amount_pkr

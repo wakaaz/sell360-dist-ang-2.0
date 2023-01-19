@@ -424,7 +424,7 @@ export class OrderDispatchedComponent implements OnInit {
                 prod.trade_discount_pkr = JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
                 prod.tax_amount_pkr = JSON.parse(JSON.stringify(prod.total_tax_amount || 0));
                 prod.selectedScheme = this.schemes.find((scheme) => scheme.id === prod.scheme_id);
-                //debugger
+                
                 return prod;
               });
             }
@@ -458,7 +458,7 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   getDiscountSlabs(): void {
-    ////debugger;
+    //
     if (!this.discountSlabs.length) {
       this.orderService.getDiscountSlabs().subscribe(
         (res) => {
@@ -562,7 +562,7 @@ export class OrderDispatchedComponent implements OnInit {
 
       let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
       let ttl_trade_discount  =  + stockQty * item.trade_discount_pkr;
-      let ttl_special_discount=  + stockQty * item.special_discount;
+      let ttl_special_discount=  + stockQty * item.special_discount ? +item.special_discount:0;
       let ttl_extra_discount  =  + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
       let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
       let final_price         =   gross_sale_amount - total_discount;                          
@@ -640,7 +640,7 @@ export class OrderDispatchedComponent implements OnInit {
         total_discount: total_discount, 
         order_id: this.orderDetails.id,
       };
-      //debugger
+      
       return orderItem;
     });
     this.saveOrder();
@@ -873,7 +873,7 @@ export class OrderDispatchedComponent implements OnInit {
     this.load.processed_date = this.orderDate;
     this.load.assignmentId = this.assignmentId;
     const order = { load: this.load, payments: this.credits };
-    //debugger
+    
     this.showFinalLoad = false;
     this.orderService.saveDispatchOrder(order).subscribe(
       (res) => {
@@ -987,7 +987,7 @@ export class OrderDispatchedComponent implements OnInit {
     });
     //It will return only where actual qty or issue qty should be greater than zero 
     this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation);
-    //debugger; 
+     
   }
 
   getItemName(itemId: number): string {

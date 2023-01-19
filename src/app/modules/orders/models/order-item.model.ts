@@ -2,6 +2,7 @@ import { ComplimentoryProdut } from '../primary-orders/_models/complimentoryProd
 
 export interface OrderItem {
   pref_id: number;
+  employee_id:number;
   item_quantity_booker: number;
   item_quantity_updated: number;
   quantity_returned: number;
@@ -26,6 +27,7 @@ export interface OrderItem {
   slab_type:number;
   slab_discount_type:string;
   scheme_id: number;
+  scheme_type:string;
   scheme_min_quantity: number;
   scheme_quantity_free: number;
   scheme_rule: string;
@@ -59,5 +61,6 @@ export interface OrderItem {
   total_discount: number;
   scheme_discount_type: number;
   trade_price: number;
+  item_retail_price:number;
   schemeitems: ComplimentoryProdut[];
 }

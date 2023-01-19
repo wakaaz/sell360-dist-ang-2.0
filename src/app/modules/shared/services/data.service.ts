@@ -462,42 +462,8 @@ export class DataService {
     }
     product.trade_discount_pkr = discountValuePKR;
     product.price = product.unit_price_after_scheme_discount - discountValuePKR;
-    product.unit_price_after_merchant_discount = JSON.parse(
-      JSON.stringify(product.price)
-    );
-    return product;
-  }
-
-  applySlabForTotal(
-    product: any,
-    merchantDiscount: any,
-    orderTotal: number
-  ): any {
-    const selectedSlab = merchantDiscount.slab.find(
-      (slb) =>
-        slb.range_from &&
-        slb.range_to &&
-        slb.range_from <= orderTotal &&
-        slb.range_to >= orderTotal
-    );
-    if (selectedSlab && +product.stockQty > 0) {
-      const discountValuePKR =
-        (selectedSlab.value / 100) * product.unit_price_after_scheme_discount;
-      product.trade_discount = selectedSlab.value;
-      product.trade_discount_pkr = discountValuePKR;
-      product.price =
-        product.unit_price_after_scheme_discount - discountValuePKR;
-      product.unit_price_after_merchant_discount = JSON.parse(
-        JSON.stringify(product.price)
-      );
-    } else {
-      product.trade_discount = 0;
-      product.trade_discount_pkr = 0;
-      product.price = product.unit_price_after_scheme_discount;
-      product.unit_price_after_merchant_discount = JSON.parse(
-        JSON.stringify(product.price)
-      );
-    }
+    product.unit_price_after_merchant_discount = JSON.parse( JSON.stringify(product.price));
+    
     return product;
   }
 
@@ -516,7 +482,7 @@ export class DataService {
                                             x.territory_id === selectedRetailer.territory_id &&
                                             x.channel_id === selectedRetailer.retailer_type_id
                                         ); 
-                                        debugger
+                                        
                                       
     if(!selecteditem.slab_id || selecteditem.slab_id === null || selecteditem.slab_id === 0){
       selecteditem.slab_id =  null;
@@ -636,7 +602,7 @@ export class DataService {
         let rangeModel:any        =   itemslab;              
         let ItemTp                =   item.original_price ? item.original_price : item.item_trade_price;
         item.original_price       =   item.original_price ? item.original_price : item.item_trade_price;
-        let itemDiscountTp        =   item.unit_price_after_scheme_discount ? item.unit_price_after_scheme_discount : ItemTp;
+        let itemDiscountedTp      =   ItemTp;
         
         if(item.slab_id > 0){
           itemslab  =   slabs.filter(x=> x.discount_slab_id == item.slab_id) ? slabs.filter(x=> x.discount_slab_id == item.slab_id)[0]:null;
@@ -649,7 +615,7 @@ export class DataService {
         slabmodel.discount_type           =       0;
         slabmodel.discount                =       0;
         slabmodel.discount_pkr            =       0;
-        slabmodel.itemDiscountTp          =       itemDiscountTp;
+        slabmodel.itemDiscountedTp          =       itemDiscountedTp;
         //////
         if(itemslab && itemslab.discount_slab_id != null && +item.stockQty > 0){
           
@@ -710,12 +676,12 @@ export class DataService {
                         if (rangeModel.value > 0) {
                             slabmodel.discount            =   rangeModel.value;
                             slabmodel.discount_pkr        =   (slabmodel.discount/100)*ItemTp;
-                            slabmodel.itemDiscountTp      =   slabmodel.itemDiscountTp - slabmodel.discount_pkr;
+                            slabmodel.itemDiscountedTp      =   slabmodel.itemDiscountedTp - slabmodel.discount_pkr;
                         }
                     } else if (rangeModel.discount_type  == 'value') {
                         slabmodel.discount                =   rangeModel.value;
                         slabmodel.discount_pkr            =   slabmodel.discount;
-                        slabmodel.itemDiscountTp          =   itemDiscountTp - slabmodel.discount;
+                        slabmodel.itemDiscountedTp        =   itemDiscountedTp - slabmodel.discount;
                     }
                 }
             }
@@ -726,11 +692,11 @@ export class DataService {
                 if (itemslab.discount_type  == 'percentage') {
                     if (slabmodel.discount > 0) {
                         slabmodel.discount_pkr    =   (slabmodel.discount/100)*ItemTp;
-                        slabmodel.itemDiscountTp  =   slabmodel.itemDiscountTp - slabmodel.discount_pkr; //$this.applyRetailerDiscount(slabmodel.itemDiscountTp , slabmodel.discount);
+                        slabmodel.itemDiscountedTp  =   slabmodel.itemDiscountedTp - slabmodel.discount_pkr; //$this.applyRetailerDiscount(slabmodel.itemDiscountedTp , slabmodel.discount);
                     }
                 } else if (itemslab.discount_type  == 'value') {
                     slabmodel.discount_pkr        =   slabmodel.discount;
-                    slabmodel.itemDiscountTp      =   slabmodel.itemDiscountTp - slabmodel.discount;
+                    slabmodel.itemDiscountedTp    =   slabmodel.itemDiscountedTp - slabmodel.discount;
                 }
             }
         }
@@ -743,7 +709,7 @@ export class DataService {
         item.merchant_discount_pkr              = slabmodel.discount_pkr;
         item.trade_discount                     = slabmodel.discount; 
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
-        item.unit_price_after_merchant_discount = slabmodel.itemDiscountTp;
+        item.unit_price_after_merchant_discount = slabmodel.itemDiscountedTp;
       return item;
     });
     return JSON.parse(JSON.stringify(items));
@@ -776,7 +742,7 @@ export class DataService {
         regionId === x.region_id &&
         +product.pref_id === x.pref_id
     );
-    
+
     if (selectedSpecialDiscount && +product.stockQty > 0) {
       product.price =
         product.unit_price_after_merchant_discount -
@@ -792,6 +758,8 @@ export class DataService {
       product.special_discount = 0.0;
       product.unit_price_after_special_discount = product.unit_price_after_merchant_discount;
     }
+    console.log("unit_price_after_special_discount 761 ==>"+product.unit_price_after_special_discount)
+    
     return product;
   }
   /** Special Discount End */
@@ -906,6 +874,8 @@ export class DataService {
             item.scheme_id            =   product.selectedScheme.id;
             item.scheme_type          =   product.selectedScheme.scheme_type;
             item.scheme_rule          =   product.selectedScheme.scheme_rule;
+            item.scheme_discount_type =   product.selectedScheme.discount_type;
+            item.scheme_min_quantity  =   product.selectedScheme.min_qty; 
             item.scheme_quantity_free =   0;
             item.scheme_discount      =   0;
             item.price                =   item.item_trade_price;
@@ -987,6 +957,8 @@ export class DataService {
       item.scheme_id            =   item.selectedScheme.id;
       item.scheme_type          =   item.selectedScheme.scheme_type;
       item.scheme_rule          =   item.selectedScheme.scheme_rule;
+      item.scheme_discount_type =   item.selectedScheme.discount_type;
+      item.scheme_min_quantity  =   item.selectedScheme.min_qty;
       item.scheme_quantity_free =   0;
       item.scheme_discount      =   0;
       item.price                =   item.item_trade_price;
@@ -1014,6 +986,8 @@ export class DataService {
       item.scheme_id            =   item.selectedScheme.id;
       item.scheme_type          =   item.selectedScheme.scheme_type;
       item.scheme_rule          =   item.selectedScheme.scheme_rule;
+      item.scheme_discount_type =   item.selectedScheme.discount_type;
+      item.scheme_min_quantity  =   item.selectedScheme.min_qty;
       item.scheme_quantity_free =   0;
       item.scheme_discount      =   0;
       item.price                =   item.item_trade_price;
@@ -1071,6 +1045,7 @@ export class DataService {
                                         scheme_id           :   item.scheme_id,
                                         scheme_type         :   item.scheme_type,
                                         scheme_rule         :   item.scheme_rule,
+                                        scheme_discount_type:   item.scheme_discount_type,
                                         gift_value          :   item.gift_value,
                                         scheme_quantity_free:   +x.free_qty,
                                         parent_qty_sold     :   +x.free_qty/ +stockitem.sub_inventory_quantity,
@@ -1098,8 +1073,9 @@ export class DataService {
                         newItem.unit_price_after_merchant_discount= newItem.original_price;
                         newItem.special_discount= 0;
                         newItem.unit_price_after_special_discount=newItem.original_price;
-                        newItem.booker_discount= 0;
+                        newItem.extra_discount= 0;
                         newItem.unit_price_after_individual_discount=newItem.original_price;
+                        newItem.price=newItem.original_price;
                         newItem.unit_id= newItem.unit_id;
                         newItem.unit_name= newItem.unit_name;
                         newItem.brand_id= newItem.brand_id;
@@ -1172,7 +1148,7 @@ export class DataService {
   calculateOrderItemsValues(items:any):any{
 
     items = items.map(item =>{
-      debugger
+      
       let stockQty            =   +item.stockQty;
       let gross_sale_amount   =   (item.original_price ? +item.original_price:+item.original_amount) * +stockQty;
       let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
@@ -1184,7 +1160,7 @@ export class DataService {
       
       item.tax_amount_pkr     =   + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
       item.net_amount         =   net_amount; 
-      //debugger
+      
       return item;
     }); 
     items = JSON.parse(JSON.stringify(items));

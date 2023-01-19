@@ -517,11 +517,13 @@ export class DataService {
                                             x.channel_id === selectedRetailer.retailer_type_id
                                         ); 
                                       
-    if(!selecteditem.slab_id || selecteditem.slab_id === null){
+    if(!selecteditem.slab_id || selecteditem.slab_id === null || selecteditem.slab_id === 0){
+      selecteditem.slab_id =  null;
       const skuslab        =  fileteredSlabs.filter(x => x.slab_type === 3) ? fileteredSlabs.filter(x => x.slab_type == 3)[0] : null;
       const brandslab      =  fileteredSlabs.filter(x => x.slab_type === 4) ? fileteredSlabs.filter(x => x.slab_type == 4)[0] : null;
       const categoryslab   =  fileteredSlabs.filter(x => x.slab_type === 5) ? fileteredSlabs.filter(x => x.slab_type == 5)[0] : null;  
       const generalslabs   =  fileteredSlabs.filter(x => x.slab_type < 3)  ? fileteredSlabs.filter(x => x.slab_type <= 2)  : null;                                                                    
+      
       if(skuslab){
         selecteditem = this.applySlabToItem(selecteditem,skuslab,true);
       }     
@@ -534,7 +536,7 @@ export class DataService {
       if(selecteditem.slab_id === null && generalslabs) {
         selecteditem = this.applySlabToItem(selecteditem,generalslabs,false);
       } 
-      debugger 
+      //debugger  
     }    
     //////debugger
     return selecteditem;
@@ -574,21 +576,25 @@ export class DataService {
             }
         }
         if(slab){
-          item.slab_id    = slab[0] ? slab[0].discount_slab_id : null;
-          item.slab_type  = slab[0] ? slab[0].slab_type:null;
+          item.slab_id            = slab[0] ? slab[0].discount_slab_id : null;
+          item.slab_type          = slab[0] ? slab[0].slab_type:null;
+          item.slab_discount_type = slab[0] ? slab[0].discount_type:null;
+          
         }
       }
     }else{
-      item.slab_id    = null;
-      item.slab_type  = null; 
+      item.slab_id            = null;
+      item.slab_type          = null; 
+      item.slab_discount_type = null;
     }
+    
     return item;
   }
 
   applySlabDiscountValuesToItems(items:any, slabs:any){
     //console.log(items)
     items = items.map((item) => {
-    //console.log(item);
+    console.log(item);
       /* App Scenarios In case of exclusiveOrder Access Right = 0:
          If the order booker has "0" Normal Order rights in that case only Normal Product or All Products Slabs shall be applied meaning ( Slab Type 0 or 1, 0 always has the priority )
          If there are no slab for 0 than apply 1
@@ -633,7 +639,7 @@ export class DataService {
         if(item.slab_id > 0){
           itemslab  =   slabs.filter(x=> x.discount_slab_id == item.slab_id) ? slabs.filter(x=> x.discount_slab_id == item.slab_id)[0]:null;
         }
-        debugger
+        
         slabmodel.slab_type               =       itemslab ? itemslab.slab_type       : 0; //   Zero means its is a for all product (Slab Type 0 or 1) can bbe applien periorty is zero
         slabmodel.slab_rule               =       itemslab ? itemslab.slab_rule       : 0; //   Zero means its is a for all product (Slab Type 0 or 1) can bbe applien periorty is zero
         slabmodel.packaging_type          =       itemslab ? itemslab.packaging_type  : null;
@@ -644,9 +650,10 @@ export class DataService {
         slabmodel.itemDiscountTp          =       itemDiscountTp;
         //////debugger
         if(itemslab && itemslab.id != null && item.stockQty > 0){
+          
             if(slabmodel.slab_rule == 2){
                 if(slabmodel.slab_type < 3){
-                  rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type );
+                  rangecontent        =   items.filter(x=> x.slab_id==item.slab_id); 
                   rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty, 0):0;
                 }else if(slabmodel.slab_type == 3){
                   rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.item_id==item.item_id );
@@ -668,7 +675,7 @@ export class DataService {
             }
             else{
               if(slabmodel.slab_type < 3){
-                rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type );
+                rangecontent        =   items.filter(x=> x.slab_id==item.slab_id);
                 rangevalue          =   rangecontent ? rangecontent.reduce((a: any, b: any) => a + b.stockQty*b.original_price, 0):0;
               }else if(slabmodel.slab_type == 3){
                 rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.item_id==item.item_id );
@@ -694,7 +701,7 @@ export class DataService {
                                                             x.range_to          >=  rangevalue 
                                                            ) 
                                                       ); 
-                if(rangeModel && rangeModel[0]){ 
+                if(rangeModel && rangeModel[0]){  
                     rangeModel  = rangeModel[0]; 
                              
                     slabmodel.discount_type       =   rangeModel.discount_type;
@@ -737,7 +744,7 @@ export class DataService {
         item.trade_discount                     = slabmodel.discount; 
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountTp;
-        //////debugger
+        
       return item;
     });
     return JSON.parse(JSON.stringify(items));

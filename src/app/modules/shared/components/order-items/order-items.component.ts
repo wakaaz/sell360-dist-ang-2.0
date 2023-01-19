@@ -241,11 +241,12 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
       
       this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
-       
+     
       this.calculateProductPrice(product);
       this.calculateTotalBill();
       this.applySpecialDiscountOnAllProducts();
-      this.productUpdated.emit();
+      console.log(this.orderDetail.items); 
+      this.productUpdated.emit(); 
     }
   }
 
@@ -571,6 +572,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     this.orderDetail.ttl_qty_sold = this.selectedProductQuantities;
     this.orderDetail.ttl_products_sold = this.orderDetail.items.length;
 
-    debugger            
+                
   }
 }

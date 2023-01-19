@@ -752,10 +752,10 @@ export class CounterSaleComponent implements OnInit {
           this.selectedRetailer.items = this.selectedProducts;
           this.selectedProducts   = this.applyBunldeProductScheme(this.selectedProduct,this.selectedRetailer);
         }
-        console.log("COUNT BFR=>"+this.selectedProducts.length)
+        console.log("COUNT BFR  =>"+this.selectedProducts.length)
         this.selectedRetailer.items = this.selectedProducts;
         this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.selectedProducts);
-        console.log("COUNT AFR=>"+this.selectedProducts.length)
+        console.log("COUNT AFR  =>"+this.selectedProducts.length)
         //apply slabs to all items 
         this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
         

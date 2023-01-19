@@ -529,15 +529,17 @@ export class CounterSaleComponent implements OnInit {
       (res) => {
         if (res.status === 200) {
           this.retailers = res.data;
-          const selectedob = this.orderBookers.some(x=> (x.employee_id == 39)) ? this.orderBookers.filter(x=> (x.employee_id == 39))[0]:null;
+          const selectedob = this.orderBookers.some(x=> (x.employee_id == this.selectedEmployee)) ? this.orderBookers.filter(x=> (x.employee_id == this.selectedEmployee))[0]:null;
           if(selectedob && this.retailers){
-            this.retailers  = this.retailers.map(x=>{
-              x.region_id = selectedob.region_id;
-              x.area_id = selectedob.area_id;
-              x.territory_id = selectedob.territory_id;
+            this.retailers    = this.retailers.map(x=>{
+              x.region_id     = selectedob.region_id;
+              x.area_id       = selectedob.area_id;
+              x.territory_id  = selectedob.territory_id;
+              
              return x;
             });
           }
+          
         } else {
           const toast: Toaster = {
             type: 'error',

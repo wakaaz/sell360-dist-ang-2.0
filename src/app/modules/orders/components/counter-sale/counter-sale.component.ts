@@ -529,6 +529,15 @@ export class CounterSaleComponent implements OnInit {
       (res) => {
         if (res.status === 200) {
           this.retailers = res.data;
+          const selectedob = this.orderBookers.some(x=> (x.employee_id == 39)) ? this.orderBookers.filter(x=> (x.employee_id == 39))[0]:null;
+          if(selectedob && this.retailers){
+            this.retailers  = this.retailers.map(x=>{
+              x.region_id = selectedob.region_id;
+              x.area_id = selectedob.area_id;
+              x.territory_id = selectedob.territory_id;
+             return x;
+            });
+          }
         } else {
           const toast: Toaster = {
             type: 'error',
@@ -618,24 +627,6 @@ export class CounterSaleComponent implements OnInit {
     }
   }
 
-  // setPrefrence(prefId: number, product: any): void {
-  //     this.alreadyAdded = false;
-  //     const prefrence = this.prefrences.find(x => x.pref_id === +prefId);
-  //     product.unit_id = prefrence.unit_id;
-  //     product.item_trade_price = prefrence.item_trade_price;
-  //     product.unit_name = prefrence.unit_name;
-  //     product.retail_price = prefrence.item_retail_price;
-  //     if (product.stockQty) {
-  //         if (this.selectedProducts.find(x => x.item_id === product.item_id && x.pref_id === product.pref_id)) {
-  //             this.grossAmount = this.grossAmount - product.original_amount;
-  //         }
-  //         this.calculateProductDiscounts(product);
-  //         this.calculateProductPrice(product);
-  //         this.calculateTotalBill();
-  //         this.applySlabOnAllProducts();
-  //     }
-  // }
-
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
   }
@@ -664,7 +655,7 @@ export class CounterSaleComponent implements OnInit {
       //update Scheme Free Products to scheme Items
       console.log("COUNT BFR=>"+this.selectedProducts.length)
       this.selectedRetailer.items = this.selectedProducts;
-      this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.selectedProducts);
+      this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
       console.log("COUNT AFR=>"+this.selectedProducts.length)
 
       
@@ -746,7 +737,8 @@ export class CounterSaleComponent implements OnInit {
         if (!this.selectedProductsIds.includes(this.selectedProduct.item_id)) {
           this.selectedProductsIds.push(this.selectedProduct.item_id);
         }
-
+        this.calculateProductPrice(this.selectedProduct);
+        this.calculateProductDiscounts(this.selectedProduct);  
         console.log("COUNT 750 =>"+this.selectedProducts.length)
         if(this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type == 'bundle_offer'){
           this.selectedRetailer.items = this.selectedProducts;
@@ -754,7 +746,7 @@ export class CounterSaleComponent implements OnInit {
         }
         console.log("COUNT BFR  =>"+this.selectedProducts.length)
         this.selectedRetailer.items = this.selectedProducts;
-        this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.selectedProducts);
+        this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
         console.log("COUNT AFR  =>"+this.selectedProducts.length)
         //apply slabs to all items 
         this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
@@ -811,7 +803,7 @@ export class CounterSaleComponent implements OnInit {
     }
     //console.log("COUNT BFR=>"+this.selectedProducts.length)
     this.selectedRetailer.items = this.selectedProducts;
-    this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.selectedProducts);
+    this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
     //console.log("COUNT AFR=>"+this.selectedProducts.length)
     //apply slabs to all items 
     this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
@@ -876,42 +868,82 @@ export class CounterSaleComponent implements OnInit {
   }
   calculateProductDiscounts(product: any, scheme?: any): void {
     // Trade Offer
+    product.scheme_id = 0; 
+    product.scheme_type= 0; 
+    product.scheme_rule= 0;
+    product.scheme_min_quantity= 0; 
+    product.scheme_discount_type= 0;
+    product.discount_on_tp= 0;  
+    product.scheme_quantity_free= 0; 
+    product.scheme_discount= 0; 
+    product.scheme_free_items   = [];
     if (scheme) {
       product.selectedScheme = scheme;
     }
     if (product.selectedScheme) {
+      product.scheme_id             =   product.selectedScheme.id ;
+      product.scheme_type           =   product.selectedScheme.scheme_type;
+      product.scheme_rule           =   product.selectedScheme.scheme_rule;
+      product.scheme_min_quantity   =   product.selectedScheme.min_qty;
+      product.scheme_discount_type  =   product.selectedScheme.discount_type;
+      product.discount_on_tp        =   product.selectedScheme.discount_on_tp;
       product = this.applyScheme(product);
     } else {
-      product.scheme_discount = 0;
-      product.price = JSON.parse(JSON.stringify(product.item_trade_price));
-      product.unit_price_after_scheme_discount = JSON.parse(
-        JSON.stringify(product.item_trade_price)
-      );
+      product.scheme_discount                   =   0;
+      product.price                             =   JSON.parse(JSON.stringify(product.item_trade_price));
+      product.unit_price_after_scheme_discount  =   JSON.parse(JSON.stringify(product.item_trade_price));
     }
+
+
     // Trade Discount
-    if (this.merchantDiscount) {
-      product = this.dataService.applyMerchantDiscountForSingleProduct(
-        this.merchantDiscount,
-        product,
-        this.grossAmount
-      );
-    } else {
+    // if (this.merchantDiscount) {
+    //   product = this.dataService.applyMerchantDiscountForSingleProduct(
+    //     this.merchantDiscount,
+    //     product,
+    //     this.grossAmount
+    //   );
+    // } 
+    
+    
+    if (this.discountSlabs) {
+    
+      product = this.dataService.applySlabDiscountToSingleItem(product,this.selectedRetailer,this.discountSlabs);
+      product = JSON.parse(JSON.stringify(product))
+      
+      if(product.slab_id){ 
+       
+      }else{
+        product.slab_id=0;
+        product.slab_type=0;
+        product.slab_discount_type = '0';
+        product.trade_discount = 0;
+        product.trade_discount_pkr = 0;
+        product.unit_price_after_merchant_discount = 123;//JSON.parse(JSON.stringify(product.price));
+      }
+      
+    }
+    else {
       product.trade_discount = 0;
       product.trade_discount_pkr = 0;
       product.unit_price_after_merchant_discount = JSON.parse(
         JSON.stringify(product.price)
       );
     }
-
+    //console.log(this.orderDetail);
+    
     // Special Discount
     product = this.calculateProductSpecialDiscount(product);
-
+    
     // Extra Discount => Booker Discount
-    product.extra_discount = 0;
-    product.extra_discount_pkr = 0;
-
-    this.calculateNetAmountOfProduct(product);
+    if (!product.extra_discount || +product.stockQty < 1) {
+      product.extra_discount = 0;
+      product.extra_discount_pkr = 0;
+      this.calculateNetAmountOfProduct(product);
+    } else {
+      this.calculateExtraDiscount(product);
+    }
   }
+
 
   calculateProductSpecialDiscount(product: any): any {
     return this.dataService.getSpecialDiscounts(

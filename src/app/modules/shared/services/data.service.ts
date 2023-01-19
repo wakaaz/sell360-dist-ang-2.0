@@ -509,13 +509,14 @@ export class DataService {
    */
 
   applySlabDiscountToSingleItem(selecteditem:any,selectedRetailer:any,slabs:any){
+    
      // update slab_id null to all order items,SO we can apply updated slabs     
     const fileteredSlabs = slabs.filter(x =>
                                             x.region_id  === selectedRetailer.region_id &&
                                             x.territory_id === selectedRetailer.territory_id &&
                                             x.channel_id === selectedRetailer.retailer_type_id
                                         ); 
-                                        //////debugger
+                                      
     if(!selecteditem.slab_id || selecteditem.slab_id === null){
       const skuslab        =  fileteredSlabs.filter(x => x.slab_type === 3) ? fileteredSlabs.filter(x => x.slab_type == 3)[0] : null;
       const brandslab      =  fileteredSlabs.filter(x => x.slab_type === 4) ? fileteredSlabs.filter(x => x.slab_type == 4)[0] : null;
@@ -532,7 +533,8 @@ export class DataService {
       } 
       if(selecteditem.slab_id === null && generalslabs) {
         selecteditem = this.applySlabToItem(selecteditem,generalslabs,false);
-      }  
+      } 
+      debugger 
     }    
     //////debugger
     return selecteditem;
@@ -618,8 +620,8 @@ export class DataService {
         In case if both do not exist then no discount slab would be applied for exclusive products
       */
         //////debugger
-        let slabmodel :any            =   []
-        let itemslab:any              =   []
+        let slabmodel :any        =   []
+        let itemslab:any          =   []
                                       
         let rangevalue:number     =   0; 
         let rangecontent :any     =   [];
@@ -631,6 +633,7 @@ export class DataService {
         if(item.slab_id > 0){
           itemslab  =   slabs.filter(x=> x.discount_slab_id == item.slab_id) ? slabs.filter(x=> x.discount_slab_id == item.slab_id)[0]:null;
         }
+        debugger
         slabmodel.slab_type               =       itemslab ? itemslab.slab_type       : 0; //   Zero means its is a for all product (Slab Type 0 or 1) can bbe applien periorty is zero
         slabmodel.slab_rule               =       itemslab ? itemslab.slab_rule       : 0; //   Zero means its is a for all product (Slab Type 0 or 1) can bbe applien periorty is zero
         slabmodel.packaging_type          =       itemslab ? itemslab.packaging_type  : null;
@@ -941,7 +944,7 @@ export class DataService {
    * 
    */ 
   applyComplementaryScheme(product: any): any {
- 
+
     switch (product.selectedScheme.scheme_rule) {
       case 5:
         product = this.applyComplementaryFixedProduct(product);

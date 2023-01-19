@@ -106,7 +106,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type !='bundle_offer' &&
       !this.selectedProduct.selectedScheme.applied
     ) {
-      debugger
+      
       this.dataService.schemeCannotApplied();
       return;
     }

@@ -989,6 +989,47 @@ export class OrderDispatchedComponent implements OnInit {
     this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation);
      
   }
+  retailerSelected(order: any): void {
+    if (order.isSelected) {
+      this.currentLoadContent = this.dispatchService.setLoadContent(
+        order,
+        this.currentLoadContent
+      );
+      this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(
+        (x) => {
+          if (order.id === x.id) {
+            x.isSelected = true;
+          } 
+          return x;
+        }
+      );
+    } else {
+      this.isAllSelected = false;
+      this.currentLoadContent = this.dispatchService.removeOrderFromCurrentLoad(
+        order,
+        this.currentLoadContent
+      );
+      this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(
+        (x) => {
+          if (order.id === x.id) {
+            x.isSelected = false;
+          }
+          return x;
+        }
+      );
+    }
+    this.remainingOrders = this.remainingOrders.map((x) => {
+      if (x.id === order.id) {
+        x.isSelected = order.isSelected;
+      }
+      return x;
+    });
+    this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
+    //It will return only where actual qty or issue qty should be greater than zero 
+    this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation);
+    
+  }
+
 
   getItemName(itemId: number): string {
     const item = this.inventory.find((x) => x.item_id === itemId);
@@ -1023,44 +1064,6 @@ export class OrderDispatchedComponent implements OnInit {
     this.currentLoadContent.order_ids = [];
     this.currentLoadContent.total_orders = 0;
     this.currentLoadContent.total_products = 0;
-  }
-
-  retailerSelected(order: any): void {
-    if (order.isSelected) {
-      this.currentLoadContent = this.dispatchService.setLoadContent(
-        order,
-        this.currentLoadContent
-      );
-      this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(
-        (x) => {
-          if (order.id === x.id) {
-            x.isSelected = true;
-          }
-          return x;
-        }
-      );
-    } else {
-      this.isAllSelected = false;
-      this.currentLoadContent = this.dispatchService.removeOrderFromCurrentLoad(
-        order,
-        this.currentLoadContent
-      );
-      this.dispatchOrderDetail.orders = this.dispatchOrderDetail.orders.map(
-        (x) => {
-          if (order.id === x.id) {
-            x.isSelected = false;
-          }
-          return x;
-        }
-      );
-    }
-    this.remainingOrders = this.remainingOrders.map((x) => {
-      if (x.id === order.id) {
-        x.isSelected = order.isSelected;
-      }
-      return x;
-    });
-    this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
   }
 
   completeDispatch(): void {

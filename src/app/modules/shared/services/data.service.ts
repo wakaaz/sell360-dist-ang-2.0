@@ -493,34 +493,48 @@ export class DataService {
       // if(selecteditem.item_id == 26) 
       //   debugger 
       if(skuslab){
-        selecteditem = this.applySlabToItem(selecteditem,skuslab,true);
+        selecteditem = this.applySlabToItem(selecteditem,skuslab,3);
       }     
       if(selecteditem.slab_id === null && brandslab){
-        selecteditem = this.applySlabToItem(selecteditem,brandslab,true);
+        selecteditem = this.applySlabToItem(selecteditem,brandslab,4);
       }
       if(selecteditem.slab_id === null && categoryslab){
-        selecteditem = this.applySlabToItem(selecteditem,categoryslab,true);
+        selecteditem = this.applySlabToItem(selecteditem,categoryslab,5);
       } 
       if(selecteditem.slab_id === null && generalslabs) {
-        selecteditem = this.applySlabToItem(selecteditem,generalslabs,false);
+        selecteditem = this.applySlabToItem(selecteditem,generalslabs,0);
       } 
       // if(selecteditem.item_id == 26) 
       //   debugger 
       //  
     }    
     //////
-    return selecteditem;
+    return selecteditem; 
     
   }
-  applySlabToItem(item:any, slabs:any, productbase:boolean){
+  applySlabToItem(item:any, slabs:any, slabtype:number){
     
     if(slabs && ( !item.slab_id || item.slab_id === null) ){
-      if(productbase){
+      if(slabtype > 0){
         // console.log(item.item_id);
-        // console.log(slabs.slab_items); 
-        if(slabs.slab_items && slabs.slab_items.includes(item.item_id)){
-          item.slab_id    = slabs.discount_slab_id;
-          item.slab_type  = slabs.slab_type;
+        // console.log(slabs.slab_items);
+        if(slabtype == 3){
+          if(slabs.slab_items && slabs.slab_items.includes(item.item_id)){
+            item.slab_id    = slabs.discount_slab_id;
+            item.slab_type  = slabs.slab_type;
+          }
+        } 
+        else if(slabtype == 4){
+          if(slabs.slab_items && slabs.slab_items.includes(item.brand_id)){
+            item.slab_id    = slabs.discount_slab_id;
+            item.slab_type  = slabs.slab_type;
+          }
+        }
+        else if(slabtype == 5){
+          if(slabs.slab_items && slabs.slab_items.includes(item.sub_category_id)){
+            item.slab_id    = slabs.discount_slab_id;
+            item.slab_type  = slabs.slab_type;
+          }
         }
       }
       else{

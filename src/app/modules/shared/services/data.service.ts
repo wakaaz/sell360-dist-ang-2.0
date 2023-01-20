@@ -482,16 +482,16 @@ export class DataService {
                                             x.territory_id === selectedRetailer.territory_id &&
                                             x.channel_id === selectedRetailer.retailer_type_id
                                         ); 
-             debugger                           
+           //  debugger                           
                                       
     if(!selecteditem.slab_id || selecteditem.slab_id === null || selecteditem.slab_id === 0){
       selecteditem.slab_id =  null;
-      const skuslab        =  fileteredSlabs.filter(x => x.slab_type === 3) ? fileteredSlabs.filter(x => x.slab_type == 3)[0] : null;
-      const brandslab      =  fileteredSlabs.filter(x => x.slab_type === 4) ? fileteredSlabs.filter(x => x.slab_type == 4)[0] : null;
-      const categoryslab   =  fileteredSlabs.filter(x => x.slab_type === 5) ? fileteredSlabs.filter(x => x.slab_type == 5)[0] : null;  
+      const skuslab        =  fileteredSlabs.filter(x => x.slab_type === 3) ? fileteredSlabs.filter(x => x.slab_type == 3) : null;
+      const brandslab      =  fileteredSlabs.filter(x => x.slab_type === 4) ? fileteredSlabs.filter(x => x.slab_type == 4) : null;
+      const categoryslab   =  fileteredSlabs.filter(x => x.slab_type === 5) ? fileteredSlabs.filter(x => x.slab_type == 5) : null;  
       const generalslabs   =  fileteredSlabs.filter(x => x.slab_type < 3)  ? fileteredSlabs.filter(x => x.slab_type <= 2)  : null;                                                                    
       // if(selecteditem.item_id == 26) 
-      //   debugger 
+       //  debugger   
       if(skuslab){
         selecteditem = this.applySlabToItem(selecteditem,skuslab,3);
       }     
@@ -516,26 +516,29 @@ export class DataService {
     
     if(slabs && ( !item.slab_id || item.slab_id === null) ){
       if(slabtype > 0){
-        // console.log(item.item_id);
-        // console.log(slabs.slab_items);
-        if(slabtype == 3){
-          if(slabs.slab_items && slabs.slab_items.includes(item.item_id)){
-            item.slab_id    = slabs.discount_slab_id;
-            item.slab_type  = slabs.slab_type;
-          }
-        } 
-        else if(slabtype == 4){
-          if(slabs.slab_items && slabs.slab_items.includes(item.brand_id)){
-            item.slab_id    = slabs.discount_slab_id;
-            item.slab_type  = slabs.slab_type;
-          }
-        }
-        else if(slabtype == 5){
-          if(slabs.slab_items && slabs.slab_items.includes(item.sub_category_id)){
-            item.slab_id    = slabs.discount_slab_id;
-            item.slab_type  = slabs.slab_type;
-          }
-        }
+        slabs.forEach(slab=>{
+            if(slabtype == 3){
+              if(slab.slab_items && slab.slab_items.includes(item.item_id)){
+                item.slab_id    = slab.discount_slab_id;
+                item.slab_type  = slab.slab_type;
+                return item;
+              }
+            } 
+            else if(slabtype == 4){
+              if(slab.slab_items && slab.slab_items.includes(item.brand_id)){
+                item.slab_id    = slab.discount_slab_id;
+                item.slab_type  = slab.slab_type;
+                return item;
+              }
+            }
+            else if(slabtype == 5){
+              if(slab.slab_items && slab.slab_items.includes(item.sub_category_id)){
+                item.slab_id    = slab.discount_slab_id;
+                item.slab_type  = slab.slab_type;
+                return item;
+              }
+            }
+        });
       }
       else{
         let slab = null;
@@ -731,7 +734,7 @@ export class DataService {
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountedTp;
         // if(item.item_id == 26)
-        //debugger
+        debugger
       return item;
     });
     return JSON.parse(JSON.stringify(items));

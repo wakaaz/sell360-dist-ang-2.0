@@ -482,7 +482,7 @@ export class DataService {
                                             x.territory_id === selectedRetailer.territory_id &&
                                             x.channel_id === selectedRetailer.retailer_type_id
                                         ); 
-                                        
+             debugger                           
                                       
     if(!selecteditem.slab_id || selecteditem.slab_id === null || selecteditem.slab_id === 0){
       selecteditem.slab_id =  null;
@@ -731,7 +731,7 @@ export class DataService {
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountedTp;
         // if(item.item_id == 26)
-        // debugger
+        //debugger
       return item;
     });
     return JSON.parse(JSON.stringify(items));

@@ -128,6 +128,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.getOrdersBySalemanAndDate();
       this.getOrderBookers();
     }
+    
   }
 
   setSpotSaleOrder(): void {
@@ -293,6 +294,16 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       (res) => {
         if (res.status === 200) {
           this.routeRetailers = res.data;
+          if(this.selectedOrderBooker){
+            
+            this.routeRetailers    = this.routeRetailers.map(x=>{
+              x.region_id          = this.selectedOrderBooker.region_id;
+              x.area_id            = this.selectedOrderBooker.area_id;
+              x.territory_id       = this.selectedOrderBooker.territory_id;
+             return x;
+            });
+            
+          } 
           if (this.spotSaleOrder.retailers.length) {
             this.routeRetailers = this.routeRetailers.map((x) => {
               const index = this.spotSaleOrder.retailers.findIndex(
@@ -498,19 +509,13 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     this.orderDetails.items = this.orderDetails.items.map((prod) => {
       const product = this.inventory.find((x) => x.item_id === prod.item_id);
       if (!product) return;
-      prod.parent_trade_price = JSON.parse(
-        JSON.stringify(product.parent_trade_price)
-      );
-      prod.parent_unit_id = JSON.parse(JSON.stringify(product.parent_unit_id));
-      prod.parent_quantity = JSON.parse(JSON.stringify(product.quantity));
-      prod.child = JSON.parse(JSON.stringify(product.child));
-      prod.item_retail_price = JSON.parse(
-        JSON.stringify(product.item_retail_price)
-      );
+      prod.parent_trade_price = JSON.parse( JSON.stringify(product.parent_trade_price));
+      prod.parent_unit_id     = JSON.parse(JSON.stringify(product.parent_unit_id));
+      prod.parent_quantity    = JSON.parse(JSON.stringify(product.quantity));
+      prod.child              = JSON.parse(JSON.stringify(product.child));
+      prod.item_retail_price  = JSON.parse(JSON.stringify(product.item_retail_price));
       prod.extra_discount = JSON.parse(JSON.stringify(prod.booker_discount));
-      prod.tax_class_amount = JSON.parse(
-        JSON.stringify(product.tax_class_amount)
-      );
+      prod.tax_class_amount = JSON.parse( JSON.stringify(product.tax_class_amount) );
       prod.tax_class_id = JSON.parse(JSON.stringify(product.tax_class_id));
       prod.tax_class_type = JSON.parse(JSON.stringify(product.tax_class_type));
       prod.pref_id = JSON.parse(JSON.stringify(product.pref_id));
@@ -518,10 +523,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       prod.unit_name = JSON.parse(JSON.stringify(product.unit_name));
       prod.brand_id = JSON.parse(JSON.stringify(product.brand_id));
       prod.is_active = JSON.parse(JSON.stringify(product.is_active));
-      prod.item_trade_price = JSON.parse(
-        JSON.stringify(product.item_trade_price)
-      );
-
+      prod.item_trade_price = JSON.parse(JSON.stringify(product.item_trade_price));
       prod.stockQty = JSON.parse(JSON.stringify(prod.executed_qty));
       prod.net_amount = JSON.parse(JSON.stringify(prod.final_price));
       prod.gross_amount = prod.item_trade_price * prod.stockQty;
@@ -529,18 +531,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       prod.original_amount = prod.item_trade_price * prod.stockQty;
       prod.special_discount_pkr = prod.special_discount;
       prod.trade_discount = JSON.parse(JSON.stringify(prod.merchant_discount));
-      prod.trade_discount_pkr = JSON.parse(
-        JSON.stringify(prod.merchant_discount_pkr)
-      );
-      prod.tax_amount_pkr = JSON.parse(
-        JSON.stringify(prod.total_tax_amount || 0)
-      );
-      prod.selectedScheme = this.schemes.find(
-        (scheme) => scheme.id === prod.scheme_id
-      );
+      prod.trade_discount_pkr = JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
+      prod.tax_amount_pkr = JSON.parse(JSON.stringify(prod.total_tax_amount || 0));
+      prod.selectedScheme = this.schemes.find((scheme) => scheme.id === prod.scheme_id);
+      debugger
       return prod;
     });
-
     this.orderDetails.items = this.orderDetails.items.filter((x) => x);
   }
 

@@ -41,7 +41,7 @@ export class OrderDispatchService {
                 loadItem.dispatched_qty = loadItem.dispatched_qty - item.dispatch_qty - loadItem.issued_qty;
                 loadItem.issued_qty = 0;
             }
-            if (loadItem.actual_qty === 0) {
+            if (loadItem && loadItem.actual_qty === 0) {
                 currentLoadContent.items = currentLoadContent.items.filter(x => x.item_id !== item.item_id);
             }
         });

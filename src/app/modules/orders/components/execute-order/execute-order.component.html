@@ -392,6 +392,7 @@
   [allProducts]="inventory"
   [productSchemes]="schemes"
   [productMerchantDiscount]="merchantDiscount"
+  [discountSlabs] = "discountSlabs"
   [specialDiscounts]="specialDiscounts"
   (drawerClosed)="closeNewProducts()"
   (productSelected)="addNewProductToOrder($event)"
@@ -901,6 +902,7 @@
                     [allProducts]="inventory"
                     [specialDiscounts]="specialDiscounts"
                     [merchantDiscount]="merchantDiscount"
+                    [discountSlabs]="discountSlabs"
                     [newProduct]="newProduct"
                     [orderType]="'execution'"
                     [recoveryAmount]="recoveryAmount"
@@ -993,7 +995,7 @@
                   *ngIf="!savingOrder"
                   data-toggle="modal"
                   data-target="#order-hold-model"
-                  class="btn btn-cancel hold_order_btn font13"
+                  class="btn btn-cancel hold_order_btn mr-2 font13"
                   > 
                   Hold Order 
                  </button>
@@ -1144,7 +1146,7 @@
             </div>
 
             <div class="row m-0 grayTopborder">
-              <div id="orderList-id" class="col-4 p-0">
+              <div id="orderList-id" \[merchantDiscount\]class="col-4 p-0">
                 <app-retailer-sub-list
                   [retailers]="spotSaleOrder.retailers"
                   [currentTab]="currentTab"
@@ -1176,6 +1178,7 @@
                     [allProducts]="inventory"
                     [specialDiscounts]="specialDiscounts"
                     [merchantDiscount]="merchantDiscount"
+                    [discountSlabs] = "discountSlabs"
                     [newProduct]="newProduct"
                     (openDrawer)="openProductsList()"
                     (openReturnedModal)="openReturnedModal()"

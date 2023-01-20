@@ -1,6 +1,7 @@
 <app-products-drawer
   *ngIf="showProducts"
   [selectedRetailer]="selectedRetailer"
+  [orderType]="'dispatch'"
   [orderedProducts]="orderDetails?.items"
   [loadingProducts]="loadingProduct"
   [allProducts]="inventory"
@@ -379,7 +380,7 @@
                   *ngIf="!savingOrder"
                   data-toggle="modal"
                   data-target="#order-hold-model"
-                  class="btn btn-cancel hold_order_btn font13"
+                  class="btn btn-cancel hold_order_btn mr-2 font13"
                   > 
                   Hold Order 
                  </button>

@@ -490,7 +490,8 @@ export class DataService {
       const brandslab      =  fileteredSlabs.filter(x => x.slab_type === 4) ? fileteredSlabs.filter(x => x.slab_type == 4)[0] : null;
       const categoryslab   =  fileteredSlabs.filter(x => x.slab_type === 5) ? fileteredSlabs.filter(x => x.slab_type == 5)[0] : null;  
       const generalslabs   =  fileteredSlabs.filter(x => x.slab_type < 3)  ? fileteredSlabs.filter(x => x.slab_type <= 2)  : null;                                                                    
-      
+      // if(selecteditem.item_id == 26) 
+      //   debugger 
       if(skuslab){
         selecteditem = this.applySlabToItem(selecteditem,skuslab,true);
       }     
@@ -503,6 +504,8 @@ export class DataService {
       if(selecteditem.slab_id === null && generalslabs) {
         selecteditem = this.applySlabToItem(selecteditem,generalslabs,false);
       } 
+      // if(selecteditem.item_id == 26) 
+      //   debugger 
       //  
     }    
     //////
@@ -617,6 +620,8 @@ export class DataService {
         slabmodel.discount_pkr            =       0;
         slabmodel.itemDiscountedTp          =       itemDiscountedTp;
         //////
+        // if(item.item_id == 26) 
+        // debugger 
         if(itemslab && itemslab.discount_slab_id != null && +item.stockQty > 0){
           
             if(slabmodel.slab_rule == 2){
@@ -624,16 +629,16 @@ export class DataService {
                   rangecontent        =   items.filter(x=> x.slab_id==item.slab_id); 
                   rangevalue          =   rangecontent ? rangecontent.reduce((a: number, b: any) => a + +b.stockQty, 0):0;
                 }else if(slabmodel.slab_type == 3){
-                  rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.item_id==item.item_id );
+                  rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.item_id==item.item_id );
                   rangevalue          =   rangecontent ? rangecontent.reduce((a: number, b: any) => a + +b.stockQty, 0):0;
                   slabmodel.items     =   itemslab.items;
                 }else if(slabmodel.slab_type == 4){
-                  rangecontent        =   items.filter(x=> x.slab_id==item.slab_id &&   x.slab_type == slabmodel.slab_type  && x.brand_id==item.brand_id );
+                  rangecontent        =   items.filter(x=> x.slab_id==item.slab_id  && x.brand_id==item.brand_id );
                   rangevalue          =   rangecontent ? rangecontent.reduce((a: number, b: any) => a + +b.stockQty, 0):0;
                   slabmodel.items     =   itemslab.items;
                 }
                 else if(slabmodel.slab_type == 5){
-                  rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.brand_id==item.brand_id );
+                  rangecontent        =   items.filter(x=> x.slab_id==item.slab_id  && x.brand_id==item.brand_id );
                   rangevalue          =   rangecontent ? rangecontent.reduce((a: number, b: any) => a + +b.stockQty, 0):0;
                   slabmodel.items     =   itemslab.items;
                 }
@@ -645,18 +650,19 @@ export class DataService {
               if(slabmodel.slab_type < 3){
                 rangecontent        =   items.filter(x=> x.slab_id==item.slab_id);
               }else if(slabmodel.slab_type == 3){
-                rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.item_id==item.item_id );
+                rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.item_id==item.item_id );
                 slabmodel.items     =   itemslab.items;
               }else if(slabmodel.slab_type == 4){
-                rangecontent        =   items.filter(x=> x.slab_id==item.slab_id &&   x.slab_type == slabmodel.slab_type  && x.brand_id==item.brand_id );
+                rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.brand_id==item.brand_id );
                 slabmodel.items     =   itemslab.items;
               }
               else if(slabmodel.slab_type == 5){
-                rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.slab_type == slabmodel.slab_type  && x.brand_id==item.brand_id );
+                rangecontent        =   items.filter(x=> x.slab_id==item.slab_id && x.brand_id==item.brand_id );
                 slabmodel.items     =   itemslab.items;
               }
               rangevalue          =   rangecontent ? this.rangecontentGrossAmountSum(rangecontent,item.item_id):0;
-
+              // if(item.item_id == 26)
+              // debugger
             } 
             
             if (itemslab.discount_filter == 'slab' ) {
@@ -710,6 +716,8 @@ export class DataService {
         item.trade_discount                     = slabmodel.discount; 
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountedTp;
+        // if(item.item_id == 26)
+        // debugger
       return item;
     });
     return JSON.parse(JSON.stringify(items));
@@ -717,10 +725,13 @@ export class DataService {
   rangecontentGrossAmountSum(rangecontent:any,item_id:number){
     let ttl_Amnt = 0;
     rangecontent.forEach(b => {
-      var gr_amnt = (+b.stockQty* b.original_price ? +b.original_price:+b.original_amount);
-    
+      var gr_amnt = ((+b.stockQty) * (b.original_price ? +b.original_price:+b.item_trade_price));
+      // if(item_id == 26)
+      // debugger
       ttl_Amnt  = ttl_Amnt + gr_amnt;
-    }); 
+    });
+    // if(item_id == 26)
+    //     debugger 
     return ttl_Amnt ? ttl_Amnt : 0; 
   }
 
@@ -758,7 +769,6 @@ export class DataService {
       product.special_discount = 0.0;
       product.unit_price_after_special_discount = product.unit_price_after_merchant_discount;
     }
-    console.log("unit_price_after_special_discount 761 ==>"+product.unit_price_after_special_discount)
     
     return product;
   }

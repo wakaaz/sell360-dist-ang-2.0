@@ -985,9 +985,10 @@ export class OrderDispatchedComponent implements OnInit {
         this.currentLoadContent
       );
     });
-    //It will return only where actual qty or issue qty should be greater than zero 
-    this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation);
+    //It will return only where actual qty or issue qty should be greater than zero
      
+      this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation,this.dispatchOrderDetail);
+    
   }
   retailerSelected(order: any): void {
     if (order.isSelected) {
@@ -1026,7 +1027,7 @@ export class OrderDispatchedComponent implements OnInit {
     });
     this.ordersDispList = JSON.parse(JSON.stringify(this.remainingOrders));
     //It will return only where actual qty or issue qty should be greater than zero 
-    this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation);
+    this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation,this.dispatchOrderDetail);
     
   }
 

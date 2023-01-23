@@ -100,6 +100,8 @@ export class ExecutionService {
       }
       let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
       const orderItem = {
+        quantity_returned:item.dispatch_qty - item.stockQty > -1 ? item.dispatch_qty - item.stockQty : 0,
+        executed_qty: finalQty, 
         id: item.id || 0,
         unit_id: item.unit_id,
         unit_name: item.unit_name,
@@ -110,7 +112,6 @@ export class ExecutionService {
         employee_id: orderDetails.employee_id,
         item_quantity_booker: item.item_quantity_booker,
         item_quantity_updated: item.item_quantity_booker != finalQty ? finalQty : null ,
-        quantity_returned: 0,
         original_price: item.original_price,
         scheme_id: item.scheme_id || 0,
         scheme_type : item.scheme_type,

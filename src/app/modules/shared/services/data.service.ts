@@ -140,11 +140,15 @@ export class DataService {
       product.selectedScheme.min_qty,
       product.selectedScheme.quantity_free
     );
+    product.scheme_id           =   product.selectedScheme.id;
+    product.scheme_type         =   product.selectedScheme.scheme_type;
+    product.scheme_rule         =   product.selectedScheme.scheme_rule;
     product.scheme_discount = discounted.schemeDiscount;
     product.price = discounted.singleItemPrice;
     product.unit_price_after_scheme_discount = discounted.singleItemPrice;
     product.selectedScheme.applied = true;
     //
+    
     return product;
   }
 
@@ -161,6 +165,9 @@ export class DataService {
         product.selectedScheme.min_qty,
         product.selectedScheme.quantity_free
       );
+      product.scheme_id           =   product.selectedScheme.id;
+      product.scheme_type         =   product.selectedScheme.scheme_type;
+      product.scheme_rule         =   product.selectedScheme.scheme_rule;
       product.scheme_discount = discounted.schemeDiscount;
       product.price = discounted.singleItemPrice;
       product.unit_price_after_scheme_discount = discounted.singleItemPrice;
@@ -188,6 +195,9 @@ export class DataService {
         product.selectedScheme.min_qty,
         product.selectedScheme.quantity_free
       );
+      product.scheme_id           =   product.selectedScheme.id;
+      product.scheme_type         =   product.selectedScheme.scheme_type;
+      product.scheme_rule         =   product.selectedScheme.scheme_rule;
       product.scheme_discount = discounted.schemeDiscount;
       product.price = discounted.singleItemPrice;
       product.unit_price_after_scheme_discount = discounted.singleItemPrice;
@@ -365,7 +375,9 @@ export class DataService {
           product.original_price - product.selectedScheme.discount_on_tp;
         product.scheme_discount = product.selectedScheme.discount_on_tp;
       }
-
+      product.scheme_id           =   product.selectedScheme.id;
+      product.scheme_type         =   product.selectedScheme.scheme_type;
+      product.scheme_rule         =   product.selectedScheme.scheme_rule;
       product.selectedScheme.applied = true;
     } else {
       product.selectedScheme.applied = false;
@@ -734,7 +746,7 @@ export class DataService {
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountedTp;
         // if(item.item_id == 26)
-        debugger
+        //debugger
       return item;
     });
     return JSON.parse(JSON.stringify(items));
@@ -969,6 +981,7 @@ export class DataService {
         product = product;
         break;
     }
+    
     return product;
   }
 
@@ -999,10 +1012,11 @@ export class DataService {
         })
       }
       item.selectedScheme.applied = true;
+      debugger
     }else{
       item.selectedScheme.applied = false;
     }
-    
+    debugger
     return JSON.parse(JSON.stringify(item));
   }
   applyComplementaryEquelProduct(item: any): any {
@@ -1140,10 +1154,8 @@ export class DataService {
                         newItem.total_tax_amount=0;
                         newItem.total_amount_after_tax= 0;
                         newItem.total_discount=0;
-                        console.log(orderDetails_items.length)
                         ////
                         orderDetails_items.push(newItem);
-                        console.log(orderDetails_items.length)
                         ////
                       };
                     }
@@ -1152,11 +1164,12 @@ export class DataService {
                 });
               }
           }
-          orderDetails_items.push(item);
           return item;                    
       });
-      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails_items));
-     
+      orderDetails_items.forEach(newItem=>{
+        orderDetails.items.push(newItem); 
+      });
+      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items));
       orderDetails.schemeitems    = schemeitems;
       orderDetails.items          = orderDetails.items.map((item) => { 
         item.schemeitems          = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === item.item_id) : null;
@@ -1165,6 +1178,7 @@ export class DataService {
       })
     }
     ////
+    //debugger
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
 

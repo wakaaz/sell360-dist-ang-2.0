@@ -160,7 +160,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   addNewProductToOrder(product: any): void {
-    this.newProduct = product;
+    this.newProduct      = product;
   }
 
   getSchemesData(): void {

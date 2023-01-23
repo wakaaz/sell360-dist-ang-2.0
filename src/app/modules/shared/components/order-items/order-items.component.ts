@@ -19,7 +19,7 @@ import { DataService } from '../../services';
   templateUrl: 'order-items.component.html',
   styleUrls: ['./order-items.component.css'],
 })
-export class OrderItemsListComponent implements OnInit, OnChanges {
+export class OrderItemsListComponent implements OnInit, OnChanges{
   @Input() stockAllocation: any;
   @Input() orderType: string;
   @Input() returnAmount: number;
@@ -54,6 +54,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   totalMerchantDiscount: number;
   selectedProductQuantities: number;
   totalTax: number;
+  item_id : string;
 
   selectedItem: any;
   permissions: any;
@@ -63,7 +64,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   @Output() saveCurrentOrder: EventEmitter<any> = new EventEmitter();
   @Output() cancelCurrentOrder: EventEmitter<any> = new EventEmitter();
   @Output() deleteReturned: EventEmitter<any> = new EventEmitter();
-  @Output() productUpdated: EventEmitter<boolean> = new EventEmitter();
+  @Output() productUpdated: EventEmitter<boolean> = new EventEmitter(); 
 
   constructor(
     private toastService: ToasterService,
@@ -78,7 +79,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.showProducts = false;
+    this.item_id = null;
   }
+     
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.orderDetail && changes.orderDetail.currentValue?.items) {
@@ -87,6 +90,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     if (changes.newProduct?.currentValue) {
       this.orderDetail.items.push(this.newProduct);
       this.setQuantity(this.newProduct);
+      this.item_id = this.newProduct.item_id;
     }
     if (changes.savingOrder?.currentValue) {
       this.resetValues();
@@ -154,7 +158,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         this.grossAmount = this.grossAmount - this.selectedItem.original_amount;
         
         if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
-          this.orderDetail.items   = this.applyBunldeProductScheme(this.selectedItem,this.orderDetail);
+          this.orderDetail.items   = this.dataService.applyBundleProductsScheme(this.selectedItem,this.orderDetail);
         }
         //console.log("COUNT BFR=>"+this.orderDetail.items.length)
         this.orderDetail.items  = this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
@@ -230,7 +234,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       
       
       if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
-        this.orderDetail.items   = this.applyBunldeProductScheme(product,this.orderDetail);
+        this.orderDetail.items   = this.dataService.applyBundleProductsScheme(product,this.orderDetail);
       }
       //Apply slab on all products
     
@@ -246,7 +250,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
       this.calculateTotalBill();
       this.applySpecialDiscountOnAllProducts();
       console.log(this.orderDetail.items); 
-      this.productUpdated.emit(); 
+      this.item_id = product.item_id;
+      this.productUpdated.emit();
+      //debugger
+      this.item_id = product.item_id;
+      debugger
     }
   }
 
@@ -472,9 +480,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         break;
     }
     return product;
-  }
-  applyBunldeProductScheme(product: any,orderDetail:any): any {
-    return this.dataService.applyBundleProductsScheme(product,orderDetail);
   }
   checkRecovery(): void {
     if (+this.orderDetail.recovered > this.recoveryAmount) {

@@ -341,6 +341,7 @@
                     [orderType]="'dispatch'"
                     [stockAllocation]="stockAllocation"
                     (openDrawer)="openProductsList()"
+                    (domChange)="onDomChange($event)"
                   >
                   </app-order-items-list>
                   <div class="col-12" *ngIf="savingOrder">

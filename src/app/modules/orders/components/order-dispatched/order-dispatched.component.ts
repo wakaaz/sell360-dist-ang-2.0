@@ -81,7 +81,6 @@ export class OrderDispatchedComponent implements OnInit {
     this.retailer_credit_Invoices = new Array<RecoveryRetailer>();
     this.holdOrderParams.hold_reason = '';
   }
-
   ngOnInit(): void {
     this.dtOptions = {
       pagingType: 'simple_numbers',

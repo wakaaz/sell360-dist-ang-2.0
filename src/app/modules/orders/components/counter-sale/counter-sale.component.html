@@ -86,6 +86,8 @@
         class="modal-body AddDetailPR"
       >
         <div class="row">
+          <div class="col-md-4 pt-7 mb-15">SKU:</div>
+          <div class="col-md-8 mb-15">{{selectedProduct.item_sku}}</div>
           <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
           <div class="col-md-8 mb-15">
             <input
@@ -587,6 +589,15 @@
                               >
                                 SKU: {{ product.item_sku }}
                               </span>
+                              <span
+                                style="
+                                  display: block;
+                                  opacity: 0.6;
+                                  padding-top: 5px;
+                                "
+                              >
+                                Available: {{ product.availble_stock }}
+                              </span>
                             </div>
                           </div>
                         </td>
@@ -597,6 +608,7 @@
                             data-target="#exampleModal"
                             class="btn btn-default mb-0 dont-close-quantity"
                             (click)="openQuantityModal(product)"
+                            [disabled]="+product.availble_stock<1"
                           >
                             Add
                           </button>

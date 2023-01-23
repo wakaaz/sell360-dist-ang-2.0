@@ -167,7 +167,7 @@ export class ExecutionService {
         total_discount: total_discount, 
         order_id: orderDetails.id,
       };
-      debugger
+      //debugger
       return orderItem;
     });
     return payLoadItems;

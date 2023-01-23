@@ -131,6 +131,18 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
 
       
 
+     // let orderDetail:any  = this.selectedRetailer;
+    // orderDetail.items    =  this.orderedProducts;
+    // if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
+    //   orderDetail.items   = this.dataService.applyBundleProductsScheme(product,orderDetail);
+    // }
+    // //console.log("COUNT BFR=>"+orderDetail.items.length)
+    // orderDetail.items  = this.dataService.updateSchemeFreeProductItems(orderDetail,this.allProducts);
+    // //console.log("COUNT AFR=>"+orderDetail.items.length)
+    // //apply slabs to all items 
+    // orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(orderDetail.items,this.discountSlabs)   
+    
+
       this.productSelected.emit(
         JSON.parse(JSON.stringify(this.selectedProduct))
       );
@@ -250,33 +262,17 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         1
       );
     } 
-    
-    // if (this.discountSlabs) {
-    
-    //   product = this.dataService.applySlabDiscountToSingleItem(product,this.selectedRetailer,this.discountSlabs);
-    //   product = JSON.parse(JSON.stringify(product))
-    //   if(product.slab_id){ 
-    //     this.orderedProducts  = this.dataService.applySlabDiscountValuesToItems(this.orderedProducts,this.discountSlabs)   
-    //     this.orderedProducts  = JSON.parse(JSON.stringify(this.orderedProducts))
-    //   }else{
-    //     product.slab_id=0;
-    //     product.slab_type=0;
-    //     product.slab_discount_type = '0';
-    //     product.trade_discount = 0;
-    //     product.trade_discount_pkr = 0;
-    //     product.unit_price_after_merchant_discount = 123;//JSON.parse(JSON.stringify(product.price));
-    //   }
-    //   
+    // let orderDetail:any  = this.selectedRetailer;
+    // orderDetail.items    =  this.orderedProducts;
+    // if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
+    //   orderDetail.items   = this.dataService.applyBundleProductsScheme(product,orderDetail);
     // }
-    else {
-      
-      product.slab_id=0;
-      product.slab_type=0;
-      product.slab_discount_type = '0';
-      product.trade_discount = 0;
-      product.trade_discount_pkr = 0;
-      product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price));
-    }
+    // //console.log("COUNT BFR=>"+orderDetail.items.length)
+    // orderDetail.items  = this.dataService.updateSchemeFreeProductItems(orderDetail,this.allProducts);
+    // //console.log("COUNT AFR=>"+orderDetail.items.length)
+    // //apply slabs to all items 
+    // orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(orderDetail.items,this.discountSlabs)   
+    
 
     // Special Discount
     product = this.calculateProductSpecialDiscount(product);
@@ -288,7 +284,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     product.unit_price_after_individual_discount = JSON.parse(
       JSON.stringify(product.unit_price_after_special_discount)
     );
-
+     
     this.calculateNetAmountOfProduct(product);
   }
 

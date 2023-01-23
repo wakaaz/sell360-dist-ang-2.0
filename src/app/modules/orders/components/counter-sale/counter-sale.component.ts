@@ -160,6 +160,8 @@ export class CounterSaleComponent implements OnInit {
           this.allProducts = res.data.inventory.map((pr) => {
             pr.net_amount = 0.0;
             pr.isAdded = false;
+           let  availble_stock:number = (pr.availble_stock_qty ? +pr.availble_stock_qty:0) - (pr.allocated_stock_qty ? +pr.allocated_stock_qty:0)
+            pr.availble_stock = availble_stock > 0 ? availble_stock:0;
             return pr;
           });
           this.specialDiscounts = res.data.special_discount;
@@ -634,8 +636,18 @@ export class CounterSaleComponent implements OnInit {
   }
 
   setQuantity(product: any): void {
-    if (+product.stockQty > 1000) {
-      product.stockQty = 0;
+    // if (+product.stockQty > 1000) {
+    //   product.stockQty = 0;
+    // }
+    let  availble_stock:number = +product.availble_stock
+    if(product.stockQty > (+product.availble_stock+ +product.scheme_quantity_free)){
+      product.stockQty = (+product.availble_stock+ +product.scheme_quantity_free);
+      this.toastService.showToaster({
+        title: 'Stock Error:',
+        message:
+          `Added quantity shouldn't be greater then available stock (${availble_stock})!`,
+        type: 'error',
+      });
     }
     if (product.item_trade_price) {
       if (this.selectedProducts.find((x) => x.item_id === product.item_id)) {
@@ -677,6 +689,18 @@ export class CounterSaleComponent implements OnInit {
       product.item_trade_price * +product.stockQty;
   }
   addProductToOrder(): void {
+    let  availble_stock:number = +this.selectedProduct.availble_stock
+    if(this.selectedProduct.stockQty > (+this.selectedProduct.availble_stock+ +this.selectedProduct.scheme_quantity_free)){
+      this.selectedProduct.stockQty = (+this.selectedProduct.availble_stock+ +this.selectedProduct.scheme_quantity_free);
+      this.toastService.showToaster({
+        title: 'Stock Error:',
+        message:
+          `Added quantity shouldn't be greater then available stock (${availble_stock})!`,
+        type: 'error',
+      });
+      return; 
+    }
+     
     if (
       this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type !='bundle_offer' &&
       !this.selectedProduct.selectedScheme.applied
@@ -685,16 +709,17 @@ export class CounterSaleComponent implements OnInit {
       this.dataService.schemeCannotApplied();
       return;
     }
-    this.isAdded = true;
     if (+this.selectedProduct.stockQty > 0 && this.selectedProduct.pref_id) {
       const pr = this.selectedProducts.find(
         (x) =>
           x.item_id === this.selectedProduct.item_id &&
-          x.pref_id === this.selectedProduct.pref_id
+          x.pref_id === this.selectedProduct.pref_id &&
+          x.stockQty>0 
       );
       if (pr) {
         this.alreadyAdded = true;
-      } else {
+      } 
+      else {
         this.alreadyAdded = false;
         this.showQuantityModal = false;
         this.allProducts = this.allProducts.map((prod) => {
@@ -731,6 +756,7 @@ export class CounterSaleComponent implements OnInit {
 
 
         this.calculateTotalBill();
+        debugger
         document.getElementById('pl-qty-close').click();
         this.isAdded = false;
       }
@@ -1243,7 +1269,7 @@ export class CounterSaleComponent implements OnInit {
         total_amount_after_tax: ttl_amnt_aftr_tax,
         total_discount: total_discount
       }; 
-      debugger
+      //debugger
       this.order.items.push(item);
       if (index === this.selectedProducts.length - 1) {
         this.placeOrder();
@@ -1274,6 +1300,7 @@ export class CounterSaleComponent implements OnInit {
 
   placeOrder(): void {
     this.isOrdering = true;
+    debugger 
     this.ordersService.counterSaleOrder(this.order).subscribe(
       (res) => {
         this.isOrdering = false;

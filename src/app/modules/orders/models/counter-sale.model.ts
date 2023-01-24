@@ -56,6 +56,10 @@ export interface CounterSale {
     total_tax_amount: number;
     total_amount_after_tax: number;
     total_discount: number;
+    loyalty_offer_id: number;
+    loyalty_offer_reward_type: number;
+    loyalty_offer_interval: number;
+    loyalty_offer_discount: number;
     payment: Payment;
     items: Array<OrderItem>;
 }

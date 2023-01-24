@@ -86,7 +86,9 @@
         class="modal-body AddDetailPR"
       >
         <div class="row">
-          <div class="col-md-4 pt-7 mb-15">SKU:</div>
+          <div class="col-md-4 mb-10">Product:</div>
+          <div class="col-md-8 mb-10">{{selectedProduct.item_name}}</div>
+          <div class="col-md-4 mb-15">SKU:</div>
           <div class="col-md-8 mb-15">{{selectedProduct.item_sku}}</div>
           <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
           <div class="col-md-8 mb-15">
@@ -118,7 +120,7 @@
               Quantity should be greater than 0!
             </span>
           </div>
-          <div class="col-md-4 pt-7 mb-15">Unit:</div>
+          <div class="col-md-4 mb-15">Unit:</div>
           <div class="col-md-8 mb-15">
             {{ selectedProduct.unit_name }}
             <!-- <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
@@ -806,11 +808,15 @@
                   <div class="addItemCell PL-5">
                     <div class="_emp-sele _product-name">
                       {{ product.item_name }}
-                      (slb-id: {{product.slab_id}})
                       <span
                         style="display: block; opacity: 0.6; padding-top: 5px"
                       >
                         SKU: {{ product.item_sku }}
+                      </span>
+                      <span
+                        style="display: block; opacity: 0.6; padding-top: 5px"
+                      >
+                        SCM: {{product.selectedScheme ? product.selectedScheme.title:''}} id-{{product.scheme_id}}
                       </span>
                     </div>
                   </div>
@@ -818,7 +824,7 @@
                   <div class="addItemCell unit-w">
                     <div class="addItemCell2 _h25">
                       {{ product.unit_name }}
-                      ({{product.selectedScheme ?product.selectedScheme.title:''}} id-{{product.scheme_id}})
+                      (slb-id: {{product.slab_id}})
                     </div>
                   </div>
 
@@ -979,7 +985,7 @@
                 <div class="addItemCell2 _h25 width-t">Loyalty Discount:</div>
 
                 <div class="addItemCell3 _h25">
-                  {{ extraDiscount | number: "1.2-2" }}
+                  {{ loyaltyDiscount | number: "1.2-2" }}
                 </div>
               </div>
 

@@ -671,6 +671,10 @@ export class NewCounterSaleComponent implements OnInit {
         total_tax_amount: this.secondaryOrder.tax,
         ttl_products_sold: this.secondaryOrder.totalItemsCount,
         ttl_qty_sold: this.secondaryOrder.totalQty,
+        loyalty_offer_id: null,
+        loyalty_offer_reward_type: null,
+        loyalty_offer_interval: null,
+        loyalty_offer_discount: null,
         within_radius: 0,
       };
       //   if (this.isEdit) {

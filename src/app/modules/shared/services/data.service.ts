@@ -495,7 +495,7 @@ export class DataService {
                                             x.territory_id === retailer.territory_id &&
                                             x.channel_id === retailer.retailer_type_id
                                         ); 
-           //  debugger                           
+           //  //debugger                           
                                       
     if(!selecteditem.slab_id || selecteditem.slab_id === null || selecteditem.slab_id === 0){
       selecteditem.slab_id =  null;
@@ -504,7 +504,7 @@ export class DataService {
       const categoryslab   =  fileteredSlabs.filter(x => x.slab_type === 5) ? fileteredSlabs.filter(x => x.slab_type == 5) : null;  
       const generalslabs   =  fileteredSlabs.filter(x => x.slab_type < 3)  ? fileteredSlabs.filter(x => x.slab_type <= 2)  : null;                                                                    
       // if(selecteditem.item_id == 26) 
-       //  debugger   
+       //  //debugger   
       if(skuslab){
         selecteditem = this.applySlabToItem(selecteditem,skuslab,3);
       }     
@@ -518,10 +518,11 @@ export class DataService {
         selecteditem = this.applySlabToItem(selecteditem,generalslabs,0);
       } 
       // if(selecteditem.item_id == 26) 
-      //   debugger 
+      //   //debugger 
       //  
     }    
     //////
+    //debugger
     return selecteditem; 
     
   }
@@ -650,7 +651,7 @@ export class DataService {
         slabmodel.itemDiscountedTp          =       itemDiscountedTp;
         //////
         // if(item.item_id == 26) 
-        // debugger 
+        // //debugger 
         if(itemslab && itemslab.discount_slab_id != null && +item.stockQty > 0){
           
             if(slabmodel.slab_rule == 2){
@@ -691,7 +692,7 @@ export class DataService {
               }
               rangevalue          =   rangecontent ? this.rangecontentGrossAmountSum(rangecontent,item.item_id):0;
               // if(item.item_id == 26)
-              // debugger
+              // //debugger
             } 
             
             if (itemslab.discount_filter == 'slab' ) {
@@ -746,7 +747,7 @@ export class DataService {
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountedTp;
         // if(item.item_id == 26)
-        //debugger
+        ////debugger
       return item;
     });
     return this.updateOrderitemscalculation(items);
@@ -756,11 +757,11 @@ export class DataService {
     rangecontent.forEach(b => {
       var gr_amnt = ((+b.stockQty) * (b.original_price ? +b.original_price:+b.item_trade_price));
       // if(item_id == 26)
-      // debugger
+      // //debugger
       ttl_Amnt  = ttl_Amnt + gr_amnt;
     });
     // if(item_id == 26)
-    //     debugger 
+    //     //debugger 
     return ttl_Amnt ? ttl_Amnt : 0; 
   }
 
@@ -1012,11 +1013,9 @@ export class DataService {
         })
       }
       item.selectedScheme.applied = true;
-      debugger
     }else{
       item.selectedScheme.applied = false;
     }
-    debugger
     return JSON.parse(JSON.stringify(item));
   }
   applyComplementaryEquelProduct(item: any): any {
@@ -1077,12 +1076,13 @@ export class DataService {
 
   updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
     ////
+    
     if(orderDetails.items && orderDetails.items.length > 0){
       
       let schemeitems:any         = [];
       let orderDetails_items:any  = [];
       let loyalty_free_items:any  = orderDetails.loyalty_free_items; 
-      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && (x.quantity > 0 || x.stockQty >0)))));
+      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && (x.quantity > 0 || x.stockQty >0 || x.scheme_id > 0)))));
        orderDetails.items.map((item) => {
           //add for scheme offers
           if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
@@ -1177,7 +1177,10 @@ export class DataService {
                         newItem.total_tax_amount=0;
                         newItem.total_amount_after_tax= 0;
                         newItem.total_discount=0;
+                        //newItem.isAdded=true;
                         ////
+                        newItem = this.updateItemcalculation(newItem);
+                        
                         orderDetails_items.push(newItem);
                         ////
                       };
@@ -1278,8 +1281,12 @@ export class DataService {
                       newItem.total_tax_amount=0;
                       newItem.total_amount_after_tax= 0;
                       newItem.total_discount=0;
+                      //newItem.isAdded=true;
                       ////
-                      orderDetails_items.push(newItem);
+                      
+                      newItem = this.updateItemcalculation(newItem);
+                      
+                      orderDetails_items.push(newItem); 
                       ////
                     };
                   }
@@ -1303,7 +1310,7 @@ export class DataService {
       })
     }
     ////
-    //debugger
+    ////debugger
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
 
@@ -1322,8 +1329,8 @@ export class DataService {
     orderDetails.loyalty_free_items     =   [];
     let loyaltyOffer:any                =   [];
     if(orderDetails.loyalty_offer_id && orderDetails.loyalty_offer_id > 0){
-        loyaltyOffer                      =   loyaltyOffers.find(x=> (x.id = orderDetails.loyalty_offer_id));
-        loyaltyOffer.retailer             =   loyaltyOffer.retailers.find(x=> (x.retailer_id = orderDetails.retailer_id));
+        loyaltyOffer                    =   loyaltyOffers.find(x=> (x.id = orderDetails.loyalty_offer_id));
+        loyaltyOffer.retailer           =   loyaltyOffer.retailers.find(x=> (x.retailer_id = orderDetails.retailer_id));
     }
     else{
         loyaltyOffers.forEach(offer=>{
@@ -1377,7 +1384,7 @@ export class DataService {
             }
             sales_value =  sales_value + totalCurrentOrderSale;
             // Compare value is eligable to  loyal offer min value
-            // debugger
+            // //debugger
             if(sales_value >=  sale_criteria_min_value) {
 
                 // Check Discount is reward_max_discount_interval
@@ -1398,7 +1405,7 @@ export class DataService {
                         // reward_discount_type e.g( 1 discount in value, 2 discount in percentage )
                         let reward_discount_value:number  = 0;
                         let loyalty_offer_discount:number =  +loyaltyOffer.reward_discount_value;
-                        //debugger
+                        ////debugger
                         if (loyaltyOffer.reward_discount_type == 1) {
                             // discount in value
                             reward_discount_value = +loyalty_offer_discount * +intervals;
@@ -1437,10 +1444,10 @@ export class DataService {
                                 item.loyalty_offer_discount     =  +loyalty_offer_discount;
                                 item.loyalty_offer_discount_pkr =  +reward_each_item_discount;
                                 item.total_item_discount        =  +total_item_discount;
-                                total_discount                  =   +total_discount + +total_item_discount;
-                                // debugger
+                                total_discount                  =  +total_discount + +total_item_discount;
+                                // //debugger
                             }
-                            // debugger
+                            // //debugger
                             return item;
                         })
                     }
@@ -1463,7 +1470,7 @@ export class DataService {
             }
         }
     }
-    // debugger
+    // //debugger
     orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items);
     console.log("loyalty_offer_interval==> "+orderDetails.loyalty_offer_interval);
     console.log("loyalty_offer_discount==> "+orderDetails.loyalty_offer_discount);
@@ -1522,7 +1529,55 @@ export class DataService {
   End::LOyalty Offer
   *
   */
+  
+  updateItemcalculation(item):any{
 
+        item.scheme_discount    = item.scheme_discount ? +item.scheme_discount : 0;
+        item.trade_discount     = item.trade_discount_pkr ? +item.trade_discount : 0;
+        item.trade_discount_pkr = item.trade_discount_pkr ? +item.trade_discount_pkr : 0;
+        item.special_discount   = item.special_discount ? +item.special_discount : 0;
+        item.extra_discount_pkr = item.extra_discount_pkr ? +item.extra_discount_pkr : 0; 
+
+
+        let free_qty            =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
+        let stockQty            =   +item.stockQty;
+        let gross_sale_amount   =   item.original_price * stockQty
+        let finalQty            =   stockQty+free_qty;
+
+        let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(stockQty * item.scheme_discount) ;
+        let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
+        let ttl_special_discount=   +stockQty * item.special_discount ? +item.special_discount:0;
+        let ttl_extra_discount  =   +item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+        let ttl_loyalty_discount=   +stockQty * item.loyalty_offer_discount_pkr ? +item.loyalty_offer_discount_pkr : 0;
+        let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount + ttl_loyalty_discount;
+        let final_price         =   gross_sale_amount - total_discount;                          
+        let tax_in_value        =   0;                          
+        let total_tax_amount    =   0;    
+        if(item.tax_class_id  > 0 && item.tax_class_amount){
+          tax_in_value          =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
+          total_tax_amount      =   tax_in_value*finalQty;  
+        }
+        let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
+        item.parent_qty_sold                      =   +this.getParentQty(+item.stockQty,+item.sub_inventory_quantity);
+        item.gross_amount                         =   +gross_sale_amount;
+        item.gross_sale_amount                    =   +item.gross_amount;
+        item.unit_price_after_scheme_discount     =   +item.gross_amount - +item.scheme_discount; 
+        item.trade_discount                       =   +item.trade_discount;
+        item.trade_discount_pkr                   =   +item.trade_discount_pkr;
+        item.unit_price_after_merchant_discount   =   +item.unit_price_after_scheme_discount - +item.trade_discount_pkr;
+        item.special_discount                     =   +item.special_discount;
+        item.unit_price_after_special_discount    =   +item.unit_price_after_merchant_discount- +item.special_discount;
+        item.extra_discount                       =   +item.extra_discount;
+        item.unit_price_after_individual_discount =   +item.unit_price_after_special_discount - +item.extra_discount;
+        item.final_price                          =   +final_price;
+        item.net_amount                           =   +item.final_price; 
+        item.price                                =   +item.final_price;
+        item.total_tax_amount                     =   +total_tax_amount;
+        item.total_amount_after_tax               =   +ttl_amnt_aftr_tax;
+        item.total_discount                       =   +total_discount; 
+        // //debugger
+        return JSON.parse(JSON.stringify(item));
+  }
   updateOrderitemscalculation(items):any{
     items   =   items.map((item) => {
 
@@ -1539,10 +1594,11 @@ export class DataService {
         let finalQty            =   stockQty+free_qty;
 
         let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(stockQty * item.scheme_discount) ;
-        let ttl_trade_discount  =  + stockQty * item.trade_discount_pkr;
-        let ttl_special_discount=  + stockQty * item.special_discount ? +item.special_discount:0;
-        let ttl_extra_discount  =  + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
-        let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
+        let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
+        let ttl_special_discount=   +stockQty * item.special_discount ? +item.special_discount:0;
+        let ttl_extra_discount  =   +item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+        let ttl_loyalty_discount=   +stockQty * item.loyalty_offer_discount_pkr ? +item.loyalty_offer_discount_pkr : 0;
+        let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount + ttl_loyalty_discount;
         let final_price         =   gross_sale_amount - total_discount;                          
         let tax_in_value        =   0;                          
         let total_tax_amount    =   0;    
@@ -1552,22 +1608,24 @@ export class DataService {
         }
         let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
         
+        item.parent_qty_sold                      =   +this.getParentQty(+item.stockQty,+item.sub_inventory_quantity);
         item.gross_amount                         =   +gross_sale_amount;
+        item.gross_sale_amount                    =   +item.gross_amount;
         item.unit_price_after_scheme_discount     =   +item.gross_amount - +item.scheme_discount;
         item.trade_discount                       =   +item.trade_discount;
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
         item.unit_price_after_merchant_discount   =   +item.unit_price_after_scheme_discount - +item.trade_discount_pkr;
         item.special_discount                     =   +item.special_discount;
         item.unit_price_after_special_discount    =   +item.unit_price_after_merchant_discount- +item.special_discount;
-        item.extra_discount_pkr                   =   +item.extra_discount_pkr;
-        item.unit_price_after_individual_discount =   +item.unit_price_after_special_discount - +item.extra_discount_pkr;
+        item.extra_discount                       =   +item.extra_discount;
+        item.unit_price_after_individual_discount =   +item.unit_price_after_special_discount - +item.extra_discount;
         item.final_price                          =   +final_price;
-        item.net_amount                           =   +item.final_price;
+        item.net_amount                           =   +item.final_price; 
         item.price                                =   +item.final_price;
         item.total_tax_amount                     =   +total_tax_amount;
         item.total_amount_after_tax               =   +ttl_amnt_aftr_tax;
         item.total_discount                       =   +total_discount; 
-        // debugger
+        // //debugger
         return item; 
     });
     return JSON.parse(JSON.stringify(items));
@@ -1577,25 +1635,28 @@ export class DataService {
     let price:number = 0;
     if(items){
         items.forEach(item=>{
-            price = price + +item.parent_qty_sold;
+            price = price + +(item.parent_qty_sold ? item.parent_qty_sold : 0);
         })
     }
     return price;
   }
   orderGrossAmount(items:any):number{
       let price:number = 0;
+      //debugger
       if(items){
           items.forEach(item=>{
-              price = price + +item.gross_amount;
+              price = price + +(item.gross_amount ? item.gross_amount:0);
+              //debugger
           })
       }
+      //debugger
       return price;
   }
   orderNetAmount(items:any):number{
       let price:number = 0;
       if(items){
           items.forEach(item=>{
-              price = price + +item.net_amount;
+              price = price + +(item.net_amount ? item.net_amount : 0) ;
           })
       }
       return price;
@@ -1660,5 +1721,12 @@ export class DataService {
       }
       return price;
   }
+
+  orderLoyaltyDiscount(orderDetails:any):number{
+    if(orderDetails.loyalty_offer_reward_type == 1){
+      return orderDetails.loyalty_offer_discount ? +orderDetails.loyalty_offer_discount:0; 
+    }
+    return 0;
+}
 
 }

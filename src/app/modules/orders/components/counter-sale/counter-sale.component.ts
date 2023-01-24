@@ -40,7 +40,7 @@ export class CounterSaleComponent implements OnInit {
   alreadyAdded: boolean;
 
   grossAmount: number;
-  tradeOffer: number;
+  schemeDiscount: number;
   tradeDiscount: number;
   specialDiscount: number;
   extraDiscount: number;
@@ -51,7 +51,7 @@ export class CounterSaleComponent implements OnInit {
   selectedRegion: number;
   selectedSegment: number;
   distributorId: number;
-  selectedProductQuantities: number;
+  orderParentQtySold: number;
   chequeAmount: number;
   creditAmount: number;
   orderTotal: number;
@@ -106,7 +106,7 @@ export class CounterSaleComponent implements OnInit {
 
   ngOnInit(): void {
     this.grossAmount = 0.0;
-    this.tradeOffer = 0.0;
+    this.schemeDiscount = 0.0;
     this.tradeDiscount = 0.0;
     this.specialDiscount = 0.0;
     this.extraDiscount = 0.0;
@@ -162,9 +162,12 @@ export class CounterSaleComponent implements OnInit {
             pr.net_amount = 0.0;
             pr.isAdded = false;
            let  availble_stock:number = (pr.availble_stock_qty ? +pr.availble_stock_qty:0) - (pr.allocated_stock_qty ? +pr.allocated_stock_qty:0)
-            pr.availble_stock = availble_stock > 0 ? availble_stock:0;
+            pr.availble_stock = availble_stock > 0 ? +availble_stock:0;
             return pr;
           });
+          this.allProducts = this.allProducts.sort(
+            (a, b) => parseInt(b.availble_stock)
+          );
           this.specialDiscounts = res.data.special_discount;
           // this.prefrences = res.data.prefs;
           this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
@@ -196,7 +199,7 @@ export class CounterSaleComponent implements OnInit {
     this.selectedProducts = [];
     this.selectedProductsIds = [];
     this.grossAmount = 0.0;
-    this.tradeOffer = 0.0;
+    this.schemeDiscount = 0.0;
     this.tradeDiscount = 0.0;
     this.specialDiscount = 0.0;
     this.extraDiscount = 0.0;
@@ -984,64 +987,30 @@ export class CounterSaleComponent implements OnInit {
     this.calculateProductTax(product);
   }
 
-  calculateTotalBill(): void {
+  calculateTotalBill(): void { 
 
-
-    if (this.selectedProducts.length) {
-
-      this.selectedProducts = this.dataService.calculateOrderItemsValues(this.selectedProducts);
-
-      this.selectedProductQuantities = this.selectedProducts
-        .map((product) => +product.parent_qty_sold)
-        .reduce((a, b) => a + b);
-    }
+    this.orderParentQtySold  =    this.dataService.orderParentQtySold(this.selectedProducts);
     // Gross Amount
-    let prices = this.selectedProducts.map(
-      (product) => product.original_amount
-    );
-    this.grossAmount = this.dataService.calculateItemsBill(prices);
+    this.grossAmount         =    this.dataService.orderGrossAmount(this.selectedProducts);
     // Retail Price
-    prices = this.selectedProducts.map(
-      (product) => product.stockQty * product.item_retail_price
-    );
-    this.totalRetailPrice = this.dataService.calculateItemsBill(prices);
-    // Gross Amount
-    prices = this.selectedProducts.map((product) => product.gross_amount);
-    this.totalAmountAfterScheme = this.dataService.calculateItemsBill(prices);
+    this.totalRetailPrice    =    this.dataService.orderRetailPrice(this.selectedProducts);
     // Net Amount
-    prices = this.selectedProducts.map((product) => product.net_amount);
-    this.dueAmount = this.dataService.calculateItemsBill(prices);
+    this.dueAmount           =    this.dataService.orderNetAmount(this.selectedProducts);
     // Order Original
-    prices = this.selectedProducts.map((product) => product.original_amount);
-    this.orderTotal = JSON.parse(JSON.stringify(this.dueAmount));
+    this.orderTotal          =    this.dataService.orderNetAmount(this.selectedProducts);
     // Scheme Discount
-    let discount = this.selectedProducts.map(
-      (product) => +product.stockQty * product.scheme_discount
-    );
-    this.tradeOffer = this.dataService.calculateItemsBill(discount);
+    this.schemeDiscount          =    this.dataService.orderSchemeDiscount(this.selectedProducts);
     // Trade Discount
-    discount = this.selectedProducts.map(
-      (product) => +product.stockQty * product.trade_discount_pkr
-    );
-    this.tradeDiscount = this.dataService.calculateItemsBill(discount);
+    this.tradeDiscount       =    this.dataService.orderTradeDiscount(this.selectedProducts);
     // Special Discount
-    discount = this.selectedProducts.map(
-      (product) => +product.stockQty * product.special_discount_pkr
-    );
-    this.specialDiscount = this.dataService.calculateItemsBill(discount);
+    this.specialDiscount     =    this.dataService.orderSpecialDiscount(this.selectedProducts);
     // Extra Discount
-    discount = this.selectedProducts.map(
-      (product) => +product.extra_discount_pkr
-    );
-    this.extraDiscount = this.dataService.calculateItemsBill(discount);
+    this.extraDiscount       =    this.dataService.orderExtraDiscount(this.selectedProducts);
     // Tax
-    const taxes = this.selectedProducts.map(
-      (product) => product.tax_amount_pkr
-    );
-    this.tax = this.dataService.calculateItemsBill(taxes);
-
+    this.tax                 =    this.dataService.orderTax(this.selectedProducts);
+    debugger
     this.calculatePayments();
-  }
+}
 
   calculatePayments(): void {
     this.cash = {
@@ -1185,9 +1154,9 @@ export class CounterSaleComponent implements OnInit {
         gross_sale_amount: this.grossAmount,
         total_amount_after_tax: this.dueAmount,
         total_discount:
-          this.specialDiscount +
+          this.schemeDiscount +
           this.tradeDiscount +
-          this.tradeOffer +
+          this.specialDiscount +
           this.extraDiscount,
         total_tax_amount: this.tax,
         booked_order_value: 0,
@@ -1206,7 +1175,7 @@ export class CounterSaleComponent implements OnInit {
         territory_id: employee.territory_id,
         total_retail_price: this.totalRetailPrice,
         ttl_products_sold: this.selectedProductsIds.length,
-        ttl_qty_sold: this.selectedProductQuantities,
+        ttl_qty_sold: this.orderParentQtySold,
         payment: {
           total_payment: this.dueAmount,
           detail: [],

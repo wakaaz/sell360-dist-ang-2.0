@@ -87,6 +87,7 @@ export class CounterSaleComponent implements OnInit {
   selectedProducts: Array<any> = [];
   selectedProductsIds: Array<any> = [];
   schemes: Array<any> = [];
+  loyaltyoffers: Array<any> = [];
   subInventory: Array<any> = [];
   discountSlabs: Array<any> = [];
 
@@ -235,6 +236,32 @@ export class CounterSaleComponent implements OnInit {
           const toast: Toaster = {
             type: 'error',
             message: 'Cannot fetch Trade Offers. Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      }
+    );
+  }
+  getLoyaltyofferData(employee_id:number): void {
+    this.ordersService.getLoyaltyoffers(employee_id).subscribe(
+      (res) => {
+        if (res.status === 200) { 
+          this.loyaltyoffers = res.data;
+        } else {
+          const toast: Toaster = {
+            type: 'error',
+            message: res.message,
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      },
+      (error) => {
+        if (error.status !== 1 && error.status !== 401) {
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Cannot fetch Loyalty Offers. Please try again',
             title: 'Error:',
           };
           this.toastService.showToaster(toast);
@@ -496,9 +523,7 @@ export class CounterSaleComponent implements OnInit {
     this.selectedRoute = null;
     this.selectedRetailer = null;
     this.resetValues();
-    this.generalDataService
-      .getOrderBookerRoutes(this.selectedEmployee)
-      .subscribe(
+    this.generalDataService.getOrderBookerRoutes(this.selectedEmployee).subscribe(
         (res) => {
           if (res.status === 200) {
             this.routes = res.data;
@@ -522,6 +547,7 @@ export class CounterSaleComponent implements OnInit {
           }
         }
       );
+    this.getLoyaltyofferData(this.selectedEmployee);  
   }
 
   getRetailerByRoute(): void {
@@ -634,11 +660,20 @@ export class CounterSaleComponent implements OnInit {
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
   }
-
+  calculateProductPrice(product): void {
+    product.original_amount = this.dataService.calculateUnitPrice(
+      +product.stockQty,
+      product.item_trade_price
+    );
+    product.gross_amount =
+      product.unit_price_after_scheme_discount ||
+      product.item_trade_price * +product.stockQty;
+  }
   setQuantity(product: any): void {
     // if (+product.stockQty > 1000) {
     //   product.stockQty = 0;
     // }
+    
     let  availble_stock:number = +product.availble_stock
     if(product.stockQty > (+product.availble_stock+ +product.scheme_quantity_free)){
       product.stockQty = (+product.availble_stock+ +product.scheme_quantity_free);
@@ -658,35 +693,33 @@ export class CounterSaleComponent implements OnInit {
         product.quantity
       );
       this.calculateProductPrice(product);
-      this.calculateProductDiscounts(product);  
-      console.log("COUNT BFR=>"+this.selectedProducts.length)  
-      if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
-        this.selectedRetailer.items = this.selectedProducts;
-        this.selectedProducts   = this.applyBunldeProductScheme(product,this.selectedRetailer);
-      }
-      //Apply slab on all products
-    
-      //update Scheme Free Products to scheme Items
-      console.log("COUNT BFR=>"+this.selectedProducts.length)
-      this.selectedRetailer.items = this.selectedProducts;
-      this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
-      console.log("COUNT AFR=>"+this.selectedProducts.length)
+      this.calculateProductDiscounts(product);
 
       
-      this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
-       
+      
+      if(product.isAdded === true ){
+        this.selectedProducts = this.dataService.updateOrderitemscalculation(this.selectedProducts);
+        if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
+          this.selectedRetailer.items = this.selectedProducts;
+          this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer);
+        }
+
+        //Apply slab on all products
+        this.selectedProducts       =  this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
+
+
+        //Apply Loyal offer discount
+        this.selectedRetailer.items = this.selectedProducts
+        this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+        this.selectedProducts       =  this.selectedRetailer.items; 
+
+        //update Scheme Free Products to scheme Items
+        this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
+        this.selectedRetailer.items =  this.selectedProducts
+      }  
+
       this.calculateTotalBill();
     }
-  }
-
-  calculateProductPrice(product): void {
-    product.original_amount = this.dataService.calculateUnitPrice(
-      +product.stockQty,
-      product.item_trade_price
-    );
-    product.gross_amount =
-      product.unit_price_after_scheme_discount ||
-      product.item_trade_price * +product.stockQty;
   }
   addProductToOrder(): void {
     let  availble_stock:number = +this.selectedProduct.availble_stock
@@ -719,7 +752,7 @@ export class CounterSaleComponent implements OnInit {
       if (pr) {
         this.alreadyAdded = true;
       } 
-      else {
+      else { 
         this.alreadyAdded = false;
         this.showQuantityModal = false;
         this.allProducts = this.allProducts.map((prod) => {
@@ -736,27 +769,36 @@ export class CounterSaleComponent implements OnInit {
         });
         this.selectedProduct.isAdded = true;
         this.selectedProducts.push(this.selectedProduct);
+        
         if (!this.selectedProductsIds.includes(this.selectedProduct.item_id)) {
           this.selectedProductsIds.push(this.selectedProduct.item_id);
         }
         this.calculateProductPrice(this.selectedProduct);
-        this.calculateProductDiscounts(this.selectedProduct);  
-        console.log("COUNT 750 =>"+this.selectedProducts.length)
+        this.calculateProductDiscounts(this.selectedProduct); 
+        
+        this.selectedProducts         = this.dataService.updateOrderitemscalculation(this.selectedProducts);
+
         if(this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type == 'bundle_offer'){
           this.selectedRetailer.items = this.selectedProducts;
-          this.selectedProducts   = this.applyBunldeProductScheme(this.selectedProduct,this.selectedRetailer);
+          this.selectedProducts       = this.dataService.applyBundleProductsScheme(this.selectedProduct,this.selectedRetailer);
         }
-        console.log("COUNT BFR  =>"+this.selectedProducts.length)
-        this.selectedRetailer.items = this.selectedProducts;
-        this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
-        console.log("COUNT AFR  =>"+this.selectedProducts.length)
+       
         //apply slabs to all items 
+        this.selectedProducts       = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
         
-        this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
+        //Apply Loyal offer discount
+        this.selectedRetailer.items = this.selectedProducts
+        this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+        this.selectedProducts       =  this.selectedRetailer.items; 
+
+        //update Scheme Free Products to scheme Items
+        this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
+        this.selectedRetailer.items = this.selectedProducts
+
 
 
         this.calculateTotalBill();
-        debugger
+        
         document.getElementById('pl-qty-close').click();
         this.isAdded = false;
       }
@@ -801,15 +843,22 @@ export class CounterSaleComponent implements OnInit {
     
     if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
       this.selectedRetailer.items = this.selectedProducts;
-      this.selectedProducts   = this.applyBunldeProductScheme(product,this.selectedRetailer);
+      this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer);
     }
-    //console.log("COUNT BFR=>"+this.selectedProducts.length)
-    this.selectedRetailer.items = this.selectedProducts;
-    this.selectedProducts  = this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
-    //console.log("COUNT AFR=>"+this.selectedProducts.length)
+ 
+
     //apply slabs to all items 
     this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
     
+    //Apply Loyal offer discount
+    this.selectedRetailer.items = this.selectedProducts
+    this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+    this.selectedProducts       =  this.selectedRetailer.items;  
+
+    //update Scheme Free Products to scheme Items
+    this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
+    this.selectedRetailer.items = this.selectedProducts
+
   }
 
  
@@ -1034,9 +1083,6 @@ export class CounterSaleComponent implements OnInit {
         break;
     }
     return product;
-  }
-  applyBunldeProductScheme(product: any,orderDetail:any): any {
-    return this.dataService.applyBundleProductsScheme(product,orderDetail);
   }
   closeQuantityModal(event: Event): void {
     if (

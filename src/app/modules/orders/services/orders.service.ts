@@ -80,6 +80,11 @@ export class OrdersService {
     return this.baseService.get(API_URLS.GET_SCHEMES);
   }
 
+  getLoyaltyoffers(employee_id: number): Observable<any> {
+    const url = `${API_URLS.GET_LOYALTY_OFFERS}/${employee_id}`;
+    return this.baseService.get(url);
+  }
+
   counterSaleOrder(order: CounterSale): Observable<any> {
     const url = `${API_URLS.ADD_COUNTER_SALE}`;
     return this.baseService.post(url, order);

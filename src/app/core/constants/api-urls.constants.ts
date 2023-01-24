@@ -24,6 +24,7 @@ export const API_URLS = {
   CANCEL_EXECUTION_ORDER: '/cancelExecutionOrder',
   CANCEL_SPOT_SALE: '/cancelSpotSale',
   GET_SCHEMES: '/getSchemesDiscount',
+  GET_LOYALTY_OFFERS: '/getLoyaltyDiscount',
   GET_EMPLOYEES: '/getEmployees',
   GET_EMPLOYEE_ROUTES: '/getEmployeeRoutes',
   GET_DISCOUNT_SLABS: '/getSlabDiscount',

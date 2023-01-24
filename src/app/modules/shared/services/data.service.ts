@@ -1328,7 +1328,8 @@ export class DataService {
     else{
         loyaltyOffers.forEach(offer=>{
             if(offer.retailers.some(x=> (x.retailer_id == orderDetails.retailer_id))){
-                orderDetails.loyalty_offer_id =   offer.id;
+                orderDetails.loyalty_offer_id           =   offer.id;
+                orderDetails.loyalty_offer_reward_type  =   offer.reward_type;
                 if(offer.retailers){
                     let retailer =   offer.retailers.find(x=> (x.retailer_id = orderDetails.retailer_id));
                     if(retailer){

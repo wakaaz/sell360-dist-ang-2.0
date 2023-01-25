@@ -882,6 +882,8 @@ export class CounterSaleComponent implements OnInit {
     //update Scheme Free Products to scheme Items
     this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
     this.selectedRetailer.items = this.selectedProducts
+    
+    this.calculateTotalBill();
 
   }
 

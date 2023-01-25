@@ -1401,19 +1401,23 @@ export class DataService {
                         let reward_max_discount_interval:number = loyaltyOffer.reward_max_discount_interval;
                         if (intervals > reward_max_discount_interval) {
                             intervals = +reward_max_discount_interval;
+                            console.log('interval 1401');
+                            debugger
                         }
                         // reward_discount_type e.g( 1 discount in value, 2 discount in percentage )
-                        let reward_discount_value:number  = 0;
+                        let reward_discount_value:number  =  0;
                         let loyalty_offer_discount:number =  +loyaltyOffer.reward_discount_value;
                         ////debugger
                         if (loyaltyOffer.reward_discount_type == 1) {
                             // discount in value
                             reward_discount_value = +loyalty_offer_discount * +intervals;
+                            console.log('reward_discount_value 1418 => '+reward_discount_value);
                             if(loyaltyOffer.reward_max_discount_value){
                                 let reward_max_discount_value:number = loyaltyOffer.reward_max_discount_value
                                 if(reward_max_discount_value > 0){
                                     if (reward_discount_value > reward_max_discount_value) {
                                         reward_discount_value = reward_max_discount_value;
+                                        console.log('reward_discount_value 1418');
                                     }
                                 }
                             }
@@ -1421,11 +1425,14 @@ export class DataService {
                         else {
                             //  discount in percentage
                             reward_discount_value =  +(loyalty_offer_discount/100) * +totalCurrentOrderSale;
+                            console.log(`loyalty_offer_discount => ${reward_discount_value} == totalCurrentOrderSale=>${totalCurrentOrderSale}`);
+                            console.log('reward_discount_value 1418 => '+reward_discount_value);
                             if(loyaltyOffer.reward_max_discount_value){
                                 let reward_max_discount_value:number = +loyaltyOffer.reward_max_discount_value;
                                 if(reward_max_discount_value > 0){
                                     if (reward_discount_value > reward_max_discount_value) {
                                         reward_discount_value = reward_max_discount_value;
+                                        console.log('reward_discount_value 1431');
                                     }
                                 }
                             }
@@ -1456,6 +1463,7 @@ export class DataService {
                         let reward_max_discount_interval:number = loyaltyOffer.reward_max_discount_interval;
                         if (intervals > reward_max_discount_interval) {
                             intervals = +reward_max_discount_interval;
+                            console.log('interval 1461');
                         }
                         let reward_free_qty:number = loyaltyOffer.reward_free_qty * intervals;
                         total_discount             =   +reward_free_qty;

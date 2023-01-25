@@ -1387,16 +1387,17 @@ export class DataService {
             // //debugger
             if(sales_value >=  sale_criteria_min_value) {
                 // Check Discount is reward_max_discount_interval
-                let sale_criteria_max_interval:number = loyaltyOffer.sale_criteria_max_interval;
-                let retailer_interval_count:number    = loyaltyOffer.retailer.interval_count;
-                let total_discount:number             = 0;
-                let intervals:number                  = 0;
+                let sale_criteria_max_interval:number   = +loyaltyOffer.sale_criteria_max_interval;
+                let retailer_interval_count:number      = +loyaltyOffer.retailer.interval_count;
+                let total_discount:number               = 0;
+                let intervals:number                    = 0;
+                let reward_max_discount_interval:number = +sale_criteria_max_interval - +retailer_interval_count;
                 if (retailer_interval_count < sale_criteria_max_interval) {
                     // Check  reward_type e.g(1 discount on value, 2 free_product)
                     if (loyaltyOffer.reward_type == 1) {
                         // Check Reward Apply On
                         intervals = Math.floor(totalCurrentOrderSale / sale_criteria_min_value);
-                        let reward_max_discount_interval:number = loyaltyOffer.reward_max_discount_interval;
+                        //let reward_max_discount_interval:number = loyaltyOffer.reward_max_discount_interval;
                         if (intervals > reward_max_discount_interval) {
                             intervals = +reward_max_discount_interval;
                         }
@@ -1456,7 +1457,7 @@ export class DataService {
                     }
                     else {
                         intervals = Math.floor(sales_value / sale_criteria_min_value);
-                        let reward_max_discount_interval:number = loyaltyOffer.reward_max_discount_interval;
+                        //let reward_max_discount_interval:number = loyaltyOffer.reward_max_discount_interval;
                         intervals = loyaltyOffer.reward_free_qty * intervals;
                         if (intervals > reward_max_discount_interval) {
                             intervals = +reward_max_discount_interval;
@@ -1679,9 +1680,11 @@ export class DataService {
   orderSchemeDiscount(items:any):number{
       let price:number = 0;
       if(items){
-          items.forEach(item=>{
-              price = price + (+item.stockQty * item.scheme_discount);
+          items.forEach(item=>{ 
+            price = +price + (item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(+item.stockQty * +item.scheme_discount)) ;
+            debugger
           })
+          debugger
       }
       return price;
   }

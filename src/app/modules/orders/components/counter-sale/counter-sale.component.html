@@ -755,6 +755,7 @@
                 id="productlist01"
                 (click)="showProductsList($event)"
                 class="btn btn-primary ml-15"
+                [disabled]="isChequeAdded || isCreditAdded"
               >
                 Add Product
               </button>

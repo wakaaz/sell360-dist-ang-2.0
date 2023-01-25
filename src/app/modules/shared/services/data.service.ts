@@ -1391,6 +1391,7 @@ export class DataService {
                 let sale_criteria_max_interval:number = loyaltyOffer.sale_criteria_max_interval;
                 let retailer_interval_count:number    = loyaltyOffer.retailer.interval_count;
                 let intervals:number                  = 0;
+                let interval_discount_value           = 0;
                 let total_discount:number             = 0;
                 if (retailer_interval_count < sale_criteria_max_interval) {
                     // Check  reward_type e.g(1 discount on value, 2 free_product)
@@ -1424,12 +1425,14 @@ export class DataService {
                         }
                         else {
                             //  discount in percentage
+                            let totalCurrentOrderSale1:number = +loyaltyOffer.sale_criteria_min_value * +intervals 
+
                             reward_discount_value =  +(loyalty_offer_discount/100) * +totalCurrentOrderSale;
-                            console.log(`loyalty_offer_discount => ${reward_discount_value} == totalCurrentOrderSale=>${totalCurrentOrderSale}`);
+                            console.log(`loyalty_offer_discount => ${reward_discount_value} == totalCurrentOrderSale=>${totalCurrentOrderSale} == totalCurrentOrderSale1=>${totalCurrentOrderSale1}`);
                             console.log('reward_discount_value 1418 => '+reward_discount_value);
                             if(loyaltyOffer.reward_max_discount_value){
                                 let reward_max_discount_value:number = +loyaltyOffer.reward_max_discount_value;
-                                if(reward_max_discount_value > 0){
+                                if(reward_max_discount_value > 0){ 
                                     if (reward_discount_value > reward_max_discount_value) {
                                         reward_discount_value = reward_max_discount_value;
                                         console.log('reward_discount_value 1431');
@@ -1438,20 +1441,30 @@ export class DataService {
                             }
                         }
                         
+                        
+
+
                         //calculate discount on each order item
                         const totalItem     =   orderDetails.items.length;
                         orderDetails.items  =   orderDetails.items.map(item=>{
                             item.loyalty_offer_id           =  loyaltyOffer.id;
                             item.loyalty_offer_type         =  loyaltyOffer.reward_type;
                             item.loyalty_offer_discount_type=  loyaltyOffer.reward_discount_type;
+                           
                             if(reward_discount_value < totalCurrentOrderSale){
-                                let itemQty                     =  Math.floor(item.stockQty);
-                                let total_item_discount         =  +reward_discount_value / +totalItem;
-                                reward_each_item_discount       =  +total_item_discount / +itemQty;
-                                item.loyalty_offer_discount     =  +loyalty_offer_discount;
-                                item.loyalty_offer_discount_pkr =  +reward_each_item_discount;
-                                item.total_item_discount        =  +total_item_discount;
-                                total_discount                  =  +total_discount + +total_item_discount;
+                                let item_wtg:number             =  0;
+                                let total_item_discount:number  =  0;   
+                                if(loyaltyOffer.sale_criteria_value_type == 1){
+                                   item_wtg                    =  (+item.gross_amount/ +totalCurrentOrderSale)*100 ;
+                                }else{
+                                   item_wtg                    =  (+item.net_amount/ +totalCurrentOrderSale)*100 ;
+                                }
+                                total_item_discount            =  (+item_wtg/100) * +reward_discount_value; 
+                                let itemQty                    =  Math.floor(item.stockQty);
+                                item.loyalty_offer_discount    =  +loyalty_offer_discount;
+                                item.loyalty_offer_discount_pkr=  +total_item_discount/+itemQty;
+                                item.total_item_discount       =  +total_item_discount;
+                                total_discount                 =  +total_discount + +total_item_discount;
                                 // //debugger
                             }
                             // //debugger

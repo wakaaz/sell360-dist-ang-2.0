@@ -616,11 +616,18 @@
                           </button>
                           <button
                             *ngIf="product.isAdded"
+                            class="btn btn-default mb-0 dont-close-quantity"
+                            [disabled]="product.isAdded"
+                            >
+                            Added
+                          </button>
+                          <!-- <button
+                            *ngIf="product.isAdded"
                             class="btn btn-default mb-0 red-bg dont-close-product"
                             (click)="removeProductFromOrder(product)"
                           >
                             Remove
-                          </button>
+                          </button> -->
                         </td>
                       </tr>
                     </tbody>

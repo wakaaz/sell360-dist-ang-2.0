@@ -163,6 +163,7 @@ export class CounterSaleComponent implements OnInit {
           this.allProducts = res.data.inventory.map((pr) => {
             pr.net_amount = 0.0;
             pr.isAdded = false;
+            pr.qtyAdded = false;
            let  availble_stock:number = (pr.availble_stock_qty ? +pr.availble_stock_qty:0) - (pr.allocated_stock_qty ? +pr.allocated_stock_qty:0)
             pr.availble_stock = availble_stock > 0 ? +availble_stock:0;
             return pr;
@@ -218,6 +219,7 @@ export class CounterSaleComponent implements OnInit {
     this.addedPayment = '';
     this.allProducts = this.allProducts.map((pr) => {
       pr.isAdded = false;
+      pr.qtyAdded = false;
       return pr;
     });
     this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
@@ -748,17 +750,20 @@ export class CounterSaleComponent implements OnInit {
         this.allProducts = this.allProducts.map((prod) => {
           if (prod.item_id === this.selectedProduct.item_id) {
             prod.isAdded = true;
+            prod.qtyAdded = true;
           }
           return prod;
         });
         this.dispProducts = this.dispProducts.map((prod) => {
           if (prod.item_id === this.selectedProduct.item_id) {
             prod.isAdded = true;
+            prod.qtyAdded = true;
           }
           return prod;
         }); 
         this.selectedProducts = this.selectedProducts.filter(x=> !(x.item_id==this.selectedProduct.item_id));
         this.selectedProduct.isAdded = true;
+        this.selectedProduct.qtyAdded = true;
         this.selectedProducts.push(this.selectedProduct);
         
         if (!this.selectedProductsIds.includes(this.selectedProduct.item_id)) {
@@ -772,16 +777,19 @@ export class CounterSaleComponent implements OnInit {
         this.allProducts = this.allProducts.map((prod) => {
           if (prod.item_id === this.selectedProduct.item_id) {
             prod.isAdded = true;
+            prod.qtyAdded = true;
           }
           return prod;
         });
         this.dispProducts = this.dispProducts.map((prod) => {
           if (prod.item_id === this.selectedProduct.item_id) {
             prod.isAdded = true;
+            prod.qtyAdded =true;
           }
           return prod;
         });
         this.selectedProduct.isAdded = true;
+        this.selectedProduct.qtyAdded= true;
         this.selectedProducts.push(this.selectedProduct);
         
         if (!this.selectedProductsIds.includes(this.selectedProduct.item_id)) {
@@ -839,12 +847,14 @@ export class CounterSaleComponent implements OnInit {
     this.allProducts = this.allProducts.map((prod) => {
       if (prod.item_id === product.item_id) {
         prod.isAdded = false;
+        prod.qtyAdded = false;
       }
       return prod;
     });
     this.dispProducts = this.dispProducts.map((prod) => {
       if (prod.item_id === product.item_id) {
         prod.isAdded = false;
+        prod.qtyAdded =false;
       }
       return prod;
     });

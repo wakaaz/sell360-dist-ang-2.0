@@ -605,21 +605,21 @@
                         </td>
                         <td>
                           <button
-                            *ngIf="!product.isAdded"
+                            *ngIf="!product.qtyAdded"
                             data-toggle="modal"
                             data-target="#exampleModal"
                             class="btn btn-default mb-0 dont-close-quantity"
                             (click)="openQuantityModal(product)"
                             [disabled]="+product.availble_stock<1"
                           >
-                            Add
+                            Add 
                           </button>
                           <button
-                            *ngIf="product.isAdded"
-                            class="btn btn-default mb-0 dont-close-quantity"
+                            *ngIf="product.qtyAdded"
+                            class="btn btn-default mb-0 red-bg dont-close-quantity"
                             [disabled]="product.isAdded"
                             >
-                            Added
+                            Added 
                           </button>
                           <!-- <button
                             *ngIf="product.isAdded"
@@ -824,6 +824,16 @@
                         style="display: block; opacity: 0.6; padding-top: 5px"
                       >
                         SCM: {{product.selectedScheme ? product.selectedScheme.title:''}} id-{{product.scheme_id}}
+                      </span>
+                      <span
+                        style="display: block; opacity: 0.6; padding-top: 5px"
+                      >
+                        LDis: {{product.loyalty_offer_discount ? product.loyalty_offer_discount:''}}
+                      </span>
+                      <span
+                        style="display: block; opacity: 0.6; padding-top: 5px"
+                      >
+                        TDT: {{product.total_item_discount ? product.total_item_discount:''}}
                       </span>
                     </div>
                   </div>

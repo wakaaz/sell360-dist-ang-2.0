@@ -1082,7 +1082,7 @@ export class DataService {
       let schemeitems:any         = [];
       let orderDetails_items:any  = [];
       let loyalty_free_items:any  = orderDetails.loyalty_free_items; 
-      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && (x.quantity > 0 || x.stockQty >0 || x.scheme_id > 0)))));
+      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && (+x.quantity > 0 || +x.stockQty >0 || +x.scheme_id > 0 || +x.scheme_quantity_free > 0)))));
        orderDetails.items.map((item) => {
           //add for scheme offers
           if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
@@ -1177,7 +1177,7 @@ export class DataService {
                         newItem.total_tax_amount=0;
                         newItem.total_amount_after_tax= 0;
                         newItem.total_discount=0;
-                        //newItem.isAdded=true;
+                        newItem.isAdded=true;
                         ////
                         newItem = this.updateItemcalculation(newItem);
                         
@@ -1281,7 +1281,7 @@ export class DataService {
                       newItem.total_tax_amount=0;
                       newItem.total_amount_after_tax= 0;
                       newItem.total_discount=0;
-                      //newItem.isAdded=true;
+                      newItem.isAdded=true;
                       ////
                       
                       newItem = this.updateItemcalculation(newItem);

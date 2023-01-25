@@ -1675,6 +1675,7 @@ export class DataService {
           })
       }
       return price;
+      
   }
 
   orderSchemeDiscount(items:any):number{

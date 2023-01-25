@@ -41,6 +41,7 @@ export class OrderDispatchedComponent implements OnInit {
 
   searchText: string;
   assignmentId: string;
+  employeeId: number;
 
   salemanId: number;
   currentTab: number;
@@ -59,9 +60,11 @@ export class OrderDispatchedComponent implements OnInit {
   finalLoad: any;
 
   inventory: Array<any> = [];
+
   ordersRetailers: Array<any> = [];
   specialDiscounts: Array<any> = [];
   schemes: Array<any> = [];
+  loyaltyoffers: Array<any> = [];
   discountSlabs: Array<any> = [];
   credits: Array<any> = [];
   recoveryRetailers: Array<any> = [];
@@ -89,6 +92,8 @@ export class OrderDispatchedComponent implements OnInit {
       this.checkAllocationSuccess = x;
     });
     this.currentTab = 1;
+    this.employeeId = null;
+    this.loyaltyoffers = null;
     this.setLoad();
     this.setCurrentLoad(1);
     this.load.content.push(this.currentLoadContent);
@@ -138,10 +143,12 @@ export class OrderDispatchedComponent implements OnInit {
       items: [],
     };
   }
+
   closeSideBarEvent(value: any) {
     this.stockAllocation = null;
     this.getDispatchDetails();
   }
+
   tabChanged(): void {
     switch (this.currentTab) {
       case 1:
@@ -182,6 +189,7 @@ export class OrderDispatchedComponent implements OnInit {
     this.getDispatchDetails();
     this.tabLoading = false;
   }
+
   getCreditTabData() {
     this.loading = true;
     this.orderService.getCreditdatailsData(this.assignmentId).subscribe((x) => {
@@ -231,12 +239,15 @@ export class OrderDispatchedComponent implements OnInit {
               setTimeout(() => {
                 this.showFinalLoad = true;
               }, 500);
-            } else {
+            } 
+            else {
               this.ordersRetailers = res.data.retailers.map((ret) => {
+                this.employeeId = ret.employee_id;
                 ret.isActive = false;
                 return ret;
               });
               this.orderService.setOrderRetailers([...this.ordersRetailers]);
+              this.getLoyaltyofferData(this.employeeId);
             }
           }
         },
@@ -253,6 +264,36 @@ export class OrderDispatchedComponent implements OnInit {
           }
         }
       );
+  }
+
+  getLoyaltyofferData(employee_id:number): void {
+    if(this.loyaltyoffers == null){
+
+      this.orderService.getLoyaltyoffers(employee_id).subscribe(
+        (res) => {
+          if (res.status === 200) { 
+            this.loyaltyoffers = res.data;
+          } else {
+            const toast: Toaster = {
+              type: 'error',
+              message: res.message,
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+        },
+        (error) => {
+          if (error.status !== 1 && error.status !== 401) {
+            const toast: Toaster = {
+              type: 'error',
+              message: 'Cannot fetch Loyalty Offers. Please try again',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+        }
+      );
+    }
   }
 
   getDispatchOrdersDetail(): void {
@@ -340,7 +381,7 @@ export class OrderDispatchedComponent implements OnInit {
           this.inventory = res.data.inventory;
           this.specialDiscounts = res.data.special_discount;
           if(loaddispatch){
-            this.getDispatchDetails();
+            this.getDispatchDetails(); 
           }
           
         }
@@ -450,8 +491,6 @@ export class OrderDispatchedComponent implements OnInit {
     this.getDispatchDetails();
   }
 
-
-
   addNewProductToOrder(product: any): void {
     this.newProduct = product;
   }
@@ -560,10 +599,11 @@ export class OrderDispatchedComponent implements OnInit {
       let finalQty            =   stockQty+free_qty;
 
       let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
-      let ttl_trade_discount  =  + stockQty * item.trade_discount_pkr;
-      let ttl_special_discount=  + stockQty * item.special_discount ? +item.special_discount:0;
-      let ttl_extra_discount  =  + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
-      let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
+      let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
+      let ttl_special_discount=   item.special_discount ? stockQty * +item.special_discount:0;
+      let ttl_extra_discount  =   +item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+      let ttl_loyalty_discount=   item.loyalty_offer_discount_pkr ? +stockQty * +item.loyalty_offer_discount_pkr : 0;
+      let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount + ttl_loyalty_discount;
       let final_price         =   gross_sale_amount - total_discount;                          
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;    
@@ -591,7 +631,11 @@ export class OrderDispatchedComponent implements OnInit {
         scheme_min_quantity: item.scheme_min_quantity || 0,
         scheme_quantity_free: item.scheme_quantity_free || 0,
         scheme_discount_type: item.scheme_discount_type || 0,
-        gift_value: item.gift_value || 0,
+        gift_value: item.gift_value || 0,loyalty_offer_id: item.loyalty_offer_id,
+        loyalty_offer_type : item.loyalty_offer_type ? item.loyalty_offer_type :null,
+        loyalty_offer_discount_type: item.loyalty_offer_discount_type? item.loyalty_offer_discount_type :null,
+        loyalty_offer_discount: item.loyalty_offer_discount? item.loyalty_offer_discount :null,
+        loyalty_offer_discount_pkr : item.loyalty_offer_discount_pkr? item.loyalty_offer_discount_pkr :null,  
         scheme_discount: item.scheme_discount,
         unit_price_after_scheme_discount: item.unit_price_after_scheme_discount,
         slab_id: item.slab_id,
@@ -681,9 +725,11 @@ export class OrderDispatchedComponent implements OnInit {
       }
     );
   }
+
   closeHoldOrderModal(event: Event):void{
     document.getElementById('close-hold-model').click();
   }
+
   holdOrder(event: Event):void{
     if(this.holdOrderParams.hold_reason.trim() != ''){
       document.getElementById('close-hold-model').click();
@@ -989,6 +1035,7 @@ export class OrderDispatchedComponent implements OnInit {
       this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation,this.dispatchOrderDetail);
     
   }
+
   retailerSelected(order: any): void {
     if (order.isSelected) {
       this.currentLoadContent = this.dispatchService.setLoadContent(
@@ -1029,7 +1076,6 @@ export class OrderDispatchedComponent implements OnInit {
     this.currentLoadContent = this.dispatchService.setActiveLoadContent(this.currentLoadContent,this.stockAllocation,this.dispatchOrderDetail);
     
   }
-
 
   getItemName(itemId: number): string {
     const item = this.inventory.find((x) => x.item_id === itemId);

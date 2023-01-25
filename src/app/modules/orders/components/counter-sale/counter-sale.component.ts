@@ -711,9 +711,9 @@ export class CounterSaleComponent implements OnInit {
 
 
         //Apply Loyal offer discount
-        this.selectedRetailer.items = this.selectedProducts
-        this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
-        this.selectedProducts       =  this.selectedRetailer.items; 
+        this.selectedRetailer.items =   this.selectedProducts
+        this.selectedRetailer       =   this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+        this.selectedProducts       =   this.selectedRetailer.items; 
 
         //update Scheme Free Products to scheme Items
         this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
@@ -721,6 +721,12 @@ export class CounterSaleComponent implements OnInit {
       }  
 
       this.calculateTotalBill();
+      setTimeout(()=>{      
+        if(document.getElementById(product.item_id)){
+          (document.getElementById(product.item_id) as HTMLInputElement).focus();
+        }
+      },50); 
+
     }
   }
   addProductToOrder(): void {

@@ -89,6 +89,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   routeRetailers: Array<any> = [];
   retailersList: Array<any> = [];
   schemes: Array<any> = [];
+  loyaltyoffers: Array<any> =[];
   inventory: Array<any> = [];
   allProducts: Array<any> = [];
   specialDiscounts: Array<any> = [];

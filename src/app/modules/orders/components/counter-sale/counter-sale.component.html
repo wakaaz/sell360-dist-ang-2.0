@@ -850,6 +850,7 @@
                     <input
                       class="addItemCell2_input"
                       type="text"
+                      [id]="product.item_id"
                       [disabled]="isChequeAdded || isCreditAdded"
                       (keyup)="setQuantity(product)"
                       (keydown)="isNumber($event, 'quantity')"

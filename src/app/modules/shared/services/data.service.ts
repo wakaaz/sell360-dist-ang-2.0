@@ -495,7 +495,7 @@ export class DataService {
                                             x.territory_id === retailer.territory_id &&
                                             x.channel_id === retailer.retailer_type_id
                                         ); 
-           //  //debugger                           
+           //  ////debugger                           
                                       
     if(!selecteditem.slab_id || selecteditem.slab_id === null || selecteditem.slab_id === 0){
       selecteditem.slab_id =  null;
@@ -504,7 +504,7 @@ export class DataService {
       const categoryslab   =  fileteredSlabs.filter(x => x.slab_type === 5) ? fileteredSlabs.filter(x => x.slab_type == 5) : null;  
       const generalslabs   =  fileteredSlabs.filter(x => x.slab_type < 3)  ? fileteredSlabs.filter(x => x.slab_type <= 2)  : null;                                                                    
       // if(selecteditem.item_id == 26) 
-       //  //debugger   
+       //  ////debugger   
       if(skuslab){
         selecteditem = this.applySlabToItem(selecteditem,skuslab,3);
       }     
@@ -518,11 +518,11 @@ export class DataService {
         selecteditem = this.applySlabToItem(selecteditem,generalslabs,0);
       } 
       // if(selecteditem.item_id == 26) 
-      //   //debugger 
+      //   ////debugger 
       //  
     }    
     //////
-    //debugger
+    ////debugger
     return selecteditem; 
     
   }
@@ -651,7 +651,7 @@ export class DataService {
         slabmodel.itemDiscountedTp          =       itemDiscountedTp;
         //////
         // if(item.item_id == 26) 
-        // //debugger 
+        // ////debugger 
         if(itemslab && itemslab.discount_slab_id != null && +item.stockQty > 0){
           
             if(slabmodel.slab_rule == 2){
@@ -692,7 +692,7 @@ export class DataService {
               }
               rangevalue          =   rangecontent ? this.rangecontentGrossAmountSum(rangecontent,item.item_id):0;
               // if(item.item_id == 26)
-              // //debugger
+              // ////debugger
             } 
             
             if (itemslab.discount_filter == 'slab' ) {
@@ -747,7 +747,7 @@ export class DataService {
         item.trade_discount_pkr                 = slabmodel.discount_pkr; 
         item.unit_price_after_merchant_discount = slabmodel.itemDiscountedTp;
         // if(item.item_id == 26)
-        ////debugger
+        //////debugger
       return item;
     });
     return this.updateOrderitemscalculation(items);
@@ -757,11 +757,11 @@ export class DataService {
     rangecontent.forEach(b => {
       var gr_amnt = ((+b.stockQty) * (b.original_price ? +b.original_price:+b.item_trade_price));
       // if(item_id == 26)
-      // //debugger
+      // ////debugger
       ttl_Amnt  = ttl_Amnt + gr_amnt;
     });
     // if(item_id == 26)
-    //     //debugger 
+    //     ////debugger 
     return ttl_Amnt ? ttl_Amnt : 0; 
   }
 
@@ -1082,8 +1082,10 @@ export class DataService {
       let schemeitems:any         = [];
       let orderDetails_items:any  = [];
       let loyalty_free_items:any  = orderDetails.loyalty_free_items; 
-      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && (+x.quantity > 0 || +x.stockQty >0 || +x.scheme_id > 0 || +x.scheme_quantity_free > 0)))));
-       orderDetails.items.map((item) => {
+      console.log("BFR===>"+orderDetails.items.length)
+      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && (+x.quantity > 0 || +x.stockQty >0 || +x.scheme_id > 0 || +x.scheme_quantity_free > 0))))); 
+      console.log("AFR===>"+orderDetails.items.length)
+      orderDetails.items.map((item) => {
           //add for scheme offers
           if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
             if(item.scheme_free_items.length > 0){
@@ -1191,7 +1193,7 @@ export class DataService {
               }
           }
           //add for loyalty offers
-          if(loyalty_free_items.length > 0 && loyalty_free_items.some(x=>x.item_id==item.item_id)){
+          if(loyalty_free_items && loyalty_free_items.length > 0 && loyalty_free_items.some(x=>x.item_id==item.item_id)){
             loyalty_free_items.forEach(x=>{
               if(x.free_qty > 0){
               let stockitem = allProducts.filter(y=> y.item_id == x.item_id ) ? allProducts.filter(y=> y.item_id == x.item_id )[0]:null;
@@ -1310,7 +1312,7 @@ export class DataService {
       })
     }
     ////
-    ////debugger
+    //////debugger
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
 
@@ -1384,7 +1386,7 @@ export class DataService {
             }
             sales_value =  sales_value + totalCurrentOrderSale;
             // Compare value is eligable to  loyal offer min value
-            // //debugger
+            // ////debugger
             if(sales_value >=  sale_criteria_min_value) {
                 // Check Discount is reward_max_discount_interval
                 let sale_criteria_max_interval:number   = +loyaltyOffer.sale_criteria_max_interval;
@@ -1404,7 +1406,7 @@ export class DataService {
                         // reward_discount_type e.g( 1 discount in value, 2 discount in percentage )
                         let reward_discount_value:number  =  0;
                         let loyalty_offer_discount:number =  +loyaltyOffer.reward_discount_value;
-                        ////debugger
+                        //////debugger
                         if (loyaltyOffer.reward_discount_type == 1) {
                             // discount in value
                             reward_discount_value = +loyalty_offer_discount * +intervals;
@@ -1448,9 +1450,9 @@ export class DataService {
                                 item.loyalty_offer_discount    =  +loyalty_offer_discount;
                                 item.loyalty_offer_discount_pkr=  +total_item_discount / +itemQty;
                                 item.total_item_discount       =  +total_item_discount;
-                                //debugger
+                                ////debugger
                             }
-                            //debugger
+                            ////debugger
                             return item;
                         })
                         total_discount  =  +reward_discount_value;
@@ -1475,7 +1477,7 @@ export class DataService {
             }
         }
     } 
-    // //debugger
+    // ////debugger
     orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items);
     console.log("loyalty_offer_interval==> "+orderDetails.loyalty_offer_interval);
     console.log("loyalty_offer_discount==> "+orderDetails.loyalty_offer_discount);
@@ -1580,7 +1582,7 @@ export class DataService {
         item.total_tax_amount                     =   +total_tax_amount;
         item.total_amount_after_tax               =   +ttl_amnt_aftr_tax;
         item.total_discount                       =   +total_discount; 
-        // //debugger
+        // ////debugger
         return JSON.parse(JSON.stringify(item));
   }
   updateOrderitemscalculation(items):any{
@@ -1630,7 +1632,7 @@ export class DataService {
         item.total_tax_amount                     =   +total_tax_amount;
         item.total_amount_after_tax               =   +ttl_amnt_aftr_tax;
         item.total_discount                       =   +total_discount; 
-        // //debugger
+        // ////debugger
         return item; 
     });
     return JSON.parse(JSON.stringify(items));
@@ -1647,14 +1649,14 @@ export class DataService {
   }
   orderGrossAmount(items:any):number{
       let price:number = 0;
-      //debugger
+      ////debugger
       if(items){
           items.forEach(item=>{
               price = price + +(item.gross_amount ? item.gross_amount:0);
-              //debugger
+              ////debugger
           })
       }
-      //debugger
+      ////debugger
       return price;
   }
   orderNetAmount(items:any):number{
@@ -1675,7 +1677,7 @@ export class DataService {
           })
       }
       return price;
-      
+
   }
 
   orderSchemeDiscount(items:any):number{
@@ -1683,9 +1685,9 @@ export class DataService {
       if(items){
           items.forEach(item=>{ 
             price = +price + (item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(+item.stockQty * +item.scheme_discount)) ;
-            debugger
+            //debugger
           })
-          debugger
+          //debugger
       }
       return price;
   }

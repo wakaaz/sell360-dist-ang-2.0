@@ -725,7 +725,7 @@ export class CounterSaleComponent implements OnInit {
         if(document.getElementById(product.item_id)){
           (document.getElementById(product.item_id) as HTMLInputElement).focus();
         }
-      },50); 
+      },30); 
 
     }
   }

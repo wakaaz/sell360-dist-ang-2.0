@@ -1349,6 +1349,7 @@ export class DataService {
             }
         });
     }
+    orderDetails.loyalty_offer_reward_type  =   loyaltyOffer.reward_type;
     
     if(loyaltyOffer){
 

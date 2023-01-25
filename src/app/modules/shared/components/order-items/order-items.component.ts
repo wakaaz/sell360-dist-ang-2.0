@@ -290,11 +290,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
       this.calculateTotalBill(); 
       this.productUpdated.emit();
-      setTimeout(()=>{      
-        if(document.getElementById(product.item_id)){
+      setTimeout(()=>{       
+        if(document.getElementById(product.item_id)){ 
           (document.getElementById(product.item_id) as HTMLInputElement).focus();
         }
-      },50);   
+      },30);   
   
     }
   } 
@@ -554,7 +554,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     this.totalSchemeDiscount        =    this.dataService.orderSchemeDiscount(this.orderDetail.items);
 
     //Loyalty Discount
-    this.totalloyaltyDiscount       =    this.dataService.orderLoyaltyDiscount(this.selectedRetailer);
+    this.totalloyaltyDiscount       =    this.dataService.orderLoyaltyDiscount(this.orderDetail);
 
     // Trade Discount
     this.totalMerchantDiscount      =    this.dataService.orderTradeDiscount(this.orderDetail.items);

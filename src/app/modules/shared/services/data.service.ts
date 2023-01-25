@@ -1462,7 +1462,7 @@ export class DataService {
                                 total_item_discount            =  (+item_wtg/100) * +reward_discount_value; 
                                 let itemQty                    =  Math.floor(item.stockQty);
                                 item.loyalty_offer_discount    =  +loyalty_offer_discount;
-                                item.loyalty_offer_discount_pkr=  +total_item_discount/+itemQty;
+                                item.loyalty_offer_discount_pkr=  +total_item_discount / +itemQty;
                                 item.total_item_discount       =  +total_item_discount;
                                 total_discount                 =  +total_discount + +total_item_discount;
                                 // //debugger
@@ -1567,9 +1567,9 @@ export class DataService {
 
         let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(stockQty * item.scheme_discount) ;
         let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
-        let ttl_special_discount=   +stockQty * item.special_discount ? +item.special_discount:0;
+        let ttl_special_discount=   item.special_discount ? +stockQty * +item.special_discount:0;
         let ttl_extra_discount  =   +item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
-        let ttl_loyalty_discount=   +stockQty * item.loyalty_offer_discount_pkr ? +item.loyalty_offer_discount_pkr : 0;
+        let ttl_loyalty_discount=   item.loyalty_offer_discount_pkr ? +stockQty * +item.loyalty_offer_discount_pkr : 0;
         let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount + ttl_loyalty_discount;
         let final_price         =   gross_sale_amount - total_discount;                          
         let tax_in_value        =   0;                          
@@ -1616,9 +1616,9 @@ export class DataService {
 
         let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(stockQty * item.scheme_discount) ;
         let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
-        let ttl_special_discount=   +stockQty * item.special_discount ? +item.special_discount:0;
+        let ttl_special_discount=   item.special_discount ? +stockQty * +item.special_discount:0;
         let ttl_extra_discount  =   +item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
-        let ttl_loyalty_discount=   +stockQty * item.loyalty_offer_discount_pkr ? +item.loyalty_offer_discount_pkr : 0;
+        let ttl_loyalty_discount=   item.loyalty_offer_discount_pkr ? +stockQty * +item.loyalty_offer_discount_pkr : 0;
         let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount + ttl_loyalty_discount;
         let final_price         =   gross_sale_amount - total_discount;                          
         let tax_in_value        =   0;                          

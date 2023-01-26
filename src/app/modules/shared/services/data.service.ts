@@ -1352,16 +1352,17 @@ export class DataService {
     orderDetails.loyalty_offer_reward_type  =   loyaltyOffer.reward_type;
     
     if(loyaltyOffer){
-
         if(loyaltyOffer.retailer){
-            
+
             // Pervious Sales
-            let sales_value:number              =  loyaltyOffer.retailer.sales_value;
-            let sale_criteria_min_value:number  =  loyaltyOffer.sale_criteria_min_value;
+            let sales_value:number                  =  +loyaltyOffer.retailer.sales_value;
+            let sale_criteria_min_value:number      =  +loyaltyOffer.sale_criteria_min_value;
+            let reward_max_discount_value:number    =  +loyaltyOffer.reward_max_discount_value - +loyaltyOffer.retailer.discount_amount_availed;
             let totalCurrentOrderSale:number    =  0;
             // Check Booking value is allowed  or not
+            if(reward_max_discount_value > 0){
 
-            if(loyaltyOffer.allow_live_booking_sale == 1){
+              if(loyaltyOffer.allow_live_booking_sale == 1){
                 // check sale_criteria e.g 1 volume or 2 value
                 if(loyaltyOffer.sale_criteria == 1){
                     // Check "sale_criteria_unit_type": 1,  e.g (1 Primary  for 2 Secondary)
@@ -1384,22 +1385,32 @@ export class DataService {
                     }
 
                 }
-            }
-            sales_value =  sales_value + totalCurrentOrderSale;
+              }
+              sales_value =  sales_value + totalCurrentOrderSale;
             // Compare value is eligable to  loyal offer min value
             // ////debugger
-            if(sales_value >=  sale_criteria_min_value) {
+              if(sales_value >=  sale_criteria_min_value) {
                 // Check Discount is reward_max_discount_interval
-                let sale_criteria_max_interval:number   = +loyaltyOffer.sale_criteria_max_interval;
+                //offer total interval
+                let sale_criteria_max_interval:number   = +loyaltyOffer.sale_criteria_max_interval; 
+
+                //availed interval
                 let retailer_interval_count:number      = +loyaltyOffer.retailer.interval_count;
+
                 let total_discount:number               = 0;
                 let intervals:number                    = 0;
+
+                //avialable interval to use in current or next orders
                 let reward_max_discount_interval:number = +sale_criteria_max_interval - +retailer_interval_count;
-                if (retailer_interval_count < sale_criteria_max_interval) {
-                    // Check  reward_type e.g(1 discount on value, 2 free_product)
+
+                if (reward_max_discount_interval > 0) {
+                    // Check  reward_type e.g(1 discount on order value, 2 free_product)
+
+                    // discount on order value
                     if (loyaltyOffer.reward_type == 1) {
                         // Check Reward Apply On
-                        intervals = Math.floor(totalCurrentOrderSale / sale_criteria_min_value);
+                        intervals = Math.floor(sales_value / sale_criteria_min_value);
+                        intervals = intervals - +retailer_interval_count;
                         //let reward_max_discount_interval:number = loyaltyOffer.reward_max_discount_interval;
                         if (intervals > reward_max_discount_interval) {
                             intervals = +reward_max_discount_interval;
@@ -1407,29 +1418,19 @@ export class DataService {
                         // reward_discount_type e.g( 1 discount in value, 2 discount in percentage )
                         let reward_discount_value:number  =  0;
                         let loyalty_offer_discount:number =  +loyaltyOffer.reward_discount_value;
-                        //////debugger
+                        /// debugger
                         if (loyaltyOffer.reward_discount_type == 1) {
                             // discount in value
                             reward_discount_value = +loyalty_offer_discount * +intervals;
-                            if(loyaltyOffer.reward_max_discount_value){
-                                let reward_max_discount_value:number = loyaltyOffer.reward_max_discount_value
-                                if(reward_max_discount_value > 0){
-                                    if (reward_discount_value > reward_max_discount_value) {
-                                        reward_discount_value = reward_max_discount_value;
-                                    }
-                                }
+                            if (reward_discount_value > reward_max_discount_value) {
+                              reward_discount_value = reward_max_discount_value;
                             }
                         }
                         else {
                             //  discount in percentage
                             reward_discount_value =  +(loyalty_offer_discount/100) * +totalCurrentOrderSale;
-                            if(loyaltyOffer.reward_max_discount_value){
-                                let reward_max_discount_value:number = +loyaltyOffer.reward_max_discount_value;
-                                if(reward_max_discount_value > 0){ 
-                                    if (reward_discount_value > reward_max_discount_value) {
-                                        reward_discount_value = reward_max_discount_value;
-                                    }
-                                }
+                            if (reward_discount_value > reward_max_discount_value) {
+                              reward_discount_value = reward_max_discount_value;
                             }
                         }
                         //calculate discount on each order item
@@ -1458,23 +1459,26 @@ export class DataService {
                         })
                         total_discount  =  +reward_discount_value;
                     }
-                    else {
+                    else { //free product
+                      
                         intervals = Math.floor(sales_value / sale_criteria_min_value);
+                        intervals = intervals - +retailer_interval_count;
                         //let reward_max_discount_interval:number = loyaltyOffer.reward_max_discount_interval;
-                        intervals = loyaltyOffer.reward_free_qty * intervals;
                         if (intervals > reward_max_discount_interval) {
                             intervals = +reward_max_discount_interval;
                             console.log('interval 1461');
                         }
-                        total_discount             =   +intervals;
-                        orderDetails.loyalty_free_items   =   [{
+                        let ttl_reward_free_qty =   loyaltyOffer.reward_free_qty * intervals;
+                        total_discount          =   +ttl_reward_free_qty;
+                        orderDetails.loyalty_free_items   =   [{ 
                             item_id     : +loyaltyOffer.reward_item_id,
-                            free_qty    : +intervals
+                            free_qty    : +ttl_reward_free_qty
                         }];
                     }
                     orderDetails.loyalty_offer_interval   =   intervals;
                     orderDetails.loyalty_offer_discount   =   total_discount;
                 }
+              }
             }
         }
     } 
@@ -1483,7 +1487,7 @@ export class DataService {
     console.log("loyalty_offer_interval==> "+orderDetails.loyalty_offer_interval);
     console.log("loyalty_offer_discount==> "+orderDetails.loyalty_offer_discount);
     return orderDetails;
-}
+  }
   nullifyLoyaltyDiscount(orderDetails):any{
     orderDetails.items  =   orderDetails.items.map(item=>{
       item.loyalty_offer_id           =  null;

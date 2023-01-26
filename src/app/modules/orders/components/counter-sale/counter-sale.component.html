@@ -837,7 +837,7 @@
                       <span
                         style="display: block; opacity: 0.6; padding-top: 5px"
                       >
-                        TDT: {{product.total_item_discount ? product.total_item_discount:''}}
+                        TDT: {{product.total_item_discount ? (+product.total_item_discount   | number: "1.2-2") :''}}
                       </span>
                     </div>
                   </div>

@@ -38,7 +38,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   @Input() merchantDiscount: any;
   @Input() discountSlabs: any; 
   @Input() schemes: any;
-  @Input() loyaltyoffers:any;
+  @Input() loyaltyoffers:Array<any>;
   @Input() newProduct: any;
   @Input() returnedProduct: any;
   @Input() specialDiscounts: Array<any>;

@@ -120,6 +120,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     this.getSchemesData();
     this.setPaymentInitalValues();
     this.setSpotSaleOrder();
+    this.loyaltyoffers = null;
     this.salemanId = +this.route.snapshot.paramMap.get('saleManId');
     this.orderDate = this.route.snapshot.paramMap.get('date');
     this.selectedLoadId = +this.route.snapshot.paramMap.get('loadId');
@@ -197,6 +198,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
           if (res.status === 200) {
             this.executionData = { assignment_id: res.data.assignment_id };
             this.retailersList = res.data.retailers;
+            if(this.retailersList[0]){
+              this.getLoyaltyofferData(this.retailersList[0].employee_id);
+            }
             this.allProducts = res.data.all_products;
             this.loadId = res.data.load_id;
             this.spotSaleOrder.retailers = res.data.spot_sale_orders;
@@ -222,7 +226,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             if (res.data.is_dsr) {
               this.changeTab(4);
             }
-          } else {
+          } 
+          else {
             this.toastService.showToaster({
               type: 'error',
               title: 'Error:',
@@ -295,6 +300,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       (res) => {
         if (res.status === 200) {
           this.routeRetailers = res.data;
+          this.getLoyaltyofferData(this.selectedOrderBooker);
           if(this.selectedOrderBooker){
             
             this.routeRetailers    = this.routeRetailers.map(x=>{
@@ -428,6 +434,36 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         }
       );
       this.getDiscountSlabs();
+    }
+  }
+
+  getLoyaltyofferData(employee_id:number): void {
+    if(employee_id != null){
+
+      this.orderService.getLoyaltyoffers(employee_id).subscribe(
+        (res) => {
+          if (res.status === 200) { 
+            this.loyaltyoffers = res.data;
+          } else {
+            const toast: Toaster = {
+              type: 'error',
+              message: res.message,
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+        },
+        (error) => {
+          if (error.status !== 1 && error.status !== 401) {
+            const toast: Toaster = {
+              type: 'error',
+              message: 'Cannot fetch Loyalty Offers. Please try again',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+        }
+      );
     }
   }
 

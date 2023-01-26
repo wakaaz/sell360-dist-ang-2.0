@@ -687,6 +687,7 @@
                     [(ngModel)]="selectedEmployee"
                     (change)="getRoutes()"
                     placeholder="Select Employee"
+                    [disabled]="isChequeAdded || isCreditAdded"
                   >
                     <ng-option disabled>Select Employee</ng-option>
                     <ng-option
@@ -710,6 +711,7 @@
                     [(ngModel)]="selectedRoute"
                     (change)="getRetailerByRoute()"
                     placeholder="Select Route"
+                    [disabled]="isChequeAdded || isCreditAdded"
                   >
                     <ng-option *ngIf="!selectedEmployee" disabled
                       >Select Employee First</ng-option
@@ -734,6 +736,7 @@
                     [(ngModel)]="selectedRetailer"
                     (change)="getDiscountSlabs()"
                     placeholder="Select Retailer"
+                    [disabled]="isChequeAdded || isCreditAdded"
                   >
                     <ng-option disabled *ngIf="!selectedRoute"
                       >Select Route First</ng-option

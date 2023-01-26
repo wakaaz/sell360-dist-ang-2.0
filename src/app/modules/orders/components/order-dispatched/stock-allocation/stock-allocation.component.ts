@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { forEach } from 'jszip';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { DataService } from 'src/app/modules/shared/services';
 import { OrdersService } from '../../../services/orders.service';
@@ -70,10 +71,17 @@ export class StockAllocationComponent implements OnInit {
       (err) => {
         this.tabLoading = false;
         this.orderService.setCheckAllocationSuccess(false);
+        
+        let itemrror_list:string = '';
+        // if(err.error.error){
+        //   err.error.error.forEach(x=>{
+        //     itemrror_list += "<br>"+x.msg;
+        //   });
+        // }
+
         const toast: Toaster = {
           type: 'error',
-          message:
-            'Requested allocation quantity is greater than available stock.',
+          message:'Requested allocation quantity is greater than available stock.'+itemrror_list, 
           title: 'Error:',
         };
         this.toastService.showToaster(toast);

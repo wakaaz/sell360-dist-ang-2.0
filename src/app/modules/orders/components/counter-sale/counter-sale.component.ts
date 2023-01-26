@@ -693,6 +693,8 @@ export class CounterSaleComponent implements OnInit {
       });
     }
     if (product.item_trade_price) { 
+      
+      product.qtyAdded = true;
       this.calculateProductPrice(product);
       this.calculateProductDiscounts(product);
 

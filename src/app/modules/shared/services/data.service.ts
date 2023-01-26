@@ -1084,9 +1084,8 @@ export class DataService {
       let schemeitems:any         = [];
       let orderDetails_items:any  = [];
       let loyalty_free_items:any  = orderDetails.loyalty_free_items; 
-      console.log("BFR===>"+orderDetails.items.length)
-      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && (+x.quantity > 0 || +x.stockQty >0 || +x.scheme_id > 0 || +x.scheme_quantity_free > 0))))); 
-      console.log("AFR===>"+orderDetails.items.length)
+      debugger
+      orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && ( x.isSoftDelete  || +x.stockQty >0 || +x.scheme_id > 0 || +x.scheme_quantity_free > 0 || x.qtyAdded))))); 
       orderDetails.items.map((item) => {
         
           //add for scheme offers
@@ -1331,7 +1330,8 @@ export class DataService {
         return item;
       })
     }
-    orderDetails.items        = orderDetails.items.filter(x=>( +x.stockQty > 0 || +x.scheme_quantity_free > 0))
+    orderDetails.items        = orderDetails.items.filter(x=>( x.isSoftDelete || +x.stockQty > 0 || +x.scheme_quantity_free > 0 || x.qtyAdded))
+    debugger
     console.log(orderDetails.schemeitems);
     orderDetails.schemeitems  = this.updateSchemeItems(orderDetails);
     console.log(orderDetails.schemeitems);
@@ -1414,7 +1414,7 @@ export class DataService {
         });
     }
     orderDetails.loyalty_offer_reward_type  =   loyaltyOffer.reward_type;
-    
+    debugger
     if(loyaltyOffer){
         if(loyaltyOffer.retailer){
 
@@ -1549,6 +1549,7 @@ export class DataService {
         }
     } 
     // ////
+    debugger 
     orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items);
     console.log("loyalty_offer_interval==> "+orderDetails.loyalty_offer_interval);
     console.log("loyalty_offer_discount==> "+orderDetails.loyalty_offer_discount);

@@ -682,15 +682,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   calculateReceivable(): void {
-    const returnPrices = this.orderDetails.returned_items
-      .filter((x) => !x.isDeleted)
-      .map((x) => x.net_amount);
+    const returnPrices = this.orderDetails.returned_items.filter((x) => !x.isDeleted).map((x) => x.net_amount);
     this.returnAmount = this.dataService.calculateItemsBill(returnPrices);
     const price = this.orderDetails.items.map((x) => x.net_amount);
     this.netAmount = this.dataService.calculateItemsBill(price);
     this.dueAmount = this.netAmount + this.returnAmount;
-    this.receivableAmount =
-      this.netAmount + this.orderDetails.recovered + this.returnAmount;
+    this.receivableAmount =this.netAmount + this.orderDetails.recovered + this.returnAmount;
     this.selectedRetailer.order_total = this.dueAmount;
     if (this.currentTab === 2) {
       const retailer = this.spotSaleOrder.retailers.find(
@@ -752,6 +749,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       });
       this.selectedRetailer = null;
       this.orderDetails = null;
+      this.getLoyaltyofferData(this.employeeId);
     }
     if (this.currentTab === 2) {
       if (this.selectedRetailer) {
@@ -767,7 +765,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       }
       this.resetPaymentValues();
       this.setPaymentInitalValues();
-      this.getLoyaltyofferData(this.employeeId);
     }
     if (this.currentTab === 3) {
       this.orderService.setLoadRetaillersRecovery(true);

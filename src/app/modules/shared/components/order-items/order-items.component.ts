@@ -203,13 +203,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     //   product.stockQty = foundProd.current_load_allocated_qty;
     // }
 
-    if (+product.stockQty > product.quantity + product.extra_qty) {
-      product.stockQty = product.quantity + product.extra_qty;
-    }
-
-    if(product.current_load_allocated_qty < (product.stockQty + product.scheme_quantity_free)){
-      product.stockQty = product.current_load_allocated_qty - product.scheme_quantity_free;
-    }
+    
     
     if (this.orderType === 'execution') {
       const prod = this.allProducts.find((x) => x.item_id === product.item_id);
@@ -227,30 +221,30 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         this.toastService.showToaster(toast);
         product.stockQty = 0;
       }
+    }else{
+      if (+product.stockQty > product.quantity + product.extra_qty) {
+        product.stockQty = product.quantity + product.extra_qty;
+      }
+  
+      if(product.current_load_allocated_qty < (product.stockQty + product.scheme_quantity_free)){
+        product.stockQty = product.current_load_allocated_qty - product.scheme_quantity_free;
+      }
     }
     if (product.item_trade_price) {
-      if (
-        this.orderType !== 'execution' &&
-        product.item_quantity_booker > 0 &&
-        +product.stockQty === 0
-      ) {
+      if (this.orderType !== 'execution' && product.item_quantity_booker > 0 && +product.stockQty === 0) {
         product.isDeleted = true;
-      } else if (
-        this.orderType === 'execution' &&
-        product.dispatch_qty > 0 &&
-        +product.stockQty === 0
-      ) {
+      } 
+      else if (this.orderType === 'execution' && product.dispatch_qty > 0 && +product.stockQty === 0) {
         product.isDeleted = true;
-      } else {
+      } 
+      else{
         product.isDeleted = false;
       }
+      product.qtyAdded = true;
       if (this.orderDetail.items.find((x) => x.item_id === product.item_id)) {
         this.grossAmount = this.grossAmount - product.original_amount;
       }
-      product.parent_qty_sold = this.dataService.getParentQty(
-        +product.stockQty,
-        product.parent_quantity || product.quantity
-      );
+      product.parent_qty_sold = this.dataService.getParentQty(+product.stockQty,product.sub_inventory_quantity);
       this.calculateProductDiscounts(product);
       
       
@@ -287,7 +281,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       //update Scheme Free Products to scheme Items
       this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
       
-
       this.calculateTotalBill(); 
       this.productUpdated.emit();
       setTimeout(()=>{       
@@ -300,9 +293,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   } 
 
   setReturnedQty(product: any): void {
-    const productAvalableQty = this.allProducts.find(
-      (x) => x.item_id === product.item_id
-    )?.available_qty;
+    const productAvalableQty = this.allProducts.find((x) => x.item_id === product.item_id)?.available_qty;
     if (
       productAvalableQty < product.quantity_returned &&
       +product.stockQty < product.quantity_returned &&
@@ -341,6 +332,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         this.productUpdated.emit();
       }
     }
+    // setTimeout(()=>{       
+    //   if(document.getElementById(product.item_id)){ 
+    //     (document.getElementById(product.item_id) as HTMLInputElement).focus();
+    //   }
+    // },30);  
   }
 
   checkDiscount(product: any): boolean {

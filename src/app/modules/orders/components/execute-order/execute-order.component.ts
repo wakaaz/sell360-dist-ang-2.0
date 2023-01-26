@@ -77,6 +77,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   dispatchSummary: any;
   returnedProduct: any;
   selectedOrderBooker: any;
+  employeeId:number;
   spotSaleOrder: any = {};
   currentSpotSale: any = {};
   spotRetailer: any;
@@ -116,6 +117,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     this.dtOPtions = {
       pagingType: 'simple_numbers',
     };
+    this.employeeId=null;
     this.showAddRetailer = true;
     this.getSchemesData();
     this.setPaymentInitalValues();
@@ -199,7 +201,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.executionData = { assignment_id: res.data.assignment_id };
             this.retailersList = res.data.retailers;
             if(this.retailersList[0]){
-              this.getLoyaltyofferData(this.retailersList[0].employee_id);
+              this.employeeId = this.retailersList[0].employee_id;
+              this.getLoyaltyofferData(this.employeeId);
             }
             this.allProducts = res.data.all_products;
             this.loadId = res.data.load_id;
@@ -764,6 +767,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       }
       this.resetPaymentValues();
       this.setPaymentInitalValues();
+      this.getLoyaltyofferData(this.employeeId);
     }
     if (this.currentTab === 3) {
       this.orderService.setLoadRetaillersRecovery(true);

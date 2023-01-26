@@ -123,6 +123,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       let prod = this.allProducts.find(
         (x) => x.item_id === this.selectedProduct.item_id
       );
+      prod.booked_foc = 0;
       prod.isAdded = true;
       prod = this.dispProducts.find(
         (x) => x.item_id === this.selectedProduct.item_id

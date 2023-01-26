@@ -727,7 +727,15 @@ export class CounterSaleComponent implements OnInit {
         if(document.getElementById(product.item_id)){
           (document.getElementById(product.item_id) as HTMLInputElement).focus();
         }
-      },30); 
+      },30);
+      if(this.selectedRetailer.FOCA_error){
+        this.toastService.showToaster({
+          title: 'Stock Error:',
+          message:
+            `FOC quantity is changed due to insufficient stock!`,
+          type: 'error',
+        });
+      }
 
     }
   }

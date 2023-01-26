@@ -1078,7 +1078,7 @@ export class DataService {
   updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
     ////
     
-    
+    orderDetails.FOCA_error = null;
     if(orderDetails.items && orderDetails.items.length > 0){
       
       let schemeitems:any         = [];
@@ -1319,9 +1319,10 @@ export class DataService {
         if(!orderDetails.status_code || orderDetails.status_code === null){ //for counter sale
           ttl_item_stock  = +item.availble_stock
         }else{
-          ttl_item_stock  = +item.dispatch_qty + +item.extra_qty;
+          ttl_item_stock  = +item.dispatch_qty + +item.booked_foc + +item.extra_qty;
         }
         if(+ttl_item_stock < +ttlQty){
+          orderDetails.FOCA_error = true;
           item.scheme_quantity_free = +ttl_item_stock - +item.stockQty;
           if(item.scheme_quantity_free < 1){
             item.scheme_quantity_free = 0;

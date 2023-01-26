@@ -209,8 +209,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       const prod = this.allProducts.find((x) => x.item_id === product.item_id);
       if (
         (product.id &&
-          +product.stockQty > prod.available_qty + product.executed_qty) ||
-        (!product.id && +product.stockQty > prod.available_qty)
+          +product.stockQty > (+prod.available_qty + +product.executed_qty + +product.booked_foc)) ||(!product.id && +product.stockQty > (prod.available_qty++ +product.booked_foc))
       ) {
         const toast: Toaster = {
           message:
@@ -222,7 +221,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         product.stockQty = 0;
       }
     }else{
-      if (+product.stockQty > product.quantity + product.extra_qty) {
+      if (+product.stockQty > (+product.quantity + +product.extra_qty + +product.booked_foc)) {
         product.stockQty = product.quantity + product.extra_qty;
       }
   
@@ -287,7 +286,15 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         if(document.getElementById(product.item_id)){ 
           (document.getElementById(product.item_id) as HTMLInputElement).focus();
         }
-      },30);   
+      },30); 
+      if(this.orderDetail.FOCA_error){
+        this.toastService.showToaster({
+          title: 'Stock Error:',
+          message:
+            `FOC quantity is changed due to insufficient stock!`,
+          type: 'error',
+        });
+      }  
   
     }
   } 

@@ -142,6 +142,7 @@
               <th>Stock in Hand</th>
               <th>Allocated Stock</th>
               <th>Available QTY.</th>
+              <th>FOC QTY.</th> 
               <th>Booked QTY.</th>
               <th>Allocated QTY.</th>
               <th>ACTIONS</th>
@@ -158,7 +159,10 @@
               <td>
                 {{ +item.availble_stock_qty - +item.allocated_stock_qty }}
               </td>
-              <td>{{ item.current_load_booked_qty }}</td>
+              <td>{{ item.current_load_foc_qty }}</td>
+              <td>   
+                {{ +item.current_load_booked_qty - +item.current_load_foc_qty }}
+              </td>
               <td>
                 <input
                   type="text"

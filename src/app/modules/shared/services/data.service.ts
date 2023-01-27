@@ -1500,6 +1500,7 @@ export class DataService {
                             }
                         }
                         //calculate discount on each order item
+                        debugger
                         orderDetails.items  =   orderDetails.items.map(item=>{
                             item.loyalty_offer_id           =  loyaltyOffer.id;
                             item.loyalty_offer_type         =  loyaltyOffer.reward_type;
@@ -1521,8 +1522,10 @@ export class DataService {
                                 ////
                             }
                             ////
+                            debugger
                             return item;
                         })
+                        //debugger
                         total_discount  =  +reward_discount_value;
                     }
                     else { //free product

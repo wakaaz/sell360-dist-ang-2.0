@@ -291,7 +291,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         this.toastService.showToaster({
           title: 'Stock Error:',
           message:
-            `FOC quantity is changed due to insufficient stock!`,
+            `FOC quantity is changed!`,
           type: 'error',
         });
       }  

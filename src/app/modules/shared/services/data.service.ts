@@ -1729,7 +1729,7 @@ export class DataService {
       ////
       if(items){
           items.forEach(item=>{
-              price = price + +(item.gross_amount ? item.gross_amount:0);
+              price = price + +( +item.original_price * +item.stockQty );
               ////
           })
       }

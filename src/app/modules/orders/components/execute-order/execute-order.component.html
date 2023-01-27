@@ -1533,6 +1533,13 @@
                         }}</span>
                       </div>
                       <div class="report_value">
+                        <strong>Loyalty Discount:</strong>
+                        <span>{{
+                          finalLoad?.dsr?.total_loyalty_discount
+                            | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value">
                         <strong>Total Tax:</strong>
                         <span>{{
                           finalLoad?.dsr?.total_tax_amount | number: "1.2-2"

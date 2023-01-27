@@ -719,13 +719,21 @@
                         }}</span>
                       </div>
                       <div class="report_value">
+                        <strong>Loyalty Discount:</strong>
+                        <span>{{
+                          finalLoad.summary.total_loyalty_discount
+                            | number: "1.2-2"
+                        }}</span>
+                      </div>
+                      <div class="report_value">
                         <strong>Total:</strong>
                         <span>{{
                           finalLoad.summary.total_gross_amount -
                             finalLoad.summary.total_trade_offer -
                             finalLoad.summary.total_trade_discount -
                             finalLoad.summary.total_special_discount -
-                            finalLoad.summary.total_booker_discount
+                            finalLoad.summary.total_booker_discount  -
+                            finalLoad.summary.total_loyalty_discount
                             | number: "1.2-2"
                         }}</span>
                       </div>

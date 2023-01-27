@@ -240,11 +240,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         product.isDeleted = false;
       }
       product.qtyAdded = true;
-      if (this.orderDetail.items.find((x) => x.item_id === product.item_id)) {
-        this.grossAmount = this.grossAmount - product.original_amount;
-      }
-      product.parent_qty_sold = this.dataService.getParentQty(+product.stockQty,product.sub_inventory_quantity);
-      this.calculateProductDiscounts(product);
+
+       this.calculateProductDiscounts(product);
       
       
       // if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){

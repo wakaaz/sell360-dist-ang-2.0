@@ -123,6 +123,7 @@ export class OrderDispatchedComponent implements OnInit {
       total_trade_discount: 0,
       total_special_discount: 0,
       total_booker_discount: 0,
+      total_loyalty_discount: 0,
       total_tax_amount: 0,
       total_recovery_amount: 0,
       total_net_sale: 0,
@@ -899,19 +900,15 @@ export class OrderDispatchedComponent implements OnInit {
     });
     this.load.salesman_id = this.salemanId;
     this.load.total_orders = this.dispatchOrderDetail.orders.length;
-    this.load.total_gross_amount =
-      this.dispatchOrderDetail.summary.gross_total || 0;
-    this.load.total_trade_offer = this.dispatchOrderDetail.summary.trade_offer;
-    this.load.total_trade_discount =
-      this.dispatchOrderDetail.summary.trade_discount;
-    this.load.total_special_discount =
-      this.dispatchOrderDetail.summary.special_discount;
-    this.load.total_booker_discount =
-      this.dispatchOrderDetail.summary.booker_discount;
-    this.load.total_tax_amount =
-      this.dispatchOrderDetail.summary.total_tax || 0;
-    this.load.total_recovery_amount = totalRecovery;
-    this.load.total_net_sale = this.dispatchOrderDetail.summary.total_price;
+    this.load.total_gross_amount =this.dispatchOrderDetail.summary.gross_total || 0;
+    this.load.total_trade_offer = this.dispatchOrderDetail.summary.trade_offer || 0;
+    this.load.total_trade_discount =this.dispatchOrderDetail.summary.trade_discount || 0;
+    this.load.total_special_discount =this.dispatchOrderDetail.summary.special_discount || 0;
+    this.load.total_booker_discount =this.dispatchOrderDetail.summary.booker_discount || 0;
+    this.load.total_loyalty_discount =this.dispatchOrderDetail.summary.loyalty_discount || 0;
+    this.load.total_tax_amount =this.dispatchOrderDetail.summary.total_tax || 0;
+    this.load.total_recovery_amount = totalRecovery || 0;
+    this.load.total_net_sale = this.dispatchOrderDetail.summary.total_price || 0;
     this.load.total_products = totalProducts;
     this.load.distributor_id = this.distributorId;
     this.load.total_sub_loads = this.load.content.length;

@@ -553,13 +553,14 @@
                             <tr>
                               <th rowspan="2">SN</th>
                               <th rowspan="2">Product Name</th>
-                              <th colspan="2" style="text-align: center">
+                              <th colspan="1" style="text-align: center">
                                  BOX/PIECE
                               </th> 
                             </tr>
                             <tr>
                               <th style="text-align: center">Order QTY</th>
-                              <!-- <th style="text-align: center">Extra QTY</th> -->
+                              <!-- <th style="text-align: center">FOC QTY</th>
+                              <th style="text-align: center">Issued QTY</th> -->
                             </tr>
                           </thead>
                           <tbody>
@@ -571,8 +572,9 @@
                             >
                               <td>{{ item.item_id }}</td>
                               <td>{{ getItemName(item.item_id) }}</td>
-                              <td style="text-align: center">{{ item.actual_qty | number }}</td>
-                              <!-- <td style="text-align: center">{{ item.extra_qty | number }} </td> -->
+                              <td style="text-align: center">{{ (+item.actual_qty- +item.foc_qty) | number }}</td>
+                              <!-- <td style="text-align: center">{{ item.foc_qty | number }}</td>
+                              <td style="text-align: center">{{ item.issued_qty | number }}</td> -->
                               <!-- <td>
                                 <input
                                   class="value_input"
@@ -637,10 +639,15 @@
                           Load {{ i + 1 }}
                         </th>
                         <th colspan="2" style="text-align: center">
+                          Extra Issuance
+                        </th>
+                        <th colspan="2" style="text-align: center">
                           Total Issuance
                         </th>
                       </tr>
                       <tr *ngIf="finalLoad.count == 3">
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
                         <th>CTN/Bundle</th>
@@ -657,8 +664,12 @@
                         <th>Box/Piece</th>
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
                       </tr>
                       <tr *ngIf="finalLoad.count == 1">
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
                         <th>CTN/Bundle</th>
@@ -675,6 +686,8 @@
                           <td>{{ loadContent.parent_qty | number }}</td>
                           <td>{{ loadContent.child_qty }}</td>
                         </ng-container>
+                        <td>{{ product.total_extra_primary_qty | number }}</td>
+                        <td>{{ product.total_extra_secondary_qty | number }}</td>
                         <td>{{ product.total_primary_qty | number }}</td>
                         <td>{{ product.total_secondary_qty | number }}</td>
                       </tr>

@@ -893,11 +893,7 @@ export class OrderDispatchedComponent implements OnInit {
     let totalfocs    = 0;
     this.load.content.map((x) => {totalfocs = +x.total_focs + +totalfocs;});
     let totalProducts = 0;
-    this.load.content.map((x) => {totalProducts = +x.total_products + +totalProducts;});
-    this.load.content = this.load.content.map((x) => {
-      delete x.loadNumber;
-      return x;
-    }); 
+    this.load.content.map((x) => {totalProducts = +x.total_products + +totalProducts;}); 
     this.load.salesman_id = this.salemanId;
     this.load.total_orders = this.dispatchOrderDetail.orders.length;
     this.load.total_gross_amount =this.dispatchOrderDetail.summary.gross_total || 0;
@@ -915,23 +911,14 @@ export class OrderDispatchedComponent implements OnInit {
     this.load.total_sub_loads = this.load.content.length;
     this.load.processed_date = this.orderDate;
     this.load.assignmentId = this.assignmentId;
+    this.load.content      =  this.dispatchService.parseLoads(this.load.content,this.stockAllocation);
     //allocate extra Qty to first  load items
-    // let newcontents:any = [];
-    // this.stockAllocation.forEach(item => {
-    //   let flag = true;
-    //   if(item.current_load_allocated_qty > 0){
-    //     this.load.content.forEach((x, i)){
-    //     this.load.content.items.map(x=>{
-    //       if(flag){
-    //         flag = false
-    //       }
-    //       return x;
-    //     });
-    //           //loadItem.extra_qty      =   0;//+item.current_load_allocated_qty - +item.current_load_booked_qty;    
-    //           //debugger
-    //   });
-    // }); 
-    debugger
+    
+    // debugger 
+    this.load.content = this.load.content.map((x) => {
+      delete x.loadNumber;
+      return x;
+    });
     const order = { load: this.load, payments: this.credits };
     
     this.showFinalLoad = false;  

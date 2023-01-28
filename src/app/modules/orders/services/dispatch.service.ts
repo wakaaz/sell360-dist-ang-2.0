@@ -18,14 +18,13 @@ export class OrderDispatchService {
                     unit_id: item.unit_id,
                     item_trade_price: item.original_price,
                     actual_qty: item.dispatch_qty,
-                    dispatched_qty: item.dispatch_qty,
+                    issued_qty: 0,
                     foc_qty:item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
                 };
                 //debugger
                 currentLoadContent.items.push(newContent);
             } else {
                 loadItem.actual_qty     = loadItem.actual_qty + item.dispatch_qty; 
-                loadItem.dispatched_qty = loadItem.dispatched_qty + item.dispatch_qty;
             }
         });
         currentLoadContent.order_ids.push(newOrder.id);
@@ -41,12 +40,10 @@ export class OrderDispatchService {
         order.items.forEach(item => {
             const loadItem = currentLoadContent.items.find(x => x.item_id === item.item_id);
             if (loadItem) {
-                loadItem.actual_qty     =   loadItem.actual_qty - item.dispatch_qty;
-                loadItem.dispatched_qty =   loadItem.dispatched_qty - item.dispatch_qty - loadItem.issued_qty;
-                loadItem.issued_qty     =   loadItem.issued_qty;
-                loadItem.foc_qty        =   loadItem.foc_qty;
-                loadItem.ordered_qty    =   loadItem.ordered_qty;
-                loadItem.extra_qty      =   0;  
+                loadItem.actual_qty =   loadItem.actual_qty - item.dispatch_qty;
+                loadItem.issued_qty =   0;
+                loadItem.foc_qty    =   loadItem.foc_qty;
+                loadItem.extra_qty  =   0;   
                 //debugger
             }
             if (loadItem && loadItem.actual_qty === 0) {
@@ -70,27 +67,24 @@ export class OrderDispatchService {
                     const loadItem = currentLoadContent.items.find(x => x.item_id === item.item_id);
                     if (!loadItem) {
                         const newContent = {
-                            item_id         : item.item_id,
-                            pref_id         : item.pref_id,
-                            unit_id         : item.unit_id,
+                            item_id: item.item_id,
+                            pref_id: item.pref_id,
+                            unit_id: item.unit_id,
                             item_trade_price: item.item_trade_price,
-                            actual_qty      : 0,
-                            issued_qty      : +item.current_load_allocated_qty,
-                            ordered_qty     : +item.current_load_booked_qty,
-                            dispatched_qty  : +item.current_load_allocated_qty,
-                            foc_qty         : +item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
+                            actual_qty: 0,
+                            issued_qty: item.current_load_allocated_qty,
+                            foc_qty   : +item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
                         };
                        // debugger
                         currentLoadContent.items.push(newContent);
                     } else {
-                        loadItem.ordered_qty    =   +item.current_load_booked_qty
-                        loadItem.issued_qty     =   +item.current_load_allocated_qty;
-                        loadItem.dispatched_qty =   +item.current_load_allocated_qty;
-                        loadItem.extra_qty      =   0;//+item.current_load_allocated_qty - +item.current_load_booked_qty;    
+                        
+                        loadItem.issued_qty = item.current_load_allocated_qty - loadItem.actual_qty;
+                        loadItem.extra_qty  =   0;//+item.current_load_allocated_qty - +item.current_load_booked_qty;    
                         //debugger
                     }
                 }
-            }); 
+            });  
         }else{
             currentLoadContent.items        =   [];
         }
@@ -99,6 +93,47 @@ export class OrderDispatchService {
         currentLoadContent.total_focs       =   totalfocs;    
         currentLoadContent.total_products   =   currentLoadContent.items.length;
         return currentLoadContent;
+    }
+
+    parseLoads(loadcontents: any, stockAllocation:any){
+        let actuals_qty_items   =   stockAllocation.map(x=>{ 
+                                                                if(x.current_load_booked_qty > 0 ) {
+                                                                    return x.item_id;
+                                                                }
+                                                            });
+        actuals_qty_items       =   actuals_qty_items.filter(x=> (x>0));
+        // debugger
+        let contents:any    =   [];
+        let contentitems    =   [];
+        return loadcontents.map(content=>{
+                                if(content.loadNumber == 1 ){
+                                    content.items = content.items.filter(x=> (+x.actual_qty > 0 || !actuals_qty_items.includes(x.item_id)));
+                                    content.items   =   content.items.map(x=>{
+                                                                                x.issued_qty = +stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_allocated_qty - +stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_booked_qty;
+                                                                                return x;
+                                                                            })    
+                                    contentitems  = content.items.map(item => item.item_id);
+                                    //debugger
+                                }else{
+                                    content.items   =   content.items.filter(x=> (+x.actual_qty > 0)); 
+                                    content.items   =   content.items.map(x=>{
+                                                                                if(contentitems.includes(x.item_id)){
+                                                                                    x.issued_qty = 0;
+                                                                                }else{
+                                                                                    x.issued_qty = +stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_allocated_qty -stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_booked_qty;
+                                                                                }
+                                                                                return x;
+                                                                            })   
+                                    let thisitems   =   content.items.map(item => item.item_id);  
+                                    contentitems    =   contentitems.concat(thisitems);
+                                    contentitems    =   contentitems.filter(this.onlyUnique);
+                                }
+                                // debugger
+                                return content;
+                        });   
+    }
+    onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
     }
 
 }

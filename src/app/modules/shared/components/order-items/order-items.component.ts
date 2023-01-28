@@ -376,9 +376,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
           product.price =
             product.unit_price_after_special_discount - +product.extra_discount;
         }
-
-
-        this.calculateNetAmountOfProduct(product);
         return product;
       });
       this.calculateTotalBill();
@@ -445,14 +442,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     // Special Discount
     product = this.calculateProductSpecialDiscount(product);
     
-    // Extra Discount => Booker Discount
-    if (!product.extra_discount || +product.stockQty < 1) {
-      product.extra_discount = 0;
-      product.extra_discount_pkr = 0;
-      this.calculateNetAmountOfProduct(product);
-    } else {
-      this.calculateExtraDiscount(product);
-    }
+  
   }
 
   calculateProductSpecialDiscount(product: any): any {
@@ -466,13 +456,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
   calculateExtraDiscount(product: any): void {
     if (+product.extra_discount < product.unit_price_after_special_discount) {
-      product.price =
-        product.unit_price_after_special_discount - +product.extra_discount;
+      product.price = product.unit_price_after_special_discount - +product.extra_discount;
       product.extra_discount_pkr = +product.stockQty * +product.extra_discount;
     } else {
       product.extra_discount = 0;
       product.extra_discount_pkr = 0;
-      product.price = product.unit_price_after_special_discount;
       const toast: Toaster = {
         type: 'error',
         message: 'Discount should not be greater than item price!',
@@ -480,17 +468,16 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       };
       this.toastService.showToaster(toast);
     }
-    this.calculateNetAmountOfProduct(product);
+
+     //Apply Loyal offer discount
+     this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
+     //update Scheme Free Products to scheme Items
+     this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
     this.calculateTotalBill();
     this.productUpdated.emit();
   }
 
-  calculateNetAmountOfProduct(product: any): any { 
-    //product.net_amount = this.dataService.calculateUnitPrice(product.unit_price_after_special_discount,+product.stockQty);
-    product.net_amount = this.dataService.calculateproductnetAmount(product);
-    
-    this.calculateProductTax(product);
-  }
+  
 
   calculateProductTax(product: any): void {
     if (product.tax_class_amount) {

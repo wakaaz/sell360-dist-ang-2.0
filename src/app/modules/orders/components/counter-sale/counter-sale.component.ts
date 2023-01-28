@@ -955,13 +955,7 @@ export class CounterSaleComponent implements OnInit {
     product.extra_discount_pkr = 0;
     product.unit_price_after_individual_discount = product.unit_price_after_special_discount;
     // Extra Discount => Booker Discount
-    if (! product.extra_discount || +product.stockQty < 1) {
-      product.extra_discount = 0;
-      product.extra_discount_pkr = 0;
-      this.calculateNetAmountOfProduct(product);
-    } else {
-      this.calculateExtraDiscount(product);
-    }
+  
   }
 
 
@@ -976,13 +970,12 @@ export class CounterSaleComponent implements OnInit {
 
   calculateExtraDiscount(product: any): void {
     if (+product.extra_discount < product.unit_price_after_special_discount) {
-      product.price = product.unit_price_after_special_discount - +product.extra_discount;
       product.extra_discount_pkr = +product.stockQty * +product.extra_discount;
-      
-    } else {
+    } 
+    else 
+    {
       product.extra_discount = 0;
       product.extra_discount_pkr = 0;
-      product.price = product.unit_price_after_special_discount;
       const toast: Toaster = {
         type: 'error',
         message: 'Discount should not be greater than item price!',
@@ -990,7 +983,16 @@ export class CounterSaleComponent implements OnInit {
       };
       this.toastService.showToaster(toast);
     }
-    this.calculateNetAmountOfProduct(product);
+    
+    //Apply Loyal offer discount
+    this.selectedRetailer.items =  this.selectedProducts
+    this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+    this.selectedProducts       =  this.selectedRetailer.items;  
+
+    //update Scheme Free Products to scheme Items
+    this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
+    this.selectedRetailer.items =  this.selectedProducts
+    
     this.calculateTotalBill();
   }
 
@@ -1004,14 +1006,6 @@ export class CounterSaleComponent implements OnInit {
       product.tax_amount_value = 0;
       product.tax_amount_pkr = 0;
     }
-  }
-
-  calculateNetAmountOfProduct(product: any): any {
-    product.net_amount = this.dataService.calculateUnitPrice(
-      product.price,
-      +product.stockQty
-    );
-    this.calculateProductTax(product);
   }
 
   calculateTotalBill(): void { 

@@ -108,7 +108,7 @@
           <input
             type="number"
             (paste)="$event.preventDefault()"
-            [id]="item.item_id"
+            id="ex-{{item.item_id}}"
             [disabled]="isChequeAdded || isCreditAdded || +item.stockQty < 1"
             [name]="item.item_id"
             [(ngModel)]="item.extra_discount"

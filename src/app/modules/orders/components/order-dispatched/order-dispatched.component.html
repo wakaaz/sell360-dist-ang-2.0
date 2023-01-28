@@ -559,7 +559,7 @@
                             </tr>
                             <tr>
                               <th style="text-align: center">Order QTY</th>
-                              <th style="text-align: center">Extra QTY</th>
+                              <!-- <th style="text-align: center">Extra QTY</th> -->
                             </tr>
                           </thead>
                           <tbody>
@@ -572,7 +572,7 @@
                               <td>{{ item.item_id }}</td>
                               <td>{{ getItemName(item.item_id) }}</td>
                               <td style="text-align: center">{{ item.actual_qty | number }}</td>
-                              <td style="text-align: center">{{ item.issued_qty | number }}</td>
+                              <!-- <td style="text-align: center">{{ item.extra_qty | number }} </td> -->
                               <!-- <td>
                                 <input
                                   class="value_input"

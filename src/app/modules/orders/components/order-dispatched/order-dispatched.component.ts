@@ -128,6 +128,7 @@ export class OrderDispatchedComponent implements OnInit {
       total_recovery_amount: 0,
       total_net_sale: 0,
       total_products: 0,
+      total_focs: 0,
       distributor_id: 0,
       total_sub_loads: 0,
       processed_date: '',
@@ -140,6 +141,7 @@ export class OrderDispatchedComponent implements OnInit {
       loadNumber: ldNumber,
       order_ids: [],
       total_products: 0,
+      total_focs:0,
       total_orders: 0,
       items: [],
     };
@@ -887,17 +889,15 @@ export class OrderDispatchedComponent implements OnInit {
   saveDispatch(): void {
     this.loading = true;
     let totalRecovery = 0;
-    this.credits.map((x) => {
-      totalRecovery = x.recovery + totalRecovery;
-    });
+    this.credits.map((x) => { totalRecovery = x.recovery + totalRecovery;});
+    let totalfocs    = 0;
+    this.load.content.map((x) => {totalfocs = +x.total_focs + +totalfocs;});
     let totalProducts = 0;
-    this.load.content.map((x) => {
-      totalProducts = x.total_products + totalProducts;
-    });
+    this.load.content.map((x) => {totalProducts = +x.total_products + +totalProducts;});
     this.load.content = this.load.content.map((x) => {
       delete x.loadNumber;
       return x;
-    });
+    }); 
     this.load.salesman_id = this.salemanId;
     this.load.total_orders = this.dispatchOrderDetail.orders.length;
     this.load.total_gross_amount =this.dispatchOrderDetail.summary.gross_total || 0;
@@ -909,14 +909,34 @@ export class OrderDispatchedComponent implements OnInit {
     this.load.total_tax_amount =this.dispatchOrderDetail.summary.total_tax || 0;
     this.load.total_recovery_amount = totalRecovery || 0;
     this.load.total_net_sale = this.dispatchOrderDetail.summary.total_price || 0;
+    this.load.total_focs = +totalfocs;
     this.load.total_products = totalProducts;
     this.load.distributor_id = this.distributorId;
     this.load.total_sub_loads = this.load.content.length;
     this.load.processed_date = this.orderDate;
     this.load.assignmentId = this.assignmentId;
+    //allocate extra Qty to first  load items
+    // let newcontents:any = [];
+    // this.stockAllocation.forEach(item => {
+    //   let flag = true;
+    //   if(item.current_load_allocated_qty > 0){
+    //     this.load.content.forEach((x, i)){
+    //     this.load.content.items.map(x=>{
+    //       if(flag){
+    //         flag = false
+    //       }
+    //       return x;
+    //     });
+    //           //loadItem.extra_qty      =   0;//+item.current_load_allocated_qty - +item.current_load_booked_qty;    
+    //           //debugger
+    //   });
+    // }); 
+    debugger
     const order = { load: this.load, payments: this.credits };
     
-    this.showFinalLoad = false;
+    this.showFinalLoad = false;  
+
+    
     this.orderService.saveDispatchOrder(order).subscribe(
       (res) => {
         if (res.status === 200) {
@@ -1104,9 +1124,10 @@ export class OrderDispatchedComponent implements OnInit {
         return x;
       }
     );
-    this.currentLoadContent.order_ids = [];
-    this.currentLoadContent.total_orders = 0;
-    this.currentLoadContent.total_products = 0;
+    this.currentLoadContent.order_ids       = [];
+    this.currentLoadContent.total_orders    = 0;
+    this.currentLoadContent.total_focs      = 0;
+    this.currentLoadContent.total_products  = 0;
   }
 
   completeDispatch(): void {

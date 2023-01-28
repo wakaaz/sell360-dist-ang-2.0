@@ -724,8 +724,8 @@ export class DataService {
             }
             else if (itemslab.discount_filter == 'flat') {
                 slabmodel.discount_type     =  itemslab.discount_type; 
-                rangeModel                  =  itemslab.ranges.filter(x=>x.discount_slab_id  ==  itemslab.id); 
-                slabmodel.discount          =  rangeModel ? rangeModel[0].value:0;
+                
+                slabmodel.discount          =  itemslab.flat ? +itemslab.flat.value : 0; 
                 if (itemslab.discount_type  == 'percentage') {
                     if (slabmodel.discount > 0) {
                         slabmodel.discount_pkr    =   (slabmodel.discount/100)*ItemTp;

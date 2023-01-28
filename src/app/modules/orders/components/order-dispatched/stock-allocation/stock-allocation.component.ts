@@ -32,7 +32,7 @@ export class StockAllocationComponent implements OnInit {
     console.log('stockAllocation => ', this.stockAllocation);
     this.dtOptions = {
       pagingType: 'simple_numbers',
-      order: [[5, 'desc']],
+      order: [[7, 'desc']],
       processing: true,
       // dom: 'Bfrtip',
       // buttons: [

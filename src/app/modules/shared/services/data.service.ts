@@ -1364,6 +1364,7 @@ export class DataService {
           for (const x in loyaltyOffer.retailers) {
             if(loyaltyOffer.retailers[x].retailer_id == orderDetails.retailer_id){
               loyaltyOffer.retailer = loyaltyOffer.retailers[x];
+              
             }
           }
         }
@@ -1374,8 +1375,9 @@ export class DataService {
           if(offer.retailers){
             for (const x in offer.retailers) {
               if(offer.retailers[x].retailer_id == orderDetails.retailer_id){
-                loyaltyOffer           = offer;
-                loyaltyOffer.retailer  = offer.retailers[x];
+                loyaltyOffer                  = offer;
+                loyaltyOffer.retailer         = offer.retailers[x];
+                orderDetails.loyalty_offer_id = offer.id;  
                 break;
               }
             }
@@ -1394,7 +1396,7 @@ export class DataService {
         });
     }
     orderDetails.loyalty_offer_reward_type  =   loyaltyOffer.reward_type;
-    ////debugger
+    debugger
     if(loyaltyOffer){
         if(loyaltyOffer.retailer){
 

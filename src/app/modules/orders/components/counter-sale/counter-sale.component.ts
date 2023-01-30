@@ -1202,7 +1202,9 @@ if (!this.isDataValid()) {
             detail: [],
         },
         items: [],
-    };
+        
+    };  
+    
     this.order = newOrder;
     if (this.cheque) {
         this.order.payment.detail.push(this.cheque);
@@ -1257,9 +1259,9 @@ if (!this.isDataValid()) {
         employee_id: this.selectedEmployee,
         item_quantity_booker: product.item_quantity_booker,
         item_quantity_updated: product.item_quantity_booker != finalQty ? finalQty : null ,
-        quantity_returned: 0,
+        quantity_returned: 0, 
         original_price: product.original_price,
-        loyalty_offer_id: product.loyalty_offer_id,
+        loyalty_offer_id: product.loyalty_offer_id ? product.loyalty_offer_id:null,
         loyalty_offer_type : product.loyalty_offer_type ? product.loyalty_offer_type :null,
         loyalty_offer_discount_type: product.loyalty_offer_discount_type? product.loyalty_offer_discount_type :null,
         loyalty_offer_discount: product.loyalty_offer_discount? product.loyalty_offer_discount :null,

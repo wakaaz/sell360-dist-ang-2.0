@@ -30,11 +30,11 @@ export const ordersSubMenu = {
       icon: '/assets/images/counter-sale.svg',
     },
 
-    {
-      title: 'New Counter Sale',
-      link: '/orders/new-counter-sale',
-      icon: '/assets/images/counter-sale.svg',
-    },
+    // {
+    //   title: 'New Counter Sale',
+    //   link: '/orders/new-counter-sale',
+    //   icon: '/assets/images/counter-sale.svg',
+    // },
     // Hidden for first version
     // {
     //     title: 'Booking VS Execution',

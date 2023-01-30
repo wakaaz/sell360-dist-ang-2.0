@@ -54,21 +54,7 @@ export class DataService {
     return totalSchemeDiscount;
     
   }
-  calculateproductnetAmount(item:any):number{
-      let stockQty            =   +item.stockQty;
-      let gross_sale_amount   =   item.original_price * stockQty;
-      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
-      let ttl_trade_discount  =  + stockQty * item.trade_discount_pkr;
-      let ttl_special_discount=  + stockQty * item.special_discount;
-      let ttl_extra_discount  =  + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
-      let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
-      let net_amount          =   gross_sale_amount - total_discount;
-      // if([35,36].includes(item.item_id))
-      //  
-
-
-      return net_amount;
-  }
+ 
 
   /** Schemes Calculation and implementation */
 
@@ -793,7 +779,7 @@ export class DataService {
     }
     product.special_discount_pkr              = product.special_discount;
     product.unit_price_after_special_discount = product.unit_price_after_merchant_discount - product.special_discount;
-      //debugger
+      ////debugger
     return product;
   }
   /** Special Discount End */
@@ -1051,9 +1037,9 @@ export class DataService {
       let stockQty            =   +item.stockQty;
       let gross_sale_amount   =   (item.original_price ? +item.original_price:+item.original_amount) * +stockQty;
       let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
-      let ttl_trade_discount  =   item.trade_discount_pkr ? + stockQty * +item.trade_discount_pkr : 0;
-      let ttl_special_discount=   item.special_discount ? + stockQty * +item.special_discount :0;
-      let ttl_extra_discount  =   + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+      let ttl_trade_discount  =   +item.trade_discount_pkr ? + stockQty * +item.trade_discount_pkr : 0;
+      let ttl_special_discount=   +item.special_discount ? + stockQty * +item.special_discount :0;
+      let ttl_extra_discount  =   +item.extra_discount ? + stockQty * +item.extra_discount :0;
       let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
       let net_amount          =   gross_sale_amount - total_discount;
       
@@ -1077,7 +1063,7 @@ export class DataService {
       let schemeitems:any         = [];
       let orderDetails_items:any  = [];
       let loyalty_free_items:any  = orderDetails.loyalty_free_items; 
-      // //debugger
+      // ////debugger
       orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && ( x.isSoftDelete  || +x.stockQty >0 || +x.scheme_id > 0 || +x.scheme_quantity_free > 0 || x.qtyAdded))))); 
       orderDetails.items.map((item) => {
         
@@ -1325,7 +1311,7 @@ export class DataService {
       })
     }
     orderDetails.items        = orderDetails.items.filter(x=>( x.isSoftDelete || +x.stockQty > 0 || +x.scheme_quantity_free > 0 || x.qtyAdded))
-    //debugger
+    ////debugger
     console.log(orderDetails.schemeitems);
     orderDetails.schemeitems  = this.updateSchemeItems(orderDetails);
     console.log(orderDetails.schemeitems);
@@ -1408,7 +1394,7 @@ export class DataService {
         });
     }
     orderDetails.loyalty_offer_reward_type  =   loyaltyOffer.reward_type;
-    //debugger
+    ////debugger
     if(loyaltyOffer){
         if(loyaltyOffer.retailer){
 
@@ -1493,7 +1479,7 @@ export class DataService {
                             }
                         }
                         //calculate discount on each order item
-                        ////debugger
+                        //////debugger
                         orderDetails.items  =   orderDetails.items.map(item=>{
                             item.loyalty_offer_id           =  loyaltyOffer.id;
                             item.loyalty_offer_type         =  loyaltyOffer.reward_type;
@@ -1515,10 +1501,10 @@ export class DataService {
                                 ////
                             }
                             ////
-                           // //debugger
+                           // ////debugger
                             return item;
                         })
-                        ////debugger
+                        //////debugger
                         total_discount  =  +reward_discount_value;
                     }
                     else { //free product
@@ -1546,7 +1532,7 @@ export class DataService {
         }
     } 
     // ////
-    ////debugger 
+    //////debugger 
     orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items);
     console.log("loyalty_offer_interval==> "+orderDetails.loyalty_offer_interval);
     console.log("loyalty_offer_discount==> "+orderDetails.loyalty_offer_discount);
@@ -1608,7 +1594,7 @@ export class DataService {
   */
   
   updateItemcalculation(item):any{
-        debugger
+        //debugger
         item.scheme_discount    = item.scheme_discount ? +item.scheme_discount : 0;
         item.trade_discount     = item.trade_discount_pkr ? +item.trade_discount : 0;
         item.trade_discount_pkr = item.trade_discount_pkr ? +item.trade_discount_pkr : 0;
@@ -1623,8 +1609,8 @@ export class DataService {
 
         let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(stockQty * item.scheme_discount) ;
         let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
-        let ttl_special_discount=   item.special_discount ? +stockQty * +item.special_discount:0;
-        let ttl_extra_discount  =   +item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+        let ttl_special_discount=   +item.special_discount ? +stockQty * +item.special_discount:0;
+        let ttl_extra_discount  =   +item.extra_discount ? +stockQty * +item.extra_discount:0;
         let ttl_loyalty_discount=   item.loyalty_offer_discount_pkr ? +stockQty * +item.loyalty_offer_discount_pkr : 0;
         let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount + ttl_loyalty_discount;
         let final_price         =   gross_sale_amount - total_discount;                          
@@ -1657,7 +1643,7 @@ export class DataService {
   }
   updateOrderitemscalculation(items):any{
     items   =   items.map((item) => {
-        debugger
+        //debugger
         item.scheme_discount    = item.scheme_discount ? +item.scheme_discount : 0;
         item.trade_discount     = item.trade_discount_pkr ? +item.trade_discount : 0;
         item.trade_discount_pkr = item.trade_discount_pkr ? +item.trade_discount_pkr : 0;
@@ -1674,7 +1660,7 @@ export class DataService {
         let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(stockQty * item.scheme_discount) ;
         let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
         let ttl_special_discount=   item.special_discount ? +stockQty * +item.special_discount:0;
-        let ttl_extra_discount  =   +item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+        let ttl_extra_discount  =   +item.extra_discount ? +stockQty * +item.extra_discount : 0;
         let ttl_loyalty_discount=   item.loyalty_offer_discount_pkr ? +stockQty * +item.loyalty_offer_discount_pkr : 0;
         let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_loyalty_discount;
         let final_price         =   gross_sale_amount - total_discount;                          

@@ -328,19 +328,23 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
   setExtraDiscount(product: any): void {
     if (product.stockQty) {
-      if (this.checkDiscount(product)) {
-        product.booker_discount = +product.extra_discount;
-        product.unit_price_after_individual_discount =
-          product.item_trade_price - product.booker_discount;
-        product.net_amount = -(product.unit_price_after_individual_discount * product.stockQty);
-        this.productUpdated.emit();
-      }
+        product.booker_discount     = +product.extra_discount;
+        product.booker_discount_pkr =  product.booker_discount;
+        product.unit_price_after_individual_discount = product.item_trade_price - product.booker_discount;
     }
-    // setTimeout(()=>{       
-    //   if(document.getElementById(product.item_id)){ 
-    //     (document.getElementById(product.item_id) as HTMLInputElement).focus();
-    //   }
-    // },30);  
+    //Apply Loyal offer discount
+    this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
+      
+    //update Scheme Free Products to scheme Items
+    this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
+    
+    this.calculateTotalBill(); 
+    this.productUpdated.emit();
+    setTimeout(()=>{       
+      if(document.getElementById("extra-"+product.item_id)){ 
+        (document.getElementById("extra-"+product.item_id) as HTMLInputElement).focus();
+      }
+    },30);  
   }
 
   checkDiscount(product: any): boolean {
@@ -578,11 +582,13 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
                 this.totalSchemeDiscount +
                 this.totalMerchantDiscount +
                 this.totalSpecialDiscount +
-                this.totalBookerDiscount;
+                this.totalBookerDiscount +
+                this.totalloyaltyDiscount; 
     this.orderDetail.gross_sale_amount  = this.grossAmount;
     this.orderDetail.total_retail_price = this.totalRetailPrice;
     this.orderDetail.ttl_qty_sold       = this.selectedProductQuantities;
     this.orderDetail.ttl_products_sold  = this.orderDetail.items.length;
+    debugger
                 
   }
 }

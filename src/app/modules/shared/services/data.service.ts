@@ -1788,7 +1788,7 @@ export class DataService {
       let price:number = 0;
       if(items){
           items.forEach(item=>{
-              price = price + (+item.stockQty * item.extra_discount_pkr ? +item.extra_discount_pkr:0);
+              price = price + (+item.stockQty * +(item.extra_discount ? item.extra_discount:0));
           })
       }
       return price;

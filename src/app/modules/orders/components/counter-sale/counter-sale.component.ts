@@ -668,15 +668,6 @@ export class CounterSaleComponent implements OnInit {
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
   }
-  calculateProductPrice(product): void {
-    product.original_amount = this.dataService.calculateUnitPrice(
-      +product.stockQty,
-      product.item_trade_price
-    );
-    product.gross_amount =
-      product.unit_price_after_scheme_discount ||
-      product.item_trade_price * +product.stockQty;
-  }
   setQuantity(product: any): void {
     // if (+product.stockQty > 1000) {
     //   product.stockQty = 0;
@@ -695,8 +686,7 @@ export class CounterSaleComponent implements OnInit {
     if (product.item_trade_price) { 
       
       product.qtyAdded = true;
-      this.calculateProductPrice(product);
-      this.calculateProductDiscounts(product);
+      product = this.calculateProductDiscounts(product);
 
       
       
@@ -760,6 +750,7 @@ export class CounterSaleComponent implements OnInit {
       this.dataService.schemeCannotApplied();
       return;
     }
+    this.selectedProduct  = this.calculateProductDiscounts(this.selectedProduct); 
     if (+this.selectedProduct.stockQty > 0 && this.selectedProduct.pref_id) {
       const pr = this.selectedProducts.find((x) => x.item_id === this.selectedProduct.item_id);
       if (pr) {
@@ -812,9 +803,7 @@ export class CounterSaleComponent implements OnInit {
           this.selectedProductsIds.push(this.selectedProduct.item_id);
         }
       }
-      this.calculateProductPrice(this.selectedProduct);
-      this.calculateProductDiscounts(this.selectedProduct); 
-      
+      debugger
       this.selectedProducts         = this.dataService.updateOrderitemscalculation(this.selectedProducts);
 
       if(this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type == 'bundle_offer'){
@@ -904,7 +893,7 @@ export class CounterSaleComponent implements OnInit {
   }
 
  
-  calculateProductDiscounts(product: any, scheme?: any): void {
+  calculateProductDiscounts(product: any, scheme?: any):any {
     // Trade Offer
     product.scheme_id             =   0;  
     product.scheme_type           =   0; 
@@ -950,11 +939,10 @@ export class CounterSaleComponent implements OnInit {
     product.unit_price_after_special_discount = product.unit_price_after_merchant_discount;
     // Special Discount
     product = this.calculateProductSpecialDiscount(product);
-
-    product.extra_discount = 0;
-    product.extra_discount_pkr = 0;
-    product.unit_price_after_individual_discount = product.unit_price_after_special_discount;
+    product.unit_price_after_individual_discount = +product.unit_price_after_special_discount - product.extra_discount ? +product.extra_discount:0;
     // Extra Discount => Booker Discount
+    
+    return product;
   
   }
 
@@ -964,7 +952,7 @@ export class CounterSaleComponent implements OnInit {
       this.selectedSegment,
       this.selectedRegion,
       product,
-      this.specialDiscounts
+      this.specialDiscounts 
     );
   }
 

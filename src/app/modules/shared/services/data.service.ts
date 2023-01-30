@@ -778,29 +778,22 @@ export class DataService {
     product: any,
     specialDiscounts: Array<any>
   ): any {
+    
     const selectedSpecialDiscount = specialDiscounts.find(
       (x) =>
         segmentId === x.segment_id &&
         regionId === x.region_id &&
         +product.pref_id === x.pref_id
     );
-
+  
     if (selectedSpecialDiscount && +product.stockQty > 0) {
-      product.price =
-        product.unit_price_after_merchant_discount -
-        selectedSpecialDiscount.discount;
-      product.unit_price_after_special_discount =
-        product.unit_price_after_merchant_discount -
-        selectedSpecialDiscount.discount;
-      product.special_discount = selectedSpecialDiscount.discount;
-      product.special_discount_pkr = selectedSpecialDiscount.discount;
+      product.special_discount      = selectedSpecialDiscount.discount;
     } else {
       product.special_discount = 0;
-      product.special_discount_pkr = 0.0;
-      product.special_discount = 0.0;
-      product.unit_price_after_special_discount = product.unit_price_after_merchant_discount;
     }
-    
+    product.special_discount_pkr              = product.special_discount;
+    product.unit_price_after_special_discount = product.unit_price_after_merchant_discount - product.special_discount;
+      //debugger
     return product;
   }
   /** Special Discount End */
@@ -1615,7 +1608,7 @@ export class DataService {
   */
   
   updateItemcalculation(item):any{
-
+        debugger
         item.scheme_discount    = item.scheme_discount ? +item.scheme_discount : 0;
         item.trade_discount     = item.trade_discount_pkr ? +item.trade_discount : 0;
         item.trade_discount_pkr = item.trade_discount_pkr ? +item.trade_discount_pkr : 0;
@@ -1664,7 +1657,7 @@ export class DataService {
   }
   updateOrderitemscalculation(items):any{
     items   =   items.map((item) => {
-
+        debugger
         item.scheme_discount    = item.scheme_discount ? +item.scheme_discount : 0;
         item.trade_discount     = item.trade_discount_pkr ? +item.trade_discount : 0;
         item.trade_discount_pkr = item.trade_discount_pkr ? +item.trade_discount_pkr : 0;
@@ -1711,6 +1704,7 @@ export class DataService {
         item.total_amount_after_tax               =   +ttl_amnt_aftr_tax;
         item.total_discount                       =   +total_discount; 
         // ////
+        
         return item; 
     });
     return JSON.parse(JSON.stringify(items));
@@ -1784,7 +1778,7 @@ export class DataService {
       let price:number = 0;
       if(items){
           items.forEach(item=>{
-              price = price + (+item.stockQty * item.special_discount_pkr ? +item.special_discount_pkr:0);
+              price = price + (+item.stockQty * +(item.special_discount ? item.special_discount:0));
           })
       }
       return price;

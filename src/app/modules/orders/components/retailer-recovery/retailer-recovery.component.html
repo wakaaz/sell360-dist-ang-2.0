@@ -70,6 +70,7 @@
             #recoveryDiscount="ngModel"
             class="form-control value_input"
             placeholder="0"
+            [min]="0"
           />
         </th>
         <th *ngIf="isRecoverydiscountActivated">
@@ -94,6 +95,7 @@
             max="{{ inv.balance }}"
             class="form-control value_input"
             placeholder="0"
+            [min]="0"
           />
           <input
             *ngIf="executionData !== null || assignment_idOutRoute"
@@ -112,6 +114,7 @@
             max="{{ inv.balance }}"
             class="form-control value_input"
             placeholder="0"
+            [min]="0"
           />
         </th>
         <th>

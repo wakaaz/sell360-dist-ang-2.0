@@ -148,7 +148,7 @@ export class ExecutionService {
         campaign_id: item.selectedScheme?.id || 0,
         item_status: item.is_active,
         dispatch_status: 0,
-        dispatch_qty: finalQty,
+        dispatch_qty: item.dispatch_qty,
         dispatch_amount: final_price,
         reasoning: '',
         distributor_id: orderDetails.distributor_id,

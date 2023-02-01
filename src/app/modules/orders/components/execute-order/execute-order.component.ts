@@ -26,6 +26,7 @@ import { SpotSaleService } from '../../services/spot-sale.service';
   encapsulation: ViewEncapsulation.None,
 })
 export class ExecuteOrderComponent implements OnInit, OnDestroy {
+  system_discount_type:number;
   dtOPtions: DataTables.Settings = {};
 
   executionData: any;
@@ -110,6 +111,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     private storageService: LocalStorageService
   ) {
     this.holdOrderParams.hold_reason = '';
+    this.system_discount_type = this.storageService.getItem('distributor').system_discount_type;
   }
 
   ngOnInit(): void {

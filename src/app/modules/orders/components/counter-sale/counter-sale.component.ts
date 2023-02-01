@@ -27,6 +27,7 @@ import { localStorageKeys } from 'src/app/core/constants/localstorage.constants'
 })
 export class CounterSaleComponent implements OnInit {
   permissions: any;
+  system_discount_type:number;
 
   showProducts: boolean;
   showQuantityModal: boolean;
@@ -100,9 +101,8 @@ export class CounterSaleComponent implements OnInit {
     private toastService: ToasterService,
     private dataService: DataService
   ) {
-    this.permissions = this.storageService.getItem(
-      localStorageKeys.permissions
-    );
+    this.permissions          = this.storageService.getItem(localStorageKeys.permissions);
+    this.system_discount_type = this.storageService.getItem('distributor').system_discount_type;
   }
 
   ngOnInit(): void {
@@ -1267,7 +1267,7 @@ export class CounterSaleComponent implements OnInit {
         scheme_discount_type: product.scheme_discount_type || 0,
         gift_value: product.gift_value || 0,
         scheme_discount: product.scheme_discount,
-        unit_price_after_scheme_discount: product.unit_price_after_scheme_discount ? product.unit_price_after_scheme_discount:product.original_price,
+        unit_price_after_scheme_discount: product.unit_price_after_scheme_discount,
         slab_id: product.slab_id,
         slab_type: product.slab_type,
         slab_discount_type: product.slab_discount_type,

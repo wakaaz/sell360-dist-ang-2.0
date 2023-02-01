@@ -193,15 +193,11 @@ export class ExecutionService {
         unit_price_after_scheme_discount: item.unit_price_after_scheme_discount,
         merchant_discount: 0,
         merchant_discount_pkr: 0,
-        unit_price_after_merchant_discount:
-          item.unit_price_after_merchant_discount,
+        unit_price_after_merchant_discount:item.unit_price_after_merchant_discount,
         special_discount: 0,
-        unit_price_after_special_discount:
-          item.unit_price_after_special_discount,
+        unit_price_after_special_discount:item.unit_price_after_special_discount,
         booker_discount: item.extra_discount || 0,
-        unit_price_after_individual_discount:
-          item.unit_price_after_individual_discount ||
-          item.unit_price_after_special_discount,
+        unit_price_after_individual_discount:item.unit_price_after_individual_discount ||item.unit_price_after_special_discount,
         unit_id: item.unit_id,
         unit_name: item.unit_name,
         brand_id: item.brand_id,

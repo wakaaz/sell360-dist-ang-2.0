@@ -26,6 +26,7 @@ import { exit } from 'process';
   styleUrls: ['./order-dispatched.component.css'],
 })
 export class OrderDispatchedComponent implements OnInit {
+  system_discount_type:number;
   checkAllocationSuccess: boolean = false;
   stockAllocation: any;
   tabLoading = false;
@@ -83,6 +84,7 @@ export class OrderDispatchedComponent implements OnInit {
     this.distributorId = this.storageService.getItem('distributor').id;
     this.retailer_credit_Invoices = new Array<RecoveryRetailer>();
     this.holdOrderParams.hold_reason = '';
+    this.system_discount_type = this.storageService.getItem('distributor').system_discount_type;
   }
   ngOnInit(): void {
     this.dtOptions = {
@@ -459,7 +461,6 @@ export class OrderDispatchedComponent implements OnInit {
                 prod.extra_discount = JSON.parse(JSON.stringify(prod.booker_discount));
                 prod.stockQty     = JSON.parse(JSON.stringify(prod.dispatch_qty));
                 prod.net_amount   = JSON.parse(JSON.stringify(prod.final_price));
-                prod.gross_amount = prod.unit_price_after_scheme_discount * prod.stockQty;
                 prod.extra_discount_pkr = prod.stockQty * prod.extra_discount;
                 prod.original_amount = prod.item_trade_price * prod.stockQty;
                 prod.special_discount_pkr = prod.special_discount;

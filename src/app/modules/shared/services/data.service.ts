@@ -6,16 +6,22 @@ import { interval, Observable } from 'rxjs';
 import { retry } from 'rxjs/operators';
 import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 import { HttpBaseService } from 'src/app/core/services/http.service';
+import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { environment } from '../../../../environments/environment';
 import { ItemModel } from '../../inventory/model/distributor-purchase.model';
 
 @Injectable()
 export class DataService {
+  system_discount_type:number;
   constructor(
     private toastService: ToasterService,
-    private baseService: HttpBaseService
-  ) {}
+    private baseService: HttpBaseService,
+    private storageService: LocalStorageService
+    
+  ) {
+    this.system_discount_type = this.storageService.getItem('distributor').system_discount_type;
+  }
 
   calculateUnitPrice(perUnitPrice: number,unitPurchased: number): number {
     return unitPurchased * perUnitPrice;
@@ -618,8 +624,11 @@ export class DataService {
         let rangevalue:number     =   0; 
         let rangecontent :any     =   [];
         let rangeModel:any        =   itemslab;              
-        let ItemTp                =   item.original_price ? item.original_price : item.item_trade_price;
         item.original_price       =   item.original_price ? item.original_price : item.item_trade_price;
+        let ItemTp                =   item.original_price ? item.original_price : item.item_trade_price;
+        if(this.system_discount_type == 2 || this.system_discount_type == 3){
+            ItemTp                =   item.unit_price_after_scheme_discount ? item.unit_price_after_scheme_discount : ItemTp;
+        }
         let itemDiscountedTp      =   ItemTp;
         
         if(item.slab_id > 0){
@@ -633,7 +642,7 @@ export class DataService {
         slabmodel.discount_type           =       0;
         slabmodel.discount                =       0;
         slabmodel.discount_pkr            =       0;
-        slabmodel.itemDiscountedTp          =       itemDiscountedTp;
+        slabmodel.itemDiscountedTp        =       itemDiscountedTp;
         //////
         // if(item.item_id == 26) 
         // //// 
@@ -740,7 +749,12 @@ export class DataService {
   rangecontentGrossAmountSum(rangecontent:any,item_id:number){
     let ttl_Amnt = 0;
     rangecontent.forEach(b => {
-      var gr_amnt = ((+b.stockQty) * (b.original_price ? +b.original_price:+b.item_trade_price));
+      if(this.system_discount_type == 3){
+        var gr_amnt = ((+b.stockQty) * (b.unit_price_after_scheme_discount ? +b.unit_price_after_scheme_discount:+b.unit_price_after_scheme_discount));
+      }
+      else{
+        var gr_amnt = ((+b.stockQty) * (b.original_price ? +b.original_price:+b.item_trade_price));
+      }
       // if(item_id == 26)
       // ////
       ttl_Amnt  = ttl_Amnt + gr_amnt;
@@ -1029,7 +1043,7 @@ export class DataService {
    *  
    */
   calculateOrderItemsValues(items:any):any{
-
+    
     items = items.map(item =>{
       
       let stockQty            =   +item.stockQty;
@@ -1621,17 +1635,28 @@ export class DataService {
           total_tax_amount      =   tax_in_value*finalQty;  
         }
         let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
+
+
+        item.unit_price_after_scheme_discount       =   +item.original_price - +item.scheme_discount;
+        if(this.system_discount_type == 2 || this.system_discount_type == 3){
+          item.unit_price_after_merchant_discount   =   +item.unit_price_after_scheme_discount - +item.trade_discount_pkr;
+          item.unit_price_after_special_discount    =   +item.unit_price_after_merchant_discount- +item.special_discount;
+          item.unit_price_after_individual_discount =   +item.unit_price_after_special_discount - +item.extra_discount;
+        }
+        else{
+            item.unit_price_after_merchant_discount   =   +item.original_price - +item.trade_discount_pkr;
+            item.unit_price_after_special_discount    =   +item.original_price - +item.special_discount;
+            item.unit_price_after_individual_discount =   +item.original_price - +item.extra_discount;
+        }   
+
+
         item.parent_qty_sold                      =   +this.getParentQty(+item.stockQty,+item.sub_inventory_quantity);
         item.gross_amount                         =   +gross_sale_amount;
         item.gross_sale_amount                    =   +item.gross_amount;
-        item.unit_price_after_scheme_discount     =   +item.original_price - +item.scheme_discount; 
         item.trade_discount                       =   +item.trade_discount;
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
-        item.unit_price_after_merchant_discount   =   +item.unit_price_after_scheme_discount - +item.trade_discount_pkr;
         item.special_discount                     =   +item.special_discount;
-        item.unit_price_after_special_discount    =   +item.unit_price_after_merchant_discount- +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
-        item.unit_price_after_individual_discount =   +item.unit_price_after_special_discount - +item.extra_discount;
         item.final_price                          =   +final_price;
         item.net_amount                           =   +item.final_price; 
         item.price                                =   +item.final_price;
@@ -1672,17 +1697,28 @@ export class DataService {
         }
         let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
         
+
+        
+        item.unit_price_after_scheme_discount       =   +item.original_price - +item.scheme_discount;
+        if(this.system_discount_type == 2 || this.system_discount_type == 3){
+          item.unit_price_after_merchant_discount   =   +item.unit_price_after_scheme_discount - +item.trade_discount_pkr;
+          item.unit_price_after_special_discount    =   +item.unit_price_after_merchant_discount- +item.special_discount;
+          item.unit_price_after_individual_discount =   +item.unit_price_after_special_discount - +item.extra_discount;
+        }
+        else{
+            item.unit_price_after_merchant_discount   =   +item.original_price - +item.trade_discount_pkr;
+            item.unit_price_after_special_discount    =   +item.original_price - +item.special_discount;
+            item.unit_price_after_individual_discount =   +item.original_price - +item.extra_discount;
+        } 
+
+
         item.parent_qty_sold                      =   +this.getParentQty(+item.stockQty,+item.sub_inventory_quantity);
         item.gross_amount                         =   +gross_sale_amount;
         item.gross_sale_amount                    =   +item.gross_amount;
-        item.unit_price_after_scheme_discount     =   +item.original_price - +item.scheme_discount;
         item.trade_discount                       =   +item.trade_discount;
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
-        item.unit_price_after_merchant_discount   =   +item.unit_price_after_scheme_discount - +item.trade_discount_pkr;
         item.special_discount                     =   +item.special_discount;
-        item.unit_price_after_special_discount    =   +item.unit_price_after_merchant_discount- +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
-        item.unit_price_after_individual_discount =   +item.unit_price_after_special_discount - +item.extra_discount;
         item.final_price                          =   +final_price;
         item.net_amount                           =   +item.final_price; 
         item.price                                =   +item.final_price;

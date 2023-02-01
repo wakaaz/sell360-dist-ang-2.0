@@ -807,7 +807,7 @@ export class CounterSaleComponent implements OnInit {
           this.selectedProductsIds.push(this.selectedProduct.item_id);
         }
       }
-      debugger
+      //debugger
       this.selectedProducts         = this.dataService.updateOrderitemscalculation(this.selectedProducts);
 
       if(this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type == 'bundle_offer'){
@@ -1223,7 +1223,7 @@ export class CounterSaleComponent implements OnInit {
 
   setOrderItems(selectedEmployee: any): void {
     this.selectedProducts.forEach((product, index) => {
-      debugger
+      //debugger
 
       let free_qty            =   product.scheme_quantity_free ? +product.scheme_quantity_free : 0;
       let stockQty            =   +product.stockQty;
@@ -1310,7 +1310,7 @@ export class CounterSaleComponent implements OnInit {
         total_amount_after_tax: ttl_amnt_aftr_tax,
         total_discount: total_discount
       }; 
-      debugger  
+      //debugger  
       this.order.items.push(item);
       if (index === this.selectedProducts.length - 1) {
         this.placeOrder();
@@ -1341,7 +1341,7 @@ export class CounterSaleComponent implements OnInit {
 
   placeOrder(): void {
     this.isOrdering = true;
-    // debugger 
+    // //debugger 
     this.ordersService.counterSaleOrder(this.order).subscribe(
       (res) => {
         this.isOrdering = false;

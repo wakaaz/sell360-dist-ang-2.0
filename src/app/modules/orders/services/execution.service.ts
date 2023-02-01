@@ -125,6 +125,11 @@ export class ExecutionService {
         scheme_quantity_free: item.scheme_quantity_free || 0,
         scheme_discount_type: item.scheme_discount_type || 0,
         gift_value: item.gift_value || 0,
+        loyalty_offer_id : item.loyalty_offer_id ? item.loyalty_offer_id :null, 
+        loyalty_offer_type : item.loyalty_offer_type ? item.loyalty_offer_type :null,
+        loyalty_offer_discount_type: item.loyalty_offer_discount_type? item.loyalty_offer_discount_type :null,
+        loyalty_offer_discount: item.loyalty_offer_discount? item.loyalty_offer_discount :null,
+        loyalty_offer_discount_pkr : item.loyalty_offer_discount_pkr? item.loyalty_offer_discount_pkr :null,  
         scheme_discount: item.scheme_discount,
         unit_price_after_scheme_discount: item.unit_price_after_scheme_discount,
         slab_id: item.slab_id,
@@ -172,7 +177,7 @@ export class ExecutionService {
         total_discount: total_discount, 
         order_id: orderDetails.id,
       };
-      //debugger
+      ////debugger
       return orderItem;
     });
     return payLoadItems;

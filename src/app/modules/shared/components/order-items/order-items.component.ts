@@ -192,7 +192,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   setQuantity(product: any): void { 
-    debugger
+    //debugger
     //
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
@@ -227,7 +227,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         product.stockQty = product.current_load_allocated_qty - product.scheme_quantity_free;
       }
     }
-    debugger
+    //debugger
     if (product.item_trade_price) {
       if (this.orderType !== 'execution' && product.item_quantity_booker > 0 && +product.stockQty === 0) {
         product.isDeleted = true;
@@ -557,7 +557,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
     // Extra Discount
     this.totalBookerDiscount        =    this.dataService.orderExtraDiscount(this.orderDetail.items);
-
     // Tax
     this.totalTax                   =    this.dataService.orderTax(this.orderDetail.items);
     
@@ -590,7 +589,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     this.orderDetail.total_retail_price = this.totalRetailPrice;
     this.orderDetail.ttl_qty_sold       = this.selectedProductQuantities;
     this.orderDetail.ttl_products_sold  = this.orderDetail.items.length;
-    debugger
+    
                 
   }
 }

@@ -258,13 +258,13 @@
           <div class="col-6" style="color: #0038ba">Total Bill:</div>
           <div class="col-6" style="color: #0038ba">
             <span>{{
-              grossAmount -
-                totalSchemeDiscount -
-                totalMerchantDiscount -
-                totalSpecialDiscount -
-                totalloyaltyDiscount -
-                totalBookerDiscount +
-                returnAmount +
+              grossAmount - 
+              totalSchemeDiscount - 
+              totalMerchantDiscount - 
+              totalSpecialDiscount - 
+              totalloyaltyDiscount - 
+              totalBookerDiscount + 
+              returnAmount +
                 totalTax | number: "1.2-2"
             }}</span>
           </div>

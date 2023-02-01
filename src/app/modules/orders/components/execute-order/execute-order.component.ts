@@ -413,8 +413,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             }
             if (this.orderDetails.returned_items.length) {
               this.setOrderDetailReturnedItems();
-            } else {
-              this.receivableAmount = this.orderDetails.total_amount_after_tax + this.orderDetails.recovered;
+            } else { 
+              this.receivableAmount = this.dataService.orderTotalAmountAfterTax(this.orderDetails.items) + this.orderDetails.recovered;
             }
             this.setOrderDetailItems();
             this.calculateReceivable();
@@ -1064,6 +1064,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.orderDetails.payment.detail.push(this.cheque);
     }
     this.savingOrder = true;
+    
     this.orderService.saveExecutionQuantityOrder(this.orderDetails).subscribe(
       (res) => {
         this.savingOrder = false;

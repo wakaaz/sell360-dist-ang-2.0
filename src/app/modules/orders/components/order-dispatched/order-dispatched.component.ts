@@ -635,7 +635,8 @@ export class OrderDispatchedComponent implements OnInit {
         scheme_min_quantity: item.scheme_min_quantity || 0,
         scheme_quantity_free: item.scheme_quantity_free || 0,
         scheme_discount_type: item.scheme_discount_type || 0,
-        gift_value: item.gift_value || 0,loyalty_offer_id: item.loyalty_offer_id,
+        gift_value: item.gift_value || 0,
+        loyalty_offer_id : item.loyalty_offer_id ? item.loyalty_offer_id :null,
         loyalty_offer_type : item.loyalty_offer_type ? item.loyalty_offer_type :null,
         loyalty_offer_discount_type: item.loyalty_offer_discount_type? item.loyalty_offer_discount_type :null,
         loyalty_offer_discount: item.loyalty_offer_discount? item.loyalty_offer_discount :null,
@@ -915,7 +916,7 @@ export class OrderDispatchedComponent implements OnInit {
     this.load.content      =  this.dispatchService.parseLoads(this.load.content,this.stockAllocation);
     //allocate extra Qty to first  load items
     
-    // debugger 
+    // //debugger 
     this.load.content = this.load.content.map((x) => {
       delete x.loadNumber;
       return x;

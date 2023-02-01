@@ -21,7 +21,7 @@ export class OrderDispatchService {
                     issued_qty: 0,
                     foc_qty:item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
                 };
-                //debugger
+                ////debugger
                 currentLoadContent.items.push(newContent);
             } else {
                 loadItem.actual_qty     = loadItem.actual_qty + item.dispatch_qty; 
@@ -44,7 +44,7 @@ export class OrderDispatchService {
                 loadItem.issued_qty =   0;
                 loadItem.foc_qty    =   loadItem.foc_qty;
                 loadItem.extra_qty  =   0;   
-                //debugger
+                ////debugger
             }
             if (loadItem && loadItem.actual_qty === 0) {
                 currentLoadContent.items = currentLoadContent.items.filter(x => x.item_id !== item.item_id);
@@ -75,13 +75,13 @@ export class OrderDispatchService {
                             issued_qty: item.current_load_allocated_qty,
                             foc_qty   : +item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
                         };
-                       // debugger
+                       // //debugger
                         currentLoadContent.items.push(newContent);
                     } else {
                         
                         loadItem.issued_qty = item.current_load_allocated_qty - loadItem.actual_qty;
                         loadItem.extra_qty  =   0;//+item.current_load_allocated_qty - +item.current_load_booked_qty;    
-                        //debugger
+                        ////debugger
                     }
                 }
             });  
@@ -102,7 +102,7 @@ export class OrderDispatchService {
                                                                 }
                                                             });
         actuals_qty_items       =   actuals_qty_items.filter(x=> (x>0));
-        // debugger
+        // //debugger
         let contents:any    =   [];
         let contentitems    =   [];
         return loadcontents.map(content=>{
@@ -113,7 +113,7 @@ export class OrderDispatchService {
                                                                                 return x;
                                                                             })    
                                     contentitems  = content.items.map(item => item.item_id);
-                                    //debugger
+                                    ////debugger
                                 }else{
                                     content.items   =   content.items.filter(x=> (+x.actual_qty > 0)); 
                                     content.items   =   content.items.map(x=>{
@@ -128,7 +128,7 @@ export class OrderDispatchService {
                                     contentitems    =   contentitems.concat(thisitems);
                                     contentitems    =   contentitems.filter(this.onlyUnique);
                                 }
-                                // debugger
+                                // //debugger
                                 return content;
                         });   
     }

@@ -168,6 +168,7 @@ export class OrdersService {
   }
 
   getViewOrderDetailById(orderid: number): Observable<any> {
+   
     const url = `${API_URLS.VIEW_ORDER_DETAIL}/${orderid}`;
     return this.baseService.get(url);
   }

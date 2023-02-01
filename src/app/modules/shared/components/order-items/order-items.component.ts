@@ -192,7 +192,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   setQuantity(product: any): void { 
-    
+    debugger
     //
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
@@ -227,6 +227,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         product.stockQty = product.current_load_allocated_qty - product.scheme_quantity_free;
       }
     }
+    debugger
     if (product.item_trade_price) {
       if (this.orderType !== 'execution' && product.item_quantity_booker > 0 && +product.stockQty === 0) {
         product.isDeleted = true;

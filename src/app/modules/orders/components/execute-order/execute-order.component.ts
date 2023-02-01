@@ -391,7 +391,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.resetPaymentValues();
       this.setPaymentInitalValues();
       this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
-      this.orderService.getOrderDetails(retailer.id).subscribe(
+      this.orderService.getOrderDetails(retailer.id,'execution').subscribe(
         (res) => {
           this.savingOrder = false;
           if (res.status === 200) {

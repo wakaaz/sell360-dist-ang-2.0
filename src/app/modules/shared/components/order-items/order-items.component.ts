@@ -270,6 +270,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       //Apply slab on all products
       this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
 
+      //update slab discount
+      this.orderDetail.items       =  this.dataService.applySpecialDiscount(this.orderDetail,this.specialDiscounts);
+      
       //Apply Loyal offer discount
       this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
       

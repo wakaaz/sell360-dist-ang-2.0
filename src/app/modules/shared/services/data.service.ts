@@ -1066,6 +1066,22 @@ export class DataService {
 
   }
 
+  applySpecialDiscount(orderDetails:any,specialDiscounts:any){
+
+    orderDetails.items  = orderDetails.items.map((item) => {
+      //add for scheme offers
+        item = this.getSpecialDiscounts(
+                                        orderDetails.segment_id,
+                                        orderDetails.region_id,
+                                        item,
+                                        specialDiscounts
+                                      );
+        return item;                    
+    });
+    orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items);
+    return JSON.parse(JSON.stringify(orderDetails.items));
+  }
+
   updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
     ////
     

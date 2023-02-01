@@ -701,6 +701,10 @@ export class CounterSaleComponent implements OnInit {
         //Apply slab on all products
         this.selectedProducts       =  this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
 
+        //update slab discount
+        this.selectedRetailer.items =  this.selectedProducts
+        this.selectedProducts       =  this.dataService.applySpecialDiscount(this.selectedRetailer,this.specialDiscounts);
+        this.selectedRetailer.items =  this.selectedProducts
 
         //Apply Loyal offer discount
         this.selectedRetailer.items =   this.selectedProducts

@@ -414,9 +414,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             if (this.orderDetails.returned_items.length) {
               this.setOrderDetailReturnedItems();
             } else {
-              this.receivableAmount =
-                this.orderDetails.total_amount_after_tax +
-                this.orderDetails.recovered;
+              this.receivableAmount = this.orderDetails.total_amount_after_tax + this.orderDetails.recovered;
             }
             this.setOrderDetailItems();
             this.calculateReceivable();
@@ -689,7 +687,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     const price = this.orderDetails.items.map((x) => x.net_amount);
     this.netAmount = this.dataService.calculateItemsBill(price);
     this.dueAmount = this.netAmount + this.returnAmount;
-    this.receivableAmount =this.netAmount + this.orderDetails.recovered + this.returnAmount;
+    this.receivableAmount = this.netAmount + this.orderDetails.recovered + this.returnAmount;
     this.selectedRetailer.order_total = this.dueAmount;
     if (this.currentTab === 2) {
       const retailer = this.spotSaleOrder.retailers.find(
@@ -950,9 +948,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         payment_mode: 'Cheque',
         payment_detail: {
           cheque_amount:
-            this.paymentTypeCheque === 'full'
-              ? JSON.parse(JSON.stringify(this.receivableAmount))
-              : JSON.parse(JSON.stringify(this.chequeAmount)),
+            this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.receivableAmount)): JSON.parse(JSON.stringify(this.chequeAmount)),
           bank_name: JSON.parse(JSON.stringify(this.bankName)),
           cheque_number: JSON.parse(JSON.stringify(this.chequeNumber)),
           cheque_date: JSON.parse(JSON.stringify(this.paymentDate)),
@@ -960,9 +956,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         dispatched_bill_amount: 0,
         recovery: 0,
         amount_received:
-          this.paymentTypeCheque === 'full'
-            ? JSON.parse(JSON.stringify(this.receivableAmount))
-            : JSON.parse(JSON.stringify(this.chequeAmount)),
+          this.paymentTypeCheque === 'full'? JSON.parse(JSON.stringify(this.receivableAmount)): JSON.parse(JSON.stringify(this.chequeAmount)),
       };
       this.isChequeAdded = true;
     }

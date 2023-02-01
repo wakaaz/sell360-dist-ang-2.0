@@ -650,7 +650,7 @@ export class OrderDispatchedComponent implements OnInit {
         special_discount: item.special_discount,
         unit_price_after_special_discount:item.unit_price_after_special_discount,
         booker_discount: item.extra_discount ? +item.extra_discount : 0,
-        unit_price_after_individual_discount:item.unit_price_after_individual_discount || item.price,
+        unit_price_after_individual_discount:item.unit_price_after_individual_discount,
         schemeitems:item.schemeitems ? item.schemeitems :null,
         parent_pref_id: item.child,
         parent_unit_id: item.parent_unit_id,

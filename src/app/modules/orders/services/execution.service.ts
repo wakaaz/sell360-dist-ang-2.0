@@ -100,6 +100,10 @@ export class ExecutionService {
         total_tax_amount      =   tax_in_value*finalQty;  
       }
       let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
+
+
+      
+
       const orderItem = {
         quantity_returned:item.dispatch_qty - item.stockQty > -1 ? item.dispatch_qty - item.stockQty : 0,
         executed_qty: finalQty, 
@@ -132,7 +136,7 @@ export class ExecutionService {
         special_discount: item.special_discount,
         unit_price_after_special_discount:item.unit_price_after_special_discount,
         booker_discount: item.extra_discount ? +item.extra_discount : 0,
-        unit_price_after_individual_discount:item.unit_price_after_individual_discount || item.price,
+        unit_price_after_individual_discount:item.unit_price_after_individual_discount,
         schemeitems:item.schemeitems ? item.schemeitems :null,
         parent_pref_id: item.child,
         parent_unit_id: item.parent_unit_id,

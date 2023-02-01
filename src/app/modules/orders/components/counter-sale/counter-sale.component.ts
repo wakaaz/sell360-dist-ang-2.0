@@ -933,7 +933,7 @@ export class CounterSaleComponent implements OnInit {
 
     product.trade_discount = 0;
     product.trade_discount_pkr = 0;
-    product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.price ? product.price:product.original_amount));
+    product.unit_price_after_merchant_discount = JSON.parse(JSON.stringify(product.original_price));
     //console.log(this.orderDetail);
     product.special_discount = 0;
     product.unit_price_after_special_discount = product.unit_price_after_merchant_discount;
@@ -1135,21 +1135,21 @@ export class CounterSaleComponent implements OnInit {
     const toast: Toaster = {
         type: 'error',
         message: 'Product Quantity cannot be zero',
-        title: 'Error:',
+        title: 'Error:', 
     };
     this.toastService.showToaster(toast);
     return;
-}
-if (!this.isDataValid()) {
-    const toast: Toaster = {
-        type: 'error',
-        message:
-            'Please select Employee, Route, Retailer and Products to place the order!',
-        title: 'Error:',
-    };
-    this.toastService.showToaster(toast);
-} else {
-    const employee = this.orderBookers.find(
+    }
+    if (!this.isDataValid()) {
+        const toast: Toaster = {
+            type: 'error',
+            message:
+                'Please select Employee, Route, Retailer and Products to place the order!',
+            title: 'Error:',
+        };
+        this.toastService.showToaster(toast);
+    } else {
+        const employee = this.orderBookers.find(
         (x) => x.employee_id === this.selectedEmployee
     );
     const newOrder: CounterSale = {
@@ -1219,19 +1219,19 @@ if (!this.isDataValid()) {
 
   setOrderItems(selectedEmployee: any): void {
     this.selectedProducts.forEach((product, index) => {
+      debugger
 
       let free_qty            =   product.scheme_quantity_free ? +product.scheme_quantity_free : 0;
       let stockQty            =   +product.stockQty;
-      let original_price      =   product.original_price ? product.original_price : product.original_amount;
-      let gross_sale_amount   =   product.original_price * stockQty;
+      let gross_sale_amount   =   product.original_price * stockQty
       let finalQty            =   stockQty+free_qty;
 
       let ttl_scheme_discount =   product.scheme_id && product.scheme_type == 'bundle_offer' ? +product.scheme_discount: +(stockQty * product.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * product.trade_discount_pkr;
-      let ttl_special_discount=   product.special_discount ? +stockQty * +product.special_discount:0;
-      let ttl_extra_discount  =   +product.extra_discount_pkr ? +product.extra_discount_pkr : 0;
+      let ttl_special_discount=   product.special_discount ? stockQty * +product.special_discount:0;
+      let ttl_extra_discount  =   +product.extra_discount ? +product.extra_discount : 0;
       let ttl_loyalty_discount=   product.loyalty_offer_discount_pkr ? +stockQty * +product.loyalty_offer_discount_pkr : 0;
-      let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount + ttl_loyalty_discount;
+      let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_loyalty_discount;
       let final_price         =   gross_sale_amount - total_discount;                          
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;    
@@ -1240,13 +1240,6 @@ if (!this.isDataValid()) {
         total_tax_amount      =   tax_in_value*finalQty;  
       }
       let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
-
-
-
-
-      let unit_price_after_special_discount     = product.unit_price_after_special_discount ? product.unit_price_after_special_discount: product.unit_price_after_merchant_discount;
-      let unit_price_after_individual_discount  = product.unit_price_after_individual_discount ? product.unit_price_after_individual_discount :unit_price_after_special_discount;
-      
 
 
       const item:any =  {
@@ -1274,17 +1267,17 @@ if (!this.isDataValid()) {
         scheme_discount_type: product.scheme_discount_type || 0,
         gift_value: product.gift_value || 0,
         scheme_discount: product.scheme_discount,
-        unit_price_after_scheme_discount: product.unit_price_after_scheme_discount ? product.unit_price_after_scheme_discount:original_price,
+        unit_price_after_scheme_discount: product.unit_price_after_scheme_discount ? product.unit_price_after_scheme_discount:product.original_price,
         slab_id: product.slab_id,
         slab_type: product.slab_type,
         slab_discount_type: product.slab_discount_type,
         merchant_discount: product.trade_discount,
-        merchant_discount_pkr: product.trade_discount_pkr,
+        merchant_discount_pkr: product.trade_discount_pkr ? product.trade_discount_pkr:0,
         unit_price_after_merchant_discount: product.unit_price_after_merchant_discount,
         special_discount: product.special_discount ? product.special_discount :0,
-        unit_price_after_special_discount:unit_price_after_special_discount,
+        unit_price_after_special_discount:product.unit_price_after_special_discount,
         booker_discount: product.extra_discount ? product.extra_discount:0, 
-        unit_price_after_individual_discount:unit_price_after_individual_discount,
+        unit_price_after_individual_discount:product.unit_price_after_individual_discount,
         schemeitems:product.schemeitems ? product.schemeitems :null,
         parent_pref_id: product.child,
         parent_unit_id: product.parent_unit_id, 
@@ -1313,7 +1306,7 @@ if (!this.isDataValid()) {
         total_amount_after_tax: ttl_amnt_aftr_tax,
         total_discount: total_discount
       }; 
-      
+      debugger  
       this.order.items.push(item);
       if (index === this.selectedProducts.length - 1) {
         this.placeOrder();

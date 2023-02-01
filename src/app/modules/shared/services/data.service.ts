@@ -353,14 +353,12 @@ export class DataService {
           (product.selectedScheme.discount_on_tp / 100);
         product.price = product.original_price - findDiscount;
 
-        product.unit_price_after_scheme_discount = findDiscount;
 
         product.scheme_discount = findDiscount;
+        product.unit_price_after_scheme_discount = product.original_price - findDiscount;
       } else {
-        product.price =
-          product.original_price - product.selectedScheme.discount_on_tp;
-        product.unit_price_after_scheme_discount =
-          product.original_price - product.selectedScheme.discount_on_tp;
+        product.price = product.original_price - product.selectedScheme.discount_on_tp;
+        product.unit_price_after_scheme_discount =product.original_price - product.selectedScheme.discount_on_tp;
         product.scheme_discount = product.selectedScheme.discount_on_tp;
       }
       product.scheme_id           =   product.selectedScheme.id;
@@ -1626,7 +1624,7 @@ export class DataService {
         item.parent_qty_sold                      =   +this.getParentQty(+item.stockQty,+item.sub_inventory_quantity);
         item.gross_amount                         =   +gross_sale_amount;
         item.gross_sale_amount                    =   +item.gross_amount;
-        item.unit_price_after_scheme_discount     =   +item.gross_amount - +item.scheme_discount; 
+        item.unit_price_after_scheme_discount     =   +item.original_price - +item.scheme_discount; 
         item.trade_discount                       =   +item.trade_discount;
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
         item.unit_price_after_merchant_discount   =   +item.unit_price_after_scheme_discount - +item.trade_discount_pkr;
@@ -1677,7 +1675,7 @@ export class DataService {
         item.parent_qty_sold                      =   +this.getParentQty(+item.stockQty,+item.sub_inventory_quantity);
         item.gross_amount                         =   +gross_sale_amount;
         item.gross_sale_amount                    =   +item.gross_amount;
-        item.unit_price_after_scheme_discount     =   +item.gross_amount - +item.scheme_discount;
+        item.unit_price_after_scheme_discount     =   +item.original_price - +item.scheme_discount;
         item.trade_discount                       =   +item.trade_discount;
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
         item.unit_price_after_merchant_discount   =   +item.unit_price_after_scheme_discount - +item.trade_discount_pkr;

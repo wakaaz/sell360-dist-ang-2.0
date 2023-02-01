@@ -82,7 +82,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
   ngOnInit(): void {
     this.showProducts = false;
-    this.item_id = null;
   }
      
 
@@ -93,7 +92,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     if (changes.newProduct?.currentValue) {
       this.orderDetail.items.push(this.newProduct);
       this.setQuantity(this.newProduct);
-      this.item_id = this.newProduct.item_id;
     }
     if (changes.savingOrder?.currentValue) {
       this.resetValues();

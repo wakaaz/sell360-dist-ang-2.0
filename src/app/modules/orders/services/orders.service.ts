@@ -331,4 +331,11 @@ export class OrdersService {
     const url = `${API_URLS.SAVE_LOAD_ITEM_ALLOCATION}/${assignment_id}`;
     return this.baseService.get(url);
   }
+
+  // GET:: /saveLoadItemAllocation/{assignment_id}
+  verifyLoyalityOfferOnExecution(load_id: number): Observable<any> {
+    const url = `${API_URLS.EXECUTION_VERIFY_LOYALITY_OFFER}/${load_id}`;
+    return this.baseService.get(url);
+  }
+
 }

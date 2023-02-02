@@ -51,6 +51,7 @@ export const API_URLS = {
   UPDATE_INVOICE_DETAIL: '/updateDispatchInvoiceDate',
   GET_EXECUTION_LIST: '/executionOrderListing',
   GET_EXECUTION_DETAILS: '/executionDetail',
+  EXECUTION_VERIFY_LOYALITY_OFFER: '/executionVerifyLoyalityOffer',
   CHECK_RETAILER_BALANCE: '/executionCheckRetailerBalance',
   SAVE_EXPENSE: '/executionSaveExpense',
   EXECUTION_FINAL_SAVE: '/executionFinalSave',

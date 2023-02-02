@@ -653,9 +653,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
   deleteReturnedProduct(selectedItem: any): void {
     if (selectedItem.id) {
-      const productAvalableQty = this.inventory.find(
-        (x) => x.item_id === selectedItem.item_id
-      )?.available_qty;
+      const productAvalableQty = this.inventory.find((x) => x.item_id === selectedItem.item_id)?.extra_qty;
       if (
         productAvalableQty >= selectedItem.quantity_returned ||
         selectedItem.return_type === 'damage'
@@ -740,7 +738,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     this.showReturned = false;
   }
 
-  changeTab(selectedTab: number): void {
+  changeTab(selectedTab: number,actionTab:string=null): void {
+    //alert(selectedTab) 
     this.currentTab = selectedTab;
     if (this.currentTab === 1) {
       this.retailersList = this.retailersList.map((x) => {
@@ -767,6 +766,39 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.setPaymentInitalValues();
     }
     if (this.currentTab === 3) {
+      if(actionTab && actionTab == 'next'){
+
+        this.orderService.verifyLoyalityOfferOnExecution(this.loadId).subscribe(
+          (res) => {
+            this.savingOrder = false;
+            if (res.status === 200) {
+              console.log(res.data)
+              const toast: Toaster = {
+                type: 'success',
+                message: res.data.msg,
+                title: 'Success:',
+              };
+              this.toastService.showToaster(toast); 
+            }
+          },
+          (error) => {
+            this.changeTab(2);
+            this.savingOrder = false;
+            if (error.status !== 1 && error.status !== 401) {
+              console.log(
+                'Error while getting checking loyality offer :>> ',
+                error.message
+              );
+              const toast: Toaster = {
+                type: 'error',
+                message: 'Cannot fetch loyality offer. Please try again',
+                title: 'Error:',
+              };
+              this.toastService.showToaster(toast);
+            }
+          }
+        );
+      }
       this.orderService.setLoadRetaillersRecovery(true);
     } else if (this.currentTab === 4) {
       this.selectedOrderBooker = null;
@@ -1234,12 +1266,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       let isOrderValid = true;
       const returnedProduct = this.orderDetails.returned_items.find(
         (product) => {
-          const productAvalableQty = this.inventory.find(
-            (x) => x.item_id === product.item_id
-          )?.available_qty;
+          const productAvalableQty = this.inventory.find((x) => x.item_id === product.item_id)?.extra_qty;
           if (
-            productAvalableQty < product.quantity_returned &&
-            product.return_type !== 'damage'
+            productAvalableQty < product.quantity_returned && product.return_type !== 'damage'
           ) {
             isOrderValid = false;
             return product;

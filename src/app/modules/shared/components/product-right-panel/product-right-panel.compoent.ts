@@ -92,16 +92,17 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     if (this.orderType === 'execution') {
       const toast: Toaster = {
         type: 'error',
-        message: `Quantity (${product.stockQty}) should not be greater than available quantity (${product.available_qty})!`,
+        message: `Quantity (${product.stockQty}) should not be greater than available quantity (${product.extra_qty})!`,
         title: 'Quantity Error:',
       };
-      if (+product.stockQty > product.available_qty) {
+      if (+product.stockQty > product.extra_qty) {
         this.toastService.showToaster(toast);
       }
     }
   }
 
   addProductToOrder(): void {
+    debugger
     if (
       this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type !='bundle_offer' &&
       !this.selectedProduct.selectedScheme.applied
@@ -114,7 +115,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       +this.selectedProduct.stockQty > 0 &&
       (this.orderType !== 'execution' ||
         (this.orderType === 'execution' &&
-          +this.selectedProduct.stockQty <= this.selectedProduct.available_qty))
+          +this.selectedProduct.stockQty <= this.selectedProduct.extra_qty))
     ) {
       this.allProducts  = this.dataService.applySlabDiscountValuesToItems(this.allProducts,this.discountSlabs)   
         
@@ -132,17 +133,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
 
       
 
-     // let orderDetail:any  = this.selectedRetailer;
-    // orderDetail.items    =  this.orderedProducts;
-    // if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
-    //   orderDetail.items   = this.dataService.applyBundleProductsScheme(product,orderDetail);
-    // }
-    // //console.log("COUNT BFR=>"+orderDetail.items.length)
-    // orderDetail.items  = this.dataService.updateSchemeFreeProductItems(orderDetail,this.allProducts);
-    // //console.log("COUNT AFR=>"+orderDetail.items.length)
-    // //apply slabs to all items 
-    // orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(orderDetail.items,this.discountSlabs)   
-    
+      debugger
 
       this.productSelected.emit(
         JSON.parse(JSON.stringify(this.selectedProduct))

@@ -1672,7 +1672,7 @@
               <button
                 [disabled]="currentTab === 1 || isSpotSaleActive || loading"
                 type="submit"
-                (click)="changeTab(currentTab - 1)"
+                (click)="changeTab(currentTab - 1,'prev')"
                 class="btn btn-primary m-0 mr-2"
               >
                 Previous
@@ -1680,7 +1680,7 @@
               <button
                 type="submit"
                 [disabled]="isSpotSaleActive || loading || currentTab === 5"
-                (click)="changeTab(currentTab + 1)"
+                (click)="changeTab(currentTab + 1,'next')"
                 class="btn btn-primary m-0"
               >
                 Next

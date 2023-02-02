@@ -206,9 +206,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     if (this.orderType === 'execution') {
       const prod = this.allProducts.find((x) => x.item_id === product.item_id);
       if (
-        (product.id &&
-          +product.stockQty > (+prod.available_qty + +product.executed_qty + +product.booked_foc)) ||(!product.id && +product.stockQty > (prod.available_qty++ +product.booked_foc))
-      ) {
+        (product.id && +product.stockQty > (+prod.extra_qty + +product.executed_qty + +product.booked_foc)) 
+        ||
+        (!product.id && +product.stockQty > (+prod.extra_qty + +product.booked_foc))
+        ) 
+        {
         const toast: Toaster = {
           message:
             'Executed quantity cannot be greater than available quantity!',
@@ -299,7 +301,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   } 
 
   setReturnedQty(product: any): void {
-    const productAvalableQty = this.allProducts.find((x) => x.item_id === product.item_id)?.available_qty;
+    const productAvalableQty = this.allProducts.find((x) => x.item_id === product.item_id)?.extra_qty;
     if (
       productAvalableQty < product.quantity_returned &&
       +product.stockQty < product.quantity_returned &&

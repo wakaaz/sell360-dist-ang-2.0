@@ -177,22 +177,19 @@
                                 <span
                                   *ngIf="orderType === 'execution'"
                                   style="display: block"
-                                  >available: {{product.available_qty}}</span
-                                >
+                                  >available: {{product.extra_qty}}</span> 
                                 <span
-                                  *ngIf="product?.current_load_allocated_qty"
+                                  *ngIf="orderType !== 'execution'"
                                   style="display: block; opacity: 0.6"
-                                >
-                                  available:
-                                  {{product?.current_load_allocated_qty -
-                                  product?.current_load_booked_qty}}
+                                > 
+                                  available: {{+product?.current_load_allocated_qty - +product?.current_load_booked_qty}}
                                 </span>
                               </div>
                             </div>
                           </td>
                           <td>
                             <button
-                              *ngIf="!product.isAdded "
+                              *ngIf="!product.isAdded && !(orderType === 'execution' && +product.extra_qty == 0 ) && !(orderType !== 'execution' && +product?.current_load_allocated_qty - +product?.current_load_booked_qty == 0 )"
                               class="btn btn-default mb-0 dont-close-quantity"
                               data-toggle="modal"
                               data-target="#exampleModal"

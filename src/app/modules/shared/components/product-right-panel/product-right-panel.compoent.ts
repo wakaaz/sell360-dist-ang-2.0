@@ -102,7 +102,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   }
 
   addProductToOrder(): void {
-    debugger
+    
     if (
       this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type !='bundle_offer' &&
       !this.selectedProduct.selectedScheme.applied
@@ -133,7 +133,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
 
       
 
-      debugger
+      
 
       this.productSelected.emit(
         JSON.parse(JSON.stringify(this.selectedProduct))

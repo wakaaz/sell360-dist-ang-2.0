@@ -56,6 +56,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   totalMerchantDiscount: number;
   totalRetailPrice:number;
   selectedProductQuantities: number;
+  selecteddeleteSchemes: any;
   totalTax: number;
   item_id : string;
 
@@ -81,6 +82,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   ngOnInit(): void {
+    this.orderDetail.orderType  = this.orderType;
     this.showProducts = false;
   }
      
@@ -109,6 +111,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     this.totalMerchantDiscount = 0;
     this.totalRetailPrice=0;
     this.selectedProductQuantities = 0;
+    this.selecteddeleteSchemes = null;
   }
 
   openProductsList(event: Event): void {
@@ -140,11 +143,21 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
   }
+  confirmDelete(selecteditem:any): void{
+    this.selecteddeleteSchemes = JSON.parse(JSON.stringify(this.orderDetail.scheme_items?.filter(x=>(x.item_id == selecteditem.item_id))));
+    this.selectedItem          = selecteditem;
+  }
 
-  deleteProduct(): void {
+  deleteProduct(deleteType:number=null): void {
     if (this.selectedItem.productType === 'returned') {
       this.deleteReturned.emit(this.selectedItem);
-    } else {
+    } 
+    else 
+    {
+      //remove appliedn scheme except loyality scheme
+      if(deleteType && deleteType == 1){
+        this.orderDetail.items = this.dataService.deleteSchemeformItems(this.selectedItem,this.orderDetail.items,this.selecteddeleteSchemes);
+      }
       if (this.selectedItem.id) {
         this.selectedItem.stockQty = 0;
         this.selectedItem.trade_discount = 0;
@@ -153,21 +166,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         this.selectedItem.merchant_discount_pkr = 0;
         this.setQuantity(this.selectedItem); 
         this.selectedItem.isDeleted = true;
-        // this.selectedItem.item_status = 0;
-      } else {
+      } 
+      else {
         this.orderDetail.items = this.orderDetail.items.filter(
           (x) => x.item_id !== this.selectedItem.item_id
         );
-        
-        // if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
-        //   this.orderDetail.items   = this.dataService.applyBundleProductsScheme(this.selectedItem,this.orderDetail);
-        // }
-        // //console.log("COUNT BFR=>"+this.orderDetail.items.length)
-        // this.orderDetail.items  = this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
-        // //console.log("COUNT AFR=>"+this.orderDetail.items.length)
-        // //apply slabs to all items 
-        // this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
-        // this.applySpecialDiscountOnAllProducts();
 
         this.orderDetail.items = this.dataService.updateOrderitemscalculation(this.orderDetail.items);
       if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
@@ -188,11 +191,20 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       }
       this.productUpdated.emit();
       document.getElementById('close-prod-del').click();
+      if(deleteType && deleteType == 1){
+        const toast: Toaster = {
+          message:
+            'Schemes are removed!',
+          type: 'success',
+          title: 'Schemes:',
+        };
+        this.toastService.showToaster(toast);
+      }
     }
   }
 
   setQuantity(product: any): void { 
-    //debugger
+    
     //
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
@@ -200,11 +212,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     // if (+product.stockQty > foundProd.current_load_allocated_qty) {
     //   product.stockQty = foundProd.current_load_allocated_qty;
     // }
-
-    
-    
+    this.orderDetail.orderType  = this.orderType;
     if (this.orderType === 'execution') {
-      const prod = this.allProducts.find((x) => x.item_id === product.item_id);
+      product.executed_qty  = product.executed_qty ? +product.executed_qty:0;
+      product.booked_foc    = product.booked_foc ? +product.booked_foc:0;
+      const prod = this.allProducts.find((x) => x.item_id == product.item_id);
       if (
         (product.id && +product.stockQty > (+prod.extra_qty + +product.executed_qty + +product.booked_foc)) 
         ||
@@ -217,7 +229,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
           type: 'error',
           title: 'Quantity Error:',
         };
-        this.toastService.showToaster(toast);
+        this.toastService.showToaster(toast); 
         product.stockQty = 0;
       }
     }else{
@@ -229,7 +241,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         product.stockQty = product.current_load_allocated_qty - product.scheme_quantity_free;
       }
     }
-    //debugger
+    
     if (product.item_trade_price) {
       if (this.orderType !== 'execution' && product.item_quantity_booker > 0 && +product.stockQty === 0) {
         product.isDeleted = true;
@@ -263,7 +275,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       // this.applySpecialDiscountOnAllProducts();
 
 
-      this.orderDetail.items = this.dataService.updateOrderitemscalculation(this.orderDetail.items);
+      this.orderDetail.items     = this.dataService.updateOrderitemscalculation(this.orderDetail.items);
       if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
         this.orderDetail.items   = this.dataService.applyBundleProductsScheme(product,this.orderDetail);
       }

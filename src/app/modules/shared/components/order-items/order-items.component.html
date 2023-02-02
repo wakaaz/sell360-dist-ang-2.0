@@ -26,7 +26,12 @@
       </div>
       <div class="modal-footer border-0">
         <button type="button" class="btn btn-primary" (click)="deleteProduct()">
-          Yes
+          Booked Qty
+        </button>
+        <button
+        *ngIf="selecteddeleteSchemes?.length" 
+        type="button" class="btn btn-primary" (click)="deleteProduct(1)">
+         Booked Qty AND Schemes
         </button>
         <button
           type="submit"
@@ -124,7 +129,7 @@
             *ngIf="!item.isDeleted"
             [disabled]="isChequeAdded || isCreditAdded"
             type="button"
-            (click)="selectedItem = item"
+            (click)="confirmDelete(item)"
             class="del_item btn smBTN red-bg"
             data-toggle="modal"
             data-target="#exampleModal-del"

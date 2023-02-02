@@ -235,8 +235,6 @@ export class DataService {
         product.unit_price_after_scheme_discount = product.original_price;
         this.schemeCannotApplied();
     }
-    // console.log(product);
-    // ////
     return product;
   }
 
@@ -584,7 +582,6 @@ export class DataService {
   }
 
   applySlabDiscountValuesToItems(items:any, slabs:any){
-    //console.log(items)
     items = items.map((item) => {
     
       /* App Scenarios In case of exclusiveOrder Access Right = 0:
@@ -791,7 +788,7 @@ export class DataService {
     }
     product.special_discount_pkr              = product.special_discount;
     product.unit_price_after_special_discount = product.unit_price_after_merchant_discount - product.special_discount;
-      //////debugger
+     
     return product;
   }
   /** Special Discount End */
@@ -883,8 +880,6 @@ export class DataService {
             item.price            =   item.original_price - schemeItemDiscount; 
             item.unit_price_after_scheme_discount = item.original_price - schemeItemDiscount;
             item.selectedScheme.applied = true;
-           //console.log(item)
-          // 
           }
           
           return item;
@@ -923,9 +918,6 @@ export class DataService {
               })
             }
             item.selectedScheme.applied = true;
-            //////
-           //console.log(item)
-          // 
           }
           return item;
       });
@@ -1091,7 +1083,6 @@ export class DataService {
       let schemeitems:any         = [];
       let orderDetails_items:any  = [];
       let loyalty_free_items:any  = orderDetails.loyalty_free_items; 
-      // //////debugger
       orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && ( x.isSoftDelete  || +x.stockQty >0 || +x.scheme_id > 0 || +x.scheme_quantity_free > 0 || x.qtyAdded))))); 
       orderDetails.items.map((item) => {
         
@@ -1206,7 +1197,6 @@ export class DataService {
 
       //add for loyalty offers 
       if(typeof loyalty_free_items !== 'undefined' && loyalty_free_items !== null && loyalty_free_items.length > 0 ){
-        console.log("loyalty_free_items"+loyalty_free_items[0].free_qty);
         if(loyalty_free_items[0].free_qty > 0){
         let item_id   = loyalty_free_items[0].item_id;
         let free_qty  = loyalty_free_items[0].free_qty;
@@ -1326,7 +1316,16 @@ export class DataService {
         if(!orderDetails.status_code || orderDetails.status_code === null){ //for counter sale
           ttl_item_stock  = +item.availble_stock
         }else{
-          ttl_item_stock  = +item.dispatch_qty + +item.booked_foc + +item.extra_qty;
+          if(orderDetails.orderType === 'execution'){
+              if(item.id){
+                ttl_item_stock  = +item.executed_qty + +item.booked_foc + +item.extra_qty;
+              }else{
+                ttl_item_stock  =  +item.booked_foc + +item.extra_qty;
+              }
+              debugger
+          }else{
+            ttl_item_stock  = +item.dispatch_qty + +item.booked_foc + +item.extra_qty;
+          }
         }
         if(+ttl_item_stock < +ttlQty){
           orderDetails.FOCA_error = true;
@@ -1339,10 +1338,8 @@ export class DataService {
       })
     }
     orderDetails.items        = orderDetails.items.filter(x=>( x.isSoftDelete || +x.stockQty > 0 || +x.scheme_quantity_free > 0 || x.qtyAdded))
-    //////debugger
-    console.log(orderDetails.schemeitems);
+   
     orderDetails.schemeitems  = this.updateSchemeItems(orderDetails);
-    console.log(orderDetails.schemeitems);
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
   
@@ -1424,7 +1421,7 @@ export class DataService {
         });
     }
     orderDetails.loyalty_offer_reward_type  =   loyaltyOffer.reward_type;
-    //debugger
+   
     if(loyaltyOffer){
         if(loyaltyOffer.retailer){
 
@@ -1509,7 +1506,6 @@ export class DataService {
                             }
                         }
                         //calculate discount on each order item
-                        ////////debugger
                         orderDetails.items  =   orderDetails.items.map(item=>{
                             item.loyalty_offer_id           =  loyaltyOffer.id;
                             item.loyalty_offer_type         =  loyaltyOffer.reward_type;
@@ -1531,10 +1527,8 @@ export class DataService {
                                 ////
                             }
                             ////
-                           // //////debugger
                             return item;
                         })
-                        ////////debugger
                         total_discount  =  +reward_discount_value;
                     }
                     else { //free product
@@ -1544,7 +1538,6 @@ export class DataService {
                         //let reward_max_discount_interval:number = loyaltyOffer.reward_max_discount_interval;
                         if (intervals > reward_max_discount_interval) {
                             intervals = +reward_max_discount_interval;
-                            console.log('interval 1461');
                         }
                         
                         let ttl_reward_free_qty =   loyaltyOffer.reward_free_qty * intervals;
@@ -1561,12 +1554,7 @@ export class DataService {
             }
         }
     } 
-    // ////
-    ////////debugger 
     orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items);
-    console.log("loyalty_offer_interval==> "+orderDetails.loyalty_offer_interval);
-    console.log("loyalty_offer_discount==> "+orderDetails.loyalty_offer_discount);
-    
     return orderDetails;
   }
   nullifyLoyaltyDiscount(orderDetails):any{
@@ -1624,7 +1612,7 @@ export class DataService {
   */
   
   updateItemcalculation(item):any{
-        ////debugger
+       
         item.scheme_discount    = item.scheme_discount ? +item.scheme_discount : 0;
         item.trade_discount     = item.trade_discount_pkr ? +item.trade_discount : 0;
         item.trade_discount_pkr = item.trade_discount_pkr ? +item.trade_discount_pkr : 0;
@@ -1684,7 +1672,6 @@ export class DataService {
   }
   updateOrderitemscalculation(items):any{
     items   =   items.map((item) => {
-        ////debugger
         item.scheme_discount    = item.scheme_discount ? +item.scheme_discount : 0;
         item.trade_discount     = item.trade_discount_pkr ? +item.trade_discount : 0;
         item.trade_discount_pkr = item.trade_discount_pkr ? +item.trade_discount_pkr : 0;
@@ -1855,9 +1842,26 @@ export class DataService {
   orderLoyaltyDiscount(orderDetails:any):number{
     if(orderDetails.loyalty_offer_reward_type == 1){
       return orderDetails.loyalty_offer_discount ? +orderDetails.loyalty_offer_discount:0; 
-      //debugger
     }
     return 0;
+  }
+
+  deleteSchemeformItems(selectedItem:any,items:any,selecteddeleteSchemes:any):any{
+    items   =   items.map((item) => {
+                if( selectedItem && (selectedItem.item_id == item.item_id || selecteddeleteSchemes?.some(x => ( x.parent_item_id != null && x.parent_item_id == item.item_id)))){
+                    item.selectedScheme       =   null;
+                    item.scheme_id            =   null;
+                    item.scheme_type          =   null;
+                    item.scheme_rule          =   null;
+                    item.scheme_discount_type =   null;
+                    item.scheme_min_quantity  =   null;
+                    item.scheme_quantity_free =   0;
+                    item.scheme_discount      =   0;
+                    item.scheme_free_items    =   [];
+                }
+                return item; 
+              });
+    return JSON.parse(JSON.stringify(items));
   }
 
 }

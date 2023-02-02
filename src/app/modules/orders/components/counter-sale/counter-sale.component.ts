@@ -1367,6 +1367,7 @@ export class CounterSaleComponent implements OnInit {
           this.isCreditAdded = false;
           this.resetValues();
           this.paymentCancelled();
+          this.getCounterSaleData();
         }
       },
       (error) => {

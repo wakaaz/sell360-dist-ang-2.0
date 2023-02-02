@@ -89,6 +89,7 @@ export class OrderDispatchedComponent implements OnInit {
   ngOnInit(): void {
     this.dtOptions = {
       pagingType: 'simple_numbers',
+      scrollX: true,
     };
     this.orderService.checkAllocationSuccess.subscribe((x) => {
       this.checkAllocationSuccess = x;

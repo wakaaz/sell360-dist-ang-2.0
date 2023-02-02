@@ -625,7 +625,7 @@
                     <thead>
                       <tr>
                         <th rowspan="2" style="vertical-align: middle">SN</th>
-                        <th rowspan="2" style="vertical-align: middle">
+                        <th rowspan="2" style="vertical-align: middle;min-width:200px !important">
                           Product Name
                         </th>
                         <th
@@ -679,7 +679,7 @@
                     <tbody>
                       <tr *ngFor="let product of finalLoad.load">
                         <td>{{ product.item_sku }}</td>
-                        <td>{{ product.item_name }}</td>
+                        <td style="min-width:200px !important">{{ product.item_name }}</td>
                         <ng-container
                           *ngFor="let loadContent of product.content"
                         >

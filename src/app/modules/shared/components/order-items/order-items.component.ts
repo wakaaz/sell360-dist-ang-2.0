@@ -461,6 +461,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     
     // Special Discount
     product = this.calculateProductSpecialDiscount(product);
+
     
   
   }

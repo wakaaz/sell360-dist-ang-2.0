@@ -61,16 +61,22 @@
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th><strong>Code</strong></th>
-                                                                <th><strong>Product Name</strong></th>
+                                                                <th rowspan="2"><strong>Code</strong></th>
+                                                                <th rowspan="2"><strong>Product Name</strong></th>
+                                                                <th colspan="2" style="text-align:center;"><strong>Booked</strong></th>
+                                                                <th colspan="2" style="text-align:center;"><strong>FOC</strong></th>
+                                                                <th rowspan="2"><strong>T.P</strong></th>
+                                                                <th rowspan="2"><strong>GR Amt</strong></th>
+                                                                <th rowspan="2"><strong>T.O</strong></th>
+                                                                <th rowspan="2"><strong>T.Disc</strong></th>
+                                                                <th rowspan="2"><strong>SPC.Disc</strong></th>
+                                                                <th rowspan="2"><strong>Net.Amt</strong></th>
+                                                            </tr>
+                                                            <tr>
                                                                 <th><strong>CTN</strong></th>
                                                                 <th><strong>BOX/PCS</strong></th>
-                                                                <th><strong>T.P</strong></th>
-                                                                <th><strong>GR Amt</strong></th>
-                                                                <th><strong>T.O</strong></th>
-                                                                <th><strong>T.Disc</strong></th>
-                                                                <th><strong>SPC.Disc</strong></th>
-                                                                <th><strong>Net.Amt</strong></th>
+                                                                <th><strong>CTN</strong></th>
+                                                                <th><strong>BOX/PCS</strong></th>
                                                             </tr>
                                                         </thead>
                                                         <tbody class="order_items_body">
@@ -79,6 +85,8 @@
                                                                 <td>{{item.item_name}}</td>
                                                                 <td>{{item.parent_qty}}</td>
                                                                 <td>{{item.child_qty}}</td>
+                                                                <td>{{item.foc_parent_qty}}</td>
+                                                                <td>{{item.foc_child_qty}}</td>
                                                                 <td>{{item.original_price}}</td>
                                                                 <td>{{(item.original_price * item.quantity) | decimal}}</td>
                                                                 <td>{{(item.scheme_discount * item.quantity) | number: '1.2-2'}}</td>
@@ -87,6 +95,8 @@
                                                                 <td>{{item.final_price | number: '1.2-2'}}</td>
                                                             </tr>
                                                             <!-- <tr>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
@@ -107,10 +117,14 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
                                                                 <td><strong>Total Discount PKR.</strong></td>
                                                                 <td><strong>{{orderDetail?.totalDiscount | decimal}}</strong></td>
                                                             </tr>
                                                             <tr>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>

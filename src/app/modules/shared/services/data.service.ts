@@ -1612,11 +1612,19 @@ export class DataService {
   */
   
   updateItemcalculation(item):any{
-       
+        if(+item.stockQty < 1){
+          item.scheme_discount    = 0; 
+          item.trade_discount     = 0; 
+          item.trade_discount_pkr = 0; 
+          item.special_discount   = 0; 
+          item.extra_discount     = 0;
+          item.extra_discount_pkr = 0;
+        }
         item.scheme_discount    = item.scheme_discount ? +item.scheme_discount : 0;
         item.trade_discount     = item.trade_discount_pkr ? +item.trade_discount : 0;
         item.trade_discount_pkr = item.trade_discount_pkr ? +item.trade_discount_pkr : 0;
         item.special_discount   = item.special_discount ? +item.special_discount : 0;
+        item.extra_discount     = item.extra_discount ? +item.extra_discount : 0; 
         item.extra_discount_pkr = item.extra_discount_pkr ? +item.extra_discount_pkr : 0; 
 
 
@@ -1672,6 +1680,14 @@ export class DataService {
   }
   updateOrderitemscalculation(items):any{
     items   =   items.map((item) => {
+        if(+item.stockQty < 1){
+          item.scheme_discount    = 0; 
+          item.trade_discount     = 0; 
+          item.trade_discount_pkr = 0; 
+          item.special_discount   = 0; 
+          item.extra_discount     = 0;
+          item.extra_discount_pkr = 0;
+        }
         item.scheme_discount    = item.scheme_discount ? +item.scheme_discount : 0;
         item.trade_discount     = item.trade_discount_pkr ? +item.trade_discount : 0;
         item.trade_discount_pkr = item.trade_discount_pkr ? +item.trade_discount_pkr : 0;

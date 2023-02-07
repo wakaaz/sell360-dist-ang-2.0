@@ -86,7 +86,7 @@ export class ExecutionService {
       let gross_sale_amount   =   item.original_price * stockQty
       let finalQty            =   stockQty+free_qty;
 
-      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
+      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
       let ttl_special_discount=   item.special_discount ? stockQty * +item.special_discount:0;
       let ttl_extra_discount  =   +item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
@@ -120,6 +120,7 @@ export class ExecutionService {
         original_price: item.original_price,
         scheme_id: item.scheme_id || 0,
         scheme_type : item.scheme_type,
+        scheme_bundle_interval:item.scheme_bundle_interval || 0,
         scheme_rule: item.scheme_rule,
         scheme_min_quantity: item.scheme_min_quantity || 0,
         scheme_quantity_free: item.scheme_quantity_free || 0,

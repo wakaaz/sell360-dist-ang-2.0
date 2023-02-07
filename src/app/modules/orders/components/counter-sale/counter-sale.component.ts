@@ -1230,7 +1230,7 @@ export class CounterSaleComponent implements OnInit {
       let gross_sale_amount   =   product.original_price * stockQty
       let finalQty            =   stockQty+free_qty;
 
-      let ttl_scheme_discount =   product.scheme_id && product.scheme_type == 'bundle_offer' ? +product.scheme_discount: +(stockQty * product.scheme_discount) ;
+      let ttl_scheme_discount =   product.scheme_id && product.scheme_type == 'bundle_offer' ? (+product.scheme_discount * +product.scheme_bundle_interval): +(stockQty * product.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * product.trade_discount_pkr;
       let ttl_special_discount=   product.special_discount ? stockQty * +product.special_discount:0;
       let ttl_extra_discount  =   +product.extra_discount ? +product.extra_discount : 0;
@@ -1264,6 +1264,7 @@ export class CounterSaleComponent implements OnInit {
         loyalty_offer_discount: product.loyalty_offer_discount? product.loyalty_offer_discount :null,
         loyalty_offer_discount_pkr : product.loyalty_offer_discount_pkr? product.loyalty_offer_discount_pkr :null, 
         scheme_id: product.scheme_id || 0,
+        scheme_bundle_interval:product.scheme_bundle_interval || 0, 
         scheme_type : product.scheme_type,
         scheme_rule: product.scheme_rule,
         scheme_min_quantity: product.scheme_min_quantity || 0,

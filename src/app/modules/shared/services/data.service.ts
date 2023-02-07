@@ -54,7 +54,7 @@ export class DataService {
     let totalSchemeDiscount = 0;
     if(items){
       items.forEach(x=>{
-        totalSchemeDiscount = totalSchemeDiscount + (x.scheme_id && x.scheme_type == 'bundle_offer' ? x.scheme_discount:(x.stockQty * x.scheme_discount) )
+        totalSchemeDiscount = totalSchemeDiscount + (x.scheme_id && x.scheme_type == 'bundle_offer' ? ( +x.scheme_discount * +x.scheme_bundle_interval):(x.stockQty * x.scheme_discount) )
       });
     }
     return totalSchemeDiscount;
@@ -863,12 +863,14 @@ export class DataService {
       ////
       //schemeItemDiscount    = schemeItemDiscount > 0 ? schemeItemDiscount/total_items : 0; 
       orderDetails.items      = orderDetails.items.map((item) => {
+        item.scheme_bundle_interval         =   null;
           if(scheme_items.includes(item.item_id)){
             ////
-            item.selectedScheme   =   product.selectedScheme;
-            item.scheme_id        =   product.selectedScheme.id;
-            item.scheme_type      =   product.selectedScheme.scheme_type;
-            item.scheme_rule      =   product.selectedScheme.scheme_rule;
+            item.selectedScheme             =   product.selectedScheme;
+            item.scheme_id                  =   product.selectedScheme.id;
+            item.scheme_type                =   product.selectedScheme.scheme_type;
+            item.scheme_rule                =   product.selectedScheme.scheme_rule;
+            item.scheme_bundle_interval     =   interval;
             let schemeItemDiscount=   0;
             if(product.selectedScheme.discount_type == 1){
               schemeItemDiscount  = interval*item.selectedScheme.discount_on_tp; 
@@ -895,6 +897,7 @@ export class DataService {
     if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
       orderDetails.items      = orderDetails.items.map((item) => {
+        item.scheme_bundle_interval   =   null;
           if(scheme_items.includes(item.item_id)){
             item.scheme_free_items    =   [];
             item.selectedScheme       =   product.selectedScheme;
@@ -903,6 +906,7 @@ export class DataService {
             item.scheme_rule          =   product.selectedScheme.scheme_rule;
             item.scheme_discount_type =   product.selectedScheme.discount_type;
             item.scheme_min_quantity  =   product.selectedScheme.min_qty; 
+            item.scheme_bundle_interval=   interval;
             item.scheme_quantity_free =   0;
             item.scheme_discount      =   0;
             item.price                =   item.item_trade_price;
@@ -1040,7 +1044,7 @@ export class DataService {
       
       let stockQty            =   +item.stockQty;
       let gross_sale_amount   =   (item.original_price ? +item.original_price:+item.original_amount) * +stockQty;
-      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount: +(stockQty * item.scheme_discount) ;
+      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
       let ttl_trade_discount  =   +item.trade_discount_pkr ? + stockQty * +item.trade_discount_pkr : 0;
       let ttl_special_discount=   +item.special_discount ? + stockQty * +item.special_discount :0;
       let ttl_extra_discount  =   +item.extra_discount ? + stockQty * +item.extra_discount :0;
@@ -1633,7 +1637,7 @@ export class DataService {
         let gross_sale_amount   =   item.original_price * stockQty
         let finalQty            =   stockQty+free_qty;
 
-        let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(stockQty * item.scheme_discount) ;
+        let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
         let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
         let ttl_special_discount=   +item.special_discount ? +stockQty * +item.special_discount:0;
         let ttl_extra_discount  =   +item.extra_discount ? +stockQty * +item.extra_discount:0;
@@ -1701,7 +1705,7 @@ export class DataService {
         let gross_sale_amount   =   item.original_price * stockQty
         let finalQty            =   stockQty+free_qty;
 
-        let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(stockQty * item.scheme_discount) ;
+        let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
         let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
         let ttl_special_discount=   item.special_discount ? +stockQty * +item.special_discount:0;
         let ttl_extra_discount  =   +item.extra_discount ? +stockQty * +item.extra_discount : 0;
@@ -1807,12 +1811,12 @@ export class DataService {
       let price:number = 0;
       if(items){
           items.forEach(item=>{ 
-            price = +price + (item.scheme_id && item.scheme_type == 'bundle_offer' ? +item.scheme_discount : +(+item.stockQty * +item.scheme_discount)) ;
+            price = +price + (item.scheme_id && item.scheme_type == 'bundle_offer' ? (+item.scheme_discount * +item.scheme_bundle_interval) : +(+item.stockQty * +item.scheme_discount)) ;
             //
           })
           //
       }
-      return price;
+      return price; 
   }
 
   orderTradeDiscount(items:any):number{

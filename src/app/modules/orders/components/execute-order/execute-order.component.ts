@@ -563,6 +563,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       prod.unit_name = JSON.parse(JSON.stringify(product.unit_name));
       prod.brand_id     = JSON.parse(JSON.stringify(product.brand_id));
       prod.is_active    = JSON.parse(JSON.stringify(product.is_active));
+      prod.original_price = JSON.parse(JSON.stringify(prod.original_price));
       prod.item_trade_price = JSON.parse(JSON.stringify(prod.original_price));
       prod.extra_discount = JSON.parse(JSON.stringify(prod.booker_discount));
       prod.stockQty     = JSON.parse(JSON.stringify(prod.executed_qty));
@@ -575,6 +576,31 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       prod.trade_discount_pkr = JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
       prod.tax_amount_pkr = JSON.parse(JSON.stringify(prod.total_tax_amount || 0));
       prod.selectedScheme = this.schemes.find((scheme) => scheme.id === prod.scheme_id);
+
+      
+      prod.scheme_id              =JSON.parse(JSON.stringify(prod.scheme_id));
+      prod.scheme_type            =JSON.parse(JSON.stringify(prod.scheme_type));
+      prod.scheme_rule          =JSON.parse(JSON.stringify(prod.scheme_rule));
+      prod.scheme_bundle_interval=JSON.parse(JSON.stringify(prod.scheme_bundle_interval));
+      prod.scheme_min_quantity=JSON.parse(JSON.stringify(prod.scheme_min_quantity));
+      prod.scheme_quantity_free=JSON.parse(JSON.stringify(prod.scheme_quantity_free));
+      prod.scheme_discount_type=JSON.parse(JSON.stringify(prod.scheme_discount_type));
+      prod.scheme_discount=JSON.parse(JSON.stringify(prod.scheme_discount));
+      prod.gift_value=JSON.parse(JSON.stringify(prod.gift_value));
+      prod.loyalty_offer_id =JSON.parse(JSON.stringify(prod.loyalty_offer_id)); 
+      prod.loyalty_offer_type =JSON.parse(JSON.stringify(prod.loyalty_offer_type));
+      prod.loyalty_offer_discount_type=JSON.parse(JSON.stringify(prod.loyalty_offer_discount_type));
+      prod.loyalty_offer_discount=JSON.parse(JSON.stringify(prod.loyalty_offer_discount));
+      prod.loyalty_offer_discount_pkr =JSON.parse(JSON.stringify(prod.loyalty_offer_discount_pkr));
+      prod.slab_id=JSON.parse(JSON.stringify(prod.slab_id)); 
+      prod.slab_type=JSON.parse(JSON.stringify(prod.slab_type));
+      prod.slab_discount_type=JSON.parse(JSON.stringify(prod.slab_discount_type));
+      prod.merchant_discount=JSON.parse(JSON.stringify(prod.merchant_discount));
+      prod.merchant_discount_pkr=JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
+      prod.special_discount=JSON.parse(JSON.stringify(prod.special_discount));
+      prod.booker_discount=JSON.parse(JSON.stringify(prod.booker_discount));
+
+      debugger 
       return prod;
     });
     this.orderDetails.items = this.orderDetails.items.filter((x) => x);

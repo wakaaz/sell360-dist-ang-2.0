@@ -882,6 +882,7 @@ export class DataService {
             item.price            =   item.original_price - schemeItemDiscount; 
             item.unit_price_after_scheme_discount = item.original_price - schemeItemDiscount;
             item.selectedScheme.applied = true;
+            
           }
           
           return item;

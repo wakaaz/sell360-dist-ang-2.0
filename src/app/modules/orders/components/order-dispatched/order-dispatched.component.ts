@@ -690,6 +690,7 @@ export class OrderDispatchedComponent implements OnInit {
         total_discount: total_discount, 
         order_id: this.orderDetails.id,
       };
+      debugger
       
       return orderItem;
     });

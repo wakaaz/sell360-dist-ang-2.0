@@ -873,10 +873,10 @@ export class DataService {
             item.scheme_bundle_interval     =   interval;
             let schemeItemDiscount=   0;
             if(product.selectedScheme.discount_type == 1){
-              schemeItemDiscount  = interval*item.selectedScheme.discount_on_tp; 
+              schemeItemDiscount  = item.selectedScheme.discount_on_tp; 
             }else{
               let thisdiscount    = product.selectedScheme.discount_on_tp/100 * item.original_price;
-              schemeItemDiscount  = interval*thisdiscount; 
+              schemeItemDiscount  = thisdiscount;  
             }
             item.scheme_discount  =   schemeItemDiscount;
             item.price            =   item.original_price - schemeItemDiscount; 
@@ -892,7 +892,7 @@ export class DataService {
   }
   applyBundleFixedProduct(product: any,orderDetails:any): any {
     //////
-    const interval  = this.getBundleOfferIntervalsAlgo(product,orderDetails);
+    const interval  = this.getBundleOfferIntervalsAlgo(product,orderDetails); 
     //////
     if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
@@ -906,7 +906,7 @@ export class DataService {
             item.scheme_rule          =   product.selectedScheme.scheme_rule;
             item.scheme_discount_type =   product.selectedScheme.discount_type;
             item.scheme_min_quantity  =   product.selectedScheme.min_qty; 
-            item.scheme_bundle_interval=   interval;
+            item.scheme_bundle_interval=  interval; 
             item.scheme_quantity_free =   0;
             item.scheme_discount      =   0;
             item.price                =   item.item_trade_price;

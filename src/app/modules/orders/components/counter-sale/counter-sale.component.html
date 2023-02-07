@@ -869,7 +869,7 @@
                   
 
                   <div class="addItemCell2 _h25 {{product.scheme_quantity_free > 0 ? 'free-product':''}}">
-                    {{ product.scheme_id && product.scheme_type =='bundle_offer' ?  ( (+product.scheme_discount * +item.scheme_bundle_interval )| number: "1.2-2") : +product.stockQty * product.scheme_discount | number: "1.2-2" }} {{product.scheme_quantity_free > 0 ? "("+product.scheme_quantity_free+")":"" }}
+                    {{ product.scheme_id && product.scheme_type =='bundle_offer' ?  ( (+product.scheme_discount * +product.scheme_bundle_interval )| number: "1.2-2") : +product.stockQty * product.scheme_discount | number: "1.2-2" }} {{product.scheme_quantity_free > 0 ? "("+product.scheme_quantity_free+")":"" }}
                   </div>
                   <div class="addItemCell2 _h25">
                     {{ product.trade_discount }} {{ product.slab_discount_type == 'percentage' ? '%':''}} ({{

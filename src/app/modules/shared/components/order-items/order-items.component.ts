@@ -496,6 +496,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
     this.calculateTotalBill();
     this.productUpdated.emit();
+    setTimeout(()=>{      
+      if(document.getElementById('extraDiscount-'+product.item_id)){
+        (document.getElementById('extraDiscount-'+product.item_id) as HTMLInputElement).focus();
+      }
+    },30);
   }
 
   

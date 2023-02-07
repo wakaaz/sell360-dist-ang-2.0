@@ -986,6 +986,11 @@ export class CounterSaleComponent implements OnInit {
     this.selectedRetailer.items =  this.selectedProducts
     
     this.calculateTotalBill();
+    setTimeout(()=>{      
+      if(document.getElementById('extraDiscount-'+product.item_id)){
+        (document.getElementById('extraDiscount-'+product.item_id) as HTMLInputElement).focus();
+      }
+    },30);
   }
 
   calculateProductTax(product: any): void {

@@ -137,7 +137,7 @@ export class DataService {
     product.scheme_id           =   product.selectedScheme.id;
     product.scheme_type         =   product.selectedScheme.scheme_type;
     product.scheme_rule         =   product.selectedScheme.scheme_rule;
-    product.scheme_discount = discounted.schemeDiscount;
+    product.scheme_discount     =   discounted.schemeDiscount;
     product.price = discounted.singleItemPrice;
     product.unit_price_after_scheme_discount = discounted.singleItemPrice;
     product.selectedScheme.applied = true;
@@ -162,7 +162,7 @@ export class DataService {
       product.scheme_id           =   product.selectedScheme.id;
       product.scheme_type         =   product.selectedScheme.scheme_type;
       product.scheme_rule         =   product.selectedScheme.scheme_rule;
-      product.scheme_discount = discounted.schemeDiscount;
+      product.scheme_discount     =   discounted.schemeDiscount;
       product.price = discounted.singleItemPrice;
       product.unit_price_after_scheme_discount = discounted.singleItemPrice;
       product.selectedScheme.applied = true;
@@ -192,7 +192,7 @@ export class DataService {
       product.scheme_id           =   product.selectedScheme.id;
       product.scheme_type         =   product.selectedScheme.scheme_type;
       product.scheme_rule         =   product.selectedScheme.scheme_rule;
-      product.scheme_discount = discounted.schemeDiscount;
+      product.scheme_discount     =   discounted.schemeDiscount;
       product.price = discounted.singleItemPrice;
       product.unit_price_after_scheme_discount = discounted.singleItemPrice;
       product.selectedScheme.applied = true;
@@ -780,7 +780,7 @@ export class DataService {
         regionId === x.region_id &&
         +product.pref_id === x.pref_id
     );
-  
+  debugger
     if (selectedSpecialDiscount && +product.stockQty > 0) {
       product.special_discount      = selectedSpecialDiscount.discount;
     } else {

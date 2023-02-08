@@ -773,22 +773,24 @@ export class DataService {
     product: any,
     specialDiscounts: Array<any>
   ): any {
+    if(segmentId && regionId && product && specialDiscounts){
+      const selectedSpecialDiscount = specialDiscounts.find(
+        (x) =>
+          segmentId === x.segment_id &&
+          regionId === x.region_id &&
+          +product.pref_id === x.pref_id
+      );
     
-    const selectedSpecialDiscount = specialDiscounts.find(
-      (x) =>
-        segmentId === x.segment_id &&
-        regionId === x.region_id &&
-        +product.pref_id === x.pref_id
-    );
-  debugger
-    if (selectedSpecialDiscount && +product.stockQty > 0) {
-      product.special_discount      = selectedSpecialDiscount.discount;
-    } else {
-      product.special_discount = 0;
+      if (selectedSpecialDiscount && +product.stockQty > 0) {
+        product.special_discount      = selectedSpecialDiscount.discount;
+      } else {
+        product.special_discount = 0;
+      }
+      product.special_discount_pkr              = product.special_discount;
+      product.unit_price_after_special_discount = product.unit_price_after_merchant_discount - product.special_discount;
+       
     }
-    product.special_discount_pkr              = product.special_discount;
-    product.unit_price_after_special_discount = product.unit_price_after_merchant_discount - product.special_discount;
-     
+    
     return product;
   }
   /** Special Discount End */
@@ -1425,6 +1427,7 @@ export class DataService {
             // }
         });
     }
+    debugger
     orderDetails.loyalty_offer_reward_type  =   loyaltyOffer.reward_type;
    
     if(loyaltyOffer){

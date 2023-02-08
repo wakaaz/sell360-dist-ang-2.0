@@ -144,8 +144,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     return this.dataService.isNumber(event, type);
   }
   confirmDelete(selecteditem:any): void{
-    this.selecteddeleteSchemes = JSON.parse(JSON.stringify(this.orderDetail.scheme_items?.filter(x=>(x.item_id == selecteditem.item_id))));
-    this.selectedItem          = selecteditem;
+    this.selecteddeleteSchemes =  this.orderDetail.scheme_items ? JSON.parse(JSON.stringify(this.orderDetail.scheme_items?.filter(x=>(x.item_id == selecteditem.item_id)))) : null;
+    this.selectedItem          =  selecteditem;
   }
 
   deleteProduct(deleteType:number=null): void {
@@ -467,6 +467,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   calculateProductSpecialDiscount(product: any): any {
+      this.selectedRetailer.segment_id
+      this.selectedRetailer.region_id
+      product
+      this.specialDiscounts
+      
     return this.dataService.getSpecialDiscounts(
       this.selectedRetailer.segment_id,
       this.selectedRetailer.region_id,

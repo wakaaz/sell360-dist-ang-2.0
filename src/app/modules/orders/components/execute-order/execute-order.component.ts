@@ -305,7 +305,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       (res) => {
         if (res.status === 200) {
           this.routeRetailers = res.data;
-          this.getLoyaltyofferData(this.selectedOrderBooker);
+          
+          this.getLoyaltyofferData(this.selectedOrderBooker.employee_id ? this.selectedOrderBooker.employee_id:this.selectedOrderBooker );
           if(this.selectedOrderBooker){
             
             this.routeRetailers    = this.routeRetailers.map(x=>{

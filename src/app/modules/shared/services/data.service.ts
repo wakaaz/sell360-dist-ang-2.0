@@ -1319,8 +1319,8 @@ export class DataService {
         item.scheme_quantity_free     = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.item_id === item.item_id).reduce((a: any, b: any) => +a + +b.quantity, 0):0;      
         let ttlQty                    = +item.stockQty + +item.scheme_quantity_free;
         let ttl_item_stock:number     = 0;
-        
-        if(!orderDetails.status_code || orderDetails.status_code === null){ //for counter sale
+        debugger 
+        if( (!orderDetails.status_code || orderDetails.status_code === null) && orderDetails.orderType !== 'execution'){ //for counter sale
           ttl_item_stock  = +item.availble_stock
         }else{
           if(orderDetails.orderType === 'execution'){

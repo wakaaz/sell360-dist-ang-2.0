@@ -773,7 +773,7 @@ export class DataService {
     product: any,
     specialDiscounts: Array<any>
   ): any {
-    if(segmentId && regionId && product && specialDiscounts){
+    if(segmentId && regionId && product && specialDiscounts && segmentId > 0 && regionId > 0){
       const selectedSpecialDiscount = specialDiscounts.find(
         (x) =>
           segmentId === x.segment_id &&
@@ -790,6 +790,7 @@ export class DataService {
       product.unit_price_after_special_discount = product.unit_price_after_merchant_discount - product.special_discount;
        
     }
+    debugger
     
     return product;
   }
@@ -1069,6 +1070,7 @@ export class DataService {
 
     orderDetails.items  = orderDetails.items.map((item) => {
       //add for scheme offers
+      debugger
         item = this.getSpecialDiscounts(
                                         orderDetails.segment_id,
                                         orderDetails.region_id,
@@ -1319,7 +1321,7 @@ export class DataService {
         item.scheme_quantity_free     = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.item_id === item.item_id).reduce((a: any, b: any) => +a + +b.quantity, 0):0;      
         let ttlQty                    = +item.stockQty + +item.scheme_quantity_free;
         let ttl_item_stock:number     = 0;
-        debugger 
+         
         if( (!orderDetails.status_code || orderDetails.status_code === null) && orderDetails.orderType !== 'execution'){ //for counter sale
           ttl_item_stock  = +item.availble_stock
         }else{
@@ -1329,7 +1331,7 @@ export class DataService {
               }else{
                 ttl_item_stock  =  +item.booked_foc + +item.extra_qty;
               }
-              debugger
+              
           }else{
             ttl_item_stock  = +item.dispatch_qty + +item.booked_foc + +item.extra_qty;
           }
@@ -1427,7 +1429,7 @@ export class DataService {
             // }
         });
     }
-    debugger
+    
     orderDetails.loyalty_offer_reward_type  =   loyaltyOffer.reward_type;
    
     if(loyaltyOffer){

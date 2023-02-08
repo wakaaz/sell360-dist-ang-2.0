@@ -284,7 +284,15 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       //Apply slab on all products
       this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
 
-      //update slab discount
+      //update special discount
+      if( this.selectedRetailer.segment_id && +this.selectedRetailer.segment_id > 0 ){
+        this.orderDetail.segment_id  = this.selectedRetailer.segment_id;
+      }
+      if( this.selectedRetailer.region_id && +this.selectedRetailer.region_id > 0 ){
+        this.orderDetail.region_id  = this.selectedRetailer.region_id;
+      } 
+      debugger
+
       this.orderDetail.items       =  this.dataService.applySpecialDiscount(this.orderDetail,this.specialDiscounts);
       
       //Apply Loyal offer discount
@@ -302,10 +310,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       },30); 
       if(this.orderDetail.FOCA_error){
         this.toastService.showToaster({
-          title: 'Stock Error:',
-          message:
-            `FOC quantity is changed!`,
-          type: 'error',
+          title: 'Warning:',
+          message:`FOC quantity is changed!`,
+          type: 'success',
         });
       }  
   
@@ -467,11 +474,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   calculateProductSpecialDiscount(product: any): any {
-      this.selectedRetailer.segment_id
-      this.selectedRetailer.region_id
-      product
-      this.specialDiscounts
-      
+     //this.selectedRetailer.segment_id
+      // this.selectedRetailer.region_id
+      // product
+      // this.specialDiscounts
+      // debugger
     return this.dataService.getSpecialDiscounts(
       this.selectedRetailer.segment_id,
       this.selectedRetailer.region_id,

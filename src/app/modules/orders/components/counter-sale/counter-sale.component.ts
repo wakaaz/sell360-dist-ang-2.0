@@ -724,10 +724,9 @@ export class CounterSaleComponent implements OnInit {
       },30);
       if(this.selectedRetailer.FOCA_error){
         this.toastService.showToaster({
-          title: 'Stock Error:',
-          message:
-            `FOC quantity is changed due to insufficient stock!`,
-          type: 'error',
+          title: 'Warning',
+          message:`FOC quantity is changed due to insufficient stock!`,
+          type: 'success',
         });
       }
 

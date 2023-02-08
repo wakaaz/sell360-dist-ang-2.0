@@ -1441,7 +1441,7 @@ export class DataService {
             // Check Booking value is allowed  or not
             if(reward_max_discount_value > 0 || loyaltyOffer.reward_type == 2){
 
-              if(loyaltyOffer.allow_live_booking_sale == 1 || orderDetails.orderType === 'execution'){
+              if(loyaltyOffer.allow_live_booking_sale == 1 || (orderDetails.orderType && orderDetails.orderType === 'execution') ){
                 // check sale_criteria e.g 1 volume or 2 value
                 if(loyaltyOffer.sale_criteria == 1){
                     // Check "sale_criteria_unit_type": 1,  e.g (1 Primary  for 2 Secondary)

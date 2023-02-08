@@ -21,9 +21,10 @@ export class OrderDispatchService {
                     issued_qty: 0,
                     foc_qty:item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
                 };
-                ////debugger
+                //debugger
                 currentLoadContent.items.push(newContent);
             } else {
+                loadItem.foc_qty        = loadItem.foc_qty  +  (item.scheme_quantity_free ? +item.scheme_quantity_free : 0), 
                 loadItem.actual_qty     = loadItem.actual_qty + item.dispatch_qty; 
             }
         });
@@ -75,14 +76,17 @@ export class OrderDispatchService {
                             issued_qty: item.current_load_allocated_qty,
                             foc_qty   : +item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
                         };
-                       // //debugger
+                       
                         currentLoadContent.items.push(newContent);
+                        //debugger
                     } else {
                         
                         loadItem.issued_qty = item.current_load_allocated_qty - loadItem.actual_qty;
                         loadItem.extra_qty  =   0;//+item.current_load_allocated_qty - +item.current_load_booked_qty;    
-                        ////debugger
+                    
+                        //debugger
                     }
+                    
                 }
             });  
         }else{

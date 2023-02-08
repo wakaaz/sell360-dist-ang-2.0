@@ -493,7 +493,7 @@ export class OrderDispatchedComponent implements OnInit {
                 prod.merchant_discount_pkr=JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
                 prod.special_discount=JSON.parse(JSON.stringify(prod.special_discount));
                 prod.booker_discount=JSON.parse(JSON.stringify(prod.booker_discount));
-        debugger
+        //debugger
                 
                 return prod;
               });
@@ -715,7 +715,7 @@ export class OrderDispatchedComponent implements OnInit {
         total_discount: total_discount, 
         order_id: this.orderDetails.id,
       };
-      debugger
+      //debugger
       
       return orderItem;
     });
@@ -1063,6 +1063,7 @@ export class OrderDispatchedComponent implements OnInit {
         order,
         this.currentLoadContent
       );
+      //debugger
     });
     //It will return only where actual qty or issue qty should be greater than zero
      

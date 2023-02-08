@@ -1625,6 +1625,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
               type: 'success',
             });
             this.finalLoad = res.data;
+            this.getExecutionFinalLoad();
           }
         },
         (error) => {

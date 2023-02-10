@@ -866,9 +866,9 @@ export class DataService {
       ////
       //schemeItemDiscount    = schemeItemDiscount > 0 ? schemeItemDiscount/total_items : 0; 
       orderDetails.items      = orderDetails.items.map((item) => {
-        item.scheme_bundle_interval         =   null;
+        
           if(scheme_items.includes(item.item_id)){
-            ////
+            item.scheme_bundle_interval     =   null;
             item.selectedScheme             =   product.selectedScheme;
             item.scheme_id                  =   product.selectedScheme.id;
             item.scheme_type                =   product.selectedScheme.scheme_type;
@@ -901,8 +901,9 @@ export class DataService {
     if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
       const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
       orderDetails.items      = orderDetails.items.map((item) => {
-        item.scheme_bundle_interval   =   null;
+      
           if(scheme_items.includes(item.item_id)){
+            item.scheme_bundle_interval     =   null;
             item.scheme_free_items    =   [];
             item.selectedScheme       =   product.selectedScheme;
             item.scheme_id            =   product.selectedScheme.id;

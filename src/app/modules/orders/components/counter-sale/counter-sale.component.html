@@ -824,7 +824,7 @@
                       >
                         SKU: {{ product.item_sku }}
                       </span>
-                      <span
+                      <!-- <span
                         style="display: block; opacity: 0.6; padding-top: 5px"
                       >
                         SCM: {{product.selectedScheme ? product.selectedScheme.title:''}} id-{{product.scheme_id}}
@@ -838,14 +838,14 @@
                         style="display: block; opacity: 0.6; padding-top: 5px"
                       >
                         TDT: {{product.total_item_discount ? (+product.total_item_discount   | number: "1.2-2") :''}}
-                      </span>
+                      </span> -->
                     </div>
                   </div>
 
                   <div class="addItemCell unit-w">
                     <div class="addItemCell2 _h25">
-                      {{ product.unit_name }}
-                      (slb-id: {{product.slab_id}})
+                      {{ product.unit_name }} 
+                      <!-- (slb-id: {{product.slab_id}}) -->
                     </div>
                   </div>
 

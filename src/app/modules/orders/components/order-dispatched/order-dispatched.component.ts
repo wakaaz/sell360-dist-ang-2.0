@@ -630,8 +630,8 @@ export class OrderDispatchedComponent implements OnInit {
 
       let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
-      let ttl_special_discount=   item.special_discount ? stockQty * +item.special_discount:0;
-      let ttl_extra_discount  =   +item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
+      let ttl_special_discount=   item.special_discount ? +stockQty * +item.special_discount:0;
+      let ttl_extra_discount  =   +item.extra_discount_pkr ? +stockQty * +item.extra_discount_pkr : 0;
       let ttl_loyalty_discount=   item.loyalty_offer_discount_pkr ? +stockQty * +item.loyalty_offer_discount_pkr : 0;
       let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_loyalty_discount;
       let final_price         =   gross_sale_amount - total_discount;                          

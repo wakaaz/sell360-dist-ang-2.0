@@ -2,12 +2,12 @@ export const environment = {
   production: false,
   // apiDomain: 'https://demo.sell360.app',
   // apiUrl: 'https://demo.sell360.app/distributor-api',
-  // apiDomain: 'https://marketer.sell360.app', 
-  // apiUrl: 'https://marketer.sell360.app/distributor-api', 
+  apiDomain: 'https://marketer.sell360.app', 
+  apiUrl: 'https://marketer.sell360.app/distributor-api',  
   
 
-  apiDomain: 'https://asg.sell360.app', 
-  apiUrl: 'https://asg.sell360.app/distributor-api',
+  // apiDomain: 'https://asg.sell360.app', 
+  // apiUrl: 'https://asg.sell360.app/distributor-api',
 
   // apiDomain: ' https://staging.spencer.allomate.solutions',
   // apiUrl: ' https://staging.spencer.allomate.solutions/distributor-api',

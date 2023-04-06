@@ -1237,7 +1237,7 @@ export class CounterSaleComponent implements OnInit {
       let ttl_scheme_discount =   product.scheme_id && product.scheme_type == 'bundle_offer' ? (+product.scheme_discount * +product.scheme_bundle_interval): +(stockQty * product.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * product.trade_discount_pkr;
       let ttl_special_discount=   product.special_discount ? stockQty * +product.special_discount:0;
-      let ttl_extra_discount  =   +product.extra_discount ? +product.extra_discount : 0;
+      let ttl_extra_discount  =   +product.extra_discount ? +stockQty * +product.extra_discount : 0;
       let ttl_loyalty_discount=   product.loyalty_offer_discount_pkr ? +stockQty * +product.loyalty_offer_discount_pkr : 0;
       let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_loyalty_discount;
       let final_price         =   gross_sale_amount - total_discount;                          

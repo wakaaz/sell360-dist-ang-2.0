@@ -9,6 +9,9 @@ export const environment = {
   // apiDomain: 'https://asg.sell360.app', 
   // apiUrl: 'https://asg.sell360.app/distributor-api',
 
+  //  apiDomain: 'https://shahi-revamp.sell360.app', 
+  // apiUrl: 'https://shahi-revamp.sell360.app/distributor-api',   
+
   // apiDomain: ' https://staging.spencer.allomate.solutions',
   // apiUrl: ' https://staging.spencer.allomate.solutions/distributor-api',
   DISCOUNT_TYPES: {

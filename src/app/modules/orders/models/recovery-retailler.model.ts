@@ -83,6 +83,7 @@ export class RecoveryRetailer {
       }, 0);
     } else {
       this._invoice_discount = v;
+      this._recoverd_amount  = 0; 
     }
   }
 
@@ -153,7 +154,7 @@ export class RecoveryRetailer {
     return this._recoverd_amount;
   }
   public set recoverd_amount(v: number) {
-    if (v > this.amount) {
+    if (v > this.balance) {
       this._recoverd_amount = 0;
       setTimeout(() => {
         this._recoverd_amount = this.balance;

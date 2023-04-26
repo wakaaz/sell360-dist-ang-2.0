@@ -1116,6 +1116,10 @@ export class OrderDispatchedComponent implements OnInit {
     const item = this.inventory.find((x) => x.item_id === itemId);
     return item.item_name;
   }
+  getItemSKU(itemId: number): string {
+    const item = this.inventory.find((x) => x.item_id === itemId);
+    return item.item_sku;
+  }
 
   addCurrentLoad(): void {
     this.remainingOrders = this.remainingOrders.filter(

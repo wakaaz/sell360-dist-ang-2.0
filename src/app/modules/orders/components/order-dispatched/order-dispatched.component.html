@@ -570,7 +570,7 @@
                                 let i = index
                               "
                             >
-                              <td>{{ item.item_id }}</td>
+                              <td>{{ getItemSKU(item.item_id) }}</td>
                               <td>{{ getItemName(item.item_id) }}</td>
                               <td style="text-align: center">{{ (+item.actual_qty- +item.foc_qty) | number }}</td>
                               <td style="text-align: center">{{ item.foc_qty | number }}</td>

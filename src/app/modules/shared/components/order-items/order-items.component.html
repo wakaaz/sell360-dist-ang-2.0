@@ -114,7 +114,7 @@
         <td>{{ item.special_discount * item.stockQty | number: "1.2-2" }}</td>
         <td *ngIf="permissions?.Secondary_Orders?.extra_discount">
           <input
-            type="number"
+            type="text" 
             (paste)="$event.preventDefault()"
             id="extraDiscount-{{item.item_id}}"
             [disabled]="isChequeAdded || isCreditAdded || +item.stockQty < 1"

@@ -59,6 +59,7 @@ export class CounterSaleComponent implements OnInit {
   orderTotal: number;
   totalAmountAfterScheme: number;
   totalRetailPrice: number;
+  pre_discount:any;
 
   chequeNumber: string;
   paymentDate: string;
@@ -124,6 +125,7 @@ export class CounterSaleComponent implements OnInit {
     this.getSchemesData();
     this.getOrderBookers();
     this.getCounterSaleData();
+    this.pre_discount = [];
   }
 
   getOrderBookers(): void {
@@ -975,16 +977,33 @@ export class CounterSaleComponent implements OnInit {
       this.toastService.showToaster(toast);
     }
     
-  
-    if(!product.extra_discount.endsWith(".")){
-
-      
-      
+    
+    let pass_discount = false;
+    let current_value = product.extra_discount;
+    console.log(this.pre_discount);
+    if(this.pre_discount && this.pre_discount.some(x=>x.item_id == product.item_id) && !product.extra_discount.endsWith(".")){
+     let discountResult = this.pre_discount.find(x=>x.item_id == product.item_id);
+     console.log('pass_discount')
+     debugger
+     if(discountResult.value > +product.extra_discount){
+        pass_discount = true
+     }
+    }
+    if( (!product.extra_discount.endsWith(".")  &&  product.extra_discount.toString().substring(product.extra_discount.toString().length - 2) != ".0" ) || pass_discount){ 
+      if(this.pre_discount && this.pre_discount.some(x=>x.item_id == product.item_id)){
+          let indexI = this.pre_discount.findIndex(x=>x.item_id == product.item_id);
+          this.pre_discount[indexI].value = product.extra_discount;
+      } else{
+        this.pre_discount.push({
+                                item_id : product.item_id,
+                                value   : product.extra_discount,
+                              })
+      }
       //maximum tw decimal positions
-      product.extra_discount       =  +product.extra_discount;
+      product.extra_discount      =  +product.extra_discount;
   
       product.extra_discount      =  +product.extra_discount.toFixed(2);
-
+      current_value               =   product.extra_discount;
       this.selectedRetailer.items =  this.selectedProducts
       this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
       this.selectedProducts       =  this.selectedRetailer.items;  
@@ -996,6 +1015,8 @@ export class CounterSaleComponent implements OnInit {
       this.calculateTotalBill();
       setTimeout(()=>{      
         if(document.getElementById('extraDiscount-'+product.item_id)){
+          // let inputElement = document.getElementById('extraDiscount-' + product.item_id) as HTMLInputElement;
+          // inputElement.value = current_value.toString();
           (document.getElementById('extraDiscount-'+product.item_id) as HTMLInputElement).focus();
         }
       },30);

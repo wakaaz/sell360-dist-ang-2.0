@@ -59,6 +59,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   selecteddeleteSchemes: any;
   totalTax: number;
   item_id : string;
+  pre_discount:any;
 
   selectedItem: any;
   permissions: any;
@@ -112,6 +113,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     this.totalRetailPrice=0;
     this.selectedProductQuantities = 0;
     this.selecteddeleteSchemes = null;
+    this.pre_discount = [];
   }
 
   openProductsList(event: Event): void {
@@ -355,7 +357,11 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         product.booker_discount_pkr =  product.booker_discount;
         product.unit_price_after_individual_discount = product.item_trade_price - product.booker_discount;
     }
-    if(!product.extra_discount.endsWith(".")){ 
+
+    if( (!product.extra_discount.endsWith(".")  && !product.extra_discount.includes(".0") )){ 
+
+      
+
       //Apply Loyal offer discount
       this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
         
@@ -364,6 +370,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       
       this.calculateTotalBill(); 
       this.productUpdated.emit();
+
+    
+
       setTimeout(()=>{       
         if(document.getElementById("extra-"+product.item_id)){ 
           (document.getElementById("extra-"+product.item_id) as HTMLInputElement).focus();
@@ -503,8 +512,27 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       };
       this.toastService.showToaster(toast);
     }
-    if(!product.extra_discount.toString().endsWith(".")){
-      //maximum tw decimal positions
+    let pass_discount = false;
+    console.log(this.pre_discount);
+    if(this.pre_discount && this.pre_discount.some(x=>x.item_id == product.item_id) && !product.extra_discount.endsWith(".")){
+     let discountResult = this.pre_discount.find(x=>x.item_id == product.item_id);
+     console.log('pass_discount')
+     debugger
+     if(discountResult.value > +product.extra_discount){
+        pass_discount = true
+     }
+    }
+    if( (!product.extra_discount.endsWith(".")  &&  product.extra_discount.toString().substring(product.extra_discount.toString().length - 2) != ".0" ) || pass_discount){ 
+      if(this.pre_discount && this.pre_discount.some(x=>x.item_id == product.item_id)){
+          let indexI = this.pre_discount.findIndex(x=>x.item_id == product.item_id);
+          this.pre_discount[indexI].value = product.extra_discount;
+      } else{
+        this.pre_discount.push({
+                                item_id : product.item_id,
+                                value   : product.extra_discount,
+                              })
+      }
+     //maximum tw decimal positions
       product.extra_discount       =  +product.extra_discount;
   
       product.extra_discount = +product.extra_discount.toFixed(2);

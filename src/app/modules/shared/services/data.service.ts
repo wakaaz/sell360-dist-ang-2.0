@@ -790,7 +790,7 @@ export class DataService {
       product.unit_price_after_special_discount = product.unit_price_after_merchant_discount - product.special_discount;
        
     }
-    debugger
+    //debugger
     
     return product;
   }
@@ -1071,7 +1071,7 @@ export class DataService {
 
     orderDetails.items  = orderDetails.items.map((item) => {
       //add for scheme offers
-      debugger
+      //debugger
         item = this.getSpecialDiscounts(
                                         orderDetails.segment_id,
                                         orderDetails.region_id,

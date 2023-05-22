@@ -291,7 +291,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       if( this.selectedRetailer.region_id && +this.selectedRetailer.region_id > 0 ){
         this.orderDetail.region_id  = this.selectedRetailer.region_id;
       } 
-      debugger
+      //debugger
 
       this.orderDetail.items       =  this.dataService.applySpecialDiscount(this.orderDetail,this.specialDiscounts);
       
@@ -355,19 +355,21 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         product.booker_discount_pkr =  product.booker_discount;
         product.unit_price_after_individual_discount = product.item_trade_price - product.booker_discount;
     }
-    //Apply Loyal offer discount
-    this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
+    if(!product.extra_discount.endsWith(".")){ 
+      //Apply Loyal offer discount
+      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
+        
+      //update Scheme Free Products to scheme Items
+      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
       
-    //update Scheme Free Products to scheme Items
-    this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
-    
-    this.calculateTotalBill(); 
-    this.productUpdated.emit();
-    setTimeout(()=>{       
-      if(document.getElementById("extra-"+product.item_id)){ 
-        (document.getElementById("extra-"+product.item_id) as HTMLInputElement).focus();
-      }
-    },30);  
+      this.calculateTotalBill(); 
+      this.productUpdated.emit();
+      setTimeout(()=>{       
+        if(document.getElementById("extra-"+product.item_id)){ 
+          (document.getElementById("extra-"+product.item_id) as HTMLInputElement).focus();
+        }
+      },30); 
+    } 
   }
 
   checkDiscount(product: any): boolean {
@@ -501,18 +503,24 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       };
       this.toastService.showToaster(toast);
     }
-
-     //Apply Loyal offer discount
-     this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
-     //update Scheme Free Products to scheme Items
-     this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
-    this.calculateTotalBill();
-    this.productUpdated.emit();
-    setTimeout(()=>{      
-      if(document.getElementById('extraDiscount-'+product.item_id)){
-        (document.getElementById('extraDiscount-'+product.item_id) as HTMLInputElement).focus();
-      }
-    },30);
+    if(!product.extra_discount.toString().endsWith(".")){
+      //maximum tw decimal positions
+      product.extra_discount       =  +product.extra_discount;
+  
+      product.extra_discount = +product.extra_discount.toFixed(2);
+      
+      //Apply Loyal offer discount
+      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
+      //update Scheme Free Products to scheme Items
+      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
+      this.calculateTotalBill();
+      this.productUpdated.emit();
+      setTimeout(()=>{       
+        if(document.getElementById('extraDiscount-'+product.item_id)){
+          (document.getElementById('extraDiscount-'+product.item_id) as HTMLInputElement).focus(); 
+        }
+      },30);
+    }
   }
 
   

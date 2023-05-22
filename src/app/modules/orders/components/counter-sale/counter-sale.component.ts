@@ -965,8 +965,8 @@ export class CounterSaleComponent implements OnInit {
     } 
     else 
     {
-      product.extra_discount = 0;
-      product.extra_discount_pkr = 0;
+      product.extra_discount      = 0;
+      product.extra_discount_pkr  = 0;
       const toast: Toaster = {
         type: 'error',
         message: 'Discount should not be greater than item price!',
@@ -975,21 +975,32 @@ export class CounterSaleComponent implements OnInit {
       this.toastService.showToaster(toast);
     }
     
-    //Apply Loyal offer discount
-    this.selectedRetailer.items =  this.selectedProducts
-    this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
-    this.selectedProducts       =  this.selectedRetailer.items;  
+  
+    if(!product.extra_discount.endsWith(".")){
 
-    //update Scheme Free Products to scheme Items
-    this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
-    this.selectedRetailer.items =  this.selectedProducts
+      
+      
+      //maximum tw decimal positions
+      product.extra_discount       =  +product.extra_discount;
+  
+      product.extra_discount      =  +product.extra_discount.toFixed(2);
+
+      this.selectedRetailer.items =  this.selectedProducts
+      this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+      this.selectedProducts       =  this.selectedRetailer.items;  
+
+      //update Scheme Free Products to scheme Items
+      this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
+      this.selectedRetailer.items =  this.selectedProducts
+
+      this.calculateTotalBill();
+      setTimeout(()=>{      
+        if(document.getElementById('extraDiscount-'+product.item_id)){
+          (document.getElementById('extraDiscount-'+product.item_id) as HTMLInputElement).focus();
+        }
+      },30);
+    }
     
-    this.calculateTotalBill();
-    setTimeout(()=>{      
-      if(document.getElementById('extraDiscount-'+product.item_id)){
-        (document.getElementById('extraDiscount-'+product.item_id) as HTMLInputElement).focus();
-      }
-    },30);
   }
 
   calculateProductTax(product: any): void {

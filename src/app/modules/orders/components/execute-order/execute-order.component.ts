@@ -601,7 +601,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       prod.special_discount=JSON.parse(JSON.stringify(prod.special_discount));
       prod.booker_discount=JSON.parse(JSON.stringify(prod.booker_discount));
 
-      debugger 
+      //debugger 
       return prod;
     });
     this.orderDetails.items = this.orderDetails.items.filter((x) => x);

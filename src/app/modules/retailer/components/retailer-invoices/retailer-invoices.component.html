@@ -225,12 +225,13 @@
                 <td>{{ item?.amount_due | number: "1.2-2" }}</td>
                 <td>
                   <button
+                    *ngIf="item?.invoice_number !== null"
                     type="button"
                     class="btn btn-pdf"
                     title="View Bill"
                     data-toggle="modal"
                     data-target="#exampleModal2"
-                    (click)="showDetails = true; openDetailsModal(item.id)"
+                    (click)="showDetails = true; openDetailsModal(item.order_id)"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -273,7 +274,9 @@
                       />
                     </svg>
                   </button>
-                  <button class="btn btn-pdf" title="Download PDF">
+                  <button class="btn btn-pdf" 
+                  (click)="downloadPdfReport(item)"
+                  title="Download PDF">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="16"
@@ -341,7 +344,7 @@
                     </div>
                     <div class="col-4 ord-no">
                       Order #
-                      <strong>{{ orderDetail?.retailer_detail?.id }}</strong>
+                      <strong>{{ orderDetail?.retailer_detail?.id || 'NA' }}</strong>
                     </div>
                   </div>
                 </div>
@@ -354,19 +357,19 @@
                             <span>Retailer Name: </span>
                             <strong>
                               {{
-                                orderDetail?.retailer_detail.retailer_name
+                                orderDetail?.retailer_detail?.retailer_name || 'NA' 
                               }} </strong
                             ><br />
                             <span>Phone No: </span>
                             <strong>
                               {{
-                                orderDetail?.retailer_detail.retailer_phone
+                                orderDetail?.retailer_detail?.retailer_phone || 'NA' 
                               }} </strong
                             ><br />
                             <span>Location: </span>
                             <strong>
                               {{
-                                orderDetail?.retailer_detail.retailer_address
+                                orderDetail?.retailer_detail?.retailer_address || 'NA' 
                               }}
                             </strong>
                           </div>
@@ -374,17 +377,17 @@
                           <div class="col-md-3 p-0">
                             <span>Status: </span>
                             <strong>
-                              {{ orderDetail?.retailer_detail.status }} </strong
+                              {{ orderDetail?.retailer_detail?.status || 'NA'  }} </strong
                             ><br />
                             <span>Booking Date: </span>
                             <strong>
                               {{
-                                orderDetail?.retailer_detail.order_date
+                                orderDetail?.retailer_detail?.order_date || 'NA' 
                               }} </strong
                             ><br />
                             <span>Employee: </span>
                             <strong>
-                              {{ orderDetail?.retailer_detail.employee_name }}
+                              {{ orderDetail?.retailer_detail?.employee_name || 'NA'  }}
                             </strong>
                           </div>
                         </div>
@@ -485,10 +488,7 @@
                                   <strong>Total PKR.</strong>
                                 </td>
                                 <td style="background-color: #000; color: #fff">
-                                  <strong>{{
-                                    orderDetail?.retailer_detail?.order_total
-                                      | number: "1.2-2"
-                                  }}</strong>
+                                  <strong>{{ orderDetail?.retailer_detail?.order_total | number: "1.2-2" }}</strong>
                                 </td>
                               </tr>
                             </tbody>

@@ -8,6 +8,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DataService } from 'src/app/modules/shared/services';
 import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
+import { environment } from 'src/environments/environment';
+import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 
 @Component({
   selector: 'app-retailer-invoices',
@@ -42,6 +44,7 @@ export class RetailerInvoicesComponent implements OnInit {
   loading = false;
   recoveryBtnLoading = false;
   retailerId: number = 0;
+  distributorId: number = 0;
   constructor(
     private retailerService: RetailerService,
     private actr: ActivatedRoute,
@@ -50,9 +53,9 @@ export class RetailerInvoicesComponent implements OnInit {
     private dataService: DataService,
     private storageService: LocalStorageService
   ) {
-    this.permissions = this.storageService.getItem(
-      localStorageKeys.permissions
-    );
+    this.permissions    = this.storageService.getItem(localStorageKeys.permissions);
+    const distributor   = this.storageService.getItem(localStorageKeys.distributor);
+    this.distributorId  = distributor.id;
   }
   closeDetailsModal(): void {
     document.body.classList.remove('no-scroll');
@@ -156,6 +159,8 @@ export class RetailerInvoicesComponent implements OnInit {
     this.recoveryForm.invoice_discount = 0;
   }
 
+  
+
   openDetailsModal(orderId: number): void {
     this.orderDetail = null;
     // document.body.classList.add('no-scroll');
@@ -194,5 +199,10 @@ export class RetailerInvoicesComponent implements OnInit {
         scrollTo(0, 0);
       }
     );
+  }
+
+  downloadPdfReport(item: any) {
+    const url = `${environment.apiDomain}${API_URLS.CREDIT_INVOICE_DETAILS}/${this.distributorId}?shop_id=${item.retailer_id}&bill_no=${item.order_id}`;
+    window.open(url);
   }
 }

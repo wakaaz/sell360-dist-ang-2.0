@@ -69,6 +69,7 @@ export const API_URLS = {
   DSR_PDF: '/pdfDSRNew',
   DSRS_PDF_REPORT: '/dsrs-pdf-report',
   BOOKER_WISE_CREDIT_AGEING_REPORT: '/booker-wise-credit-ageing-report',
+  CREDIT_INVOICE_DETAILS: '/credit-invoice-details',
 
   // Salesmen
   GET_ALL_SALESMEN: '/getAllSalesman',

@@ -47,7 +47,7 @@ export class InvoiceAgingReportComponent implements OnInit {
   }
   generateDSRWithCreditOrderBookers(): void {
     const orderBookers = this.selectBookers.join(',');
-    const url = `${environment.apiDomain}${API_URLS.BOOKER_WISE_CREDIT_AGEING_REPORT}/${this.distributorId}?${orderBookers}`;
+    const url = `${environment.apiDomain}${API_URLS.BOOKER_WISE_CREDIT_AGEING_REPORT}/${this.distributorId}?booker_ids=${orderBookers}`;
     window.open(url);
   }
 }

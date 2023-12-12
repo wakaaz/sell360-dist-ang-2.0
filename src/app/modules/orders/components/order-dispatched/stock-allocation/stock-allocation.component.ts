@@ -15,6 +15,8 @@ export class StockAllocationComponent implements OnInit {
   @Output() closeSideBar = new EventEmitter<boolean>();
   orders: any = [];
   tabLoading = false;
+  showalloctionErrors = false;
+  alloctionErrors : string;
   assignmentId: string;
   dtOptions: any;
   loading: false;
@@ -30,6 +32,8 @@ export class StockAllocationComponent implements OnInit {
   ngOnInit(): void {
     this.orderService.setCheckAllocationSuccess(false);
     console.log('stockAllocation => ', this.stockAllocation);
+    this.alloctionErrors = '';
+    this.showalloctionErrors = false;
     this.dtOptions = {
       pagingType: 'simple_numbers',
       order: [[7, 'desc']],
@@ -56,7 +60,9 @@ export class StockAllocationComponent implements OnInit {
   }
 
   onCheckAllocation() {
-    this.tabLoading = true;
+    this.alloctionErrors  = '';
+    this.showalloctionErrors = false;
+    this.tabLoading       = true;
     this.orderService.saveLoadItemAllocation(this.assignmentId).subscribe(
       (x) => {
         this.tabLoading = false;
@@ -72,21 +78,27 @@ export class StockAllocationComponent implements OnInit {
         this.tabLoading = false;
         this.orderService.setCheckAllocationSuccess(false);
         
+        this.showalloctionErrors = true;
         let itemrror_list:string = '';
-        // if(err.error.error){
-        //   err.error.error.forEach(x=>{
-        //     itemrror_list += "<br>"+x.msg;
-        //   });
-        // }
-
+        if(err.error.error){
+          err.error.error.forEach(x=>{
+            itemrror_list += `<li>Product SKU: ${x.item_sku}, Product Name: ${x.item_name} </li>`
+         });
+        }
+        this.alloctionErrors  = `${itemrror_list}`;
         const toast: Toaster = {
           type: 'error',
-          message:'Requested allocation quantity is greater than available stock.'+itemrror_list, 
+          message:'Requested allocation quantity is greater than available stock.', 
           title: 'Error:',
         };
         this.toastService.showToaster(toast);
       }
     );
+  }
+  
+  closeAlert() {
+    this.showalloctionErrors = false;
+    this.alloctionErrors  = '';
   }
 
   //#region  show product list

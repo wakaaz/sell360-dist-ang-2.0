@@ -12,6 +12,7 @@ import { StockOutReportComponent } from './components/stock-out-report/stock-out
 import { OrderBookerListComponent } from './components/order-booker-list/order-booker-list.component';
 import { AllReportComponent } from './components/all-report/all-report.component';
 import { InvoiceAgingReportComponent } from './components/invoice-aging-report/invoice-aging-report.component';
+import { AllocatedStockReportComponent } from './components/allocated-stock-report/allocated-stock-report.component';
 
 
 const routes: Routes = [
@@ -68,7 +69,11 @@ const routes: Routes = [
         path: 'invoice-aging-report',
         pathMatch: 'full',
         component: InvoiceAgingReportComponent,
-      }
+      },
+      {
+        path: 'allocated-stock-report',
+        component: AllocatedStockReportComponent,
+      },
     ],
   },
 ];

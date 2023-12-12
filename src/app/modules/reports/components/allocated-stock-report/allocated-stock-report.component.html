@@ -1,0 +1,48 @@
+<div class="container" style="height: 100vh">
+
+    <div class="row mt-2 mb-2">
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <h2 class="_head01">Rate <span> List</span></h2>
+        </div>
+
+        <div class="col-lg-6 col-md-6 col-sm-6">
+            <ol class="breadcrumb">
+                <li><a><span>Rate List</span></a></li>
+                <li><span>Generate</span></li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="header">
+                    <h2>Rate <span>List</span></h2>
+                </div>
+                <div class="body PT-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <label class="font11 mb-4">Start Date*</label>
+                            <div class="form-s2">
+                                <input type="date" id="datepicker" [(ngModel)]="filter.startDate" name="gen-date" class="form-control"
+                                  placeholder="">
+                              </div>
+                        </div>
+                        <div class="col-md-3 pl-0">
+                            <label class="font11 mb-4">End Date*</label>
+                            <div class="form-s2">
+                                <input type="date" id="datepicker" [(ngModel)]="filter.endDate" name="gen-date" class="form-control"
+                                  placeholder="">
+                              </div>
+                        </div>
+
+                        <div class="col-3 pl-0 rate-act">
+                            <button type="button" class="btn btn-primary btn-line"
+                                style="line-height:1; height: 34px; box-shadow:none" (click)="generateAllocationReport()">Download PDF</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

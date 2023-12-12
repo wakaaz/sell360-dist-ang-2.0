@@ -1,0 +1,7 @@
+.rate-act{margin-top: 26px}
+.rate-act .btn-primary{padding-left: 10px; padding-right: 10px; font-size: 14px}
+.btn-primary {background: #fff; color: #003db6}
+.ng-select .ng-select-container {border-radius: 0 !important;border: 1px solid #f6f6f6 !important;background-color: #f6f6f6 !important;outline: none;}
+.input-error { font-size: 11px; color: orangered;margin-top: 5px;}
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {background-color: #0038ba;border: 1px solid #0038ba;margin-right: 7px;color: #fff;}
+.ng-select .ng-clear {display: none !important;}

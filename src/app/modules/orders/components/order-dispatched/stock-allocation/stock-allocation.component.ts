@@ -85,13 +85,13 @@ export class StockAllocationComponent implements OnInit {
             itemrror_list += `<li>Product SKU: ${x.item_sku}, Product Name: ${x.item_name} </li>`
          });
         }
-        this.alloctionErrors  = `${itemrror_list}`;
-        const toast: Toaster = {
-          type: 'error',
-          message:'Requested allocation quantity is greater than available stock.', 
-          title: 'Error:',
-        };
-        this.toastService.showToaster(toast);
+        // this.alloctionErrors  = `${itemrror_list}`;
+        // const toast: Toaster = {
+        //   type: 'error',
+        //   message:'Requested allocation quantity is greater than available stock.', 
+        //   title: 'Error:',
+        // };
+        // this.toastService.showToaster(toast);
       }
     );
   }

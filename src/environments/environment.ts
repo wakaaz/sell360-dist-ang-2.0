@@ -1,4 +1,5 @@
 export const environment = {
+  //Sell360 will be main branch for sell360 distribution
   production: false,
   // apiDomain: 'https://demo.sell360.app',
   // apiUrl: 'https://demo.sell360.app/distributor-api',

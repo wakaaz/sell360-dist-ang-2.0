@@ -28,6 +28,7 @@ export const API_URLS = {
   GET_EMPLOYEES: '/getEmployees',
   GET_EMPLOYEE_ROUTES: '/getEmployeeRoutes',
   GET_DISCOUNT_SLABS: '/getSlabDiscount',
+  GET_TAX_CLASSES: '/getTaxClasses',
   GET_SLABS_BY_CHANNEL: '/getSlabDiscountByChannel',
   GET_RETAILERS_BY_ROUTE: '/getRetailersByRoute',
   GET_NEW_ORDERS: '/getNewOrders',

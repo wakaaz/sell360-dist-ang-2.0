@@ -805,7 +805,8 @@
                 >
                   E. Disc.
                 </div>
-                <div class="addItemCell2">Tax</div>
+                <div class="addItemCell2" title="General Sales Tax">GST</div>
+                <div class="addItemCell2" title="Advance Income Tax">AIT</div>
                 <div class="addItemCell3">Net Amount</div>
               </div>
 
@@ -824,28 +825,12 @@
                       >
                         SKU: {{ product.item_sku }}
                       </span>
-                      <!-- <span
-                        style="display: block; opacity: 0.6; padding-top: 5px"
-                      >
-                        SCM: {{product.selectedScheme ? product.selectedScheme.title:''}} id-{{product.scheme_id}}
-                      </span>
-                      <span
-                        style="display: block; opacity: 0.6; padding-top: 5px"
-                      >
-                        LDis: {{product.loyalty_offer_discount ? product.loyalty_offer_discount:''}}
-                      </span>
-                      <span
-                        style="display: block; opacity: 0.6; padding-top: 5px"
-                      >
-                        TDT: {{product.total_item_discount ? (+product.total_item_discount   | number: "1.2-2") :''}}
-                      </span> -->
                     </div>
                   </div>
 
                   <div class="addItemCell unit-w">
                     <div class="addItemCell2 _h25">
                       {{ product.unit_name }} 
-                      <!-- (slb-id: {{product.slab_id}}) -->
                     </div>
                   </div>
 
@@ -872,10 +857,8 @@
                     {{ product.scheme_id && product.scheme_type =='bundle_offer' ?  ( (+product.scheme_discount * +product.scheme_bundle_interval )| number: "1.2-2") : +product.stockQty * product.scheme_discount | number: "1.2-2" }} {{product.scheme_quantity_free > 0 ? "("+product.scheme_quantity_free+")":"" }}
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.trade_discount }} {{ product.slab_discount_type == 'percentage' ? '%':''}} ({{
-                      +product.stockQty * product.trade_discount_pkr
-                        | number: "1.2-2"
-                    }})
+                    {{ product.trade_discount }} {{ product.slab_discount_type == 'percentage' ? '%':''}} 
+                    
                   </div>
                   <div class="addItemCell2 _h25">
                     {{
@@ -902,10 +885,13 @@
                     />
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.tax_amount_pkr || 0.0 | number: "1.2-2" }}
+                    {{ product.tax_gst_amount_pkr || 0.0 | number: "1.2-2" }}
+                  </div>
+                  <div class="addItemCell2 _h25">
+                    {{ product.tax_adv_inc_amount_pkr || 0.0 | number: "1.2-2" }}
                   </div>
                   <div class="addItemCell3 _h25">
-                    {{ product.net_amount || 0.0 | number: "1.2-2" }}
+                    {{ product.total_amount_after_tax || 0.0 | number: "1.2-2" }}
                   </div>
                   <a
                     [disabled]="isChequeAdded || isCreditAdded"
@@ -931,6 +917,7 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25 width-t">Gross Amount:</div>
                 <div class="addItemCell3 _h25">
                   {{ grossAmount | number: "1.2-2" }}
@@ -940,6 +927,7 @@
               <div class="row _totalBar2">
                 <div class="addItemCell _h25 PL-5"></div>
                 <div class="addItemCell _h25 unit-w"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
@@ -959,6 +947,7 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25 width-t">Trade Discount:</div>
                 <div class="addItemCell3 _h25">
                   {{ tradeDiscount | number: "1.2-2" }}
@@ -968,6 +957,7 @@
               <div class="row _totalBar2">
                 <div class="addItemCell _h25 PL-5"></div>
                 <div class="addItemCell _h25 unit-w"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
@@ -983,6 +973,7 @@
               <div class="row _totalBar2">
                 <div class="addItemCell _h25 PL-5"></div>
                 <div class="addItemCell _h25 unit-w"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
@@ -1005,6 +996,7 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25 width-t">Loyalty Discount:</div>
 
                 <div class="addItemCell3 _h25">
@@ -1020,7 +1012,36 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
-                <div class="addItemCell2 _h25 width-t">Tax:</div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25 width-t" title="">General Sales Tax(GST):</div>
+
+                <div class="addItemCell3 _h25">{{ gst_tax | number: "1.2-2" }}</div>
+              </div>
+              
+              <div class="row _totalBar2">
+                <div class="addItemCell _h25 PL-5"></div>
+                <div class="addItemCell _h25 unit-w"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25 width-t" title="Advance Income Tax">Advance Income Tax(AIT):</div>
+
+                <div class="addItemCell3 _h25">{{ adv_inc_tax | number: "1.2-2" }}</div>
+              </div>
+
+              <div class="row _totalBar2">
+                <div class="addItemCell _h25 PL-5"></div>
+                <div class="addItemCell _h25 unit-w"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25 width-t" title="Total Tax">Total Tax:</div>
 
                 <div class="addItemCell3 _h25">{{ tax | number: "1.2-2" }}</div>
               </div>
@@ -1028,6 +1049,7 @@
               <div class="row _totalBar2">
                 <div class="addItemCell _h25 PL-5"></div>
                 <div class="addItemCell _h25 unit-w"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
@@ -1052,6 +1074,7 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25 width-t">
                   <strong>Cash:</strong>
                 </div>
@@ -1071,6 +1094,7 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25 width-t">
                   <strong>Cheque Payment:</strong>
                 </div>
@@ -1085,6 +1109,7 @@
               <div class="row _totalBar2">
                 <div class="addItemCell _h25 PL-5"></div>
                 <div class="addItemCell _h25 unit-w"></div>
+                <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>

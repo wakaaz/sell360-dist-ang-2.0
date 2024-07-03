@@ -47,6 +47,8 @@ export class CounterSaleComponent implements OnInit {
   specialDiscount: number;
   extraDiscount: number;
   tax: number;
+  gst_tax: number;
+  adv_inc_tax: number;
   dueAmount: number;
   selectedEmployee: number;
   selectedRoute: number;
@@ -93,6 +95,7 @@ export class CounterSaleComponent implements OnInit {
   loyaltyoffers: Array<any> = [];
   subInventory: Array<any> = [];
   discountSlabs: Array<any> = [];
+  taxClasses: Array<any> = [];
 
   constructor(
     private router: Router,
@@ -114,6 +117,8 @@ export class CounterSaleComponent implements OnInit {
     this.specialDiscount = 0.0;
     this.extraDiscount = 0.0;
     this.tax = 0.0;
+    this.gst_tax = 0.0;
+    this.adv_inc_tax = 0.0;
     this.dueAmount = 0.0;
     this.totalAmountAfterScheme = 0.0;
     this.notes = '';
@@ -203,6 +208,7 @@ export class CounterSaleComponent implements OnInit {
   resetValues(): void {
     this.selectedProducts = [];
     this.selectedProductsIds = [];
+    this.taxClasses = [];
     this.grossAmount = 0.0;
     this.schemeDiscount = 0.0;
     this.loyaltyDiscount =0.0;
@@ -280,9 +286,29 @@ export class CounterSaleComponent implements OnInit {
     );
   }
 
+  getTaxclasses(province_id=0): void {
+    this.ordersService.getTaxClasses(province_id).subscribe(
+      (res) => {
+        if (res.status === 200) {
+          this.taxClasses = res.data;
+        }
+      },
+      (error) => {
+        if (error.status !== 1 && error.status !== 401) {
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Cannot fetch Provincial Tax Classes. Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      }
+    );
+  }
   getDiscountSlabs(): void {
     this.selectedSegment = this.selectedRetailer.segment_id;
     this.resetValues();
+    this.getTaxclasses(this.selectedRetailer.province_id);
     this.ordersService.getDiscountSlabs().subscribe(
       (res) => {
         if (res.status === 200) {
@@ -693,28 +719,28 @@ export class CounterSaleComponent implements OnInit {
       
       
       if(product.isAdded === true ){
-        this.selectedProducts = this.dataService.updateOrderitemscalculation(this.selectedProducts);
+        this.selectedProducts = this.dataService.updateOrderitemscalculation(this.selectedProducts,this.selectedRetailer,this.taxClasses);
         if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
           this.selectedRetailer.items = this.selectedProducts;
-          this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer);
+          this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer,this.taxClasses);
         }
         
 
         //Apply slab on all products
-        this.selectedProducts       =  this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
+        this.selectedProducts       =  this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs,this.selectedRetailer,this.taxClasses)   
 
         //update slab discount
         this.selectedRetailer.items =  this.selectedProducts
-        this.selectedProducts       =  this.dataService.applySpecialDiscount(this.selectedRetailer,this.specialDiscounts);
+        this.selectedProducts       =  this.dataService.applySpecialDiscount(this.selectedRetailer,this.specialDiscounts,this.taxClasses);
         this.selectedRetailer.items =  this.selectedProducts
 
         //Apply Loyal offer discount
         this.selectedRetailer.items =   this.selectedProducts
-        this.selectedRetailer       =   this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+        this.selectedRetailer       =   this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers,this.taxClasses); 
         this.selectedProducts       =   this.selectedRetailer.items; 
 
         //update Scheme Free Products to scheme Items
-        this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
+        this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts,this.taxClasses);
         this.selectedRetailer.items =  this.selectedProducts
       }  
 
@@ -809,30 +835,30 @@ export class CounterSaleComponent implements OnInit {
         }
       }
       //debugger
-      this.selectedProducts         = this.dataService.updateOrderitemscalculation(this.selectedProducts);
+      this.selectedProducts         = this.dataService.updateOrderitemscalculation(this.selectedProducts,this.selectedRetailer,this.taxClasses);
 
       if(this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type == 'bundle_offer'){
         this.selectedRetailer.items = this.selectedProducts;
-        this.selectedProducts       = this.dataService.applyBundleProductsScheme(this.selectedProduct,this.selectedRetailer);
+        this.selectedProducts       = this.dataService.applyBundleProductsScheme(this.selectedProduct,this.selectedRetailer,this.taxClasses);
       }
       
       //apply slabs to all items 
-      this.selectedProducts       = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
+      this.selectedProducts       =   this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs,this.selectedRetailer,this.taxClasses)   
       
       //Apply Loyal offer discount
-      this.selectedRetailer.items = this.selectedProducts
-      this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+      this.selectedRetailer.items =  this.selectedProducts
+      this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers,this.taxClasses); 
       this.selectedProducts       =  this.selectedRetailer.items; 
 
       //update Scheme Free Products to scheme Items
-      this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
-      this.selectedRetailer.items = this.selectedProducts
+      this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts,this.taxClasses);
+      this.selectedRetailer.items =  this.selectedProducts
 
       this.calculateTotalBill();
       
       document.getElementById('pl-qty-close').click();
       this.isAdded = false;
-      console.log(this.dispProducts.filter(x=>x.isAdded===true));
+      // console.log(this.dispProducts.filter(x=>x.isAdded===true));
     }
         
   }
@@ -877,20 +903,20 @@ export class CounterSaleComponent implements OnInit {
     
     if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
       this.selectedRetailer.items = this.selectedProducts;
-      this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer);
+      this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer,this.taxClasses);
     }
  
 
     //apply slabs to all items 
-    this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs)   
+    this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs,this.selectedRetailer,this.taxClasses)   
     
     //Apply Loyal offer discount
-    this.selectedRetailer.items = this.selectedProducts
-    this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+    this.selectedRetailer.items =  this.selectedProducts
+    this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers,this.taxClasses); 
     this.selectedProducts       =  this.selectedRetailer.items;  
 
     //update Scheme Free Products to scheme Items
-    this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
+    this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts,this.taxClasses);
     this.selectedRetailer.items = this.selectedProducts
     
     this.calculateTotalBill();
@@ -1062,6 +1088,13 @@ export class CounterSaleComponent implements OnInit {
 
     // Extra Discount
     this.extraDiscount       =    this.dataService.orderExtraDiscount(this.selectedProducts);
+
+    // Tax
+    this.gst_tax             =    this.dataService.orderGstTax(this.selectedProducts);
+
+    // Tax
+    this.adv_inc_tax         =    this.dataService.orderAdvIncTax(this.selectedProducts);
+
     // Tax
     this.tax                 =    this.dataService.orderTax(this.selectedProducts);
     
@@ -1189,73 +1222,114 @@ export class CounterSaleComponent implements OnInit {
         };
         this.toastService.showToaster(toast);
     } else {
-        const employee = this.orderBookers.find(
-        (x) => x.employee_id === this.selectedEmployee
-    );
-    const newOrder: CounterSale = {
-        area_id: employee.area_id,
-        assigned_route_id: this.selectedRoute,
-        booking_territory: employee.territory_id,
-        order_type: 'counter',
-        counter_sale: 1,
-        spot_sale: 0,
-        sales_man_id: 0,
-        within_radius: 0,
-        booking_region: this.selectedRegion,
-        invoice_number: '',
-        invoice_date: new Date().toISOString(),
-        remarks: this.notes,
-        retailer_id: this.selectedRetailer.retailer_id,
-        distributor_id: this.distributorId,
-        gross_sale_amount: this.grossAmount,
-        total_amount_after_tax: this.dueAmount,
-        total_discount:
-            this.specialDiscount +
-            this.tradeDiscount +
-            this.schemeDiscount +
-            this.loyaltyDiscount +
-            this.extraDiscount,
-        total_tax_amount: this.tax,
-        booked_order_value: 0,
-        booked_total_qty: 0,
-        booked_total_skus: 0,
-        booking_area: employee.area_id,
-        booking_locality_id: this.selectedRetailer.locality_id,
-        booking_neighbourhood_id: this.selectedRetailer.neighbourhood_id,
-        booking_zone: employee.area_id,
-        employee_id: employee.employee_id,
-        freight_charges: 0,
-        order_total: this.orderTotal,
-        region_id: this.selectedRegion,
-        status: 'Completed',
-        status_code: 0,
-        territory_id: employee.territory_id,
-        total_retail_price: this.totalRetailPrice,
-        ttl_products_sold: this.selectedRetailer.items.length,
-        ttl_qty_sold: this.orderParentQtySold,
-        loyalty_offer_id: this.selectedRetailer.loyalty_offer_id,
-        loyalty_offer_reward_type: this.selectedRetailer.loyalty_offer_reward_type,
-        loyalty_offer_interval: this.selectedRetailer.loyalty_offer_interval,
-        loyalty_offer_discount: this.selectedRetailer.loyalty_offer_discount,
-        payment: {
-            total_payment: this.dueAmount,
-            detail: [],
-        },
-        items: [],
+            const employee = this.orderBookers.find(
+            (x) => x.employee_id === this.selectedEmployee
+        );
+        const newOrder: CounterSale = {
+            area_id: employee.area_id,
+            assigned_route_id: this.selectedRoute,
+            booking_territory: employee.territory_id,
+            order_type: 'counter',
+            counter_sale: 1,
+            spot_sale: 0,
+            sales_man_id: 0,
+            within_radius: 0,
+            booking_region: this.selectedRegion,
+            invoice_number: '',
+            invoice_date: new Date().toISOString(),
+            remarks: this.notes,
+            retailer_id: this.selectedRetailer.retailer_id,
+            distributor_id: this.distributorId,
+            gross_sale_amount: this.grossAmount,
+            total_amount_after_tax: this.dueAmount,
+            total_discount:
+                this.specialDiscount +
+                this.tradeDiscount +
+                this.schemeDiscount +
+                this.loyaltyDiscount +
+                this.extraDiscount,
+            total_tax_amount: this.tax,
+            booked_order_value: 0,
+            booked_total_qty: 0,
+            booked_total_skus: 0,
+            booking_area: employee.area_id,
+            booking_locality_id: this.selectedRetailer.locality_id,
+            booking_neighbourhood_id: this.selectedRetailer.neighbourhood_id,
+            booking_zone: employee.area_id,
+            employee_id: employee.employee_id,
+            freight_charges: 0,
+            order_total: this.orderTotal,
+            region_id: this.selectedRegion,
+            status: 'Completed',
+            status_code: 0,
+            territory_id: employee.territory_id,
+            total_retail_price: this.totalRetailPrice,
+            ttl_products_sold: this.selectedRetailer.items.length,
+            ttl_qty_sold: this.orderParentQtySold,
+            loyalty_offer_id: this.selectedRetailer.loyalty_offer_id,
+            loyalty_offer_reward_type: this.selectedRetailer.loyalty_offer_reward_type,
+            loyalty_offer_interval: this.selectedRetailer.loyalty_offer_interval,
+            loyalty_offer_discount: this.selectedRetailer.loyalty_offer_discount,
+            payment: {
+                total_payment: this.dueAmount,
+                detail: [],
+            },
+            items: [],
+            
+        };  
         
-    };  
-    
-    this.order = newOrder;
-    if (this.cheque) {
-        this.order.payment.detail.push(this.cheque);
+        this.order = newOrder;
+        if (this.cheque) {
+            this.order.payment.detail.push(this.cheque);
+        }
+        if (this.credit) {
+            this.order.payment.detail.push(this.credit);
+        }
+        this.order.payment.detail.push(this.cash);
+        this.setOrderItems(employee);
     }
-    if (this.credit) {
-        this.order.payment.detail.push(this.credit);
+  }
+
+ 
+  getTaxType(tax_class_id):string{
+    if(tax_class_id > 0){
+      const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+        return taxclass.type;
+      }else{
+        return 'percentage';
+      }
     }
-    this.order.payment.detail.push(this.cash);
-    this.setOrderItems(employee);
-}
-}
+    return 'percentage';
+  }
+  getGstTaxAmount(tax_class_id):any{
+    if(tax_class_id > 0){
+      const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+         if(this.selectedRetailer.retailer_register == 1){
+            return taxclass.gst_filer_retailer_value;
+         }
+         else{
+            return taxclass.gst_nonfiler_retailer_value;
+         }
+      }
+    }
+    return 0;
+  }
+  getAdvIncTaxAmount(tax_class_id):any{
+    if(tax_class_id > 0){
+      const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+         if(this.selectedRetailer.retailer_register == 1){
+            return taxclass.adv_inc_filer_retailer_value;
+         }
+         else{
+            return taxclass.adv_inc_nonfiler_retailer_value;
+         }
+      }
+    }
+    return 0;
+  }
 
   setOrderItems(selectedEmployee: any): void {
     this.selectedProducts.forEach((product, index) => {
@@ -1272,13 +1346,19 @@ export class CounterSaleComponent implements OnInit {
       let ttl_extra_discount  =   +product.extra_discount ? +stockQty * +product.extra_discount : 0;
       let ttl_loyalty_discount=   product.loyalty_offer_discount_pkr ? +stockQty * +product.loyalty_offer_discount_pkr : 0;
       let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_loyalty_discount;
-      let final_price         =   gross_sale_amount - total_discount;                          
+      let final_price         =   gross_sale_amount - total_discount;
+      let gst_tax             =   0;
+      let adv_inc_tax         =   0;                           
       let tax_in_value        =   0;                          
-      let total_tax_amount    =   0;    
-      if(product.tax_class_id  > 0 && product.tax_class_amount){
-        tax_in_value          =   (product.tax_class_amount / 100) * +product.item_retail_price;                          
+      let total_tax_amount    =   0;
+
+      if(product.tax_class_id > 0){
+        gst_tax               =  (this.getGstTaxAmount(product.tax_class_id)/ 100) * +product.item_retail_price;
+        adv_inc_tax           =  (this.getAdvIncTaxAmount(product.tax_class_id) / 100) * (+product.item_retail_price + +gst_tax); 
+        tax_in_value          =   gst_tax + adv_inc_tax;                          
         total_tax_amount      =   tax_in_value*finalQty;  
       }
+
       let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
 
 
@@ -1340,8 +1420,12 @@ export class CounterSaleComponent implements OnInit {
         gross_sale_amount: gross_sale_amount,
         item_retail_price: product.item_retail_price,
         total_retail_price: product.item_retail_price * finalQty,
+        tax_type: this.selectedRetailer.retailer_register == 1 ? 1:2,
         tax_class_id: product.tax_class_id,
-        tax_in_percentage: product.tax_class_amount,
+        tax_in_percentage: this.getGstTaxAmount(product.tax_class_id),
+        adv_inc_tax_in_percentage: this.getAdvIncTaxAmount(product.tax_class_id),
+        gst_tax_amount :gst_tax,
+        adv_inc_tax_amount :adv_inc_tax,
         tax_in_value: tax_in_value,
         total_tax_amount: total_tax_amount,
         total_amount_after_tax: ttl_amnt_aftr_tax,

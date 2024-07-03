@@ -95,6 +95,11 @@ export class OrdersService {
     return this.baseService.get(url);
   }
 
+  getTaxClasses(provinceId: number=0): Observable<any> {
+    const url = `${API_URLS.GET_TAX_CLASSES}/${provinceId}`;
+    return this.baseService.get(url);
+  }
+
   getDiscountSlabsByChannel(
     segementId: number,
     channelId: number

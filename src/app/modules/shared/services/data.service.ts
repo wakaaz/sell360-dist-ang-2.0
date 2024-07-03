@@ -581,7 +581,7 @@ export class DataService {
     return item;
   }
 
-  applySlabDiscountValuesToItems(items:any, slabs:any){
+  applySlabDiscountValuesToItems(items:any, slabs:any,retailer:any=null,taxClasses:any=null){
     items = items.map((item) => {
     
       /* App Scenarios In case of exclusiveOrder Access Right = 0:
@@ -741,7 +741,7 @@ export class DataService {
         //////
       return item;
     });
-    return this.updateOrderitemscalculation(items);
+    return this.updateOrderitemscalculation(items,retailer,taxClasses);
   }
   rangecontentGrossAmountSum(rangecontent:any,item_id:number){
     let ttl_Amnt = 0;
@@ -838,7 +838,7 @@ export class DataService {
    * Begin: Bundle Offer
    * 
    */
-  applyBundleProductsScheme(product: any,orderDetail:any): any {
+  applyBundleProductsScheme(product: any,orderDetail:any=null,taxClasses:any=null): any {
  
     let orderDetailitems = orderDetail.items;
     switch (product.selectedScheme.scheme_rule) {
@@ -853,7 +853,7 @@ export class DataService {
           break;
     }
     //
-    return this.updateOrderitemscalculation(orderDetailitems);
+    return this.updateOrderitemscalculation(orderDetailitems,orderDetail,taxClasses);
   }
 
   applyBundleDOTP(product: any,orderDetails:any): any {
@@ -1043,31 +1043,9 @@ export class DataService {
    * End: Complementary Offer
    *  
    */
-  calculateOrderItemsValues(items:any):any{
-    
-    items = items.map(item =>{
-      
-      let stockQty            =   +item.stockQty;
-      let gross_sale_amount   =   (item.original_price ? +item.original_price:+item.original_amount) * +stockQty;
-      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
-      let ttl_trade_discount  =   +item.trade_discount_pkr ? + stockQty * +item.trade_discount_pkr : 0;
-      let ttl_special_discount=   +item.special_discount ? + stockQty * +item.special_discount :0;
-      let ttl_extra_discount  =   +item.extra_discount ? + stockQty * +item.extra_discount :0;
-      let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount;
-      let net_amount          =   gross_sale_amount - total_discount;
-      
-      item.tax_amount_pkr     =   + item.extra_discount_pkr ? +item.extra_discount_pkr : 0;
-      item.net_amount         =   net_amount; 
-      
-      return item;
-    }); 
-    items = JSON.parse(JSON.stringify(items));
-    
-    return items;
 
-  }
 
-  applySpecialDiscount(orderDetails:any,specialDiscounts:any){
+  applySpecialDiscount(orderDetails:any,specialDiscounts:any,taxClasses:any=null){
 
     orderDetails.items  = orderDetails.items.map((item) => {
       //add for scheme offers
@@ -1080,11 +1058,11 @@ export class DataService {
                                       );
         return item;                    
     });
-    orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items);
+    orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items,orderDetails,taxClasses);
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
 
-  updateSchemeFreeProductItems(orderDetails:any,allProducts:any){
+  updateSchemeFreeProductItems(orderDetails:any,allProducts:any,taxClasses:any=null){
     ////
     
     orderDetails.FOCA_error = null;
@@ -1185,13 +1163,19 @@ export class DataService {
                         newItem.total_retail_price= 0;
                         newItem.tax_class_id=0;
                         newItem.tax_in_percentage= 0;
+
+                        newItem.tax_type= null;
+                        newItem.adv_inc_tax_in_percentage= null;
+                        newItem.gst_tax_amount =0;
+                        newItem.adv_inc_tax_amount =0;
+
                         newItem.tax_in_value= 0;
                         newItem.total_tax_amount=0;
                         newItem.total_amount_after_tax= 0;
                         newItem.total_discount=0;
                         newItem.isAdded=true;
                         ////
-                        newItem = this.updateItemcalculation(newItem);
+                        newItem = this.updateItemcalculation(newItem,orderDetails,taxClasses);
                         
                         orderDetails_items.push(newItem);
                         ////
@@ -1293,6 +1277,10 @@ export class DataService {
                 newItem.total_retail_price= 0;
                 newItem.tax_class_id=0;
                 newItem.tax_in_percentage= 0;
+                newItem.tax_type= null;
+                newItem.adv_inc_tax_in_percentage= null;
+                newItem.gst_tax_amount =0;
+                newItem.adv_inc_tax_amount =0;
                 newItem.tax_in_value= 0;
                 newItem.total_tax_amount=0;
                 newItem.total_amount_after_tax= 0;
@@ -1300,7 +1288,7 @@ export class DataService {
                 newItem.isAdded=true;
                 ////
                 
-                newItem = this.updateItemcalculation(newItem);
+                newItem = this.updateItemcalculation(newItem,orderDetails,taxClasses);
                 
                 orderDetails_items.push(newItem); 
                 ////
@@ -1383,7 +1371,7 @@ export class DataService {
   Begin::LOyalty Offer
   *
   */
-  applyLoyaltyOfferDiscount(orderDetails:any,loyaltyOffers:any):any {
+  applyLoyaltyOfferDiscount(orderDetails:any,loyaltyOffers:any,taxClasses:any=null):any {
     //remove previous offers
     
     orderDetails.loyalty_offer_interval =   0;
@@ -1565,7 +1553,7 @@ export class DataService {
             }
         }
     } 
-    orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items);
+    orderDetails.items  = this.updateOrderitemscalculation(orderDetails.items,orderDetails,taxClasses);
     return orderDetails;
   }
   nullifyLoyaltyDiscount(orderDetails):any{
@@ -1622,7 +1610,7 @@ export class DataService {
   *
   */
   
-  updateItemcalculation(item):any{
+  updateItemcalculation(item,retailer:any=null,taxClasses:any=null):any{
         if(+item.stockQty < 1){
           item.scheme_discount    = 0; 
           item.trade_discount     = 0; 
@@ -1651,11 +1639,17 @@ export class DataService {
         let ttl_loyalty_discount=   item.loyalty_offer_discount_pkr ? +stockQty * +item.loyalty_offer_discount_pkr : 0;
         let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount + ttl_loyalty_discount;
         let final_price         =   gross_sale_amount - total_discount;                          
+        let gst_tax             =   0;
+        let adv_inc_tax         =   0;                        
         let tax_in_value        =   0;                          
-        let total_tax_amount    =   0;    
-        if(item.tax_class_id  > 0 && item.tax_class_amount){
-          tax_in_value          =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
-          total_tax_amount      =   tax_in_value*finalQty;  
+        let total_tax_amount    =   0;  
+
+        if(item.tax_class_id  > 0){
+          gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +item.item_retail_price;
+          adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+item.item_retail_price + +gst_tax); 
+          tax_in_value          =   gst_tax + adv_inc_tax;                          
+          total_tax_amount      =   tax_in_value*finalQty;
+            
         }
         let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
 
@@ -1680,6 +1674,9 @@ export class DataService {
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
         item.special_discount                     =   +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
+        item.tax_gst_amount_pkr                   =   +gst_tax;
+        item.tax_adv_inc_amount_pkr               =   +adv_inc_tax;
+        item.tax_amount_pkr                       =   +tax_in_value;
         item.final_price                          =   +final_price;
         item.net_amount                           =   +item.final_price; 
         item.price                                =   +item.final_price;
@@ -1689,7 +1686,7 @@ export class DataService {
         // ////
         return JSON.parse(JSON.stringify(item));
   }
-  updateOrderitemscalculation(items):any{
+  updateOrderitemscalculation(items,retailer:any=null,taxClasses:any=null):any{
     items   =   items.map((item) => {
         if(+item.stockQty < 1){
           item.scheme_discount    = 0; 
@@ -1718,13 +1715,25 @@ export class DataService {
         let ttl_extra_discount  =   +item.extra_discount ? +stockQty * +item.extra_discount : 0;
         let ttl_loyalty_discount=   item.loyalty_offer_discount_pkr ? +stockQty * +item.loyalty_offer_discount_pkr : 0;
         let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_loyalty_discount;
-        let final_price         =   gross_sale_amount - total_discount;                          
+        let final_price         =   gross_sale_amount - total_discount;   
+        let gst_tax             =   0;
+        let adv_inc_tax         =   0;                        
         let tax_in_value        =   0;                          
-        let total_tax_amount    =   0;    
-        if(item.tax_class_id  > 0 && item.tax_class_amount){
-          tax_in_value          =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
-          total_tax_amount      =   tax_in_value*finalQty;  
+        let total_tax_amount    =   0;  
+
+        if(item.tax_class_id  > 0){
+          gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +item.item_retail_price;
+          adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+item.item_retail_price+ +gst_tax); 
+          tax_in_value          =   gst_tax + adv_inc_tax;                          
+          total_tax_amount      =   tax_in_value*finalQty; 
+           
         }
+
+        // if(item.tax_class_id  > 0 && item.tax_class_amount){
+        //   tax_in_value          =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
+        //   total_tax_amount      =   tax_in_value*finalQty;  
+        // }
+
         let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
         
 
@@ -1749,6 +1758,9 @@ export class DataService {
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
         item.special_discount                     =   +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
+        item.tax_gst_amount_pkr                   =   +gst_tax;
+        item.tax_adv_inc_amount_pkr               =   +adv_inc_tax;
+        item.tax_amount_pkr                       =   +tax_in_value;
         item.final_price                          =   +final_price;
         item.net_amount                           =   +item.final_price; 
         item.price                                =   +item.final_price;
@@ -1797,7 +1809,8 @@ export class DataService {
       let price:number = 0;
       if(items){
           items.forEach(item=>{
-              price = price + +(item.net_amount ? item.net_amount : 0) ;
+              // price = price + +(item.net_amount ? item.net_amount : 0) ;
+              price = price + +(item.total_amount_after_tax ? item.total_amount_after_tax : 0) ;
           })
       }
       return price;
@@ -1856,14 +1869,78 @@ export class DataService {
       return price;
   }
 
+  getTaxType(taxClasses,tax_class_id):string{
+    if(tax_class_id > 0){
+      const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+        return taxclass.type;
+      }else{
+        return 'percentage';
+      }
+    }
+    return 'percentage';
+  }
+  getGstTaxAmount(taxClasses,tax_class_id,retailer):any{
+    let tax_amount_per = 0;
+    if(tax_class_id > 0){
+      const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+         if(retailer.retailer_register == 1){
+          tax_amount_per = taxclass.gst_filer_retailer_value;
+         }
+         else{
+          tax_amount_per = taxclass.gst_nonfiler_retailer_value;
+         }
+      }
+    }
+    return tax_amount_per;
+  }
+  getAdvIncTaxAmount(taxClasses,tax_class_id,retailer):any{
+    let tax_amount_per = 0;
+    if(tax_class_id > 0){
+      const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+         if(retailer.retailer_register == 1){
+          tax_amount_per =  taxclass.adv_inc_filer_retailer_value;
+         }
+         else{
+          tax_amount_per =  taxclass.adv_inc_nonfiler_retailer_value;
+         }
+      }
+    }
+    return tax_amount_per;
+  }
   orderTax(items:any):number{
       let price:number = 0;
       if(items){ 
           items.forEach(item=>{
-              price = price + item.tax_amount_pkr ? +item.tax_amount_pkr:0;
+              price = price + item.tax_amount_pkr ? (+item.tax_amount_pkr * +item.stockQty):0;
+              debugger
           })
       }
       return price;
+  }
+
+  orderGstTax(items:any):number{
+      let price:number = 0;
+      if(items){ 
+          items.forEach(item=>{
+              price = price + item.tax_gst_amount_pkr ? +item.tax_gst_amount_pkr * +item.stockQty:0;
+              debugger
+          })
+      }
+      return price;
+  }
+
+  orderAdvIncTax(items:any):number{
+    let price:number = 0;
+    if(items){ 
+        items.forEach(item=>{
+            price = price + item.tax_adv_inc_amount_pkr ? (+item.tax_adv_inc_amount_pkr * +item.stockQty):0;
+            debugger
+        })
+    }
+    return price;
   }
 
   orderLoyaltyDiscount(orderDetails:any):number{

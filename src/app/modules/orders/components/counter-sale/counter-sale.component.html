@@ -848,7 +848,7 @@
                     />
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.item_trade_price }}
+                    {{ product.item_trade_price  || 0.0 | number: "1.2-2" }}
                   </div>
 
                   

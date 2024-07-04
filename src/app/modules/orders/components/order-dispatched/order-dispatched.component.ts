@@ -67,6 +67,7 @@ export class OrderDispatchedComponent implements OnInit {
   schemes: Array<any> = [];
   loyaltyoffers: Array<any> = [];
   discountSlabs: Array<any> = [];
+  taxClasses: Array<any> = [];
   credits: Array<any> = [];
   recoveryRetailers: Array<any> = [];
   remainingOrders: Array<any> = [];
@@ -435,6 +436,7 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   getOrderDetailsByRetailer(retailer: any): void {
+    this.taxClasses = []; 
     if (this.selectedRetailer?.iorderDetailsd !== retailer.id) {
       this.savingOrder = true;
       this.newProduct = null;
@@ -446,57 +448,59 @@ export class OrderDispatchedComponent implements OnInit {
             if (res.status === 200) {
               this.orderDetails = res.data;
               this.orderDetails.items = this.orderDetails.items.map((prod) => {
+                const product                     =     this.inventory.find(x => x.item_id === prod.item_id);
+                prod.parent_quantity              =     JSON.parse(JSON.stringify(product.quantity));
+                prod.parent_unit_id               =     JSON.parse(JSON.stringify(product.parent_unit_id));
+                prod.sub_inventory_quantity       =     JSON.parse(JSON.stringify(product.sub_inventory_quantity));
+                prod.child                        =     JSON.parse(JSON.stringify(product.child));
+                prod.tax_class_amount             =     JSON.parse(JSON.stringify(product.tax_class_amount));
+                prod.tax_class_type               =     JSON.parse(JSON.stringify(product.tax_class_type));
+                prod.brand_id                     =     JSON.parse(JSON.stringify(product.brand_id));
+                prod.unit_name                    =     JSON.parse(JSON.stringify(product.unit_name));
+                prod.is_active                    =     JSON.parse(JSON.stringify(product.is_active));
+                prod.original_price               =     JSON.parse(JSON.stringify(prod.original_price));
+                prod.item_trade_price             =     JSON.parse(JSON.stringify(prod.original_price));
+                prod.extra_discount               =     JSON.parse(JSON.stringify(prod.booker_discount));
+                prod.stockQty                     =     JSON.parse(JSON.stringify(prod.dispatch_qty));
+                prod.net_amount                   =     JSON.parse(JSON.stringify(prod.final_price));
+                prod.extra_discount_pkr           =     prod.stockQty * prod.extra_discount;
+                prod.original_amount              =     prod.item_trade_price * prod.stockQty;
+                prod.special_discount_pkr         =     prod.special_discount;
+                prod.trade_discount               =     JSON.parse(JSON.stringify(prod.merchant_discount));
+                prod.trade_discount_pkr           =     JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
 
-                const product = this.inventory.find(x => x.item_id === prod.item_id);
-                prod.parent_unit_id = JSON.parse(JSON.stringify(product.parent_unit_id));
-                prod.parent_quantity = JSON.parse(JSON.stringify(product.quantity));
-                prod.sub_inventory_quantity = JSON.parse(JSON.stringify(product.sub_inventory_quantity));
-                prod.child = JSON.parse(JSON.stringify(product.child));
-                prod.tax_class_amount = JSON.parse(JSON.stringify(product.tax_class_amount));
-                prod.tax_class_type = JSON.parse(JSON.stringify(product.tax_class_type));
-                prod.unit_name = JSON.parse(JSON.stringify(product.unit_name));
-                prod.brand_id     = JSON.parse(JSON.stringify(product.brand_id));
-                prod.is_active    = JSON.parse(JSON.stringify(product.is_active));
-                prod.original_price = JSON.parse(JSON.stringify(prod.original_price));
-                prod.item_trade_price     = JSON.parse(JSON.stringify(prod.original_price));
-                prod.extra_discount       = JSON.parse(JSON.stringify(prod.booker_discount));
-                prod.stockQty             = JSON.parse(JSON.stringify(prod.dispatch_qty));
-                prod.net_amount           = JSON.parse(JSON.stringify(prod.final_price));
-                prod.extra_discount_pkr   = prod.stockQty * prod.extra_discount;
-                prod.original_amount      = prod.item_trade_price * prod.stockQty;
-                prod.special_discount_pkr = prod.special_discount;
-                prod.trade_discount       = JSON.parse(JSON.stringify(prod.merchant_discount));
-                prod.trade_discount_pkr   = JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
-                prod.tax_amount_pkr       = JSON.parse(JSON.stringify(prod.total_tax_amount || 0));
-                prod.selectedScheme       = this.schemes.find((scheme) => scheme.id === prod.scheme_id);
+          
+                prod.selectedScheme               =     this.schemes.find((scheme) => scheme.id === prod.scheme_id);
 
+               
 
+                prod.scheme_id                    =     JSON.parse(JSON.stringify(prod.scheme_id));
 
-                prod.scheme_id              =JSON.parse(JSON.stringify(prod.scheme_id));
-                prod.scheme_type            =JSON.parse(JSON.stringify(prod.scheme_type));
-                prod.scheme_rule          =JSON.parse(JSON.stringify(prod.scheme_rule));
-                prod.scheme_bundle_interval=JSON.parse(JSON.stringify(prod.scheme_bundle_interval));
-                prod.scheme_min_quantity=JSON.parse(JSON.stringify(prod.scheme_min_quantity));
-                prod.scheme_quantity_free=JSON.parse(JSON.stringify(prod.scheme_quantity_free));
-                prod.scheme_discount_type=JSON.parse(JSON.stringify(prod.scheme_discount_type));
-                prod.scheme_discount=JSON.parse(JSON.stringify(prod.scheme_discount));
-                prod.gift_value=JSON.parse(JSON.stringify(prod.gift_value));
-                prod.loyalty_offer_id =JSON.parse(JSON.stringify(prod.loyalty_offer_id));
-                prod.loyalty_offer_type =JSON.parse(JSON.stringify(prod.loyalty_offer_type));
-                prod.loyalty_offer_discount_type=JSON.parse(JSON.stringify(prod.loyalty_offer_discount_type));
-                prod.loyalty_offer_discount=JSON.parse(JSON.stringify(prod.loyalty_offer_discount));
-                prod.loyalty_offer_discount_pkr =JSON.parse(JSON.stringify(prod.loyalty_offer_discount_pkr));
-                prod.slab_id=JSON.parse(JSON.stringify(prod.slab_id));
-                prod.slab_type=JSON.parse(JSON.stringify(prod.slab_type));
-                prod.slab_discount_type=JSON.parse(JSON.stringify(prod.slab_discount_type));
-                prod.merchant_discount=JSON.parse(JSON.stringify(prod.merchant_discount));
-                prod.merchant_discount_pkr=JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
-                prod.special_discount=JSON.parse(JSON.stringify(prod.special_discount));
-                prod.booker_discount=JSON.parse(JSON.stringify(prod.booker_discount));
+                prod.scheme_type                  =     JSON.parse(JSON.stringify(prod.scheme_type));
+                prod.scheme_rule                  =     JSON.parse(JSON.stringify(prod.scheme_rule));
+                prod.scheme_bundle_interval       =     JSON.parse(JSON.stringify(prod.scheme_bundle_interval));
+                prod.scheme_min_quantity          =     JSON.parse(JSON.stringify(prod.scheme_min_quantity));
+                prod.scheme_quantity_free         =     JSON.parse(JSON.stringify(prod.scheme_quantity_free));
+                prod.scheme_discount_type         =     JSON.parse(JSON.stringify(prod.scheme_discount_type));
+                prod.scheme_discount              =     JSON.parse(JSON.stringify(prod.scheme_discount));
+                prod.gift_value                   =     JSON.parse(JSON.stringify(prod.gift_value));
+                prod.loyalty_offer_id             =     JSON.parse(JSON.stringify(prod.loyalty_offer_id));
+                prod.loyalty_offer_type           =     JSON.parse(JSON.stringify(prod.loyalty_offer_type));
+                prod.loyalty_offer_discount_type  =     JSON.parse(JSON.stringify(prod.loyalty_offer_discount_type));
+                prod.loyalty_offer_discount       =     JSON.parse(JSON.stringify(prod.loyalty_offer_discount));
+                prod.loyalty_offer_discount_pkr   =     JSON.parse(JSON.stringify(prod.loyalty_offer_discount_pkr));
+                prod.slab_id                      =     JSON.parse(JSON.stringify(prod.slab_id));
+                prod.slab_type                    =     JSON.parse(JSON.stringify(prod.slab_type));
+                prod.slab_discount_type           =     JSON.parse(JSON.stringify(prod.slab_discount_type));
+                prod.merchant_discount            =     JSON.parse(JSON.stringify(prod.merchant_discount));
+                prod.merchant_discount_pkr        =     JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
+                prod.special_discount             =     JSON.parse(JSON.stringify(prod.special_discount));
+                prod.booker_discount              =     JSON.parse(JSON.stringify(prod.booker_discount));
         //debugger
                 
                 return prod;
               });
+              console.log("orderDetails.items",this.orderDetails.items)
             }
           },
           (error) => {
@@ -515,7 +519,7 @@ export class OrderDispatchedComponent implements OnInit {
               this.toastService.showToaster(toast);
             }
           }
-        );
+        ); 
       this.getDiscountSlabs();
     }
     this.getDispatchDetails();
@@ -525,8 +529,32 @@ export class OrderDispatchedComponent implements OnInit {
     this.newProduct = product;
   }
 
+  
+
+  getTaxclasses(province_id=0): void {
+    this.orderService.getTaxClasses(province_id).subscribe(
+      (res) => {
+        if (res.status === 200) {
+          this.taxClasses = res.data;
+        }
+      },
+      (error) => {
+        if (error.status !== 1 && error.status !== 401) {
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Cannot fetch Provincial Tax Classes. Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      }
+    );
+  }
+
   getDiscountSlabs(): void {
     //
+    
+    this.getTaxclasses(this.selectedRetailer.province_id);
     if (!this.discountSlabs.length) {
       this.orderService.getDiscountSlabs().subscribe(
         (res) => {
@@ -620,7 +648,45 @@ export class OrderDispatchedComponent implements OnInit {
       }
     );
   }
-
+  getTaxType(tax_class_id):string{
+    if(tax_class_id > 0){
+      const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+        return taxclass.type;
+      }else{
+        return 'percentage';
+      }
+    }
+    return 'percentage';
+  }
+  getGstTaxAmount(tax_class_id):any{
+    if(tax_class_id > 0){
+      const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+         if(this.selectedRetailer.retailer_register == 1){
+            return taxclass.gst_filer_retailer_value;
+         }
+         else{
+            return taxclass.gst_nonfiler_retailer_value;
+         }
+      }
+    }
+    return 0;
+  }
+  getAdvIncTaxAmount(tax_class_id):any{
+    if(tax_class_id > 0){
+      const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+         if(this.selectedRetailer.retailer_register == 1){
+            return taxclass.adv_inc_filer_retailer_value;
+         }
+         else{
+            return taxclass.adv_inc_nonfiler_retailer_value;
+         }
+      }
+    }
+    return 0;
+  }
   setOrderItems(): void {
     this.orderDetails.items   =   this.orderDetails.items.map((item) => {
       let free_qty            =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
@@ -635,10 +701,17 @@ export class OrderDispatchedComponent implements OnInit {
       let ttl_loyalty_discount=   item.loyalty_offer_discount_pkr ? +stockQty * +item.loyalty_offer_discount_pkr : 0;
       let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_loyalty_discount;
       let final_price         =   gross_sale_amount - total_discount;                          
+  
+      
+      let gst_tax             =   0;
+      let adv_inc_tax         =   0;                           
       let tax_in_value        =   0;                          
-      let total_tax_amount    =   0;    
-      if(item.tax_class_id  > 0 && item.tax_class_amount){
-        tax_in_value          =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
+      let total_tax_amount    =   0;
+
+      if(item.tax_class_id > 0){
+        gst_tax               =  (this.getGstTaxAmount(item.tax_class_id)/ 100) * +item.item_retail_price;
+        adv_inc_tax           =  (this.getAdvIncTaxAmount(item.tax_class_id) / 100) * (+item.item_retail_price + +gst_tax); 
+        tax_in_value          =   gst_tax + adv_inc_tax;                          
         total_tax_amount      =   tax_in_value*finalQty;  
       }
       let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
@@ -707,15 +780,18 @@ export class OrderDispatchedComponent implements OnInit {
         gross_sale_amount: gross_sale_amount,
         item_retail_price: item.item_retail_price,
         total_retail_price: item.item_retail_price * finalQty,
+        tax_type: this.selectedRetailer.retailer_register == 1 ? 1:2,
         tax_class_id: item.tax_class_id,
-        tax_in_percentage: item.tax_class_amount,
+        tax_in_percentage: this.getGstTaxAmount(item.tax_class_id),
+        adv_inc_tax_in_percentage: this.getAdvIncTaxAmount(item.tax_class_id),
+        gst_tax_amount :gst_tax,
+        adv_inc_tax_amount :adv_inc_tax,
         tax_in_value: tax_in_value,
         total_tax_amount: total_tax_amount,
         total_amount_after_tax: ttl_amnt_aftr_tax,
         total_discount: total_discount, 
         order_id: this.orderDetails.id,
       };
-      //debugger
       
       return orderItem;
     });

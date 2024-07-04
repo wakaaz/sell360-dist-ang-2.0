@@ -17,11 +17,15 @@ export class OrderDispatchService {
                     pref_id: item.pref_id,
                     unit_id: item.unit_id,
                     item_trade_price: item.original_price,
+                    tax_in_percentage: item.tax_in_percentage,
+                    adv_inc_tax_in_percentage: item.adv_inc_tax_in_percentage,
+                    gst_tax_amount: item.gst_tax_amount,
+                    adv_inc_tax_amount: item.adv_inc_tax_amount,
                     actual_qty: item.dispatch_qty,
                     issued_qty: 0,
                     foc_qty:item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
                 };
-                //debugger
+                debugger
                 currentLoadContent.items.push(newContent);
             } else {
                 loadItem.foc_qty        = loadItem.foc_qty  +  (item.scheme_quantity_free ? +item.scheme_quantity_free : 0), 
@@ -45,7 +49,7 @@ export class OrderDispatchService {
                 loadItem.issued_qty =   0;
                 loadItem.foc_qty    =   loadItem.foc_qty;
                 loadItem.extra_qty  =   0;   
-                ////debugger
+                debugger
             }
             if (loadItem && loadItem.actual_qty === 0) {
                 currentLoadContent.items = currentLoadContent.items.filter(x => x.item_id !== item.item_id);
@@ -72,19 +76,23 @@ export class OrderDispatchService {
                             pref_id: item.pref_id,
                             unit_id: item.unit_id,
                             item_trade_price: item.item_trade_price,
+                            tax_in_percentage: item.tax_in_percentage,
+                            adv_inc_tax_in_percentage: item.adv_inc_tax_in_percentage,
+                            gst_tax_amount: item.gst_tax_amount,
+                            adv_inc_tax_amount: item.adv_inc_tax_amount,
                             actual_qty: 0,
                             issued_qty: item.current_load_allocated_qty,
                             foc_qty   : +item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
                         };
                        
                         currentLoadContent.items.push(newContent);
-                        //debugger
+                        debugger
                     } else {
                         
                         loadItem.issued_qty = item.current_load_allocated_qty - loadItem.actual_qty;
                         loadItem.extra_qty  =   0;//+item.current_load_allocated_qty - +item.current_load_booked_qty;    
                     
-                        //debugger
+                        debugger
                     }
                     
                 }
@@ -132,7 +140,7 @@ export class OrderDispatchService {
                                     contentitems    =   contentitems.concat(thisitems);
                                     contentitems    =   contentitems.filter(this.onlyUnique);
                                 }
-                                // //debugger
+                                debugger
                                 return content;
                         });   
     }

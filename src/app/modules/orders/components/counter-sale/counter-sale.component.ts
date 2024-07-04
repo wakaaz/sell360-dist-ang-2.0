@@ -1031,11 +1031,11 @@ export class CounterSaleComponent implements OnInit {
       product.extra_discount      =  +product.extra_discount.toFixed(2);
       current_value               =   product.extra_discount;
       this.selectedRetailer.items =  this.selectedProducts
-      this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers); 
+      this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers,this.taxClasses); 
       this.selectedProducts       =  this.selectedRetailer.items;  
 
       //update Scheme Free Products to scheme Items
-      this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts);
+      this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts,this.taxClasses);
       this.selectedRetailer.items =  this.selectedProducts
 
       this.calculateTotalBill();
@@ -1420,8 +1420,8 @@ export class CounterSaleComponent implements OnInit {
         gross_sale_amount: gross_sale_amount,
         item_retail_price: product.item_retail_price,
         total_retail_price: product.item_retail_price * finalQty,
-        tax_type: this.selectedRetailer.retailer_register == 1 ? 1:2,
         tax_class_id: product.tax_class_id,
+        tax_type: this.selectedRetailer.retailer_register == 1 ? 1:2,
         tax_in_percentage: this.getGstTaxAmount(product.tax_class_id),
         adv_inc_tax_in_percentage: this.getAdvIncTaxAmount(product.tax_class_id),
         gst_tax_amount :gst_tax,

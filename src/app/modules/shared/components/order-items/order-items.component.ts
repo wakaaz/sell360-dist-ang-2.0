@@ -37,6 +37,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   @Input() selectedRetailer: any;
   @Input() merchantDiscount: any;
   @Input() discountSlabs: any; 
+  @Input() taxClasses: any; 
   @Input() schemes: any;
   @Input() loyaltyoffers:Array<any>;
   @Input() newProduct: any;
@@ -58,6 +59,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   selectedProductQuantities: number;
   selecteddeleteSchemes: any;
   totalTax: number;
+  gst_tax: number;
+  adv_inc_tax: number;
   item_id : string;
   pre_discount:any;
 
@@ -103,6 +106,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
   resetValues(): void {
     this.totalTax = 0;
+    this.gst_tax = 0;
+    this.adv_inc_tax = 0;
     this.netAmount = 0;
     this.grossAmount = 0;
     this.totalBookerDiscount = 0;
@@ -174,20 +179,21 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
           (x) => x.item_id !== this.selectedItem.item_id
         );
 
-        this.orderDetail.items = this.dataService.updateOrderitemscalculation(this.orderDetail.items);
+        this.orderDetail.items = this.dataService.updateOrderitemscalculation(this.orderDetail.items,this.orderDetail,this.taxClasses);
       if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
-        this.orderDetail.items   = this.dataService.applyBundleProductsScheme(this.selectedItem,this.orderDetail);
+        this.orderDetail.items   = this.dataService.applyBundleProductsScheme(this.selectedItem,this.orderDetail,this.taxClasses);
       }
       
 
       //Apply slab on all products
-      this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
+      
+      this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs,this.orderDetail,this.taxClasses)   
 
       //Apply Loyal offer discount
-      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
+      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers,this.taxClasses); 
       
       //update Scheme Free Products to scheme Items
-      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
+      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses);
       
 
       }
@@ -258,33 +264,18 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
        this.calculateProductDiscounts(product);
       
-      
-      // if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
-      //   this.orderDetail.items   = this.dataService.applyBundleProductsScheme(product,this.orderDetail);
-      // }
-      //Apply slab on all products
-    
-      //update Scheme Free Products to scheme Items
-      // console.log("COUNT BFR=>"+this.orderDetail.items.length)
-      // this.orderDetail.items  = this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
-      // console.log("COUNT AFR=>"+this.orderDetail.items.length)
-
-      
-      // this.orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
-     
-      // this.calculateProductPrice(product);
-      // this.calculateTotalBill();
-      // this.applySpecialDiscountOnAllProducts();
+  
 
 
-      this.orderDetail.items     = this.dataService.updateOrderitemscalculation(this.orderDetail.items);
+      this.orderDetail.items     = this.dataService.updateOrderitemscalculation(this.orderDetail.items,this.orderDetail,this.taxClasses);
       if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
-        this.orderDetail.items   = this.dataService.applyBundleProductsScheme(product,this.orderDetail);
+        this.orderDetail.items   = this.dataService.applyBundleProductsScheme(product,this.orderDetail,this.taxClasses);
       }
       
 
       //Apply slab on all products
-      this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs)   
+      
+      this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs,this.orderDetail,this.taxClasses)   
 
       //update special discount
       if( this.selectedRetailer.segment_id && +this.selectedRetailer.segment_id > 0 ){
@@ -295,13 +286,13 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       } 
       //debugger
 
-      this.orderDetail.items       =  this.dataService.applySpecialDiscount(this.orderDetail,this.specialDiscounts);
+      this.orderDetail.items       =  this.dataService.applySpecialDiscount(this.orderDetail,this.specialDiscounts,this.taxClasses);
       
       //Apply Loyal offer discount
-      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
+      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers,this.taxClasses); 
       
       //update Scheme Free Products to scheme Items
-      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
+      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses);
       
       this.calculateTotalBill(); 
       this.productUpdated.emit();
@@ -363,10 +354,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       
 
       //Apply Loyal offer discount
-      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
+      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers,this.taxClasses); 
         
       //update Scheme Free Products to scheme Items
-      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
+      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses);
       
       this.calculateTotalBill(); 
       this.productUpdated.emit();
@@ -516,8 +507,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     console.log(this.pre_discount);
     if(this.pre_discount && this.pre_discount.some(x=>x.item_id == product.item_id) && !product.extra_discount.endsWith(".")){
      let discountResult = this.pre_discount.find(x=>x.item_id == product.item_id);
-     console.log('pass_discount')
-     debugger
      if(discountResult.value > +product.extra_discount){
         pass_discount = true
      }
@@ -538,9 +527,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       product.extra_discount = +product.extra_discount.toFixed(2);
       
       //Apply Loyal offer discount
-      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers); 
+      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers,this.taxClasses); 
       //update Scheme Free Products to scheme Items
-      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts);
+      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses);
       this.calculateTotalBill();
       this.productUpdated.emit();
       setTimeout(()=>{       
@@ -609,7 +598,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     this.dueAmount                  =    this.dataService.orderNetAmount(this.orderDetail.items);
 
     // Order Original
-    this.netAmount                  =    this.dataService.orderNetAmount(this.orderDetail.items);
+    this.netAmount                  =    this.dueAmount;
 
     // Scheme Discount
     this.totalSchemeDiscount        =    this.dataService.orderSchemeDiscount(this.orderDetail.items);
@@ -625,8 +614,17 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
     // Extra Discount
     this.totalBookerDiscount        =    this.dataService.orderExtraDiscount(this.orderDetail.items);
+
+    
+    // Tax
+    this.gst_tax                    =    this.dataService.orderGstTax(this.orderDetail.items);
+
+    // Tax
+    this.adv_inc_tax                =    this.dataService.orderAdvIncTax(this.orderDetail.items);
+
     // Tax
     this.totalTax                   =    this.dataService.orderTax(this.orderDetail.items);
+  
     
     if (this.orderType === 'execution') {
       if (this.selectedRetailer) {

@@ -96,6 +96,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   allProducts: Array<any> = [];
   specialDiscounts: Array<any> = [];
   discountSlabs: Array<any> = [];
+  taxClasses: Array<any> = [];
   isRecvoryRetailerCanged = false;
   holdOrderParams: any = {};
   constructor(
@@ -382,7 +383,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
   }
 
-  getOrderDetailsByRetailer(retailer: any): void {
+  getOrderDetailsByRetailer(retailer: any): void {  
+    this.taxClasses = []; 
     if (this.selectedRetailer?.id !== retailer.id) {
       this.savingOrder = true;
       this.newProduct = null;
@@ -443,7 +445,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
   getLoyaltyofferData(employee_id:number): void {
     if(employee_id != null){
-
       this.orderService.getLoyaltyoffers(employee_id).subscribe(
         (res) => {
           if (res.status === 200) { 
@@ -539,6 +540,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         x.trade_discount = 0;
         x.trade_discount_pkr = 0;
         x.net_amount = x.final_price;
+        x.total_amount_after_tax = x.total_amount_after_tax;
         x.gross_amount = x.gross_sale_amount;
         x.original_amount = x.gross_sale_amount;
         return x;
@@ -601,7 +603,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       prod.special_discount=JSON.parse(JSON.stringify(prod.special_discount));
       prod.booker_discount=JSON.parse(JSON.stringify(prod.booker_discount));
 
-      //debugger 
       return prod;
     });
     this.orderDetails.items = this.orderDetails.items.filter((x) => x);
@@ -633,7 +634,28 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
   }
 
+  getTaxclasses(province_id=0): void {
+    this.orderService.getTaxClasses(province_id).subscribe(
+      (res) => {
+        if (res.status === 200) {
+          this.taxClasses = res.data;
+        }
+      },
+      (error) => {
+        if (error.status !== 1 && error.status !== 401) {
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Cannot fetch Provincial Tax Classes. Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      }
+    );
+  }
+
   getDiscountSlabs(): void {
+    this.getTaxclasses(this.selectedRetailer.province_id);
     if (!this.discountSlabs.length) {
       this.orderService.getDiscountSlabs().subscribe(
         (res) => {
@@ -707,9 +729,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   calculateReceivable(): void {
-    const returnPrices = this.orderDetails.returned_items.filter((x) => !x.isDeleted).map((x) => x.net_amount);
+    const returnPrices = this.orderDetails.returned_items.filter((x) => !x.isDeleted).map((x) => x.total_amount_after_tax);
     this.returnAmount = this.dataService.calculateItemsBill(returnPrices);
-    const price = this.orderDetails.items.map((x) => x.net_amount);
+    const price = this.orderDetails.items.map((x) => x.total_amount_after_tax);
     this.netAmount = this.dataService.calculateItemsBill(price);
     this.dueAmount = this.netAmount + this.returnAmount;
     this.receivableAmount = this.netAmount + this.orderDetails.recovered + this.returnAmount;
@@ -1100,7 +1122,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   saveExecutionQuantity(): void {
     this.orderDetails.items = this.executionService.setOrderPayloadItems(
       this.orderDetails,
-      this.selectedRetailer
+      this.selectedRetailer,
+      this.taxClasses
     );
     this.orderDetails.returned_items =
       this.executionService.setOrderPayloadReturnedItems(
@@ -1212,7 +1235,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
 
     this.orderDetails.items = this.executionService.setOrderPayloadItems(
       this.orderDetails,
-      this.selectedRetailer
+      this.selectedRetailer,
+      this.taxClasses
     );
     this.orderDetails.returned_items =
       this.executionService.setOrderPayloadReturnedItems(

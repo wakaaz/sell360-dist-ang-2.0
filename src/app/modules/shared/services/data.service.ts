@@ -581,7 +581,8 @@ export class DataService {
     return item;
   }
 
-  applySlabDiscountValuesToItems(items:any, slabs:any,retailer:any=null,taxClasses:any=null){
+  applySlabDiscountValuesToItems(items:any, slabs:any,retailer:any,taxClasses:any){
+    
     items = items.map((item) => {
     
       /* App Scenarios In case of exclusiveOrder Access Right = 0:
@@ -730,13 +731,15 @@ export class DataService {
 
         //update discount value in discount
         //slab_id, 
-        item.slab_type                          = itemslab.slab_type; 
-        item.slab_discount_type                 = itemslab.discount_type;
-        item.merchant_discount                  = slabmodel.discount; 
-        item.merchant_discount_pkr              = slabmodel.discount_pkr;
-        item.trade_discount                     = slabmodel.discount; 
-        item.trade_discount_pkr                 = slabmodel.discount_pkr; 
-        item.unit_price_after_merchant_discount = slabmodel.itemDiscountedTp;
+        if(itemslab){
+          item.slab_type                          = itemslab.slab_type; 
+          item.slab_discount_type                 = itemslab.discount_type;
+          item.merchant_discount                  = slabmodel.discount; 
+          item.merchant_discount_pkr              = slabmodel.discount_pkr;
+          item.trade_discount                     = slabmodel.discount; 
+          item.trade_discount_pkr                 = slabmodel.discount_pkr; 
+          item.unit_price_after_merchant_discount = slabmodel.itemDiscountedTp;
+        }
         // if(item.item_id == 26)
         //////
       return item;
@@ -838,7 +841,7 @@ export class DataService {
    * Begin: Bundle Offer
    * 
    */
-  applyBundleProductsScheme(product: any,orderDetail:any=null,taxClasses:any=null): any {
+  applyBundleProductsScheme(product: any,orderDetail:any,taxClasses:any): any {
  
     let orderDetailitems = orderDetail.items;
     switch (product.selectedScheme.scheme_rule) {
@@ -1045,7 +1048,7 @@ export class DataService {
    */
 
 
-  applySpecialDiscount(orderDetails:any,specialDiscounts:any,taxClasses:any=null){
+  applySpecialDiscount(orderDetails:any,specialDiscounts:any,taxClasses:any){
 
     orderDetails.items  = orderDetails.items.map((item) => {
       //add for scheme offers
@@ -1062,7 +1065,7 @@ export class DataService {
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
 
-  updateSchemeFreeProductItems(orderDetails:any,allProducts:any,taxClasses:any=null){
+  updateSchemeFreeProductItems(orderDetails:any,allProducts:any,taxClasses:any){
     ////
     
     orderDetails.FOCA_error = null;
@@ -1371,7 +1374,7 @@ export class DataService {
   Begin::LOyalty Offer
   *
   */
-  applyLoyaltyOfferDiscount(orderDetails:any,loyaltyOffers:any,taxClasses:any=null):any {
+  applyLoyaltyOfferDiscount(orderDetails:any,loyaltyOffers:any,taxClasses:any):any {
     //remove previous offers
     
     orderDetails.loyalty_offer_interval =   0;
@@ -1610,7 +1613,7 @@ export class DataService {
   *
   */
   
-  updateItemcalculation(item,retailer:any=null,taxClasses:any=null):any{
+  updateItemcalculation(item,retailer:any,taxClasses:any):any{
         if(+item.stockQty < 1){
           item.scheme_discount    = 0; 
           item.trade_discount     = 0; 
@@ -1674,8 +1677,14 @@ export class DataService {
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
         item.special_discount                     =   +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
-        item.tax_gst_amount_pkr                   =   +gst_tax;
-        item.tax_adv_inc_amount_pkr               =   +adv_inc_tax;
+
+        
+        item.tax_type                             =   retailer.retailer_register == 1 ? 1:2,
+        item.tax_in_percentage                    =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer),
+        item.adv_inc_tax_in_percentage            =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer),
+
+        item.gst_tax_amount                       =   +gst_tax;
+        item.adv_inc_tax_amount                   =   +adv_inc_tax;
         item.tax_amount_pkr                       =   +tax_in_value;
         item.final_price                          =   +final_price;
         item.net_amount                           =   +item.final_price; 
@@ -1686,7 +1695,7 @@ export class DataService {
         // ////
         return JSON.parse(JSON.stringify(item));
   }
-  updateOrderitemscalculation(items,retailer:any=null,taxClasses:any=null):any{
+  updateOrderitemscalculation(items,retailer:any,taxClasses:any):any{
     items   =   items.map((item) => {
         if(+item.stockQty < 1){
           item.scheme_discount    = 0; 
@@ -1758,8 +1767,11 @@ export class DataService {
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
         item.special_discount                     =   +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
-        item.tax_gst_amount_pkr                   =   +gst_tax;
-        item.tax_adv_inc_amount_pkr               =   +adv_inc_tax;
+        item.tax_type                             =   retailer.retailer_register == 1 ? 1:2,
+        item.tax_in_percentage                    =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer),
+        item.adv_inc_tax_in_percentage            =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer),
+        item.gst_tax_amount                       =   +gst_tax;
+        item.adv_inc_tax_amount                   =   +adv_inc_tax;
         item.tax_amount_pkr                       =   +tax_in_value;
         item.final_price                          =   +final_price;
         item.net_amount                           =   +item.final_price; 
@@ -1809,8 +1821,9 @@ export class DataService {
       let price:number = 0;
       if(items){
           items.forEach(item=>{
-              // price = price + +(item.net_amount ? item.net_amount : 0) ;
+
               price = price + +(item.total_amount_after_tax ? item.total_amount_after_tax : 0) ;
+              // console.log('price',price)
           })
       }
       return price;
@@ -1914,8 +1927,8 @@ export class DataService {
       let price:number = 0;
       if(items){ 
           items.forEach(item=>{
-              price = price + item.tax_amount_pkr ? (+item.tax_amount_pkr * +item.stockQty):0;
-              debugger
+              price = price + item.total_tax_amount ?  +item.total_tax_amount : 0;
+
           })
       }
       return price;
@@ -1925,8 +1938,8 @@ export class DataService {
       let price:number = 0;
       if(items){ 
           items.forEach(item=>{
-              price = price + item.tax_gst_amount_pkr ? +item.tax_gst_amount_pkr * +item.stockQty:0;
-              debugger
+              price = price + item.gst_tax_amount ? +item.gst_tax_amount * +item.stockQty:0;
+            
           })
       }
       return price;
@@ -1936,8 +1949,8 @@ export class DataService {
     let price:number = 0;
     if(items){ 
         items.forEach(item=>{
-            price = price + item.tax_adv_inc_amount_pkr ? (+item.tax_adv_inc_amount_pkr * +item.stockQty):0;
-            debugger
+            price = price + item.adv_inc_tax_amount ? (+item.adv_inc_tax_amount * +item.stockQty):0;
+            
         })
     }
     return price;

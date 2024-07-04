@@ -885,10 +885,10 @@
                     />
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.tax_gst_amount_pkr || 0.0 | number: "1.2-2" }}
+                    {{ product.gst_tax_amount || 0.0 | number: "1.2-2" }}
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.tax_adv_inc_amount_pkr || 0.0 | number: "1.2-2" }}
+                    {{ product.adv_inc_tax_amount || 0.0 | number: "1.2-2" }}
                   </div>
                   <div class="addItemCell3 _h25">
                     {{ product.total_amount_after_tax || 0.0 | number: "1.2-2" }}

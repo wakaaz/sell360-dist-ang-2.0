@@ -78,6 +78,8 @@
         <th>T.Disc</th>
         <th>Spec.Disc</th>
         <th *ngIf="permissions?.Secondary_Orders?.extra_discount">B.Disc</th>
+        <th title="General Sales Tax">GST</th>
+        <th title="Advance Income Tax">AIT</th> 
         <th>Net Amt</th>
         <th style="width: 48px">Action</th>
       </tr>
@@ -126,7 +128,9 @@
             placeholder="0"
           />
         </td>
-        <td>{{ item.net_amount || 0 | number: "1.2-2" }}</td>
+        <td>{{ item.gst_tax_amount || 0 | number: "1.2-2" }}</td>
+        <td>{{ item.adv_inc_tax_amount || 0 | number: "1.2-2" }}</td>
+        <td>{{ item.total_amount_after_tax || 0 | number: "1.2-2" }}</td>
         <td>
           <button
             *ngIf="!item.isDeleted"
@@ -181,7 +185,9 @@
             placeholder="0"
           />
         </td>
-        <td>{{ item.net_amount || 0 | number: "1.2-2" }}</td>
+        <td>{{ item.gst_tax_amount || 0 | number: "1.2-2"}}</td>
+        <td>{{ item.adv_inc_tax_amount || 0 | number: "1.2-2"}}</td>
+        <td>{{ item.total_amount_after_tax || 0 | number: "1.2-2" }}</td>
         <td>
           <button
             *ngIf="!item.isDeleted"
@@ -245,10 +251,16 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-6">Tax:</div>
-          <div class="col-6">
-            <span>{{ totalTax | number: "1.2-2" }}</span>
-          </div>
+          <div class="col-6" title="General Sales Tax">General Sales Tax:</div>
+          <div class="col-6"> <span>{{ gst_tax | number: "1.2-2" }}</span> </div>
+        </div>
+        <div class="row">
+          <div class="col-6" title="Advance Income Tax">Advance Income Tax:</div>
+          <div class="col-6"> <span>{{ adv_inc_tax | number: "1.2-2" }}</span> </div>
+        </div>
+        <div class="row">
+          <div class="col-6">Total Tax:</div>
+          <div class="col-6"> <span>{{ totalTax| number: "1.2-2" }}</span> </div>
         </div>
         <div *ngIf="orderType === 'execution'" class="row">
           <div class="col-6">Less Return:</div>

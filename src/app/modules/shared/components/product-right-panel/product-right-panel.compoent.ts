@@ -117,7 +117,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         (this.orderType === 'execution' &&
           +this.selectedProduct.stockQty <= this.selectedProduct.extra_qty))
     ) {
-      this.allProducts  = this.dataService.applySlabDiscountValuesToItems(this.allProducts,this.discountSlabs)   
+      this.allProducts  = this.dataService.applySlabDiscountValuesToItems(this.allProducts,this.discountSlabs,null,null)   
         
       
       this.selectedProduct.item_quantity_booker = 0;

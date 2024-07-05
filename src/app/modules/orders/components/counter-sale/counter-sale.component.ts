@@ -219,6 +219,9 @@ export class CounterSaleComponent implements OnInit {
     this.cheque = null;
     this.cash = null;
     this.tax = 0.0;
+    this.tax = 0.0;
+    this.gst_tax = 0.0;
+    this.adv_inc_tax = 0.0;
     this.dueAmount = 0.0;
     this.notes = '';
     this.paymentDate = new Date().toISOString().split('T')[0];
@@ -1253,6 +1256,8 @@ export class CounterSaleComponent implements OnInit {
             booked_total_qty: 0,
             booked_total_skus: 0,
             booking_area: employee.area_id,
+            segment_id: this.selectedRetailer.segment_id,
+            channel_id: this.selectedRetailer.retailer_type_id,
             booking_locality_id: this.selectedRetailer.locality_id,
             booking_neighbourhood_id: this.selectedRetailer.neighbourhood_id,
             booking_zone: employee.area_id,
@@ -1277,7 +1282,6 @@ export class CounterSaleComponent implements OnInit {
             items: [],
             
         };  
-        
         this.order = newOrder;
         if (this.cheque) {
             this.order.payment.detail.push(this.cheque);
@@ -1303,7 +1307,7 @@ export class CounterSaleComponent implements OnInit {
     return 'percentage';
   }
   taxAppliedOn(tax_class_id):string{
-    if(tax_class_id > 0){
+    if(this.selectedRetailer  && this.selectedRetailer.apply_retail_tax == 1 && tax_class_id > 0){
       const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
       if(taxclass){
         return taxclass.tax_applied_on == 'net_price' ? 'net_price':'retail_price';
@@ -1311,7 +1315,7 @@ export class CounterSaleComponent implements OnInit {
         return 'retail_price';
       }
     }
-    return 'retail_price';
+    return null;
   }
   getGstTaxAmount(tax_class_id):any{
     if(this.selectedRetailer && tax_class_id > 0){
@@ -1363,7 +1367,7 @@ export class CounterSaleComponent implements OnInit {
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;
 
-      if(product.tax_class_id > 0 && this.selectedRetailer.apply_retail_tax == 1){
+      if(this.selectedRetailer && product.tax_class_id > 0 && this.selectedRetailer.apply_retail_tax == 1){
 
         let tax_applied_value =  this.taxAppliedOn(product.tax_class_id) == 'net_price' ? +(final_price/finalQty):+product.item_retail_price;
 
@@ -1436,6 +1440,7 @@ export class CounterSaleComponent implements OnInit {
         total_retail_price: product.item_retail_price * finalQty,
         tax_class_id: product.tax_class_id,
         tax_type: this.selectedRetailer.retailer_register == 1 ? 1:2,
+        tax_applied_on: this.taxAppliedOn(product.tax_class_id),
         tax_in_percentage: this.getGstTaxAmount(product.tax_class_id),
         adv_inc_tax_in_percentage: this.getAdvIncTaxAmount(product.tax_class_id),
         gst_tax_amount :gst_tax,

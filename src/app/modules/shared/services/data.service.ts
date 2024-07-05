@@ -1647,8 +1647,8 @@ export class DataService {
         let tax_in_value        =   0;                          
         let total_tax_amount    =   0;  
 
-        if(item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
-          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id) == 'net_price' ? +(final_price/finalQty):+item.item_retail_price;
+        if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
+          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 'net_price' ? +(final_price/finalQty):+item.item_retail_price;
 
           gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value;
 
@@ -1735,9 +1735,9 @@ export class DataService {
         let tax_in_value        =   0;                          
         let total_tax_amount    =   0;  
 
-        if(item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
+        if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
 
-          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id) == 'net_price' ? +(final_price/finalQty): +item.item_retail_price;
+          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 'net_price' ? +(final_price/finalQty): +item.item_retail_price;
 
           gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value;
           adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value+ +gst_tax); 
@@ -1892,8 +1892,8 @@ export class DataService {
       return price;
   }
 
-  taxAppliedOn(taxClasses,tax_class_id):string{
-    if(tax_class_id > 0){
+  taxAppliedOn(taxClasses,tax_class_id,retailer):string{
+    if(retailer  && retailer.apply_retail_tax == 1 &&   tax_class_id > 0){
       const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
       if(taxclass){
         return taxclass.tax_applied_on == 'net_price' ? 'net_price':'retail_price';

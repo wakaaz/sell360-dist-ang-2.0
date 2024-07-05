@@ -661,7 +661,7 @@ export class OrderDispatchedComponent implements OnInit {
   }
   
   taxAppliedOn(tax_class_id):string{
-    if(tax_class_id > 0){
+    if(this.selectedRetailer  && this.selectedRetailer.apply_retail_tax == 1 && tax_class_id > 0 ){
       const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
       if(taxclass){
         return taxclass.tax_applied_on == 'net_price' ? 'net_price':'retail_price';
@@ -721,7 +721,7 @@ export class OrderDispatchedComponent implements OnInit {
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;
 
-      if(item.tax_class_id > 0  && this.selectedRetailer.apply_retail_tax == 1){
+      if(this.selectedRetailer && item.tax_class_id > 0  && this.selectedRetailer.apply_retail_tax == 1){
 
         let tax_applied_value =  this.taxAppliedOn(item.tax_class_id) == 'net_price' ? +(final_price/finalQty):+item.item_retail_price;
 
@@ -730,7 +730,7 @@ export class OrderDispatchedComponent implements OnInit {
         tax_in_value          =   gst_tax + adv_inc_tax;                          
         total_tax_amount      =   tax_in_value*finalQty;  
       }
-      let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
+      let ttl_amnt_aftr_tax   =   final_price + total_tax_amount; 
       const orderItem = {
         id: item.id || 0,
         unit_id: item.unit_id,
@@ -798,6 +798,7 @@ export class OrderDispatchedComponent implements OnInit {
         total_retail_price: item.item_retail_price * finalQty,
         tax_type: this.selectedRetailer.retailer_register == 1 ? 1:2,
         tax_class_id: item.tax_class_id,
+        tax_applied_on: this.taxAppliedOn(item.tax_class_id),
         tax_in_percentage: this.getGstTaxAmount(item.tax_class_id),
         adv_inc_tax_in_percentage: this.getAdvIncTaxAmount(item.tax_class_id),
         gst_tax_amount :gst_tax,

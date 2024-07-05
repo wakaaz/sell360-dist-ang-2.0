@@ -16,8 +16,8 @@ export class ExecutionService {
     return 'percentage';
   }
   
-  taxAppliedOn(taxClasses,tax_class_id):string{
-    if(tax_class_id > 0){
+  taxAppliedOn(taxClasses,tax_class_id,retailer):string{
+    if(retailer  && retailer.apply_retail_tax == 1 &&  tax_class_id > 0){
       const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
       if(taxclass){
         return taxclass.tax_applied_on == 'net_price' ? 'net_price':'retail_price';
@@ -77,10 +77,10 @@ export class ExecutionService {
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;  
 
-      if(item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){
+      if(orderDetails && item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){
 
         
-        let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id) == 'net_price' ? +(final_price/finalQty): +item.item_retail_price;
+        let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,orderDetails) == 'net_price' ? +(final_price/finalQty): +item.item_retail_price;
 
         gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails)/ 100) * +tax_applied_value;
         adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails) / 100) * (+tax_applied_value + +gst_tax); 
@@ -169,6 +169,7 @@ export class ExecutionService {
         
         tax_type: orderDetails.retailer_register == 1 ? 1:2,
         tax_class_id: item.tax_class_id,
+        tax_applied_on : this.taxAppliedOn(taxClasses,item.tax_class_id,orderDetails),
         tax_in_percentage  :   this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails),
         adv_inc_tax_in_percentage:   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails),
         gst_tax_amount :gst_tax,
@@ -242,6 +243,7 @@ export class ExecutionService {
         quantity: 0,
         gross_sale_amount: item.original_amount,
         total_retail_price: item.total_retail_price,
+        tax_applied_on:null,
         tax_class_id: 0,
         tax_in_percentage: 0,
         tax_in_value: 0,

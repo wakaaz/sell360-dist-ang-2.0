@@ -36,8 +36,6 @@ export interface CounterSale {
     invoice_number: string;
     freight_charges: number;
     booking_zone: number;
-    segment_id:number;
-    channel_id:number;
     booking_locality_id: number;
     booking_neighbourhood_id: number;
     sales_man_id: number;

@@ -1256,8 +1256,6 @@ export class CounterSaleComponent implements OnInit {
             booked_total_qty: 0,
             booked_total_skus: 0,
             booking_area: employee.area_id,
-            segment_id: this.selectedRetailer.segment_id,
-            channel_id: this.selectedRetailer.retailer_type_id,
             booking_locality_id: this.selectedRetailer.locality_id,
             booking_neighbourhood_id: this.selectedRetailer.neighbourhood_id,
             booking_zone: employee.area_id,

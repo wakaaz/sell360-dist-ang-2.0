@@ -1949,7 +1949,7 @@ export class DataService {
       let price:number = 0;
       if(items){ 
           items.forEach(item=>{
-              price = price + item.total_tax_amount ?  +item.total_tax_amount : 0;
+              price = price + (item.total_tax_amount ?  +item.total_tax_amount : 0);
 
           })
       }
@@ -1960,7 +1960,7 @@ export class DataService {
       let price:number = 0;
       if(items){ 
           items.forEach(item=>{
-              price = price + item.gst_tax_amount ? +item.gst_tax_amount * +item.stockQty:0;
+              price = price +  +(item.gst_tax_amount ? +item.gst_tax_amount * +item.stockQty:0);
             
           })
       }
@@ -1971,7 +1971,7 @@ export class DataService {
     let price:number = 0;
     if(items){ 
         items.forEach(item=>{
-            price = price + item.adv_inc_tax_amount ? (+item.adv_inc_tax_amount * +item.stockQty):0;
+            price = price +  +(item.adv_inc_tax_amount ? (+item.adv_inc_tax_amount * +item.stockQty):0);
             
         })
     }

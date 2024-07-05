@@ -1647,9 +1647,12 @@ export class DataService {
         let tax_in_value        =   0;                          
         let total_tax_amount    =   0;  
 
-        if(item.tax_class_id  > 0){
-          gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +item.item_retail_price;
-          adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+item.item_retail_price + +gst_tax); 
+        if(item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
+          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id) == 'net_price' ? +(final_price/finalQty):+item.item_retail_price;
+
+          gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value;
+
+          adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value + +gst_tax); 
           tax_in_value          =   gst_tax + adv_inc_tax;                          
           total_tax_amount      =   tax_in_value*finalQty;
             
@@ -1678,10 +1681,12 @@ export class DataService {
         item.special_discount                     =   +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
 
+        if(retailer){
+          item.tax_type                           =   retailer.retailer_register == 1 ? 1:2;
+          item.tax_in_percentage                  =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer);
+          item.adv_inc_tax_in_percentage          =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer);
+        }
         
-        item.tax_type                             =   retailer.retailer_register == 1 ? 1:2,
-        item.tax_in_percentage                    =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer),
-        item.adv_inc_tax_in_percentage            =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer),
 
         item.gst_tax_amount                       =   +gst_tax;
         item.adv_inc_tax_amount                   =   +adv_inc_tax;
@@ -1730,9 +1735,12 @@ export class DataService {
         let tax_in_value        =   0;                          
         let total_tax_amount    =   0;  
 
-        if(item.tax_class_id  > 0){
-          gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +item.item_retail_price;
-          adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+item.item_retail_price+ +gst_tax); 
+        if(item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
+
+          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id) == 'net_price' ? +(final_price/finalQty): +item.item_retail_price;
+
+          gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value;
+          adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value+ +gst_tax); 
           tax_in_value          =   gst_tax + adv_inc_tax;                          
           total_tax_amount      =   tax_in_value*finalQty; 
            
@@ -1767,9 +1775,11 @@ export class DataService {
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
         item.special_discount                     =   +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
-        item.tax_type                             =   retailer.retailer_register == 1 ? 1:2,
-        item.tax_in_percentage                    =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer),
-        item.adv_inc_tax_in_percentage            =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer),
+        if(retailer){
+          item.tax_type                             =   retailer.retailer_register == 1 ? 1:2;
+          item.tax_in_percentage                    =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer);
+          item.adv_inc_tax_in_percentage            =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer);
+        }
         item.gst_tax_amount                       =   +gst_tax;
         item.adv_inc_tax_amount                   =   +adv_inc_tax;
         item.tax_amount_pkr                       =   +tax_in_value;
@@ -1882,6 +1892,18 @@ export class DataService {
       return price;
   }
 
+  taxAppliedOn(taxClasses,tax_class_id):string{
+    if(tax_class_id > 0){
+      const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+        return taxclass.tax_applied_on == 'net_price' ? 'net_price':'retail_price';
+      }else{
+        return 'retail_price';
+      }
+    }
+    return 'retail_price';
+  }
+
   getTaxType(taxClasses,tax_class_id):string{
     if(tax_class_id > 0){
       const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
@@ -1895,7 +1917,7 @@ export class DataService {
   }
   getGstTaxAmount(taxClasses,tax_class_id,retailer):any{
     let tax_amount_per = 0;
-    if(tax_class_id > 0){
+    if(retailer && tax_class_id > 0){
       const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
       if(taxclass){
          if(retailer.retailer_register == 1){
@@ -1910,11 +1932,11 @@ export class DataService {
   }
   getAdvIncTaxAmount(taxClasses,tax_class_id,retailer):any{
     let tax_amount_per = 0;
-    if(tax_class_id > 0){
+    if(retailer && tax_class_id > 0){
       const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
       if(taxclass){
          if(retailer.retailer_register == 1){
-          tax_amount_per =  taxclass.adv_inc_filer_retailer_value;
+          tax_amount_per =  taxclass.adv_inc_filer_retailer_value; 
          }
          else{
           tax_amount_per =  taxclass.adv_inc_nonfiler_retailer_value;

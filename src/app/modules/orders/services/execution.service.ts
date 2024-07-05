@@ -15,9 +15,21 @@ export class ExecutionService {
     }
     return 'percentage';
   }
+  
+  taxAppliedOn(taxClasses,tax_class_id):string{
+    if(tax_class_id > 0){
+      const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+        return taxclass.tax_applied_on == 'net_price' ? 'net_price':'retail_price';
+      }else{
+        return 'retail_price';
+      }
+    }
+    return 'retail_price';
+  }
   getGstTaxAmount(taxClasses,tax_class_id,retailer):any{
     let tax_amount_per = 0;
-    if(tax_class_id > 0){
+    if(retailer && tax_class_id > 0){
       const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
       if(taxclass){
          if(retailer.retailer_register == 1){
@@ -32,7 +44,7 @@ export class ExecutionService {
   }
   getAdvIncTaxAmount(taxClasses,tax_class_id,retailer):any{
     let tax_amount_per = 0;
-    if(tax_class_id > 0){
+    if(retailer && tax_class_id > 0){
       const taxclass  = taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
       if(taxclass){
          if(retailer.retailer_register == 1){
@@ -65,9 +77,13 @@ export class ExecutionService {
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;  
 
-      if(item.tax_class_id  > 0){
-        gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails)/ 100) * +item.item_retail_price;
-        adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails) / 100) * (+item.item_retail_price + +gst_tax); 
+      if(item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){
+
+        
+        let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id) == 'net_price' ? +(final_price/finalQty): +item.item_retail_price;
+
+        gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails)/ 100) * +tax_applied_value;
+        adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails) / 100) * (+tax_applied_value + +gst_tax); 
         tax_in_value          =   gst_tax + adv_inc_tax;                          
         total_tax_amount      =   tax_in_value*finalQty;
           

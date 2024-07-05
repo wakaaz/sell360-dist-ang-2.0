@@ -659,6 +659,19 @@ export class OrderDispatchedComponent implements OnInit {
     }
     return 'percentage';
   }
+  
+  taxAppliedOn(tax_class_id):string{
+    if(tax_class_id > 0){
+      const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
+      if(taxclass){
+        return taxclass.tax_applied_on == 'net_price' ? 'net_price':'retail_price';
+      }else{
+        return 'retail_price';
+      }
+    }
+    return 'retail_price';
+  }
+
   getGstTaxAmount(tax_class_id):any{
     if(tax_class_id > 0){
       const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
@@ -674,7 +687,7 @@ export class OrderDispatchedComponent implements OnInit {
     return 0;
   }
   getAdvIncTaxAmount(tax_class_id):any{
-    if(tax_class_id > 0){
+    if(this.selectedRetailer &&  tax_class_id > 0){
       const taxclass  = this.taxClasses?.find(x=> x.tax_class_id == tax_class_id)||null;
       if(taxclass){
          if(this.selectedRetailer.retailer_register == 1){
@@ -708,9 +721,12 @@ export class OrderDispatchedComponent implements OnInit {
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;
 
-      if(item.tax_class_id > 0){
-        gst_tax               =  (this.getGstTaxAmount(item.tax_class_id)/ 100) * +item.item_retail_price;
-        adv_inc_tax           =  (this.getAdvIncTaxAmount(item.tax_class_id) / 100) * (+item.item_retail_price + +gst_tax); 
+      if(item.tax_class_id > 0  && this.selectedRetailer.apply_retail_tax == 1){
+
+        let tax_applied_value =  this.taxAppliedOn(item.tax_class_id) == 'net_price' ? +(final_price/finalQty):+item.item_retail_price;
+
+        gst_tax               =  (this.getGstTaxAmount(item.tax_class_id)/ 100) * +tax_applied_value;
+        adv_inc_tax           =  (this.getAdvIncTaxAmount(item.tax_class_id) / 100) * (+tax_applied_value + +gst_tax); 
         tax_in_value          =   gst_tax + adv_inc_tax;                          
         total_tax_amount      =   tax_in_value*finalQty;  
       }

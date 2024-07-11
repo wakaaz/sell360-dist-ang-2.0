@@ -70,6 +70,8 @@
                                                                 <th rowspan="2"><strong>T.O</strong></th>
                                                                 <th rowspan="2"><strong>T.Disc</strong></th>
                                                                 <th rowspan="2"><strong>SPC.Disc</strong></th>
+                                                                <th rowspan="2" title="General Sales Tax"><strong>General<br>Sales<br>Tax</strong></th>
+                                                                <th rowspan="2" title=""><strong>Advance<br>Income<br>Tax</strong></th>
                                                                 <th rowspan="2"><strong>Net.Amt</strong></th>
                                                             </tr>
                                                             <tr>
@@ -92,9 +94,13 @@
                                                                 <td>{{(item.scheme_discount * item.quantity) | number: '1.2-2'}}</td>
                                                                 <td>{{(item.merchant_discount_pkr * item.quantity) | number: '1.2-2'}}</td>
                                                                 <td>{{(item.special_discount * item.quantity) | number: '1.2-2'}}</td>
+                                                                <td>{{(item.gst_tax_amount * item.quantity) | number: '1.2-2'}}</td>
+                                                                <td>{{(item.adv_inc_tax_amount * item.quantity) | number: '1.2-2'}}</td>
                                                                 <td>{{item.final_price | number: '1.2-2'}}</td>
                                                             </tr>
                                                             <!-- <tr>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
@@ -119,10 +125,30 @@
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
                                                                 <td><strong>Total Discount PKR.</strong></td>
                                                                 <td><strong>{{orderDetail?.totalDiscount | decimal}}</strong></td>
                                                             </tr>
                                                             <tr>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
+                                                                <td><strong>Total TAX PKR.</strong></td>
+                                                                <td><strong>{{orderDetail?.retailer_detail?.total_tax_amount | number: '1.2-2'}}</strong></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td class="border-0"></td>
+                                                                <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>
                                                                 <td class="border-0"></td>

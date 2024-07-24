@@ -85,6 +85,7 @@ export class OrderDispatchedComponent implements OnInit {
     this.distributorId = this.storageService.getItem('distributor').id;
     this.retailer_credit_Invoices = new Array<RecoveryRetailer>();
     this.holdOrderParams.hold_reason = '';
+    this.holdOrderParams.delete_allocation = false;
     this.system_discount_type = this.storageService.getItem('distributor').system_discount_type;
   }
   ngOnInit(): void {
@@ -815,10 +816,10 @@ export class OrderDispatchedComponent implements OnInit {
     this.saveOrder();
   }
 
-  cancelOrder(): void {
+  cancelOrder(delete_allocation=1): void {
     document.getElementById('close-del').click();
     this.savingOrder = true;
-    this.orderService.cancelOrder(this.orderDetails.id).subscribe(
+    this.orderService.cancelOrder(this.orderDetails.id,delete_allocation).subscribe(
       (res) => {
         this.savingOrder = false;
         if (res.status === 200) {
@@ -862,6 +863,8 @@ export class OrderDispatchedComponent implements OnInit {
       this.savingOrder = true;
       this.holdOrderParams.order_id = this.orderDetails.id;
       this.holdOrderParams.assignment_id = this.orderDetails.assignment_id;
+      debugger
+      return;
       this.orderService.holdOrder(this.holdOrderParams).subscribe(
         (res) => {
           this.newProduct = null;
@@ -883,6 +886,7 @@ export class OrderDispatchedComponent implements OnInit {
           this.holdOrderParams.order_id = null;
           this.holdOrderParams.assignment_id = null;
           this.holdOrderParams.hold_reason = '';
+          this.holdOrderParams.delete_allocation = false;
           this.getDispatchDetails();
         },
         (error) => {

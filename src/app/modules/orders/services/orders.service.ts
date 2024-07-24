@@ -222,8 +222,8 @@ export class OrdersService {
     return this.baseService.post(url, order);
   }
 
-  cancelOrder(orderId: number): Observable<any> {
-    const url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
+  cancelOrder(orderId: number,delete_allocation:number=0): Observable<any> {
+    const url = `${API_URLS.CANCEL_ORDER}/${orderId}?delete_allocation=${delete_allocation}`;
     return this.baseService.get(url);
   }
   holdOrder(order: number): Observable<any> {

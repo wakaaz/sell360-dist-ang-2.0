@@ -1,11 +1,11 @@
 export const environment = {
   //Sell360 will be main branch for sell360 distribution
-  production: false,
+  production: true, 
   // apiDomain: 'https://demo.sell360.app',
   // apiUrl: 'https://demo.sell360.app/distributor-api',
   
-  apiDomain: 'https://marketer.sell360.app', 
-  apiUrl: 'https://marketer.sell360.app/distributor-api',   
+  apiDomain: 'https://test.mtek.sell360.app', 
+  apiUrl: 'https://test.mtek.sell360.app/distributor-api',   
   
 
   // apiDomain: 'https://asg.sell360.app', 
@@ -14,8 +14,8 @@ export const environment = {
   //  apiDomain: 'https://shahi-revamp.sell360.app',  
   // apiUrl: 'https://shahi-revamp.sell360.app/distributor-api',   
 
-  // apiDomain: ' https://staging.spencer.allomate.solutions',
-  // apiUrl: ' https://staging.spencer.allomate.solutions/distributor-api',
+  // apiDomain: ' https://mtek.sell360.app',
+  // apiUrl: ' https://mtek.sell360.app/distributor-api',
 
 
   

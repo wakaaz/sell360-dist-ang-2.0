@@ -42,8 +42,11 @@
         </div>
       </div>
       <div class="modal-footer border-0">
-        <button type="button" class="btn btn-primary" (click)="cancelOrder()">
-          Yes
+        <button type="button" class="btn btn-primary" (click)="cancelOrder()" style="font-size: 14px;padding: 8px 12px;letter-spacing: normal;">
+          Cancel Without Allocation
+        </button>
+        <button type="button" class="btn btn-primary" (click)="cancelOrder(1)" style="font-size: 14px;padding: 8px 12px;letter-spacing: normal;">
+          Cancel With Allocation
         </button>
         <button
           type="submit"
@@ -51,6 +54,7 @@
           class="btn btn-cancel"
           data-dismiss="modal"
           aria-label="Close"
+          style="font-size: 14px;padding: 8px 16px;letter-spacing: normal;"
         >
           No
         </button>
@@ -189,8 +193,7 @@
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content top_border">
       <div class="modal-header">
-        <h5 class="modal-title" id="holdOrderModalLabel">
-          Product <span> Detail</span>
+        <h5 class="modal-title" id="holdOrderModalLabel"> Hold Order<span> </span>
         </h5>
         <button
           type="button"
@@ -202,7 +205,8 @@
           <span class="dont-close-products" aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body AddDetailPR">
+      <div class="modal-body AddDetailPR" style="font-size: 14px;">
+        
         <div class="row">
           <div class="col-md-4 pt-7 mb-15">Hold Reason:</div>
           <div class="col-md-8 mb-15">
@@ -214,6 +218,23 @@
               [(ngModel)]="holdOrderParams.hold_reason"
               style="font-size: 13px"
             />
+          </div>
+        </div>
+        <div class="row">
+          <!-- <div class="col-md-12">
+            <p>Are you sure you want to hold the order?</p>
+          </div> -->
+          <div class="col-md-4 PT-10">Delete Alloation:</div>
+          <div class="col-md-8">
+            <div class="custom-control custom-checkbox" style="line-height: 1.7;">
+                  <input
+                      type="checkbox"
+                      class="custom-control-input"
+                      id="deleteAllocationCheckbox"
+                      [(ngModel)]="holdOrderParams.delete_allocation"
+                  />
+                  <label class="custom-control-label mt-2" for="deleteAllocationCheckbox">Yes</label>
+              </div>
           </div>
         </div>
       </div>

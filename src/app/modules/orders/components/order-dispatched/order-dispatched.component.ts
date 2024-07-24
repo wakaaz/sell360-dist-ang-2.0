@@ -863,8 +863,8 @@ export class OrderDispatchedComponent implements OnInit {
       this.savingOrder = true;
       this.holdOrderParams.order_id = this.orderDetails.id;
       this.holdOrderParams.assignment_id = this.orderDetails.assignment_id;
-      debugger
-      return;
+      // debugger
+      // return;
       this.orderService.holdOrder(this.holdOrderParams).subscribe(
         (res) => {
           this.newProduct = null;

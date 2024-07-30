@@ -225,7 +225,7 @@ export class OrdersService {
   cancelOrder(orderId: number,delete_allocation:number=0,dispatch:number=0): Observable<any> {
     let url = `${API_URLS.CANCEL_ORDER}/${orderId}`;
     if(dispatch == 1){
-       url = url+`?dispatch=1&delete_allocation=${delete_allocation}`;
+       url = url+`?dispatch=1&delete_allocation=${delete_allocation}`;  
     }
     return this.baseService.get(url);
   }

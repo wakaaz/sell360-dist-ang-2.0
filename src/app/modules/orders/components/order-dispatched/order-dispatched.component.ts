@@ -819,7 +819,7 @@ export class OrderDispatchedComponent implements OnInit {
   cancelOrder(delete_allocation=1): void {
     document.getElementById('close-del').click();
     this.savingOrder = true;
-    this.orderService.cancelOrder(this.orderDetails.id,delete_allocation).subscribe(
+    this.orderService.cancelOrder(this.orderDetails.id,delete_allocation,1).subscribe(
       (res) => {
         this.savingOrder = false;
         if (res.status === 200) {
@@ -861,11 +861,11 @@ export class OrderDispatchedComponent implements OnInit {
     if(this.holdOrderParams.hold_reason.trim() != ''){
       document.getElementById('close-hold-model').click();
       this.savingOrder = true;
-      this.holdOrderParams.order_id = this.orderDetails.id;
-      this.holdOrderParams.assignment_id = this.orderDetails.assignment_id;
+      this.holdOrderParams.order_id       = this.orderDetails.id;
+      this.holdOrderParams.assignment_id  = this.orderDetails.assignment_id;
       // debugger
       // return;
-      this.orderService.holdOrder(this.holdOrderParams).subscribe(
+      this.orderService.holdOrder(this.holdOrderParams,1).subscribe(
         (res) => {
           this.newProduct = null;
           this.savingOrder = false;

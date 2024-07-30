@@ -7,7 +7,7 @@ export const environment = {
     NORMAL: 1, // noramal means flat value * qty
     PERCENTAGE: 2, // Percentage means (value/100) * qty
   },
-  CREDIT_ORDER_TYPE: {
+  CREDIT_ORDER_TYPE: { 
     Regular_Order: 0,
     Credit_Order_Without_Discount: 1,
     Credit_Order_With_Discount: 2,

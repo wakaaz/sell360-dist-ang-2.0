@@ -816,7 +816,7 @@ export class OrderDispatchedComponent implements OnInit {
     this.saveOrder();
   }
 
-  cancelOrder(delete_allocation=1): void {
+  cancelOrder(delete_allocation=0): void {
     document.getElementById('close-del').click();
     this.savingOrder = true;
     this.orderService.cancelOrder(this.orderDetails.id,delete_allocation,1).subscribe(

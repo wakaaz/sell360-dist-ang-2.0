@@ -830,7 +830,7 @@
                   <div class="gary-box min-w">
                     <strong>Order Booker:</strong>
                     <b class="execution_bookers float-right">{{
-                      dispatchSummary?.order_bookers.join(
+                      dispatchSummary?.order_bookers?.join(
                         ",
                                             "
                       ) || "--"
@@ -841,7 +841,7 @@
                   <div class="gary-box min-w">
                     <strong>Territory:</strong>
                     <span class="execution_territories">{{
-                      dispatchSummary?.territories.join(
+                      dispatchSummary?.territories?.join(
                         ",
                                             "
                       ) || "--"

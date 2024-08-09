@@ -1754,7 +1754,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   checkRecieveable(): void {
-    if (+this.amountReceived === 0) {
+    if (+this.amountReceived < 0) {
       this.toastService.showToaster({
         title: 'Execution Error:',
         message: 'Please add received amount!',

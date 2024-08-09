@@ -25,7 +25,7 @@ export class OrderDispatchService {
                     issued_qty: 0,
                     foc_qty:item.scheme_quantity_free ? +item.scheme_quantity_free : 0,
                 };
-                debugger
+                // debugger
                 currentLoadContent.items.push(newContent);
             } else {
                 loadItem.foc_qty        = loadItem.foc_qty  +  (item.scheme_quantity_free ? +item.scheme_quantity_free : 0), 
@@ -49,7 +49,7 @@ export class OrderDispatchService {
                 loadItem.issued_qty =   0;
                 loadItem.foc_qty    =   loadItem.foc_qty;
                 loadItem.extra_qty  =   0;   
-                debugger
+                // debugger
             }
             if (loadItem && loadItem.actual_qty === 0) {
                 currentLoadContent.items = currentLoadContent.items.filter(x => x.item_id !== item.item_id);
@@ -86,13 +86,13 @@ export class OrderDispatchService {
                         };
                        
                         currentLoadContent.items.push(newContent);
-                        debugger
+                        // debugger
                     } else {
                         
                         loadItem.issued_qty = item.current_load_allocated_qty - loadItem.actual_qty;
                         loadItem.extra_qty  =   0;//+item.current_load_allocated_qty - +item.current_load_booked_qty;    
                     
-                        debugger
+                        // debugger
                     }
                     
                 }
@@ -140,7 +140,7 @@ export class OrderDispatchService {
                                     contentitems    =   contentitems.concat(thisitems);
                                     contentitems    =   contentitems.filter(this.onlyUnique);
                                 }
-                                debugger
+                                // debugger
                                 return content;
                         });   
     }

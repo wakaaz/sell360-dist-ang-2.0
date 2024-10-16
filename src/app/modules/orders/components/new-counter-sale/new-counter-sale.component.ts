@@ -162,7 +162,7 @@ export class NewCounterSaleComponent implements OnInit {
     this.secondaryOrder.items=  this.generalDataService.empty_dispProducts();
     this.order.route_id      = this.selectedRoute.route_id;
     this.generalDataService
-      .getRetailersByRoute(this.selectedRoute.route_id)
+      .getRetailersByRoute(this.selectedRoute.route_id,1)
       .subscribe(
         (res) => {
           if (res.status === 200) {

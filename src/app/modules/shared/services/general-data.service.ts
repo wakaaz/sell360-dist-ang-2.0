@@ -65,8 +65,11 @@ export class GeneralDataService {
     return this.httpBaseService.get(url);
   }
 
-  getRetailersByRoute(routeId: number): Observable<any> {
-    const url = `${API_URLS.GET_RETAILERS_BY_ROUTE}/${routeId}`;
+  getRetailersByRoute(routeId: number,is_counter_sale=0): Observable<any> {
+    let url = `${API_URLS.GET_RETAILERS_BY_ROUTE}/${routeId}`;
+    if(is_counter_sale && is_counter_sale == 1){
+       url = url+`?cs=1`
+    }
     return this.httpBaseService.get(url);
   }
 

@@ -592,7 +592,7 @@ export class CounterSaleComponent implements OnInit {
   getRetailerByRoute(): void {
     this.selectedRetailer = null;
     this.resetValues();
-    this.generalDataService.getRetailersByRoute(this.selectedRoute).subscribe(
+    this.generalDataService.getRetailersByRoute(this.selectedRoute,1).subscribe(
       (res) => {
         if (res.status === 200) {
           this.retailers = res.data;

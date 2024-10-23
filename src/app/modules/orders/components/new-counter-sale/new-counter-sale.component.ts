@@ -95,7 +95,7 @@ export class NewCounterSaleComponent implements OnInit {
   }
 
   getOrderBookers(): void {
-    this.generalDataService.getOrderBookers(this.distributorId).subscribe(
+    this.generalDataService.getOrderBookers(this.distributorId,1).subscribe(
       (res) => {
         if (res.status === 200) {
           this.orderBookers = res.data;
@@ -162,7 +162,7 @@ export class NewCounterSaleComponent implements OnInit {
     this.secondaryOrder.items=  this.generalDataService.empty_dispProducts();
     this.order.route_id      = this.selectedRoute.route_id;
     this.generalDataService
-      .getRetailersByRoute(this.selectedRoute.route_id,1)
+      .getRetailersByRoute(this.selectedRoute.route_id)
       .subscribe(
         (res) => {
           if (res.status === 200) {

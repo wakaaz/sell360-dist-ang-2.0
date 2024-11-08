@@ -108,46 +108,41 @@ export class OrderDispatchService {
     }
 
     parseLoads(loadcontents: any, stockAllocation:any){
-        try{
-                let actuals_qty_items   =   stockAllocation.map(x=>{ 
-                                                                        if(x.current_load_booked_qty > 0 ) {
-                                                                            return x.item_id;
-                                                                        }
-                                                                    });
-                actuals_qty_items       =   actuals_qty_items.filter(x=> (x>0));
+        let actuals_qty_items   =   stockAllocation.map(x=>{ 
+                                                                if(x.current_load_booked_qty > 0 ) {
+                                                                    return x.item_id;
+                                                                }
+                                                            });
+        actuals_qty_items       =   actuals_qty_items.filter(x=> (x>0));
 
-                let contents:any    =   [];
-                let contentitems    =   [];
-                return loadcontents.map(content=>{
-                                        if(content.loadNumber == 1 ){
-                                            content.items = content.items.filter(x=> (+x.actual_qty > 0 || !actuals_qty_items.includes(x.item_id)));
-                                            content.items   =   content.items.map(x=>{
-                                                                                        x.issued_qty = +stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_allocated_qty - +stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_booked_qty;
-                                                                                        return x;
-                                                                                    })    
-                                            contentitems  = content.items.map(item => item.item_id);
-                                            ////debugger
-                                        }else{
-                                            content.items   =   content.items.filter(x=> (+x.actual_qty > 0)); 
-                                            content.items   =   content.items.map(x=>{
-                                                                                        if(contentitems.includes(x.item_id)){
-                                                                                            x.issued_qty = 0;
-                                                                                        }else{
-                                                                                            x.issued_qty = +stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_allocated_qty -stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_booked_qty;
-                                                                                        }
-                                                                                        return x;
-                                                                                    })   
-                                            let thisitems   =   content.items.map(item => item.item_id);  
-                                            contentitems    =   contentitems.concat(thisitems);
-                                            contentitems    =   contentitems.filter(this.onlyUnique);
-                                        }
-                                        
-                                        return content;
-                                }); 
-        } catch (error) {
-            console.error("An error occurred in parseLoads:", error);
-            return []; // Return an empty array or handle the fallback logic here as needed
-        }  
+        let contents:any    =   [];
+        let contentitems    =   [];
+        return loadcontents.map(content=>{
+                                if(content.loadNumber == 1 ){
+                                    content.items = content.items.filter(x=> (+x.actual_qty > 0 || !actuals_qty_items.includes(x.item_id)));
+                                    content.items   =   content.items.map(x=>{
+                                                                                x.issued_qty = +stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_allocated_qty - +stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_booked_qty;
+                                                                                return x;
+                                                                            })    
+                                    contentitems  = content.items.map(item => item.item_id);
+                                    ////debugger
+                                }else{
+                                    content.items   =   content.items.filter(x=> (+x.actual_qty > 0)); 
+                                    content.items   =   content.items.map(x=>{
+                                                                                if(contentitems.includes(x.item_id)){
+                                                                                    x.issued_qty = 0;
+                                                                                }else{
+                                                                                    x.issued_qty = +stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_allocated_qty -stockAllocation.find(y=>(y.item_id==x.item_id)).current_load_booked_qty;
+                                                                                }
+                                                                                return x;
+                                                                            })   
+                                    let thisitems   =   content.items.map(item => item.item_id);  
+                                    contentitems    =   contentitems.concat(thisitems);
+                                    contentitems    =   contentitems.filter(this.onlyUnique);
+                                }
+                                
+                                return content;
+                        });   
     }
     onlyUnique(value, index, self) {
         return self.indexOf(value) === index;

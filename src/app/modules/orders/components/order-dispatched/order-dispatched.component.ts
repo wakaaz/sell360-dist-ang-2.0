@@ -161,6 +161,7 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   tabChanged(): void {
+    
     if(this.isShopPendingApproval){
         this.tabLoading = false; 
         this.orderService.setCheckAllocationSuccess(false);
@@ -455,101 +456,93 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   getOrderDetailsByRetailer(retailer: any): void {
-    try{
-        this.taxClasses = []; 
-        if (this.selectedRetailer?.iorderDetailsd !== retailer.id) {
-          this.savingOrder = true;
-          this.newProduct = null;
-          this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
-          this.getProducts(false);
-          this.orderService.getOrderDetails(retailer.id, this.assignmentId).subscribe(
-              (res) => {
-                this.savingOrder = false;
-                if (res.status === 200) {
-                  this.orderDetails = res.data;
-                  this.orderDetails.items = this.orderDetails.items.map((prod) => {
-                    const product                     =     this.inventory.find(x => x.item_id === prod.item_id);
-                    prod.parent_quantity              =     JSON.parse(JSON.stringify(product.quantity));
-                    prod.parent_unit_id               =     JSON.parse(JSON.stringify(product.parent_unit_id));
-                    prod.sub_inventory_quantity       =     JSON.parse(JSON.stringify(product.sub_inventory_quantity));
-                    prod.child                        =     JSON.parse(JSON.stringify(product.child));
-                    prod.tax_class_amount             =     JSON.parse(JSON.stringify(product.tax_class_amount));
-                    prod.tax_class_type               =     JSON.parse(JSON.stringify(product.tax_class_type));
-                    prod.brand_id                     =     JSON.parse(JSON.stringify(product.brand_id));
-                    prod.unit_name                    =     JSON.parse(JSON.stringify(product.unit_name));
-                    prod.is_active                    =     JSON.parse(JSON.stringify(product.is_active));
-                    prod.original_price               =     JSON.parse(JSON.stringify(prod.original_price));
-                    prod.item_trade_price             =     JSON.parse(JSON.stringify(prod.original_price));
-                    prod.extra_discount               =     JSON.parse(JSON.stringify(prod.booker_discount));
-                    prod.stockQty                     =     JSON.parse(JSON.stringify(prod.dispatch_qty));
-                    prod.net_amount                   =     JSON.parse(JSON.stringify(prod.final_price));
-                    prod.extra_discount_pkr           =     prod.stockQty * prod.extra_discount;
-                    prod.original_amount              =     prod.item_trade_price * prod.stockQty;
-                    prod.special_discount_pkr         =     prod.special_discount;
-                    prod.trade_discount               =     JSON.parse(JSON.stringify(prod.merchant_discount));
-                    prod.trade_discount_pkr           =     JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
+    this.taxClasses = []; 
+    if (this.selectedRetailer?.iorderDetailsd !== retailer.id) {
+      this.savingOrder = true;
+      this.newProduct = null;
+      this.selectedRetailer = JSON.parse(JSON.stringify(retailer));
+      this.getProducts(false);
+      this.orderService.getOrderDetails(retailer.id, this.assignmentId).subscribe(
+          (res) => {
+            this.savingOrder = false;
+            if (res.status === 200) {
+              this.orderDetails = res.data;
+              this.orderDetails.items = this.orderDetails.items.map((prod) => {
+                const product                     =     this.inventory.find(x => x.item_id === prod.item_id);
+                prod.parent_quantity              =     JSON.parse(JSON.stringify(product.quantity));
+                prod.parent_unit_id               =     JSON.parse(JSON.stringify(product.parent_unit_id));
+                prod.sub_inventory_quantity       =     JSON.parse(JSON.stringify(product.sub_inventory_quantity));
+                prod.child                        =     JSON.parse(JSON.stringify(product.child));
+                prod.tax_class_amount             =     JSON.parse(JSON.stringify(product.tax_class_amount));
+                prod.tax_class_type               =     JSON.parse(JSON.stringify(product.tax_class_type));
+                prod.brand_id                     =     JSON.parse(JSON.stringify(product.brand_id));
+                prod.unit_name                    =     JSON.parse(JSON.stringify(product.unit_name));
+                prod.is_active                    =     JSON.parse(JSON.stringify(product.is_active));
+                prod.original_price               =     JSON.parse(JSON.stringify(prod.original_price));
+                prod.item_trade_price             =     JSON.parse(JSON.stringify(prod.original_price));
+                prod.extra_discount               =     JSON.parse(JSON.stringify(prod.booker_discount));
+                prod.stockQty                     =     JSON.parse(JSON.stringify(prod.dispatch_qty));
+                prod.net_amount                   =     JSON.parse(JSON.stringify(prod.final_price));
+                prod.extra_discount_pkr           =     prod.stockQty * prod.extra_discount;
+                prod.original_amount              =     prod.item_trade_price * prod.stockQty;
+                prod.special_discount_pkr         =     prod.special_discount;
+                prod.trade_discount               =     JSON.parse(JSON.stringify(prod.merchant_discount));
+                prod.trade_discount_pkr           =     JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
 
-              
-                    prod.selectedScheme               =     this.schemes.find((scheme) => scheme.id === prod.scheme_id);
+          
+                prod.selectedScheme               =     this.schemes.find((scheme) => scheme.id === prod.scheme_id);
 
-                  
+               
 
-                    prod.scheme_id                    =     JSON.parse(JSON.stringify(prod.scheme_id));
+                prod.scheme_id                    =     JSON.parse(JSON.stringify(prod.scheme_id));
 
-                    prod.scheme_type                  =     JSON.parse(JSON.stringify(prod.scheme_type));
-                    prod.scheme_rule                  =     JSON.parse(JSON.stringify(prod.scheme_rule));
-                    prod.scheme_bundle_interval       =     JSON.parse(JSON.stringify(prod.scheme_bundle_interval));
-                    prod.scheme_min_quantity          =     JSON.parse(JSON.stringify(prod.scheme_min_quantity));
-                    prod.scheme_quantity_free         =     JSON.parse(JSON.stringify(prod.scheme_quantity_free));
-                    prod.scheme_discount_type         =     JSON.parse(JSON.stringify(prod.scheme_discount_type));
-                    prod.scheme_discount              =     JSON.parse(JSON.stringify(prod.scheme_discount));
-                    prod.gift_value                   =     JSON.parse(JSON.stringify(prod.gift_value));
-                    prod.loyalty_offer_id             =     JSON.parse(JSON.stringify(prod.loyalty_offer_id));
-                    prod.loyalty_offer_type           =     JSON.parse(JSON.stringify(prod.loyalty_offer_type));
-                    prod.loyalty_offer_discount_type  =     JSON.parse(JSON.stringify(prod.loyalty_offer_discount_type));
-                    prod.loyalty_offer_discount       =     JSON.parse(JSON.stringify(prod.loyalty_offer_discount));
-                    prod.loyalty_offer_discount_pkr   =     JSON.parse(JSON.stringify(prod.loyalty_offer_discount_pkr));
-                    prod.slab_id                      =     JSON.parse(JSON.stringify(prod.slab_id));
-                    prod.slab_type                    =     JSON.parse(JSON.stringify(prod.slab_type));
-                    prod.slab_discount_type           =     JSON.parse(JSON.stringify(prod.slab_discount_type));
-                    prod.merchant_discount            =     JSON.parse(JSON.stringify(prod.merchant_discount));
-                    prod.merchant_discount_pkr        =     JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
-                    prod.special_discount             =     JSON.parse(JSON.stringify(prod.special_discount));
-                    prod.booker_discount              =     JSON.parse(JSON.stringify(prod.booker_discount));   
-                    return prod;
-                  });
-                  console.log("orderDetails.items",this.orderDetails.items)
-                }
-              },
-              (error) => {
-                this.savingOrder = false;
-                this.loading = false;
-                if (error.status !== 1 && error.status !== 401) {
-                  console.log(
-                    'Error while getting order detail data :>> ',
-                    error.message
-                  );
-                  const toast: Toaster = {
-                    type: 'error',
-                    message: 'Cannot fetch Order Detail. Please try again',
-                    title: 'Error:',
-                  };
-                  this.toastService.showToaster(toast);
-                }
-              }
-            ); 
-          this.getDiscountSlabs();
-        }
-        this.getDispatchDetails();
-    } catch (error) {
-      console.error("An error occurred in getOrderDetailsByRetailer:", error);
-      const toast: Toaster = {
-        type: 'error',
-        message: 'There is an issue with your catalog. Please contact the administrator.',
-        title: 'Dispatch Error:',
-      };
-      this.toastService.showToaster(toast);
+                prod.scheme_type                  =     JSON.parse(JSON.stringify(prod.scheme_type));
+                prod.scheme_rule                  =     JSON.parse(JSON.stringify(prod.scheme_rule));
+                prod.scheme_bundle_interval       =     JSON.parse(JSON.stringify(prod.scheme_bundle_interval));
+                prod.scheme_min_quantity          =     JSON.parse(JSON.stringify(prod.scheme_min_quantity));
+                prod.scheme_quantity_free         =     JSON.parse(JSON.stringify(prod.scheme_quantity_free));
+                prod.scheme_discount_type         =     JSON.parse(JSON.stringify(prod.scheme_discount_type));
+                prod.scheme_discount              =     JSON.parse(JSON.stringify(prod.scheme_discount));
+                prod.gift_value                   =     JSON.parse(JSON.stringify(prod.gift_value));
+                prod.loyalty_offer_id             =     JSON.parse(JSON.stringify(prod.loyalty_offer_id));
+                prod.loyalty_offer_type           =     JSON.parse(JSON.stringify(prod.loyalty_offer_type));
+                prod.loyalty_offer_discount_type  =     JSON.parse(JSON.stringify(prod.loyalty_offer_discount_type));
+                prod.loyalty_offer_discount       =     JSON.parse(JSON.stringify(prod.loyalty_offer_discount));
+                prod.loyalty_offer_discount_pkr   =     JSON.parse(JSON.stringify(prod.loyalty_offer_discount_pkr));
+                prod.slab_id                      =     JSON.parse(JSON.stringify(prod.slab_id));
+                prod.slab_type                    =     JSON.parse(JSON.stringify(prod.slab_type));
+                prod.slab_discount_type           =     JSON.parse(JSON.stringify(prod.slab_discount_type));
+                prod.merchant_discount            =     JSON.parse(JSON.stringify(prod.merchant_discount));
+                prod.merchant_discount_pkr        =     JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
+                prod.special_discount             =     JSON.parse(JSON.stringify(prod.special_discount));
+                prod.booker_discount              =     JSON.parse(JSON.stringify(prod.booker_discount));
+        //debugger
+                
+                return prod;
+              });
+              console.log("orderDetails.items",this.orderDetails.items)
+            }
+          },
+          (error) => {
+            this.savingOrder = false;
+            this.loading = false;
+            if (error.status !== 1 && error.status !== 401) {
+              console.log(
+                'Error while getting order detail data :>> ',
+                error.message
+              );
+              const toast: Toaster = {
+                type: 'error',
+                message: 'Cannot fetch Order Detail. Please try again',
+                title: 'Error:',
+              };
+              this.toastService.showToaster(toast);
+            }
+          }
+        ); 
+      this.getDiscountSlabs();
     }
+    this.getDispatchDetails();
   }
 
   addNewProductToOrder(product: any): void {
@@ -1236,48 +1229,12 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   getItemName(itemId: number): string {
-    try{
-         const item = this.inventory.find((x) => x.item_id === itemId);
-          if(!item){
-            const toast: Toaster = {
-              type: 'error',
-              message: 'There is an issue with your catalog. Please contact the administrator.'+itemId,
-              title: 'Dispatch Error:',
-            };
-          }
-          return item ? item.item_name : null;
-        } catch (error) {
-          console.error("An error occurred in getItemName:", error);
-          const toast: Toaster = {
-            type: 'error',
-            message: 'There is an issue with your catalog. Please contact the administrator.',
-            title: 'Dispatch Error:',
-          };
-          this.toastService.showToaster(toast);
-          return null; 
-      } 
+    const item = this.inventory.find((x) => x.item_id === itemId);
+    return item.item_name;
   }
   getItemSKU(itemId: number): string {
-    try{ 
-        const item = this.inventory.find((x) => x.item_id === itemId);
-        if(!item){
-          const toast: Toaster = {
-            type: 'error',
-            message: 'There is an issue with your catalog. Please contact the administrator.'+itemId,
-            title: 'Dispatch Error:',
-          };
-        }
-        return item ? item.item_sku : null;
-      } catch (error) {
-        console.error("An error occurred in getItemSKU:", error);
-        const toast: Toaster = {
-          type: 'error',
-          message: 'There is an issue with your catalog. Please contact the administrator.',
-          title: 'Dispatch Error:',
-        };
-        this.toastService.showToaster(toast);
-        return null; 
-    } 
+    const item = this.inventory.find((x) => x.item_id === itemId);
+    return item.item_sku;
   }
 
   addCurrentLoad(): void {

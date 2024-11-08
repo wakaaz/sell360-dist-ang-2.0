@@ -12,6 +12,7 @@ import { OrdersService } from '../../../services/orders.service';
 })
 export class StockAllocationComponent implements OnInit {
   @Input() stockAllocation: any;
+  @Input() isShopPendingApproval: boolean;
   @Output() closeSideBar = new EventEmitter<boolean>();
   orders: any = [];
   tabLoading = false;
@@ -63,37 +64,50 @@ export class StockAllocationComponent implements OnInit {
     this.alloctionErrors  = '';
     this.showalloctionErrors = false;
     this.tabLoading       = true;
-    this.orderService.saveLoadItemAllocation(this.assignmentId).subscribe(
-      (x) => {
-        this.tabLoading = false;
-        this.orderService.setCheckAllocationSuccess(true);
-        const toast: Toaster = {
-          type: 'success',
-          message: 'Allocation Quanity Verified',
-          title: 'Success:',
-        };
-        this.toastService.showToaster(toast);
-      },
-      (err) => {
-        this.tabLoading = false; 
-        this.orderService.setCheckAllocationSuccess(false);
-        
-        this.showalloctionErrors = true;
-        let itemrror_list:string = '';
-        if(err.error.error){
-          err.error.error.forEach(x=>{
-            itemrror_list += `<li>Product SKU: ${x.item_sku}, Product Name: ${x.item_name} </li>`
-         });
+    if(this.isShopPendingApproval){
+      this.tabLoading = false; 
+      this.orderService.setCheckAllocationSuccess(false);
+      const toast: Toaster = {
+        type: 'error',
+        message: 'Approve all pending Retialers First.',
+        title: 'Failed:',
+      };
+      this.toastService.showToaster(toast);
+    }
+    else
+    {
+      this.orderService.saveLoadItemAllocation(this.assignmentId).subscribe(
+        (x) => {
+          this.tabLoading = false;
+          this.orderService.setCheckAllocationSuccess(true);
+          const toast: Toaster = {
+            type: 'success',
+            message: 'Allocation Quanity Verified',
+            title: 'Success:',
+          };
+          this.toastService.showToaster(toast);
+        },
+        (err) => {
+          this.tabLoading = false; 
+          this.orderService.setCheckAllocationSuccess(false);
+          
+          this.showalloctionErrors = true;
+          let itemrror_list:string = '';
+          if(err.error.error){
+            err.error.error.forEach(x=>{
+              itemrror_list += `<li>Product SKU: ${x.item_sku}, Product Name: ${x.item_name} </li>`
+           });
+          }
+          this.alloctionErrors  = `${itemrror_list}`;
+          // const toast: Toaster = {
+          //   type: 'error',
+          //   message:'Requested allocation quantity is greater than available stock.', 
+          //   title: 'Error:',
+          // };
+          // this.toastService.showToaster(toast);
         }
-        this.alloctionErrors  = `${itemrror_list}`;
-        // const toast: Toaster = {
-        //   type: 'error',
-        //   message:'Requested allocation quantity is greater than available stock.', 
-        //   title: 'Error:',
-        // };
-        // this.toastService.showToaster(toast);
-      }
-    );
+      );
+    }
   }
   
   closeAlert() {

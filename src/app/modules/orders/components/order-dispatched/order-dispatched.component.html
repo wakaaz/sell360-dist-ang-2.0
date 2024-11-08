@@ -327,6 +327,7 @@
           <app-stock-allocation
             *ngIf="currentTab === 1 && stockAllocation"
             [stockAllocation]="stockAllocation"
+            [isShopPendingApproval]="isShopPendingApproval"
             (closeSideBar)="closeSideBarEvent($event)"
           ></app-stock-allocation>
         </div>

@@ -82,6 +82,7 @@
                 <th>Order Bookers</th>
                 <th>Orders</th>
                 <th>Booked Value</th>
+                <th>Pending Shops</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -92,6 +93,7 @@
                 <td>{{ order.emp_names || order.emp_name }}</td>
                 <td>{{ order.total_orders }}</td>
                 <td>{{ order.order_total | number: "1.2-2" }}</td>
+                <td>{{ order.pending_retailers }}</td>
                 <td>
                   <button
                     (click)="loadBookingSheet(order)"
@@ -99,17 +101,32 @@
                   >
                     BS
                   </button>
-                  <a
-                    [routerLink]="[
-                      '/orders',
-                      'dispatch',
-                      order.assignment_id,
-                      order.sales_man_id,
-                      order.date
-                    ]"
-                    class="btn btn-default btn-line mb-0"
-                    >Dispatch</a
-                  >
+                  <ng-container *ngIf="order.pending_retailers > 0; else activeLink">
+                    <!-- Disabled button with tooltip -->
+                    <button
+                      class="btn btn-default btn-line mb-0"
+                      title="Approve all retailers first"
+                      disabled
+                    >
+                      Dispatch
+                    </button>
+                  </ng-container>
+
+                  <!-- Active link rendering as an anchor -->
+                  <ng-template #activeLink>
+                    <a
+                      [routerLink]="[
+                        '/orders',
+                        'dispatch',
+                        order.assignment_id,
+                        order.sales_man_id,
+                        order.date
+                      ]"
+                      class="btn btn-default btn-line mb-0"
+                    >
+                      Dispatch
+                    </a>
+                  </ng-template>
                   <button
                     (click)="selectedAssignmentId = order.assignment_id"
                     data-toggle="modal"

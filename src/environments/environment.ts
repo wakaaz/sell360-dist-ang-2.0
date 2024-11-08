@@ -4,8 +4,8 @@ export const environment = {
   // apiDomain: 'https://demo.sell360.app',
   // apiUrl: 'https://demo.sell360.app/distributor-api',
   
-  apiDomain: 'https://marketer.sell360.app', 
-  apiUrl: 'https://marketer.sell360.app/distributor-api',   
+  apiDomain: 'https://shahi-latest.sell360.app', 
+  apiUrl: 'https://shahi-latest.sell360.app/distributor-api',   
   
 
   // apiDomain: 'https://asg.sell360.app', 

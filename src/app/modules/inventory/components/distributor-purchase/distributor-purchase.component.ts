@@ -84,7 +84,7 @@ export class DistributorPurchaseComponent
       remark: '',
       gst: 0,
       fare: 0,
-      supplier: 'shahi',
+      supplier: 'sell360',
       original_amount: 0,
       discount: 0,
       net_amount: 0,

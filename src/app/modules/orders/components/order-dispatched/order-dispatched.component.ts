@@ -468,6 +468,7 @@ export class OrderDispatchedComponent implements OnInit {
             if (res.status === 200) {
               this.orderDetails = res.data;
               this.orderDetails.items = this.orderDetails.items.map((prod) => {
+                // debugger
                 const product                     =     this.inventory.find(x => x.item_id === prod.item_id);
                 prod.parent_quantity              =     JSON.parse(JSON.stringify(product.quantity));
                 prod.parent_unit_id               =     JSON.parse(JSON.stringify(product.parent_unit_id));

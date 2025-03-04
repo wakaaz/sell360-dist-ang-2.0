@@ -96,7 +96,7 @@ export class OrdersService {
   }
 
   getTaxClasses(provinceId: number=0): Observable<any> {
-    const url = `${API_URLS.GET_TAX_CLASSES}/${provinceId}`;
+    const url = `${API_URLS.GET_TAX_CLASSES||'/getTaxClasses'}/${provinceId}`;
     return this.baseService.get(url);
   }
 

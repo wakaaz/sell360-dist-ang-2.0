@@ -339,24 +339,18 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
 
   checkBundleScheme(scheme:any):boolean{
     
-    
-    //console.log(scheme.scheme_type);
+    debugger
+    let itemCount           =   0; 
+    const scheme_items      =   scheme.items.map(x=> {return x.item_id});
     if(scheme.scheme_type == 'bundle_offer'){ 
-      let itemCount  = 0; 
-      const scheme_items      =   scheme.items.map(x=> {return x.item_id});
       this.orderedProducts.forEach(x=>{
-        
         if(scheme_items.includes(x.item_id) && scheme.min_qty <= x.stockQty && (!x.scheme_id || x.scheme_id == 0)){ 
           ++itemCount;      
         }
-       
       });
-      //console.log(`COUNT ${scheme_items.length - 1} <= ${itemCount}` )
       if(scheme_items.length - 1 <= itemCount){
-        //console.log(false);
           return false
       }else{
-        //console.log(true);
         return true;
       }   
     

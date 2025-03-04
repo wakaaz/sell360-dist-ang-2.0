@@ -289,7 +289,7 @@ export class CounterSaleComponent implements OnInit {
     );
   }
 
-  getTaxclasses(province_id=0): void {
+  getTaxclasses(province_id=0): void { 
     this.ordersService.getTaxClasses(province_id).subscribe(
       (res) => {
         if (res.status === 200) {
@@ -723,8 +723,11 @@ export class CounterSaleComponent implements OnInit {
       
       if(product.isAdded === true ){
         this.selectedProducts = this.dataService.updateOrderitemscalculation(this.selectedProducts,this.selectedRetailer,this.taxClasses);
-        if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
+        if(product.selectedScheme && (product.selectedScheme.scheme_type == 'bundle_offer' || product.selectedScheme.scheme_type == 'mix_match')){
           this.selectedRetailer.items = this.selectedProducts;
+          if(product.selectedScheme.scheme_type == 'mix_match')
+          this.selectedProducts   = this.dataService.applyMixMatchProductsScheme(product,this.selectedRetailer,this.taxClasses);
+          else
           this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer,this.taxClasses);
         }
         
@@ -777,7 +780,9 @@ export class CounterSaleComponent implements OnInit {
     }
      
     if (
-      this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type !='bundle_offer' &&
+      this.selectedProduct.selectedScheme && 
+      this.selectedProduct.selectedScheme.scheme_type !='bundle_offer' && 
+      this.selectedProduct.selectedScheme.scheme_type !='mix_match' && 
       !this.selectedProduct.selectedScheme.applied
     ) {
       
@@ -840,8 +845,11 @@ export class CounterSaleComponent implements OnInit {
       //debugger
       this.selectedProducts         = this.dataService.updateOrderitemscalculation(this.selectedProducts,this.selectedRetailer,this.taxClasses);
 
-      if(this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type == 'bundle_offer'){
+      if(this.selectedProduct.selectedScheme && (this.selectedProduct.selectedScheme.scheme_type == 'bundle_offer' || this.selectedProduct.selectedScheme.scheme_type == 'mix_match')){
         this.selectedRetailer.items = this.selectedProducts;
+        if(this.selectedProduct.selectedScheme.scheme_type == 'mix_match')
+        this.selectedProducts       = this.dataService.applyMixMatchProductsScheme(this.selectedProduct,this.selectedRetailer,this.taxClasses);
+        else
         this.selectedProducts       = this.dataService.applyBundleProductsScheme(this.selectedProduct,this.selectedRetailer,this.taxClasses);
       }
       
@@ -892,7 +900,7 @@ export class CounterSaleComponent implements OnInit {
     });
     this.dispProducts = this.dispProducts.map((prod) => {
       if (prod.item_id === product.item_id) {
-        prod.isAdded = false;
+        prod.isAdded  = false;
         prod.qtyAdded =false;
       }
       return prod;
@@ -904,15 +912,36 @@ export class CounterSaleComponent implements OnInit {
     // }
     this.calculateTotalBill();
     
-    if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
-      this.selectedRetailer.items = this.selectedProducts;
-      this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer,this.taxClasses);
-    }
- 
+    if(product.selectedScheme && (product.selectedScheme.scheme_type == 'bundle_offer' || product.selectedScheme.scheme_type == 'mix_match')){
+      if(product.selectedScheme.scheme_type == 'mix_match'){
+        if(this.selectedProduct.selectedScheme){
+          const selectedScheme  = this.selectedProduct.selectedScheme;
+          const other_items     = new Set( this.selectedProduct.selectedScheme.items.filter(x => x.item_id != this.selectedProduct.item_id) .map(x => x.item_id));
+          const firstItemId     = [...other_items][0]; 
+          // Find the firstItemId item in the updated selectedProducts and assign selectedScheme
+          const firstItemIndex  = this.selectedProducts.findIndex(item => item.item_id === firstItemId);
+          // debugger
+          if (firstItemIndex !== -1) {
+            // debugger
+              this.selectedProducts[firstItemIndex] = { ...this.selectedProducts[firstItemIndex],selectedScheme: this.selectedProduct.selectedScheme};
+              console.log('item_id bfore',product.item_id)
+              product              = this.selectedProducts[firstItemIndex];
+              console.log('item_id after',product.item_id)
+          }
+          
+        }
+        // debugger
+        this.selectedRetailer.items = this.selectedProducts;
+        this.selectedProducts       = this.dataService.applyMixMatchProductsScheme(product,this.selectedRetailer,this.taxClasses);
+      }
+      else{
+        this.selectedRetailer.items = this.selectedProducts;
+        this.selectedProducts       = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer,this.taxClasses);
+      }
 
+    }
     //apply slabs to all items 
-    this.selectedProducts  = this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs,this.selectedRetailer,this.taxClasses)   
-    
+    this.selectedProducts       =  this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs,this.selectedRetailer,this.taxClasses)   
     //Apply Loyal offer discount
     this.selectedRetailer.items =  this.selectedProducts
     this.selectedRetailer       =  this.dataService.applyLoyaltyOfferDiscount(this.selectedRetailer,this.loyaltyoffers,this.taxClasses); 
@@ -1127,6 +1156,7 @@ export class CounterSaleComponent implements OnInit {
   }
 
   applyScheme(product: any): any {
+    // debugger
     switch (product.selectedScheme.scheme_type) {
       case 'free_product':
         product   = this.dataService.applyFreeProductScheme(product);
@@ -1138,7 +1168,9 @@ export class CounterSaleComponent implements OnInit {
         product   = this.dataService.applyComplementaryScheme(product);  
         break;
      case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
-            break;       
+        break
+     case 'mix_match': //it will be applied on after item added to order details because it depends on multiple items
+        break;       
       default:
         product   = this.dataService.getSDForGift(product);
         break;
@@ -1353,7 +1385,7 @@ export class CounterSaleComponent implements OnInit {
       let gross_sale_amount   =   product.original_price * stockQty
       let finalQty            =   stockQty+free_qty;
 
-      let ttl_scheme_discount =   product.scheme_id && product.scheme_type == 'bundle_offer' ? (+product.scheme_discount * +product.scheme_bundle_interval): +(stockQty * product.scheme_discount) ;
+      let ttl_scheme_discount =   product.scheme_id && (product.scheme_type == 'bundle_offer' || product.scheme_type == 'mix_match') ? (+product.scheme_discount * +product.scheme_bundle_interval): +(stockQty * product.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * product.trade_discount_pkr;
       let ttl_special_discount=   product.special_discount ? stockQty * +product.special_discount:0;
       let ttl_extra_discount  =   +product.extra_discount ? +stockQty * +product.extra_discount : 0;
@@ -1522,9 +1554,7 @@ export class CounterSaleComponent implements OnInit {
     );
   }
 
-  checkBundleScheme(scheme:any):boolean{
-    
-    
+  checkBundleScheme(scheme:any,selectedProduct:any=null):boolean{
     //console.log(scheme.scheme_type);
     if(scheme.scheme_type == 'bundle_offer'){ 
       let itemCount  = 0; 
@@ -1540,6 +1570,16 @@ export class CounterSaleComponent implements OnInit {
         return true;
       } 
     }
-    return false;
+    else if (scheme.scheme_type === 'mix_match') { 
+      const schemeItemsSet = new Set(scheme.items.map(x => x.item_id)); // Convert to Set for faster lookup
+      return this.selectedProducts?.some(x => 
+          selectedProduct.item_id !== x.item_id &&
+          schemeItemsSet.has(x.item_id) &&
+          x.selectedScheme
+      ) ?? false;
+    }  
+    else{
+      return false;
+    }
   }
 }

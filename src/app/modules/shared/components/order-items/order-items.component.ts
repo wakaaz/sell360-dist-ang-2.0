@@ -181,7 +181,22 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
         this.orderDetail.items = this.dataService.updateOrderitemscalculation(this.orderDetail.items,this.orderDetail,this.taxClasses);
       if(this.selectedItem.selectedScheme && this.selectedItem.selectedScheme.scheme_type == 'bundle_offer'){
+        if(this.selectedItem.selectedScheme.scheme_type == 'mix_match')
+        this.orderDetail.items   = this.dataService.applyMixMatchProductsScheme(this.selectedItem,this.orderDetail,this.taxClasses);
+        else
         this.orderDetail.items   = this.dataService.applyBundleProductsScheme(this.selectedItem,this.orderDetail,this.taxClasses);
+      }else{
+        this.orderDetail.items.forEach((item, index) => {
+          if (item.selectedScheme) {
+            if (item.selectedScheme.scheme_type === 'bundle_offer') {
+              this.orderDetail.items =  this.dataService.applyBundleProductsScheme(item, this.orderDetail, this.taxClasses);
+            }
+            if (item.selectedScheme.scheme_type === 'mix_match') {
+              debugger
+              this.orderDetail.items =   this.dataService.applyMixMatchProductsScheme(item, this.orderDetail, this.taxClasses);
+            }
+          }
+        });
       }
       
 
@@ -269,7 +284,22 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
       this.orderDetail.items     = this.dataService.updateOrderitemscalculation(this.orderDetail.items,this.orderDetail,this.taxClasses);
       if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
+        if(this.selectedItem.selectedScheme.scheme_type == 'mix_match')
+        this.orderDetail.items   = this.dataService.applyMixMatchProductsScheme(this.selectedItem,this.orderDetail,this.taxClasses);
+        else
         this.orderDetail.items   = this.dataService.applyBundleProductsScheme(product,this.orderDetail,this.taxClasses);
+      }else{
+        this.orderDetail.items.forEach((item, index) => {
+          if (item.selectedScheme) {
+            if (item.selectedScheme.scheme_type === 'bundle_offer') {
+              this.orderDetail.items =  this.dataService.applyBundleProductsScheme(item, this.orderDetail, this.taxClasses);
+            }
+            if (item.selectedScheme.scheme_type === 'mix_match') {
+              debugger
+              this.orderDetail.items =   this.dataService.applyMixMatchProductsScheme(item, this.orderDetail, this.taxClasses);
+            }
+          }
+        });
       }
       
 
@@ -284,7 +314,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       if( this.selectedRetailer.region_id && +this.selectedRetailer.region_id > 0 ){
         this.orderDetail.region_id  = this.selectedRetailer.region_id;
       } 
-      //debugger
 
       this.orderDetail.items       =  this.dataService.applySpecialDiscount(this.orderDetail,this.specialDiscounts,this.taxClasses);
       
@@ -480,7 +509,6 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       // this.selectedRetailer.region_id
       // product
       // this.specialDiscounts
-      // debugger
     return this.dataService.getSpecialDiscounts(
       this.selectedRetailer.segment_id,
       this.selectedRetailer.region_id,
@@ -554,6 +582,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   applyScheme(product: any): any {
+    product.selectedScheme.scheme_type
+    
     switch (product.selectedScheme.scheme_type) {
       case 'free_product':
         product   = this.dataService.applyFreeProductScheme(product);

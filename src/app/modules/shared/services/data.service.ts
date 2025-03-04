@@ -171,6 +171,7 @@ export class DataService {
       product.scheme_discount = 0;
       product.price = product.original_price;
       product.unit_price_after_scheme_discount = product.original_price;
+      
       this.schemeCannotApplied();
     }
     return product;
@@ -201,6 +202,7 @@ export class DataService {
       product.scheme_discount = 0;
       product.price = product.original_price;
       product.unit_price_after_scheme_discount = product.original_price;
+      
       this.schemeCannotApplied();
     }
     return product;
@@ -233,6 +235,7 @@ export class DataService {
         product.price                   =   product.original_price;
         product.scheme_free_items       =   null;
         product.unit_price_after_scheme_discount = product.original_price;
+        
         this.schemeCannotApplied();
     }
     return product;
@@ -374,6 +377,7 @@ export class DataService {
       product.price = product.original_price;
       product.unit_price_after_scheme_discount = product.original_price;
       product.scheme_discount = 0;
+      
       this.schemeCannotApplied();
     }
     return product;
@@ -396,6 +400,7 @@ export class DataService {
       product.price = product.original_price;
       product.unit_price_after_scheme_discount = product.original_price;
       product.scheme_discount = 0;
+      
       this.schemeCannotApplied();
     }
     return product;
@@ -995,7 +1000,7 @@ applyMixMatchDOTP(product: any,orderDetails:any): any {
           item.selectedScheme             =   product.selectedScheme;
           item.scheme_id                  =   product.selectedScheme.id;
           item.scheme_type                =   product.selectedScheme.scheme_type;
-          item.scheme_rule                =   product.selectedScheme.scheme_rule;
+          item.scheme_rule                =   product.selectedScheme.scheme_rule; 
           item.scheme_bundle_interval     =   interval;
           let schemeItemDiscount=   0;
           if(product.selectedScheme.discount_type == 1){
@@ -1018,11 +1023,10 @@ applyMixMatchDOTP(product: any,orderDetails:any): any {
   return JSON.parse(JSON.stringify(orderDetails.items));
 }
 applyMixMatchFixedProduct(product: any,orderDetails:any): any {
-  const interval  = this.getMixMatchOfferIntervalsAlgo(product,orderDetails); 
+  const interval            =   this.getMixMatchOfferIntervalsAlgo(product,orderDetails); 
   if(product.selectedScheme && product.selectedScheme.scheme_type == 'mix_match'){
-    const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
-    orderDetails.items      = orderDetails.items.map((item) => {
-      
+    const scheme_items      =   product.selectedScheme.items.map(x=> {return x.item_id});
+    orderDetails.items      =   orderDetails.items.map((item) => {
         if(scheme_items.includes(item.item_id)){
           item.scheme_bundle_interval     =   null;
           item.scheme_free_items          =   [];
@@ -1065,7 +1069,6 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
 
   // Filter order details to get only items that belong to the scheme
   let schemeItems = orderDetail.items.filter(x => scheme_items.includes(x.item_id));
-// debugger
   // Calculate the total stock quantity of scheme items in the order
   let totalStockQty = schemeItems.reduce((sum, item) => sum +  +item.stockQty, 0);
 
@@ -1197,10 +1200,11 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
       let loyalty_free_items:any  = orderDetails.loyalty_free_items; 
       
       orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items.filter(x=> (x && ( x.isSoftDelete  || +x.stockQty >0 || +x.scheme_id > 0 || +x.scheme_quantity_free > 0 || x.qtyAdded))))); 
-      orderDetails.items.map((item) => {
-        
+      
+      orderDetails.items.map((item) => {  
           //add for scheme offers
           if(typeof item.scheme_free_items !== 'undefined' && item.scheme_free_items !== null){
+            
             if(item.scheme_free_items.length > 0){
               
               item.scheme_free_items.forEach(x=>{
@@ -1209,6 +1213,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
                 let stockitem = allProducts.filter(y=> y.item_id == x.item_id ) ? allProducts.filter(y=> y.item_id == x.item_id )[0]:null;
                 
                 if(stockitem){
+                  
                   let schemeitem = { 
                                         parent_item_id      :   item.item_id,
                                         city_id             :   orderDetails.city_id,
@@ -1432,7 +1437,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
       orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items));
       orderDetails.schemeitems    = schemeitems;
       orderDetails.items          = orderDetails.items.map((item) => { 
-        
+        debugger
         item.schemeitems              = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === item.item_id) : null;
         item.loyaltyitems             = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === null && x.item_id === item.item_id) : null;
         item.scheme_quantity_free     = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.item_id === item.item_id).reduce((a: any, b: any) => +a + +b.quantity, 0):0;      

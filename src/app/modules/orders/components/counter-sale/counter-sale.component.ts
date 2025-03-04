@@ -729,8 +729,20 @@ export class CounterSaleComponent implements OnInit {
           this.selectedProducts   = this.dataService.applyMixMatchProductsScheme(product,this.selectedRetailer,this.taxClasses);
           else
           this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer,this.taxClasses);
+        }else{
+          debugger
+          this.selectedProducts.forEach((item, index) => {
+            if (item.selectedScheme) {
+              if (item.selectedScheme.scheme_type === 'bundle_offer') {
+                this.selectedProducts =  this.dataService.applyBundleProductsScheme(item, this.selectedRetailer, this.taxClasses);
+              }
+              if (item.selectedScheme.scheme_type === 'mix_match') {
+                debugger
+                this.selectedProducts =   this.dataService.applyMixMatchProductsScheme(item, this.selectedRetailer, this.taxClasses);
+              }
+            }
+          });
         }
-        
 
         //Apply slab on all products
         this.selectedProducts       =  this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs,this.selectedRetailer,this.taxClasses)   
@@ -842,7 +854,6 @@ export class CounterSaleComponent implements OnInit {
           this.selectedProductsIds.push(this.selectedProduct.item_id);
         }
       }
-      //debugger
       this.selectedProducts         = this.dataService.updateOrderitemscalculation(this.selectedProducts,this.selectedRetailer,this.taxClasses);
 
       if(this.selectedProduct.selectedScheme && (this.selectedProduct.selectedScheme.scheme_type == 'bundle_offer' || this.selectedProduct.selectedScheme.scheme_type == 'mix_match')){
@@ -851,6 +862,17 @@ export class CounterSaleComponent implements OnInit {
         this.selectedProducts       = this.dataService.applyMixMatchProductsScheme(this.selectedProduct,this.selectedRetailer,this.taxClasses);
         else
         this.selectedProducts       = this.dataService.applyBundleProductsScheme(this.selectedProduct,this.selectedRetailer,this.taxClasses);
+      }else{
+        this.selectedProducts.forEach((item, index) => {
+          if (item.selectedScheme) {
+            if (item.selectedScheme.scheme_type === 'bundle_offer') {
+              this.selectedProducts =  this.dataService.applyBundleProductsScheme(item, this.selectedRetailer, this.taxClasses);
+            }
+            if (item.selectedScheme.scheme_type === 'mix_match') {
+              this.selectedProducts =   this.dataService.applyMixMatchProductsScheme(item, this.selectedRetailer, this.taxClasses);
+            }
+          }
+        });
       }
       
       //apply slabs to all items 
@@ -920,9 +942,9 @@ export class CounterSaleComponent implements OnInit {
           const firstItemId     = [...other_items][0]; 
           // Find the firstItemId item in the updated selectedProducts and assign selectedScheme
           const firstItemIndex  = this.selectedProducts.findIndex(item => item.item_id === firstItemId);
-          // debugger
+
           if (firstItemIndex !== -1) {
-            // debugger
+
               this.selectedProducts[firstItemIndex] = { ...this.selectedProducts[firstItemIndex],selectedScheme: this.selectedProduct.selectedScheme};
               console.log('item_id bfore',product.item_id)
               product              = this.selectedProducts[firstItemIndex];
@@ -930,7 +952,7 @@ export class CounterSaleComponent implements OnInit {
           }
           
         }
-        // debugger
+
         this.selectedRetailer.items = this.selectedProducts;
         this.selectedProducts       = this.dataService.applyMixMatchProductsScheme(product,this.selectedRetailer,this.taxClasses);
       }
@@ -1041,8 +1063,6 @@ export class CounterSaleComponent implements OnInit {
     console.log(this.pre_discount);
     if(this.pre_discount && this.pre_discount.some(x=>x.item_id == product.item_id) && !product.extra_discount.endsWith(".")){
      let discountResult = this.pre_discount.find(x=>x.item_id == product.item_id);
-     console.log('pass_discount')
-     debugger
      if(discountResult.value > +product.extra_discount){
         pass_discount = true
      }
@@ -1156,7 +1176,6 @@ export class CounterSaleComponent implements OnInit {
   }
 
   applyScheme(product: any): any {
-    // debugger
     switch (product.selectedScheme.scheme_type) {
       case 'free_product':
         product   = this.dataService.applyFreeProductScheme(product);
@@ -1378,7 +1397,7 @@ export class CounterSaleComponent implements OnInit {
 
   setOrderItems(selectedEmployee: any): void {
     this.selectedProducts.forEach((product, index) => {
-      //debugger
+
 
       let free_qty            =   product.scheme_quantity_free ? +product.scheme_quantity_free : 0;
       let stockQty            =   +product.stockQty;
@@ -1480,7 +1499,6 @@ export class CounterSaleComponent implements OnInit {
         total_amount_after_tax: ttl_amnt_aftr_tax,
         total_discount: total_discount
       }; 
-      //debugger  
       this.order.items.push(item);
       if (index === this.selectedProducts.length - 1) {
         this.placeOrder();
@@ -1511,7 +1529,6 @@ export class CounterSaleComponent implements OnInit {
 
   placeOrder(): void {
     this.isOrdering = true;
-    // //debugger 
     this.ordersService.counterSaleOrder(this.order).subscribe(
       (res) => {
         this.isOrdering = false;

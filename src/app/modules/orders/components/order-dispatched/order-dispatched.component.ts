@@ -468,7 +468,6 @@ export class OrderDispatchedComponent implements OnInit {
             if (res.status === 200) {
               this.orderDetails = res.data;
               this.orderDetails.items = this.orderDetails.items.map((prod) => {
-                // debugger
                 const product                     =     this.inventory.find(x => x.item_id === prod.item_id);
                 prod.parent_quantity              =     JSON.parse(JSON.stringify(product.quantity));
                 prod.parent_unit_id               =     JSON.parse(JSON.stringify(product.parent_unit_id));
@@ -517,7 +516,7 @@ export class OrderDispatchedComponent implements OnInit {
                 prod.merchant_discount_pkr        =     JSON.parse(JSON.stringify(prod.merchant_discount_pkr));
                 prod.special_discount             =     JSON.parse(JSON.stringify(prod.special_discount));
                 prod.booker_discount              =     JSON.parse(JSON.stringify(prod.booker_discount));
-        //debugger
+        
                 
                 return prod;
               });
@@ -728,7 +727,7 @@ export class OrderDispatchedComponent implements OnInit {
       let gross_sale_amount   =   item.original_price * stockQty
       let finalQty            =   stockQty+free_qty;
 
-      let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
+      let ttl_scheme_discount =   item.scheme_id && (item.scheme_type == 'bundle_offer' || item.scheme_type == 'mix_match') ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
       let ttl_special_discount=   item.special_discount ? +stockQty * +item.special_discount:0;
       let ttl_extra_discount  =   +item.extra_discount_pkr ? +stockQty * +item.extra_discount : 0;
@@ -883,7 +882,7 @@ export class OrderDispatchedComponent implements OnInit {
       this.savingOrder = true;
       this.holdOrderParams.order_id       = this.orderDetails.id;
       this.holdOrderParams.assignment_id  = this.orderDetails.assignment_id;
-      // debugger
+      
       // return;
       this.orderService.holdOrder(this.holdOrderParams,1).subscribe(
         (res) => {
@@ -1061,7 +1060,6 @@ export class OrderDispatchedComponent implements OnInit {
     this.load.content      =  this.dispatchService.parseLoads(this.load.content,this.stockAllocation);
     //allocate extra Qty to first  load items
     
-    // //debugger 
     this.load.content = this.load.content.map((x) => {
       delete x.loadNumber;
       return x;
@@ -1180,7 +1178,6 @@ export class OrderDispatchedComponent implements OnInit {
         order,
         this.currentLoadContent
       );
-      //debugger
     });
     //It will return only where actual qty or issue qty should be greater than zero
      

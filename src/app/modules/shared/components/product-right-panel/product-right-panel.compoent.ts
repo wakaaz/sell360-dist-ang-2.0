@@ -104,7 +104,8 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   addProductToOrder(): void {
     
     if (
-      this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type !='bundle_offer' &&
+      this.selectedProduct.selectedScheme && this.selectedProduct.selectedScheme.scheme_type !='bundle_offer' && 
+      this.selectedProduct.selectedScheme.scheme_type !='mix_match' &&
       !this.selectedProduct.selectedScheme.applied
     ) {
       
@@ -182,8 +183,15 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
           case 'dotp':
             scheme.name = schemes.dotp;
             break;
+          case 'comp_product': 
+              product   = this.dataService.applyComplementaryScheme(product);  
+              break;
+          case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
+              break
+          case 'mix_match': //it will be applied on after item added to order details because it depends on multiple items
+              break;
           default:
-            scheme.name = schemes.gift;
+            scheme.name = schemes.gift; 
             break;
         }
         return scheme;
@@ -254,17 +262,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         1
       );
     } 
-    // let orderDetail:any  = this.selectedRetailer;
-    // orderDetail.items    =  this.orderedProducts;
-    // if(product.selectedScheme && product.selectedScheme.scheme_type == 'bundle_offer'){
-    //   orderDetail.items   = this.dataService.applyBundleProductsScheme(product,orderDetail);
-    // }
-    // //console.log("COUNT BFR=>"+orderDetail.items.length)
-    // orderDetail.items  = this.dataService.updateSchemeFreeProductItems(orderDetail,this.allProducts);
-    // //console.log("COUNT AFR=>"+orderDetail.items.length)
-    // //apply slabs to all items 
-    // orderDetail.items  = this.dataService.applySlabDiscountValuesToItems(orderDetail.items,this.discountSlabs)   
-    
+
 
     // Special Discount
     product = this.calculateProductSpecialDiscount(product);
@@ -317,6 +315,13 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       case 'dotp':
         product = this.applyDOTPScheme(product);
         break;
+      case 'comp_product': 
+          product   = this.dataService.applyComplementaryScheme(product);  
+          break;
+      case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
+          break
+      case 'mix_match': //it will be applied on after item added to order details because it depends on multiple items
+        break;
       default:
         product = this.applyGiftScheme(product);
         break;
@@ -334,12 +339,12 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   }
 
   applyGiftScheme(product: any): any {
+    
     return this.dataService.getSDForGift(product);
   }
 
-  checkBundleScheme(scheme:any):boolean{
+  checkBundleScheme(scheme:any,selectedProduct:any=null):boolean{
     
-    debugger
     let itemCount           =   0; 
     const scheme_items      =   scheme.items.map(x=> {return x.item_id});
     if(scheme.scheme_type == 'bundle_offer'){ 
@@ -355,8 +360,17 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       }   
     
     }
-    //console.log(false);
-    return false;
+    else if (scheme.scheme_type === 'mix_match') { 
+      const schemeItemsSet = new Set(scheme.items.map(x => x.item_id)); // Convert to Set for faster lookup
+      return this.orderedProducts?.some(x => 
+          selectedProduct.item_id !== x.item_id &&
+          schemeItemsSet.has(x.item_id) &&
+          x.selectedScheme
+      ) ?? false;
+    }  
+    else{
+      return false;
+    }
   }
 
 }

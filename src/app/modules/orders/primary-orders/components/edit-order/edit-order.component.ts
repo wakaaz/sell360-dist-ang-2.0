@@ -339,6 +339,13 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           case 'dotp':
             scheme.name = schemes.dotp;
             break;
+          case 'comp_product': 
+              product   = this.dataService.applyComplementaryScheme(product);  
+              break;
+          case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
+              break
+          case 'mix_match': //it will be applied on after item added to order details because it depends on multiple items
+              break;
           default:
             scheme.name = schemes.gift;
             break;

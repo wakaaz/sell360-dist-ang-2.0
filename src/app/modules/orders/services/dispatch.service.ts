@@ -125,7 +125,6 @@ export class OrderDispatchService {
                                                                                 return x;
                                                                             })    
                                     contentitems  = content.items.map(item => item.item_id);
-                                    ////debugger
                                 }else{
                                     content.items   =   content.items.filter(x=> (+x.actual_qty > 0)); 
                                     content.items   =   content.items.map(x=>{

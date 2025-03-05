@@ -1437,10 +1437,12 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
       orderDetails.items          = JSON.parse(JSON.stringify(orderDetails.items));
       orderDetails.schemeitems    = schemeitems;
       orderDetails.items          = orderDetails.items.map((item) => { 
-        debugger
+        
         item.schemeitems              = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === item.item_id) : null;
         item.loyaltyitems             = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.parent_item_id === null && x.item_id === item.item_id) : null;
         item.scheme_quantity_free     = orderDetails.schemeitems ? orderDetails.schemeitems.filter(x => x.item_id === item.item_id).reduce((a: any, b: any) => +a + +b.quantity, 0):0;      
+        item.item_id
+        
         let ttlQty                    = +item.stockQty + +item.scheme_quantity_free;
         let ttl_item_stock:number     = 0;
          
@@ -1496,6 +1498,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         });
       });
     }
+    
     return schemeitems;
   }
 

@@ -942,13 +942,9 @@ export class CounterSaleComponent implements OnInit {
           const firstItemId     = [...other_items][0]; 
           // Find the firstItemId item in the updated selectedProducts and assign selectedScheme
           const firstItemIndex  = this.selectedProducts.findIndex(item => item.item_id === firstItemId);
-
           if (firstItemIndex !== -1) {
-
               this.selectedProducts[firstItemIndex] = { ...this.selectedProducts[firstItemIndex],selectedScheme: this.selectedProduct.selectedScheme};
-              console.log('item_id bfore',product.item_id)
               product              = this.selectedProducts[firstItemIndex];
-              console.log('item_id after',product.item_id)
           }
           
         }

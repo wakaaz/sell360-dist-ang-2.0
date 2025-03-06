@@ -948,7 +948,6 @@ export class CounterSaleComponent implements OnInit {
           }
           
         }
-
         this.selectedRetailer.items = this.selectedProducts;
         this.selectedProducts       = this.dataService.applyMixMatchProductsScheme(product,this.selectedRetailer,this.taxClasses);
       }

@@ -185,9 +185,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
             const firstItemIndex  = this.orderDetail.items.findIndex(item => item.item_id === firstItemId);
             if (firstItemIndex !== -1) {
                 this.orderDetail.items[firstItemIndex] = { ...this.orderDetail.items[firstItemIndex],selectedScheme: this.selectedItem.selectedScheme};
-                let product              = this.orderDetail.items[firstItemIndex];
+                let product                 = this.orderDetail.items[firstItemIndex];
                 this.selectedRetailer.items = this.orderDetail.items;
-                this.orderDetail.items =   this.dataService.applyMixMatchProductsScheme(product, this.orderDetail, this.taxClasses);
+                this.orderDetail.items      =   this.dataService.applyMixMatchProductsScheme(product, this.orderDetail, this.taxClasses);
             }
             
           }
@@ -253,6 +253,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     // if (+product.stockQty > foundProd.current_load_allocated_qty) {
     //   product.stockQty = foundProd.current_load_allocated_qty;
     // }
+    
     this.orderDetail.orderType  = this.orderType;
     if (this.orderType === 'execution') {
       product.executed_qty  = product.executed_qty ? +product.executed_qty:0;
@@ -297,23 +298,20 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
 
        this.calculateProductDiscounts(product);
       
-  
-
 
       this.orderDetail.items     = this.dataService.updateOrderitemscalculation(this.orderDetail.items,this.orderDetail,this.taxClasses);
-      if(product.selectedScheme && (product.selectedScheme.scheme_type == 'bundle_offer'  || this.selectedItem.selectedScheme.scheme_type == 'mix_match')){
-        if(this.selectedItem.selectedScheme.scheme_type == 'mix_match')
-        this.orderDetail.items   = this.dataService.applyMixMatchProductsScheme(this.selectedItem,this.orderDetail,this.taxClasses);
+      if(product.selectedScheme && (product.selectedScheme.scheme_type == 'bundle_offer'  || product.selectedScheme.scheme_type == 'mix_match')){
+        if(product.selectedScheme.scheme_type == 'mix_match')
+        this.orderDetail.items   = this.dataService.applyMixMatchProductsScheme(product,this.orderDetail,this.taxClasses);
         else
         this.orderDetail.items   = this.dataService.applyBundleProductsScheme(product,this.orderDetail,this.taxClasses);
       }else{
-        this.orderDetail.items.forEach((item, index) => {
+        this.orderDetail.items.forEach((item, index) => { 
           if (item.selectedScheme) {
             if (item.selectedScheme.scheme_type === 'bundle_offer') {
               this.orderDetail.items =  this.dataService.applyBundleProductsScheme(item, this.orderDetail, this.taxClasses);
             }
             if (item.selectedScheme.scheme_type === 'mix_match') {
-              debugger
               this.orderDetail.items =   this.dataService.applyMixMatchProductsScheme(item, this.orderDetail, this.taxClasses);
             }
           }
@@ -348,6 +346,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
           (document.getElementById(product.item_id) as HTMLInputElement).focus();
         }
       },30); 
+      debugger
       if(this.orderDetail.FOCA_error){
         this.toastService.showToaster({
           title: 'Warning:',

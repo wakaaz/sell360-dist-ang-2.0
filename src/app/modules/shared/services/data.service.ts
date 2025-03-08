@@ -986,7 +986,7 @@ applyMixMatchProductsScheme(product: any,orderDetail:any,taxClasses:any): any {
 
 applyMixMatchDOTP(product: any,orderDetails:any): any {
   const interval  = this.getMixMatchOfferIntervalsAlgo(product,orderDetails);
-  
+
   if(product.selectedScheme && product.selectedScheme.scheme_type == 'mix_match'){
     const scheme_items      = product.selectedScheme.items.map(x=> {return x.item_id});
     const total_items       = scheme_items.length;
@@ -1024,6 +1024,7 @@ applyMixMatchDOTP(product: any,orderDetails:any): any {
 }
 applyMixMatchFixedProduct(product: any,orderDetails:any): any {
   const interval            =   this.getMixMatchOfferIntervalsAlgo(product,orderDetails); 
+
   if(product.selectedScheme && product.selectedScheme.scheme_type == 'mix_match'){
     const scheme_items      =   product.selectedScheme.items.map(x=> {return x.item_id});
     orderDetails.items      =   orderDetails.items.map((item) => {

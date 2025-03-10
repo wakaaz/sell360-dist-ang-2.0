@@ -1492,7 +1492,18 @@ export class CounterSaleComponent implements OnInit {
         tax_in_value: tax_in_value,
         total_tax_amount: total_tax_amount,
         total_amount_after_tax: ttl_amnt_aftr_tax,
-        total_discount: total_discount
+        total_discount: total_discount,
+        region_id:employee.region_id,
+        area_id:employee.area_id,
+        territory_id:employee.territory_id,
+        city_id:this.selectedRetailer.city_id,
+        locality_id:this.selectedRetailer.locality_id,
+        neighbourhood_id:this.selectedRetailer.neighbourhood_id,
+        segment_id:this.selectedRetailer.segment_id,
+        channel_id:this.selectedRetailer.retailer_type_id,
+        main_category_id: product.main_category_id,
+        sub_category_id : product.sub_category_id,
+        division_id: product.division_id,
       }; 
       this.order.items.push(item);
       if (index === this.selectedProducts.length - 1) {

@@ -1489,6 +1489,7 @@ export class CounterSaleComponent implements OnInit {
 
   placeOrder(): void {
     this.isOrdering = true;
+    // //debugger 
     this.ordersService.counterSaleOrder(this.order).subscribe(
       (res) => {
         this.isOrdering = false;

@@ -1222,6 +1222,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     this.savingOrder = true;
     this.orderDetails.load_id = this.loadId;
     this.orderDetails.catalogue_id = this.catalogue_id;
+    this.orderDetails.channel_id=this.selectedRetailer.retailer_type_id;
     this.orderDetails.processed_at = this.orderDate;
     this.orderDetails.processed_by = this.distributorId;
     this.orderDetails.sales_man_id = this.salemanId;

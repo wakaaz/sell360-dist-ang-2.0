@@ -21,6 +21,7 @@ export interface Payment {
     detail: Array<PaymentDetail>;
 }
 export interface CounterSale {
+    catalogue_id:any;
     employee_id: number; // Selected Employee
     retailer_id: number; // Selected Retailer
     within_radius: number;

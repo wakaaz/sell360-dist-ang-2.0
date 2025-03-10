@@ -180,7 +180,19 @@ export class ExecutionService {
         total_amount_after_tax: ttl_amnt_aftr_tax,
         total_discount: total_discount, 
         order_id: orderDetails.id,
+
+        
+      
+        city_id:selectedRetailer.city_id,
+        locality_id:orderDetails.booking_locality_id,
+        neighbourhood_id:orderDetails.booking_neighbourhood_id,
+        segment_id:orderDetails.segment_id,
+        channel_id:selectedRetailer.retailer_type_id,
+        main_category_id: item.main_category_id,
+        sub_category_id : item.sub_category_id
+        
       };
+      
       return orderItem;
     });
     return payLoadItems;

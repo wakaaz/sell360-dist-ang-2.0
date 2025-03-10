@@ -18,6 +18,7 @@ import { CounterSale, PaymentDetail } from '../../models/counter-sale.model';
 import { OrderItem } from '../../models/order-item.model';
 import { GeneralDataService } from '../../../shared/services';
 import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
+import { number } from 'echarts';
 
 @Component({
   selector: 'app-counter-sale',
@@ -62,7 +63,7 @@ export class CounterSaleComponent implements OnInit {
   totalAmountAfterScheme: number;
   totalRetailPrice: number;
   pre_discount:any;
-
+  catalogue_id=number;
   chequeNumber: string;
   paymentDate: string;
   paymentTypeCheque: string;
@@ -168,6 +169,7 @@ export class CounterSaleComponent implements OnInit {
         this.loadingProducts = false;
         if (res.status === 200) {
           this.allProducts = res.data.inventory.map((pr) => {
+            this.catalogue_id = pr.catalogue_id;
             pr.net_amount = 0.0;
             pr.isAdded = false;
             pr.qtyAdded = false;
@@ -1275,6 +1277,7 @@ export class CounterSaleComponent implements OnInit {
             (x) => x.employee_id === this.selectedEmployee
         );
         const newOrder: CounterSale = {
+            catalogue_id:this.catalogue_id,
             area_id: employee.area_id,
             assigned_route_id: this.selectedRoute,
             booking_territory: employee.territory_id,
@@ -1391,6 +1394,7 @@ export class CounterSaleComponent implements OnInit {
   }
 
   setOrderItems(selectedEmployee: any): void {
+    const employee = this.orderBookers.find( (x) => x.employee_id === this.selectedEmployee );
     this.selectedProducts.forEach((product, index) => {
 
 
@@ -1472,12 +1476,8 @@ export class CounterSaleComponent implements OnInit {
         campaign_id: product.selectedScheme?.id || 0,
         item_status: 1,
         reasoning: '',
-        area_id: selectedEmployee.area_id,
-        division_id: selectedEmployee.division_id,
         assigned_route_id: this.selectedRoute,
         booked_total_qty: 0, 
-        region_id: this.selectedRetailer.region_id,
-        territory_id: this.selectedRetailer.territory_id,
         quantity: finalQty,
         gross_sale_amount: gross_sale_amount,
         item_retail_price: product.item_retail_price,

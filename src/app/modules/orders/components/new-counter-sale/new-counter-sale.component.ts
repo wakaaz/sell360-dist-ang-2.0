@@ -615,6 +615,7 @@ export class NewCounterSaleComponent implements OnInit {
       //   (x) => x.employee_id === this.selectedEmployee
       // );
       const newOrder: CounterSale = {
+        catalogue_id:0,
         area_id: this.selectedEmployee.area_id,
         assigned_route_id: this.secondaryOrder.assignedRouteId,
         booked_order_value: 0,

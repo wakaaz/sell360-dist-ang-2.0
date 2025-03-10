@@ -63,7 +63,7 @@ export class CounterSaleComponent implements OnInit {
   totalAmountAfterScheme: number;
   totalRetailPrice: number;
   pre_discount:any;
-  catalogue_id=number;
+  catalogue_id:any=0;
   chequeNumber: string;
   paymentDate: string;
   paymentTypeCheque: string;

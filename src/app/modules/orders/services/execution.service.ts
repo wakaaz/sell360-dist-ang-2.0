@@ -189,7 +189,7 @@ export class ExecutionService {
         segment_id:orderDetails.segment_id,
         channel_id:selectedRetailer.retailer_type_id,
         main_category_id: item.main_category_id,
-        sub_category_id : item.sub_category_id
+        sub_category_id : item.sub_category_id 
         
       };
       

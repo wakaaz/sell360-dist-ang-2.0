@@ -346,7 +346,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
           (document.getElementById(product.item_id) as HTMLInputElement).focus();
         }
       },30); 
-      debugger
+      
       if(this.orderDetail.FOCA_error){
         this.toastService.showToaster({
           title: 'Warning:',

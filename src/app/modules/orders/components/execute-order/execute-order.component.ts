@@ -1257,6 +1257,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     if (this.cheque) {
       this.orderDetails.payment.detail.push(this.cheque);
     }
+    
     this.orderService.saveSpotSaleOrder(this.orderDetails).subscribe(
       (res) => {
         this.savingOrder = false;

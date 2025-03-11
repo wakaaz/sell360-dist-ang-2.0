@@ -374,7 +374,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       product.stockQty = product.quantity_returned;
       return;
     }
-    if (+product.stockQty > 1000) {
+    if (+product.stockQty > 1000) { 
       product.stockQty = product.quantity_returned;
     }
     product.gross_amount = -(product.item_trade_price * product.stockQty);

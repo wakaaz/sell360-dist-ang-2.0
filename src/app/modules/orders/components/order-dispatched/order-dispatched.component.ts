@@ -815,7 +815,7 @@ export class OrderDispatchedComponent implements OnInit {
         quantity: finalQty,
         gross_sale_amount: gross_sale_amount,
         item_retail_price: item.item_retail_price,
-        total_retail_price: item.item_retail_price * finalQty,
+        total_retail_price: item.item_retail_price * stockQty,
         tax_type: this.selectedRetailer.retailer_register == 1 ? 1:2,
         tax_class_id: item.tax_class_id,
         tax_applied_on: this.taxAppliedOn(item.tax_class_id),

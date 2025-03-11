@@ -165,7 +165,7 @@ export class ExecutionService {
         quantity: finalQty,
         gross_sale_amount: gross_sale_amount,
         item_retail_price: item.item_retail_price,
-        total_retail_price: item.item_retail_price * finalQty,
+        total_retail_price: item.item_retail_price * stockQty, 
         
         tax_type: orderDetails.retailer_register == 1 ? 1:2,
         tax_class_id: item.tax_class_id,

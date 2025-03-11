@@ -1481,7 +1481,7 @@ export class CounterSaleComponent implements OnInit {
         quantity: finalQty,
         gross_sale_amount: gross_sale_amount,
         item_retail_price: product.item_retail_price,
-        total_retail_price: product.item_retail_price * finalQty,
+        total_retail_price: product.item_retail_price * stockQty,
         tax_class_id: product.tax_class_id,
         tax_type: this.selectedRetailer.retailer_register == 1 ? 1:2,
         tax_applied_on: this.taxAppliedOn(product.tax_class_id),
@@ -1505,6 +1505,7 @@ export class CounterSaleComponent implements OnInit {
         sub_category_id : product.sub_category_id,
         division_id: product.division_id,
       }; 
+      
       this.order.items.push(item);
       if (index === this.selectedProducts.length - 1) {
         this.placeOrder();

@@ -11,7 +11,7 @@ export class ListComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   loading: boolean;
   distributors = [];
-
+  currentYear: number = new Date().getFullYear();
   constructor(
     private distributorService: DistributorService,
     private toastService: ToasterService

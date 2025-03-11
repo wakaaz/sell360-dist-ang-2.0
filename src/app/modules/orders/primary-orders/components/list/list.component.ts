@@ -15,6 +15,7 @@ import { PrimaryOrder } from '../../_models/order';
   styleUrls: ['./list.component.css'],
 })
 export class ListComponent {
+  currentYear: number = new Date().getFullYear();
   isReports = false;
   readonly PRIMARY_ORDER_CONST = PRIMARY_ORDER;
   readonly PRIMARY_ORDER_STATUS_UPDATE = PRIMARY_ORDER_API_STATUS_UPDATE;

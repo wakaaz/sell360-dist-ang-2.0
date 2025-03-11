@@ -15,7 +15,7 @@ export class StockOutReportComponent implements OnInit {
     start: null,
     end: null,
   }
-
+  currentYear: number = new Date().getFullYear();
   constructor(
     private storageService: LocalStorageService,
     private toastService: ToasterService,

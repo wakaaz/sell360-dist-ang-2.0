@@ -32,7 +32,7 @@ export class AppComponent implements OnInit {
   toastMessage: string;
   toastType: string;
   showToast: boolean;
-
+  currentYear: number = new Date().getFullYear();
   selectedSubMenu: {
     title: string;
     subMenu: Array<{ title: string; link: string; icon: string }>;

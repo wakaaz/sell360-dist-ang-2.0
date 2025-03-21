@@ -1295,7 +1295,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
                         newItem.stockQty= 0;
                         newItem.gross_sale_amount= 0;
                         newItem.total_retail_price= 0;
-                        newItem.tax_class_id=0;
+                        newItem.tax_class_id=newItem.tax_class_id;
                         newItem.tax_in_percentage= 0;
 
                         newItem.tax_type= null;
@@ -1409,7 +1409,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
                 newItem.stockQty= 0;
                 newItem.gross_sale_amount= 0;
                 newItem.total_retail_price= 0;
-                newItem.tax_class_id=0;
+                newItem.tax_class_id=newItem.tax_class_id;
                 newItem.tax_in_percentage= 0;
                 newItem.tax_type= null;
                 newItem.adv_inc_tax_in_percentage= null;

@@ -196,7 +196,7 @@
                   {{ item.updateLoading ? "" : "Update" }}
                 </button>
                 <button
-                  *ngIf="item.current_load_booked_qty > 0"
+                  *ngIf=" +item.current_load_booked_qty- +item.current_load_foc_qty > 0 "
                   type="button"
                   id="productlist01"
                   class="btn smBTN btn-line mb-0"
@@ -205,7 +205,7 @@
                   View Orders
                 </button>
                 <button
-                  *ngIf="item.current_load_booked_qty > 0"
+                  *ngIf=" +item.current_load_booked_qty- +item.current_load_foc_qty > 0 "
                   type="submit"
                   class="btn smBTN red-bg mb-0"
                   (click)="clearLoadItemAllocation(item)"

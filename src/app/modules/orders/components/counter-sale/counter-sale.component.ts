@@ -732,14 +732,14 @@ export class CounterSaleComponent implements OnInit {
           else
           this.selectedProducts   = this.dataService.applyBundleProductsScheme(product,this.selectedRetailer,this.taxClasses);
         }else{
-          debugger
+          
           this.selectedProducts.forEach((item, index) => {
             if (item.selectedScheme) {
               if (item.selectedScheme.scheme_type === 'bundle_offer') {
                 this.selectedProducts =  this.dataService.applyBundleProductsScheme(item, this.selectedRetailer, this.taxClasses);
               }
               if (item.selectedScheme.scheme_type === 'mix_match') {
-                debugger
+                
                 this.selectedProducts =   this.dataService.applyMixMatchProductsScheme(item, this.selectedRetailer, this.taxClasses);
               }
             }
@@ -1417,7 +1417,7 @@ export class CounterSaleComponent implements OnInit {
 
       if(this.selectedRetailer && product.tax_class_id > 0 && this.selectedRetailer.apply_retail_tax == 1){
 
-        let tax_applied_value =  this.taxAppliedOn(product.tax_class_id) == 'net_price' ? +(final_price/finalQty):+product.item_retail_price;
+        let tax_applied_value =  this.taxAppliedOn(product.tax_class_id) == 'net_price' ? +( final_price == 0 ? product.original_price:(final_price/finalQty) ):+product.item_retail_price;
 
         gst_tax               =  (this.getGstTaxAmount(product.tax_class_id)/ 100) * +tax_applied_value;
         adv_inc_tax           =  (this.getAdvIncTaxAmount(product.tax_class_id) / 100) * (+tax_applied_value + +gst_tax); 
@@ -1536,6 +1536,7 @@ export class CounterSaleComponent implements OnInit {
 
   placeOrder(): void {
     this.isOrdering = true;
+    console.log("placeOrder",this.order);
     this.ordersService.counterSaleOrder(this.order).subscribe(
       (res) => {
         this.isOrdering = false;

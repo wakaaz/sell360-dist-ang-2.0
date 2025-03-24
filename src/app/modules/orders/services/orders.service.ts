@@ -86,6 +86,8 @@ export class OrdersService {
   }
 
   counterSaleOrder(order: CounterSale): Observable<any> {
+    
+    console.log("counterSaleOrder",order); 
     const url = `${API_URLS.ADD_COUNTER_SALE}`;
     return this.baseService.post(url, order);
   }

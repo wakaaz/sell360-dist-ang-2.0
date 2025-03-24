@@ -54,8 +54,13 @@ export interface OrderItem {
   gross_sale_amount: number;
   total_retail_price: number;
   tax_class_id: number;
+  tax_type:number;
+  tax_applied_on:string;
   tax_in_percentage: number;
+  adv_inc_tax_in_percentage:number;
   tax_in_value: number;
+  gst_tax_amount:number;
+  adv_inc_tax_amount:number;
   total_tax_amount: number;
   total_amount_after_tax: number;
   total_discount: number;

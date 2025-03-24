@@ -10,6 +10,7 @@ import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { environment } from '../../../../environments/environment';
 import { ItemModel } from '../../inventory/model/distributor-purchase.model';
+import { debug } from 'console';
 
 @Injectable()
 export class DataService {
@@ -1309,6 +1310,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
                         newItem.total_discount=0;
                         newItem.isAdded=true;
                         ////
+                        
                         newItem = this.updateItemcalculation(newItem,orderDetails,taxClasses);
                         
                         orderDetails_items.push(newItem);
@@ -1782,15 +1784,13 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         let total_tax_amount    =   0;  
 
         if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
-          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 'net_price' ? +(final_price/finalQty):+item.item_retail_price;
-
+          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 'net_price' ? +( final_price == 0 ? item.original_price:(final_price/finalQty) ):+item.item_retail_price;
           gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value;
-
           adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value + +gst_tax); 
           tax_in_value          =   gst_tax + adv_inc_tax;                          
           total_tax_amount      =   tax_in_value*finalQty;
-            
         }
+        
         let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
 
 
@@ -1871,8 +1871,8 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
 
         if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
 
-          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 'net_price' ? +(final_price/finalQty): +item.item_retail_price;
-
+          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 'net_price' ? +( final_price == 0 ? item.original_price:(final_price/finalQty) ): +item.item_retail_price;
+          
           gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value;
           adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value+ +gst_tax); 
           tax_in_value          =   gst_tax + adv_inc_tax;                          

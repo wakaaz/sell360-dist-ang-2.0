@@ -10,7 +10,7 @@ import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { environment } from '../../../../environments/environment';
 import { ItemModel } from '../../inventory/model/distributor-purchase.model';
-import { debug } from 'console';
+
 
 @Injectable()
 export class DataService {
@@ -1425,7 +1425,6 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
                 ////
                 
                 newItem = this.updateItemcalculation(newItem,orderDetails,taxClasses);
-                
                 orderDetails_items.push(newItem); 
                 ////
               };
@@ -1469,6 +1468,9 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
           if(item.scheme_quantity_free < 1){
             item.scheme_quantity_free = 0;
           }
+        }
+        if(item.scheme_quantity_free > 0){
+          item = this.updateItemcalculation(item,orderDetails,taxClasses);
         }
         return item;
       })

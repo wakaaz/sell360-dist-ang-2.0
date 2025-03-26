@@ -1478,7 +1478,7 @@ export class CounterSaleComponent implements OnInit {
         reasoning: '',
         assigned_route_id: this.selectedRoute,
         booked_total_qty: 0, 
-        quantity: finalQty,
+        quantity: finalQty, 
         gross_sale_amount: gross_sale_amount,
         item_retail_price: product.item_retail_price,
         total_retail_price: product.item_retail_price * stockQty,

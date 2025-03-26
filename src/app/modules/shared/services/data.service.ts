@@ -1469,7 +1469,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
             item.scheme_quantity_free = 0;
           }
         }
-        if(item.scheme_quantity_free > 0){
+        if(item.finalQty = 0 ||item.scheme_quantity_free > 0){
           item = this.updateItemcalculation(item,orderDetails,taxClasses);
         }
         return item;

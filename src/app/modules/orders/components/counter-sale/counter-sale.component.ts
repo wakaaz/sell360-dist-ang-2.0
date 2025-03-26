@@ -899,6 +899,7 @@ export class CounterSaleComponent implements OnInit {
   }
 
   removeProductFromOrder(product: any): void {
+    
     if (this.isCreditAdded || this.isChequeAdded) {
       this.toastService.showToaster({
         title: 'Payment Error:',
@@ -968,6 +969,9 @@ export class CounterSaleComponent implements OnInit {
 
     //update Scheme Free Products to scheme Items
     this.selectedProducts       =  this.dataService.updateSchemeFreeProductItems(this.selectedRetailer,this.allProducts,this.taxClasses);
+
+    //if stock qty is zero then remove the product
+
     this.selectedRetailer.items = this.selectedProducts
     
     this.calculateTotalBill();

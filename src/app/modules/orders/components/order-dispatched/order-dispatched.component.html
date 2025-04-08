@@ -653,7 +653,7 @@
                           Product Name
                         </th>
                         <th
-                          colspan="2"
+                          colspan="3"
                           style="text-align: center"
                           *ngFor="
                             let number of finalLoad.load[0].content;
@@ -665,39 +665,48 @@
                         <th colspan="2" style="text-align: center">
                           Extra Issuance
                         </th>
-                        <th colspan="2" style="text-align: center">
+                        <th colspan="3" style="text-align: center">
                           Total Issuance
                         </th>
                       </tr>
                       <tr *ngIf="finalLoad.count == 3">
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
+                        <th>Weight</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                        <th>Weight</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                        <th>Weight</th>
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
-                        <th>CTN/Bundle</th>
-                        <th>Box/Piece</th>
-                        <th>CTN/Bundle</th>
-                        <th>Box/Piece</th>
+                        <th>Weight</th>
                       </tr>
                       <tr *ngIf="finalLoad.count == 2">
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
+                        <th>Weight</th>
+                        <th>CTN/Bundle</th>
+                        <th>Box/Piece</th>
+                        <th>Weight</th>
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
-                        <th>CTN/Bundle</th>
-                        <th>Box/Piece</th>
+                        <th>Weight</th>
                       </tr>
                       <tr *ngIf="finalLoad.count == 1">
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
+                        <th>Weight</th>
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
                         <th>CTN/Bundle</th>
                         <th>Box/Piece</th>
+                        <th>Weight</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -709,11 +718,14 @@
                         >
                           <td>{{ loadContent.parent_qty | number }}</td>
                           <td>{{ loadContent.child_qty }}</td>
+                          <td>{{ loadContent.total_weight }}</td>
                         </ng-container>
                         <td>{{ product.total_extra_primary_qty | number }}</td>
                         <td>{{ product.total_extra_secondary_qty | number }}</td>
                         <td>{{ product.total_primary_qty | number }}</td>
                         <td>{{ product.total_secondary_qty | number }}</td>
+                        <td> {{product.total_weight }}</td> 
+                       
                       </tr>
                     </tbody>
                   </table>
@@ -794,6 +806,10 @@
                         <span>{{
                           finalLoad.summary.issued_total_price | number: "1.2-2"
                         }}</span>
+                      </div>
+                      <div class="report_value" style="color: #0038ba">
+                        <strong>Total Weight:</strong>
+                        <span>{{finalLoad.summary.total_weight | number: "1.2-2"}}Kg</span>
                       </div>
                     </div>
                     <div style="padding: 10px 15px">

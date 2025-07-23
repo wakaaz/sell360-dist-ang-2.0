@@ -252,8 +252,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     // );
     // if (+product.stockQty > foundProd.current_load_allocated_qty) {
     //   product.stockQty = foundProd.current_load_allocated_qty;
-    // }
-    
+    // } 
     this.orderDetail.orderType  = this.orderType;
     if (this.orderType === 'execution') {
       product.executed_qty  = product.executed_qty ? +product.executed_qty:0;
@@ -320,7 +319,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       
 
       //Apply slab on all products
-      
+      console.log("this.orderDetail.items",this.orderDetail.items);
       this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs,this.orderDetail,this.taxClasses)   
 
       //update special discount

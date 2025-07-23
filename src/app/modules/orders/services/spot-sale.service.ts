@@ -10,6 +10,7 @@ export class SpotSaleService {
             employee_id: selectedEmployee.employee_id, // Selected Employee
             retailer_id: selectedRetailer.retailer_id, // Selected Retailer
             within_radius: 0,
+            apply_retail_tax: selectedRetailer.apply_retail_tax,
             status: '',
             status_code: 0,
             order_total: 0,

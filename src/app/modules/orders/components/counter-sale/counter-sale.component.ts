@@ -876,7 +876,7 @@ export class CounterSaleComponent implements OnInit {
           }
         });
       }
-      
+      console.log(" counter sale this.selectedRetailer",this.selectedRetailer);
       //apply slabs to all items 
       this.selectedProducts       =   this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs,this.selectedRetailer,this.taxClasses)   
       
@@ -1397,10 +1397,10 @@ export class CounterSaleComponent implements OnInit {
     return 0;
   }
 
-  setOrderItems(selectedEmployee: any): void {
+  setOrderItems(selectedEmployee: any): void { 
     const employee = this.orderBookers.find( (x) => x.employee_id === this.selectedEmployee );
     this.selectedProducts.forEach((product, index) => {
-
+    console.log("product",product);
 
       let free_qty            =   product.scheme_quantity_free ? +product.scheme_quantity_free : 0;
       let stockQty            =   +product.stockQty;

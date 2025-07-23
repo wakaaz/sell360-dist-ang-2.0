@@ -130,12 +130,11 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
       prod = this.dispProducts.find(
         (x) => x.item_id === this.selectedProduct.item_id
       );
-      prod.isAdded = true;
-
+      prod.isAdded = true; 
       
-
-      
-
+      console.log("selectedProduct",this.selectedProduct);
+      console.log("selectedProduct",this.selectedProduct);
+      console.log("selectedProduct",this.selectedProduct);
       this.productSelected.emit(
         JSON.parse(JSON.stringify(this.selectedProduct))
       );
@@ -146,6 +145,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   }
 
   closeQuantityModal(event: Event): void {
+    console.log("closeQuantityModal");
     if (
       this.showQuantityModal &&
       !(event.target as HTMLElement).classList.contains('dont-close-quantity')

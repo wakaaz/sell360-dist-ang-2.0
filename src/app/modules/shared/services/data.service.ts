@@ -588,7 +588,7 @@ export class DataService {
   }
 
   applySlabDiscountValuesToItems(items:any, slabs:any,retailer:any,taxClasses:any){
-    
+     
     items = items.map((item) => {
     
       /* App Scenarios In case of exclusiveOrder Access Right = 0:
@@ -1781,7 +1781,9 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         let total_discount      =   ttl_scheme_discount + ttl_trade_discount + ttl_special_discount + ttl_extra_discount + ttl_extra_discount + ttl_loyalty_discount;
         let final_price         =   gross_sale_amount - total_discount;                          
         let gst_tax             =   0;
-        let adv_inc_tax         =   0;                        
+        let gst_tax_temp        =   0;
+        let adv_inc_tax         =   0;
+        let adv_inc_tax_temp    =   0;
         let tax_in_value        =   0;                          
         let total_tax_amount    =   0;  
 
@@ -1837,7 +1839,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         return JSON.parse(JSON.stringify(item));
   }
   updateOrderitemscalculation(items,retailer:any,taxClasses:any):any{
-    items   =   items.map((item) => {
+    items   =   items.map((item) => { 
         if(+item.stockQty < 1){
           item.scheme_discount    = 0; 
           item.trade_discount     = 0; 
@@ -1870,17 +1872,40 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         let adv_inc_tax         =   0;                        
         let tax_in_value        =   0;                          
         let total_tax_amount    =   0;  
-
-        if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
-
-          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 'net_price' ? +( final_price == 0 ? item.original_price:(final_price/finalQty) ): +item.item_retail_price;
+        let adv_inc_tax_temp    =   0;
+        let gst_tax_temp        =   0;
+        let tax_applied_value   =   0;
+        console.log("item",item);
+        console.log("item.order_id",item.order_id);
+        console.log("retailer",retailer);
+        if(item.order_id && item.order_id > 0){
+          console.log('from data service inn');
+          tax_applied_value     = item.tax_applied_on == 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
+                                  item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
           
-          gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value;
-          adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value+ +gst_tax); 
+          console.log(item.tax_in_percentage, tax_applied_value);
+          console.log(item.stockQty);
+          gst_tax               = item.stockQty > 0 ? (item.tax_in_percentage/ 100) * +tax_applied_value : 0; 
+          adv_inc_tax           =   item.stockQty > 0 ? (item.adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0; 
           tax_in_value          =   gst_tax + adv_inc_tax;                          
-          total_tax_amount      =   tax_in_value*finalQty; 
-           
+          total_tax_amount      =   tax_in_value*finalQty;  
+          gst_tax_temp          =   gst_tax * item.stockQty;
+          adv_inc_tax_temp      =   adv_inc_tax * item.stockQty;
         }
+        else if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
+          console.log('from data service else');
+          tax_applied_value     = this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 
+                                  'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
+                                    item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
+          
+          gst_tax               =   item.stockQty > 0 ? (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value : 0; 
+          adv_inc_tax           =   item.stockQty > 0 ? (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value+ +gst_tax) : 0; 
+          tax_in_value          =   gst_tax + adv_inc_tax;                          
+          total_tax_amount      =   tax_in_value*finalQty;  
+          gst_tax_temp          =   gst_tax * item.stockQty;
+          adv_inc_tax_temp      =   adv_inc_tax * item.stockQty; 
+        }
+        
 
         // if(item.tax_class_id  > 0 && item.tax_class_amount){
         //   tax_in_value          =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
@@ -1911,10 +1936,15 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         item.trade_discount_pkr                   =   +item.trade_discount_pkr;
         item.special_discount                     =   +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
-        if(retailer){
-          item.tax_type                             =   retailer.retailer_register == 1 ? 1:2;
-          item.tax_in_percentage                    =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer);
-          item.adv_inc_tax_in_percentage            =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer);
+        if(item.order_id && item.order_id > 0){
+          item.tax_type                           =   item.tax_type;    
+          item.tax_in_percentage                  =   item.tax_in_percentage;
+          item.adv_inc_tax_in_percentage          =   item.adv_inc_tax_in_percentage;
+        }
+        else if(retailer){
+          item.tax_type                           =   retailer.retailer_register == 1 ? 1:2;
+          item.tax_in_percentage                  =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer);
+          item.adv_inc_tax_in_percentage          =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer);
         }
         item.gst_tax_amount                       =   +gst_tax;
         item.adv_inc_tax_amount                   =   +adv_inc_tax;
@@ -1925,6 +1955,8 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         item.total_tax_amount                     =   +total_tax_amount;
         item.total_amount_after_tax               =   +ttl_amnt_aftr_tax;
         item.total_discount                       =   +total_discount; 
+        item.gst_tax_amount_temp                  =   +gst_tax_temp;
+        item.adv_inc_tax_amount_temp              =   +adv_inc_tax_temp;
         // ////
         
         return item; 

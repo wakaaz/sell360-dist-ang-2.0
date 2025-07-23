@@ -76,18 +76,41 @@ export class ExecutionService {
       let adv_inc_tax         =   0;                        
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;  
-
-      if(orderDetails && item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){
+      let tax_applied_value   =   0;
+      if(item.order_id && item.order_id > 0){
+        console.log('from execution service inn');
+        tax_applied_value     = item.tax_applied_on == 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
+                                item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
+        
+        console.log(item.tax_in_percentage, tax_applied_value);
+        console.log(item.stockQty);
+        gst_tax               = item.stockQty > 0 ? (item.tax_in_percentage/ 100) * +tax_applied_value : 0; 
+        adv_inc_tax           =   item.stockQty > 0 ? (item.adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0; 
+        tax_in_value          =   gst_tax + adv_inc_tax;                          
+        total_tax_amount      =   tax_in_value*finalQty;   
+      }
+      else if(orderDetails && item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){
+        console.log('else');
+        tax_applied_value     = this.taxAppliedOn(taxClasses,item.tax_class_id,orderDetails) == 
+                                'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
+                                  item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
+        
+        gst_tax               =   item.stockQty > 0 ? (this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails)/ 100) * +tax_applied_value : 0; 
+        adv_inc_tax           =   item.stockQty > 0 ? (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails) / 100) * (+tax_applied_value+ +gst_tax) : 0; 
+        tax_in_value          =   gst_tax + adv_inc_tax;                          
+        total_tax_amount      =   tax_in_value*finalQty;  
+      }
+      // if(orderDetails && item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){
 
         
-        let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,orderDetails) == 'net_price' ? +(final_price/finalQty): +item.item_retail_price;
+      //   let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,orderDetails) == 'net_price' ? +(final_price/finalQty): +item.item_retail_price;
 
-        gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails)/ 100) * +tax_applied_value;
-        adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails) / 100) * (+tax_applied_value + +gst_tax); 
-        tax_in_value          =   gst_tax + adv_inc_tax;                          
-        total_tax_amount      =   tax_in_value*finalQty;
+      //   gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails)/ 100) * +tax_applied_value;
+      //   adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails) / 100) * (+tax_applied_value + +gst_tax); 
+      //   tax_in_value          =   gst_tax + adv_inc_tax;                          
+      //   total_tax_amount      =   tax_in_value*finalQty;
           
-      }
+      // }
       
       // if(item.tax_class_id  > 0 && item.tax_class_amount){
       //   tax_in_value          =   (item.tax_class_amount / 100) * +item.item_retail_price;                          
@@ -169,9 +192,9 @@ export class ExecutionService {
         
         tax_type: orderDetails.retailer_register == 1 ? 1:2,
         tax_class_id: item.tax_class_id,
-        tax_applied_on : this.taxAppliedOn(taxClasses,item.tax_class_id,orderDetails),
-        tax_in_percentage  :   this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails),
-        adv_inc_tax_in_percentage:   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails),
+        tax_applied_on : item.order_id && item.order_id > 0 ? item.tax_applied_on : this.taxAppliedOn(taxClasses,item.tax_class_id,orderDetails),
+        tax_in_percentage  :   item.order_id && item.order_id > 0 ? item.tax_in_percentage : this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails),
+        adv_inc_tax_in_percentage:   item.order_id && item.order_id > 0 ? item.adv_inc_tax_in_percentage : this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails),
         gst_tax_amount :gst_tax,
         adv_inc_tax_amount :adv_inc_tax, 
 

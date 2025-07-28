@@ -1405,7 +1405,14 @@ export class CounterSaleComponent implements OnInit {
       let free_qty            =   product.scheme_quantity_free ? +product.scheme_quantity_free : 0;
       let stockQty            =   +product.stockQty;
       let gross_sale_amount   =   product.original_price * stockQty
-      let finalQty            =   stockQty+free_qty;
+      let taxAppliedOn        =   this.taxAppliedOn(product.tax_class_id);
+      let finalQty            =   0;
+      if(taxAppliedOn == 'net_price'){
+        finalQty = stockQty;
+      }
+      else{
+        finalQty = stockQty+free_qty;
+      }
 
       let ttl_scheme_discount =   product.scheme_id && (product.scheme_type == 'bundle_offer' || product.scheme_type == 'mix_match') ? (+product.scheme_discount * +product.scheme_bundle_interval): +(stockQty * product.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * product.trade_discount_pkr;
@@ -1418,15 +1425,26 @@ export class CounterSaleComponent implements OnInit {
       let adv_inc_tax         =   0;                           
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;
+      let tax_applied_value   =   0;
+      // if(this.selectedRetailer && product.tax_class_id > 0 && this.selectedRetailer.apply_retail_tax == 1){
 
-      if(this.selectedRetailer && product.tax_class_id > 0 && this.selectedRetailer.apply_retail_tax == 1){
+      //   let tax_applied_value =  this.taxAppliedOn(product.tax_class_id) == 'net_price' ? +( final_price == 0 ? product.original_price:(final_price/finalQty) ):+product.item_retail_price;
 
-        let tax_applied_value =  this.taxAppliedOn(product.tax_class_id) == 'net_price' ? +( final_price == 0 ? product.original_price:(final_price/finalQty) ):+product.item_retail_price;
+      //   gst_tax               =  (this.getGstTaxAmount(product.tax_class_id)/ 100) * +tax_applied_value;
+      //   adv_inc_tax           =  (this.getAdvIncTaxAmount(product.tax_class_id) / 100) * (+tax_applied_value + +gst_tax); 
+      //   tax_in_value          =   gst_tax + adv_inc_tax;                          
+      //   total_tax_amount      =   tax_in_value*finalQty;  
+      // }
 
-        gst_tax               =  (this.getGstTaxAmount(product.tax_class_id)/ 100) * +tax_applied_value;
-        adv_inc_tax           =  (this.getAdvIncTaxAmount(product.tax_class_id) / 100) * (+tax_applied_value + +gst_tax); 
+     if(this.selectedRetailer && product.tax_class_id  > 0  && this.selectedRetailer.apply_retail_tax == 1){
+        console.log('from data service else');
+        tax_applied_value     = this.taxAppliedOn(product.tax_class_id) == 
+                                'net_price' ? +( product.unit_price_after_individual_discount == 0 ? 
+                                  product.original_price:(product.unit_price_after_individual_discount) ): +product.item_retail_price; 
+        gst_tax               =   finalQty > 0 ? (this.getGstTaxAmount(product.tax_class_id)/ 100) * +tax_applied_value : 0; 
+        adv_inc_tax           =   finalQty > 0 ? (this.getAdvIncTaxAmount(product.tax_class_id) / 100) * (+tax_applied_value+ +gst_tax) : 0; 
         tax_in_value          =   gst_tax + adv_inc_tax;                          
-        total_tax_amount      =   tax_in_value*finalQty;  
+        total_tax_amount      =   tax_in_value*finalQty;   
       }
 
       let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;

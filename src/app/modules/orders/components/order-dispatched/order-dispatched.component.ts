@@ -468,6 +468,7 @@ export class OrderDispatchedComponent implements OnInit {
             this.savingOrder = false;
             if (res.status === 200) {
               this.orderDetails = res.data;
+              console.log("orderDetails",this.orderDetails);
               this.orderDetails.items = this.orderDetails.items.map((prod) => {
                 const product                     =     this.inventory.find(x => x.item_id === prod.item_id);
                 prod.parent_quantity              =     JSON.parse(JSON.stringify(product.quantity));
@@ -512,19 +513,23 @@ export class OrderDispatchedComponent implements OnInit {
                 prod.special_discount             =     JSON.parse(JSON.stringify(prod.special_discount));
                 prod.booker_discount              =     JSON.parse(JSON.stringify(prod.booker_discount));
                 prod.item_retail_price            =     JSON.parse(JSON.stringify(prod.item_retail_price));
-
-
+ 
                 //recalculating gst_tax_amount and adv_inc_tax_amount of all items based on net_price and retail_price
                 if(prod.tax_applied_on == 'net_price'){
                     prod.gst_tax_amount               =   ((prod.unit_price_after_individual_discount/100)*prod.tax_in_percentage); 
                     prod.adv_inc_tax_amount           =   ((prod.adv_inc_tax_in_percentage) / 100) * (+prod.unit_price_after_individual_discount + +prod.gst_tax_amount);  
+                    prod.gst_tax_amount_temp          =   prod.stockQty * prod.gst_tax_amount;
+                    prod.adv_inc_tax_amount_temp      =   prod.stockQty * prod.adv_inc_tax_amount;
+                
                 }else{
                     prod.gst_tax_amount               =   ((prod.item_retail_price/100)*prod.tax_in_percentage);
-                    prod.adv_inc_tax_amount           =   ((prod.adv_inc_tax_in_percentage) / 100) * (+prod.item_retail_price + +prod.gst_tax_amount);   
-                }
-                prod.gst_tax_amount_temp              =   prod.stockQty * prod.gst_tax_amount;
-                prod.adv_inc_tax_amount_temp          =   prod.stockQty * prod.adv_inc_tax_amount;
-                
+                    prod.adv_inc_tax_amount           =   ((prod.adv_inc_tax_in_percentage) / 100) * (+prod.item_retail_price + +prod.gst_tax_amount);  
+                    var totalProdQty                  =    +prod.stockQty + +prod.scheme_quantity_free;
+                    prod.gst_tax_amount_temp          =   totalProdQty * prod.gst_tax_amount;
+                    prod.adv_inc_tax_amount_temp      =   totalProdQty * prod.adv_inc_tax_amount;
+                } 
+             
+       
                 return prod;
               });
               console.log("orderDetails.items",this.orderDetails.items)
@@ -733,7 +738,14 @@ export class OrderDispatchedComponent implements OnInit {
       let free_qty            =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
       let stockQty            =   +item.stockQty;
       let gross_sale_amount   =   item.original_price * stockQty
-      let finalQty            =   stockQty+free_qty;
+      let taxAppliedOn        =   this.taxAppliedOn(item.tax_class_id); 
+      let finalQty            =   0;
+      if(taxAppliedOn == 'net_price'){
+        finalQty = stockQty;
+      }
+      else{
+        finalQty = +stockQty + +free_qty;
+      }
 
       let ttl_scheme_discount =   item.scheme_id && (item.scheme_type == 'bundle_offer' || item.scheme_type == 'mix_match') ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
@@ -749,6 +761,8 @@ export class OrderDispatchedComponent implements OnInit {
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;
       let tax_applied_value   =   0; 
+      let tax_in_percentage   =   +item.tax_in_percentage;
+      let adv_inc_tax_in_percentage =   +item.adv_inc_tax_in_percentage;
       if(item.order_id && item.order_id > 0){
         console.log(' from order dispatched inn');
         tax_applied_value     = item.tax_applied_on == 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
@@ -756,10 +770,15 @@ export class OrderDispatchedComponent implements OnInit {
         
         console.log(item.tax_in_percentage, tax_applied_value);
         console.log(item.stockQty);
-        gst_tax               =   item.stockQty > 0 ? (item.tax_in_percentage/ 100) * +tax_applied_value : 0; 
-        adv_inc_tax           =   item.stockQty > 0 ? (item.adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0; 
-        tax_in_value          =   gst_tax + adv_inc_tax;                          
-        total_tax_amount      =   tax_in_value*finalQty;   
+        if(stockQty > 0 && item.tax_class_id > 0 && taxAppliedOn == 'net_price' && (item.scheme_quantity_free > 0 || item.booked_foc > 0)){  
+          tax_in_percentage         = this.getGstTaxAmount(item.tax_class_id);
+          adv_inc_tax_in_percentage = this.getAdvIncTaxAmount(item.tax_class_id); 
+          item.tax_in_percentage = tax_in_percentage;
+          item.adv_inc_tax_in_percentage = adv_inc_tax_in_percentage;
+        }
+        gst_tax               =   finalQty > 0 ? (tax_in_percentage/ 100) * +tax_applied_value : 0; 
+        adv_inc_tax           =   finalQty > 0 ? (adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0; 
+       
       }
       else if(this.selectedRetailer && item.tax_class_id  > 0  && this.selectedRetailer.apply_retail_tax == 1){
         console.log('else');
@@ -767,11 +786,11 @@ export class OrderDispatchedComponent implements OnInit {
                                 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
                                   item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
         
-        gst_tax               =   item.stockQty > 0 ? (this.getGstTaxAmount(item.tax_class_id)/ 100) * +tax_applied_value : 0; 
-        adv_inc_tax           =   item.stockQty > 0 ? (this.getAdvIncTaxAmount(item.tax_class_id) / 100) * (+tax_applied_value+ +gst_tax) : 0; 
-        tax_in_value          =   gst_tax + adv_inc_tax;                          
-        total_tax_amount      =   tax_in_value*finalQty;  
+        gst_tax               =   finalQty > 0 ? (this.getGstTaxAmount(item.tax_class_id)/ 100) * +tax_applied_value : 0; 
+        adv_inc_tax           =   finalQty > 0 ? (this.getAdvIncTaxAmount(item.tax_class_id) / 100) * (+tax_applied_value+ +gst_tax) : 0;  
       }
+      tax_in_value          =   gst_tax + adv_inc_tax;                          
+      total_tax_amount      =   tax_in_value*finalQty;  
       // if(this.selectedRetailer && item.tax_class_id > 0  && this.selectedRetailer.apply_retail_tax == 1){
 
       //   let tax_applied_value =  this.taxAppliedOn(item.tax_class_id) == 'net_price' ? +(item.unit_price_after_individual_discount):+item.item_retail_price; 
@@ -782,6 +801,7 @@ export class OrderDispatchedComponent implements OnInit {
       //   tax_in_value          =   gst_tax + adv_inc_tax;                          
       //   total_tax_amount      =   tax_in_value*finalQty;  
       // }
+      finalQty = +stockQty + +free_qty;
       let ttl_amnt_aftr_tax   =   final_price + total_tax_amount; 
       const orderItem = {
         id: item.id || 0,

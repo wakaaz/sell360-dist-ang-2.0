@@ -10,6 +10,7 @@ import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { environment } from '../../../../environments/environment';
 import { ItemModel } from '../../inventory/model/distributor-purchase.model';
+import { debug } from 'console';
 
 
 @Injectable()
@@ -903,6 +904,7 @@ export class DataService {
     return JSON.parse(JSON.stringify(orderDetails.items));
   }
   applyBundleFixedProduct(product: any,orderDetails:any): any {
+    
     //////
     const interval  = this.getBundleOfferIntervalsAlgo(product,orderDetails); 
     //////
@@ -986,6 +988,7 @@ applyMixMatchProductsScheme(product: any,orderDetail:any,taxClasses:any): any {
 }
 
 applyMixMatchDOTP(product: any,orderDetails:any): any {
+   
   const interval  = this.getMixMatchOfferIntervalsAlgo(product,orderDetails);
 
   if(product.selectedScheme && product.selectedScheme.scheme_type == 'mix_match'){
@@ -1093,12 +1096,14 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
    * 
    */ 
   applyComplementaryScheme(product: any): any {
-
+    console.log("applyComplementaryScheme",product);
     switch (product.selectedScheme.scheme_rule) {
       case 5:
+        console.log("applyComplementaryFixedProduct",product);
         product = this.applyComplementaryFixedProduct(product);
           break;
       case 6:
+        console.log("applyComplementaryEquelProduct",product);
         product = this.applyComplementaryEquelProduct(product);
         break;    
       default:
@@ -1111,7 +1116,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
 
 
   applyComplementaryFixedProduct(item: any): any {
-    item.scheme_free_items    =   [];
+    item.scheme_free_items    =   []; 
     if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
       let min_qty               =   item.selectedScheme.min_qty ? +item.selectedScheme.min_qty:0;
       let stockQty              =   item.stockQty ? +item.stockQty:0; 
@@ -1142,7 +1147,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
     return JSON.parse(JSON.stringify(item));
   }
   applyComplementaryEquelProduct(item: any): any {
-    item.scheme_free_items      =   [];
+    item.scheme_free_items      =   []; 
     if(item.selectedScheme && item.selectedScheme.min_qty <= item.stockQty){
       const freeQty             =   item.stockQty;
       item.selectedScheme       =   item.selectedScheme;
@@ -1192,8 +1197,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
 
   updateSchemeFreeProductItems(orderDetails:any,allProducts:any,taxClasses:any){
     ////
-
-    
+ 
     orderDetails.FOCA_error = null;
     if(orderDetails.items && orderDetails.items.length > 0){
       
@@ -1469,9 +1473,9 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
             item.scheme_quantity_free = 0;
           }
         }
-        if(item.finalQty = 0 ||item.scheme_quantity_free > 0){
+        // if(item.finalQty = 0 ||item.scheme_quantity_free > 0){
           item = this.updateItemcalculation(item,orderDetails,taxClasses);
-        }
+        // }
         return item;
       })
     }
@@ -1752,6 +1756,7 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
   */
   
   updateItemcalculation(item,retailer:any,taxClasses:any):any{
+  
         if(+item.stockQty < 1){
           item.scheme_discount    = 0; 
           item.trade_discount     = 0; 
@@ -1771,7 +1776,14 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         let free_qty            =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
         let stockQty            =   +item.stockQty;
         let gross_sale_amount   =   item.original_price * stockQty
-        let finalQty            =   stockQty+free_qty;
+        let taxAppliedOn        =   this.taxAppliedOn(taxClasses,item.tax_class_id,retailer);
+        let finalQty            =   0;
+        if(taxAppliedOn == 'net_price'){
+          finalQty = stockQty;
+        }
+        else{
+          finalQty = stockQty+free_qty;
+        }
 
         let ttl_scheme_discount =   item.scheme_id && (item.scheme_type == 'bundle_offer' || item.scheme_type == 'mix_match') ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
         let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
@@ -1786,14 +1798,52 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         let adv_inc_tax_temp    =   0;
         let tax_in_value        =   0;                          
         let total_tax_amount    =   0;  
-
-        if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
-          let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 'net_price' ? +( final_price == 0 ? item.original_price:(final_price/finalQty) ):+item.item_retail_price;
-          gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value;
-          adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value + +gst_tax); 
-          tax_in_value          =   gst_tax + adv_inc_tax;                          
-          total_tax_amount      =   tax_in_value*finalQty;
+        let tax_applied_value   =   0;
+        let tax_in_percentage   =   +item.tax_in_percentage;
+        let adv_inc_tax_in_percentage =   +item.adv_inc_tax_in_percentage;
+        if(item.order_id && item.order_id > 0){
+          console.log('from data service inn'); 
+          console.log(stockQty > 0 && item.tax_class_id > 0 && taxAppliedOn == 'net_price' && item.scheme_quantity_free > 0)
+          console.log(tax_in_percentage,adv_inc_tax_in_percentage)
+          tax_applied_value     = item.tax_applied_on == 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
+                                  item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
+          if(stockQty > 0 && item.tax_class_id > 0 && taxAppliedOn == 'net_price' && (item.scheme_quantity_free > 0 || item.booked_foc > 0)){
+            tax_in_percentage         = this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer);
+            adv_inc_tax_in_percentage = this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer); 
+            item.tax_in_percentage = tax_in_percentage;
+            item.adv_inc_tax_in_percentage = adv_inc_tax_in_percentage;
+          } 
+          gst_tax               =   finalQty > 0 ? (tax_in_percentage/ 100) * +tax_applied_value : 0; 
+          adv_inc_tax           =   finalQty > 0 ? (adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0; 
+    
         }
+        else if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
+          console.log('from data service else');
+          tax_applied_value     = this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 
+                                  'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
+                                    item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price; 
+          gst_tax               =   finalQty > 0  ? (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value : 0; 
+          adv_inc_tax           =   finalQty > 0 ? (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value+ +gst_tax) : 0;  
+        }
+        tax_in_value          =   gst_tax + adv_inc_tax;                          
+        total_tax_amount      =   tax_in_value*finalQty;  
+        gst_tax_temp          =   gst_tax * finalQty;
+        adv_inc_tax_temp      =   adv_inc_tax * finalQty; 
+        console.warn('item.name',item.item_name);
+        console.log('item',item);
+        console.log("gst_tax",gst_tax);
+        console.log("adv_inc_tax",adv_inc_tax);
+        console.log("tax_in_value",tax_in_value);
+        console.log("total_tax_amount",total_tax_amount);
+        console.log("gst_tax_temp",gst_tax_temp);
+        console.log("adv_inc_tax_temp",adv_inc_tax_temp);
+        // if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
+        //   let tax_applied_value =  this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 'net_price' ? +( final_price == 0 ? item.original_price:(final_price/finalQty) ):+item.item_retail_price;
+        //   gst_tax               =  (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value;
+        //   adv_inc_tax           =  (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value + +gst_tax); 
+        //   tax_in_value          =   gst_tax + adv_inc_tax;                          
+        //   total_tax_amount      =   tax_in_value*finalQty;
+        // }
         
         let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
 
@@ -1819,12 +1869,21 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         item.special_discount                     =   +item.special_discount;
         item.extra_discount                       =   +item.extra_discount;
 
-        if(retailer){
+        // if(retailer){
+        //   item.tax_type                           =   retailer.retailer_register == 1 ? 1:2;
+        //   item.tax_in_percentage                  =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer);
+        //   item.adv_inc_tax_in_percentage          =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer);
+        // }
+        if(item.order_id && item.order_id > 0){
+          item.tax_type                           =   item.tax_type;    
+          item.tax_in_percentage                  =   item.tax_in_percentage;
+          item.adv_inc_tax_in_percentage          =   item.adv_inc_tax_in_percentage;
+        }
+        else if(retailer){
           item.tax_type                           =   retailer.retailer_register == 1 ? 1:2;
           item.tax_in_percentage                  =   this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer);
           item.adv_inc_tax_in_percentage          =   this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer);
         }
-        
 
         item.gst_tax_amount                       =   +gst_tax;
         item.adv_inc_tax_amount                   =   +adv_inc_tax;
@@ -1835,10 +1894,13 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         item.total_tax_amount                     =   +total_tax_amount;
         item.total_amount_after_tax               =   +ttl_amnt_aftr_tax;
         item.total_discount                       =   +total_discount; 
+        item.gst_tax_amount_temp                  =   +gst_tax_temp;
+        item.adv_inc_tax_amount_temp              =   +adv_inc_tax_temp;
         // ////
         return JSON.parse(JSON.stringify(item));
   }
   updateOrderitemscalculation(items,retailer:any,taxClasses:any):any{
+    
     items   =   items.map((item) => { 
         if(+item.stockQty < 1){
           item.scheme_discount    = 0; 
@@ -1854,12 +1916,23 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         item.special_discount   = item.special_discount ? +item.special_discount : 0;
         item.extra_discount     = item.extra_discount ? +item.extra_discount : 0; 
         item.extra_discount_pkr = item.extra_discount_pkr ? +item.extra_discount_pkr : 0; 
+        let taxAppliedOn        =   this.taxAppliedOn(taxClasses,item.tax_class_id,retailer);
 
 
-        let free_qty            =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
-        let stockQty            =   +item.stockQty;
-        let gross_sale_amount   =   item.original_price * stockQty
-        let finalQty            =   stockQty+free_qty;
+        let free_qty                  =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
+        let stockQty                  =   +item.stockQty;
+        let gross_sale_amount         =   item.original_price * stockQty
+        let tax_in_percentage         =   +item.tax_in_percentage;
+        let adv_inc_tax_in_percentage =   +item.adv_inc_tax_in_percentage;
+        
+        let finalQty                  =   0;
+        if(taxAppliedOn == 'net_price'){
+          finalQty = stockQty;
+         
+        }
+        else{
+          finalQty = stockQty+free_qty;
+        }
 
         let ttl_scheme_discount =   item.scheme_id && (item.scheme_type == 'bundle_offer' || item.scheme_type == 'mix_match') ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
         let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
@@ -1875,36 +1948,46 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         let adv_inc_tax_temp    =   0;
         let gst_tax_temp        =   0;
         let tax_applied_value   =   0;
+      
         console.log("item",item);
         console.log("item.order_id",item.order_id);
         console.log("retailer",retailer);
         if(item.order_id && item.order_id > 0){
           console.log('from data service inn');
-          tax_applied_value     = item.tax_applied_on == 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
-                                  item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
-          
-          console.log(item.tax_in_percentage, tax_applied_value);
-          console.log(item.stockQty);
-          gst_tax               = item.stockQty > 0 ? (item.tax_in_percentage/ 100) * +tax_applied_value : 0; 
-          adv_inc_tax           =   item.stockQty > 0 ? (item.adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0; 
-          tax_in_value          =   gst_tax + adv_inc_tax;                          
-          total_tax_amount      =   tax_in_value*finalQty;  
-          gst_tax_temp          =   gst_tax * item.stockQty;
-          adv_inc_tax_temp      =   adv_inc_tax * item.stockQty;
+          tax_applied_value     =   item.tax_applied_on == 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
+                                    item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price; 
+          console.log(stockQty > 0 && item.tax_class_id > 0 && taxAppliedOn == 'net_price' && item.scheme_quantity_free > 0)
+          if(stockQty > 0 && item.tax_class_id > 0 && taxAppliedOn == 'net_price' && (item.scheme_quantity_free > 0 || item.booked_foc > 0)){
+            tax_in_percentage         = this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer);
+            adv_inc_tax_in_percentage = this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer); 
+            item.tax_in_percentage = tax_in_percentage;
+            item.adv_inc_tax_in_percentage = adv_inc_tax_in_percentage;
+          } 
+          gst_tax               =   finalQty > 0 ? (tax_in_percentage/ 100) * +tax_applied_value : 0; 
+          adv_inc_tax           =   finalQty > 0 ? (adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0;  
         }
         else if(retailer && item.tax_class_id  > 0  && retailer.apply_retail_tax == 1){
           console.log('from data service else');
-          tax_applied_value     = this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 
-                                  'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
-                                    item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
-          
-          gst_tax               =   item.stockQty > 0 ? (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value : 0; 
-          adv_inc_tax           =   item.stockQty > 0 ? (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value+ +gst_tax) : 0; 
-          tax_in_value          =   gst_tax + adv_inc_tax;                          
-          total_tax_amount      =   tax_in_value*finalQty;  
-          gst_tax_temp          =   gst_tax * item.stockQty;
-          adv_inc_tax_temp      =   adv_inc_tax * item.stockQty; 
+          tax_applied_value     =   this.taxAppliedOn(taxClasses,item.tax_class_id,retailer) == 
+                                    'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
+                                    item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price; 
+          gst_tax               =   finalQty > 0  ? (this.getGstTaxAmount(taxClasses,item.tax_class_id,retailer)/ 100) * +tax_applied_value : 0; 
+          adv_inc_tax           =   finalQty > 0 ? (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,retailer) / 100) * (+tax_applied_value+ +gst_tax) : 0;  
         }
+        tax_in_value            =   gst_tax + adv_inc_tax;                          
+        total_tax_amount        =   tax_in_value*finalQty;  
+        gst_tax_temp            =   gst_tax * finalQty;
+        adv_inc_tax_temp        =   adv_inc_tax * finalQty;
+        console.warn('item.name',item.item_name);
+        console.log(item);
+        console.log('finalQty',finalQty);
+        console.log('tax_applied_value',tax_applied_value);
+        console.log("gst_tax",gst_tax);
+        console.log("adv_inc_tax",adv_inc_tax);
+        console.log("tax_in_value",tax_in_value);
+        console.log("total_tax_amount",total_tax_amount);
+        console.log("gst_tax_temp",gst_tax_temp);
+        console.log("adv_inc_tax_temp",adv_inc_tax_temp);
         
 
         // if(item.tax_class_id  > 0 && item.tax_class_amount){
@@ -1912,8 +1995,8 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
         //   total_tax_amount      =   tax_in_value*finalQty;  
         // }
 
-        let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
-        
+        let ttl_amnt_aftr_tax   =   +final_price + +total_tax_amount;
+        console.log('ttl_amnt_aftr_tax',ttl_amnt_aftr_tax);
 
         
         item.unit_price_after_scheme_discount       =   +item.original_price - +item.scheme_discount;
@@ -2129,7 +2212,9 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
       let price:number = 0;
       if(items){ 
           items.forEach(item=>{
-              price = price +  +(item.gst_tax_amount ? +item.gst_tax_amount * +item.stockQty:0);
+             let finalProdQuantity = +item.stockQty + +item.scheme_quantity_free;
+             console.log('finalProdQuantity',finalProdQuantity);
+              price = price +  +(item.gst_tax_amount ? +item.gst_tax_amount * +finalProdQuantity:0);
             
           })
       }
@@ -2140,7 +2225,9 @@ getMixMatchOfferIntervalsAlgo(product: any, orderDetail: any): number {
     let price:number = 0;
     if(items){ 
         items.forEach(item=>{
-            price = price +  +(item.adv_inc_tax_amount ? (+item.adv_inc_tax_amount * +item.stockQty):0);
+            let finalProdQuantity = +item.stockQty + +item.scheme_quantity_free;
+            console.log('finalProdQuantity',finalProdQuantity);
+            price = price +  +(item.adv_inc_tax_amount ? (+item.adv_inc_tax_amount * +finalProdQuantity):0);
             
         })
     }

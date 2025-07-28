@@ -13,6 +13,7 @@ import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { PaymentDetail } from 'src/app/modules/orders/models/counter-sale.model';
 import { DataService } from '../../services';
+import { debug } from 'console';
 
 @Component({
   selector: 'app-order-items-list',
@@ -91,8 +92,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
      
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges): void { 
     if (changes.orderDetail && changes.orderDetail.currentValue?.items) {
+      console.log('yes ngOnChanges orderDetail');
       this.calculateTotalBill();
     }
     if (changes.newProduct?.currentValue) {
@@ -245,7 +247,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   setQuantity(product: any): void { 
-    
+    console.log('yes set quantity');
     //
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
@@ -294,7 +296,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
         product.isDeleted = false;
       }
       product.qtyAdded = true;
-
+     
        this.calculateProductDiscounts(product);
       
 

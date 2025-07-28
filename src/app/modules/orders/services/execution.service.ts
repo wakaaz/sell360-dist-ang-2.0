@@ -62,7 +62,14 @@ export class ExecutionService {
       let free_qty            =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
       let stockQty            =   +item.stockQty;
       let gross_sale_amount   =   item.original_price * stockQty
-      let finalQty            =   stockQty+free_qty;
+      let taxAppliedOn        =   this.taxAppliedOn(taxClasses,item.tax_class_id,orderDetails);   
+      let finalQty            =   0;
+      if(taxAppliedOn == 'net_price'){
+        finalQty = stockQty;
+      }
+      else{
+        finalQty = stockQty+free_qty;
+      }
 
       let ttl_scheme_discount =   item.scheme_id && item.scheme_type == 'bundle_offer' ? (+item.scheme_discount * +item.scheme_bundle_interval): +(stockQty * item.scheme_discount) ;
       let ttl_trade_discount  =   +stockQty * item.trade_discount_pkr;
@@ -77,6 +84,8 @@ export class ExecutionService {
       let tax_in_value        =   0;                          
       let total_tax_amount    =   0;  
       let tax_applied_value   =   0;
+      let tax_in_percentage   =   +item.tax_in_percentage;
+      let adv_inc_tax_in_percentage =   +item.adv_inc_tax_in_percentage;
       if(item.order_id && item.order_id > 0){
         console.log('from execution service inn');
         tax_applied_value     = item.tax_applied_on == 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
@@ -84,10 +93,12 @@ export class ExecutionService {
         
         console.log(item.tax_in_percentage, tax_applied_value);
         console.log(item.stockQty);
-        gst_tax               = item.stockQty > 0 ? (item.tax_in_percentage/ 100) * +tax_applied_value : 0; 
-        adv_inc_tax           =   item.stockQty > 0 ? (item.adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0; 
-        tax_in_value          =   gst_tax + adv_inc_tax;                          
-        total_tax_amount      =   tax_in_value*finalQty;   
+        if(stockQty > 0 && item.tax_class_id > 0 && taxAppliedOn == 'net_price' && (item.scheme_quantity_free > 0 || item.booked_foc > 0)){
+          tax_in_percentage         = this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails);
+          adv_inc_tax_in_percentage = this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails); 
+        }
+        gst_tax               =       finalQty > 0 ? (tax_in_percentage/ 100) * +tax_applied_value : 0; 
+        adv_inc_tax           =       finalQty > 0 ? (adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0;  
       }
       else if(orderDetails && item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){
         console.log('else');
@@ -95,11 +106,11 @@ export class ExecutionService {
                                 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
                                   item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
         
-        gst_tax               =   item.stockQty > 0 ? (this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails)/ 100) * +tax_applied_value : 0; 
-        adv_inc_tax           =   item.stockQty > 0 ? (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails) / 100) * (+tax_applied_value+ +gst_tax) : 0; 
-        tax_in_value          =   gst_tax + adv_inc_tax;                          
-        total_tax_amount      =   tax_in_value*finalQty;  
+        gst_tax               =   finalQty > 0 ? (this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails)/ 100) * +tax_applied_value : 0; 
+        adv_inc_tax           =   finalQty > 0 ? (this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails) / 100) * (+tax_applied_value+ +gst_tax) : 0;  
       }
+      tax_in_value          =   gst_tax + adv_inc_tax;                          
+      total_tax_amount      =   tax_in_value*finalQty;   
       // if(orderDetails && item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){
 
         
@@ -121,7 +132,7 @@ export class ExecutionService {
       let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
 
 
-      
+      finalQty = stockQty+free_qty;
 
       const orderItem = {
         quantity_returned:item.dispatch_qty - item.stockQty > -1 ? item.dispatch_qty - item.stockQty : 0,

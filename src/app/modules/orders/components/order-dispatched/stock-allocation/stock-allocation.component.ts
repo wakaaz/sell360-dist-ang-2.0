@@ -57,7 +57,7 @@ export class StockAllocationComponent implements OnInit {
     };
     this.assignmentId = this.route.snapshot.paramMap.get('assignId');
 
-    console.log('this.assignmentId ', this.assignmentId);
+    
   }
 
   onCheckAllocation() {

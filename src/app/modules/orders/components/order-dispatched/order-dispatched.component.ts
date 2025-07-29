@@ -467,8 +467,7 @@ export class OrderDispatchedComponent implements OnInit {
           (res) => {
             this.savingOrder = false;
             if (res.status === 200) {
-              this.orderDetails = res.data;
-              console.log("orderDetails",this.orderDetails);
+              this.orderDetails = res.data; 
               this.orderDetails.items = this.orderDetails.items.map((prod) => {
                 const product                     =     this.inventory.find(x => x.item_id === prod.item_id);
                 prod.parent_quantity              =     JSON.parse(JSON.stringify(product.quantity));
@@ -525,14 +524,14 @@ export class OrderDispatchedComponent implements OnInit {
                     prod.gst_tax_amount               =   ((prod.item_retail_price/100)*prod.tax_in_percentage);
                     prod.adv_inc_tax_amount           =   ((prod.adv_inc_tax_in_percentage) / 100) * (+prod.item_retail_price + +prod.gst_tax_amount);  
                     var totalProdQty                  =    +prod.stockQty + +prod.scheme_quantity_free;
+                  
                     prod.gst_tax_amount_temp          =   totalProdQty * prod.gst_tax_amount;
                     prod.adv_inc_tax_amount_temp      =   totalProdQty * prod.adv_inc_tax_amount;
                 } 
              
        
                 return prod;
-              });
-              console.log("orderDetails.items",this.orderDetails.items)
+              }); 
             }
           },
           (error) => {
@@ -732,8 +731,7 @@ export class OrderDispatchedComponent implements OnInit {
     }
     return 0;
   }
-  setOrderItems(): void { 
-    console.log("setOrderItems order dispatched",this.orderDetails.items);
+  setOrderItems(): void {  
     this.orderDetails.items   =   this.orderDetails.items.map((item) => {
       let free_qty            =   item.scheme_quantity_free ? +item.scheme_quantity_free : 0;
       let stockQty            =   +item.stockQty;
@@ -763,13 +761,10 @@ export class OrderDispatchedComponent implements OnInit {
       let tax_applied_value   =   0; 
       let tax_in_percentage   =   +item.tax_in_percentage;
       let adv_inc_tax_in_percentage =   +item.adv_inc_tax_in_percentage;
-      if(item.order_id && item.order_id > 0){
-        console.log(' from order dispatched inn');
+      if(item.order_id && item.order_id > 0){ 
         tax_applied_value     = item.tax_applied_on == 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
                                 item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
-        
-        console.log(item.tax_in_percentage, tax_applied_value);
-        console.log(item.stockQty);
+         
         if(stockQty > 0 && item.tax_class_id > 0 && taxAppliedOn == 'net_price' && (item.scheme_quantity_free > 0 || item.booked_foc > 0)){  
           tax_in_percentage         = this.getGstTaxAmount(item.tax_class_id);
           adv_inc_tax_in_percentage = this.getAdvIncTaxAmount(item.tax_class_id); 
@@ -781,7 +776,7 @@ export class OrderDispatchedComponent implements OnInit {
        
       }
       else if(this.selectedRetailer && item.tax_class_id  > 0  && this.selectedRetailer.apply_retail_tax == 1){
-        console.log('else');
+       
         tax_applied_value     = this.taxAppliedOn(item.tax_class_id) == 
                                 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
                                   item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
@@ -882,8 +877,7 @@ export class OrderDispatchedComponent implements OnInit {
         total_amount_after_tax: ttl_amnt_aftr_tax,
         total_discount: total_discount, 
         order_id: this.orderDetails.id,
-      };
-      console.log("orderItem",orderItem);
+      }; 
       return orderItem;
     });
     this.saveOrder();

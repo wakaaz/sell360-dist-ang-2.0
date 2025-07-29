@@ -875,8 +875,7 @@ export class CounterSaleComponent implements OnInit {
             }
           }
         });
-      }
-      console.log(" counter sale this.selectedRetailer",this.selectedRetailer);
+      } 
       //apply slabs to all items 
       this.selectedProducts       =   this.dataService.applySlabDiscountValuesToItems(this.selectedProducts,this.discountSlabs,this.selectedRetailer,this.taxClasses)   
       
@@ -1399,9 +1398,7 @@ export class CounterSaleComponent implements OnInit {
 
   setOrderItems(selectedEmployee: any): void { 
     const employee = this.orderBookers.find( (x) => x.employee_id === this.selectedEmployee );
-    this.selectedProducts.forEach((product, index) => {
-    console.log("product",product);
-
+    this.selectedProducts.forEach((product, index) => { 
       let free_qty            =   product.scheme_quantity_free ? +product.scheme_quantity_free : 0;
       let stockQty            =   +product.stockQty;
       let gross_sale_amount   =   product.original_price * stockQty
@@ -1436,8 +1433,7 @@ export class CounterSaleComponent implements OnInit {
       //   total_tax_amount      =   tax_in_value*finalQty;  
       // }
 
-     if(this.selectedRetailer && product.tax_class_id  > 0  && this.selectedRetailer.apply_retail_tax == 1){
-        console.log('from data service else');
+     if(this.selectedRetailer && product.tax_class_id  > 0  && this.selectedRetailer.apply_retail_tax == 1){ 
         tax_applied_value     = this.taxAppliedOn(product.tax_class_id) == 
                                 'net_price' ? +( product.unit_price_after_individual_discount == 0 ? 
                                   product.original_price:(product.unit_price_after_individual_discount) ): +product.item_retail_price; 
@@ -1557,8 +1553,7 @@ export class CounterSaleComponent implements OnInit {
   }
 
   placeOrder(): void {
-    this.isOrdering = true;
-    console.log("placeOrder",this.order);
+    this.isOrdering = true; 
     this.ordersService.counterSaleOrder(this.order).subscribe(
       (res) => {
         this.isOrdering = false;

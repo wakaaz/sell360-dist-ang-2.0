@@ -317,8 +317,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
               x.area_id            = this.selectedOrderBooker.area_id;
               x.territory_id       = this.selectedOrderBooker.territory_id;
              return x;
-            });
-            console.log("this.routeRetailers",this.routeRetailers);
+            }); 
           } 
           if (this.spotSaleOrder.retailers.length) {
             this.routeRetailers = this.routeRetailers.map((x) => {
@@ -551,8 +550,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   setOrderDetailItems(): void {
-    this.orderDetails.items = this.orderDetails.items.map((prod) => {
-      console.log("prod",prod);
+    this.orderDetails.items = this.orderDetails.items.map((prod) => { 
       const product = this.inventory.find((x) => x.item_id === prod.item_id);
       if (!product) return;
       prod.parent_trade_price = JSON.parse( JSON.stringify(product.parent_trade_price));
@@ -606,16 +604,21 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       prod.special_discount=JSON.parse(JSON.stringify(prod.special_discount));
       prod.booker_discount=JSON.parse(JSON.stringify(prod.booker_discount));
 
+      //recalculating gst_tax_amount and adv_inc_tax_amount of all items based on net_price and retail_price
       if(prod.tax_applied_on == 'net_price'){
         prod.gst_tax_amount               =   ((prod.unit_price_after_individual_discount/100)*prod.tax_in_percentage); 
         prod.adv_inc_tax_amount           =   ((prod.adv_inc_tax_in_percentage) / 100) * (+prod.unit_price_after_individual_discount + +prod.gst_tax_amount);  
+        prod.gst_tax_amount_temp          =   prod.stockQty * prod.gst_tax_amount;
+        prod.adv_inc_tax_amount_temp      =   prod.stockQty * prod.adv_inc_tax_amount;
+    
     }else{
         prod.gst_tax_amount               =   ((prod.item_retail_price/100)*prod.tax_in_percentage);
-        prod.adv_inc_tax_amount           =   ((prod.adv_inc_tax_in_percentage) / 100) * (+prod.item_retail_price + +prod.gst_tax_amount);   
-    }
-    prod.gst_tax_amount_temp              =   prod.stockQty * prod.gst_tax_amount;
-    prod.adv_inc_tax_amount_temp          =   prod.stockQty * prod.adv_inc_tax_amount;
-
+        prod.adv_inc_tax_amount           =   ((prod.adv_inc_tax_in_percentage) / 100) * (+prod.item_retail_price + +prod.gst_tax_amount);  
+        var totalProdQty                  =    +prod.stockQty + +prod.scheme_quantity_free;
+      
+        prod.gst_tax_amount_temp          =   totalProdQty * prod.gst_tax_amount;
+        prod.adv_inc_tax_amount_temp      =   totalProdQty * prod.adv_inc_tax_amount;
+    } 
       return prod;
     });
     this.orderDetails.items = this.orderDetails.items.filter((x) => x);
@@ -1132,8 +1135,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     this.orderDetails.total_amount_after_tax = this.dueAmount;
   }
 
-  saveExecutionQuantity(): void { 
-    console.log("saveExecutionQuantity",this.orderDetails);
+  saveExecutionQuantity(): void {  
     this.orderDetails.items = this.executionService.setOrderPayloadItems(
       this.orderDetails,
       this.selectedRetailer,

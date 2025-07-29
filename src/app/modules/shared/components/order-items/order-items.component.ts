@@ -93,8 +93,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
      
 
   ngOnChanges(changes: SimpleChanges): void { 
-    if (changes.orderDetail && changes.orderDetail.currentValue?.items) {
-      console.log('yes ngOnChanges orderDetail');
+    if (changes.orderDetail && changes.orderDetail.currentValue?.items) { 
       this.calculateTotalBill();
     }
     if (changes.newProduct?.currentValue) {
@@ -246,8 +245,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     }
   }
 
-  setQuantity(product: any): void { 
-    console.log('yes set quantity');
+  setQuantity(product: any): void {  
     //
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
@@ -321,7 +319,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       
 
       //Apply slab on all products
-      console.log("this.orderDetail.items",this.orderDetail.items);
+     
       this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs,this.orderDetail,this.taxClasses)   
 
       //update special discount
@@ -390,6 +388,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   setExtraDiscount(product: any): void {
+     
     if (product.stockQty) {
         product.booker_discount     = +product.extra_discount;
         product.booker_discount_pkr =  product.booker_discount;
@@ -441,13 +440,13 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     this.setExtraDiscount(product);
   }
 
-  applySpecialDiscountOnAllProducts(): void {
+  applySpecialDiscountOnAllProducts(): void { 
     if (
       this.merchantDiscount &&
       this.merchantDiscount.discount_filter === 'slab'
     ) {
       this.orderDetail.items = this.orderDetail.items.map((product) => {
-        product = this.calculateProductSpecialDiscount(product);
+        product = this.calculateProductSpecialDiscount(product); 
         if (product.extra_discount) {
           product.price =
             product.unit_price_after_special_discount - +product.extra_discount;
@@ -536,6 +535,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   calculateExtraDiscount(product: any): void {
+     
     if (+product.extra_discount < product.unit_price_after_special_discount) {
       product.price = product.unit_price_after_special_discount - +product.extra_discount;
       product.extra_discount_pkr = +product.stockQty * +product.extra_discount;
@@ -570,13 +570,12 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
      //maximum tw decimal positions
       product.extra_discount       =  +product.extra_discount;
   
-      product.extra_discount = +product.extra_discount.toFixed(2);
-      
+      product.extra_discount = +product.extra_discount.toFixed(2); 
       //Apply Loyal offer discount
       this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers,this.taxClasses); 
       //update Scheme Free Products to scheme Items
-      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses);
-      this.calculateTotalBill();
+      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses); 
+      this.calculateTotalBill(); 
       this.productUpdated.emit();
       setTimeout(()=>{       
         if(document.getElementById('extraDiscount-'+product.item_id)){

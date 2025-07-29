@@ -55,7 +55,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
   ngOnChanges(change: SimpleChanges): void {
     
     if (change.orderedProducts?.currentValue) {
-      console.log("orderedProducts=> "+this.orderedProducts.length)
+       
       this.allProducts = this.allProducts.map((x) => {
         const orderedProduct = this.orderedProducts.some((pr) => pr.item_id === x.item_id );
         // if (orderedProduct?.item_status == 0)
@@ -65,7 +65,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         return x;
       });
       this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
-      console.log("dispProducts => "+this.dispProducts.length)
+       
     }
     if (change.allProducts?.currentValue) {
       this.allProducts = this.allProducts.map((product) => {
@@ -131,10 +131,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         (x) => x.item_id === this.selectedProduct.item_id
       );
       prod.isAdded = true; 
-      
-      console.log("selectedProduct",this.selectedProduct);
-      console.log("selectedProduct",this.selectedProduct);
-      console.log("selectedProduct",this.selectedProduct);
+       
       this.productSelected.emit(
         JSON.parse(JSON.stringify(this.selectedProduct))
       );
@@ -144,8 +141,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
     }
   }
 
-  closeQuantityModal(event: Event): void {
-    console.log("closeQuantityModal");
+  closeQuantityModal(event: Event): void { 
     if (
       this.showQuantityModal &&
       !(event.target as HTMLElement).classList.contains('dont-close-quantity')
@@ -173,6 +169,7 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
 
   openQuantityModal(product: any): void {
     this.showQuantityModal = true;
+    console.log("openQuantityModal",product);
     if (product.schemes?.length) {
       product.schemes = product.schemes.map((scheme) => {
         switch (scheme.scheme_type) {

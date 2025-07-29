@@ -86,13 +86,9 @@ export class ExecutionService {
       let tax_applied_value   =   0;
       let tax_in_percentage   =   +item.tax_in_percentage;
       let adv_inc_tax_in_percentage =   +item.adv_inc_tax_in_percentage;
-      if(item.order_id && item.order_id > 0){
-        console.log('from execution service inn');
+      if(item.order_id && item.order_id > 0){ 
         tax_applied_value     = item.tax_applied_on == 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
-                                item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
-        
-        console.log(item.tax_in_percentage, tax_applied_value);
-        console.log(item.stockQty);
+                                item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price; 
         if(stockQty > 0 && item.tax_class_id > 0 && taxAppliedOn == 'net_price' && (item.scheme_quantity_free > 0 || item.booked_foc > 0)){
           tax_in_percentage         = this.getGstTaxAmount(taxClasses,item.tax_class_id,orderDetails);
           adv_inc_tax_in_percentage = this.getAdvIncTaxAmount(taxClasses,item.tax_class_id,orderDetails); 
@@ -100,8 +96,7 @@ export class ExecutionService {
         gst_tax               =       finalQty > 0 ? (tax_in_percentage/ 100) * +tax_applied_value : 0; 
         adv_inc_tax           =       finalQty > 0 ? (adv_inc_tax_in_percentage / 100) * (+tax_applied_value+ +gst_tax) : 0;  
       }
-      else if(orderDetails && item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){
-        console.log('else');
+      else if(orderDetails && item.tax_class_id  > 0  && orderDetails.apply_retail_tax == 1){ 
         tax_applied_value     = this.taxAppliedOn(taxClasses,item.tax_class_id,orderDetails) == 
                                 'net_price' ? +( item.unit_price_after_individual_discount == 0 ? 
                                   item.original_price:(item.unit_price_after_individual_discount) ): +item.item_retail_price;
@@ -128,9 +123,9 @@ export class ExecutionService {
       //   total_tax_amount      =   tax_in_value*finalQty;  
       // }
 
-
+       
       let ttl_amnt_aftr_tax   =   final_price + total_tax_amount;
-
+       
 
       finalQty = stockQty+free_qty;
 
@@ -214,9 +209,6 @@ export class ExecutionService {
         total_amount_after_tax: ttl_amnt_aftr_tax,
         total_discount: total_discount, 
         order_id: orderDetails.id,
-
-        
-      
         city_id:selectedRetailer.city_id,
         locality_id:orderDetails.booking_locality_id,
         neighbourhood_id:orderDetails.booking_neighbourhood_id,
@@ -225,8 +217,7 @@ export class ExecutionService {
         main_category_id: item.main_category_id,
         sub_category_id : item.sub_category_id 
         
-      };
-      
+      }; 
       return orderItem;
     });
     return payLoadItems;

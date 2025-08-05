@@ -1,6 +1,9 @@
 export const environment = {
   production: true,
-
+  // apiDomain: 'https://shahi-latest.sell360.app', 
+  // apiUrl: 'https://shahi-latest.sell360.app/distributor-api', 
+  // apiDomain: 'https://matco.sell360.app',
+  // apiUrl: 'https://matco.sell360.app/distributor-api',
   apiDomain: 'https://marketer.sell360.app',
   apiUrl: 'https://marketer.sell360.app/distributor-api',
   DISCOUNT_TYPES: {

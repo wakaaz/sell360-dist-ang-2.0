@@ -42,7 +42,7 @@ export class PurchaseHisotryComponent implements OnInit {
                 });
                 console.log('this.purchasesHistory :>> ', this.purchasesHistory);
                 setTimeout(() => {
-                    this.dtTrigger.next();
+                    this.dtTrigger.next(null);
                 }, 1);
             }
 

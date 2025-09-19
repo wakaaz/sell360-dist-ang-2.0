@@ -104,7 +104,7 @@ export class DistributorPurchaseComponent
   }
 
   ngAfterViewInit(): void {
-    this.dtTrigger.next();
+    this.dtTrigger.next(null);
   }
 
   getDistributorInventory(): void {
@@ -236,7 +236,7 @@ export class DistributorPurchaseComponent
     from(this.dtPurchasedProducts.dtInstance)
       .pipe(tap((dt) => dt.destroy()))
       .subscribe((fr) => {
-        this.dtTrigger.next();
+        this.dtTrigger.next(null);
         this.change.detectChanges();
       });
   }

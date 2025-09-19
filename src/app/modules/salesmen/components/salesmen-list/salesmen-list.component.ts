@@ -95,7 +95,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.salemenError = false;
                 this.store.dispatch(addSalemens(res.data));
                 setTimeout(() => {
-                    this.dtTrigger.next();
+                    this.dtTrigger.next(null);
                 }, 200);
             }
         }, error => {
@@ -257,7 +257,7 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
             from(this.dtSalesmen.dtInstance)
                 .pipe(tap(dt => dt.destroy()))
                 .subscribe(fr => {
-                    this.dtTrigger.next();
+                    this.dtTrigger.next(null);
                 });
         }
     }

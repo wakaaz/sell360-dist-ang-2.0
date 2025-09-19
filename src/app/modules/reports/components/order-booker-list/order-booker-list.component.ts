@@ -128,7 +128,7 @@ export class OrderBookerListComponent implements OnInit {
       this.orders = res;
       if (!this.isDtInitialized) {
         this.isDtInitialized = true
-        this.dtTrigger.next();
+        this.dtTrigger.next(null);
       }
       setTimeout(() => {
         this.loading = false;

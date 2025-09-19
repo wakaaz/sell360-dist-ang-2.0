@@ -87,7 +87,7 @@ export class CompletedOrdersDetailComponent implements OnInit {
         this.loadsheets = res;
         if (!this.isDtInitialized) {
           this.isDtInitialized = true;
-          this.dtTrigger.next();
+          this.dtTrigger.next(null);
         }
         this.loading = false;
       });

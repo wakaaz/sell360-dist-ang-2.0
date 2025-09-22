@@ -5,9 +5,13 @@ import { RetailerService } from './../../services/retailer.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
+
   selector: 'app-ledger',
   templateUrl: './ledger.component.html',
   styleUrls: ['./ledger.component.css'],
+  standalone: false
+
+
 })
 export class LedgerComponent implements OnInit {
   filter = {

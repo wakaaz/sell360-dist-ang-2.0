@@ -21,10 +21,14 @@ import { localStorageKeys } from 'src/app/core/constants/localstorage.constants'
 import { number } from 'echarts';
 
 @Component({
+
   selector: 'app-counter-sale',
   templateUrl: './counter-sale.component.html',
   styleUrls: ['./counter-sale.component.css'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 export class CounterSaleComponent implements OnInit {
   permissions: any;

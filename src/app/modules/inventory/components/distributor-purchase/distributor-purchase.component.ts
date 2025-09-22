@@ -22,9 +22,13 @@ import {
 import { InventoryService } from '../../services/inventory.service';
 
 @Component({
+
   selector: 'app-distributor-purchase',
   templateUrl: './distributor-purchase.component.html',
   styleUrls: ['./distributor-purchase.component.css'],
+  standalone: false
+
+
 })
 export class DistributorPurchaseComponent
   implements OnInit, AfterViewInit, OnDestroy

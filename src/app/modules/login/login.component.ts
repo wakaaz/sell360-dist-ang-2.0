@@ -8,9 +8,13 @@ import { GeneralDataService } from '../shared/services';
 import { LoginService } from './services/login.service';
 
 @Component({
+
   selector: 'app-login-component',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
+  standalone: false
+
+
 })
 export class LoginComponent implements OnInit {
   username: string;

@@ -9,8 +9,8 @@ import { OrdersService } from '../../services/orders.service';
   selector: 'app-order-detail-list',
   templateUrl: './orders-list-details.component.html',
   styleUrls: ['./orders-list-details.component.css'],
+  standalone: false,
 })
-
 export class OrdersListDetailsComponent implements OnInit {
   dtOptions: DataTables.Settings = {};
   showDetails: boolean;
@@ -23,63 +23,76 @@ export class OrdersListDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private ordersService: OrdersService,
-    private toastService: ToasterService,
-  ) {
-  }
+    private toastService: ToasterService
+  ) {}
 
   ngOnInit(): void {
     this.showDetails = false;
-    this.date = this.route.snapshot.params.date;
-    this.employeeId = this.route.snapshot.params.employeeId;
+    this.date = this.route.snapshot.params['date'];
+    this.employeeId = this.route.snapshot.params['employeeId'];
     this.dtOptions = {
-      pagingType: 'simple_numbers'
+      pagingType: 'simple_numbers',
     };
     this.getViewOrdersByEmployee();
   }
 
   getViewOrdersByEmployee(): void {
     this.loading = true;
-    this.ordersService.getViewOrdersByEmployee(this.employeeId, this.date.toString()).subscribe(res => {
-      this.loading = false;
-      if (res.status === 200) {
-        this.orders = res.data;
-      }
-    }, error => {
-      this.loading = false;
-      if (error.status !== 401 && error.status !== 1) {
-        this.toastService.showToaster({
-          title: 'Error:',
-          message: 'New Orders not fetched, try again later.',
-          type: 'error'
-        });
-      }
-      scrollTo(0, 0);
-    });
+    this.ordersService
+      .getViewOrdersByEmployee(this.employeeId, this.date.toString())
+      .subscribe(
+        (res) => {
+          this.loading = false;
+          if (res.status === 200) {
+            this.orders = res.data;
+          }
+        },
+        (error) => {
+          this.loading = false;
+          if (error.status !== 401 && error.status !== 1) {
+            this.toastService.showToaster({
+              title: 'Error:',
+              message: 'New Orders not fetched, try again later.',
+              type: 'error',
+            });
+          }
+          scrollTo(0, 0);
+        }
+      );
   }
 
   getViewOrderDetailById(id: number): void {
     this.loading = true;
-    this.ordersService.getViewOrderDetailById(id).subscribe(res => {
-      this.loading = false;
-      if (res.status === 200) {
-        this.orderDetail = res.data;
-        this.orderDetail.subTotal = this.orderDetail.order_detail.map(x => x.final_price).reduce((a, b) => a + b, 0);
-        this.orderDetail.totalDiscount = this.orderDetail.order_detail
-          .map(x => (x.original_price * x.quantity) - (x.unit_price_after_individual_discount * x.quantity))
-          .reduce((a, b) => a + b, 0);
-        this.showDetails = true;
+    this.ordersService.getViewOrderDetailById(id).subscribe(
+      (res) => {
+        this.loading = false;
+        if (res.status === 200) {
+          this.orderDetail = res.data;
+          this.orderDetail.subTotal = this.orderDetail.order_detail
+            .map((x) => x.final_price)
+            .reduce((a, b) => a + b, 0);
+          this.orderDetail.totalDiscount = this.orderDetail.order_detail
+            .map(
+              (x) =>
+                x.original_price * x.quantity -
+                x.unit_price_after_individual_discount * x.quantity
+            )
+            .reduce((a, b) => a + b, 0);
+          this.showDetails = true;
+        }
+      },
+      (error) => {
+        this.loading = false;
+        if (error.status !== 401 && error.status !== 1) {
+          this.toastService.showToaster({
+            title: 'Error:',
+            message: 'New Orders not fetched, try again later.',
+            type: 'error',
+          });
+        }
+        scrollTo(0, 0);
       }
-    }, error => {
-      this.loading = false;
-      if (error.status !== 401 && error.status !== 1) {
-        this.toastService.showToaster({
-          title: 'Error:',
-          message: 'New Orders not fetched, try again later.',
-          type: 'error'
-        });
-      }
-      scrollTo(0, 0);
-    });
+    );
   }
 
   openDetailsModal(orderId: number): void {
@@ -91,5 +104,4 @@ export class OrdersListDetailsComponent implements OnInit {
   closeDetailsModal(): void {
     document.body.classList.remove('no-scroll');
   }
-
 }

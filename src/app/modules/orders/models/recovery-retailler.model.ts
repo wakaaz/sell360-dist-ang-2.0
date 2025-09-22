@@ -103,9 +103,8 @@ export class RecoveryRetailer {
   public get added_to_current(): number {
     if (this._added_to_current > this.balance) {
       this._added_to_current = this.balance;
-    } else {
-      return this._added_to_current;
     }
+    return this._added_to_current;
   }
 
   public set added_to_current(v: number) {

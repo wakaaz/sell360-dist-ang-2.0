@@ -5,9 +5,13 @@ import { GeneralDataService } from '../../services/general-data.service';
 import { SecondaryOrder } from '../../../orders/primary-orders/_models/secondaryOrder.model';
 
 @Component({
+
   selector: 'app-order-content',
   templateUrl: './order-content.component.html',
   styleUrls: ['./order-content.component.css'],
+  standalone: false
+
+
 })
 export class OrderContentComponent implements OnInit {
   // @Input() order: SecondaryOrder;

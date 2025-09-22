@@ -6,10 +6,14 @@ import { RetailerService } from '../../services/retailer.service';
 import { Router } from '@angular/router';
 
 @Component({
+
     selector: 'app-opening-balance',
     templateUrl: './opening-balance.component.html',
     styleUrls: ['./opening-balance.component.css'],
     encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 
 export class OpeningBalanceComponent implements OnInit {

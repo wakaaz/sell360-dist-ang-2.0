@@ -19,8 +19,9 @@ import { debug } from 'console';
   selector: 'app-order-items-list',
   templateUrl: 'order-items.component.html',
   styleUrls: ['./order-items.component.css'],
+  standalone: false,
 })
-export class OrderItemsListComponent implements OnInit, OnChanges{
+export class OrderItemsListComponent implements OnInit, OnChanges {
   @Input() stockAllocation: any;
   @Input() orderType: string;
   @Input() returnAmount: number;
@@ -37,10 +38,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   @Input() orderDetail: any;
   @Input() selectedRetailer: any;
   @Input() merchantDiscount: any;
-  @Input() discountSlabs: any; 
-  @Input() taxClasses: any; 
+  @Input() discountSlabs: any;
+  @Input() taxClasses: any;
   @Input() schemes: any;
-  @Input() loyaltyoffers:Array<any>;
+  @Input() loyaltyoffers: Array<any>;
   @Input() newProduct: any;
   @Input() returnedProduct: any;
   @Input() specialDiscounts: Array<any>;
@@ -56,14 +57,14 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   totalloyaltyDiscount: number;
   totalSpecialDiscount: number;
   totalMerchantDiscount: number;
-  totalRetailPrice:number;
+  totalRetailPrice: number;
   selectedProductQuantities: number;
   selecteddeleteSchemes: any;
   totalTax: number;
   gst_tax: number;
   adv_inc_tax: number;
-  item_id : string;
-  pre_discount:any;
+  item_id: string;
+  pre_discount: any;
 
   selectedItem: any;
   permissions: any;
@@ -73,7 +74,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   @Output() saveCurrentOrder: EventEmitter<any> = new EventEmitter();
   @Output() cancelCurrentOrder: EventEmitter<any> = new EventEmitter();
   @Output() deleteReturned: EventEmitter<any> = new EventEmitter();
-  @Output() productUpdated: EventEmitter<boolean> = new EventEmitter(); 
+  @Output() productUpdated: EventEmitter<boolean> = new EventEmitter();
 
   constructor(
     private toastService: ToasterService,
@@ -87,20 +88,19 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   ngOnInit(): void {
-    this.orderDetail.orderType  = this.orderType;
+    this.orderDetail.orderType = this.orderType;
     this.showProducts = false;
   }
-     
 
-  ngOnChanges(changes: SimpleChanges): void { 
-    if (changes.orderDetail && changes.orderDetail.currentValue?.items) { 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['orderDetail'] && changes['orderDetail'].currentValue?.items) {
       this.calculateTotalBill();
     }
-    if (changes.newProduct?.currentValue) {
+    if (changes['newProduct']?.currentValue) {
       this.orderDetail.items.push(this.newProduct);
       this.setQuantity(this.newProduct);
     }
-    if (changes.savingOrder?.currentValue) {
+    if (changes['savingOrder']?.currentValue) {
       this.resetValues();
     }
   }
@@ -113,10 +113,10 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     this.grossAmount = 0;
     this.totalBookerDiscount = 0;
     this.totalSchemeDiscount = 0;
-    this.totalloyaltyDiscount=0;
+    this.totalloyaltyDiscount = 0;
     this.totalSpecialDiscount = 0;
     this.totalMerchantDiscount = 0;
-    this.totalRetailPrice=0;
+    this.totalRetailPrice = 0;
     this.selectedProductQuantities = 0;
     this.selecteddeleteSchemes = null;
     this.pre_discount = [];
@@ -151,92 +151,149 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
   }
-  confirmDelete(selecteditem:any): void{
-    this.selecteddeleteSchemes =  this.orderDetail.scheme_items ? JSON.parse(JSON.stringify(this.orderDetail.scheme_items?.filter(x=>(x.item_id == selecteditem.item_id)))) : null;
-    this.selectedItem          =  selecteditem;
+  confirmDelete(selecteditem: any): void {
+    this.selecteddeleteSchemes = this.orderDetail.scheme_items
+      ? JSON.parse(
+          JSON.stringify(
+            this.orderDetail.scheme_items?.filter(
+              (x) => x.item_id == selecteditem.item_id
+            )
+          )
+        )
+      : null;
+    this.selectedItem = selecteditem;
   }
 
-  deleteProduct(deleteType:number=null): void {
+  deleteProduct(deleteType: number = null): void {
     if (this.selectedItem.productType === 'returned') {
       this.deleteReturned.emit(this.selectedItem);
-    } 
-    else 
-    {
+    } else {
       //remove appliedn scheme except loyality scheme
-      if(deleteType && deleteType == 1){
-        this.orderDetail.items = this.dataService.deleteSchemeformItems(this.selectedItem,this.orderDetail.items,this.selecteddeleteSchemes);
+      if (deleteType && deleteType == 1) {
+        this.orderDetail.items = this.dataService.deleteSchemeformItems(
+          this.selectedItem,
+          this.orderDetail.items,
+          this.selecteddeleteSchemes
+        );
       }
       if (this.selectedItem.id) {
         this.selectedItem.stockQty = 0;
         this.selectedItem.trade_discount = 0;
         this.selectedItem.merchant_discount = 0;
-        this.selectedItem.trade_discount_pkr = 0; 
+        this.selectedItem.trade_discount_pkr = 0;
         this.selectedItem.merchant_discount_pkr = 0;
-        this.setQuantity(this.selectedItem); 
+        this.setQuantity(this.selectedItem);
         this.selectedItem.isDeleted = true;
-      } 
-      else {
-
-        if(this.selectedItem.selectedScheme.scheme_type == 'mix_match'){
-          if(this.selectedItem.selectedScheme){
-            const selectedScheme  = this.selectedItem.selectedScheme;
-            const other_items     = new Set( this.selectedItem.selectedScheme.items.filter(x => x.item_id != this.selectedItem.item_id) .map(x => x.item_id));
-            const firstItemId     = [...other_items][0]; 
+      } else {
+        if (this.selectedItem.selectedScheme.scheme_type == 'mix_match') {
+          if (this.selectedItem.selectedScheme) {
+            const selectedScheme = this.selectedItem.selectedScheme;
+            const other_items = new Set(
+              this.selectedItem.selectedScheme.items
+                .filter((x) => x.item_id != this.selectedItem.item_id)
+                .map((x) => x.item_id)
+            );
+            const firstItemId = [...other_items][0];
             // Find the firstItemId item in the updated selectedProducts and assign selectedScheme
-            const firstItemIndex  = this.orderDetail.items.findIndex(item => item.item_id === firstItemId);
+            const firstItemIndex = this.orderDetail.items.findIndex(
+              (item) => item.item_id === firstItemId
+            );
             if (firstItemIndex !== -1) {
-                this.orderDetail.items[firstItemIndex] = { ...this.orderDetail.items[firstItemIndex],selectedScheme: this.selectedItem.selectedScheme};
-                let product                 = this.orderDetail.items[firstItemIndex];
-                this.selectedRetailer.items = this.orderDetail.items;
-                this.orderDetail.items      =   this.dataService.applyMixMatchProductsScheme(product, this.orderDetail, this.taxClasses);
+              this.orderDetail.items[firstItemIndex] = {
+                ...this.orderDetail.items[firstItemIndex],
+                selectedScheme: this.selectedItem.selectedScheme,
+              };
+              let product = this.orderDetail.items[firstItemIndex];
+              this.selectedRetailer.items = this.orderDetail.items;
+              this.orderDetail.items =
+                this.dataService.applyMixMatchProductsScheme(
+                  product,
+                  this.orderDetail,
+                  this.taxClasses
+                );
             }
-            
           }
         }
-
 
         this.orderDetail.items = this.orderDetail.items.filter(
           (x) => x.item_id !== this.selectedItem.item_id
         );
 
-        this.orderDetail.items = this.dataService.updateOrderitemscalculation(this.orderDetail.items,this.orderDetail,this.taxClasses);
-      if(this.selectedItem.selectedScheme && (this.selectedItem.selectedScheme.scheme_type == 'bundle_offer' || this.selectedItem.selectedScheme.scheme_type == 'mix_match')){
-        if(this.selectedItem.selectedScheme.scheme_type == 'mix_match')
-        this.orderDetail.items   = this.dataService.applyMixMatchProductsScheme(this.selectedItem,this.orderDetail,this.taxClasses);
-        else
-        this.orderDetail.items   = this.dataService.applyBundleProductsScheme(this.selectedItem,this.orderDetail,this.taxClasses);
-      }else{
-        this.orderDetail.items.forEach((item, index) => {
-          if (item.selectedScheme) {
-            if (item.selectedScheme.scheme_type === 'bundle_offer') {
-              this.orderDetail.items =  this.dataService.applyBundleProductsScheme(item, this.orderDetail, this.taxClasses);
+        this.orderDetail.items = this.dataService.updateOrderitemscalculation(
+          this.orderDetail.items,
+          this.orderDetail,
+          this.taxClasses
+        );
+        if (
+          this.selectedItem.selectedScheme &&
+          (this.selectedItem.selectedScheme.scheme_type == 'bundle_offer' ||
+            this.selectedItem.selectedScheme.scheme_type == 'mix_match')
+        ) {
+          if (this.selectedItem.selectedScheme.scheme_type == 'mix_match')
+            this.orderDetail.items =
+              this.dataService.applyMixMatchProductsScheme(
+                this.selectedItem,
+                this.orderDetail,
+                this.taxClasses
+              );
+          else
+            this.orderDetail.items = this.dataService.applyBundleProductsScheme(
+              this.selectedItem,
+              this.orderDetail,
+              this.taxClasses
+            );
+        } else {
+          this.orderDetail.items.forEach((item, index) => {
+            if (item.selectedScheme) {
+              if (item.selectedScheme.scheme_type === 'bundle_offer') {
+                this.orderDetail.items =
+                  this.dataService.applyBundleProductsScheme(
+                    item,
+                    this.orderDetail,
+                    this.taxClasses
+                  );
+              }
+              if (item.selectedScheme.scheme_type === 'mix_match') {
+                this.orderDetail.items =
+                  this.dataService.applyMixMatchProductsScheme(
+                    item,
+                    this.orderDetail,
+                    this.taxClasses
+                  );
+              }
             }
-            if (item.selectedScheme.scheme_type === 'mix_match') {
-              this.orderDetail.items =   this.dataService.applyMixMatchProductsScheme(item, this.orderDetail, this.taxClasses);
-            }
-          }
-        });
-      }
-      
+          });
+        }
 
-      //Apply slab on all products
-      
-      this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs,this.orderDetail,this.taxClasses)   
+        //Apply slab on all products
 
-      //Apply Loyal offer discount
-      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers,this.taxClasses); 
-      
-      //update Scheme Free Products to scheme Items
-      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses);
-      
+        this.orderDetail.items =
+          this.dataService.applySlabDiscountValuesToItems(
+            this.orderDetail.items,
+            this.discountSlabs,
+            this.orderDetail,
+            this.taxClasses
+          );
 
+        //Apply Loyal offer discount
+        this.orderDetail = this.dataService.applyLoyaltyOfferDiscount(
+          this.orderDetail,
+          this.loyaltyoffers,
+          this.taxClasses
+        );
+
+        //update Scheme Free Products to scheme Items
+        this.orderDetail.items = this.dataService.updateSchemeFreeProductItems(
+          this.orderDetail,
+          this.allProducts,
+          this.taxClasses
+        );
       }
       this.productUpdated.emit();
       document.getElementById('close-prod-del').click();
-      if(deleteType && deleteType == 1){
+      if (deleteType && deleteType == 1) {
         const toast: Toaster = {
-          message:
-            'Schemes are removed!',
+          message: 'Schemes are removed!',
           type: 'success',
           title: 'Schemes:',
         };
@@ -245,120 +302,184 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     }
   }
 
-  setQuantity(product: any): void {  
+  setQuantity(product: any): void {
     //
     // const foundProd = this.stockAllocation.find(
     //   (x) => x.item_id === product.item_id
     // );
     // if (+product.stockQty > foundProd.current_load_allocated_qty) {
     //   product.stockQty = foundProd.current_load_allocated_qty;
-    // } 
-    this.orderDetail.orderType  = this.orderType;
+    // }
+    this.orderDetail.orderType = this.orderType;
     if (this.orderType === 'execution') {
-      product.executed_qty  = product.executed_qty ? +product.executed_qty:0;
-      product.booked_foc    = product.booked_foc ? +product.booked_foc:0;
+      product.executed_qty = product.executed_qty ? +product.executed_qty : 0;
+      product.booked_foc = product.booked_foc ? +product.booked_foc : 0;
       const prod = this.allProducts.find((x) => x.item_id == product.item_id);
       if (
-        (product.id && +product.stockQty > (+prod.extra_qty + +product.executed_qty + +product.booked_foc)) 
-        ||
-        (!product.id && +product.stockQty > (+prod.extra_qty + +product.booked_foc))
-        ) 
-        {
+        (product.id &&
+          +product.stockQty >
+            +prod.extra_qty + +product.executed_qty + +product.booked_foc) ||
+        (!product.id &&
+          +product.stockQty > +prod.extra_qty + +product.booked_foc)
+      ) {
         const toast: Toaster = {
           message:
             'Executed quantity cannot be greater than available quantity!',
           type: 'error',
           title: 'Quantity Error:',
         };
-        this.toastService.showToaster(toast); 
+        this.toastService.showToaster(toast);
         product.stockQty = 0;
       }
-    }else{
-      if (+product.stockQty > (+product.quantity + +product.extra_qty + +product.booked_foc)) {
+    } else {
+      if (
+        +product.stockQty >
+        +product.quantity + +product.extra_qty + +product.booked_foc
+      ) {
         product.stockQty = product.quantity + product.extra_qty;
       }
-  
-      if(product.current_load_allocated_qty < (product.stockQty + product.scheme_quantity_free)){
-        product.stockQty = product.current_load_allocated_qty - product.scheme_quantity_free;
+
+      if (
+        product.current_load_allocated_qty <
+        product.stockQty + product.scheme_quantity_free
+      ) {
+        product.stockQty =
+          product.current_load_allocated_qty - product.scheme_quantity_free;
       }
     }
-    
+
     if (product.item_trade_price) {
-      if (this.orderType !== 'execution' && product.item_quantity_booker > 0 && +product.stockQty === 0) {
+      if (
+        this.orderType !== 'execution' &&
+        product.item_quantity_booker > 0 &&
+        +product.stockQty === 0
+      ) {
         product.isDeleted = true;
-      } 
-      else if (this.orderType === 'execution' && product.dispatch_qty > 0 && +product.stockQty === 0) {
+      } else if (
+        this.orderType === 'execution' &&
+        product.dispatch_qty > 0 &&
+        +product.stockQty === 0
+      ) {
         product.isDeleted = true;
-      } 
-      else{
+      } else {
         product.isDeleted = false;
       }
       product.qtyAdded = true;
-     
-       this.calculateProductDiscounts(product);
-      
 
-      this.orderDetail.items     = this.dataService.updateOrderitemscalculation(this.orderDetail.items,this.orderDetail,this.taxClasses);
-      if(product.selectedScheme && (product.selectedScheme.scheme_type == 'bundle_offer'  || product.selectedScheme.scheme_type == 'mix_match')){
-        if(product.selectedScheme.scheme_type == 'mix_match')
-        this.orderDetail.items   = this.dataService.applyMixMatchProductsScheme(product,this.orderDetail,this.taxClasses);
+      this.calculateProductDiscounts(product);
+
+      this.orderDetail.items = this.dataService.updateOrderitemscalculation(
+        this.orderDetail.items,
+        this.orderDetail,
+        this.taxClasses
+      );
+      if (
+        product.selectedScheme &&
+        (product.selectedScheme.scheme_type == 'bundle_offer' ||
+          product.selectedScheme.scheme_type == 'mix_match')
+      ) {
+        if (product.selectedScheme.scheme_type == 'mix_match')
+          this.orderDetail.items = this.dataService.applyMixMatchProductsScheme(
+            product,
+            this.orderDetail,
+            this.taxClasses
+          );
         else
-        this.orderDetail.items   = this.dataService.applyBundleProductsScheme(product,this.orderDetail,this.taxClasses);
-      }else{
-        this.orderDetail.items.forEach((item, index) => { 
+          this.orderDetail.items = this.dataService.applyBundleProductsScheme(
+            product,
+            this.orderDetail,
+            this.taxClasses
+          );
+      } else {
+        this.orderDetail.items.forEach((item, index) => {
           if (item.selectedScheme) {
             if (item.selectedScheme.scheme_type === 'bundle_offer') {
-              this.orderDetail.items =  this.dataService.applyBundleProductsScheme(item, this.orderDetail, this.taxClasses);
+              this.orderDetail.items =
+                this.dataService.applyBundleProductsScheme(
+                  item,
+                  this.orderDetail,
+                  this.taxClasses
+                );
             }
             if (item.selectedScheme.scheme_type === 'mix_match') {
-              this.orderDetail.items =   this.dataService.applyMixMatchProductsScheme(item, this.orderDetail, this.taxClasses);
+              this.orderDetail.items =
+                this.dataService.applyMixMatchProductsScheme(
+                  item,
+                  this.orderDetail,
+                  this.taxClasses
+                );
             }
           }
         });
       }
-      
 
       //Apply slab on all products
-     
-      this.orderDetail.items       =  this.dataService.applySlabDiscountValuesToItems(this.orderDetail.items,this.discountSlabs,this.orderDetail,this.taxClasses)   
+
+      this.orderDetail.items = this.dataService.applySlabDiscountValuesToItems(
+        this.orderDetail.items,
+        this.discountSlabs,
+        this.orderDetail,
+        this.taxClasses
+      );
 
       //update special discount
-      if( this.selectedRetailer.segment_id && +this.selectedRetailer.segment_id > 0 ){
-        this.orderDetail.segment_id  = this.selectedRetailer.segment_id;
+      if (
+        this.selectedRetailer.segment_id &&
+        +this.selectedRetailer.segment_id > 0
+      ) {
+        this.orderDetail.segment_id = this.selectedRetailer.segment_id;
       }
-      if( this.selectedRetailer.region_id && +this.selectedRetailer.region_id > 0 ){
-        this.orderDetail.region_id  = this.selectedRetailer.region_id;
-      } 
+      if (
+        this.selectedRetailer.region_id &&
+        +this.selectedRetailer.region_id > 0
+      ) {
+        this.orderDetail.region_id = this.selectedRetailer.region_id;
+      }
 
-      this.orderDetail.items       =  this.dataService.applySpecialDiscount(this.orderDetail,this.specialDiscounts,this.taxClasses);
-      
+      this.orderDetail.items = this.dataService.applySpecialDiscount(
+        this.orderDetail,
+        this.specialDiscounts,
+        this.taxClasses
+      );
+
       //Apply Loyal offer discount
-      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers,this.taxClasses); 
-      
+      this.orderDetail = this.dataService.applyLoyaltyOfferDiscount(
+        this.orderDetail,
+        this.loyaltyoffers,
+        this.taxClasses
+      );
+
       //update Scheme Free Products to scheme Items
-      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses);
-      
-      this.calculateTotalBill(); 
+      this.orderDetail.items = this.dataService.updateSchemeFreeProductItems(
+        this.orderDetail,
+        this.allProducts,
+        this.taxClasses
+      );
+
+      this.calculateTotalBill();
       this.productUpdated.emit();
-      setTimeout(()=>{       
-        if(document.getElementById(product.item_id)){ 
-          (document.getElementById(product.item_id) as HTMLInputElement).focus();
+      setTimeout(() => {
+        if (document.getElementById(product.item_id)) {
+          (
+            document.getElementById(product.item_id) as HTMLInputElement
+          ).focus();
         }
-      },30); 
-      
-      if(this.orderDetail.FOCA_error){
+      }, 30);
+
+      if (this.orderDetail.FOCA_error) {
         this.toastService.showToaster({
           title: 'Warning:',
-          message:`FOC quantity is changed!`,
+          message: `FOC quantity is changed!`,
           type: 'success',
         });
-      }  
-  
+      }
     }
-  } 
+  }
 
   setReturnedQty(product: any): void {
-    const productAvalableQty = this.allProducts.find((x) => x.item_id === product.item_id)?.extra_qty;
+    const productAvalableQty = this.allProducts.find(
+      (x) => x.item_id === product.item_id
+    )?.extra_qty;
     if (
       productAvalableQty < product.quantity_returned &&
       +product.stockQty < product.quantity_returned &&
@@ -373,49 +494,64 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       product.stockQty = product.quantity_returned;
       return;
     }
-    if (+product.stockQty > 1000) { 
+    if (+product.stockQty > 1000) {
       product.stockQty = product.quantity_returned;
     }
     product.gross_amount = -(product.item_trade_price * product.stockQty);
     product.original_amount = -(product.item_trade_price * product.stockQty);
-    product.total_retail_price = -(product.item_retail_price * product.stockQty);
+    product.total_retail_price = -(
+      product.item_retail_price * product.stockQty
+    );
     if (product.extra_discount) {
       product.booker_discount = +product.extra_discount;
-      product.unit_price_after_individual_discount = product.item_trade_price - product.booker_discount;
+      product.unit_price_after_individual_discount =
+        product.item_trade_price - product.booker_discount;
     }
-    product.net_amount = -( product.unit_price_after_individual_discount * product.stockQty );
+    product.net_amount = -(
+      product.unit_price_after_individual_discount * product.stockQty
+    );
     this.productUpdated.emit();
   }
 
   setExtraDiscount(product: any): void {
-     
     if (product.stockQty) {
-        product.booker_discount     = +product.extra_discount;
-        product.booker_discount_pkr =  product.booker_discount;
-        product.unit_price_after_individual_discount = product.item_trade_price - product.booker_discount;
+      product.booker_discount = +product.extra_discount;
+      product.booker_discount_pkr = product.booker_discount;
+      product.unit_price_after_individual_discount =
+        product.item_trade_price - product.booker_discount;
     }
 
-    if( (!product.extra_discount.endsWith(".")  && !product.extra_discount.includes(".0") )){ 
-
-      
-
+    if (
+      !product.extra_discount.endsWith('.') &&
+      !product.extra_discount.includes('.0')
+    ) {
       //Apply Loyal offer discount
-      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers,this.taxClasses); 
-        
+      this.orderDetail = this.dataService.applyLoyaltyOfferDiscount(
+        this.orderDetail,
+        this.loyaltyoffers,
+        this.taxClasses
+      );
+
       //update Scheme Free Products to scheme Items
-      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses);
-      
-      this.calculateTotalBill(); 
+      this.orderDetail.items = this.dataService.updateSchemeFreeProductItems(
+        this.orderDetail,
+        this.allProducts,
+        this.taxClasses
+      );
+
+      this.calculateTotalBill();
       this.productUpdated.emit();
 
-    
-
-      setTimeout(()=>{       
-        if(document.getElementById("extra-"+product.item_id)){ 
-          (document.getElementById("extra-"+product.item_id) as HTMLInputElement).focus();
+      setTimeout(() => {
+        if (document.getElementById('extra-' + product.item_id)) {
+          (
+            document.getElementById(
+              'extra-' + product.item_id
+            ) as HTMLInputElement
+          ).focus();
         }
-      },30); 
-    } 
+      }, 30);
+    }
   }
 
   checkDiscount(product: any): boolean {
@@ -440,13 +576,13 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     this.setExtraDiscount(product);
   }
 
-  applySpecialDiscountOnAllProducts(): void { 
+  applySpecialDiscountOnAllProducts(): void {
     if (
       this.merchantDiscount &&
       this.merchantDiscount.discount_filter === 'slab'
     ) {
       this.orderDetail.items = this.orderDetail.items.map((product) => {
-        product = this.calculateProductSpecialDiscount(product); 
+        product = this.calculateProductSpecialDiscount(product);
         if (product.extra_discount) {
           product.price =
             product.unit_price_after_special_discount - +product.extra_discount;
@@ -457,26 +593,31 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     }
   }
 
-  calculateProductPrice(product): void { 
-    product.original_amount = this.dataService.calculateUnitPrice(+product.stockQty,product.item_trade_price);
-    product.gross_amount    = product.unit_price_after_scheme_discount * +product.stockQty;
+  calculateProductPrice(product): void {
+    product.original_amount = this.dataService.calculateUnitPrice(
+      +product.stockQty,
+      product.item_trade_price
+    );
+    product.gross_amount =
+      product.unit_price_after_scheme_discount * +product.stockQty;
   }
 
   calculateProductDiscounts(product: any, scheme?: any): void {
     // Trade Offer
-    product.scheme_quantity_free= 0; 
-    product.scheme_free_items   = [];
+    product.scheme_quantity_free = 0;
+    product.scheme_free_items = [];
     if (scheme) {
       product.selectedScheme = scheme;
     }
     if (product.selectedScheme) {
       product = this.applyScheme(product);
     } else {
-      product.scheme_discount                   =   0;
-      product.price                             =   JSON.parse(JSON.stringify(product.item_trade_price));
-      product.unit_price_after_scheme_discount  =   JSON.parse(JSON.stringify(product.item_trade_price));
+      product.scheme_discount = 0;
+      product.price = JSON.parse(JSON.stringify(product.item_trade_price));
+      product.unit_price_after_scheme_discount = JSON.parse(
+        JSON.stringify(product.item_trade_price)
+      );
     }
-
 
     // Trade Discount
     // if (this.merchantDiscount) {
@@ -485,27 +626,26 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     //     product,
     //     this.grossAmount
     //   );
-    // } 
-    
-    
+    // }
+
     if (this.discountSlabs) {
-    
-      product = this.dataService.applySlabDiscountToSingleItem(product,this.selectedRetailer,this.discountSlabs);
-      product = JSON.parse(JSON.stringify(product))
-      
-      if(product.slab_id){ 
-       
-      }else{
-        product.slab_id=0;
-        product.slab_type=0;
+      product = this.dataService.applySlabDiscountToSingleItem(
+        product,
+        this.selectedRetailer,
+        this.discountSlabs
+      );
+      product = JSON.parse(JSON.stringify(product));
+
+      if (product.slab_id) {
+      } else {
+        product.slab_id = 0;
+        product.slab_type = 0;
         product.slab_discount_type = '0';
         product.trade_discount = 0;
         product.trade_discount_pkr = 0;
-        product.unit_price_after_merchant_discount = 123;//JSON.parse(JSON.stringify(product.price));
+        product.unit_price_after_merchant_discount = 123; //JSON.parse(JSON.stringify(product.price));
       }
-      
-    }
-    else {
+    } else {
       product.trade_discount = 0;
       product.trade_discount_pkr = 0;
       product.unit_price_after_merchant_discount = JSON.parse(
@@ -513,19 +653,16 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
       );
     }
     //console.log(this.orderDetail);
-    
+
     // Special Discount
     product = this.calculateProductSpecialDiscount(product);
-
-    
-  
   }
 
   calculateProductSpecialDiscount(product: any): any {
-     //this.selectedRetailer.segment_id
-      // this.selectedRetailer.region_id
-      // product
-      // this.specialDiscounts
+    //this.selectedRetailer.segment_id
+    // this.selectedRetailer.region_id
+    // product
+    // this.specialDiscounts
     return this.dataService.getSpecialDiscounts(
       this.selectedRetailer.segment_id,
       this.selectedRetailer.region_id,
@@ -535,9 +672,9 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   calculateExtraDiscount(product: any): void {
-     
     if (+product.extra_discount < product.unit_price_after_special_discount) {
-      product.price = product.unit_price_after_special_discount - +product.extra_discount;
+      product.price =
+        product.unit_price_after_special_discount - +product.extra_discount;
       product.extra_discount_pkr = +product.stockQty * +product.extra_discount;
     } else {
       product.extra_discount = 0;
@@ -551,47 +688,76 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     }
     let pass_discount = false;
     console.log(this.pre_discount);
-    if(this.pre_discount && this.pre_discount.some(x=>x.item_id == product.item_id) && !product.extra_discount.endsWith(".")){
-     let discountResult = this.pre_discount.find(x=>x.item_id == product.item_id);
-     if(discountResult.value > +product.extra_discount){
-        pass_discount = true
-     }
-    }
-    if( (!product.extra_discount.endsWith(".")  &&  product.extra_discount.toString().substring(product.extra_discount.toString().length - 2) != ".0" ) || pass_discount){ 
-      if(this.pre_discount && this.pre_discount.some(x=>x.item_id == product.item_id)){
-          let indexI = this.pre_discount.findIndex(x=>x.item_id == product.item_id);
-          this.pre_discount[indexI].value = product.extra_discount;
-      } else{
-        this.pre_discount.push({
-                                item_id : product.item_id,
-                                value   : product.extra_discount,
-                              })
+    if (
+      this.pre_discount &&
+      this.pre_discount.some((x) => x.item_id == product.item_id) &&
+      !product.extra_discount.endsWith('.')
+    ) {
+      let discountResult = this.pre_discount.find(
+        (x) => x.item_id == product.item_id
+      );
+      if (discountResult.value > +product.extra_discount) {
+        pass_discount = true;
       }
-     //maximum tw decimal positions
-      product.extra_discount       =  +product.extra_discount;
-  
-      product.extra_discount = +product.extra_discount.toFixed(2); 
+    }
+    if (
+      (!product.extra_discount.endsWith('.') &&
+        product.extra_discount
+          .toString()
+          .substring(product.extra_discount.toString().length - 2) != '.0') ||
+      pass_discount
+    ) {
+      if (
+        this.pre_discount &&
+        this.pre_discount.some((x) => x.item_id == product.item_id)
+      ) {
+        let indexI = this.pre_discount.findIndex(
+          (x) => x.item_id == product.item_id
+        );
+        this.pre_discount[indexI].value = product.extra_discount;
+      } else {
+        this.pre_discount.push({
+          item_id: product.item_id,
+          value: product.extra_discount,
+        });
+      }
+      //maximum tw decimal positions
+      product.extra_discount = +product.extra_discount;
+
+      product.extra_discount = +product.extra_discount.toFixed(2);
       //Apply Loyal offer discount
-      this.orderDetail             =  this.dataService.applyLoyaltyOfferDiscount(this.orderDetail,this.loyaltyoffers,this.taxClasses); 
+      this.orderDetail = this.dataService.applyLoyaltyOfferDiscount(
+        this.orderDetail,
+        this.loyaltyoffers,
+        this.taxClasses
+      );
       //update Scheme Free Products to scheme Items
-      this.orderDetail.items       =  this.dataService.updateSchemeFreeProductItems(this.orderDetail,this.allProducts,this.taxClasses); 
-      this.calculateTotalBill(); 
+      this.orderDetail.items = this.dataService.updateSchemeFreeProductItems(
+        this.orderDetail,
+        this.allProducts,
+        this.taxClasses
+      );
+      this.calculateTotalBill();
       this.productUpdated.emit();
-      setTimeout(()=>{       
-        if(document.getElementById('extraDiscount-'+product.item_id)){
-          (document.getElementById('extraDiscount-'+product.item_id) as HTMLInputElement).focus(); 
+      setTimeout(() => {
+        if (document.getElementById('extraDiscount-' + product.item_id)) {
+          (
+            document.getElementById(
+              'extraDiscount-' + product.item_id
+            ) as HTMLInputElement
+          ).focus();
         }
-      },30);
+      }, 30);
     }
   }
 
-  
-
   calculateProductTax(product: any): void {
     if (product.tax_class_amount) {
-      product.tax_amount_value = (product.tax_class_amount / 100) * product.item_retail_price;
+      product.tax_amount_value =
+        (product.tax_class_amount / 100) * product.item_retail_price;
       product.tax_amount_pkr = product.tax_amount_value * product.stockQty;
-      product.total_amount_after_tax = product.net_amount + product.tax_amount_pkr;
+      product.total_amount_after_tax =
+        product.net_amount + product.tax_amount_pkr;
     } else {
       product.tax_amount_value = 0;
       product.tax_amount_pkr = 0;
@@ -599,24 +765,24 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   applyScheme(product: any): any {
-    product.selectedScheme.scheme_type
-    
+    product.selectedScheme.scheme_type;
+
     switch (product.selectedScheme.scheme_type) {
       case 'free_product':
-        product   = this.dataService.applyFreeProductScheme(product);
+        product = this.dataService.applyFreeProductScheme(product);
         break;
       case 'dotp':
-        product   = this.dataService.getSDForDOTP(product);
-        break; 
-     case 'comp_product': 
-        product   = this.dataService.applyComplementaryScheme(product);  
+        product = this.dataService.getSDForDOTP(product);
         break;
-     case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
-            break;  
-     case 'mix_match': //it will be applied on after item added to order details because it depends on multiple items
-            break;       
+      case 'comp_product':
+        product = this.dataService.applyComplementaryScheme(product);
+        break;
+      case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
+        break;
+      case 'mix_match': //it will be applied on after item added to order details because it depends on multiple items
+        break;
       default:
-        product   = this.dataService.getSDForGift(product);
+        product = this.dataService.getSDForGift(product);
         break;
     }
     return product;
@@ -634,47 +800,59 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
   }
 
   calculateTotalBill(): void {
-    
+    this.selectedProductQuantities = this.dataService.orderParentQtySold(
+      this.orderDetail.items
+    );
 
-    this.selectedProductQuantities  =    this.dataService.orderParentQtySold(this.orderDetail.items);
-
-    this.grossAmount                =    this.dataService.orderGrossAmount(this.orderDetail.items);
+    this.grossAmount = this.dataService.orderGrossAmount(
+      this.orderDetail.items
+    );
 
     // Retail Price
-    this.totalRetailPrice           =   this.dataService.orderRetailPrice(this.orderDetail.items);
+    this.totalRetailPrice = this.dataService.orderRetailPrice(
+      this.orderDetail.items
+    );
 
     // Net Amount
-    this.dueAmount                  =    this.dataService.orderNetAmount(this.orderDetail.items);
+    this.dueAmount = this.dataService.orderNetAmount(this.orderDetail.items);
 
     // Order Original
-    this.netAmount                  =    this.dueAmount;
+    this.netAmount = this.dueAmount;
 
     // Scheme Discount
-    this.totalSchemeDiscount        =    this.dataService.orderSchemeDiscount(this.orderDetail.items);
+    this.totalSchemeDiscount = this.dataService.orderSchemeDiscount(
+      this.orderDetail.items
+    );
 
     //Loyalty Discount
-    this.totalloyaltyDiscount       =    this.dataService.orderLoyaltyDiscount(this.orderDetail);
+    this.totalloyaltyDiscount = this.dataService.orderLoyaltyDiscount(
+      this.orderDetail
+    );
 
     // Trade Discount
-    this.totalMerchantDiscount      =    this.dataService.orderTradeDiscount(this.orderDetail.items);
+    this.totalMerchantDiscount = this.dataService.orderTradeDiscount(
+      this.orderDetail.items
+    );
 
     // Special Discount
-    this.totalSpecialDiscount       =    this.dataService.orderSpecialDiscount(this.orderDetail.items);
+    this.totalSpecialDiscount = this.dataService.orderSpecialDiscount(
+      this.orderDetail.items
+    );
 
     // Extra Discount
-    this.totalBookerDiscount        =    this.dataService.orderExtraDiscount(this.orderDetail.items);
-
-    
-    // Tax
-    this.gst_tax                    =    this.dataService.orderGstTax(this.orderDetail.items);
+    this.totalBookerDiscount = this.dataService.orderExtraDiscount(
+      this.orderDetail.items
+    );
 
     // Tax
-    this.adv_inc_tax                =    this.dataService.orderAdvIncTax(this.orderDetail.items);
+    this.gst_tax = this.dataService.orderGstTax(this.orderDetail.items);
 
     // Tax
-    this.totalTax                   =    this.dataService.orderTax(this.orderDetail.items);
-  
-    
+    this.adv_inc_tax = this.dataService.orderAdvIncTax(this.orderDetail.items);
+
+    // Tax
+    this.totalTax = this.dataService.orderTax(this.orderDetail.items);
+
     if (this.orderType === 'execution') {
       if (this.selectedRetailer) {
         // this.selectedRetailer.order_total = this.totalPayment;
@@ -695,16 +873,14 @@ export class OrderItemsListComponent implements OnInit, OnChanges{
     }
 
     this.orderDetail.total_discount =
-                this.totalSchemeDiscount +
-                this.totalMerchantDiscount +
-                this.totalSpecialDiscount +
-                this.totalBookerDiscount +
-                this.totalloyaltyDiscount; 
-    this.orderDetail.gross_sale_amount  = this.grossAmount;
+      this.totalSchemeDiscount +
+      this.totalMerchantDiscount +
+      this.totalSpecialDiscount +
+      this.totalBookerDiscount +
+      this.totalloyaltyDiscount;
+    this.orderDetail.gross_sale_amount = this.grossAmount;
     this.orderDetail.total_retail_price = this.totalRetailPrice;
-    this.orderDetail.ttl_qty_sold       = this.selectedProductQuantities;
-    this.orderDetail.ttl_products_sold  = this.orderDetail.items.length;
-    
-                
+    this.orderDetail.ttl_qty_sold = this.selectedProductQuantities;
+    this.orderDetail.ttl_products_sold = this.orderDetail.items.length;
   }
 }

@@ -30,7 +30,7 @@ class Utility {
 
     // get slabs that are saved in order model
     const order = SecondaryOrder.getInstance;
-    const slabs: Slab[] = [...order.slabs] || [];
+    const slabs: Slab[] = order.slabs ? [...order.slabs] : [];
 
     // TODO: Remmove
     // const slabType = this.getSlabType(order.order)
@@ -233,6 +233,7 @@ class Utility {
         );
         break;
       case SCHEME_RULES.FREE_PRODUCT:
+        break;
         switch (schemeRuleName) {
           case FREE_PRODUCT_RULES.DISCOUNT_ON_TRADE_PRICE:
             schemeDiscountedAmount = this.applyFreeProductDiscountOnTradePrice(

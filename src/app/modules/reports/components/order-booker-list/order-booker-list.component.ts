@@ -10,10 +10,14 @@ import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 import { DataTableDirective } from 'angular-datatables';
 
 @Component({
+
   selector: 'app-order-booker-list',
   templateUrl: './order-booker-list.component.html',
   styleUrls: ['./order-booker-list.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 export class OrderBookerListComponent implements OnInit {
   dtOptions: DataTables.Settings = {};

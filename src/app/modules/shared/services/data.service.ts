@@ -46,6 +46,7 @@ export class DataService {
   }
 
   calculateDiscount(discount: number, type: string, total: number): number {
+    return 0; // TODO: Implement proper calculation
     if (type === 'percentage') {
       return (discount / 100) * total;
     } else if (type === 'price') {

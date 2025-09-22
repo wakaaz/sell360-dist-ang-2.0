@@ -15,6 +15,7 @@ import { API_URLS } from 'src/app/core/constants/api-urls.constants';
   selector: 'app-retailer-invoices',
   templateUrl: './retailer-invoices.component.html',
   styleUrls: ['./retailer-invoices.component.css'],
+  standalone: false,
 })
 export class RetailerInvoicesComponent implements OnInit {
   dtOptions: DataTables.Settings;
@@ -53,16 +54,20 @@ export class RetailerInvoicesComponent implements OnInit {
     private dataService: DataService,
     private storageService: LocalStorageService
   ) {
-    this.permissions    = this.storageService.getItem(localStorageKeys.permissions);
-    const distributor   = this.storageService.getItem(localStorageKeys.distributor);
-    this.distributorId  = distributor.id;
+    this.permissions = this.storageService.getItem(
+      localStorageKeys.permissions
+    );
+    const distributor = this.storageService.getItem(
+      localStorageKeys.distributor
+    );
+    this.distributorId = distributor.id;
   }
   closeDetailsModal(): void {
     document.body.classList.remove('no-scroll');
   }
   ngOnInit(): void {
     this.showDetails = false;
-    this.retailerId = this.actr.snapshot.params.retailerId;
+    this.retailerId = this.actr.snapshot.params['retailerId'];
     this.dtOptions = {
       pagingType: 'simple_numbers',
     };
@@ -158,8 +163,6 @@ export class RetailerInvoicesComponent implements OnInit {
     this.recoveryForm.recoverd_amount = 0;
     this.recoveryForm.invoice_discount = 0;
   }
-
-  
 
   openDetailsModal(orderId: number): void {
     this.orderDetail = null;

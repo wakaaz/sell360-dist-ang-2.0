@@ -2,10 +2,14 @@ import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 
 @Component({
+
   selector: 'app-retailer-sub-list',
   templateUrl: 'retailer-sub-listing.component.html',
   styleUrls: ['./retailer-sub-listing.component.css'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 
 export class RetailerSubListComponent implements OnInit, OnChanges, OnDestroy {

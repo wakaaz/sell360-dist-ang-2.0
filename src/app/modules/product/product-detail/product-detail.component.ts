@@ -4,9 +4,13 @@ import { ToasterService } from 'src/app/core/services/toaster.service';
 import { ProductService } from '../product.service';
 
 @Component({
+
   selector: 'app-product-detail',
   templateUrl: './product-detail.component.html',
   styleUrls: ['./product-detail.component.css'],
+  standalone: false
+
+
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
   dtOptions: DataTables.Settings = {};

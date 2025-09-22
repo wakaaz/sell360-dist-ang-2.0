@@ -1,10 +1,14 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
+
     selector: 'app-spot-sale',
     templateUrl: './spot-sale.component.html',
     styleUrls: ['./spot-sale.component.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 
 export class SpotSaleComponent implements OnInit {

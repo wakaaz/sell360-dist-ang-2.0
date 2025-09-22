@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
+
     selector: 'app-ledger-details',
     templateUrl: 'salesmen-ledger-details.component.html',
-    styleUrls: ['./salesmen-ledger-details.component.css']
+    styleUrls: ['./salesmen-ledger-details.component.css'],
+  standalone: false
+
+
 })
 
 export class LedgerDetailsComponent implements OnInit {

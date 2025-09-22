@@ -6,9 +6,13 @@ import { DataService } from 'src/app/modules/shared/services';
 import { OrdersService } from '../../../services/orders.service';
 
 @Component({
+
   selector: 'app-stock-allocation',
   templateUrl: './stock-allocation.component.html',
   styleUrls: ['./stock-allocation.component.css'],
+  standalone: false
+
+
 })
 export class StockAllocationComponent implements OnInit {
   @Input() stockAllocation: any;

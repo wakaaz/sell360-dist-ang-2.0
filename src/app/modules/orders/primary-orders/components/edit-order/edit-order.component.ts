@@ -24,6 +24,7 @@ import { environment } from 'src/environments/environment';
   selector: 'app-edit-order',
   templateUrl: './edit-order.component.html',
   styleUrls: ['./edit-order.component.css'],
+  standalone: false,
 })
 export class EditOrderComponent implements OnInit, OnDestroy {
   //#region Fields and Construct on int
@@ -79,11 +80,12 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     this.distributor = this.storageService.getItem(
       localStorageKeys.distributor
     );
-    const orderId = this.actr.snapshot.params.orderId;
+    const orderId = this.actr.snapshot.params['orderId'];
     this.showEditFields = orderId > 0 ? true : false;
-    this.status = this.actr.snapshot.params.status;
+    this.status = this.actr.snapshot.params['status'];
     this.getProductsMetaData();
-    this.isReturn = this.actr.snapshot.params.new === 'return' ? true : false;
+    this.isReturn =
+      this.actr.snapshot.params['new'] === 'return' ? true : false;
 
     this.isNewOrder();
     if (this.isNew) {
@@ -106,7 +108,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   }
 
   isNewOrder() {
-    this.isNew = this.actr.snapshot.params.new !== 'new' ? true : false;
+    this.isNew = this.actr.snapshot.params['new'] !== 'new' ? true : false;
   }
 
   correctIamgeURL() {
@@ -339,13 +341,13 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           case 'dotp':
             scheme.name = schemes.dotp;
             break;
-          case 'comp_product': 
-              product   = this.dataService.applyComplementaryScheme(product);  
-              break;
+          case 'comp_product':
+            product = this.dataService.applyComplementaryScheme(product);
+            break;
           case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
-              break
+            break;
           case 'mix_match': //it will be applied on after item added to order details because it depends on multiple items
-              break;
+            break;
           default:
             scheme.name = schemes.gift;
             break;

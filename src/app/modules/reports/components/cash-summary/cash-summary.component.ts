@@ -6,9 +6,13 @@ import { environment } from 'src/environments/environment';
 import { ReportsService } from '../../services/reports.service';
 
 @Component({
+
     selector: 'app-cash-summary',
     templateUrl: 'cash-summary.component.html',
-    styleUrls: ['./cash-summary.component.css']
+    styleUrls: ['./cash-summary.component.css'],
+  standalone: false
+
+
 })
 
 export class CashSummaryComponent implements OnInit {

@@ -6,9 +6,13 @@ import { ReportsService } from './../../services/reports.service';
 import { LocalStorageService } from './../../../../core/services/storage.service';
 
 @Component({
+
   selector: 'app-allocated-stock-report',
   templateUrl: './allocated-stock-report.component.html',
-  styleUrls: ['./allocated-stock-report.component.css']
+  styleUrls: ['./allocated-stock-report.component.css'],
+  standalone: false
+
+
 })
 export class AllocatedStockReportComponent implements OnInit {
 

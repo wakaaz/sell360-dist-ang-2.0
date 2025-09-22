@@ -5,10 +5,14 @@ import { DataService, GeneralDataService } from '../../../shared/services';
 import { InventoryService } from '../../services/inventory.service';
 
 @Component({
+
     selector: 'app-add-stock',
     templateUrl: 'add-stock.component.html',
     styleUrls: ['./add-stock.component.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 
 export class AddStockComponent implements OnInit {

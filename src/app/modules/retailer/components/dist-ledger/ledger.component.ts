@@ -5,9 +5,13 @@ import { RetailerService } from './../../services/retailer.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
+
   selector: 'app-dist-ledger',
   templateUrl: './dist-ledger.component.html',
   styleUrls: ['./dist-ledger.component.css'],
+  standalone: false
+
+
 })
 export class DistLedgerComponent implements OnInit {
   filter = {

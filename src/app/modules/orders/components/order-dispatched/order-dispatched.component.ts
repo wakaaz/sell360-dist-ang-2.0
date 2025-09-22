@@ -21,9 +21,13 @@ import { number } from 'echarts';
 import { exit } from 'process';
 
 @Component({
+
   selector: 'app-dispatch-order',
   templateUrl: 'order-dispatched.component.html',
   styleUrls: ['./order-dispatched.component.css'],
+  standalone: false
+
+
 })
 export class OrderDispatchedComponent implements OnInit {
   system_discount_type:number;

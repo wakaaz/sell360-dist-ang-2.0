@@ -7,9 +7,13 @@ import { ToasterService, Toaster } from '../../../../core/services/toaster.servi
 import { OrdersService } from '../../services/orders.service';
 
 @Component({
+
     selector: 'app-orderexecution-list',
     templateUrl: 'execution-list.component.html',
-    styleUrls: ['./execution-list.component.css']
+    styleUrls: ['./execution-list.component.css'],
+  standalone: false
+
+
 })
 
 export class OrderExecutionListComponent implements OnInit {

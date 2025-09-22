@@ -8,10 +8,14 @@ import { LocalStorageService } from '../../../../core/services/storage.service';
 import { localStorageKeys } from '../../../../core/constants/localstorage.constants';
 
 @Component({
+
   selector: 'app-ds-report',
   templateUrl: './dsr.component.html',
   styleUrls: ['./dsr.component.css'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 export class DSReportComponent implements OnInit {
   loading: boolean;

@@ -13,6 +13,7 @@ import { PrimaryOrder } from '../../_models/order';
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
+  standalone: false,
 })
 export class ListComponent {
   currentYear: number = new Date().getFullYear();
@@ -45,7 +46,7 @@ export class ListComponent {
     private route: ActivatedRoute
   ) {
     this.route.params.subscribe((param) => {
-      this.orderStatus = param.status;
+      this.orderStatus = param['status'];
       switch (this.orderStatus) {
         case PRIMARY_ORDER.BOOKED:
           this.orderStatusAPI = PRIMARY_ORDER_API_STATUS.BOOKED;

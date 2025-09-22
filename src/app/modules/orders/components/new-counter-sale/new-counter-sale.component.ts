@@ -30,10 +30,14 @@ import { SecondaryOrderItems } from '../../primary-orders/_models/secondaryOrder
 import { ComplimentoryProdut } from '../../primary-orders/_models/complimentoryProdut';
 
 @Component({
+
   selector: 'app-counter-sale',
   templateUrl: './new-counter-sale.component.html',
   styleUrls: ['./new-counter-sale.component.css'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 export class NewCounterSaleComponent implements OnInit {
   permissions: any;

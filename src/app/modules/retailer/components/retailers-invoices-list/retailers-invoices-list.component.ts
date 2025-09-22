@@ -2,9 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { RetailerService } from '../../services/retailer.service';
 @Component({
+
   selector: 'app-retailers-invoices-list',
   templateUrl: './retailers-invoices-list.component.html',
   styleUrls: ['./retailers-invoices-list.component.css'],
+  standalone: false
+
+
 })
 export class RetailersInvListComponent implements OnInit {
   dtOptions: DataTables.Settings;

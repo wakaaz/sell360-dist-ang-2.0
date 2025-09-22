@@ -3,9 +3,13 @@ import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { InventoryService } from '../../services/inventory.service';
 
 @Component({
+
   selector: 'app-distributor-stock',
   templateUrl: 'stock.component.html',
   styleUrls: ['./stock.component.css'],
+  standalone: false
+
+
 })
 export class StockComponent implements OnInit {
   dtOptions: DataTables.Settings = {};

@@ -4,9 +4,13 @@ import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { ReportsService } from '../../services/reports.service';
 
 @Component({
+
     selector: 'app-purchase-detail',
     templateUrl: './purchase-detail.component.html',
-    styleUrls: ['./purchase-detail.component.css']
+    styleUrls: ['./purchase-detail.component.css'],
+  standalone: false
+
+
 })
 
 export class PurchasedDetailComponent implements OnInit {

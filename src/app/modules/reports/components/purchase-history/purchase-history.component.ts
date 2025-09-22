@@ -5,9 +5,13 @@ import { ToasterService } from 'src/app/core/services/toaster.service';
 import { ReportsService } from '../../services/reports.service';
 
 @Component({
+
     selector: 'app-purchase-history',
     templateUrl: './purchase-history.component.html',
-    styleUrls: ['./purchase-history.component.css']
+    styleUrls: ['./purchase-history.component.css'],
+  standalone: false
+
+
 })
 
 export class PurchaseHisotryComponent implements OnInit {

@@ -3,9 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { InventoryService } from '../../services/inventory.service';
 
 @Component({
+
     selector: 'app-gallerty-component',
     templateUrl: 'gallery.component.html',
-    styleUrls: ['./gallery.component.css']
+    styleUrls: ['./gallery.component.css'],
+  standalone: false
+
+
 })
 
 export class GalleryComponent implements OnInit {

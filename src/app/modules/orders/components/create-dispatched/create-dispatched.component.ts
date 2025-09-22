@@ -6,9 +6,13 @@ import { Toaster, ToasterService } from '../../../../core/services/toaster.servi
 import { OrdersService } from '../../services/orders.service';
 
 @Component({
+
     selector: 'app-create-dispatched',
     templateUrl: 'create-dispatched.component.html',
-    styleUrls: ['./create-dispatched.component.css']
+    styleUrls: ['./create-dispatched.component.css'],
+  standalone: false
+
+
 })
 
 export class CreateDispatchedComponent implements OnInit {

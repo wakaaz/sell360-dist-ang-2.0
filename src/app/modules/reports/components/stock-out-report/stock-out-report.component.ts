@@ -4,9 +4,13 @@ import { environment } from 'src/environments/environment';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
+
   selector: 'app-stock-out-report',
   templateUrl: './stock-out-report.component.html',
-  styleUrls: ['./stock-out-report.component.css']
+  styleUrls: ['./stock-out-report.component.css'],
+  standalone: false
+
+
 })
 
 export class StockOutReportComponent implements OnInit {

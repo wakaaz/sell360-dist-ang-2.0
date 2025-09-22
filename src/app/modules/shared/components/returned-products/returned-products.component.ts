@@ -4,10 +4,14 @@ import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { DataService } from '../../services';
 
 @Component({
+
     selector: 'app-returned-products',
     templateUrl: './returned-products.component.html',
     styleUrls: ['./returned-products.component.css'],
     encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 
 export class ReturnedProductsComponent implements OnInit, AfterViewInit {

@@ -11,6 +11,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   selector: 'app-retailer-profile',
   templateUrl: './retailer-profile.component.html',
   styleUrls: ['./retailer-profile.component.css'],
+  standalone: false,
 })
 export class RetailerProfileComponent implements OnInit {
   options: LoaderOptions = {
@@ -131,7 +132,7 @@ export class RetailerProfileComponent implements OnInit {
   ngOnInit(): void {
     this.loading = true;
     this.profileId = this.route.snapshot.paramMap.get('id');
-    this.retailer = JSON.parse(this.route.snapshot.queryParams.retailer);
+    this.retailer = JSON.parse(this.route.snapshot.queryParams['retailer']);
     // this.mapURL = this.sanitizer.bypassSecurityTrustUrl
     // (`https://maps.google.com/?q="${this.retailer?.retailer_lats},${this.retailer?.retailer_longs}`);
     console.log('retiler -- ', this.retailer);

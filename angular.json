@@ -5,7 +5,11 @@
   "projects": {
     "distributor-dashbord": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {
+        "@schematics/angular:component": {
+          "standalone": false
+        }
+      },
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
@@ -18,7 +22,6 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
-            "aot": true,
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "node_modules/datatables.net-buttons-dt/css/buttons.dataTables.css",
@@ -46,11 +49,8 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
-              "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
-              "buildOptimizer": true,
               "budgets": [
                 {
                   "type": "initial",
@@ -69,18 +69,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "distributor-dashbord:build"
+            "buildTarget": "distributor-dashbord:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "distributor-dashbord:build:production"
+              "buildTarget": "distributor-dashbord:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "distributor-dashbord:build"
+            "buildTarget": "distributor-dashbord:build"
           }
         },
         "test": {

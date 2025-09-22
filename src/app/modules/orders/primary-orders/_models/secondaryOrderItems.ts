@@ -395,9 +395,9 @@ export class SecondaryOrderItems {
       return 0;
     }
     if (!this.unitTradeDiscountPkr && this.unitTradeDiscountPkr !== 0) {
-      this.unitTradeDiscountPkr = 0;
       return 0;
     }
+    return this.unitTradeDiscountPkr || 0;
   }
 
   public get(): number {

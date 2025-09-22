@@ -4,9 +4,13 @@ import { DistributorService } from '../../services/distributor.service';
 // import 'datatables.net';
 
 @Component({
+
   selector: 'app-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.css'],
+  standalone: false
+
+
 })
 export class ListComponent implements OnInit {
   dtOptions: DataTables.Settings = {};

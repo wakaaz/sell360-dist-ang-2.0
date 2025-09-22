@@ -7,9 +7,13 @@ import { environment } from 'src/environments/environment';
 import { ReportsService } from '../../services/reports.service';
 
 @Component({
+
   selector: 'app-invoice-aging-report',
   templateUrl: './invoice-aging-report.component.html',
   styleUrls: ['./invoice-aging-report.component.css'],
+  standalone: false
+
+
 })
 export class InvoiceAgingReportComponent implements OnInit {
   creditedBookers: Array<any> = [];

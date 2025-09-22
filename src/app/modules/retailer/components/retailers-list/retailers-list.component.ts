@@ -4,10 +4,14 @@ import { ToasterService } from 'src/app/core/services/toaster.service';
 import { RetailerService } from '../../services/retailer.service';
 
 @Component({
+
   selector: 'app-retailers-list',
   templateUrl: 'retailers-list.component.html',
   styleUrls: ['./retailers-list.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 
 export class RetalersListComponent implements OnInit {

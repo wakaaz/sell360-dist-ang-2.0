@@ -8,7 +8,7 @@ export function MustMatch(controlName: string, totalAmount: number): any {
     const control = formGroup.controls[controlName];
     // const matchingControl = formGroup.controls[matchingControlName];
     
-    if (control.errors && !control.errors.mustMatch) {
+    if (control.errors && !control.errors['mustMatch']) {
       // return if another validator has already found an error on the matchingControl
       return;
     }

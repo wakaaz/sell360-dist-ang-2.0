@@ -4,10 +4,14 @@ import { ReportsService } from './../../services/reports.service';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
+
   selector: 'app-rate-list',
   templateUrl: 'export-rate-list.component.html',
   styleUrls: ['./export-rate-list.component.css'],
-  encapsulation: ViewEncapsulation.None
+  encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 
 export class RateListComponent implements OnInit {

@@ -20,10 +20,14 @@ import { OrdersService } from '../../services/orders.service';
 import { SpotSaleService } from '../../services/spot-sale.service';
 
 @Component({
+
   selector: 'app-execute-order',
   templateUrl: 'execute-order.component.html',
   styleUrls: ['./execute-order.component.css'],
   encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 export class ExecuteOrderComponent implements OnInit, OnDestroy {
   system_discount_type:number;

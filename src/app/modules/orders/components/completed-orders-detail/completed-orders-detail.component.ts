@@ -8,9 +8,13 @@ import { ToasterService } from './../../../../core/services/toaster.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 
 @Component({
+
   selector: 'app-completed-orders-detail',
   templateUrl: './completed-orders-detail.component.html',
   styleUrls: ['./completed-orders-detail.component.css'],
+  standalone: false
+
+
 })
 export class CompletedOrdersDetailComponent implements OnInit {
   dtOptions: DataTables.Settings = {};

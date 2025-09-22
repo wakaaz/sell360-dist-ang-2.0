@@ -14,9 +14,13 @@ import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 
 @Component({
+
   selector: 'app-retailer-recovery',
   templateUrl: './retailer-recovery.component.html',
   styleUrls: ['./retailer-recovery.component.css'],
+  standalone: false
+
+
 })
 export class RetailerRecoveryComponent implements OnInit {
   permissions: any;

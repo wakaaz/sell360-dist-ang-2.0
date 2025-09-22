@@ -13,10 +13,14 @@ import { GeneralDataService } from '../../../shared/services';
 import { SalesmenService } from '../../services/salesmen.service';
 
 @Component({
+
     selector: 'app-salesmenlist-component',
     templateUrl: 'salesmen-list.component.html',
     styleUrls: ['./salesmen-list.component.css'],
     encapsulation: ViewEncapsulation.None,
+  standalone: false
+
+
 })
 
 export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {

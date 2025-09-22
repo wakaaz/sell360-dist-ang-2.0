@@ -138,11 +138,10 @@
                                                     <h4>Payment <span>Mode</span></h4>
                                                     <div class="PaymentMode-graph" style="display: block;">
                                                         <canvas id="PaymentMode" baseChart [data]="paymentChartData"
-                                                            [labels]="paymentChartLabels" [chartType]="paymentChartType"
+                                                            [labels]="paymentChartLabels" [type]="paymentChartType"
                                                             [options]="paymentChartOptions"
                                                             [plugins]="paymentChartPlugins"
-                                                            [legend]="paymentChartLegend"
-                                                            [colors]="paymentChartColors"></canvas>
+                                                            [legend]="paymentChartLegend"></canvas>
                                                     </div>
                                                 </div>
                                             </div>
@@ -255,8 +254,8 @@
 
                                         <h2 class="_head01">Category <span>Wise </span></h2>
                                         <canvas id="myChart" class="CategoryChart" baseChart [data]="categoryChartData"
-                                            [labels]="categoryChartLabels" [chartType]="categoryChartType"
-                                            [options]="categoryChartOptions" [colors]="categoryChartColors"></canvas>
+                                            [labels]="categoryChartLabels" [type]="categoryChartType"
+                                            [options]="categoryChartOptions"></canvas>
                                     </div>
 
                                 </div>

@@ -29,14 +29,14 @@ import { SpotSaleService } from './services/spot-sale.service';
 import { RetailerRecoveryComponent } from './components/retailer-recovery/retailer-recovery.component';
 import { StockAllocationComponent } from './components/order-dispatched/stock-allocation/stock-allocation.component';
 import { NewCounterSaleComponent } from './components/new-counter-sale/new-counter-sale.component';
-import { Ng2SearchPipeModule } from 'ng2-search-filter';
+// import { Ng2SearchPipeModule } from 'ng2-search-filter';
 // import { Ng2SearchPipeModule } from 'ng2-search-filter/src/ng2-filter.module';
 
 @NgModule({
   imports: [
     CommonModule,
     OrdersRoutingModule,
-    Ng2SearchPipeModule,
+    // Ng2SearchPipeModule,
     FormsModule,
     ReactiveFormsModule,
     ClickOutsideModule,

@@ -11,6 +11,7 @@ import { ProductsRightPanelComponent } from './components/product-right-panel/pr
 import { RetailerSubListComponent } from './components/retailer-sub-listing/retailer-sub-listing.component';
 import { ReturnedProductsComponent } from './components/returned-products/returned-products.component';
 import { Decimal } from './pipes/Decimal.pipe';
+import { FilterPipe } from './pipes/filter.pipe';
 import { PipeModule } from './pipes/pipe.module';
 import { DataService, GeneralDataService } from './services';
 
@@ -30,8 +31,8 @@ const components = [
     NgSelectModule,
     PipeModule,
   ],
-  exports: [...components, Decimal],
-  declarations: [...components],
+  exports: [...components, Decimal, FilterPipe],
+  declarations: [...components, FilterPipe],
   providers: [GeneralDataService, DataService, PipeModule],
 })
 export class SharedModule {

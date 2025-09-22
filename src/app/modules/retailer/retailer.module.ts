@@ -4,7 +4,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { DataTablesModule } from 'angular-datatables';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ChartsModule } from 'ng2-charts';
+import { NgChartsModule } from 'ng2-charts';
 
 import { SharedModule } from '../shared/shared.module';
 import { RetailerRoutingModule } from './retailer-routing.module';
@@ -28,7 +28,7 @@ import { RetailerInvoicesComponent } from './components/retailer-invoices/retail
     DataTablesModule,
     ClickOutsideModule,
     NgSelectModule,
-    ChartsModule,
+    NgChartsModule,
     RetailerRoutingModule,
   ],
   declarations: [

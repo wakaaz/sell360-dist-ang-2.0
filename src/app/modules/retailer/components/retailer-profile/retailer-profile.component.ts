@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartType, ChartOptions, Chart } from 'chart.js';
-import { SingleDataSet, Label, Color } from 'ng2-charts';
 import * as echarts from 'echarts';
 import { Loader, LoaderOptions } from 'google-maps';
 import { ActivatedRoute } from '@angular/router';
@@ -14,7 +13,9 @@ import { DomSanitizer } from '@angular/platform-browser';
   styleUrls: ['./retailer-profile.component.css'],
 })
 export class RetailerProfileComponent implements OnInit {
-  options: LoaderOptions = {/* todo */ };
+  options: LoaderOptions = {
+    /* todo */
+  };
   loader = new Loader('AIzaSyAPx6ZyRZ1B8SoBCDMZ89LQ5TyQTr-pgN8', this.options);
   dtOptions: DataTables.Settings = {};
   dtOptionsOrders: DataTables.Settings = {};
@@ -33,10 +34,10 @@ export class RetailerProfileComponent implements OnInit {
     rotation: 1 * Math.PI,
     circumference: 1 * Math.PI,
   };
-  public paymentChartLabels: Label[] = ['Cash', 'Cheque', 'Deposite'];
-  public paymentChartData: SingleDataSet = [350, 209, 55]; // Static for now
+  public paymentChartLabels: string[] = ['Cash', 'Cheque', 'Deposite'];
+  public paymentChartData: number[] = [350, 209, 55]; // Static for now
   public paymentChartType: ChartType = 'doughnut';
-  public paymentChartColors: Color[] = [
+  public paymentChartColors: any[] = [
     {
       backgroundColor: ['#0038ba', '#282828', '#939393'],
       borderColor: ['#fff', '#fff', '#fff'],
@@ -61,21 +62,21 @@ export class RetailerProfileComponent implements OnInit {
       ): number {
         return a + b;
       },
-        0);
+      0);
       for (let i = 0; i < ds.data.length; i++) {
         text.push('<li>');
         const perc = Math.round((100 * (ds.data as Array<number>)[i]) / sum);
         text.push(
           '<span style="background-color:' +
-          ds.backgroundColor[i] +
-          '">' +
-          '</span>' +
-          chart.data.labels[i] +
-          ' (' +
-          ds.data[i] +
-          ') (' +
-          perc +
-          '%)'
+            ds.backgroundColor[i] +
+            '">' +
+            '</span>' +
+            chart.data.labels[i] +
+            ' (' +
+            ds.data[i] +
+            ') (' +
+            perc +
+            '%)'
         );
         text.push('</li>');
       }
@@ -83,14 +84,14 @@ export class RetailerProfileComponent implements OnInit {
       return text.join('');
     },
   };
-  public invoiceChartData: SingleDataSet = [400, 300]; // Static for now
+  public invoiceChartData: number[] = [400, 300]; // Static for now
   public invoiceChartType: ChartType = 'pie';
-  public InvoiceChartLabels: Label[] = ['Paid Invoices', 'Pending Invoices'];
+  public InvoiceChartLabels: string[] = ['Paid Invoices', 'Pending Invoices'];
   public invoiceChartColors: string[] = ['#0038ba', '#282828'];
 
   // Category Chart
   public categoryChartType: ChartType = 'pie';
-  public categoryChartLabels: Label[] = [
+  public categoryChartLabels: string[] = [
     'Shahi Meva',
     'Aas Pas',
     'Daal Channa',
@@ -98,8 +99,8 @@ export class RetailerProfileComponent implements OnInit {
     'Ballay Nimko',
     'Shahi Elaichi',
   ]; // Static for now
-  public categoryChartData: SingleDataSet = [800, 700, 600, 950, 500, 150]; // Static for now
-  public categoryChartColors: Color[] = [
+  public categoryChartData: number[] = [800, 700, 600, 950, 500, 150]; // Static for now
+  public categoryChartColors: any[] = [
     {
       backgroundColor: [
         '#002b8f',
@@ -125,7 +126,7 @@ export class RetailerProfileComponent implements OnInit {
     private retailerService: RetailerService,
     private toastService: ToasterService,
     private sanitizer: DomSanitizer
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -514,11 +515,10 @@ export class RetailerProfileComponent implements OnInit {
     salesman: string,
     date: string,
     invoice_number: string,
-    status: string,
-  )
-    : void {
+    status: string
+  ): void {
     this.orderDetail = null;
-    this.retailerService.getOrderDetail(orderId).subscribe(res => {
+    this.retailerService.getOrderDetail(orderId).subscribe((res) => {
       const data = {
         items: res.details,
         order_booker: orderBooker,
@@ -526,26 +526,34 @@ export class RetailerProfileComponent implements OnInit {
         date: date,
         invoice_number,
         status,
-      }
+      };
       this.orderDetail = { ...data };
       console.log('res =>', JSON.stringify(this.orderDetail));
     });
   }
 
   showVisitStorePicture(id) {
-    const visit = this.visits.find(x => x.id === id);
+    const visit = this.visits.find((x) => x.id === id);
     this.visitIamge = visit.picture;
   }
   getGrAmount(items: any) {
-    return items?.map(x => x.final_price).reduce((accumulator, cur) => accumulator + cur);
+    return items
+      ?.map((x) => x.final_price)
+      .reduce((accumulator, cur) => accumulator + cur);
   }
   getToAmount(items: any) {
-    return items?.map(x => x.trade_offer).reduce((accumulator, cur) => accumulator + cur);
+    return items
+      ?.map((x) => x.trade_offer)
+      .reduce((accumulator, cur) => accumulator + cur);
   }
   getSpcDiscAmount(items: any) {
-    return items?.map(x => x.special_discount).reduce((accumulator, cur) => accumulator + cur);
+    return items
+      ?.map((x) => x.special_discount)
+      .reduce((accumulator, cur) => accumulator + cur);
   }
   getExtraDiscAmount(items: any) {
-    return items?.map(x => x.extra_discount).reduce((accumulator, cur) => accumulator + cur);
+    return items
+      ?.map((x) => x.extra_discount)
+      .reduce((accumulator, cur) => accumulator + cur);
   }
 }

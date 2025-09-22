@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToasterService } from 'src/app/core/services/toaster.service';
 import { DistributorService } from '../../services/distributor.service';
+// import 'datatables.net';
 
 @Component({
   selector: 'app-list',

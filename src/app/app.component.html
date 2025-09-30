@@ -1,4 +1,5 @@
-<div *ngIf="!isLoggedIn" class="bg_main">
+<div *ngIf="!isLoggedIn" class="bg-[url('/assets/images/log-bg.png')]">
+  <!-- Tailwind CSS Test - Remove this after confirming it works -->
   <div
     *ngIf="showToast"
     aria-live="polite"
@@ -33,19 +34,29 @@
       </div>
     </div>
   </div>
-  <div id="wrapper" class="EbobBGImg">
+  <div class="flex h-screen items-center bg-[url('/assets/images/login-page.png')] bg-no-repeat bg-left-top bg-contain">
     <div class="container mt-0 mb-0">
       <router-outlet></router-outlet>
     </div>
-    <div class="Log_footer">
-      Copyright © 2021 sell360 All rights reserved.<br />
-      Design & Developed by
-      <a href="https://allomate.com" target="_blank">Allomate Solutions</a>
+    <div class="fixed bottom-0 left-0 right-0 w-full text-secondary text-xs tracking-wide px-5 pb-2.5 text-center font-primary opacity-75">
+      Copyright © 2021 Sell360 All rights reserved.<br />
+      Design &amp; Developed by
+      <a 
+        href="https://allomate.com" 
+        target="_blank"
+        class="text-secondary underline hover:text-primary focus:text-primary transition-colors duration-200"
+      >
+        Allomate Solutions
+      </a>
     </div>
   </div>
 </div>
 
 <div *ngIf="isLoggedIn && !isSideNavHidden" class="sidebarblue">
+ 
+  
+ 
+
   <div class="aside-primary">
     <div class="sell360">
       <a routerLink="/home"
@@ -131,6 +142,9 @@
       </ul>
     </div>
   </div>
+
+
+
 </div>
 <div *ngIf="isLoggedIn" id="_subNav-id" #subNav (clickOutside)="closeSubMenu()">
   <div *ngIf="selectedSubMenu" class="_subNav">
@@ -197,9 +211,9 @@
         Close every thing!
       </button>
       <router-outlet></router-outlet>
-      <footer *ngIf="true" class="sticky-footer">
-        <div class="container my-auto">
-          <div class="copyright text-center my-auto">
+      <footer *ngIf="true" class="bg-white border-t border-gray-200 py-4 mt-auto">
+        <div class="container mx-auto px-4">
+          <div class="text-center text-secondary text-sm font-primary">
             {{ currentYear }} © Sell360 All rights reserved
           </div>
         </div>

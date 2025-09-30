@@ -1,65 +1,129 @@
-<div class="table-struct full-width">
-    <div class="table-cell vertical-align-middle auth-form-wrap">
-        <div class="auth-form">
-            <div class="row m-0">
-                <div class="col-md-12 col-height">
-                    <div class="login-right">
-                        <div class="log-form">
-                            <h3>LOG <span>IN</span></h3>
-                            <form #loginForm="ngForm">
-                                <div class="form-group">
-                                    <div class="user"> <span class="fa fa-user-alt"></span>
-                                        <input type="email" class="form-control" [(ngModel)]="username"
-                                            #usernameField="ngModel" required id="exampleInputEmail_2" name="usrename"
-                                            placeholder="Username" style="font-size: 13px">
-                                    </div>
-                                    <span
-                                        *ngIf="(usernameField.dirty || usernameField.touched || loginForm.submitted) && usernameField.errors?.required"
-                                        class="field-error">
-                                        Username required!
-                                    </span>
-                                </div>
-                                <div class="form-group">
-                                    <div class="clearfix"></div>
-                                    <div class="pass"> <span class="fa fa-unlock"></span>
-                                        <input type="password" class="form-control" required id="exampleInputpwd_2"
-                                            name="password" [(ngModel)]="password" #passwordField="ngModel"
-                                            placeholder="Password" style="font-size: 13px">
-                                    </div>
-                                    <span
-                                        *ngIf="(passwordField.dirty || passwordField.touched || loginForm.submitted) && passwordField.errors?.required"
-                                        class="field-error">
-                                        Password required!
-                                    </span>
-                                </div>
-                                <div class="form-group">
-                                    <div class="clearfix">
-                                        <re-captcha [(ngModel)]="captcha" required name="re-captcha" siteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></re-captcha>
-                                    </div>
-                                    <span
-                                        *ngIf="loginForm.submitted && !captcha"
-                                        class="field-error">
-                                        Please complete the captcha!
-                                    </span>
-                                </div>
-
-                                <h2 class="login-error" *ngIf="apiError">
-                                    {{apiError}}
-                                </h2>
-                                <div class="form-group mb-0">
-                                    <button *ngIf="!loading" type="submit" (click)="login(loginForm)"
-                                        class="btn btn-info btn-login">LOG <span>IN</span></button>
-                                    <button *ngIf="loading" class="btn btn-info btn-login" disabled>
-                                        <div class="spinner-border text-light" role="status">
-                                            <span class="sr-only">Loading...</span>
-                                        </div>
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+ 
+     <div class="container flex mx-auto px-3 sm:px-4">
+      <div class="flex ml-auto items-center !mr-3 lg:!mr-8 login-form-margin">
+        <div class="max-w-md mx-auto">
+          <h3 class="text-xl font-primary mb-2 text-secondary font-semibold">
+            LOG <span class="font-secondary font-normal">IN</span>
+          </h3>
+          <form #loginForm="ngForm" class="w-[310px] login-form-container">
+            <!-- Username Input -->
+            <div class="relative">
+              <div
+                class="absolute top-[8px] left-0 flex items-center pl-1.5 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-secondary opacity-40"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="email"
+                [(ngModel)]="username"
+                #usernameField="ngModel"
+                required
+                id="exampleInputEmail_2"
+                name="usrename"
+                placeholder="Username"
+                class="text-secondary rounded-[8px] border !border-secondarygray text-sm bg-secondarygray leading-none h-auto mb-3 w-full pl-8 py-2.5 pr-3  focus:!border-primary focus:outline-none focus:shadow-none transition-colors duration-200"
+              />
+              <span
+                *ngIf="(usernameField.dirty || usernameField.touched || loginForm.submitted) && usernameField.errors?.required"
+                class="block text-red-500 text-xs mb-2 -mt-2"
+              >
+                Username required!
+              </span>
             </div>
+
+            <!-- Password Input -->
+            <div class="relative">
+              <div
+                class="absolute top-[8px] left-0 flex items-center pl-1.5 pointer-events-none"
+              >
+                <svg
+                  class="w-5 h-5 text-secondary opacity-40"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </div>
+              <input
+                type="password"
+                [(ngModel)]="password"
+                #passwordField="ngModel"
+                required
+                id="exampleInputpwd_2"
+                name="password"
+                placeholder="Password"
+                class="text-secondary rounded-[8px] border !border-secondarygray text-sm bg-secondarygray leading-none h-auto mb-3 w-full pl-8 py-2.5 pr-3  focus:!border-primary focus:outline-none focus:shadow-none transition-colors duration-200"
+              />
+              <span
+                *ngIf="(passwordField.dirty || passwordField.touched || loginForm.submitted) && passwordField.errors?.required"
+                class="block text-red-500 text-xs mb-2 -mt-2"
+              >
+                Password required!
+              </span>
+            </div>
+
+            <!-- Captcha -->
+            <div class="mb-3">
+              <re-captcha 
+                [(ngModel)]="captcha" 
+                required 
+                name="re-captcha" 
+                siteKey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI">
+              </re-captcha>
+              <span
+                *ngIf="loginForm.submitted && !captcha"
+                class="block text-red-500 text-xs mt-1"
+              >
+                Please complete the captcha!
+              </span>
+            </div> 
+
+            <!-- Error Message -->
+            <div *ngIf="apiError" class="mb-3">
+              <p class="text-red-500 text-sm font-medium">
+                {{apiError}}
+              </p>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="mb-0">
+              <button
+                *ngIf="!loading"
+                type="submit"
+                (click)="login(loginForm)"
+                class="rounded-[8px] w-[100px] p-2 text-[13px] font-primary tracking-[1px] bg-primary text-white border-0  hover:bg-primary hover:text-white focus:bg-primary focus:text-white transition-colors duration-200"
+              >
+                LOG <span>IN</span>
+              </button>
+              <button
+                *ngIf="loading"
+                class="rounded-[8px] w-[100px] p-2 text-[13px] font-primary tracking-[1px] bg-primary text-white border-0  opacity-75 cursor-not-allowed"
+                disabled
+              >
+                <div class="flex items-center justify-center">
+                  <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Loading...
+                </div>
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
-</div>
+ 
+ 

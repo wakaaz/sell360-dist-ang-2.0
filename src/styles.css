@@ -10,12 +10,68 @@
 @import './styles/dropzone.css';
 @import './styles/lightbox.css';
 @import './styles/lightbox.min.css'; */
-@import './styles/rout-paln.css';
+/* @import './styles/rout-paln.css'; */
 /* @import './styles/style.css'; */
 /* @import './styles/menu.css';  */
  
 @import './styles/fontawesome-free/css/all.css';
-@import "~@ng-select/ng-select/themes/default.theme.css";
+/* @import "~@ng-select/ng-select/themes/default.theme.css"; */
+
+/* AG Grid Quartz Theme */
+@import 'ag-grid-community/styles/ag-grid.css';
+@import 'ag-grid-community/styles/ag-theme-quartz.css';
+
+/* Apply primary font to all AG Grid instances */ 
+/* AG Grid height fix */
+.ag-theme-quartz {
+    width: 100%; 
+    font-family: 'Outfit', sans-serif !important;
+}
+/* Remove border radius from AG Grid header container */
+.ag-theme-quartz .ag-header,
+.ag-theme-quartz .ag-header-container,
+.ag-theme-quartz .ag-header-cell,
+.ag-theme-quartz .ag-header-group-cell,
+.ag-theme-quartz .ag-header-row,
+.ag-theme-quartz .ag-header-viewport {
+  border-radius: 0 !important;
+}
+
+.ag-theme-quartz .ag-root-wrapper {
+    width: 100%;
+}
+
+.ag-theme-quartz .ag-root-wrapper.ag-layout-auto-height {
+    width: 100%;
+}
+
+/* Ensure the grid container has proper styling */
+.ag-grid-container {
+    width: 100%; 
+}
+.ag-header-cell-text{
+	opacity: 0.70;
+}
+/* Specific AG Grid elements font styling */
+.ag-theme-quartz .ag-header-cell-label,
+.ag-theme-quartz .ag-cell,
+.ag-theme-quartz .ag-paging-panel,
+.ag-theme-quartz .ag-status-bar,
+.ag-theme-quartz .ag-filter-toolpanel,
+.ag-theme-quartz .ag-column-drop,
+.ag-theme-quartz .ag-column-drop-vertical,
+.ag-theme-quartz .ag-column-drop-horizontal,
+.ag-theme-quartz .ag-tool-panel,
+.ag-theme-quartz .ag-menu,
+.ag-theme-quartz .ag-popup,
+.ag-theme-quartz .ag-tooltip {
+    font-family: 'Outfit', sans-serif !important;
+}
+.ag-paging-panel { 
+    justify-content: space-between; font-size: 12px; color: #7e7e7e;
+}
+ 
+
 @media (max-width: 1280px) {
   .container {
     max-width: 100% !important;

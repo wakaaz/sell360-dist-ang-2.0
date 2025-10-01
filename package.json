@@ -26,6 +26,8 @@
     "@ngrx/router-store": "^20.0.0",
     "@ngrx/store": "^20.0.0",
     "@ngrx/store-devtools": "^20.0.0",
+    "ag-grid-angular": "^34.2.0",
+    "ag-grid-community": "^34.2.0",
     "angular-datatables": "^15.0.0",
     "chart.js": "^2.9.3",
     "datatables.net": "^1.10.20",

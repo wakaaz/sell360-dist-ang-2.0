@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { OrdersRoutingModule } from './orders-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AgGridModule } from 'ag-grid-angular';
 import { DataTablesModule } from 'angular-datatables';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { SharedModule } from '../shared/shared.module';
@@ -42,6 +43,7 @@ import { NewCounterSaleComponent } from './components/new-counter-sale/new-count
     ClickOutsideModule,
     NgSelectModule,
     SharedModule,
+    AgGridModule,
     DataTablesModule,
   ],
   declarations: [

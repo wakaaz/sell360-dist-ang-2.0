@@ -34,15 +34,19 @@
       </div>
     </div>
   </div>
-  <div class="flex h-screen items-center bg-[url('/assets/images/login-page.png')] bg-no-repeat bg-left-top bg-contain">
+  <div
+    class="flex h-screen items-center bg-[url('/assets/images/login-page.png')] bg-no-repeat bg-left-top bg-contain"
+  >
     <div class="container mt-0 mb-0">
       <router-outlet></router-outlet>
     </div>
-    <div class="fixed bottom-0 left-0 right-0 w-full text-secondary text-xs tracking-wide px-5 pb-2.5 text-center font-primary opacity-75">
+    <div
+      class="fixed bottom-0 left-0 right-0 w-full text-secondary text-xs tracking-wide px-5 pb-2.5 text-center font-primary opacity-75"
+    >
       Copyright © 2021 Sell360 All rights reserved.<br />
       Design &amp; Developed by
-      <a 
-        href="https://allomate.com" 
+      <a
+        href="https://allomate.com"
         target="_blank"
         class="text-secondary underline hover:text-primary focus:text-primary transition-colors duration-200"
       >
@@ -53,101 +57,246 @@
 </div>
 
 <div *ngIf="isLoggedIn && !isSideNavHidden" class="sidebarblue">
+  <div
+    class="h-full fixed overflow-visible top-0 bottom-0 left-0 z-[1000] flex flex-row flex-none"
+  >
+    <div
+      class="flex flex-col h-full w-[185px] transition-[width] duration-500 bg-gradient-to-r from-[#1E54D3] to-[#0038BA] rounded-tr-lg rounded-br-lg"
+    >
+      <div class="flex justify-between p-[15px] relative">
+        <a routerLink="/home">
+          <img
+            src="/assets/images/logo-w.svg"
+            alt="Sell360"
+            class="h-10 w-[80px]"
+          />
+        </a>
+        <button (click)="toggleDarkMode()" class="absolute top-4 right-4">
+          <svg
+            id="lightIcon"
+            style="display: none"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="#FFFFFF"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"
+            />
+            <path
+              d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"
+            />
+          </svg>
+          <svg
+            id="darkIcon"
+            xmlns="http://www.w3.org/2000/svg"
+            width="16.069"
+            height="16.069"
+            fill="#FFFFFF"
+            viewBox="0 0 16.069 16.069"
+          >
+            <path
+              id="brightness"
+              d="M8.035,11.382a3.348,3.348,0,1,1,3.348-3.348A3.349,3.349,0,0,1,8.035,11.382Zm0-5.356a2.009,2.009,0,1,0,2.009,2.009A2.015,2.015,0,0,0,8.035,6.026ZM8.7,2.678V.67a.67.67,0,0,0-1.339,0V2.678a.67.67,0,0,0,1.339,0ZM8.7,15.4V13.391a.67.67,0,0,0-1.339,0V15.4a.67.67,0,0,0,1.339,0ZM3.348,8.035a.672.672,0,0,0-.67-.67H.67A.67.67,0,0,0,.67,8.7H2.678A.672.672,0,0,0,3.348,8.035Zm12.721,0a.672.672,0,0,0-.67-.67H13.391a.67.67,0,0,0,0,1.339H15.4A.672.672,0,0,0,16.069,8.035ZM4.493,4.493a.667.667,0,0,0,0-.944L3.154,2.21a.668.668,0,0,0-.944.944L3.549,4.493a.657.657,0,0,0,.475.194A.686.686,0,0,0,4.5,4.493Zm9.374,9.374a.667.667,0,0,0,0-.944l-1.339-1.339a.668.668,0,1,0-.944.944l1.339,1.339a.657.657,0,0,0,.475.194.686.686,0,0,0,.475-.194Zm-10.713,0,1.339-1.339a.668.668,0,1,0-.944-.944L2.21,12.922a.667.667,0,0,0,0,.944.657.657,0,0,0,.475.194.686.686,0,0,0,.475-.194Zm9.374-9.374,1.339-1.339a.668.668,0,1,0-.944-.944L11.583,3.549a.667.667,0,0,0,0,.944.657.657,0,0,0,.475.194.686.686,0,0,0,.475-.194Z"
+              fill="#FFFFFF"
+            />
+          </svg>
+        </button>
+      </div>
+      <div class="flex-1 overflow-auto pb-2">
+        <ul>
+          <!-- <li>
+                    <a [routerLink]="['dashboard']"
+                      class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear hover:text-white hover:bg-[#0038BA] hover:no-underline"
+                    >
+                      <span class="mr-2.5 mt-0.5">
+                        <img src="/assets/images/daily-dashboard.svg" alt="" class="h-4 w-4" />
+                      </span>
+                      Dashboard
+                    </a>
+                  </li> -->
+          <li *ngIf="permissions?.Tabs?.primary_orders">
+            <a
+              (click)="openSubmenu($event, 'primaryOrders')"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+            >
+              <span class="mr-2.5 mt-0.5">
+                <img
+                  src="/assets/images/new-primary-order.svg"
+                  alt=""
+                  class="h-4 w-4"
+                />
+              </span>
+              Primary Sales
+            </a>
+          </li>
+          <li *ngIf="permissions?.Tabs?.secondary_orders">
+            <a
+              (click)="openSubmenu($event, 'orders')"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+            >
+              <span class="mr-2.5 mt-0.5">
+                <img
+                  src="/assets/images/order-icon.svg"
+                  alt=""
+                  class="h-4 w-4"
+                />
+              </span>
+              Secondary Sales
+            </a>
+          </li>
+          <li>
+            <a
+              (click)="openSubmenu($event, 'salesmen')"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+            >
+              <span class="mr-2.5 mt-0.5">
+                <img
+                  src="/assets/images/customer-icon.svg"
+                  alt=""
+                  class="h-4 w-4"
+                />
+              </span>
+              Salesmen
+            </a>
+          </li>
+          <li>
+            <a
+              (click)="openSubmenu($event, 'inventory')"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+            >
+              <span class="mr-2.5 mt-0.5">
+                <img
+                  src="/assets/images/inventory-icon.svg"
+                  alt=""
+                  class="h-4 w-4"
+                />
+              </span>
+              Inventory
+            </a>
+          </li>
+          <li>
+            <a
+              [routerLink]="['distributor']"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+            >
+              <span class="mr-2.5 mt-0.5">
+                <img
+                  src="/assets/images/distributor-icon-white.svg"
+                  alt=""
+                  class="h-4 w-4"
+                />
+              </span>
+              Distributors
+            </a>
+          </li>
+          <li>
+            <a
+              (click)="openSubmenu($event, 'retailer')"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+            >
+              <span class="mr-2.5 mt-0.5">
+                <img
+                  src="/assets/images/retailar-icon.svg"
+                  alt=""
+                  class="h-4 w-4"
+                />
+              </span>
+              Retailer
+            </a>
+          </li>
+          <li>
+            <a
+              (click)="openSubmenu($event, 'reports')"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+            >
+              <span class="mr-2.5 mt-0.5">
+                <img
+                  src="/assets/images/reports-icon.svg"
+                  alt=""
+                  class="h-4 w-4"
+                />
+              </span>
+              Reports
+            </a>
+          </li>
+          <!-- Hidden for first version -->
+          <!-- <li>
+                    <a (click)="openSubmenu($event, 'payments')"
+                      class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear hover:text-white hover:bg-[#0038BA] hover:no-underline"
+                    >
+                      <span class="mr-2.5 mt-0.5">
+                        <img src="/assets/images/payment-icon.svg" alt="" class="h-4 w-4" />
+                      </span>
+                      Payments
+                    </a>
+                  </li> -->
+        </ul>
+      </div>
+      <div>
+        <!-- <div
+                class="w-full mt-4 px-4 pb-3 border-b border-[#2F5FCC] flex items-center"
+              >
  
-  
+                <a href="#" class="relative">
+                  <img
+                    src="../images/bell-icon-2.svg"
+                    alt="Notification"
+                    title="Notification"
+                    class="w-[14px]"
+                  />
+                  <span
+                    class="absolute -top-2 -right-1 bg-white primary-color text-[10px] font-bold rounded-full px-1"
+                  >
+                    4
+                  </span>
+                </a>
  
-
-  <div class="aside-primary">
-    <div class="sell360">
-      <a routerLink="/home"
-        ><img alt="Sell360" src="/assets/images/logo-w.svg"
-      /></a>
-    </div>
-    <div class="main-links">
-      <ul>
-        <!-- <li>
-          <a [routerLink]="['dashboard']"
-            ><img src="/assets/images/daily-dashboard.svg" alt="" />
-             Dashboard</a
-          >
-        </li> -->
-        <li *ngIf="permissions?.Tabs?.primary_orders">
-          <a (click)="openSubmenu($event, 'primaryOrders')"
-            ><img src="/assets/images/new-primary-order.svg" alt="" /> Primary
-            Sales</a
-          >
-        </li>
-        <li *ngIf="permissions?.Tabs?.secondary_orders">
-          <a (click)="openSubmenu($event, 'orders')"
-            ><img src="/assets/images/order-icon.svg" alt="" /> Secondary
-            Sales</a
-          >
-        </li>
-        <li>
-          <a (click)="openSubmenu($event, 'salesmen')"
-            ><img src="/assets/images/customer-icon.svg" alt="" /> Salesmen</a
-          >
-        </li>
-        <li>
-          <a (click)="openSubmenu($event, 'inventory')"
-            ><img src="/assets/images/inventory-icon.svg" alt="" /> Inventory</a
-          >
-        </li>
-        <li>
-          <a [routerLink]="['distributor']"
-            ><img src="/assets/images/distributor-icon-white.svg" alt="" />
-            Distributors</a
-          >
-        </li>
-        <li>
-          <a (click)="openSubmenu($event, 'retailer')"
-            ><img src="/assets/images/retailar-icon.svg" alt="" /> Retailer</a
-          >
-        </li>
-        <li>
-          <a (click)="openSubmenu($event, 'reports')"
-            ><img src="/assets/images/reports-icon.svg" alt="" /> Reports</a
-          >
-        </li>
-        <!-- Hidden for first version -->
-        <!-- <li><a (click)="openSubmenu($event, 'payments')"><img src="/assets/images/payment-icon.svg" alt="" /> Payments</a></li> -->
-      </ul>
-    </div>
-    <!-- <div class="_user-nav">
-      <a href="#"
-        ><img
-          src="/assets/images/bell-icon-2.svg"
-          alt="Notification"
-          title="Notification"
-        /><span class="badge">4</span></a
-      >
-      <a href="#" class="userIMG"
-        ><img src="/assets/images/avatar.svg" alt=""
-      /></a>
-      <a href="#" class="setting-icon"
-        ><img
-          src="/assets/images/setting-icon.svg"
-          alt="Setting"
-          title="Setting"
-      /></a>
-    </div> -->
-    <div class="sidebar-BL">
-      <ul>
-        <li>
-          <a (click)="logout()"
-            ><img src="/assets/images/logout-icon.svg" alt="Employee" />
-            Logout</a
-          >
-        </li>
-      </ul>
+                <a href="#" class="m-auto">
+                  <img
+                    src="../images/avatar.svg"
+                    alt="User"
+                    class="w-10 h-10 bg-white rounded-full"
+                  />
+                </a>
+ 
+                <a href="#">
+                  <img
+                    src="../images/setting-icon.svg"
+                    alt="Setting"
+                    title="Setting"
+                    class="w-[14px]"
+                  />
+                </a>
+              </div> -->
+        <!-- Sidebar -->
+        <div class="w-full">
+          <ul class="list-none w-full mb-0">
+            <!-- Logout -->
+            <li class="relative block w-full whitespace-nowrap text-left">
+              <a
+                (click)="logout()"
+                class="flex cursor-pointer text-[14px] font-secondary text-bodybg px-[15px] py-[8px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+              >
+                <span class="mr-2.5 mt-0.5">
+                  <img
+                    src="/assets/images/logout-icon.svg"
+                    alt="logout"
+                    class="h-4 w-4"
+                  />
+                </span>
+                Logout
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
-
-
-
 </div>
 <div *ngIf="isLoggedIn" id="_subNav-id" #subNav (clickOutside)="closeSubMenu()">
-  <div *ngIf="selectedSubMenu" class="_subNav">
+  <div *ngIf="selectedSubMenu" class="_subNav font-primary">
     <a id="SN-close" (click)="closeSubMenu()" class="SN-close-btn"
       ><i class="fa fa-arrow-left"></i
     ></a>
@@ -211,13 +360,16 @@
         Close every thing!
       </button>
       <router-outlet></router-outlet>
-      <footer *ngIf="true" class="bg-white border-t border-gray-200 py-4 mt-auto">
-        <div class="container mx-auto px-4">
-          <div class="text-center text-secondary text-sm font-primary">
-            {{ currentYear }} © Sell360 All rights reserved
-          </div>
-        </div>
-      </footer>
     </div>
+
   </div>
+
+    <footer
+      class="bg-[#e9ecef] pl-[185px] dark:bg-darkprimary p-[10px] fixed flex justify-center bottom-0 w-full"
+    >
+      <div class="container mx-auto px-4 text-center text-opacity-60 text-[13px] text-secondary  dark:text-white font-primary">
+        2021 Sell3sixty All rights reserved
+      </div>
+    </footer>
+    
 </div>

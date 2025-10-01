@@ -1,3 +1,131 @@
+
+
+ 
+ 
+ <div class="container mx-auto px-4"> 
+    
+  <div class="mt-2.5 mb-2.5">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1
+          class="text-lg text-secondary dark:text-white font-primary font-medium mb-0"
+        >
+        Create  
+          <span class="font-light dark:text-white">Dispatch</span>
+        </h1>
+      </div>
+      <div>
+        <!-- <nav class="flex items-center space-x-2 text-sm font-primary"> 
+          <a
+            href="#"
+            class="font-secondary text-secondary dark:text-white opacity-70 hover:opacity-100 transition-opacity"
+          >
+            Orders
+          </a> 
+          <span class="text-secondary dark:text-white">></span> 
+          <span class="font-secondary text-secondary dark:text-white">
+            Management
+          </span>
+        </nav> -->
+      </div>
+    </div>
+  </div>
+
+
+  <div class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a]">
+    <div class="text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-black dark:from-transparent dark:to-transparent shadow-none">
+      <h2 class="relative pl-0 mb-0 text-secondary dark:text-white before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
+        Orders <span class="font-light">List</span>
+      </h2>
+    </div>
+    <div class="p-4">
+      
+      <table
+      *ngIf="!loading"
+      datatable
+      [dtOptions]="dtOptions"
+      class="table table-hover dt-responsive nowrap"
+      id="example"
+      style="width: 100%"
+    >
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Sales Man</th>
+          <th>Order Bookers</th>
+          <th>Orders</th>
+          <th>Booked Value</th>
+          <th>Pending Shops</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of ordersList; let ind = index">
+          <td>{{ order.date }}</td>
+          <td>{{ order.sales_man | titlecase }}</td>
+          <td>{{ order.emp_names || order.emp_name }}</td>
+          <td>{{ order.total_orders }}</td>
+          <td>{{ order.order_total | number: "1.2-2" }}</td>
+          <td>{{ order.pending_retailers }}</td>
+          <td>
+            <button
+              (click)="loadBookingSheet(order)"
+              class="btn btn-default mb-0"
+            >
+              BS
+            </button>
+            <ng-container *ngIf="order.pending_retailers > 0; else activeLink">
+              <!-- Disabled button with tooltip -->
+              <button
+                class="btn btn-default btn-line mb-0"
+                title="Approve all retailers first"
+                disabled
+              >
+                Dispatch
+              </button>
+            </ng-container>
+
+            <!-- Active link rendering as an anchor -->
+            <ng-template #activeLink>
+              <a
+                [routerLink]="[
+                  '/orders',
+                  'dispatch',
+                  order.assignment_id,
+                  order.sales_man_id,
+                  order.date
+                ]"
+                class="btn btn-default btn-line mb-0"
+              >
+                Dispatch
+              </a>
+            </ng-template>
+            <button
+              (click)="selectedAssignmentId = order.assignment_id"
+              data-toggle="modal"
+              data-target="#order-revert"
+              class="btn btn-default red-bg mb-0"
+            >
+              Revert
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="loading" class="col-md-12">
+      <app-loader-white></app-loader-white>
+    </div>
+
+    
+    </div>
+  </div>
+
+ </div>
+ 
+ 
+  
+ 
+
 <!-- Confirmation Modal -->
 <div
   class="modal fade"
@@ -38,111 +166,6 @@
         >
           No
         </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Orders list -->
-<div class="container">
-  <div class="row mt-2 mb-2">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <h2 class="_head01">Create <span> Dispatch</span></h2>
-    </div>
-
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <ol class="breadcrumb">
-        <li>
-          <a routerLink="/orders"><span>Orders</span></a>
-        </li>
-        <li><span>List</span></li>
-      </ol>
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <!-- <div class="header">
-                    <h2>Create <span>Dispatch</span></h2>
-                </div> -->
-        <div class="body">
-          <table
-            *ngIf="!loading"
-            datatable
-            [dtOptions]="dtOptions"
-            class="table table-hover dt-responsive nowrap"
-            id="example"
-            style="width: 100%"
-          >
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Sales Man</th>
-                <th>Order Bookers</th>
-                <th>Orders</th>
-                <th>Booked Value</th>
-                <th>Pending Shops</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let order of ordersList; let ind = index">
-                <td>{{ order.date }}</td>
-                <td>{{ order.sales_man | titlecase }}</td>
-                <td>{{ order.emp_names || order.emp_name }}</td>
-                <td>{{ order.total_orders }}</td>
-                <td>{{ order.order_total | number: "1.2-2" }}</td>
-                <td>{{ order.pending_retailers }}</td>
-                <td>
-                  <button
-                    (click)="loadBookingSheet(order)"
-                    class="btn btn-default mb-0"
-                  >
-                    BS
-                  </button>
-                  <ng-container *ngIf="order.pending_retailers > 0; else activeLink">
-                    <!-- Disabled button with tooltip -->
-                    <button
-                      class="btn btn-default btn-line mb-0"
-                      title="Approve all retailers first"
-                      disabled
-                    >
-                      Dispatch
-                    </button>
-                  </ng-container>
-
-                  <!-- Active link rendering as an anchor -->
-                  <ng-template #activeLink>
-                    <a
-                      [routerLink]="[
-                        '/orders',
-                        'dispatch',
-                        order.assignment_id,
-                        order.sales_man_id,
-                        order.date
-                      ]"
-                      class="btn btn-default btn-line mb-0"
-                    >
-                      Dispatch
-                    </a>
-                  </ng-template>
-                  <button
-                    (click)="selectedAssignmentId = order.assignment_id"
-                    data-toggle="modal"
-                    data-target="#order-revert"
-                    class="btn btn-default red-bg mb-0"
-                  >
-                    Revert
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div *ngIf="loading" class="col-md-12">
-            <app-loader-white></app-loader-white>
-          </div>
-        </div>
       </div>
     </div>
   </div>

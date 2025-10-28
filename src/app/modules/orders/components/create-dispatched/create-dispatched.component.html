@@ -50,7 +50,7 @@
             type="text" 
             id="filter-text-box" 
             placeholder="Search orders..." 
-            class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary transition-all duration-200 font-primary text-sm"
+            class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
             (input)="onQuickFilterChanged($event)"
           />
         </div>
@@ -77,10 +77,10 @@
       </div>
       
  
-      
-      <div *ngIf="loading" class="col-md-12">
+      <div *ngIf="loading" class="flex justify-center items-center p-8">
         <app-loader-white></app-loader-white>
       </div>
+ 
     </div>
   </div>
 

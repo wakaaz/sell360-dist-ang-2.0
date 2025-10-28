@@ -87,7 +87,7 @@
     --ag-subheader-background-color: #2d2d2d;
     --ag-input-disabled-background-color: #2d2d2d;
     --ag-input-disabled-border-color: #333333;
-    --ag-checkbox-checked-color: #3b82f6;
+    --ag-checkbox-checked-color: #0038ba;
     --ag-range-selection-background-color: rgba(59, 130, 246, 0.2);
 }
 
@@ -111,10 +111,15 @@
     border-color: #444444 !important;
 }
 
-.dark .ag-theme-quartz button {
+.dark .ag-theme-quartz button, .dark .ag-theme-quartz a {
     background-color: #2d2d2d !important;
     color: #e0e0e0 !important;
     border-color: #444444 !important;
+}
+.dark .ag-theme-quartz button:hover, .dark .ag-theme-quartz a:hover {
+    background-color: #0038ba !important;
+    color: #fff !important;
+    border-color: #0038ba !important;
 }
 
 /* Ensure red buttons stay red in dark mode */
@@ -281,4 +286,6 @@
     padding-left: 185px;
 }
 
- 
+.dark .ag-theme-quartz .ag-filter-filter .ag-input-wrapper:before{
+  filter: invert();
+}

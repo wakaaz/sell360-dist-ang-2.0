@@ -28,6 +28,8 @@ export class AppComponent implements OnInit {
   permissions: any;
   isLoggedIn: boolean;
   isSideNavHidden: boolean;
+  isMobileMenuOpen: boolean = false;
+  isDarkMode: boolean = false;
 
   toastTitle: string;
   toastMessage: string;
@@ -77,6 +79,8 @@ export class AppComponent implements OnInit {
         localStorageKeys.permissions
       );
     });
+    // Initialize dark mode from localStorage
+    this.initDarkMode();
   }
 
   toasterHandler(): void {
@@ -140,6 +144,10 @@ export class AppComponent implements OnInit {
   }
 
   logout(): void {
+    // Close mobile menu if open
+    if (this.isMobileMenuOpen) {
+      this.closeMobileMenu();
+    }
     this.storageService.removeItem(localStorageKeys.session);
     this.storageService.removeItem(localStorageKeys.permissions);
     this.storageService.removeItem(localStorageKeys.distributor);
@@ -153,6 +161,42 @@ export class AppComponent implements OnInit {
     if (modal) {
       const closeButton = modal.querySelector('button.close');
       (closeButton as HTMLButtonElement).click();
+    }
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+    if (this.isMobileMenuOpen) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
+    }
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+    document.body.classList.remove('no-scroll');
+  }
+
+  initDarkMode(): void {
+    const savedMode = this.storageService.getItem('darkMode');
+    if (savedMode === 'true') {
+      this.isDarkMode = true;
+      document.documentElement.classList.add('dark');
+    } else {
+      this.isDarkMode = false;
+      document.documentElement.classList.remove('dark');
+    }
+  }
+
+  toggleDarkMode(): void {
+    this.isDarkMode = !this.isDarkMode;
+    if (this.isDarkMode) {
+      document.documentElement.classList.add('dark');
+      this.storageService.setItem('darkMode', 'true');
+    } else {
+      document.documentElement.classList.remove('dark');
+      this.storageService.setItem('darkMode', 'false');
     }
   }
 }

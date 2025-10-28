@@ -28,11 +28,11 @@ export class CreateDispatchedComponent implements OnInit {
     // AG Grid column definitions - simplified for debugging
     columnDefs: ColDef[] = [
         { field: 'date', headerName: 'Date', sortable: true, filter: true, width: 120 },
-        { field: 'sales_man', headerName: 'Sales Man', sortable: true, filter: true, width: 200 },
-        { field: 'emp_names', headerName: 'Order Bookers', sortable: true, filter: true, width: 150 },
+        { field: 'sales_man', headerName: 'Sales Man', sortable: true, filter: true, flex: 1 },
+        { field: 'emp_names', headerName: 'Order Bookers', sortable: true, filter: true, flex: 1  },
         { field: 'total_orders', headerName: 'Orders', sortable: true, filter: true, width: 100 },
         { field: 'order_total', headerName: 'Booked Value', sortable: true, filter: true, width: 120 },
-        { field: 'pending_retailers', headerName: 'Pending Shops', sortable: true, filter: true, flex: 1 },
+        { field: 'pending_retailers', headerName: 'Pending Shops', sortable: true, filter: true, width: 100 },
         {
             field: 'actions',
             headerName: 'Action',

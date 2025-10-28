@@ -5,28 +5,81 @@ import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { environment } from 'src/environments/environment';
 import { ToasterService, Toaster } from '../../../../core/services/toaster.service';
 import { OrdersService } from '../../services/orders.service';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
-
     selector: 'app-orderexecution-list',
     templateUrl: 'execution-list.component.html',
     styleUrls: ['./execution-list.component.css'],
   standalone: false
-
-
 })
-
 export class OrderExecutionListComponent implements OnInit {
 
-    dtOptions: DataTables.Settings = {};
+    private gridApi!: GridApi;
 
     bookingSheetUrl: string;
     showExecuteOrder: boolean;
     loading: boolean;
     selectedLoadId: number;
     distributorId: number;
+    showRevertModal: boolean = false;
 
     ordersList: Array<any> = [];
+
+    columnDefs: ColDef[] = [
+        { field: 'date', headerName: 'Date', sortable: true, filter: true, width: 120 },
+        { field: 'sales_man', headerName: 'Sales Man', sortable: true, filter: true, flex: 1 },
+        { field: 'emp_names', headerName: 'Order Bookers', sortable: true, filter: true, flex: 1 },
+        { field: 'total_orders', headerName: 'Orders', sortable: true, filter: true, width: 120 },
+        { 
+            field: 'order_total', 
+            headerName: 'Amount', 
+            sortable: true, 
+            filter: true, 
+            width: 150,
+            valueFormatter: (params) => {
+                if (!params.value) return '';
+                return params.value.toFixed(2);
+            }
+        },
+        {
+            field: 'actions',
+            headerName: 'Action',
+            cellRenderer: (params: any) => {
+                const order = params.data;
+                return `
+                    <div class="flex gap-1">
+                        <button onclick="window.bookingSheetClick('${order.load_id}', '${order.sales_man_id}', '${order.date}')" 
+                                class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5" title="Booking Sheet">BS</button>
+                        <button onclick="window.loadSheetClick('${order.load_id}', '${order.sales_man_id}', '${order.date}')" 
+                                class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5" title="Load Sheet">LS</button>
+                        <button onclick="window.billsClick('${order.load_id}', '${order.sales_man_id}', '${order.date}')" 
+                                class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5" title="Bills">Bills</button>
+                        <button onclick="window.revertClick('${order.load_id}')" 
+                                class="bg-red-500 dark:bg-red-600 dark:border-red-600 dark:text-white font-primary text-[11px] h-auto leading-none py-[4px] px-[5px] text-white rounded-[5px] mb-1 ml-0.5" title="Revert Order">Revert</button>
+                        <a href="/orders/execute-order/${order.sales_man_id}/${order.date}/${order.load_id}" 
+                           class="bg-gradient-to-r from-[#1e54d3] to-[#0038ba] h-auto leading-none py-[4px] px-[5px] text-white text-[11px] border border-primary font-primary rounded-[5px] mb-1 ml-0.5 inline-block">Execute</a>
+                    </div>
+                `;
+            },
+            cellStyle: {
+                display: 'flex',
+                alignItems: 'center', 
+            },
+            width: 350,
+            sortable: false,
+            filter: false,
+            pinned: 'right'
+        }
+    ];
+
+    defaultColDef: ColDef = {
+        resizable: true,
+        sortable: true,
+        filter: true
+    };
 
     constructor(
         private router: Router,
@@ -40,10 +93,38 @@ export class OrderExecutionListComponent implements OnInit {
 
     ngOnInit(): void {
         this.showExecuteOrder = false;
-        this.dtOptions = {
-            pagingType: 'simple_numbers'
-        };
         this.getExecutionList();
+        this.setupGlobalFunctions();
+    }
+
+    setupGlobalFunctions(): void {
+        (window as any).bookingSheetClick = (loadId: string, salesManId: string, date: string) => {
+            this.loadBookingSheet({ load_id: loadId, sales_man_id: salesManId, date: date });
+        };
+        
+        (window as any).loadSheetClick = (loadId: string, salesManId: string, date: string) => {
+            this.loadLoadSheet({ load_id: loadId, sales_man_id: salesManId, date: date });
+        };
+
+        (window as any).billsClick = (loadId: string, salesManId: string, date: string) => {
+            this.loadBills({ load_id: loadId, sales_man_id: salesManId, date: date });
+        };
+        
+        (window as any).revertClick = (loadId: string) => {
+            this.selectedLoadId = parseInt(loadId);
+            this.showRevertModal = true;
+        };
+    }
+
+    onGridReady(params: GridReadyEvent): void {
+        this.gridApi = params.api;
+    }
+
+    onQuickFilterChanged(event: any): void {
+        const filterValue = event.target.value;
+        if (this.gridApi) {
+            this.gridApi.setGridOption('quickFilterText', filterValue);
+        }
     }
 
     getExecutionList(): void {
@@ -84,20 +165,20 @@ export class OrderExecutionListComponent implements OnInit {
 
     revertOrder(): void {
       this.loading = true;
-      document.getElementById('close-revert').click();
+      this.closeRevertModal();
       this.orderService.revertOrder('load', this.selectedLoadId).subscribe(res => {
         this.loading = false;
         if (res.status === 200) {
           this.toastServicer.showToaster({
-            title: 'Revet Success:',
+            title: 'Revert Success:',
             message: 'The order reverted successfully!',
             type: 'success'
           });
           this.router.navigateByUrl('/orders');
         } else {
           this.toastServicer.showToaster({
-            title: 'Revet Error:',
-            message: 'The order cannot be reverted at the momnent, please try again later.',
+            title: 'Revert Error:',
+            message: 'The order cannot be reverted at the moment, please try again later.',
             type: 'error'
           });
         }
@@ -105,12 +186,17 @@ export class OrderExecutionListComponent implements OnInit {
         this.loading = false;
         if (error.status !== 1 && error.status !== 401) {
           this.toastServicer.showToaster({
-            title: 'Revet Error:',
-            message: 'The order cannot be reverted at the momnent, please try again later.',
+            title: 'Revert Error:',
+            message: 'The order cannot be reverted at the moment, please try again later.',
             type: 'error'
           });
         }
       });
     }
 
+    closeRevertModal(): void {
+      this.showRevertModal = false;
+    }
+
 }
+

@@ -56,51 +56,62 @@
   </div>
 </div>
 
+<!-- Mobile Overlay -->
+<div 
+  *ngIf="isLoggedIn && !isSideNavHidden && isMobileMenuOpen" 
+  class="fixed inset-0 bg-black bg-opacity-50 z-[999] xl:hidden"
+  (click)="closeMobileMenu()"
+></div>
+
 <div *ngIf="isLoggedIn && !isSideNavHidden" class="sidebarblue">
   <div
     class="h-full fixed overflow-visible top-0 bottom-0 left-0 z-[1000] flex flex-row flex-none"
   >
+    <!-- Mobile Menu (visible when isMobileMenuOpen is true and xl:hidden) -->
     <div
-      class="flex flex-col h-full w-[185px] transition-[width] duration-500 bg-gradient-to-r from-[#1E54D3] to-[#0038BA] rounded-tr-lg rounded-br-lg"
+      [class]="isMobileMenuOpen ? 'flex flex-col h-full w-[185px] transition-[width] duration-500 bg-gradient-to-r from-[#1E54D3] to-[#0038BA] rounded-tr-lg rounded-br-lg' : 'hidden xl:flex flex-col h-full w-[185px] transition-[width] duration-500 bg-gradient-to-r from-[#1E54D3] to-[#0038BA] rounded-tr-lg rounded-br-lg'"
     >
       <div class="flex justify-between p-[15px] relative">
-        <a routerLink="/home">
+        <a routerLink="/home" (click)="closeMobileMenu()">
           <img
             src="/assets/images/logo-w.svg"
             alt="Sell360"
-            class="h-10 w-[80px]"
+            class="h-10 w-[70px]"
           />
         </a>
-        <button (click)="toggleDarkMode()" class="absolute top-4 right-4">
-          <svg
-            id="lightIcon"
-            style="display: none"
+        <!-- Close button for mobile menu -->
+        <button 
+          (click)="closeMobileMenu()" 
+          class="xl:hidden absolute top-[12px] right-[-32px] z-[50] text-white hover:text-gray-200 transition-colors"
+          *ngIf="isMobileMenuOpen"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+          </svg>
+        </button>
+        <button (click)="toggleDarkMode()" class="absolute top-4 right-4 text-white hover:text-gray-300 transition-colors" [title]="isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'">
+          <!-- Sun Icon (Light Mode) - shown when NOT in dark mode -->
+          <svg 
+            *ngIf="!isDarkMode"
             xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="#FFFFFF"
+            width="18"
+            height="18"
+            fill="currentColor"
             viewBox="0 0 16 16"
           >
-            <path
-              d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"
-            />
-            <path
-              d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"
-            />
+            <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.414a.5.5 0 1 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708"/>
           </svg>
+          <!-- Moon Icon (Dark Mode) - shown when in dark mode -->
           <svg
-            id="darkIcon"
+            *ngIf="isDarkMode"
             xmlns="http://www.w3.org/2000/svg"
-            width="16.069"
-            height="16.069"
-            fill="#FFFFFF"
-            viewBox="0 0 16.069 16.069"
+            width="18"
+            height="18"
+            fill="currentColor"
+            viewBox="0 0 16 16"
           >
-            <path
-              id="brightness"
-              d="M8.035,11.382a3.348,3.348,0,1,1,3.348-3.348A3.349,3.349,0,0,1,8.035,11.382Zm0-5.356a2.009,2.009,0,1,0,2.009,2.009A2.015,2.015,0,0,0,8.035,6.026ZM8.7,2.678V.67a.67.67,0,0,0-1.339,0V2.678a.67.67,0,0,0,1.339,0ZM8.7,15.4V13.391a.67.67,0,0,0-1.339,0V15.4a.67.67,0,0,0,1.339,0ZM3.348,8.035a.672.672,0,0,0-.67-.67H.67A.67.67,0,0,0,.67,8.7H2.678A.672.672,0,0,0,3.348,8.035Zm12.721,0a.672.672,0,0,0-.67-.67H13.391a.67.67,0,0,0,0,1.339H15.4A.672.672,0,0,0,16.069,8.035ZM4.493,4.493a.667.667,0,0,0,0-.944L3.154,2.21a.668.668,0,0,0-.944.944L3.549,4.493a.657.657,0,0,0,.475.194A.686.686,0,0,0,4.5,4.493Zm9.374,9.374a.667.667,0,0,0,0-.944l-1.339-1.339a.668.668,0,1,0-.944.944l1.339,1.339a.657.657,0,0,0,.475.194.686.686,0,0,0,.475-.194Zm-10.713,0,1.339-1.339a.668.668,0,1,0-.944-.944L2.21,12.922a.667.667,0,0,0,0,.944.657.657,0,0,0,.475.194.686.686,0,0,0,.475-.194Zm9.374-9.374,1.339-1.339a.668.668,0,1,0-.944-.944L11.583,3.549a.667.667,0,0,0,0,.944.657.657,0,0,0,.475.194.686.686,0,0,0,.475-.194Z"
-              fill="#FFFFFF"
-            />
+            <path d="M6 .278a.77.77 0 0 1 .08.858 7.2 7.2 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277q.792-.001 1.533-.16a.79.79 0 0 1 .81.316.73.73 0 0 1-.031.893A8.35 8.35 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.75.75 0 0 1 6 .278M4.858 1.311A7.27 7.27 0 0 0 1.025 7.71c0 4.02 3.279 7.276 7.319 7.276a7.32 7.32 0 0 0 5.205-2.162q-.506.063-1.029.063c-4.61 0-8.343-3.714-8.343-8.29 0-1.167.242-2.278.681-3.286"/>
+            <path d="M10.794 3.148a.217.217 0 0 1 .412 0l.387 1.162c.173.518.579.924 1.097 1.097l1.162.387a.217.217 0 0 1 0 .412l-1.162.387a1.73 1.73 0 0 0-1.097 1.097l-.387 1.162a.217.217 0 0 1-.412 0l-.387-1.162A1.73 1.73 0 0 0 9.31 6.593l-1.162-.387a.217.217 0 0 1 0-.412l1.162-.387a1.73 1.73 0 0 0 1.097-1.097zM13.863.099a.145.145 0 0 1 .274 0l.258.774c.115.346.386.617.732.732l.774.258a.145.145 0 0 1 0 .274l-.774.258a1.16 1.16 0 0 0-.732.732l-.258.774a.145.145 0 0 1-.274 0l-.258-.774a1.16 1.16 0 0 0-.732-.732l-.774-.258a.145.145 0 0 1 0-.274l.774-.258c.346-.115.617-.386.732-.732z"/>
           </svg>
         </button>
       </div>
@@ -179,6 +190,7 @@
           <li>
             <a
               [routerLink]="['distributor']"
+              (click)="closeMobileMenu()"
               class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
             >
               <span class="mr-2.5 mt-0.5">
@@ -312,7 +324,8 @@
 </div>
 
 <div *ngIf="isLoggedIn" id="wrapper">
-  <div id="content-wrapper" [ngClass]="isSideNavHidden ? 'pl-0' : ''">
+  <div id="content-wrapper" class="!pl-0 xl:!pl-[185px] !pt-[46px] xl:!pt-[0px]" [ngClass]="isSideNavHidden ? 'pl-0' : ''">
+    
     <div
       *ngIf="showToast"
       aria-live="polite"
@@ -359,15 +372,35 @@
       >
         Close every thing!
       </button>
+      
+      <!-- tab header -->
+      <header
+        class="flex xl:hidden fixed top-0 left-0 right-0 z-[200] justify-between items-center h-[46px] px-4 bg-white shadow-[0_1px_20px_-3px_rgba(0,0,0,0.15)]">
+        <!-- Logo -->
+        <div class="flex items-center">
+          <a href="/" class="block">
+            <img src="/assets/images/sell-360.svg" alt="Logo" class="h-10 w-[70px]" />
+          </a>
+        </div>
+
+        <!-- Mobile Toggler -->
+        <button id="menuToggle" 
+          (click)="toggleMobileMenu()"
+          class="relative w-[26px] h-[26px] appearance-none bg-transparent border-none outline-none cursor-pointer transition-all duration-400 xl:hidden">
+          <span
+            class="absolute top-[12px] block h-[2px] w-full bg-primary rounded transition-all duration-400 before:content-[''] before:absolute before:w-1/2 before:h-[2px] before:bg-primary before:rounded before:top-[-8px] before:right-0 before:transition-all after:content-[''] after:absolute after:w-3/4 after:h-[2px] after:bg-primary after:rounded after:top-[8px] after:right-0 after:transition-all"></span>
+        </button>
+      </header>
+      
       <router-outlet></router-outlet>
     </div>
 
   </div>
 
     <footer
-      class="bg-[#e9ecef] pl-[185px] dark:bg-darkprimary p-[10px] fixed flex justify-center bottom-0 w-full"
+      class="bg-[#e9ecef] pl-[185px] dark:bg-stone-800 p-[10px] fixed flex justify-center bottom-0 w-full"
     >
-      <div class="container mx-auto px-4 text-center text-opacity-60 text-[13px] text-secondary  dark:text-white font-primary">
+      <div class="container mx-auto px-4 text-center text-opacity-60 text-[13px] text-secondary  dark:text-gray-400 font-primary">
         2021 Sell3sixty All rights reserved
       </div>
     </footer>

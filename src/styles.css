@@ -70,6 +70,74 @@
 .ag-paging-panel { 
     justify-content: space-between; font-size: 12px; color: #7e7e7e;
 }
+
+/* AG Grid Dark Mode Support */
+.dark .ag-theme-quartz {
+    --ag-background-color: #1a1a1a;
+    --ag-header-background-color: #2d2d2d;
+    --ag-header-foreground-color: #e0e0e0;
+    --ag-odd-row-background-color: #1f1f1f;
+    --ag-row-hover-color: #2d2d2d;
+    --ag-selected-row-background-color: #2d2d2d;
+    --ag-foreground-color: #e0e0e0;
+    --ag-border-color: #333333;
+    --ag-panel-background-color: #1a1a1a;
+    --ag-panel-text-color: #e0e0e0;
+    --ag-subheader-text-color: #e0e0e0;
+    --ag-subheader-background-color: #2d2d2d;
+    --ag-input-disabled-background-color: #2d2d2d;
+    --ag-input-disabled-border-color: #333333;
+    --ag-checkbox-checked-color: #3b82f6;
+    --ag-range-selection-background-color: rgba(59, 130, 246, 0.2);
+}
+
+.dark .ag-header-cell-text {
+    color: #e0e0e0 !important;
+}
+
+.dark .ag-paging-panel {
+    color: #a0a0a0 !important;
+}
+
+.dark .ag-theme-quartz .ag-cell {
+    color: #e0e0e0 !important;
+}
+
+.dark .ag-theme-quartz input,
+.dark .ag-theme-quartz select,
+.dark .ag-theme-quartz textarea {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+    border-color: #444444 !important;
+}
+
+.dark .ag-theme-quartz button {
+    background-color: #2d2d2d !important;
+    color: #e0e0e0 !important;
+    border-color: #444444 !important;
+}
+
+/* Ensure red buttons stay red in dark mode */
+.dark .ag-theme-quartz button.bg-red-500,
+.dark .ag-theme-quartz button.bg-red-600 {
+    background-color: #dc2626 !important; /* red-600 */
+}
+
+/* General rule: preserve red elements in dark mode */
+.dark button.bg-red-500,
+.dark button.bg-red-600,
+.dark .bg-red-500,
+.dark .bg-red-600 {
+    background-color: #dc2626 !important;
+}
+
+.dark .bg-red-600 {
+    background-color: #dc2626 !important;
+}
+
+.dark .ag-theme-quartz .ag-icon {
+    color: #e0e0e0 !important;
+}
  
 
 @media (max-width: 1280px) {
@@ -206,11 +274,7 @@
 }
 #wrapper #content-wrapper {
     width: 100%;
-    transition: all .3s;
-    background-image: url(assets/images/dashboard-bg.jpg);
-    background-position: top center;
-    background-repeat: no-repeat;
-    background-size: 100%;
+    transition: all .3s;  
     overflow-x: hidden;
     padding: 0rem 0px 60px;
     overflow: hidden;

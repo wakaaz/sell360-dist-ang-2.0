@@ -4,7 +4,7 @@
 /* Keep existing styles for now - will be removed gradually */
 /* @import './styles/bootstrap.min.css'; */
 /* @import './styles/catalogue.css'; */
-@import './styles/datatables.min.css';
+/* @import './styles/datatables.min.css'; */
 @import './styles/datepicker.css';
 /* @import './styles/dropify.min.css';
 @import './styles/dropzone.css';
@@ -14,7 +14,7 @@
 /* @import './styles/style.css'; */
 /* @import './styles/menu.css';  */
  
-@import './styles/fontawesome-free/css/all.css';
+/* @import './styles/fontawesome-free/css/all.css'; */
 /* @import "~@ng-select/ng-select/themes/default.theme.css"; */
 
 /* AG Grid Quartz Theme */
@@ -143,7 +143,6 @@
 .dark .ag-theme-quartz .ag-icon {
     color: #e0e0e0 !important;
 }
- 
 
 @media (max-width: 1280px) {
   .container {
@@ -210,6 +209,7 @@
 	flex-grow: 1;
 	padding: 15px 0px 15px 16px; 
 	-webkit-overflow-scrolling: touch;
+	height: 100%;
 }
 #_subNav-id {
 	min-width: 220px;
@@ -284,8 +284,60 @@
     padding: 0rem 0px 60px;
     overflow: hidden;
     padding-left: 185px;
+	min-height: 100vh;
 }
 
 .dark .ag-theme-quartz .ag-filter-filter .ag-input-wrapper:before{
   filter: invert();
+}
+ 
+
+
+
+/* NG-Select dark mode support - minimal overrides */
+.dark .ng-dropdown-panel {
+    background-color: #1a1a1a !important;
+    border-color: #444 !important;
+}
+
+.dark .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    background-color: #1a1a1a !important;
+    color: #e0e0e0 !important;
+}
+
+.dark .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+    background-color: #2d2d2d !important;
+}
+
+.dark .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
+    background-color: #0038ba !important;
+    color: white !important;
+}
+.ng-select .ng-select-container{
+	height: 35px !important;
+	min-height: 35px !important;
+}
+.ng-select .ng-select-container .ng-value-container .ng-placeholder { 
+    height: 25px !important; 
+    padding: 5px 0 !important;
+    line-height: 1 !important;
+}
+.ng-select .ng-select-container .ng-value-container .ng-input>input, .ng-select .ng-select-container .ng-value-container .ng-input>input:focus{
+	height: 25px !important; 
+    padding: 5px 0 !important; font-size: 14px !important;
+}
+.ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
+	font-size: 14px !important;
+}
+.ng-select.ng-select-single .ng-select-container .ng-value-container, .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
+
+    height: 25px;
+}
+.ng-select .ng-arrow-wrapper { 
+    height: 25px; 
+    padding: 0px;
+    display: inline-table;
+}
+.ng-select.ng-select-opened>.ng-select-container .ng-arrow {
+    top: 0 !important; 
 }

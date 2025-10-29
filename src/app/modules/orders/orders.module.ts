@@ -20,6 +20,7 @@ import { CounterSaleComponent } from './components/counter-sale/counter-sale.com
 import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
 import { CompletedOrdersDetailComponent } from './components/completed-orders-detail/completed-orders-detail.component';
 import { OrderDispatchedComponent } from './components/order-dispatched/order-dispatched.component';
+import { SalesmanSelectCellRendererComponent } from './components/orders-list/salesman-select-cell-renderer.component';
 
 import { OrdersService } from './services/orders.service';
 
@@ -61,6 +62,7 @@ import { NewCounterSaleComponent } from './components/new-counter-sale/new-count
     CompletedOrdersDetailComponent,
     RetailerRecoveryComponent,
     StockAllocationComponent,
+    SalesmanSelectCellRendererComponent,
   ],
   providers: [
     OrderDispatchService,

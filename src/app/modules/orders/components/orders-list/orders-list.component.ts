@@ -3,6 +3,7 @@ import { ToasterService } from 'src/app/core/services/toaster.service';
 import { GeneralDataService } from '../../../shared/services';
 import { OrdersService } from '../../services/orders.service';
 import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { SalesmanSelectCellRendererComponent } from './salesman-select-cell-renderer.component';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -39,9 +40,10 @@ export class OrdersListComponent implements OnInit {
         {
             field: 'salesman_selector',
             headerName: 'Assign To Salesman',
-            cellRenderer: (params: any) => {
-                const index = params.node.rowIndex;
-                return `<div id="salesman-selector-${index}"></div>`;
+            cellRenderer: SalesmanSelectCellRendererComponent,
+            cellRendererParams: {
+                salesMen: () => this.salesMen,
+                onSelectSalesman: (order: any, salesman: any) => this.addOrderToAssignment(order)
             },
             width: 230,
             sortable: false,
@@ -94,13 +96,10 @@ export class OrdersListComponent implements OnInit {
     
     onGridReady(params: GridReadyEvent): void {
         this.gridApi = params.api;
-        // Set up selectors after grid is ready
-        setTimeout(() => {
-            this.setupSalesmanSelectors();
-        }, 100);
     }
     
-    setupSalesmanSelectors(): void {
+    // Old method - can be removed later if not needed
+    /* setupSalesmanSelectors(): void {
         this.orders.forEach((order, index) => {
             const container = document.getElementById(`salesman-selector-${index}`);
             if (container) {
@@ -139,7 +138,7 @@ export class OrdersListComponent implements OnInit {
                 container.appendChild(select);
             }
         });
-    }
+    } */
 
     onQuickFilterChanged(event: any): void {
         const filterValue = event.target.value;
@@ -170,10 +169,6 @@ export class OrdersListComponent implements OnInit {
             this.loading = false;
             if (res.status === 200) {
                 this.orders = res.data;
-                // Set up selectors after data is loaded
-                setTimeout(() => {
-                    this.setupSalesmanSelectors();
-                }, 100);
             }
         }, error => {
             this.loading = false;
@@ -189,6 +184,7 @@ export class OrdersListComponent implements OnInit {
     }
 
     addOrderToAssignment(order: any): void {
+        console.log('addOrderToAssignment called with:', order);
         this.selectedOrders = this.selectedOrders.filter(odr => odr.id !== order.id);
         const assignment = {
             sales_man: order.selectedSaleman.id,
@@ -197,10 +193,11 @@ export class OrdersListComponent implements OnInit {
             date: order.date
         };
         this.selectedOrders.push(assignment);
-
+        console.log('selectedOrders:', this.selectedOrders);
     }
 
     assignSaleman(): void {
+        console.log('assignSaleman called, selectedOrders:', this.selectedOrders);
         if (this.selectedOrders.length) {
             const assigned = {
                 salesman: this.selectedOrders.map(x => {

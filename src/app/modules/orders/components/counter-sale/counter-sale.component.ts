@@ -37,6 +37,7 @@ export class CounterSaleComponent implements OnInit {
   showProducts: boolean;
   showQuantityModal: boolean;
   showPaymentModal: boolean;
+  showBillsModal: boolean = false;
   isCredit: boolean;
   loadingProducts: boolean;
   isOrdering: boolean;
@@ -1545,15 +1546,15 @@ export class CounterSaleComponent implements OnInit {
   
 
   openBillsModal() {
-    (
-      document.getElementById(
-        'billsPrintPaperModalTrigger'
-      ) as HTMLButtonElement
-    ).click();
+    this.showBillsModal = true;
+  }
+
+  closeBillsModal() {
+    this.showBillsModal = false;
   }
 
   getBills(size: string = 'A4'): void {
-    document.getElementById('close-bills').click();
+    this.closeBillsModal();
     const billsUrl = `${environment.apiDomain}${
       API_URLS.BILLS
     }?type=bill&order_booker=${
@@ -1562,6 +1563,24 @@ export class CounterSaleComponent implements OnInit {
       this.order['id']
     }`;
     window.open(billsUrl, '_blank');
+  }
+
+  onChequePaymentTypeChange(): void {
+    if (this.paymentTypeCheque === 'full') {
+      this.chequeAmount = null;
+      this.currentFullPayment('Cheque Payment', 'Credit');
+    } else {
+      this.setPartial('Cheque Payment');
+    }
+  }
+
+  onCreditPaymentTypeChange(): void {
+    if (this.paymentTypeCredit === 'full') {
+      this.creditAmount = null;
+      this.currentFullPayment('Credit', 'Cheque payment');
+    } else {
+      this.setPartial('Credit');
+    }
   }
 
   placeOrder(): void {

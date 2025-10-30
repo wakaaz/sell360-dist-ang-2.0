@@ -1,51 +1,70 @@
-<!-- <div
-  class="modal fade"
-  id="billsModalCounterSale"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="billsModalCounterSaleLabel"
-  aria-hidden="true"
+<!-- Print Bills Modal - Tailwind CSS with Light/Dark Mode -->
+<div
+  *ngIf="showBillsModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="closeBillsModal()"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="billsModalCounterSaleLabel">
-          Print bill for this order<span></span>
-        </h5>
+  <div 
+    class="bg-white dark:bg-darkprimary rounded-lg shadow-xl w-full max-w-2xl mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-white font-primary">
+        Print bill for this order
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeBillsModal()"
+        aria-label="Close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-6 py-5">
+      <h2 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-6 font-primary">
+        Select paper size for print
+      </h2>
+      
+      <div class="grid grid-cols-2 gap-4">
+        <!-- A4 Option -->
         <button
-          type="button"
-          id="close-bills"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
+          (click)="getBills('A4')"
+          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#4d7fff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
         >
-          <span aria-hidden="true">&times;</span>
+          <img
+            class="w-12 h-12 mb-4 opacity-70 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0"
+            src="assets/images/a4.svg"
+            alt="A4 Paper"
+          />
+          <strong class="text-sm text-gray-800 dark:text-gray-200 group-hover:text-[#0038ba] dark:group-hover:text-[#4d7fff] transition-colors">
+            A4 Portrait Paper
+          </strong>
         </button>
-      </div>
-      <div class="modal-body"> 
-        <div class="row">
-          <div class="col-12">
-            <h3 class="heading3">Select paper size for print</h3>
-          </div>
-        </div>
-        <div class="row print-icon-div pb-0">
-          <div class="col-6 pl-0">
-            <a (click)="getBills('A4')"
-              ><img class="print-icon" src="assets/images/a4.svg" alt="" />
-              <strong>A4 Portrait Paper</strong></a
-            >
-          </div>
-          <div class="col-6 pr-0">
-            <a (click)="getBills('A5')"
-              ><img class="print-icon" src="assets/images/a5.svg" alt="" />
-              <strong>A5 Landscape Paper</strong></a
-            >
-          </div>
-        </div>
+
+        <!-- A5 Option -->
+        <button
+          (click)="getBills('A5')"
+          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#4d7fff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
+        >
+          <img
+            class="w-12 h-12 mb-4 opacity-70 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0"
+            src="assets/images/a5.svg"
+            alt="A5 Paper"
+          />
+          <strong class="text-sm text-gray-800 dark:text-gray-200 group-hover:text-[#0038ba] dark:group-hover:text-[#4d7fff] transition-colors">
+            A5 Landscape Paper
+          </strong>
+        </button>
       </div>
     </div>
   </div>
-</div> -->
+</div>
 
 <!-- Unit, Quantity and Trade Offer of Products - Tailwind Modal -->
 <div
@@ -100,16 +119,17 @@
       <div class="flex flex-col sm:flex-row sm:items-start gap-2">
         <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0 pt-2">Add Quantity:</label>
         <div class="flex-1">
-            <input
-              type="text"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-lg bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:border-primary font-primary text-sm dont-close-products"
-            placeholder="Enter quantity"
-              (keyup)="setQuantity(selectedProduct)"
-              required
-              (keydown)="isNumber($event, 'quantity')"
-              [(ngModel)]="selectedProduct.stockQty"
-              #selectedQty="ngModel"
-            />
+            <nz-input-number
+            [(ngModel)]="selectedProduct.stockQty"
+            #selectedQty="ngModel"
+            (ngModelChange)="setQuantity(selectedProduct)"
+            [nzMin]="0"
+            [nzStep]="1"
+            nzPlaceHolder="Enter quantity"
+            class="payment-input-number w-full rounded-md focus:border-primary hover:border-primary dont-close-products"
+            name="quantity"
+            required
+          ></nz-input-number>
             <span
               *ngIf="selectedQty.errors?.required && isAdded"
             class="text-red-500 text-xs mt-1 block"
@@ -246,18 +266,18 @@
       <!-- Payment Type Selection with ng-zorro Radio -->
       <nz-radio-group 
         [(ngModel)]="paymentTypeCheque" 
+        (ngModelChange)="onChequePaymentTypeChange()"
+        name="paymentTypeCheque"
         class="payment-radio-group flex items-center gap-6 mb-4">
         <label 
           nz-radio 
-          nzValue="full" 
-          (click)="chequeAmount = null; currentFullPayment('Cheque Payment', 'Credit')"
+          nzValue="full"
           class="text-sm font-normal text-gray-700 dark:text-gray-300 cursor-pointer">
           Full Amount
         </label>
         <label 
           nz-radio 
-          nzValue="partial" 
-          (click)="setPartial('Cheque Payment')"
+          nzValue="partial"
           class="text-sm font-normal text-gray-700 dark:text-gray-300 cursor-pointer">
           Partial Amount
         </label>
@@ -350,7 +370,7 @@
             [nzMax]="cash?.amount_received"
             [nzStep]="1"
             nzPlaceHolder="Enter amount"
-            class="payment-input-number w-full  rounded-md focus:border-primary hover:border-primary" 
+            class="payment-input-number w-full rounded-md focus:border-primary hover:border-primary" 
             id="Amount1"
             name="cheque_amount"
           ></nz-input-number>
@@ -382,19 +402,19 @@
     <div *ngIf="isCredit" class="px-6 py-5">
       <!-- Payment Type Selection with ng-zorro Radio -->
       <nz-radio-group 
-        [(ngModel)]="paymentTypeCredit" 
+        [(ngModel)]="paymentTypeCredit"
+        (ngModelChange)="onCreditPaymentTypeChange()"
+        name="paymentTypeCredit"
         class="payment-radio-group flex items-center gap-6 mb-4">
         <label 
           nz-radio 
-          nzValue="full" 
-          (click)="creditAmount = null; currentFullPayment('Credit', 'Cheque payment')"
+          nzValue="full"
           class="text-sm font-normal text-gray-700 dark:text-gray-300 cursor-pointer">
           Full Amount
         </label>
         <label 
           nz-radio 
-          nzValue="partial" 
-          (click)="setPartial('Credit')"
+          nzValue="partial"
           class="text-sm font-normal text-gray-700 dark:text-gray-300 cursor-pointer">
           Partial Amount
         </label>
@@ -418,8 +438,8 @@
           [nzMax]="cash?.amount_received"
           [nzStep]="1"
           nzPlaceHolder="Enter amount"
-          class="payment-input-number w-full"
-          name="cheque_amount"
+          class="payment-input-number w-[250px] rounded-md focus:border-primary hover:border-primary"
+          name="credit_amount"
         ></nz-input-number>
         <span
           *ngIf="credAmount.errors?.required && isAdded"
@@ -633,7 +653,7 @@
           <div></div>
       </div>
   </div>
-  <div class="bg-white border-2 border-top-primary dark:bg-black dark:border-[#333333] p-5 rounded-lg relative shadow-[0_0_5px_#0000001a]">
+  <div class="bg-white border-2 border-top-primary dark:bg-black dark:border-[#333333] p-3 xl:p-5 rounded-lg relative shadow-[0_0_5px_#0000001a]">
      
     <div class="flex flex-wrap items-center gap-3 mb-3">
       <!-- Employee Select -->
@@ -760,352 +780,258 @@
       </div>
  
 
-      <div class="_add-product rounded-md">
-        <div class="row New Order">
-          <div class="addItemCell PL-5">Product Name</div>
-          <div class="addItemCell unit-w">Unit</div>
-
-          <div class="addItemCell2">QTY.</div>
-          <div class="addItemCell2">T.P</div>
-          <div class="addItemCell2">T.O</div>
-          <div class="addItemCell2">T. Dis. (%)</div>
-          <div class="addItemCell2">S. Disc.</div>
-          <div
-            class="addItemCell2"
-            *ngIf="permissions.Secondary_Orders.extra_discount"
-          >
-            E. Disc.
-          </div>
-          <div class="addItemCell2" title="General Sales Tax">GST</div>
-          <div class="addItemCell2" title="Advance Income Tax">AIT</div>
-          <div class="addItemCell3">Net Amount</div>
+      <!-- Product Table - Tailwind CSS with Light/Dark Mode -->
+      <div class="mt-4 rounded-md border-t-[3px] border-[#0038ba] bg-white dark:bg-[#1f1f1f] py-2 xl:py-4 shadow-sm transition-colors duration-200">
+        
+        <!-- Table Header -->
+        <div class="flex items-center text-xs font-semibold text-[#0038ba] dark:text-[#4d7fff] pb-2">
+          <div class="w-[230px] pl-1 pr-4">Product Name</div>
+          <div class="w-[130px] pr-4">Unit</div>
+          <div class="w-[87px] text-left pr-3">QTY.</div>
+          <div class="w-[87px] text-left pr-3">T.P</div>
+          <div class="w-[87px] text-left pr-3">T.O</div>
+          <div class="w-[87px] text-left pr-3">T. Dis. (%)</div>
+          <div class="w-[87px] text-left pr-3">S. Disc.</div>
+          <div class="w-[87px] text-left pr-3" *ngIf="permissions.Secondary_Orders.extra_discount">E. Disc.</div>
+          <div class="w-[87px] text-left pr-3" title="General Sales Tax">GST</div>
+          <div class="w-[87px] text-left pr-3" title="Advance Income Tax">AIT</div>
+          <div class="w-[100px] text-right">Net Amount</div>
         </div>
 
+        <!-- Product Rows -->
         <div
           *ngFor="let product of selectedProducts; let ind = index"
-          class="row _row-product"
+          class="group flex items-center border-t border-gray-200 dark:border-gray-700 py-2 bg-white dark:bg-[#1f1f1f] hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors duration-150 relative"
         >
-          <a class="dd-handle dd3-handle swap-div"></a>
-
-          <div class="col-12 p-0">
-            <div class="addItemCell PL-5">
-              <div class="_emp-sele _product-name">
-                {{ product.item_name }}
-                <span
-                  style="display: block; opacity: 0.6; padding-top: 5px"
-                >
-                  SKU: {{ product.item_sku }}
-                </span>
-        </div>
-      </div>
-
-            <div class="addItemCell unit-w">
-              <div class="addItemCell2 _h25">
-                {{ product.unit_name }} 
-              </div>
+          <!-- Product Name -->
+          <div class="w-[230px] pl-1 pr-4">
+            <div class="text-xs text-gray-800 dark:text-gray-200 leading-normal">
+              {{ product.item_name }}
+              <span class="block opacity-60 pt-1 text-[11px]">
+                SKU: {{ product.item_sku }}
+              </span>
             </div>
-
-            <div class="addItemCell2 _h25">
-              <input
-                class="addItemCell2_input"
-                type="text"
-                [id]="product.item_id"
-            [disabled]="isChequeAdded || isCreditAdded"
-                (keyup)="setQuantity(product)"
-                (keydown)="isNumber($event, 'quantity')"
-                placeholder="0"
-                [(ngModel)]="product.stockQty"
-                style="font-size: 13px"
-              />
-            </div>
-            <div class="addItemCell2 _h25">
-              {{ product.item_trade_price  || 0.0 | number: "1.2-2" }}
-            </div>
-
-            
-
-            <div class="addItemCell2 _h25 {{product.scheme_quantity_free > 0 ? 'free-product':''}}">
-              {{ product.scheme_id && product.scheme_type =='bundle_offer' ?  ( (+product.scheme_discount * +product.scheme_bundle_interval )| number: "1.2-2") : +product.stockQty * product.scheme_discount | number: "1.2-2" }} {{product.scheme_quantity_free > 0 ? "("+product.scheme_quantity_free+")":"" }}
-            </div>
-            <div class="addItemCell2 _h25">
-              {{ product.trade_discount }} {{ product.slab_discount_type == 'percentage' ? '%':''}} 
-              
-            </div>
-            <div class="addItemCell2 _h25">
-              {{
-                +product.stockQty * product.special_discount || 0.0
-                  | number: "1.2-2"
-              }}
-            </div>
-            <div
-              *ngIf="permissions?.Secondary_Orders?.extra_discount"
-              class="addItemCell2 _h25"
-            >
-              <input
-                [readonly]="
-                  isCreditAdded || isChequeAdded || +product.stockQty < 1
-                "
-                class="addItemCell2_input"
-                type="text"
-                id="extraDiscount-{{product.item_id}}"
-                placeholder="0"
-                [(ngModel)]="product.extra_discount"
-                (keyup)="calculateExtraDiscount(product)"
-                (keydown)="isNumber($event)"
-                style="font-size: 13px"
-              />
-            </div>
-            <div class="addItemCell2 _h25">
-              {{ product.gst_tax_amount_temp || 0.0 | number: "1.2-2" }}
-            </div>
-            <div class="addItemCell2 _h25">
-              {{ product.adv_inc_tax_amount_temp || 0.0 | number: "1.2-2" }}
-            </div>
-            <div class="addItemCell3 _h25">
-              {{ product.total_amount_after_tax || 0.0 | number: "1.2-2" }}
-            </div>
-            <a
-              [disabled]="isChequeAdded || isCreditAdded"
-              (click)="removeProductFromOrder(product, ind)"
-              class="btn _order-del"
-              title="Delete"
-              ><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-                <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
-              </svg></a>
           </div>
+
+          <!-- Unit -->
+          <div class="w-[130px] pr-4">
+            <div class="text-xs text-gray-800 dark:text-gray-300 h-6 flex items-center">
+              {{ product.unit_name }}
+            </div>
+          </div>
+
+          <!-- Quantity Input -->
+          <div class="w-[87px] pr-3">
+            <input
+              class="w-full h-6 px-2 text-xs text-left bg-transparent border border-transparent group-hover:border-gray-300 dark:group-hover:border-[#2a2a2a] rounded focus:border-gray-300 dark:focus:border-gray-600 focus:shadow-sm focus:outline-none text-gray-800 dark:text-gray-200 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              type="text"
+              [id]="product.item_id"
+              [disabled]="isChequeAdded || isCreditAdded"
+              (keyup)="setQuantity(product)"
+              (keydown)="isNumber($event, 'quantity')"
+              placeholder="0"
+              [(ngModel)]="product.stockQty"
+            />
+          </div>
+
+          <!-- Trade Price -->
+          <div class="w-[87px] pr-3 text-xs text-left text-gray-800 dark:text-gray-300 h-6 flex items-center">
+            {{ product.item_trade_price || 0.0 | number: "1.2-2" }}
+          </div>
+
+          <!-- Trade Offer -->
+          <div class="w-[87px] pr-3 text-xs text-left text-gray-800 dark:text-gray-300 h-6 flex items-center" [ngClass]="{'text-green-600 dark:text-green-400 font-semibold': product.scheme_quantity_free > 0}">
+            {{ product.scheme_id && product.scheme_type =='bundle_offer' ? ((+product.scheme_discount * +product.scheme_bundle_interval) | number: "1.2-2") : +product.stockQty * product.scheme_discount | number: "1.2-2" }} {{product.scheme_quantity_free > 0 ? "("+product.scheme_quantity_free+")":"" }}
+          </div>
+
+          <!-- Trade Discount -->
+          <div class="w-[87px] pr-3 text-xs text-left text-gray-800 dark:text-gray-300 h-6 flex items-center">
+            {{ product.trade_discount }} {{ product.slab_discount_type == 'percentage' ? '%':'' }}
+          </div>
+
+          <!-- Special Discount -->
+          <div class="w-[87px] pr-3 text-xs text-left text-gray-800 dark:text-gray-300 h-6 flex items-center">
+            {{ +product.stockQty * product.special_discount || 0.0 | number: "1.2-2" }}
+          </div>
+
+          <!-- Extra Discount Input -->
+          <div class="w-[87px] pr-3" *ngIf="permissions?.Secondary_Orders?.extra_discount">
+            <input
+              [readonly]="isCreditAdded || isChequeAdded || +product.stockQty < 1"
+              class="w-full h-6 px-2 text-xs text-left bg-transparent border border-transparent group-hover:border-gray-300 dark:group-hover:border-[#2a2a2a] rounded focus:border-gray-300 dark:focus:border-gray-600 focus:shadow-sm focus:outline-none text-gray-800 dark:text-gray-200 read-only:opacity-50 read-only:cursor-not-allowed transition-colors"
+              type="text"
+              id="extraDiscount-{{product.item_id}}"
+              placeholder="0"
+              [(ngModel)]="product.extra_discount"
+              (keyup)="calculateExtraDiscount(product)"
+              (keydown)="isNumber($event)"
+            />
+          </div>
+
+          <!-- GST -->
+          <div class="w-[87px] pr-3 text-xs text-left text-gray-800 dark:text-gray-300 h-6 flex items-center">
+            {{ product.gst_tax_amount_temp || 0.0 | number: "1.2-2" }}
+          </div>
+
+          <!-- AIT -->
+          <div class="w-[87px] pr-3 text-xs text-left text-gray-800 dark:text-gray-300 h-6 flex items-center">
+            {{ product.adv_inc_tax_amount_temp || 0.0 | number: "1.2-2" }}
+          </div>
+
+          <!-- Net Amount -->
+          <div class="w-[100px] text-xs text-right text-gray-800 dark:text-gray-300 h-6 flex items-center justify-end font-medium">
+            {{ product.total_amount_after_tax || 0.0 | number: "1.2-2" }}
+          </div>
+
+          <!-- Delete Button -->
+          <button
+            [disabled]="isChequeAdded || isCreditAdded"
+            (click)="removeProductFromOrder(product, ind)"
+            class="hidden group-hover:block absolute right-[-5px] top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            title="Delete"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+              <path d="M6.5 1h3a.5.5 0 0 1 .5.5v1H6v-1a.5.5 0 0 1 .5-.5M11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3A1.5 1.5 0 0 0 5 1.5v1H1.5a.5.5 0 0 0 0 1h.538l.853 10.66A2 2 0 0 0 4.885 16h6.23a2 2 0 0 0 1.994-1.84l.853-10.66h.538a.5.5 0 0 0 0-1zm1.958 1-.846 10.58a1 1 0 0 1-.997.92h-6.23a1 1 0 0 1-.997-.92L3.042 3.5zm-7.487 1a.5.5 0 0 1 .528.47l.5 8.5a.5.5 0 0 1-.998.06L5 5.03a.5.5 0 0 1 .47-.53Zm5.058 0a.5.5 0 0 1 .47.53l-.5 8.5a.5.5 0 1 1-.998-.06l.5-8.5a.5.5 0 0 1 .528-.47M8 4.5a.5.5 0 0 1 .5.5v8.5a.5.5 0 0 1-1 0V5a.5.5 0 0 1 .5-.5"/>
+            </svg>
+          </button>
         </div>
 
-        <div *ngIf="!selectedProducts.length" class="row _row-product">
-          <h2 class="no-data text-center text-gray-500 font-primary font-semibold text-base">Add products to counter sale...</h2>
+        <!-- Empty State -->
+        <div *ngIf="!selectedProducts.length" class="border-t border-gray-200 dark:border-gray-700 py-12 bg-white dark:bg-[#1f1f1f]">
+          <h2 class="text-center text-gray-400 dark:text-gray-400 font-medium text-base">Add products to counter sale...</h2>
         </div>
 
-        <div class="row _totalBar _totalBar2">
-          <div class="addItemCell _h25 PL-5">Total Items</div>
-          <div class="addItemCell _h25 unit-w">
+        <!-- Summary Section -->
+        <!-- Total Items Row -->
+        <div class="flex items-center border-t border-[#0038ba] dark:border-[#4d7fff] pt-3 mt-2 text-sm">
+          <div class="w-[230px] pl-1 pr-4 h-5 flex items-center text-gray-800 dark:text-gray-300">Total Items</div>
+          <div class="w-[130px] pr-4 h-5 flex items-center text-gray-800 dark:text-gray-300">
             {{ selectedProducts.length }}
           </div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">Gross Amount:</div>
-          <div class="addItemCell3 _h25">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Gross Amount:</div>
+          <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
             {{ grossAmount | number: "1.2-2" }}
           </div>
         </div>
 
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">Trade Offer:</div>
-          <div class="addItemCell3 _h25">
+        <!-- Trade Offer -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Trade Offer:</div>
+          <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
             {{ schemeDiscount | number: "1.2-2" }}
           </div>
         </div>
 
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">Trade Discount:</div>
-          <div class="addItemCell3 _h25">
+        <!-- Trade Discount -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Trade Discount:</div>
+          <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
             {{ tradeDiscount | number: "1.2-2" }}
           </div>
         </div>
 
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">Special Discount:</div>
-
-          <div class="addItemCell3 _h25">
+        <!-- Special Discount -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Special Discount:</div>
+          <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
             {{ specialDiscount | number: "1.2-2" }}
           </div>
         </div>
 
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">Extra Discount:</div>
-
-          <div class="addItemCell3 _h25">
+        <!-- Extra Discount -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Extra Discount:</div>
+          <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
             {{ extraDiscount | number: "1.2-2" }}
           </div>
         </div>
 
-        
-
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">Loyalty Discount:</div>
-
-          <div class="addItemCell3 _h25">
+        <!-- Loyalty Discount -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Loyalty Discount:</div>
+          <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
             {{ loyaltyDiscount | number: "1.2-2" }}
           </div>
         </div>
 
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t" title="">General Sales Tax(GST):</div>
-
-          <div class="addItemCell3 _h25">{{ gst_tax | number: "1.2-2" }}</div>
-        </div>
-        
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t" title="Advance Income Tax">Advance Income Tax(AIT):</div>
-
-          <div class="addItemCell3 _h25">{{ adv_inc_tax | number: "1.2-2" }}</div>
-        </div>
-
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t" title="Total Tax">Total Tax:</div>
-
-          <div class="addItemCell3 _h25">{{ tax | number: "1.2-2" }}</div>
-        </div>
-
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">
-            <strong>Total Amount Due:</strong>
+        <!-- GST -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300" title="General Sales Tax">General Sales Tax(GST):</div>
+          <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
+            {{ gst_tax | number: "1.2-2" }}
           </div>
+        </div>
 
-          <div
-            class="addItemCell3 _h25"
-            style="font-size: 18px; color: #0038ba"
-          >
+        <!-- AIT -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300" title="Advance Income Tax">Advance Income Tax(AIT):</div>
+          <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
+            {{ adv_inc_tax | number: "1.2-2" }}
+          </div>
+        </div>
+
+        <!-- Total Tax -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300" title="Total Tax">Total Tax:</div>
+          <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
+            {{ tax | number: "1.2-2" }}
+          </div>
+        </div>
+
+        <!-- Total Amount Due -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">
+            <strong class="font-semibold">Total Amount Due:</strong>
+          </div>
+          <div class="w-[100px] text-right h-5 font-['Rationale',sans-serif] flex items-center justify-end text-[18px] text-[#0038ba] dark:text-[#4d7fff]">
             {{ dueAmount | number: "1.2-2" }}
           </div>
         </div>
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">
-            <strong>Cash:</strong>
-          </div>
 
-          <div
-            class="addItemCell3 _h25"
-            style="font-size: 18px; color: #0038ba"
-          >
+        <!-- Cash -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">
+            <strong class="font-semibold">Cash:</strong>
+          </div>
+          <div class="w-[100px] text-right h-5 font-['Rationale',sans-serif] flex items-center justify-end text-[18px] text-[#0038ba] dark:text-[#4d7fff]">
             {{ cash?.amount_received || 0 | number: "1.2-2" }}
           </div>
         </div>
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">
-            <strong>Cheque Payment:</strong>
+
+        <!-- Cheque Payment -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">
+            <strong class="font-semibold">Cheque Payment:</strong>
           </div>
-
-          <div
-            class="addItemCell3 _h25"
-            style="font-size: 18px; color: #0038ba"
-          >
+          <div class="w-[100px] text-right h-5 font-['Rationale',sans-serif] flex items-center justify-end text-[18px] text-[#0038ba] dark:text-[#4d7fff]">
             {{ cheque?.amount_received || 0 | number: "1.2-2" }}
+          </div>
         </div>
-        </div>
-        <div class="row _totalBar2">
-          <div class="addItemCell _h25 PL-5"></div>
-          <div class="addItemCell _h25 unit-w"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25"></div>
-          <div class="addItemCell2 _h25 width-t">
-            <strong>Credited Amount:</strong>
-      </div>
 
-          <div
-            class="addItemCell3 _h25"
-            style="font-size: 18px; color: #0038ba"
-          >
+        <!-- Credited Amount -->
+        <div class="flex items-center text-sm mt-1">
+          <div class="flex-1"></div>
+          <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">
+            <strong class="font-semibold">Credited Amount:</strong>
+          </div>
+          <div class="w-[100px] text-right h-5 font-['Rationale',sans-serif] flex items-center justify-end text-[18px] text-[#0038ba] dark:text-[#4d7fff]">
             {{ credit?.amount_received || 0 | number: "1.2-2" }}
           </div>
         </div>
-        <!-- <div class="row _notesTER">
-                          <div class="col-md-12">
-                              Notes
-                              <textarea class="textarea-NOTES" rows='1' name="notes-input" [(ngModel)]="notes"
-                                  placeholder="Enter Notes" style="font-size: 13px"></textarea>
-                          </div>
-                      </div> -->
-    </div>
+
+      </div>
    
   </div>
 </div>

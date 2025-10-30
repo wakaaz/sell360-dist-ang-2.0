@@ -10,6 +10,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { AgGridModule } from 'ag-grid-angular';
 import { DataTablesModule } from 'angular-datatables';
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -55,6 +56,7 @@ import { NewCounterSaleComponent } from './components/new-counter-sale/new-count
     NzInputModule,
     NzRadioModule,
     NzInputNumberModule,
+    NzModalModule,
     SharedModule,
     AgGridModule,
     DataTablesModule,

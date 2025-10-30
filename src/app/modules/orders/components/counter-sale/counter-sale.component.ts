@@ -36,6 +36,7 @@ export class CounterSaleComponent implements OnInit {
 
   showProducts: boolean;
   showQuantityModal: boolean;
+  showPaymentModal: boolean;
   isCredit: boolean;
   loadingProducts: boolean;
   isOrdering: boolean;
@@ -69,7 +70,7 @@ export class CounterSaleComponent implements OnInit {
   pre_discount:any;
   catalogue_id:any=0;
   chequeNumber: string;
-  paymentDate: string;
+  paymentDate: any;
   paymentTypeCheque: string;
   paymentTypeCredit: string;
   bankName: string;
@@ -127,7 +128,7 @@ export class CounterSaleComponent implements OnInit {
     this.dueAmount = 0.0;
     this.totalAmountAfterScheme = 0.0;
     this.notes = '';
-    this.paymentDate = new Date().toISOString().split('T')[0];
+    this.paymentDate = new Date();
     this.paymentTypeCheque = '';
     this.paymentTypeCredit = '';
     this.addedPayment = '';
@@ -230,7 +231,7 @@ export class CounterSaleComponent implements OnInit {
     this.adv_inc_tax = 0.0;
     this.dueAmount = 0.0;
     this.notes = '';
-    this.paymentDate = new Date().toISOString().split('T')[0];
+    this.paymentDate = new Date();
     this.paymentTypeCheque = '';
     this.paymentTypeCredit = '';
     this.addedPayment = '';
@@ -379,7 +380,7 @@ export class CounterSaleComponent implements OnInit {
         };
         this.toastService.showToaster(toast);
       } else {
-        document.getElementById('open-modal-payment').click();
+        this.showPaymentModal = true;
         this.focusForPaymentValues();
       }
     }
@@ -461,7 +462,8 @@ export class CounterSaleComponent implements OnInit {
           this.paymentTypeCheque.length > 0 &&
           this.bankName.length > 0 &&
           this.chequeNumber.length > 0 &&
-          this.paymentDate.length > 0
+          this.paymentDate !== null &&
+          this.paymentDate !== undefined
         );
       } else {
         return (
@@ -471,7 +473,8 @@ export class CounterSaleComponent implements OnInit {
           this.chequeAmount <= this.cash.amount_received &&
           this.bankName.length > 0 &&
           this.chequeNumber.length > 0 &&
-          this.paymentDate.length > 0
+          this.paymentDate !== null &&
+          this.paymentDate !== undefined
         );
       }
     }
@@ -509,6 +512,10 @@ export class CounterSaleComponent implements OnInit {
       this.isCreditAdded = true;
     }
     if (!this.isCredit) {
+      const formattedDate = this.paymentDate instanceof Date 
+        ? this.paymentDate.toISOString().split('T')[0] 
+        : this.paymentDate;
+      
       this.cheque = {
         retailer_id: this.selectedRetailer.retailer_id,
         distributor_id: this.distributorId,
@@ -521,7 +528,7 @@ export class CounterSaleComponent implements OnInit {
               : JSON.parse(JSON.stringify(this.chequeAmount)),
           bank_name: JSON.parse(JSON.stringify(this.bankName)),
           cheque_number: JSON.parse(JSON.stringify(this.chequeNumber)),
-          cheque_date: JSON.parse(JSON.stringify(this.paymentDate)),
+          cheque_date: formattedDate,
         },
         dispatched_bill_amount: 0,
         recovery: 0,
@@ -541,12 +548,13 @@ export class CounterSaleComponent implements OnInit {
     if (isPaymentAdded) {
       this.isAdded = false;
       this.makePayment();
-      document.getElementById('open-modal-payment').click();
+      this.showPaymentModal = false;
     }
   }
 
   paymentCancelled(): void {
     this.isAdded = false;
+    this.showPaymentModal = false;
     this.resetPaymentValues();
     this.paymentTypeCredit = '';
     this.paymentTypeCheque = '';
@@ -554,7 +562,7 @@ export class CounterSaleComponent implements OnInit {
 
   resetPaymentValues(): void {
     this.chequeAmount = null;
-    this.paymentDate = new Date().toISOString().split('T')[0];
+    this.paymentDate = new Date();
     this.bankName = '';
     this.chequeNumber = null;
     this.creditAmount = null;

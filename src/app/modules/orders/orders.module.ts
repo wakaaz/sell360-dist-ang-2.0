@@ -6,6 +6,10 @@ import { OrdersRoutingModule } from './orders-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { AgGridModule } from 'ag-grid-angular';
 import { DataTablesModule } from 'angular-datatables';
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -47,6 +51,10 @@ import { NewCounterSaleComponent } from './components/new-counter-sale/new-count
     NgSelectModule,
     NzSelectModule,
     NzDatePickerModule,
+    NzFormModule,
+    NzInputModule,
+    NzRadioModule,
+    NzInputNumberModule,
     SharedModule,
     AgGridModule,
     DataTablesModule,

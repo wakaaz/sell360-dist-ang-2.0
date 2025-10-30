@@ -171,7 +171,18 @@
   --ant-primary-color-hover: var(--ant-primary-color-hover);
   --ant-primary-color-active: var(--ant-primary-color-active);
 }
-
+.ant-radio-checked:after{
+  border-color: #0038ba !important;
+}
+.dark .ant-radio-checked:after{
+  border-color: #434343 !important;
+}
+.ant-radio-inner:after { 
+  background-color: #0038ba !important;
+}
+.ant-radio-checked .ant-radio-inner {
+  border-color: #0038ba !important;
+}
 /* Global Ant Design Component Styles - Light Mode (Default) */
 .ant-select-selector {
   border-radius: 5px !important;

@@ -324,7 +324,7 @@
 </div>
 
 <div *ngIf="isLoggedIn" id="wrapper">
-  <div id="content-wrapper" class="!pl-0 xl:!pl-[185px] !pt-[46px] xl:!pt-[0px]" [ngClass]="isSideNavHidden ? 'pl-0' : ''">
+  <div id="content-wrapper" class="!pl-0 !pt-[46px] xl:!pt-[0px]" [ngClass]="isSideNavHidden ? 'xl:!pl-0' : 'xl:!pl-[185px]'">
     
     <div
       *ngIf="showToast"
@@ -398,7 +398,7 @@
   </div>
 
     <footer
-      class="bg-[#e9ecef] pl-[185px] dark:bg-stone-800 p-[10px] fixed flex justify-center bottom-0 w-full"
+      class="bg-[#e9ecef] pl-[185px] dark:bg-stone-800 p-[10px] fixed flex justify-center bottom-0 w-full" [ngClass]="isSideNavHidden ? 'hidden' : ''"
     >
       <div class="container mx-auto px-4 text-center text-opacity-60 text-[13px] text-secondary  dark:text-gray-400 font-primary">
         2021 Sell3sixty All rights reserved

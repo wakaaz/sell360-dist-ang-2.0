@@ -1,7 +1,10 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
 
 import { AppRoutingModule } from './app-routing.module';
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -9,6 +12,9 @@ import { ClickOutsideModule } from 'ng-click-outside';
 import { AppComponent } from './app.component';
 
 import { AuthInterceptor } from './core/interceptor/http-auth.interceptor';
+import { NZ_I18N, en_US } from 'ng-zorro-antd/i18n';
+
+registerLocaleData(en);
 
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
@@ -25,6 +31,7 @@ import { DashboardComponent } from './modules/dashboard/dashboard.component';
   declarations: [AppComponent, DashboardComponent],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     FormsModule,
     HttpClientModule,
     ClickOutsideModule,
@@ -40,6 +47,7 @@ import { DashboardComponent } from './modules/dashboard/dashboard.component';
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: NZ_I18N, useValue: en_US },
   ],
   bootstrap: [AppComponent],
 })

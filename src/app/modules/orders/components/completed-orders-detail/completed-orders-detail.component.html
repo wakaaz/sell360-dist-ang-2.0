@@ -11,14 +11,14 @@
         </h1>
       </div>
       
-      <div class="flex ml-auto gap-3">
+      <div class="flex ml-auto gap-3 date-picker-wrapper w-[250px]">
         <label class="text-sm font-primary text-secondary dark:text-gray-400 flex my-auto">Date:</label>
-        <input 
-          type="date" 
-          [(ngModel)]="date" 
-          (change)="getData()"
-          class="px-3 py-2 border outline-none border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-primary font-primary text-sm"
-        />
+        <nz-date-picker 
+          [ngModel]="dateValue"
+          (ngModelChange)="onDateChange($event)"
+          nzPlaceHolder="Select date"
+          class="completed-orders-date-picker w-[250px]"> 
+        </nz-date-picker>
       </div>
 
       <div>

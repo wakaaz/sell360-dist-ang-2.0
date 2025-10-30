@@ -4,6 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { OrdersRoutingModule } from './orders-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { AgGridModule } from 'ag-grid-angular';
 import { DataTablesModule } from 'angular-datatables';
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -43,6 +45,8 @@ import { NewCounterSaleComponent } from './components/new-counter-sale/new-count
     ReactiveFormsModule,
     ClickOutsideModule,
     NgSelectModule,
+    NzSelectModule,
+    NzDatePickerModule,
     SharedModule,
     AgGridModule,
     DataTablesModule,

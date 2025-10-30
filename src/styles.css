@@ -5,7 +5,7 @@
 /* @import './styles/bootstrap.min.css'; */
 /* @import './styles/catalogue.css'; */
 /* @import './styles/datatables.min.css'; */
-@import './styles/datepicker.css';
+/* @import './styles/datepicker.css'; */
 /* @import './styles/dropify.min.css';
 @import './styles/dropzone.css';
 @import './styles/lightbox.css';
@@ -16,6 +16,498 @@
  
 /* @import './styles/fontawesome-free/css/all.css'; */
 /* @import "~@ng-select/ng-select/themes/default.theme.css"; */
+
+/* ===================================================================
+   Ant Design (NG-ZORRO) Theme Variables
+   ===================================================================
+   
+   This section defines CSS custom properties for Ant Design components
+   using our primary brand color #0038ba instead of the default Ant Design blue.
+   
+   Key customizations:
+   - Primary color: #0038ba (replaces Ant Design's default #1890ff)
+   - DatePicker/Calendar: Uses primary color for selections and highlights
+   - Select dropdowns: Uses primary color for focus and selected states
+   
+   Note: These variables are used throughout the application for consistent
+   theming of Ant Design components.
+   =================================================================== */
+
+/* Ant Design Theme Variables - Light Mode (Default) */
+:root {
+  /* Primary Color */
+  --ant-primary-color: #0038ba;
+  --ant-primary-color-hover: #0030a1;
+  --ant-primary-color-active: #00288a;
+  --ant-primary-1: #e6f4ff;
+  --ant-primary-2: #bae0ff;
+  --ant-primary-3: #0038ba;
+  --ant-primary-4: #0038ba;
+  --ant-primary-5: #0038ba;
+  --ant-primary-6: #0038ba;
+  --ant-primary-7: #00288a;
+  
+  /* Background Colors */
+  --ant-color-bg-container: #ffffff;
+  --ant-color-bg-elevated: #ffffff;
+  --ant-color-bg-layout: #f0f0f0;
+  --ant-color-bg-spotlight: #fafafa;
+  
+  /* Text Colors */
+  --ant-color-text: rgba(0, 0, 0, 0.88);
+  --ant-color-text-secondary: rgba(0, 0, 0, 0.65);
+  --ant-color-text-tertiary: rgba(0, 0, 0, 0.45);
+  --ant-color-text-quaternary: rgba(0, 0, 0, 0.25);
+  
+  /* Border Colors */
+  --ant-color-border: #d9d9d9;
+  --ant-color-border-secondary: #f0f0f0;
+  
+  /* Border Radius */
+  --ant-border-radius-base: 5px;
+  --ant-border-radius-sm: 4px;
+  --ant-border-radius-lg: 8px;
+  
+  /* Shadow */
+  --ant-box-shadow-base: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+  
+  /* Select specific */
+  --ant-select-border-color-hover: #0038ba;
+  --ant-select-focus-border-color: #0038ba;
+  --ant-select-option-selected-bg: #e6f4ff;
+  --ant-select-option-active-bg: #f5f5f5;
+  --ant-select-item-selected-color: #0038ba;
+  
+  /* DatePicker/Calendar specific - Using primary color #0038ba */
+  --ant-datepicker-border-color: #d9d9d9;
+  --ant-datepicker-border-color-hover: #0038ba;
+  --ant-datepicker-focus-border-color: #0038ba;
+  --ant-datepicker-focus-shadow: 0 0 0 2px rgba(0, 56, 186, 0.1);
+  --ant-datepicker-selected-bg: #0038ba;
+  --ant-datepicker-selected-color: #ffffff;
+  --ant-datepicker-today-border-color: #0038ba;
+  --ant-datepicker-in-range-bg: rgba(0, 56, 186, 0.15);
+  --ant-datepicker-hover-bg: #f5f5f5;
+  --ant-datepicker-header-hover-color: #0038ba;
+}
+
+/* Ant Design Theme Variables - Dark Mode */
+.dark {
+  /* Primary Color */
+  --ant-primary-color: #0038ba;
+  --ant-primary-color-hover: #0044d4;
+  --ant-primary-color-active: #00288a;
+  --ant-primary-1: #111b26;
+  --ant-primary-2: #112a3c;
+  --ant-primary-3: #15395b;
+  --ant-primary-4: #164c7e;
+  --ant-primary-5: #1765ad;
+  --ant-primary-6: #0038ba;
+  --ant-primary-7: #00288a;
+  
+  /* Background Colors */
+  --ant-color-bg-container: #141414;
+  --ant-color-bg-elevated: #1f1f1f;
+  --ant-color-bg-layout: #000000;
+  --ant-color-bg-spotlight: #1a1a1a;
+  
+  /* Text Colors */
+  --ant-color-text: rgba(255, 255, 255, 0.88);
+  --ant-color-text-secondary: rgba(255, 255, 255, 0.65);
+  --ant-color-text-tertiary: rgba(255, 255, 255, 0.45);
+  --ant-color-text-quaternary: rgba(255, 255, 255, 0.25);
+  
+  /* Border Colors */
+  --ant-color-border: #434343;
+  --ant-color-border-secondary: #303030;
+  
+  /* Border Radius */
+  --ant-border-radius-base: 5px;
+  --ant-border-radius-sm: 4px;
+  --ant-border-radius-lg: 8px;
+  
+  /* Shadow */
+  --ant-box-shadow-base: 0 6px 16px 0 rgba(0, 0, 0, 0.48), 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 9px 28px 8px rgba(0, 0, 0, 0.20);
+  
+  /* Select specific */
+  --ant-select-border-color-hover: #0038ba;
+  --ant-select-focus-border-color: #0038ba;
+  --ant-select-option-selected-bg: #111b26;
+  --ant-select-option-active-bg: #262626;
+  --ant-select-item-selected-color: #0038ba;
+  
+  /* DatePicker/Calendar specific */
+  --ant-datepicker-border-color: #434343;
+  --ant-datepicker-border-color-hover: #0038ba;
+  --ant-datepicker-focus-border-color: #0038ba;
+  --ant-datepicker-focus-shadow: 0 0 0 2px rgba(0, 56, 186, 0.2);
+  --ant-datepicker-selected-bg: #0038ba;
+  --ant-datepicker-selected-color: #ffffff;
+  --ant-datepicker-today-border-color: #0038ba;
+  --ant-datepicker-in-range-bg: rgba(0, 56, 186, 0.15);
+  --ant-datepicker-hover-bg: #262626;
+  --ant-datepicker-header-hover-color: #0038ba;
+}
+.ant-picker-today-btn {
+  color: #0038ba !important;
+}
+.dark .ant-picker-today-btn {
+  color: #d2d2d2 !important;
+}
+.ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner:before { 
+  border: 1px solid #0038ba !important; 
+}
+.dark .ant-picker-panel .ant-picker-footer {
+  border-top: 1px solid rgb(66, 66, 66);
+}
+/* Apply Ant Design CSS Variables to Ant Design Components */
+.ant-select,
+.ant-select-selector,
+.ant-select-dropdown,
+.ant-select-item,
+.ant-btn,
+.ant-input {
+  --ant-primary-color: var(--ant-primary-color);
+  --ant-primary-color-hover: var(--ant-primary-color-hover);
+  --ant-primary-color-active: var(--ant-primary-color-active);
+}
+
+/* Global Ant Design Component Styles - Light Mode (Default) */
+.ant-select-selector {
+  border-radius: 5px !important;
+}
+
+.ant-select-dropdown {
+  border-radius: 5px !important;
+}
+
+.ant-select-focused .ant-select-selector,
+.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.1) !important;
+}
+
+/* Dark Mode - Ant Design Global Overrides for Portal-Rendered Elements */
+/* Target dropdowns rendered in body when html has dark class */
+html.dark .ant-select-dropdown,
+.dark .ant-select-dropdown,
+html.dark body > .ant-select-dropdown,
+body.dark > .ant-select-dropdown {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  border-radius: 5px !important;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.48), 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 9px 28px 8px rgba(0, 0, 0, 0.20) !important;
+}
+
+/* Dropdown content wrapper */
+html.dark .ant-select-dropdown .rc-virtual-list,
+.dark .ant-select-dropdown .rc-virtual-list {
+  background-color: #141414 !important;
+}
+
+/* All dropdown items - Base styles with improved readability */
+html.dark .ant-select-item,
+.dark .ant-select-item,
+html.dark body > .ant-select-dropdown .ant-select-item,
+body.dark > .ant-select-dropdown .ant-select-item {
+  background-color: #141414 !important;
+  color: #ffffff !important;
+}
+
+/* Ant Design option wrapper */
+html.dark .ant-select-item-option,
+.dark .ant-select-item-option,
+html.dark body > .ant-select-dropdown .ant-select-item-option,
+body.dark > .ant-select-dropdown .ant-select-item-option {
+  background-color: #141414 !important;
+  color: #ffffff !important;
+}
+
+/* Dropdown item content text - ensure readability */
+html.dark .ant-select-item-option-content,
+.dark .ant-select-item-option-content,
+html.dark .ant-select-item-option .ant-select-item-option-content,
+.dark .ant-select-item-option .ant-select-item-option-content {
+  color: #ffffff !important;
+}
+
+/* Hover state - use lighter background for better visibility */
+html.dark .ant-select-item-option:hover:not(.ant-select-item-option-disabled),
+html.dark .ant-select-item-option-hover:not(.ant-select-item-option-disabled),
+.dark .ant-select-item-option:hover:not(.ant-select-item-option-disabled),
+.dark .ant-select-item-option-hover:not(.ant-select-item-option-disabled),
+html.dark body > .ant-select-dropdown .ant-select-item-option:hover:not(.ant-select-item-option-disabled),
+body.dark > .ant-select-dropdown .ant-select-item-option:hover:not(.ant-select-item-option-disabled) {
+  background-color: #262626 !important;
+  color: #ffffff !important;
+}
+
+/* Active/Keyboard navigation state */
+html.dark .ant-select-item-option-active:not(.ant-select-item-option-disabled),
+.dark .ant-select-item-option-active:not(.ant-select-item-option-disabled),
+html.dark body > .ant-select-dropdown .ant-select-item-option-active:not(.ant-select-item-option-disabled),
+body.dark > .ant-select-dropdown .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: #262626 !important;
+  color: #ffffff !important;
+}
+
+/* Selected state - Primary color background */
+html.dark .ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+.dark .ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+html.dark body > .ant-select-dropdown .ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+body.dark > .ant-select-dropdown .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: #0038ba !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* Selected item content text */
+html.dark .ant-select-item-option-selected .ant-select-item-option-content,
+.dark .ant-select-item-option-selected .ant-select-item-option-content {
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* Hover on selected item */
+html.dark .ant-select-item-option-selected:hover:not(.ant-select-item-option-disabled),
+.dark .ant-select-item-option-selected:hover:not(.ant-select-item-option-disabled) {
+  background-color: #0044d4 !important;
+  color: #ffffff !important;
+}
+
+/* Dark Mode - Select Selector Styles */
+html.dark .ant-select-selector,
+.dark .ant-select-selector {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: #ffffff !important;
+  border-radius: 5px !important;
+}
+
+html.dark .ant-select-selection-item,
+.dark .ant-select-selection-item {
+  color: #ffffff !important;
+}
+
+html.dark .ant-select-selection-placeholder,
+.dark .ant-select-selection-placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+/* Dark Mode - Focus and Hover States */
+html.dark .ant-select-focused .ant-select-selector,
+html.dark .ant-select:not(.ant-select-disabled):hover .ant-select-selector,
+.dark .ant-select-focused .ant-select-selector,
+.dark .ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.2) !important;
+}
+
+/* Dark Mode - Clear Button */
+html.dark .ant-select-clear,
+.dark .ant-select-clear {
+  color: rgba(255, 255, 255, 0.85) !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+  border-radius: 50% !important;
+  transition: all 0.2s !important;
+}
+
+html.dark .ant-select-clear-icon,
+.dark .ant-select-clear-icon {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+html.dark .ant-select-clear:hover,
+.dark .ant-select-clear:hover {
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Ant Design DatePicker Global Styles - Light Mode */
+.ant-picker {
+  border-radius: 8px !important;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+.ant-picker-focused:not(.ant-picker-disabled) {
+  border-color: var(--ant-datepicker-focus-border-color) !important;
+  box-shadow: var(--ant-datepicker-focus-shadow) !important;
+}
+
+.ant-picker:hover:not(.ant-picker-disabled) {
+  border-color: var(--ant-datepicker-border-color-hover) !important;
+}
+
+/* Ant Design DatePicker Global Styles - Dark Mode */
+html.dark .ant-picker,
+.dark .ant-picker {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+html.dark .ant-picker-input > input,
+.dark .ant-picker-input > input {
+  background-color: #141414 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+html.dark .ant-picker-input > input::placeholder,
+.dark .ant-picker-input > input::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+html.dark .ant-picker-suffix,
+.dark .ant-picker-suffix {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+html.dark .ant-picker-focused:not(.ant-picker-disabled),
+.dark .ant-picker-focused:not(.ant-picker-disabled) {
+  border-color: var(--ant-datepicker-focus-border-color) !important;
+  box-shadow: var(--ant-datepicker-focus-shadow) !important;
+}
+
+html.dark .ant-picker:hover:not(.ant-picker-disabled),
+.dark .ant-picker:hover:not(.ant-picker-disabled) {
+  border-color: var(--ant-datepicker-border-color-hover) !important;
+}
+
+/* DatePicker Dropdown Panel - Light Mode */
+.ant-picker-dropdown {
+  z-index: 1050 !important;
+  position: absolute !important;
+}
+
+/* Calendar Cell Styles - Light Mode */
+.ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-selected-bg) !important;
+  color: var(--ant-datepicker-selected-color) !important;
+}
+
+.ant-picker-cell-today .ant-picker-cell-inner {
+  border-color: var(--ant-datepicker-today-border-color) !important;
+}
+
+.ant-picker-cell:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-hover-bg) !important;
+}
+
+.ant-picker-cell-in-range:not(.ant-picker-cell-selected) .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-in-range-bg) !important;
+}
+
+.ant-picker-header button:hover {
+  color: var(--ant-datepicker-header-hover-color) !important;
+}
+
+/* DatePicker Dropdown Panel - Dark Mode (Portal-rendered) */
+html.dark .ant-picker-dropdown,
+.dark .ant-picker-dropdown,
+html.dark body > .ant-picker-dropdown,
+body.dark > .ant-picker-dropdown {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.48), 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 9px 28px 8px rgba(0, 0, 0, 0.20) !important;
+  z-index: 1050 !important;
+  position: absolute !important;
+}
+
+html.dark .ant-picker-panel,
+.dark .ant-picker-panel,
+html.dark body > .ant-picker-dropdown .ant-picker-panel,
+body.dark > .ant-picker-dropdown .ant-picker-panel {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+}
+
+html.dark .ant-picker-header,
+.dark .ant-picker-header {
+  background-color: #141414 !important;
+  border-bottom-color: #434343 !important;
+}
+
+html.dark .ant-picker-header button,
+.dark .ant-picker-header button {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+html.dark .ant-picker-header button:hover,
+.dark .ant-picker-header button:hover {
+  color: var(--ant-datepicker-header-hover-color) !important;
+}
+
+html.dark .ant-picker-body,
+.dark .ant-picker-body {
+  background-color: #141414 !important;
+}
+
+html.dark .ant-picker-cell,
+.dark .ant-picker-cell {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+html.dark .ant-picker-cell:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) .ant-picker-cell-inner,
+.dark .ant-picker-cell:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-hover-bg) !important;
+}
+
+html.dark .ant-picker-cell-selected .ant-picker-cell-inner,
+.dark .ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-selected-bg) !important;
+  color: var(--ant-datepicker-selected-color) !important;
+}
+
+html.dark .ant-picker-cell-today .ant-picker-cell-inner,
+.dark .ant-picker-cell-today .ant-picker-cell-inner {
+  border-color: var(--ant-datepicker-today-border-color) !important;
+}
+
+html.dark .ant-picker-cell-in-range:not(.ant-picker-cell-selected) .ant-picker-cell-inner,
+.dark .ant-picker-cell-in-range:not(.ant-picker-cell-selected) .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-in-range-bg) !important;
+}
+
+html.dark .ant-picker-cell-disabled,
+.dark .ant-picker-cell-disabled {
+  color: rgba(255, 255, 255, 0.25) !important;
+}
+
+html.dark .ant-select-clear:hover .ant-select-clear-icon,
+.dark .ant-select-clear:hover .ant-select-clear-icon {
+  color: #ffffff !important;
+}
+
+/* Dark Mode - Arrow Icon */
+html.dark .ant-select-arrow,
+.dark .ant-select-arrow {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Additional styles for portal-rendered dropdowns - direct body children */
+body > .ant-select-dropdown {
+  /* These styles will be overridden by dark mode classes when needed */
+}
+
+html.dark body > .ant-select-dropdown,
+html.dark body > .ant-select-dropdown .ant-select-dropdown-holder {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+}
+
+/* Ensure search input in dropdown is readable in dark mode */
+html.dark .ant-select-dropdown .ant-select-dropdown-search input,
+.dark .ant-select-dropdown .ant-select-dropdown-search input {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: #ffffff !important;
+}
+
+html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
+.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
 
 /* AG Grid Quartz Theme */
 @import 'ag-grid-community/styles/ag-grid.css';
@@ -103,13 +595,7 @@
     color: #e0e0e0 !important;
 }
 
-.dark .ag-theme-quartz input,
-.dark .ag-theme-quartz select,
-.dark .ag-theme-quartz textarea {
-    background-color: #2d2d2d !important;
-    color: #e0e0e0 !important;
-    border-color: #444444 !important;
-}
+ 
 
 .dark .ag-theme-quartz button, .dark .ag-theme-quartz a {
     background-color: #2d2d2d !important;
@@ -291,53 +777,3 @@
   filter: invert();
 }
  
-
-
-
-/* NG-Select dark mode support - minimal overrides */
-.dark .ng-dropdown-panel {
-    background-color: #1a1a1a !important;
-    border-color: #444 !important;
-}
-
-.dark .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
-    background-color: #1a1a1a !important;
-    color: #e0e0e0 !important;
-}
-
-.dark .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
-    background-color: #2d2d2d !important;
-}
-
-.dark .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected {
-    background-color: #0038ba !important;
-    color: white !important;
-}
-.ng-select .ng-select-container{
-	height: 35px !important;
-	min-height: 35px !important;
-}
-.ng-select .ng-select-container .ng-value-container .ng-placeholder { 
-    height: 25px !important; 
-    padding: 5px 0 !important;
-    line-height: 1 !important;
-}
-.ng-select .ng-select-container .ng-value-container .ng-input>input, .ng-select .ng-select-container .ng-value-container .ng-input>input:focus{
-	height: 25px !important; 
-    padding: 5px 0 !important; font-size: 14px !important;
-}
-.ng-dropdown-panel .ng-dropdown-panel-items .ng-option{
-	font-size: 14px !important;
-}
-.ng-select.ng-select-single .ng-select-container .ng-value-container, .ng-select.ng-select-single .ng-select-container .ng-value-container .ng-value {
-
-    height: 25px;
-}
-.ng-select .ng-arrow-wrapper { 
-    height: 25px; 
-    padding: 0px;
-    display: inline-table;
-}
-.ng-select.ng-select-opened>.ng-select-container .ng-arrow {
-    top: 0 !important; 
-}

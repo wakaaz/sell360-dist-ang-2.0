@@ -7,9 +7,36 @@
 .Order-Detail-table table strong{font-weight: 500;}
 .Order-Detail-table table td{border: solid 1px #333333; padding: 5px; font-size:12px}
 .Order-Detail-table table th{border: solid 1px #333333; background-color: #ededed; padding: 5px; font-size:12px}
+.dark .Order-Detail-table table th{border: solid 1px #333333; background-color: #252525;}
 .button-list .btn-primary{font-size: 14px; letter-spacing: 1px}
 .button-list .btn-primary .fa{padding-right:3px} 
 .active {display: block !important;}
+
+/* Dark mode styles for table */
+:host ::ng-deep .dark .Order-Detail-table table td{
+  border-color: #333333;
+  color: #e5e7eb;
+  background-color: transparent;
+}
+
+:host ::ng-deep .dark .Order-Detail-table table th{
+  border-color: #333333;
+  background-color: #1a1a1a;
+  color: #e5e7eb;
+}
+
+:host ::ng-deep .dark .Order-Detail-table table strong{
+  color: #e5e7eb;
+}
+
+:host ::ng-deep .dark .Order-Detail-table table thead th{
+  background-color: #1a1a1a;
+  color: #e5e7eb;
+}
+
+:host ::ng-deep .dark .Order-Detail-table table tbody tr:hover{
+  background-color: rgba(255, 255, 255, 0.05);
+}
 
 /* AG Grid styles and Tailwind compatibility */
 .ag-grid-container {

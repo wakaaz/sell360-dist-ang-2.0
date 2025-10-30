@@ -1,7 +1,7 @@
 <!-- Detail Modal - Full Screen -->
 <div *ngIf="showDetailModal" class="fixed inset-0 z-[1100]">
   <!-- Full screen modal container -->
-  <div class="w-full h-full bg-white dark:bg-black flex flex-col"> 
+  <div class="w-full h-full bg-white dark:bg-gray-900 flex flex-col"> 
           <button
             type="button"
     class="absolute top-2 right-2 z-[1101] rounded-md bg-white dark:bg-black text-gray-500 hover:text-gray-800 dark:hover:text-white focus:outline-none  focus:ring-primary"
@@ -20,91 +20,92 @@
    
         <div class="container mx-auto px-4 max-w-7xl">
 
-            <div *ngIf="!loading" class="bg-white dark:bg-black dark:border-[#333333] border p-6 rounded-lg relative shadow-[0_0_5px_#0000001a]">
+            <div *ngIf="!loading" class="bg-white dark:bg-black dark:border-[#333333] border p-6 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_#ffffff1a]">
         
                 <div class="flex mb-5 pb-2 border-b border-gray-300 dark:border-[#333333] font-primary">
                     <div class="w-2/3 flex items-center OrderLogo">
-                      <img src="assets/images/sell-360.svg" alt="" class="max-h-12" />
+                      <img src="assets/images/sell-360.svg" alt="" class="max-h-12 dark:hidden" />
+                      <img src="assets/images/logo-w.svg" alt="" class="max-h-12 hidden dark:block" />
                     </div>
-                    <div class="w-1/3 text-right ord-no flex items-center justify-end my-auto">
+                    <div class="w-1/3 text-right ord-no flex items-center justify-end my-auto text-gray-900 dark:text-white">
                         Order # <strong class="ml-1 font-medium">{{ orderDetail?.retailer_detail?.id }}</strong>
                     </div>
                 </div>
         
-                  <div class="flex flex-wrap OrderInfo font-primary">
+                  <div class="flex flex-wrap OrderInfo font-primary text-gray-900 dark:text-white">
                     <!-- Left column -->
                     <div class="w-full md:w-3/4 mb-2 md:mb-0">
                       <p>
-                        <span>Retailer Name:</span>
-                        <strong class="ml-1 font-medium">{{ orderDetail?.retailer_detail.retailer_name }}</strong>
+                        <span class="text-gray-600 dark:text-gray-200">Retailer Name:</span>
+                        <strong class="ml-1 font-medium dark:text-white">{{ orderDetail?.retailer_detail.retailer_name }}</strong>
                       </p>
                       <p>
-                        <span>Phone No:</span>
-                        <strong class="ml-1 font-medium">{{ orderDetail?.retailer_detail.retailer_phone }}</strong>
+                        <span class="text-gray-600 dark:text-gray-200">Phone No:</span>
+                        <strong class="ml-1 font-medium dark:text-white">{{ orderDetail?.retailer_detail.retailer_phone }}</strong>
                       </p>
                       <p>
-                        <span>Location:</span>
-                        <strong class="ml-1 font-medium">{{ orderDetail?.retailer_detail.retailer_address }}</strong>
+                        <span class="text-gray-600 dark:text-gray-200">Location:</span>
+                        <strong class="ml-1 font-medium dark:text-white">{{ orderDetail?.retailer_detail.retailer_address }}</strong>
                       </p>
                     </div>
                   
                     <!-- Right column -->
                     <div class="w-full md:w-1/4 md:p-0">
                       <p>
-                        <span >Status:</span>
-                        <strong class="ml-1 font-medium">{{ orderDetail?.retailer_detail.status }}</strong>
+                        <span class="text-gray-600 dark:text-gray-200">Status:</span>
+                        <strong class="ml-1 font-medium dark:text-white">{{ orderDetail?.retailer_detail.status }}</strong>
                       </p>
                       <p>
-                        <span >Booking Date:</span>
-                        <strong class="ml-1 font-medium">{{ orderDetail?.retailer_detail.order_date }}</strong>
+                        <span class="text-gray-600 dark:text-gray-200">Booking Date:</span>
+                        <strong class="ml-1 font-medium dark:text-white">{{ orderDetail?.retailer_detail.order_date }}</strong>
                       </p>
                       <p>
-                        <span >Employee:</span>
-                        <strong class="ml-1 font-medium">{{ orderDetail?.retailer_detail.employee_name }}</strong>
+                        <span class="text-gray-600 dark:text-gray-200">Employee:</span>
+                        <strong class="ml-1 font-medium dark:text-white">{{ orderDetail?.retailer_detail.employee_name }}</strong>
                       </p>
         </div>
       </div>
       
                   <div class="w-full Order-Detail-table mt-6">
                     <table class="table font-primary">
-                        <thead>
-                            <tr>
-                                <th rowspan="2"><strong>Code</strong></th>
-                                <th rowspan="2"><strong>Product Name</strong></th>
-                                <th colspan="2" style="text-align:center;"><strong>Booked</strong></th>
-                                <th colspan="2" style="text-align:center;"><strong>FOC</strong></th>
-                                <th rowspan="2"><strong>T.P</strong></th>
-                                <th rowspan="2"><strong>GR Amt</strong></th>
-                                <th rowspan="2"><strong>T.O</strong></th>
-                                <th rowspan="2"><strong>T.Disc</strong></th>
-                                <th rowspan="2"><strong>SPC.Disc</strong></th>
-                                <th rowspan="2" title="General Sales Tax"><strong>General<br>Sales<br>Tax</strong></th>
-                                <th rowspan="2" title=""><strong>Advance<br>Income<br>Tax</strong></th>
-                                <th rowspan="2"><strong>Net.Amt</strong></th>
+                        <thead class="bg-gray-100 dark:bg-[#1a1a1a]">
+                            <tr class="text-gray-900 dark:text-gray-200">
+                                <th rowspan="2" class="text-gray-900 dark:text-gray-200"><strong>Code</strong></th>
+                                <th rowspan="2" class="text-gray-900 dark:text-gray-200"><strong>Product Name</strong></th>
+                                <th colspan="2" style="text-align:center;" class="text-gray-900 dark:text-gray-200"><strong>Booked</strong></th>
+                                <th colspan="2" style="text-align:center;" class="text-gray-900 dark:text-gray-200"><strong>FOC</strong></th>
+                                <th rowspan="2" class="text-gray-900 dark:text-gray-200"><strong>T.P</strong></th>
+                                <th rowspan="2" class="text-gray-900 dark:text-gray-200"><strong>GR Amt</strong></th>
+                                <th rowspan="2" class="text-gray-900 dark:text-gray-200"><strong>T.O</strong></th>
+                                <th rowspan="2" class="text-gray-900 dark:text-gray-200"><strong>T.Disc</strong></th>
+                                <th rowspan="2" class="text-gray-900 dark:text-gray-200"><strong>SPC.Disc</strong></th>
+                                <th rowspan="2" title="General Sales Tax" class="text-gray-900 dark:text-gray-200"><strong>General<br>Sales<br>Tax</strong></th>
+                                <th rowspan="2" title="" class="text-gray-900 dark:text-gray-200"><strong>Advance<br>Income<br>Tax</strong></th>
+                                <th rowspan="2" class="text-gray-900 dark:text-gray-200"><strong>Net.Amt</strong></th>
                             </tr>
-                            <tr>
-                                <th><strong>CTN</strong></th>
-                                <th><strong>BOX/PCS</strong></th>
-                                <th><strong>CTN</strong></th>
-                                <th><strong>BOX/PCS</strong></th>
+                            <tr class="text-gray-900 dark:text-gray-200">
+                                <th class="text-gray-900 dark:text-gray-200"><strong>CTN</strong></th>
+                                <th class="text-gray-900 dark:text-gray-200"><strong>BOX/PCS</strong></th>
+                                <th class="text-gray-900 dark:text-gray-200"><strong>CTN</strong></th>
+                                <th class="text-gray-900 dark:text-gray-200"><strong>BOX/PCS</strong></th>
                             </tr>
                         </thead>
                         <tbody class="order_items_body">
-                            <tr *ngFor="let item of orderDetail?.order_detail">
-                                <td>{{item.item_sku}}</td>
-                                <td>{{item.item_name}}</td>
-                                <td>{{item.parent_qty}}</td>
-                                <td>{{item.child_qty}}</td>
-                                <td>{{item.foc_parent_qty}}</td>
-                                <td>{{item.foc_child_qty}}</td>
-                                <td>{{item.original_price}}</td>
-                                <td>{{(item.original_price * item.quantity) | decimal}}</td>
-                                <td>{{(item.scheme_discount * item.quantity) | number: '1.2-2'}}</td>
-                                <td>{{(item.merchant_discount_pkr * item.quantity) | number: '1.2-2'}}</td>
-                                <td>{{(item.special_discount * item.quantity) | number: '1.2-2'}}</td>
-                                <td>{{(item.gst_tax_amount * item.quantity) | number: '1.2-2'}}</td>
-                                <td>{{(item.adv_inc_tax_amount * item.quantity) | number: '1.2-2'}}</td>
-                                <td>{{item.final_price | number: '1.2-2'}}</td>
+                            <tr *ngFor="let item of orderDetail?.order_detail" class="text-gray-900 dark:text-white">
+                                <td class="dark:text-gray-200">{{item.item_sku}}</td>
+                                <td class="dark:text-gray-200">{{item.item_name}}</td>
+                                <td class="dark:text-gray-200">{{item.parent_qty}}</td>
+                                <td class="dark:text-gray-200">{{item.child_qty}}</td>
+                                <td class="dark:text-gray-200">{{item.foc_parent_qty}}</td>
+                                <td class="dark:text-gray-200">{{item.foc_child_qty}}</td>
+                                <td class="dark:text-gray-200">{{item.original_price}}</td>
+                                <td class="dark:text-gray-200">{{(item.original_price * item.quantity) | decimal}}</td>
+                                <td class="dark:text-gray-200">{{(item.scheme_discount * item.quantity) | number: '1.2-2'}}</td>
+                                <td class="dark:text-gray-200">{{(item.merchant_discount_pkr * item.quantity) | number: '1.2-2'}}</td>
+                                <td class="dark:text-gray-200">{{(item.special_discount * item.quantity) | number: '1.2-2'}}</td>
+                                <td class="dark:text-gray-200">{{(item.gst_tax_amount * item.quantity) | number: '1.2-2'}}</td>
+                                <td class="dark:text-gray-200">{{(item.adv_inc_tax_amount * item.quantity) | number: '1.2-2'}}</td>
+                                <td class="dark:text-gray-200">{{item.final_price | number: '1.2-2'}}</td>
                             </tr>
                             <!-- <tr>
                                 <td class="border-0"></td>
@@ -122,7 +123,7 @@
                                 <td><strong>Subtotal PKR.</strong></td>
                                 <td><strong>{{orderDetail?.subTotal | number: '1.2-2'}}</strong></td>
                             </tr> -->
-                            <tr>
+                            <tr class="text-gray-900 dark:text-white">
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
@@ -135,10 +136,10 @@
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
-                                <td><strong>Total Discount PKR.</strong></td>
-                                <td><strong>{{orderDetail?.totalDiscount | decimal}}</strong></td>
+                                <td class="dark:text-gray-200"><strong>Total Discount PKR.</strong></td>
+                                <td class="dark:text-gray-200"><strong>{{orderDetail?.totalDiscount | decimal}}</strong></td>
                             </tr>
-                            <tr>
+                            <tr class="text-gray-900 dark:text-white">
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
@@ -151,10 +152,10 @@
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
-                                <td><strong>Total TAX PKR.</strong></td>
-                                <td><strong>{{orderDetail?.retailer_detail?.total_tax_amount | number: '1.2-2'}}</strong></td>
+                                <td class="dark:text-gray-200"><strong>Total TAX PKR.</strong></td>
+                                <td class="dark:text-gray-200"><strong>{{orderDetail?.retailer_detail?.total_tax_amount | number: '1.2-2'}}</strong></td>
                             </tr>
-                            <tr>
+                            <tr class="text-gray-900 dark:text-white">
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
@@ -167,10 +168,10 @@
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
                                 <td class="border-0"></td>
-                                <td style="background-color:#000; color:#fff">
+                                <td class="bg-black dark:bg-neutral-800 text-white dark:text-white">
                                     <strong>Total PKR.</strong>
                                 </td>
-                                <td style="background-color:#000; color:#fff">
+                                <td class="bg-black dark:bg-neutral-800 text-white dark:text-white">
                                     <strong>{{orderDetail?.retailer_detail?.order_total | number: '1.2-2'}}</strong>
                                 </td>
                             </tr>

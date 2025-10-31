@@ -183,6 +183,16 @@
 .ant-radio-checked .ant-radio-inner {
   border-color: #0038ba !important;
 }
+.dark .ant-radio-inner { 
+  background-color: #373737;
+  border-color: #3b3b3b; 
+}
+.dark .ant-radio-inner:after { 
+  background-color: #c7c7c7 !important;
+}
+.dark .ant-radio-checked .ant-radio-inner { 
+  border-color: #878787 !important;
+}
 /* Global Ant Design Component Styles - Light Mode (Default) */
 .ant-select-selector {
   border-radius: 5px !important;
@@ -356,7 +366,15 @@ html.dark .ant-picker,
   border-color: #434343 !important;
   color: rgba(255, 255, 255, 0.88) !important;
 }
-
+.dark .ant-input-number-handler-down { 
+  border-top: 1px solid #434343 !important; 
+}
+.dark .ant-input-number-handler{
+  border-color: #434343 !important;
+}
+.dark .ant-input-number-handler-down-inner, .dark .ant-input-number-handler-up-inner{
+  color: #ffffff !important;
+}
 html.dark .ant-picker-input > input,
 .dark .ant-picker-input > input {
   background-color: #141414 !important;
@@ -743,9 +761,8 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
 	opacity: 0.4;
 	cursor: pointer
 }
-.SN-close-btn .fa {
-	font-size: 16px;
-	color: #282828
+.SN-close-btn svg{ 
+	color: #474747
 }
 .SN-close-btn:HOVER {
 	opacity: 1
@@ -778,12 +795,17 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
     width: 100%;
     transition: all .3s;  
     overflow-x: hidden;
-    padding: 0rem 0px 60px;
-    overflow: hidden;
+    padding: 0rem 0px 60px; 
     padding-left: 185px;
-	min-height: 100vh;
+	  min-height: 100vh;
 }
+.no-scroll{
+  overflow: hidden !important;
+}
+.no-scroll #wrapper #content-wrapper{
+  overflow: hidden !important;
 
+}
 .dark .ag-theme-quartz .ag-filter-filter .ag-input-wrapper:before{
   filter: invert();
 }

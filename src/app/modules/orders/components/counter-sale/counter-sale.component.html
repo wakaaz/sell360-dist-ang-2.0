@@ -5,12 +5,12 @@
   (click)="closeBillsModal()"
 >
   <div 
-    class="bg-white dark:bg-darkprimary rounded-lg shadow-xl w-full max-w-2xl mx-auto border-t-4 border-t-primary"
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-2xl mx-auto border-t-4 border-t-primary"
     (click)="$event.stopPropagation()"
   >
     <!-- Modal Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
-      <h5 class="text-lg font-semibold text-gray-900 dark:text-white font-primary">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-300 font-primary">
         Print bill for this order
       </h5>
       <button
@@ -27,7 +27,7 @@
 
     <!-- Modal Body -->
     <div class="px-6 py-5">
-      <h2 class="text-base font-medium text-gray-800 dark:text-gray-200 mb-6 font-primary">
+      <h2 class="text-base font-medium text-gray-800 dark:text-neutral-300 mb-6 font-primary">
         Select paper size for print
       </h2>
       
@@ -35,14 +35,14 @@
         <!-- A4 Option -->
         <button
           (click)="getBills('A4')"
-          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#4d7fff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
+          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-neutral-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#ffffff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
         >
           <img
-            class="w-12 h-12 mb-4 opacity-70 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0"
+            class="w-12 h-12 mb-4 opacity-60 group-hover:opacity-100 transition-opacity grayscale  dark:invert dark:grayscale"
             src="assets/images/a4.svg"
             alt="A4 Paper"
           />
-          <strong class="text-sm text-gray-800 dark:text-gray-200 group-hover:text-[#0038ba] dark:group-hover:text-[#4d7fff] transition-colors">
+          <strong class="text-sm text-gray-800 dark:text-neutral-400 group-hover:text-primary dark:group-hover:text-[#ffffff] transition-colors">
             A4 Portrait Paper
           </strong>
         </button>
@@ -50,14 +50,14 @@
         <!-- A5 Option -->
         <button
           (click)="getBills('A5')"
-          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#4d7fff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
+          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-neutral-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#ffffff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
         >
           <img
-            class="w-12 h-12 mb-4 opacity-70 group-hover:opacity-100 transition-opacity grayscale group-hover:grayscale-0"
+            class="w-12 h-12 mb-4 opacity-60 group-hover:opacity-100 transition-opacity grayscale dark:invert dark:grayscale"
             src="assets/images/a5.svg"
             alt="A5 Paper"
           />
-          <strong class="text-sm text-gray-800 dark:text-gray-200 group-hover:text-[#0038ba] dark:group-hover:text-[#4d7fff] transition-colors">
+          <strong class="text-sm text-gray-800 dark:text-neutral-400 group-hover:text-primary dark:group-hover:text-[#ffffff] transition-colors">
             A5 Landscape Paper
           </strong>
         </button>
@@ -74,12 +74,12 @@
   (click)="closeQuantityModal($event)"
 >
   <div 
-    class="bg-white dark:bg-darkprimary rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
     (click)="$event.stopPropagation()"
   >
     <!-- Modal Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
-      <h5 class="text-lg font-semibold text-gray-900 dark:text-white font-primary">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
         Product <span class="font-light text-gray-600 dark:text-gray-400">Detail</span>
         </h5>
         <button
@@ -126,7 +126,7 @@
             [nzMin]="0"
             [nzStep]="1"
             nzPlaceHolder="Enter quantity"
-            class="payment-input-number w-full rounded-md focus:border-primary hover:border-primary dont-close-products"
+            class="payment-input-number w-full rounded-md focus:border-primary hover:border-primary dont-close-products dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300"
             name="quantity"
             required
           ></nz-input-number>
@@ -195,11 +195,11 @@
       </div>
 
     <!-- Modal Footer -->
-    <div class="px-6 py-4 bg-gray-50 dark:bg-black border-t border-gray-200 dark:border-[#333333] rounded-b-lg flex justify-end gap-3">
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
         <button
           type="button"
           id="pl-qty-close"
-        class="px-6 py-2 leading-none text-[13px] border border-gray-300 dark:border-[#434343] rounded-[5px] font-primary bg-white dark:bg-[#141414] text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-[#1a1a1a] focus:outline-none focus:ring-2 focus:ring-gray-300 transition-colors dont-close-products"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors dont-close-products"
           (click)="closeQuantityModal($event)"
           aria-label="Close"
         >
@@ -224,12 +224,12 @@
   (click)="paymentCancelled()"
 >
   <div 
-    class="bg-white dark:bg-darkprimary rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
     (click)="$event.stopPropagation()"
   >
     <!-- Cheque Modal Header -->
     <div *ngIf="!isCredit" class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
-      <h5 class="text-lg font-semibold text-gray-900 dark:text-white font-primary">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
         Add <span class="font-light text-gray-600 dark:text-gray-400">Cheque Information</span>
         </h5>
         <button
@@ -246,7 +246,7 @@
 
     <!-- Credit Modal Header -->
     <div *ngIf="isCredit" class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
-      <h5 class="text-lg font-semibold text-gray-900 dark:text-white font-primary">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
         Add <span class="font-light text-gray-600 dark:text-gray-400">Credit Information</span>
       </h5>
       <button
@@ -305,7 +305,7 @@
             [(ngModel)]="chequeNumber"
             #chequNo="ngModel"
             placeholder="Enter cheque number"
-            class="payment-input rounded-md focus:border-primary hover:border-primary"
+            class="payment-input rounded-md focus:border-primary hover:border-primary  dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300"
           />
           <span
             *ngIf="chequNo.errors?.required && isAdded"
@@ -348,7 +348,7 @@
             [(ngModel)]="bankName"
             #bank_Name="ngModel"
             placeholder="Enter bank name"
-            class="payment-input rounded-md focus:border-primary hover:border-primary"
+            class="payment-input rounded-md focus:border-primary hover:border-primary  dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300"
           />
           <span
             *ngIf="bank_Name.errors?.required && isAdded"
@@ -370,7 +370,7 @@
             [nzMax]="cash?.amount_received"
             [nzStep]="1"
             nzPlaceHolder="Enter amount"
-            class="payment-input-number w-full rounded-md focus:border-primary hover:border-primary" 
+            class="payment-input-number w-full rounded-md focus:border-primary hover:border-primary  dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300" 
             id="Amount1"
             name="cheque_amount"
           ></nz-input-number>
@@ -438,7 +438,7 @@
           [nzMax]="cash?.amount_received"
           [nzStep]="1"
           nzPlaceHolder="Enter amount"
-          class="payment-input-number w-[250px] rounded-md focus:border-primary hover:border-primary"
+          class="payment-input-number w-[250px] rounded-md focus:border-primary hover:border-primary  dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300"
           name="credit_amount"
         ></nz-input-number>
         <span
@@ -477,11 +477,11 @@
       </div>
 
     <!-- Modal Footer -->
-    <div class="px-6 py-4 bg-gray-50 dark:bg-black border-t border-gray-200 dark:border-[#333333] rounded-b-lg flex justify-end gap-3">
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
       <button
         type="button"
         id="close-payment-modal"
-        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-white bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
         (click)="paymentCancelled()"
         aria-label="Close"
       >
@@ -545,7 +545,7 @@
           </div>
           <input
             type="text"
-            class="w-full pl-10 pr-4 py-2 border border-[#ececec] dark:border-[#434343] rounded-lg bg-[#f6f6f6] dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none  focus:border-primary font-primary text-sm dont-close-products"
+            class="w-full pl-10 pr-4 py-2 border border-[#ececec] dark:border-[#1d1d1d] rounded-lg bg-[#f6f6f6] dark:bg-[#1d1d1d] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none  focus:border-primary font-primary text-sm dont-close-products"
             [(ngModel)]="productSearchText"
             (keyup)="searchProduct()"
             placeholder="Search products..."
@@ -559,7 +559,7 @@
           <!-- Product items -->
           <div 
             *ngFor="let product of dispProducts; let i = index"
-            class="bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#333333] rounded-lg p-3 hover:shadow-md transition-shadow relative">
+            class="bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#252525] rounded-lg p-3 hover:shadow-md transition-shadow relative">
             <!-- Scheme Badge -->
                             <div
                               *ngIf="product.schemes?.length"
@@ -577,28 +577,33 @@
                   onerror="this.src='assets/images/default_product.jpg'"
                             />
                 <div class="flex-1 min-w-0">
-                  <h3 class="text-sm font-medium text-gray-900 dark:text-white font-primary leading-snug">
+                  <h3 class="text-sm font-medium text-gray-900 dark:text-neutral-300 font-primary leading-snug">
                               {{ product.item_name }}
                   </h3>
-                  <p class="text-[13px] text-gray-500 dark:text-gray-400 mt-1">
+                  <p class="text-[13px] text-gray-600 dark:text-gray-400 mt-1">
                                 SKU: {{ product.item_sku }}
                   </p>
                   <p class="text-[13px] text-gray-600 dark:text-gray-300 mt-1 font-medium">
-                    Available: <span class="text-primary">{{ product.availble_stock }}</span>
+                    Available: <span class="text-primary dark:text-neutral-300">{{ product.availble_stock }}</span>
                   </p>
                             </div>
                           </div>
               
               <!-- Add Button -->
               <div class="flex my-auto ">
-                          <button
-                            *ngIf="!product.qtyAdded"
-                  class="px-4 py-2 text-[13px] leading-none font-primary bg-white text-primary border border-primary rounded-md hover:bg-primary hover:text-white transition-colors disable:border-primary disable:text-black disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200 disabled:text-black disabled:hover:text-black dont-close-quantity whitespace-nowrap"
-                            (click)="openQuantityModal(product)"
-                            [disabled]="+product.availble_stock<1"
-                          >
-                            Add 
-                          </button>
+                <button
+                *ngIf="!product.qtyAdded"
+                class="px-4 py-2 text-[13px] leading-none font-primary bg-transparent text-primary border border-primary 
+                       dark:border-[#333333] dark:text-neutral-300 rounded-md 
+                       transition-colors whitespace-nowrap 
+                       disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200 
+                       dark:disabled:bg-neutral-700 disabled:text-black
+                       hover:enabled:bg-primary hover:enabled:text-white"
+                (click)="openQuantityModal(product)"
+                [disabled]="+product.availble_stock < 1"
+              >
+                Add
+              </button>
                           <button
                             *ngIf="product.qtyAdded"
                   class="px-4 py-2 text-[13px] leading-none font-primary bg-primary text-white rounded-md cursor-not-allowed dont-close-quantity whitespace-nowrap"
@@ -628,13 +633,13 @@
       </div>
  
       <!-- Footer -->
-      <div class="bg-gray-50 dark:bg-black pl-4 p-3 rounded-bl-lg border-t border-gray-200 dark:border-[#333333]">
+      <div class="bg-gray-50 dark:bg-[#1d1d1d] dark:border-[#333333] pl-4 p-3 rounded-bl-lg border-t border-gray-200">
         <div>
     <button
       id="pl-prod-close"
             type="button"
       (click)="closeProductsList()"
-            class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-white bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors">
+            class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors">
       Cancel
     </button>
   </div>
@@ -653,11 +658,12 @@
           <div></div>
       </div>
   </div>
-  <div class="bg-white border-2 border-top-primary dark:bg-black dark:border-[#333333] p-3 xl:p-5 rounded-lg relative shadow-[0_0_5px_#0000001a]">
+  <div class="bg-white border-1 border-t-4 border-t-primary border-gray-200 dark:bg-[#1f1f1f] dark:border-[#333333] dark:border-t-primary p-3 xl:p-5 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
      
     <div class="flex flex-wrap items-center gap-3 mb-3">
+      <div class="dark:text-gray-200">Employee:</div>
       <!-- Employee Select -->
-      <div class="w-[260px]">
+      <div class="w-[240px]"> 
         <nz-select
           nzShowSearch
           nzAllowClear
@@ -679,7 +685,8 @@
       </div>
 
       <!-- Route Select -->
-      <div class="w-[260px]">
+      <div class="dark:text-gray-200">Route:</div>
+      <div class="w-[240px]">
         <nz-select
           nzShowSearch
           nzAllowClear
@@ -712,7 +719,8 @@
         </div>
 
       <!-- Retailer Select -->
-      <div class="w-[260px]">
+      <div class="dark:text-gray-200">Retailer:</div>
+      <div class="w-[240px]">
         <nz-select
           nzShowSearch
           nzAllowClear
@@ -756,35 +764,35 @@
     </div>
  
       <div class="grid grid-cols-1 md:grid-cols-2 gap-y-1 gap-x-4 border border-gray-200 dark:border-[#333333] bg-gray-50 dark:bg-[#141414] rounded-lg p-2">
-        <div>
-          <strong class="font-semibold pl-1.5">Retailer Name:&nbsp;</strong>
+        <div class="text-gray-800 dark:text-gray-400">
+          <strong class="font-semibold pl-1.5 text-secondary dark:text-gray-300">Retailer Name:&nbsp;</strong>
           {{ selectedRetailer?.retailer_name || "--" }}
           {{ selectedRetailer ? (selectedRetailer?.retailer_register == 1 ? '(Registered)' : '(Non Registered)') : '' }}
         </div>
     
-        <div>
-          <strong class="font-semibold pl-1.5">Channel Type:&nbsp;</strong>
+        <div class="text-gray-800 dark:text-gray-400">
+          <strong class="font-semibold pl-1.5 text-secondary dark:text-gray-300">Channel Type:&nbsp;</strong>
           {{ selectedRetailer?.type || "--" }}
           {{ selectedRetailer && " (" + selectedRetailer?.segment_name + ")" }}
         </div>
     
-        <div>
-          <strong class="font-semibold pl-1.5">Location:&nbsp;</strong>
+        <div class="text-gray-800 dark:text-gray-400">
+          <strong class="font-semibold pl-1.5 text-secondary dark:text-gray-300">Location:&nbsp;</strong>
           {{ selectedRetailer?.loc || "--" }}
         </div>
     
-        <div>
-          <strong class="font-semibold pl-1.5">Territory:&nbsp;</strong>
+        <div class="text-gray-800 dark:text-gray-400">
+          <strong class="font-semibold pl-1.5 text-secondary dark:text-gray-300">Territory:&nbsp;</strong>
           {{ selectedRetailer?.territory || "--" }}
         </div>
       </div>
  
 
       <!-- Product Table - Tailwind CSS with Light/Dark Mode -->
-      <div class="mt-4 rounded-md border-t-[3px] border-[#0038ba] bg-white dark:bg-[#1f1f1f] py-2 xl:py-4 shadow-sm transition-colors duration-200">
+      <div class="mt-4 rounded-md border-t-[3px] border-primary bg-white dark:bg-[#1f1f1f] py-2 xl:py-4 shadow-sm transition-colors duration-200">
         
         <!-- Table Header -->
-        <div class="flex items-center text-xs font-semibold text-[#0038ba] dark:text-[#4d7fff] pb-2">
+        <div class="flex items-center text-xs font-semibold text-primary dark:text-gray-200 pb-2">
           <div class="w-[230px] pl-1 pr-4">Product Name</div>
           <div class="w-[130px] pr-4">Unit</div>
           <div class="w-[87px] text-left pr-3">QTY.</div>
@@ -801,13 +809,13 @@
         <!-- Product Rows -->
         <div
           *ngFor="let product of selectedProducts; let ind = index"
-          class="group flex items-center border-t border-gray-200 dark:border-gray-700 py-2 bg-white dark:bg-[#1f1f1f] hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors duration-150 relative"
+          class="group flex items-center border-t border-gray-200 dark:border-neutral-700 py-2 bg-white dark:bg-[#1f1f1f] hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors duration-150 relative"
         >
           <!-- Product Name -->
           <div class="w-[230px] pl-1 pr-4">
             <div class="text-xs text-gray-800 dark:text-gray-200 leading-normal">
               {{ product.item_name }}
-              <span class="block opacity-60 pt-1 text-[11px]">
+              <span class="block opacity-70 pt-1 text-[11px]">
                 SKU: {{ product.item_sku }}
               </span>
             </div>
@@ -887,7 +895,7 @@
           <button
             [disabled]="isChequeAdded || isCreditAdded"
             (click)="removeProductFromOrder(product, ind)"
-            class="hidden group-hover:block absolute right-[-5px] top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+            class="hidden group-hover:block absolute right-[-5px] top-1/2 -translate-y-1/2 p-1.5 text-gray-400 hover:text-red-500 dark:text-gray-200 dark:hover:text-red-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
             title="Delete"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
@@ -897,13 +905,13 @@
         </div>
 
         <!-- Empty State -->
-        <div *ngIf="!selectedProducts.length" class="border-t border-gray-200 dark:border-gray-700 py-12 bg-white dark:bg-[#1f1f1f]">
-          <h2 class="text-center text-gray-400 dark:text-gray-400 font-medium text-base">Add products to counter sale...</h2>
+        <div *ngIf="!selectedProducts.length" class="border-t border-gray-200 dark:border-neutral-700 py-12 bg-white dark:bg-[#1f1f1f]">
+          <h2 class="text-center text-gray-400 dark:text-gray-500 font-medium text-base">Add products to counter sale...</h2>
         </div>
 
         <!-- Summary Section -->
         <!-- Total Items Row -->
-        <div class="flex items-center border-t border-[#0038ba] dark:border-[#4d7fff] pt-3 mt-2 text-sm">
+        <div class="flex items-center border-t border-[#0038ba] dark:border-[#4d7fff] pt-3 mt-2 text-sm pr-5">
           <div class="w-[230px] pl-1 pr-4 h-5 flex items-center text-gray-800 dark:text-gray-300">Total Items</div>
           <div class="w-[130px] pr-4 h-5 flex items-center text-gray-800 dark:text-gray-300">
             {{ selectedProducts.length }}
@@ -916,7 +924,7 @@
         </div>
 
         <!-- Trade Offer -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Trade Offer:</div>
           <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
@@ -925,7 +933,7 @@
         </div>
 
         <!-- Trade Discount -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Trade Discount:</div>
           <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
@@ -934,7 +942,7 @@
         </div>
 
         <!-- Special Discount -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Special Discount:</div>
           <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
@@ -943,7 +951,7 @@
         </div>
 
         <!-- Extra Discount -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Extra Discount:</div>
           <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
@@ -952,7 +960,7 @@
         </div>
 
         <!-- Loyalty Discount -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">Loyalty Discount:</div>
           <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
@@ -961,7 +969,7 @@
         </div>
 
         <!-- GST -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300" title="General Sales Tax">General Sales Tax(GST):</div>
           <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
@@ -970,7 +978,7 @@
         </div>
 
         <!-- AIT -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300" title="Advance Income Tax">Advance Income Tax(AIT):</div>
           <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
@@ -979,7 +987,7 @@
         </div>
 
         <!-- Total Tax -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300" title="Total Tax">Total Tax:</div>
           <div class="w-[100px] text-right h-5 flex items-center justify-end font-['Rationale',sans-serif] text-[17px] leading-none text-gray-800 dark:text-gray-200">
@@ -988,7 +996,7 @@
         </div>
 
         <!-- Total Amount Due -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">
             <strong class="font-semibold">Total Amount Due:</strong>
@@ -999,7 +1007,7 @@
         </div>
 
         <!-- Cash -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">
             <strong class="font-semibold">Cash:</strong>
@@ -1010,7 +1018,7 @@
         </div>
 
         <!-- Cheque Payment -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">
             <strong class="font-semibold">Cheque Payment:</strong>
@@ -1021,7 +1029,7 @@
         </div>
 
         <!-- Credited Amount -->
-        <div class="flex items-center text-sm mt-1">
+        <div class="flex items-center text-sm mt-1 pr-5">
           <div class="flex-1"></div>
           <div class="w-[196px] text-right pr-3 h-5 flex items-center justify-end text-gray-800 dark:text-gray-300">
             <strong class="font-semibold">Credited Amount:</strong>
@@ -1038,7 +1046,7 @@
 
 
 <!-- Bottom Action Bar - Tailwind CSS -->
-<div class="fixed bottom-0 !z-[30] left-0 right-0 bg-white dark:bg-darkprimary border-t border-gray-200 dark:border-[#333333] shadow-[0_-2px_10px_rgba(0,0,0,0.1)] dark:shadow-[0_-2px_10px_rgba(0,0,0,0.3)]">
+<div class="fixed bottom-0 !z-[30] left-0 right-0 bg-white dark:bg-[#282828] border-t border-gray-200 dark:border-[#333333] shadow-[0_-2px_10px_rgba(0,0,0,0.1)] dark:shadow-[0_-2px_10px_rgba(0,0,0,0.3)]">
   <div class="mx-auto px-4 w-full">
     <div class="flex items-center justify-between py-3 gap-3">
       <!-- Left Side Buttons -->
@@ -1104,7 +1112,7 @@
         <button
           *ngIf="!isOrdering"
           type="button"
-          class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-white bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+          class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
           [routerLink]="['/home']"
         >
           Cancel

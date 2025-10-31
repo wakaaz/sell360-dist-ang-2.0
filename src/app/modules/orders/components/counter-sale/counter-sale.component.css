@@ -389,6 +389,59 @@ input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-app
 }
 
 /* ========================================
+   DROPDOWN PANEL DARK MODE
+   ======================================== */
+
+/* Dark Mode - Dropdown Panel */
+::ng-deep .dark .ant-select-dropdown,
+::ng-deep html.dark .ant-select-dropdown {
+  background-color: #1f1f1f !important;
+  border: 1px solid #434343 !important;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.32), 0 3px 6px -4px rgba(0, 0, 0, 0.48), 0 9px 28px 8px rgba(0, 0, 0, 0.2) !important;
+}
+
+/* Dark Mode - Dropdown Items */
+::ng-deep .dark .ant-select-item,
+::ng-deep html.dark .ant-select-item {
+  background-color: #1f1f1f !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+::ng-deep .dark .ant-select-item-option-hover:not(.ant-select-item-option-disabled),
+::ng-deep html.dark .ant-select-item-option-hover:not(.ant-select-item-option-disabled) {
+  background-color: #2a2a2a !important;
+}
+
+::ng-deep .dark .ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+::ng-deep html.dark .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: rgba(0, 56, 186, 0.2) !important;
+  color: #4d7fff !important;
+  font-weight: 500 !important;
+}
+
+::ng-deep .dark .ant-select-item-option-active:not(.ant-select-item-option-disabled),
+::ng-deep html.dark .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: #2a2a2a !important;
+}
+
+::ng-deep .dark .ant-select-item-option-disabled,
+::ng-deep html.dark .ant-select-item-option-disabled {
+  color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Dark Mode - Dropdown Search Input */
+::ng-deep .dark .ant-select-dropdown .ant-select-item-option-content,
+::ng-deep html.dark .ant-select-dropdown .ant-select-item-option-content {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* Dark Mode - Empty content */
+::ng-deep .dark .ant-select-item-empty,
+::ng-deep html.dark .ant-select-item-empty {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* ========================================
    PRODUCT MODAL STYLING
    ======================================== */
 

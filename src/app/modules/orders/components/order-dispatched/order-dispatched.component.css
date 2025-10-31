@@ -327,3 +327,49 @@ input[type="number"] {
   margin: auto auto 10px auto;
   display: block;
 }
+
+/* AG Grid Container Styles */
+.ag-grid-container {
+  width: 100%;
+  min-height: 400px;
+}
+
+/* Ensure AG Grid works properly with dark mode */
+::ng-deep .ag-theme-quartz {
+  --ag-header-background-color: #f8f9fa;
+  --ag-header-foreground-color: #495057;
+  --ag-border-color: #dee2e6;
+  --ag-row-hover-color: #f8f9fa;
+  --ag-selected-row-background-color: #e3f2fd;
+  --ag-font-size: 12px;
+  font-size: 12px;
+}
+
+::ng-deep .dark .ag-theme-quartz {
+  --ag-header-background-color: #2d2d2d;
+  --ag-header-foreground-color: #e0e0e0;
+  --ag-border-color: #333333;
+  --ag-row-hover-color: #2d2d2d;
+  --ag-selected-row-background-color: #2d2d2d;
+  --ag-background-color: #1a1a1a;
+  --ag-foreground-color: #e0e0e0;
+  --ag-font-size: 12px;
+  font-size: 12px;
+}
+
+/* Ensure input fields in AG Grid are styled properly */
+::ng-deep .ag-theme-quartz input[type="text"] {
+  width: 100%;
+  font-size: 12px;
+}
+
+/* Remove any default browser styling */
+::ng-deep .ag-theme-quartz input:focus {
+  outline: none;
+}
+
+/* Set font size for all AG Grid cells and headers */
+::ng-deep .ag-theme-quartz .ag-cell,
+::ng-deep .ag-theme-quartz .ag-header-cell-text {
+  font-size: 12px;
+}

@@ -19,6 +19,9 @@ import {
 } from '../../models/recovery-retailler.model';
 import { number } from 'echarts';
 import { exit } from 'process';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -42,12 +45,24 @@ export class OrderDispatchedComponent implements OnInit {
   isAllSelected: boolean;
   showFinalLoad: boolean;
   isShopPendingApproval: boolean;
+  showAllocationErrors: boolean = false;
+  allocationErrors: string = '';
+  
+  // AG Grid
+  private stockAllocationGridApi!: GridApi;
+  stockAllocationColumnDefs: ColDef[] = [];
+  defaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: false
+  };
 
   retailer_credit_Invoices: RecoveryRetailer[];
 
   searchText: string;
   assignmentId: string;
   employeeId: number;
+  visitedTabs: Set<number> = new Set([1]); // Track visited tabs, start with tab 1
 
   salemanId: number;
   currentTab: number;
@@ -123,7 +138,316 @@ export class OrderDispatchedComponent implements OnInit {
     } else {
       this.getProducts();
       this.getSchemes();
+      this.initializeStockAllocationColumns();
     }
+  }
+
+  initializeStockAllocationColumns(): void {
+    this.stockAllocationColumnDefs = [
+      { field: 'item_sku', headerName: 'SKU', sortable: true, filter: false, width: 120 },
+      { field: 'item_main_description', headerName: 'Name', sortable: true, filter: false, flex: 1 },
+      { 
+        field: 'availble_stock_qty', 
+        headerName: 'Stock in Hand', 
+        sortable: true, 
+        filter: false,  
+        width: 110,
+        valueGetter: (params) => {
+          return params.data ? +params.data.availble_stock_qty : 0;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      { 
+        field: 'allocated_stock_qty', 
+        headerName: 'Allocated Stock', 
+        sortable: true, 
+        filter: false,  
+        width: 110,
+        valueGetter: (params) => {
+          return params.data ? +params.data.allocated_stock_qty : 0;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      { 
+        headerName: 'Available QTY.', 
+        sortable: true, 
+        filter: false,  
+        width: 110,
+        valueGetter: (params) => {
+          const available = +(params.data?.availble_stock_qty || 0);
+          const allocated = +(params.data?.allocated_stock_qty || 0);
+          return available - allocated;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      { 
+        field: 'current_load_foc_qty', 
+        headerName: 'FOC QTY.', 
+        sortable: true, 
+        filter: false,  
+        width: 100,
+        valueGetter: (params) => {
+          return params.data ? +params.data.current_load_foc_qty : 0;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      { 
+        headerName: 'Booked QTY.', 
+        sortable: true, 
+        filter: false,  
+        width: 110,
+        valueGetter: (params) => {
+          const booked = +(params.data?.current_load_booked_qty || 0);
+          const foc = +(params.data?.current_load_foc_qty || 0);
+          return booked - foc;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      {
+        field: 'current_load_allocated_qty',
+        headerName: 'Allocated QTY.',
+        sortable: false,
+        filter: false,
+        width: 100, 
+        cellRenderer: (params: any) => {
+          const item = params.data;
+          const value = Math.floor(+(item.current_load_allocated_qty || 0));
+          return `
+            <input 
+              type="text" 
+              value="${value}"
+              oninput="window.ngRef.updateAllocatedQty('${item.pref_id}', this.value, this)"
+              onkeydown="return window.ngRef.isNumberKey(event)"
+              class="w-[80px] px-3 py-1 border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none text-sm"
+              placeholder="0"
+            />
+          `;
+        },
+        cellStyle: {
+          padding: '4px'
+        }
+      },
+      {
+        field: 'actions',
+        headerName: 'ACTIONS',
+        cellRenderer: (params: any) => {
+          const item = params.data;
+          
+          return `
+            <div class="flex gap-1 items-center">
+              <button onclick="window.ngRef.extraLoadItemAllocation('${item.pref_id}')" 
+                class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5">
+                ${item.updateLoading ? 'Updating...' : 'Update'}
+              </button>
+              <button onclick="window.ngRef.viewOrders('${item.pref_id}')" 
+                class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5">
+                View Orders
+              </button>
+              <button onclick="window.ngRef.clearAllocation('${item.pref_id}')" 
+                class="bg-red-600 dark:bg-red-600 dark:border-red-600 h-auto leading-none py-[4px] px-[5px] text-white text-[11px] border border-red-600 hover:bg-red-700 font-primary rounded-[5px] mb-1 ml-0.5">
+                ${item.cancelLoading ? 'Cancelling...' : 'Cancel All'}
+              </button>
+            </div>
+          `;
+        },
+        cellStyle: {
+          display: 'flex',
+          alignItems: 'center'
+        },
+        width: 230, 
+        sortable: false,
+        filter: false,
+        pinned: 'right'
+      }
+    ];
+  }
+
+  onStockAllocationGridReady(params: GridReadyEvent): void {
+    this.stockAllocationGridApi = params.api;
+    // Expose methods to window for button clicks
+    (window as any).ngRef = {
+      extraLoadItemAllocation: (prefId: string) => {
+        const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
+        if (item) this.onExtraLoadItemAllocation(item);
+      },
+      viewOrders: (prefId: string) => {
+        const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
+        if (item) this.onShowViewOrders(null, item.pref_id);
+      },
+      clearAllocation: (prefId: string) => {
+        const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
+        if (item) this.clearLoadItemAllocation(item);
+      },
+      updateAllocatedQty: (prefId: string, value: string, inputElement: HTMLInputElement) => {
+        const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
+        if (item) {
+          const newValue = Math.floor(+(value || 0));
+          const availableQty = Math.floor(+(item.availble_stock_qty || 0) - +(item.allocated_stock_qty || 0));
+          
+          if (newValue > availableQty) {
+            item.current_load_allocated_qty = availableQty;
+            if (inputElement) {
+              inputElement.value = availableQty.toString();
+            }
+          } else {
+            item.current_load_allocated_qty = newValue;
+          }
+          this.stockAllocationGridApi.refreshCells();
+        }
+      },
+      isNumberKey: (event: KeyboardEvent) => {
+        const charCode = event.which ? event.which : event.keyCode;
+        // Allow: backspace, delete, tab, escape, enter
+        if ([46, 8, 9, 27, 13].indexOf(charCode) !== -1 ||
+            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+            (charCode === 65 && event.ctrlKey === true) ||
+            (charCode === 67 && event.ctrlKey === true) ||
+            (charCode === 86 && event.ctrlKey === true) ||
+            (charCode === 88 && event.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (charCode >= 35 && charCode <= 39)) {
+          return true;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((event.shiftKey || (charCode < 48 || charCode > 57)) && (charCode < 96 || charCode > 105)) {
+          event.preventDefault();
+          return false;
+        }
+        return true;
+      }
+    };
+  }
+
+  onStockQuickFilterChanged(event: any): void {
+    const filterValue = event.target.value;
+    if (this.stockAllocationGridApi) {
+      this.stockAllocationGridApi.setGridOption('quickFilterText', filterValue);
+    }
+  }
+
+
+  onCheckAllocation(): void {
+    this.allocationErrors = '';
+    this.showAllocationErrors = false;
+    this.tabLoading = true;
+    
+    if (this.isShopPendingApproval) {
+      this.tabLoading = false;
+      this.orderService.setCheckAllocationSuccess(false);
+      const toast: Toaster = {
+        type: 'error',
+        message: 'Approve all pending Retailers First.',
+        title: 'Failed:',
+      };
+      this.toastService.showToaster(toast);
+      return;
+    }
+    
+    this.orderService.saveLoadItemAllocation(this.assignmentId).subscribe(
+      (x) => {
+        this.tabLoading = false;
+        this.orderService.setCheckAllocationSuccess(true);
+        const toast: Toaster = {
+          type: 'success',
+          message: 'Allocation Quantity Verified',
+          title: 'Success:',
+        };
+        this.toastService.showToaster(toast);
+      },
+      (err) => {
+        this.tabLoading = false;
+        this.orderService.setCheckAllocationSuccess(false);
+        this.showAllocationErrors = true;
+        let itemErrorList: string = '';
+        if (err.error?.error) {
+          err.error.error.forEach((x: any) => {
+            itemErrorList += `<li>Product SKU: ${x.item_sku}, Product Name: ${x.item_name}</li>`;
+          });
+        }
+        this.allocationErrors = itemErrorList;
+      }
+    );
+  }
+
+  closeAllocationAlert(): void {
+    this.showAllocationErrors = false;
+    this.allocationErrors = '';
+  }
+
+  onExtraLoadItemAllocation(item: any): void {
+    item.updateLoading = true;
+    if (+item.current_load_allocated_qty < item.current_load_booked_qty) {
+      item.updateLoading = false;
+      const toast: Toaster = {
+        type: 'error',
+        message: `Requested allocation quantity is less than Booked Qty. Minimum Booked Qty is ${item.current_load_booked_qty}`,
+        title: 'Error:',
+      };
+      this.toastService.showToaster(toast);
+    } else {
+      this.orderService
+        .extraLoadItemAllocation(
+          this.assignmentId,
+          item.pref_id,
+          item.current_load_allocated_qty
+        )
+        .subscribe(
+          (x) => {
+            item.updateLoading = false;
+            this.stockAllocationGridApi.refreshCells();
+            const toast: Toaster = {
+              type: 'success',
+              message: 'Allocated Quantity Updated',
+              title: 'Success:',
+            };
+            this.toastService.showToaster(toast);
+            this.getDispatchDetails();
+          },
+          (err) => {
+            item.updateLoading = false;
+            this.stockAllocationGridApi.refreshCells();
+            const toast: Toaster = {
+              type: 'error',
+              message: 'Requested allocation quantity is greater than available stock.',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+        );
+    }
+  }
+
+  onShowViewOrders(event: any, pref_id: number): void {
+    // This will be handled by the stock-allocation component sidebar
+    // For now, we'll keep the original component behavior
+    // This can be implemented as a modal or sidebar if needed
+  }
+
+  clearLoadItemAllocation(item: any): void {
+    item.cancelLoading = true;
+    this.orderService
+      .clearLoadItemAllocation(this.assignmentId, item.pref_id)
+      .subscribe((x) => {
+        item.cancelLoading = false;
+        this.stockAllocationGridApi.refreshCells();
+        const toast: Toaster = {
+          type: 'success',
+          message: 'Allocated Quantity Updated',
+          title: 'Success:',
+        };
+        this.toastService.showToaster(toast);
+        this.getDispatchDetails();
+      });
   }
 
   setLoad(): void {
@@ -162,6 +486,36 @@ export class OrderDispatchedComponent implements OnInit {
   closeSideBarEvent(value: any) {
     this.stockAllocation = null;
     this.getDispatchDetails();
+  }
+
+  // Check if a tab has been visited
+  isTabVisited(tabNumber: number): boolean {
+    return this.visitedTabs.has(tabNumber);
+  }
+
+  // Handle tab click - only allow if visited
+  onTabClick(tabNumber: number): void {
+    if (this.isTabVisited(tabNumber)) {
+      this.currentTab = tabNumber;
+      this.tabChanged();
+    }
+  }
+
+  // Navigate to next tab
+  goToNextTab(): void {
+    if (this.currentTab < 5) {
+      this.currentTab++;
+      this.visitedTabs.add(this.currentTab); // Mark new tab as visited
+      this.tabChanged();
+    }
+  }
+
+  // Navigate to previous tab
+  goToPreviousTab(): void {
+    if (this.currentTab > 1) {
+      this.currentTab--;
+      this.tabChanged();
+    }
   }
 
   tabChanged(): void {

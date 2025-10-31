@@ -17,5 +17,13 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addBase, theme }) {
+      addBase({
+        'body': {
+          fontFamily: theme('fontFamily.secondary'),
+        },
+      })
+    },
+  ],
 }

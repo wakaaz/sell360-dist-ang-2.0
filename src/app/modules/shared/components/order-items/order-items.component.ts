@@ -47,8 +47,13 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   @Input() specialDiscounts: Array<any>;
   @Input() orders: Array<any>;
   @Input() allProducts: Array<any>;
+  @Input() loadingProducts: boolean = false;
 
   showProducts: boolean;
+  productSearchText: string = '';
+  dispProducts: Array<any> = [];
+  selectedProduct: any = {};
+  showQuantityModal: boolean = false;
 
   grossAmount: number;
   netAmount: number;
@@ -68,6 +73,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
 
   selectedItem: any;
   permissions: any;
+  showDeleteModal: boolean = false;
 
   @Output() openDrawer: EventEmitter<boolean> = new EventEmitter();
   @Output() openReturnedModal: EventEmitter<boolean> = new EventEmitter();
@@ -75,6 +81,7 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   @Output() cancelCurrentOrder: EventEmitter<any> = new EventEmitter();
   @Output() deleteReturned: EventEmitter<any> = new EventEmitter();
   @Output() productUpdated: EventEmitter<boolean> = new EventEmitter();
+  @Output() productSelected: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private toastService: ToasterService,
@@ -125,6 +132,8 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
   openProductsList(event: Event): void {
     event.stopPropagation();
     if (this.selectedRetailer?.retailer_id) {
+      this.showProducts = true;
+      this.initializeProducts();
       this.openDrawer.emit();
     } else {
       this.toastService.showToaster({
@@ -132,6 +141,76 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         title: 'Error:',
         message: 'Please select order to add products!',
       });
+    }
+  }
+
+  initializeProducts(): void {
+    if (this.allProducts && this.allProducts.length > 0) {
+      this.dispProducts = JSON.parse(JSON.stringify(this.allProducts));
+      this.dispProducts = this.dispProducts.map((prod) => {
+        const isAlreadyAdded = this.orderDetail?.items?.some(
+          (item: any) => item.item_id === prod.item_id
+        );
+        return {
+          ...prod,
+          qtyAdded: isAlreadyAdded,
+          isAdded: isAlreadyAdded,
+        };
+      });
+    }
+  }
+
+  closeProductsList(): void {
+    this.showProducts = false;
+    this.productSearchText = '';
+    this.dispProducts = [];
+  }
+
+  searchProduct(): void {
+    if (this.productSearchText) {
+      this.dispProducts = this.allProducts.filter(
+        (prod) =>
+          prod.item_name
+            .toLowerCase()
+            .includes(this.productSearchText.toLowerCase()) ||
+          prod.item_sku
+            .toLowerCase()
+            .includes(this.productSearchText.toLowerCase())
+      );
+      this.dispProducts = this.dispProducts.map((prod) => {
+        const isAlreadyAdded = this.orderDetail?.items?.some(
+          (item: any) => item.item_id === prod.item_id
+        );
+        return {
+          ...prod,
+          qtyAdded: isAlreadyAdded,
+          isAdded: isAlreadyAdded,
+        };
+      });
+    } else {
+      this.initializeProducts();
+    }
+  }
+
+  openQuantityModal(product: any): void {
+    this.selectedProduct = product;
+    this.showQuantityModal = true;
+  }
+
+  closeQuantityModal(event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+    this.showQuantityModal = false;
+    this.selectedProduct = {};
+  }
+
+  clickedOutSide(event: Event): void {
+    const target = event.target as HTMLElement;
+    const sidebar = target.closest('#product-cl-sec');
+    const sidebarContent = target.closest('.flex.flex-col.h-full');
+    if (!sidebar || (sidebar && !sidebarContent && target.id === 'product-cl-sec')) {
+      this.closeProductsList();
     }
   }
 
@@ -162,6 +241,18 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
         )
       : null;
     this.selectedItem = selecteditem;
+    this.showDeleteModal = true;
+  }
+
+  closeDeleteModal(): void {
+    this.showDeleteModal = false;
+  }
+
+  deleteProductAndClose(deleteType: number = null): void {
+    this.deleteProduct(deleteType);
+    setTimeout(() => {
+      this.closeDeleteModal();
+    }, 100);
   }
 
   deleteProduct(deleteType: number = null): void {

@@ -16,15 +16,125 @@
 </app-products-drawer>
 
 
+<!-- Orders List Sidebar - Tailwind CSS -->
+<div  
+  id="orders-list-sidebar"
+  *ngIf="showOrdersSidebar"
+  (click)="clickedOutSide($event)"
+  class="fixed inset-0 bg-white/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-[50] items-center justify-center p-4 flex">
+  <div 
+    class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[1000] flex-row flex-none flex w-full md:w-[860px] dont-close-orders"
+    (click)="$event.stopPropagation()"
+    (mousedown)="$event.stopPropagation()">
+    <div
+      class="flex flex-col h-full w-full md:w-[860px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]">
+      
+      <!-- Header -->
+      <div
+        class="relative flex items-center justify-between h-auto rounded-tl-lg bg-gradient-to-r from-[#1e54d3] to-[#0038ba] text-white px-4 py-3 text-[16px] leading-[22px]">
+        <h2 class="text-base font-bold text-white font-primary mb-0">
+          Orders 
+          <span class="font-light">List</span>
+        </h2>
+        <div>
+          <button 
+            id="orders-close" 
+            (click)="closeOrdersList()" 
+            class="hover:opacity-80 transition-opacity dont-close-orders">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x mt-1"
+              viewBox="0 0 16 16">
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708">
+              </path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Content - Orders Table -->
+      <div class="flex-1 overflow-auto p-4 bg-[#f6f6f6] dark:bg-darkprimary">
+        <div *ngIf="ordersList.length > 0" class="bg-white dark:bg-[#1f1f1f] rounded-lg border border-gray-200 dark:border-[#333333] overflow-hidden">
+          <!-- Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead class="bg-gray-50 dark:bg-[#2a2a2a] border-b border-gray-200 dark:border-[#333333]">
+                <tr>
+                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">Id</th>
+                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[250px]">Retailer Name</th>
+                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">BKD QTY</th>
+                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">FOC. QTY</th>
+                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200 dark:divide-[#333333]">
+                <tr *ngFor="let order of ordersList" class="hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors">
+                  <td class="px-4 py-3 text-[13px] text-gray-900 dark:text-gray-200 font-primary">{{ order.retailer_id || order.order_id }}</td>
+                  <td class="px-4 py-3 text-[13px] text-gray-900 dark:text-gray-200 font-primary">{{ order.retailer_name }}</td>
+                  <td class="px-4 py-3">
+                    <input
+                      type="text"
+                      [(ngModel)]="order.booked_qty"
+                      (keydown)="isNumber($event, 'quantity')"
+                      class="w-[80px] px-3 py-1 border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none text-[13px] dont-close-orders"
+                      placeholder="0"
+                    />
+                  </td>
+                  <td class="px-4 py-3 text-[13px] text-gray-900 dark:text-gray-200 font-primary">{{ order.free_qty || 0 }}</td>
+                  <td class="px-4 py-3">
+                    <button
+                      (click)="onUpdateOrderAllocation(order)"
+                      [disabled]="order.updateLoading"
+                      class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[13px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dont-close-orders">
+                      <span *ngIf="order.updateLoading" class="inline-block mr-1">⏳</span>
+                      {{ order.updateLoading ? 'Updating...' : 'Update' }}
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div *ngIf="ordersList.length === 0" class="flex flex-col h-[calc(100vh-31vh)]
+        items-center justify-center">
+         <svg class="w-16 h-16 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+         </svg>
+         <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary text-center">No orders found</p>
+       </div>
+
+
+   
+
+      </div>
+   
+      <!-- Footer -->
+      <div class="bg-gray-50 dark:bg-[#1d1d1d] dark:border-[#333333] pl-4 p-3 rounded-bl-lg border-t border-gray-200">
+        <div>
+          <button
+            id="orders-close-btn"
+            type="button"
+            (click)="closeOrdersList()"
+            class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors dont-close-orders">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="container mx-auto px-4 pb-24 mt-4">
-  <div class="bg-white px-1 border-1 border-t-2 border-t-primary border-gray-200 dark:bg-[#1f1f1f] dark:border-[#333333] dark:border-t-primary rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
+  <div class="bg-white px-1 pb-2 border-1 border-t-2 border-t-primary border-gray-200 dark:bg-[#1f1f1f] dark:border-[#333333] dark:border-t-primary rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
     <!-- Tabs Navigation - Pure Tailwind CSS with Dark Mode -->
     <div class="w-full mb-3 grid grid-cols-5" role="tablist" id="pills-tab">
       <!-- Stock Allocation Tab -->
       <div class="flex items-center justify-center relative">
         <button
           type="button"
-          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-base font-light"
+          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 1,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 1 && isTabVisited(1),
@@ -71,7 +181,7 @@
       <div class="flex items-center justify-center relative">
         <button
           type="button"
-          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-base font-light"
+          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 2,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 2 && isTabVisited(2),
@@ -120,7 +230,7 @@
       <div class="flex items-center justify-center relative">
         <button
           type="button"
-          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-base font-light"
+          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 3,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 3 && isTabVisited(3),
@@ -167,7 +277,7 @@
       <div class="flex items-center justify-center relative">
         <button
           type="button"
-          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-base font-light"
+          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 4,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 4 && isTabVisited(4),
@@ -214,7 +324,7 @@
       <div class="flex items-center justify-center relative">
         <button
           type="button"
-          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-base font-light"
+          class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 5,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 5 && isTabVisited(5),
@@ -262,13 +372,13 @@
 
     <!-- Stock Allocation Tab Content - AG Grid -->
     <div
-      [ngClass]="currentTab === 1 ? 'active show' : ''"
-      class="tab-pane p-0 pt-5 tab_M fade"
+      *ngIf="currentTab === 1"
+      class="tab-pane p-0 pt-5 tab_M active show"
       id="pills-contact"
       role="tabpanel"
       aria-labelledby="pills-contact-tab"
     >
-      <div *ngIf="currentTab === 1">
+      <div>
         <div class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative">
           <!-- Header -->
           <div class="flex justify-between items-center text-secondary rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative">
@@ -352,8 +462,13 @@
             [disabled]="tabLoading || !stockAllocation"
             class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
           >
-            <span *ngIf="tabLoading" class="inline-block mr-1">⏳</span>
-            {{ tabLoading ? "Checking..." : "Check Allocation" }}
+            <div *ngIf="tabLoading" class="inline-block animate-spin mr-2">
+              <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </div>
+            {{ tabLoading ? "" : "Check Allocation" }}
           </button>
         </div>
       </div>
@@ -361,14 +476,14 @@
 
   <div class="tab-content" id="pills-tabContent">
     <div
-      [ngClass]="currentTab === 2 ? 'active show' : ''"
-      class="tab-pane tab_M p-0 PT-15 fade"
+      *ngIf="currentTab === 2"
+      class="tab-pane tab_M p-0 PT-15 active show"
       id="pills-home"
       role="tabpanel"
       aria-labelledby="pills-home-tab"
     >
-      <div class="row m-0 grayTopborder">
-        <div id="orderList-id" class="col-4 p-0">
+      <div class="flex">
+        <div id="orderList-id" class="w-[300px] shrink-0">
           <app-retailer-sub-list
             [retailers]="ordersRetailers"
             [loading]="loading || loadingProduct || savingOrder"
@@ -376,8 +491,8 @@
           ></app-retailer-sub-list>
         </div>
 
-        <div class="col p-0">
-          <div *ngIf="currentTab === 2" class="rightHeight">
+        <div class="flex-1 pl-3 pr-2">
+          <div class="rightHeight h-[calc(100vh-200px)] overflow-y-auto">
             <app-order-items-list 
               *ngIf="!savingOrder && selectedRetailer"
               [orderDetail]="orderDetails" 
@@ -401,29 +516,26 @@
               <app-loader-white></app-loader-white>
             </div>
             <div
-              class="no-content"
-              *ngIf="!savingOrder && !selectedRetailer"
-            >
-              <div
-                class="no-content-container"
-                style="
-                  margin: auto;
-                  display: table;
-                  text-align: center;
-                  color: #b7b7b7;
-                "
-              >
-                <img src="assets/images/select order-icon.svg" alt="" />
-                <strong>Select order to see details</strong>
-              </div>
+            *ngIf="!savingOrder && !selectedRetailer"
+            class="no-content w-full h-[calc(100vh-204px)] flex"
+          >
+            <div class="no-content-container m-auto table text-center text-[#b7b7b7]">
+              <img
+                src="assets/images/select order-icon.svg"
+                alt=""
+                class="w-[70px] h-[70px] mx-auto mb-[10px] block"
+              />
+              <strong>Select order to see details</strong>
             </div>
           </div>
-          <div *ngIf="selectedRetailer" class="col-md-12 bottom-act-btn">
+
+          </div>
+          <div *ngIf="selectedRetailer" class="text-right pt-[15px]">
             <button
               *ngIf="!savingOrder"
               (click)="setOrderItems()"
               [disabled]="!orderDetails?.items?.length"
-              class="btn btn-primary mr-2 save_order_execution font13"
+              class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Save Order
             </button>
@@ -432,9 +544,8 @@
             <button
             [disabled]="!orderDetails?.items?.length"
             *ngIf="!savingOrder"
-            data-toggle="modal"
-            data-target="#order-hold-model"
-            class="btn btn-cancel hold_order_btn mr-2 font13"
+            (click)="showHoldOrderModal = true"
+            class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
             > 
             Hold Order 
            </button>
@@ -442,9 +553,8 @@
             <button
               [disabled]="!orderDetails?.items?.length"
               *ngIf="!savingOrder"
-              data-toggle="modal"
-              data-target="#order-del"
-              class="btn btn-cancel cancel_order_btn font13"
+              (click)="showCancelOrderModal = true"
+              class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel Order
             </button>
@@ -464,8 +574,8 @@
       </div>
     </div>
     <div
-      [ngClass]="currentTab === 3 ? 'active show' : ''"
-      class="tab-pane p-0 PT-20 tab_M fade"
+      *ngIf="currentTab === 3"
+      class="tab-pane p-0 PT-20 tab_M active show"
       id="pills-contact"
       role="tabpanel"
       aria-labelledby="pills-contact-tab"
@@ -474,14 +584,16 @@
     </div>
 
     <div
-      [ngClass]="currentTab === 4 ? 'active show' : ''"
-      class="tab-pane tab_M p-0 PT-15 fade"
+      *ngIf="currentTab === 4"
+      class="tab-pane tab_M p-0 PT-15 active show"
       id="pills-load"
       role="tabpanel"
       aria-labelledby="pills-load-tab"
     >
-      <div *ngIf="currentTab === 4" class="row m-0 grayTopborder">
-        <div *ngIf="!loading" id="orderList-id2" class="col-4 p-0">
+
+ 
+      <div class="flex">
+        <div *ngIf="!loading" id="orderList-id2" class="w-[300px] shrink-0">
           <div class="_selectProList ProListHeight">
             <div class="header ProListHD">
               <div class="row">
@@ -489,26 +601,16 @@
                   <h2 class="w-100">Orders <span> List</span></h2>
 
                   <div class="select-all-op">
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        type="checkbox"
-                        [(ngModel)]="isAllSelected"
-                        name="all-selected"
-                        id="all-selected"
-                        class="custom-control-input"
-                        (change)="allSelected()"
-                        id="all-s"
-                      />
-                      <label class="custom-control-label" for="all-s"
-                        >Select All</label
-                      >
-                    </div>
+                    <label nz-checkbox [(ngModel)]="isAllSelected" (ngModelChange)="allSelected()" id="all-s">
+                      Select All
+                    </label>
                   </div>
                 </div>
-                <div class="col-12">
+                  <div class="col-12">
                   <div class="APS-list">
                     <i class="fa fa-search"></i>
                     <input
+                      nz-input
                       type="text"
                       class="form-control"
                       id=""
@@ -540,20 +642,12 @@
                     >
                   </div>
                   <div class="col-4 pl-0">
-                    <div class="custom-control custom-checkbox">
-                      <input
-                        type="checkbox"
-                        [name]="ind"
-                        (change)="retailerSelected(order)"
-                        class="custom-control-input"
-                        [(ngModel)]="order.isSelected"
-                        [id]="'ord' + ind"
-                      />
-                      <label
-                        class="custom-control-label"
-                        [for]="'ord' + ind"
-                      ></label>
-                    </div>
+                    <label
+                      nz-checkbox
+                      [(ngModel)]="order.isSelected"
+                      (ngModelChange)="retailerSelected(order)"
+                      [id]="'ord' + ind"
+                    ></label>
                     <div class="text-right">
                       Total Sales<span class="or-val"
                         >Rs.
@@ -567,10 +661,10 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> 
 
-        <div *ngIf="!loading" class="col p-0">
-          <div class="rightHeight PT-5">
+        <div *ngIf="!loading" class="flex-1 pl-3 pr-2">
+          <div class="rightHeight h-[calc(100vh-200px)] overflow-y-auto pt-4">
             <div class="header-tabs">
               <div class="nav nav-tabs" id="nav-tab" role="tablist">
                 <a
@@ -650,11 +744,12 @@
           <app-loader-white></app-loader-white>
         </div>
       </div>
+      
     </div>
 
     <div
-      [ngClass]="currentTab === 5 ? 'active show' : ''"
-      class="tab-pane tab_M p-0 PT-15 fade"
+      *ngIf="currentTab === 5"
+      class="tab-pane tab_M p-0 PT-15 active show"
       id="pills-final"
       role="tabpanel"
       aria-labelledby="pills-final-tab"
@@ -917,78 +1012,38 @@
       </div>
     </div>
 
-    <div
-      *ngIf="currentTab !== 5"
-      class="col-md-12 pl-10 pr-10 text-center"
-    >
-      <div class="execFooter">
-        <button
-          (click)="currentTab = currentTab - 1; tabChanged()"
-          [disabled]="
-            currentTab === 1 ||
-            currentTab === 5 ||
-            loading ||
-            savingOrder ||
-            load.content[0].items.length > 0
-          "
-          type="submit"
-          class="btn btn-primary m-0 mr-2"
-        >
-          Previous
-        </button>
-        <button
-          *ngIf="currentTab !== 5 && currentTab !== 4"
-          [disabled]="
-            currentTab === 5 ||
-            loading ||
-            loadingProduct ||
-            savingOrder ||
-            !checkAllocationSuccess
-          "
-          (click)="currentTab = currentTab + 1; tabChanged()"
-          type="submit"
-          class="btn btn-primary m-0"
-        >
-          <div *ngIf="tabLoading" class="spinner-border" role="status">
-            <span class="sr-only"></span>
-          </div>
-          {{ tabLoading ? "" : "Next" }}
-        </button>
-        <button
-          *ngIf="currentTab === 4"
-          [disabled]="loading || loadingProduct"
-          (click)="openConfirmationModal()"
-          type="submit"
-          class="btn btn-primary m-0"
-        >
-          Next
-        </button>
-        <button
-          style="display: none"
-          id="open-create-load"
-          data-toggle="modal"
-          data-target="#create-load"
-        >
-          Open Modal
-        </button>
-      </div>
-    </div>
   </div>
 
   <!-- Previous/Next Navigation Buttons - Global for all tabs -->
-  <div class="flex justify-center gap-2 mt-4 mb-4 p-3 bg-[#f6f6f6] dark:bg-[#1a1a1a] rounded-lg mx-4">
+  <div class="flex justify-center gap-2 mt-4 p-3 bg-[#f6f6f6] dark:bg-[#1a1a1a] rounded-lg">
     <button
       type="button"
       (click)="goToPreviousTab()"
-      [disabled]="currentTab === 1"
+      [disabled]="currentTab === 1 || loading || savingOrder || (currentTab === 4 && load?.content?.[0]?.items?.length > 0)"
       class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
       Previous
     </button>
     <button
+      *ngIf="currentTab !== 4"
       type="button"
       (click)="goToNextTab()"
-      [disabled]="currentTab === 5"
+      [disabled]="currentTab === 5 || loading || loadingProduct || savingOrder || (currentTab === 1 && !checkAllocationSuccess)"
+      class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+    >
+      <div *ngIf="tabLoading" class="inline-block animate-spin mr-2">
+        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+      </div>
+      {{ tabLoading ? "" : "Next" }}
+    </button>
+    <button
+      *ngIf="currentTab === 4"
+      type="button"
+      (click)="openConfirmationModal()"
+      [disabled]="loading || loadingProduct"
       class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
       Next
@@ -1003,50 +1058,66 @@
 
 
 
+<!-- Cancel Order Modal - Tailwind CSS -->
 <div
-  class="modal fade"
-  id="order-del"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="orderLabel"
-  aria-hidden="true"
+  *ngIf="showCancelOrderModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="closeCancelOrderModal($event)"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top-borderRed">
-      <div class="modal-header">
-        <h5 class="modal-title" id="orderLabel">Cancel Order <span></span></h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="col-md-12">
-          <p>Are you sure you want to cancel the order?</p>
-        </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button type="button" class="btn btn-primary" (click)="cancelOrder()" style="font-size: 14px;padding: 8px 12px;letter-spacing: normal;">
-          Cancel Without Allocation
-        </button>
-        <button type="button" class="btn btn-primary" (click)="cancelOrder(1)" style="font-size: 14px;padding: 8px 12px;letter-spacing: normal;">
-          Cancel With Allocation
-        </button>
-        <button
-          type="submit"
-          id="close-del"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
-          style="font-size: 14px;padding: 8px 16px;letter-spacing: normal;"
-        >
-          No
-        </button>
-      </div>
+  <div 
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-red-600"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
+        Cancel <span class="font-light text-gray-600 dark:text-gray-400">Order</span>
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeCancelOrderModal($event)"
+        aria-label="Close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-6 py-5">
+      <p class="text-sm text-gray-700 dark:text-gray-300 font-primary">
+        Are you sure you want to cancel the order?
+      </p>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3 flex-wrap">
+      <button
+        type="button"
+        class="px-4 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
+        (click)="cancelOrder()"
+        aria-label="Cancel Without Allocation"
+      >
+        Cancel Without Allocation
+      </button>
+      <button
+        type="button"
+        class="px-4 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
+        (click)="cancelOrder(1)"
+        aria-label="Cancel With Allocation"
+      >
+        Cancel With Allocation
+      </button>
+      <button
+        type="button"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        (click)="closeCancelOrderModal($event)"
+        aria-label="Close"
+      >
+        No
+      </button>
     </div>
   </div>
 </div>
@@ -1081,14 +1152,14 @@
             Select Date
           </div>
           <div class="col">
-            <input
-              type="date"
+            <nz-date-picker
               id="invoice-date"
               [(ngModel)]="invoiceDate"
+              nzFormat="yyyy-MM-dd"
               class="form-control select-date"
               name="invoice-date"
-              placeholder=""
-            />
+              nzPlaceholder=""
+            ></nz-date-picker>
           </div>
           <div class="col-12">
             <hr />
@@ -1168,84 +1239,80 @@
   </div>
 </div>
 
-<!-- Hold Order -->
-
+<!-- Hold Order Modal - Tailwind CSS -->
 <div
-  class="modal fade"
-  id="order-hold-model"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
+  *ngIf="showHoldOrderModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="closeHoldOrderModal($event)"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="holdOrderModalLabel"> Hold Order<span> </span>
-        </h5>
-        <button
-          type="button"
-          class="close dont-close-products"
-          data-dismiss="modal"
-          (click)="closeHoldOrderModal($event)"
-          aria-label="Close"
-        >
-          <span class="dont-close-products" aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body AddDetailPR" style="font-size: 14px;">
-        
-        <div class="row">
-          <div class="col-md-4 pt-7 mb-15">Hold Reason:</div>
-          <div class="col-md-8 mb-15">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Reason"
-              required
-              [(ngModel)]="holdOrderParams.hold_reason"
-              style="font-size: 13px"
-            />
-          </div>
-        </div>
-        <div class="row">
-          <!-- <div class="col-md-12">
-            <p>Are you sure you want to hold the order?</p>
-          </div> -->
-          <div class="col-md-4 PT-10">Delete Alloation:</div>
-          <div class="col-md-8">
-            <div class="custom-control custom-checkbox" style="line-height: 1.7;">
-                  <input
-                      type="checkbox"
-                      class="custom-control-input"
-                      id="deleteAllocationCheckbox"
-                      [(ngModel)]="holdOrderParams.delete_allocation"
-                  />
-                  <label class="custom-control-label mt-2" for="deleteAllocationCheckbox">Yes</label>
-              </div>
-          </div>
+  <div 
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
+        Hold <span class="font-light text-gray-600 dark:text-gray-400">Order</span>
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeHoldOrderModal($event)"
+        aria-label="Close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-6 py-5 space-y-4">
+      <!-- Hold Reason Input -->
+      <div class="flex flex-col sm:flex-row sm:items-start gap-2">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0 pt-2">Hold Reason:</label>
+        <div class="flex-1">
+          <input
+            nz-input
+            type="text"
+            class="w-full px-3 py-1.5 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary focus:box-shadow-none font-primary text-sm"
+            placeholder="Reason"
+            required
+            [(ngModel)]="holdOrderParams.hold_reason"
+          />
         </div>
       </div>
-      <div class="modal-footer border-0" style="background-color: #f6f6f6">
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="holdOrder($event)"
-          aria-label="Close"
-        >
-          Save
-        </button>
-        <button
-          type="button"
-          id="close-hold-model"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          (click)="closeHoldOrderModal($event)"
-          aria-label="Close"
-        >
-          Cancel
-        </button>
+
+      <!-- Delete Allocation Checkbox -->
+      <div class="flex flex-col sm:flex-row sm:items-start gap-2 pt-2">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0">Delete Allocation:</label>
+        <div class="flex-1">
+          <label nz-checkbox [(ngModel)]="holdOrderParams.delete_allocation" id="deleteAllocationCheckbox" class="primary-checkbox">
+            <span class="ml-1.5 text-sm text-gray-700 dark:text-gray-300 font-primary">Yes</span>
+          </label>
+        </div>
       </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
+      <button
+        type="button"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        (click)="closeHoldOrderModal($event)"
+        aria-label="Close"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
+        (click)="holdOrder($event)"
+        aria-label="Save"
+      >
+        Save
+      </button>
     </div>
   </div>
 </div>
+

@@ -1,58 +1,88 @@
-<div class="_selectProList ProListHeight">
-  <div class="header ProListHD">
-    <div class="row">
-      <div class="col-12">
-        <h2 class="w-100">Orders <span> List</span></h2>
-      </div>
-      <div *ngIf="!loading" class="col-12">
-        <div class="APS-list">
-          <i class="fa fa-search"></i>
-          <input
-            type="text"
-            [(ngModel)]="searchText"
-            (keyup)="searchByRetailer()"
-            class="form-control"
-            id=""
-            placeholder="Search"
-          />
-        </div>
-      </div>
-      <div *ngIf="loading" class="col-12">
-        <div class="box-list shine mt-10"></div>
-      </div>
-    </div>
-  </div>
+<div class="w-full h-[calc(100vh-200px)] flex flex-col  bg-[#f6f6f6] border-l border-b border-[#e4e4e4] rounded-lg">
 
-  <div class="ProList-div" *ngIf="!loading && retailerDispList?.length">
-    <div
-      *ngFor="let retailer of retailerDispList; let i = index"
-      [ngClass]="retailer.isActive ? 'active' : ''"
-      class="col-12 order-list"
-      id="retailer-{{ retailer.id }}"
-      (click)="getOrderDetails(retailer)"
-    >
-      <div class="ord-no">{{ i + 1 }}</div>
-      <div class="row">
-        <div class="col-8 pr-0">
-          <strong>{{ retailer.retailer_name }}</strong
-          ><span
-            ><i class="fa fa-map-marker-alt"></i>
-            {{ retailer.retailer_neighbourhood }}</span
-          >
+  <div
+    class="w-inherit px-[15px] pt-[15px] pb-[10px] border-b border-[#e5e5e5] bg-[linear-gradient(0deg,#f6f6f6,#fff_50%)]">
+    <h2
+      class="relative flex items-start text-base pl-0 mb-3 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[3px] font-primary font-medium">
+      Orders &nbsp;<span class="font-light">List</span>
+    </h2>
+
+    <div class="relative">
+      <div class="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+      </div>
+      <input type="text"
+        class="w-full pl-8 pr-3 py-1.5 border border-[#ececec] dark:border-[#1d1d1d] rounded-lg bg-[#f6f6f6] dark:bg-[#1d1d1d] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary font-primary text-sm"
+        [(ngModel)]="searchText" (keyup)="searchByRetailer()" placeholder="Search" />
+    </div>
+
+  </div>
+  <div *ngIf="!loading">
+
+
+    <div *ngIf="loading" class="w-full">
+      <div class="h-[50px] w-full shine mt-10"></div>
+    </div>
+
+
+
+
+
+
+    <div class="flex-1 py-[10px] px-[8px] text-sm overflow-y-auto overflow-x-hidden h-[calc(100vh-300px)]"
+      *ngIf="!loading && retailerDispList?.length">
+      <div *ngFor="let retailer of retailerDispList; let i = index"
+        [ngClass]="retailer.isActive ? 'active shadow-[0_0_22px_#0000002e] scale-100 z-[3]' : ''"
+        id="retailer-{{ retailer.id }}" (click)="getOrderDetails(retailer)"
+        class="w-full text-[12px] bg-white rounded-lg px-[10px] py-[6px] mb-1 border border-[#eaeaea] relative transition-all duration-200 transform scale-[0.97] cursor-pointer hover:shadow-[0_0_15px_#0000002e] hover:scale-100 hover:z-[3]">
+        <!-- Order Number -->
+        <div
+          class="font-[Poppins,sans-serif] leading-none text-[35px] font-extrabold pt-0 text-[#ececec] absolute right-[80px] top-[7px]">
+          {{ i + 1 }}
         </div>
-        <div class="col-4 pl-0 text-right">
-          Total Value
-          <span class="or-val"
-            >Rs. {{ retailer.total_amount_after_tax || 0 | number: "1.2-2" }}</span
-          >
+
+        <!-- Flex Columns -->
+        <div class="flex flex-wrap">
+          <!-- Left Column -->
+          <div class="w-8/12 pr-0">
+            <strong class="text-gray-800 dark:text-white font-medium text-sm">{{ retailer.retailer_name }}</strong>
+            <span class="flex items-center text-neutral-700">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="w-3 h-3 mr-1 text-gray-400" viewBox="0 0 16 16">
+                <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+              </svg>
+              {{ retailer.retailer_neighbourhood }}
+            </span>
+          </div>
+
+          <!-- Right Column -->
+          <div class="w-4/12 pl-0 text-right text-neutral-700">
+            Total Value
+            <span class="block font-[Rationale,sans-serif] text-[16.5px] leading-none text-[#0038ba]">
+              Rs. {{ retailer.total_amount_after_tax || 0 | number: "1.2-2" }}
+            </span>
+          </div>
         </div>
+      </div>
+
+    </div>
+    
+
+    <div class="ProList-div" *ngIf="loading">
+      <div class="col-12">
+        <div class="box-list shine"></div>
+      </div>
+      <div class="col-12">
+        <div class="box-list shine"></div>
+      </div>
+      <div class="col-12">
+        <div class="box-list shine"></div>
+      </div>
+      <div class="col-12">
+        <div class="box-list shine"></div>
       </div>
     </div>
   </div>
-  <div class="ProList-div" *ngIf="loading">
-    <div class="col-12"><div class="box-list shine"></div></div>
-    <div class="col-12"><div class="box-list shine"></div></div>
-    <div class="col-12"><div class="box-list shine"></div></div>
-    <div class="col-12"><div class="box-list shine"></div></div>
-  </div>
-</div>

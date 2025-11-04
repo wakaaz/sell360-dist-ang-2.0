@@ -1,23 +1,20 @@
+<!-- No Content State -->
 <div
-                    class="no-content"
-                    *ngIf="!retailer_credit_Invoices.length"
-                  >
-                    <div
-                      class="no-content-container"
-                      style="
-                        margin: auto;
-                        display: table;
-                        text-align: center;
-                        color: #b7b7b7;
-                      "
-                    >
-                      <img src="assets/images/select order-icon.svg" alt="" />
-                      <strong>No Credit invoice Found</strong>
-                    </div>
-                  </div>
+  *ngIf="!retailer_credit_Invoices.length && !loading"
+  class="no-content w-full h-[calc(100vh-204px)] flex"
+>
+  <div class="no-content-container m-auto table text-center text-[#b7b7b7]">
+    <img 
+      src="assets/images/select order-icon.svg" 
+      alt="" 
+      class="w-[70px] h-[70px] mx-auto mb-[10px] block"
+    />
+    <strong>No Credit invoice Found</strong>
+  </div>
+</div>
 
 
-<div class="col-12 PT-15">
+<div  *ngIf="retailer_credit_Invoices?.length && !loading"  class="w-full pt-5 min-h-[calc(100vh-200px)]">   
   <table
     datatable
     [dtOptions]="dtOptions"
@@ -148,7 +145,7 @@
       </tr>
     </tbody>
   </table>
-  <div class="col-12" *ngIf="loading">
+  <div class="w-full" *ngIf="loading">
     <app-loader-white></app-loader-white>
   </div>
 </div>

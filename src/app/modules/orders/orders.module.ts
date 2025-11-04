@@ -9,6 +9,7 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { AgGridModule } from 'ag-grid-angular';
@@ -55,6 +56,7 @@ import { NewCounterSaleComponent } from './components/new-counter-sale/new-count
     NzFormModule,
     NzInputModule,
     NzRadioModule,
+    NzCheckboxModule,
     NzInputNumberModule,
     NzModalModule,
     SharedModule,

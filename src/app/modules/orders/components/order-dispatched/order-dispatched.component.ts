@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../../shared/services';
 import {
@@ -41,6 +41,12 @@ export class OrderDispatchedComponent implements OnInit {
   loading: boolean;
   loadingProduct: boolean;
   showProducts: boolean;
+  showOrdersSidebar: boolean = false;
+  showHoldOrderModal: boolean = false;
+  showCancelOrderModal: boolean = false;
+  ordersList: any[] = [];
+  currentPrefId: number = null;
+  private sidebarJustOpened: boolean = false;
   savingOrder: boolean;
   isAllSelected: boolean;
   showFinalLoad: boolean;
@@ -100,7 +106,8 @@ export class OrderDispatchedComponent implements OnInit {
     private dataService: DataService,
     private storageService: LocalStorageService,
     private dispatchService: OrderDispatchService,
-    private orderService: OrdersService
+    private orderService: OrdersService,
+    private cdr: ChangeDetectorRef
   ) {
     this.distributorId = this.storageService.getItem('distributor').id;
     this.retailer_credit_Invoices = new Array<RecoveryRetailer>();
@@ -164,7 +171,7 @@ export class OrderDispatchedComponent implements OnInit {
         headerName: 'Allocated Stock', 
         sortable: true, 
         filter: false,  
-        width: 110,
+        width: 115,
         valueGetter: (params) => {
           return params.data ? +params.data.allocated_stock_qty : 0;
         },
@@ -176,7 +183,7 @@ export class OrderDispatchedComponent implements OnInit {
         headerName: 'Available QTY.', 
         sortable: true, 
         filter: false,  
-        width: 110,
+        width: 115,
         valueGetter: (params) => {
           const available = +(params.data?.availble_stock_qty || 0);
           const allocated = +(params.data?.allocated_stock_qty || 0);
@@ -218,7 +225,7 @@ export class OrderDispatchedComponent implements OnInit {
         headerName: 'Allocated QTY.',
         sortable: false,
         filter: false,
-        width: 100, 
+        width: 115, 
         cellRenderer: (params: any) => {
           const item = params.data;
           const value = Math.floor(+(item.current_load_allocated_qty || 0));
@@ -228,13 +235,13 @@ export class OrderDispatchedComponent implements OnInit {
               value="${value}"
               oninput="window.ngRef.updateAllocatedQty('${item.pref_id}', this.value, this)"
               onkeydown="return window.ngRef.isNumberKey(event)"
-              class="w-[80px] px-3 py-1 border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none text-sm"
+              class="!w-[80px] px-3 py-1 border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none text-sm"
               placeholder="0"
             />
           `;
         },
         cellStyle: {
-          padding: '4px'
+          padding: '0px'
         }
       },
       {
@@ -245,15 +252,15 @@ export class OrderDispatchedComponent implements OnInit {
           
           return `
             <div class="flex gap-1 items-center">
-              <button onclick="window.ngRef.extraLoadItemAllocation('${item.pref_id}')" 
+              <button onclick="event.stopPropagation(); window.ngRef.extraLoadItemAllocation('${item.pref_id}')" 
                 class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5">
                 ${item.updateLoading ? 'Updating...' : 'Update'}
               </button>
-              <button onclick="window.ngRef.viewOrders('${item.pref_id}')" 
+              <button onclick="var e=event||window.event; if(e){e.stopPropagation();e.preventDefault();} window.ngRef.viewOrders('${item.pref_id}'); return false;" 
                 class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5">
                 View Orders
               </button>
-              <button onclick="window.ngRef.clearAllocation('${item.pref_id}')" 
+              <button onclick="event.stopPropagation(); window.ngRef.clearAllocation('${item.pref_id}')" 
                 class="bg-red-600 dark:bg-red-600 dark:border-red-600 h-auto leading-none py-[4px] px-[5px] text-white text-[11px] border border-red-600 hover:bg-red-700 font-primary rounded-[5px] mb-1 ml-0.5">
                 ${item.cancelLoading ? 'Cancelling...' : 'Cancel All'}
               </button>
@@ -282,7 +289,9 @@ export class OrderDispatchedComponent implements OnInit {
       },
       viewOrders: (prefId: string) => {
         const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
-        if (item) this.onShowViewOrders(null, item.pref_id);
+        if (item) {
+          this.onShowViewOrders(null, item.pref_id);
+        }
       },
       clearAllocation: (prefId: string) => {
         const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
@@ -428,9 +437,139 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   onShowViewOrders(event: any, pref_id: number): void {
-    // This will be handled by the stock-allocation component sidebar
-    // For now, we'll keep the original component behavior
-    // This can be implemented as a modal or sidebar if needed
+    console.log('onShowViewOrders called', pref_id);
+    
+    // Close sidebar if already open
+    if (this.showOrdersSidebar) {
+      this.closeOrdersList();
+    }
+    
+    this.currentPrefId = pref_id;
+    
+    // Set flag to prevent immediate closure - set this FIRST
+    this.sidebarJustOpened = true;
+    
+    // Open sidebar immediately (before API call) so it shows right away
+    this.showOrdersSidebar = true;
+    document.body.classList.add('no-scroll');
+    
+    // Manually trigger change detection to render sidebar immediately
+    this.cdr.detectChanges();
+    
+    this.orderService
+      .getLoadOrdersPrefs(this.assignmentId, pref_id)
+      .subscribe(
+        (x) => {
+          console.log('Orders fetched', x);
+          this.ordersList = (x.data || []).map((order: any) => ({
+            ...order,
+            updateLoading: false,
+            booked_qty: order.booked_qty || 0,
+          }));
+          
+          // Trigger change detection after orders are loaded
+          this.cdr.detectChanges();
+          
+          // Allow click-outside after a delay (prevents immediate closure from button click)
+          setTimeout(() => {
+            this.sidebarJustOpened = false;
+            console.log('Sidebar protection disabled');
+          }, 500);
+        },
+        (error) => {
+          console.error('Error fetching orders', error);
+          this.sidebarJustOpened = false;
+          this.showOrdersSidebar = false;
+          document.body.classList.remove('no-scroll');
+          this.cdr.detectChanges();
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Cannot fetch orders. Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      );
+  }
+
+  closeOrdersList(): void {
+    this.showOrdersSidebar = false;
+    this.ordersList = [];
+    this.currentPrefId = null;
+    this.sidebarJustOpened = false;
+    document.body.classList.remove('no-scroll');
+    this.cdr.detectChanges();
+  }
+
+  clickedOutSide(event: Event): void {
+    console.log('clickedOutSide called', {
+      showOrdersSidebar: this.showOrdersSidebar,
+      sidebarJustOpened: this.sidebarJustOpened,
+      target: (event.target as HTMLElement)?.id
+    });
+    
+    // Don't process if sidebar is not open
+    if (!this.showOrdersSidebar) {
+      return;
+    }
+    
+    // Prevent closing if sidebar just opened (within 500ms)
+    if (this.sidebarJustOpened) {
+      console.log('Sidebar just opened, preventing close');
+      return;
+    }
+    
+    const target = event.target as HTMLElement;
+    
+    // Don't close if clicking on sidebar content or elements marked to not close
+    if (
+      target.classList.contains('dont-close-orders') ||
+      target.closest('.dont-close-orders') ||
+      target.closest('#orders-list-sidebar > div')
+    ) {
+      console.log('Clicking on sidebar content, not closing');
+      return;
+    }
+    
+    // Only close if clicking on the backdrop itself (not on any child elements)
+    const sidebarElement = document.getElementById('orders-list-sidebar');
+    if (sidebarElement && (target === sidebarElement || target === event.currentTarget)) {
+      console.log('Closing sidebar - backdrop clicked');
+      this.closeOrdersList();
+    }
+  }
+
+  onUpdateOrderAllocation(order: any): void {
+    order.updateLoading = true;
+    this.orderService
+      .updateLoadOrderItemAllocation(
+        this.assignmentId,
+        order.order_id,
+        this.currentPrefId,
+        +order.booked_qty + +order.free_qty
+      )
+      .subscribe(
+        (x) => {
+          order.updateLoading = false;
+          const toast: Toaster = {
+            type: 'success',
+            message: 'Allocated Quantity Updated',
+            title: 'Success:',
+          };
+          this.toastService.showToaster(toast);
+          // Refresh stock allocation after update
+          this.getDispatchDetails();
+        },
+        (err) => {
+          order.updateLoading = false;
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Failed to update allocation. Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      );
   }
 
   clearLoadItemAllocation(item: any): void {
@@ -1242,7 +1381,7 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   cancelOrder(delete_allocation=0): void {
-    document.getElementById('close-del').click();
+    this.showCancelOrderModal = false;
     this.savingOrder = true;
     this.orderService.cancelOrder(this.orderDetails.id,delete_allocation,1).subscribe(
       (res) => {
@@ -1278,13 +1417,21 @@ export class OrderDispatchedComponent implements OnInit {
     );
   }
 
-  closeHoldOrderModal(event: Event):void{
-    document.getElementById('close-hold-model').click();
+  closeHoldOrderModal(event?: Event):void{
+    this.showHoldOrderModal = false;
+    if (this.holdOrderParams) {
+      this.holdOrderParams.hold_reason = '';
+      this.holdOrderParams.delete_allocation = false;
+    }
+  }
+
+  closeCancelOrderModal(event?: Event):void{
+    this.showCancelOrderModal = false;
   }
 
   holdOrder(event: Event):void{
-    if(this.holdOrderParams.hold_reason.trim() != ''){
-      document.getElementById('close-hold-model').click();
+    if(this.holdOrderParams.hold_reason && this.holdOrderParams.hold_reason.trim() != ''){
+      this.showHoldOrderModal = false;
       this.savingOrder = true;
       this.holdOrderParams.order_id       = this.orderDetails.id;
       this.holdOrderParams.assignment_id  = this.orderDetails.assignment_id;

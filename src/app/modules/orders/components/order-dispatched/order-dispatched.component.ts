@@ -19,7 +19,7 @@ import {
 } from '../../models/recovery-retailler.model';
 import { number } from 'echarts';
 import { exit } from 'process';
-import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { ColDef, ColGroupDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
 
@@ -44,6 +44,8 @@ export class OrderDispatchedComponent implements OnInit {
   showOrdersSidebar: boolean = false;
   showHoldOrderModal: boolean = false;
   showCancelOrderModal: boolean = false;
+  showCreateLoadModal: boolean = false;
+  showBillsModal: boolean = false;
   ordersList: any[] = [];
   currentPrefId: number = null;
   private sidebarJustOpened: boolean = false;
@@ -62,6 +64,10 @@ export class OrderDispatchedComponent implements OnInit {
     sortable: true,
     filter: false
   };
+
+  // Load Sheet AG Grid
+  private loadSheetGridApi!: GridApi;
+  loadSheetColumnDefs: (ColDef | ColGroupDef)[] = [];
 
   retailer_credit_Invoices: RecoveryRetailer[];
 
@@ -277,6 +283,198 @@ export class OrderDispatchedComponent implements OnInit {
         pinned: 'right'
       }
     ];
+  }
+
+  initializeLoadSheetColumns(): void {
+    if (!this.finalLoad || !this.finalLoad.load || this.finalLoad.load.length === 0) {
+      console.warn('Load sheet data not available:', this.finalLoad);
+      this.loadSheetColumnDefs = [];
+      return;
+    }
+
+    if (!this.finalLoad.load[0] || !this.finalLoad.load[0].content) {
+      console.warn('Load sheet content not available:', this.finalLoad.load[0]);
+      this.loadSheetColumnDefs = [];
+      return;
+    }
+
+    const loadCount = this.finalLoad.count || 1;
+    const loadContent = this.finalLoad.load[0].content || [];
+    
+    const columns: (ColDef | ColGroupDef)[] = [
+      {
+        headerName: 'SN',
+        field: 'item_sku',
+        width: 100,
+        minWidth: 100,
+        sortable: true,
+        filter: false,
+        pinned: 'left',
+        cellStyle: { textAlign: 'center' },
+        headerClass: 'text-center'
+      },
+      {
+        headerName: 'Product Name',
+        field: 'item_name',
+        width: 180,
+        minWidth: 180,
+        sortable: true,
+        filter: false,
+        pinned: 'left',
+        cellStyle: { minWidth: '180px' },
+        headerClass: 'text-left'
+      }
+    ];
+
+    // Add Load columns dynamically
+    loadContent.forEach((load: any, index: number) => {
+      columns.push({
+        headerName: `Load ${index + 1}`,
+        children: [
+          {
+            headerName: 'CTN/Bundle',
+            field: `load_${index}_parent_qty`,
+            width: 100,
+            minWidth: 100,
+            sortable: false,
+            filter: false,
+            valueGetter: (params) => {
+              const content = params.data?.content || [];
+              return content[index]?.parent_qty || 0;
+            },
+            valueFormatter: (params) => {
+              return params.value ? (+params.value).toLocaleString() : '0';
+            },
+            cellStyle: { textAlign: 'center' }
+          },
+          {
+            headerName: 'Box/Piece',
+            field: `load_${index}_child_qty`,
+            width: 90,
+            minWidth: 90,
+            sortable: false,
+            filter: false,
+            valueGetter: (params) => {
+              const content = params.data?.content || [];
+              return content[index]?.child_qty || 0;
+            },
+            cellStyle: { textAlign: 'center' }
+          },
+          {
+            headerName: 'Weight',
+            field: `load_${index}_total_weight`,
+            width: 80,
+            minWidth: 80,
+            sortable: false,
+            filter: false,
+            valueGetter: (params) => {
+              const content = params.data?.content || [];
+              return content[index]?.total_weight || 0;
+            },
+            cellStyle: { textAlign: 'center' }
+          }
+        ]
+      });
+    });
+
+    // Extra Issuance group
+    columns.push({
+      headerName: 'Extra Issuance',
+      children: [
+        {
+          headerName: 'CTN/Bundle',
+          field: 'total_extra_primary_qty',
+          width: 100,
+          minWidth: 100,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_extra_primary_qty || 0;
+          },
+          valueFormatter: (params) => {
+            return params.value ? (+params.value).toLocaleString() : '0';
+          },
+          cellStyle: { textAlign: 'center' }
+        },
+        {
+          headerName: 'Box/Piece',
+          field: 'total_extra_secondary_qty',
+          width: 90,
+          minWidth: 90,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_extra_secondary_qty || 0;
+          },
+          cellStyle: { textAlign: 'center' }
+        }
+      ]
+    });
+
+    // Total Issuance group
+    columns.push({
+      headerName: 'Total Issuance',
+      children: [
+        {
+          headerName: 'CTN/Bundle',
+          field: 'total_primary_qty',
+          width: 100,
+          minWidth: 100,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_primary_qty || 0;
+          },
+          valueFormatter: (params) => {
+            return params.value ? (+params.value).toLocaleString() : '0';
+          },
+          cellStyle: { textAlign: 'center' }
+        },
+        {
+          headerName: 'Box/Piece',
+          field: 'total_secondary_qty',
+          width: 90,
+          minWidth: 90,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_secondary_qty || 0;
+          },
+          cellStyle: { textAlign: 'center' }
+        },
+        {
+          headerName: 'Weight',
+          field: 'total_weight',
+          width: 80,
+          minWidth: 80,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_weight || 0;
+          },
+          cellStyle: { textAlign: 'center' }
+        }
+      ]
+    });
+
+    this.loadSheetColumnDefs = columns;
+    console.log('Load sheet columns initialized:', columns.length);
+    console.log('Load sheet data:', this.finalLoad.load);
+  }
+
+  onLoadSheetGridReady(params: GridReadyEvent): void {
+    this.loadSheetGridApi = params.api;
+    // Refresh grid when ready
+    if (this.finalLoad && this.finalLoad.load) {
+      params.api.setGridOption('rowData', this.finalLoad.load);
+    }
+  }
+
+  onLoadSheetQuickFilterChanged(event: any): void {
+    const filterValue = event.target.value;
+    if (this.loadSheetGridApi) {
+      this.loadSheetGridApi.setGridOption('quickFilterText', filterValue);
+    }
   }
 
   onStockAllocationGridReady(params: GridReadyEvent): void {
@@ -761,6 +959,14 @@ export class OrderDispatchedComponent implements OnInit {
               this.currentTab = 5;
               setTimeout(() => {
                 this.showFinalLoad = true;
+                this.initializeLoadSheetColumns();
+                // Refresh grid after columns are initialized
+                setTimeout(() => {
+                  if (this.loadSheetGridApi) {
+                    this.loadSheetGridApi.refreshCells();
+                    this.loadSheetGridApi.sizeColumnsToFit();
+                  }
+                }, 100);
               }, 500);
             } 
             else {
@@ -1429,6 +1635,14 @@ export class OrderDispatchedComponent implements OnInit {
     this.showCancelOrderModal = false;
   }
 
+  closeCreateLoadModal(event?: Event): void {
+    this.showCreateLoadModal = false;
+  }
+
+  closeBillsModal(event?: Event): void {
+    this.showBillsModal = false;
+  }
+
   holdOrder(event: Event):void{
     if(this.holdOrderParams.hold_reason && this.holdOrderParams.hold_reason.trim() != ''){
       this.showHoldOrderModal = false;
@@ -1571,7 +1785,7 @@ export class OrderDispatchedComponent implements OnInit {
       }
       if (this.load.content.length !== 3 && unSelected.length !== 0) {
         if (this.currentLoadContent.items.length) {
-          document.getElementById('open-create-load').click();
+          this.showCreateLoadModal = true;
         } else {
           this.toastService.showToaster({
             type: 'error',
@@ -1629,6 +1843,14 @@ export class OrderDispatchedComponent implements OnInit {
           setTimeout(() => {
             this.loading = false;
             this.showFinalLoad = true;
+            this.initializeLoadSheetColumns();
+            // Refresh grid after columns are initialized
+            setTimeout(() => {
+              if (this.loadSheetGridApi) {
+                this.loadSheetGridApi.refreshCells();
+                this.loadSheetGridApi.sizeColumnsToFit();
+              }
+            }, 100);
           }, 500);
           this.dispatchOrderDetail = null;
           this.ordersDispList = [];
@@ -1800,7 +2022,7 @@ export class OrderDispatchedComponent implements OnInit {
       this.isAllSelected = true;
       this.allSelected();
     }
-    document.getElementById('close-confirm-load').click();
+    this.showCreateLoadModal = false;
   }
 
   removeAllOrdersFromCurrentLoad(): void {
@@ -1888,7 +2110,7 @@ export class OrderDispatchedComponent implements OnInit {
         .subscribe(
           (res) => {
             if (res.status === 200) {
-              document.getElementById('close-bills').click();
+              this.showBillsModal = false;
               const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.salemanId}&date=${this.orderDate}&dist_id=${this.distributorId}&size=${size}&status=processed&loadId=${this.finalLoad.load_id}`;
               window.open(billsUrl);
             } else {

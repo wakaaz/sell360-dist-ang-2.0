@@ -1,45 +1,29 @@
-<app-products-drawer
-  *ngIf="showProducts"
-  [selectedRetailer]="selectedRetailer"
-  [orderType]="'dispatch'"
-  [orderedProducts]="orderDetails?.items"
-  [loadingProducts]="loadingProduct"
-  [allProducts]="inventory"
-  [productSchemes]="schemes"
-  [productMerchantDiscount]="merchantDiscount"
-  [discountSlabs] = "discountSlabs"
-  [taxClasses] = "taxClasses"
-  [specialDiscounts]="specialDiscounts"
-  (drawerClosed)="closeNewProducts()"
-  (productSelected)="addNewProductToOrder($event)"
->
+<app-products-drawer *ngIf="showProducts" [selectedRetailer]="selectedRetailer" [orderType]="'dispatch'"
+  [orderedProducts]="orderDetails?.items" [loadingProducts]="loadingProduct" [allProducts]="inventory"
+  [productSchemes]="schemes" [productMerchantDiscount]="merchantDiscount" [discountSlabs]="discountSlabs"
+  [taxClasses]="taxClasses" [specialDiscounts]="specialDiscounts" (drawerClosed)="closeNewProducts()"
+  (productSelected)="addNewProductToOrder($event)">
 </app-products-drawer>
 
 
 <!-- Orders List Sidebar - Tailwind CSS -->
-<div  
-  id="orders-list-sidebar"
-  *ngIf="showOrdersSidebar"
-  (click)="clickedOutSide($event)"
+<div id="orders-list-sidebar" *ngIf="showOrdersSidebar" (click)="clickedOutSide($event)"
   class="fixed inset-0 bg-white/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-[50] items-center justify-center p-4 flex">
-  <div 
+  <div
     class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[1000] flex-row flex-none flex w-full md:w-[860px] dont-close-orders"
-    (click)="$event.stopPropagation()"
-    (mousedown)="$event.stopPropagation()">
+    (click)="$event.stopPropagation()" (mousedown)="$event.stopPropagation()">
     <div
       class="flex flex-col h-full w-full md:w-[860px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]">
-      
+
       <!-- Header -->
       <div
         class="relative flex items-center justify-between h-auto rounded-tl-lg bg-gradient-to-r from-[#1e54d3] to-[#0038ba] text-white px-4 py-3 text-[16px] leading-[22px]">
         <h2 class="text-base font-bold text-white font-primary mb-0">
-          Orders 
+          Orders
           <span class="font-light">List</span>
         </h2>
         <div>
-          <button 
-            id="orders-close" 
-            (click)="closeOrdersList()" 
+          <button id="orders-close" (click)="closeOrdersList()"
             class="hover:opacity-80 transition-opacity dont-close-orders">
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x mt-1"
               viewBox="0 0 16 16">
@@ -53,38 +37,46 @@
 
       <!-- Content - Orders Table -->
       <div class="flex-1 overflow-auto p-4 bg-[#f6f6f6] dark:bg-darkprimary">
-        <div *ngIf="ordersList.length > 0" class="bg-white dark:bg-[#1f1f1f] rounded-lg border border-gray-200 dark:border-[#333333] overflow-hidden">
+        <div *ngIf="ordersList.length > 0"
+          class="bg-white dark:bg-[#1f1f1f] rounded-lg border border-gray-200 dark:border-[#333333] overflow-hidden">
           <!-- Table -->
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
               <thead class="bg-gray-50 dark:bg-[#2a2a2a] border-b border-gray-200 dark:border-[#333333]">
                 <tr>
-                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">Id</th>
-                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[250px]">Retailer Name</th>
-                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">BKD QTY</th>
-                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">FOC. QTY</th>
-                  <th class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">Actions</th>
+                  <th
+                    class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">
+                    Id</th>
+                  <th
+                    class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[250px]">
+                    Retailer Name</th>
+                  <th
+                    class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">
+                    BKD QTY</th>
+                  <th
+                    class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">
+                    FOC. QTY</th>
+                  <th
+                    class="px-4 py-3 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">
+                    Actions</th>
                 </tr>
               </thead>
               <tbody class="divide-y divide-gray-200 dark:divide-[#333333]">
                 <tr *ngFor="let order of ordersList" class="hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors">
-                  <td class="px-4 py-3 text-[13px] text-gray-900 dark:text-gray-200 font-primary">{{ order.retailer_id || order.order_id }}</td>
-                  <td class="px-4 py-3 text-[13px] text-gray-900 dark:text-gray-200 font-primary">{{ order.retailer_name }}</td>
+                  <td class="px-4 py-3 text-[13px] text-gray-900 dark:text-gray-200 font-primary">{{ order.retailer_id
+                    || order.order_id }}</td>
+                  <td class="px-4 py-3 text-[13px] text-gray-900 dark:text-gray-200 font-primary">{{ order.retailer_name
+                    }}</td>
                   <td class="px-4 py-3">
-                    <input
-                      type="text"
-                      [(ngModel)]="order.booked_qty"
-                      (keydown)="isNumber($event, 'quantity')"
+                    <input type="text" [(ngModel)]="order.booked_qty" (keydown)="isNumber($event, 'quantity')"
                       class="w-[80px] px-3 py-1 border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none text-[13px] dont-close-orders"
-                      placeholder="0"
-                    />
+                      placeholder="0" />
                   </td>
-                  <td class="px-4 py-3 text-[13px] text-gray-900 dark:text-gray-200 font-primary">{{ order.free_qty || 0 }}</td>
+                  <td class="px-4 py-3 text-[13px] text-gray-900 dark:text-gray-200 font-primary">{{ order.free_qty || 0
+                    }}</td>
                   <td class="px-4 py-3">
-                    <button
-                      (click)="onUpdateOrderAllocation(order)"
-                      [disabled]="order.updateLoading"
-                      class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[13px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dont-close-orders">
+                    <button (click)="onUpdateOrderAllocation(order)" [disabled]="order.updateLoading"
+                      class="bg-transparent h-auto leading-none py-[6px] px-[6px]  bg-[#404040] text-[13px] border border-[#404040] hover:bg-primary text-white hover:text-white font-primary rounded-[5px] mb-1 ml-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dont-close-orders">
                       <span *ngIf="order.updateLoading" class="inline-block mr-1">⏳</span>
                       {{ order.updateLoading ? 'Updating...' : 'Update' }}
                     </button>
@@ -97,24 +89,23 @@
 
         <div *ngIf="ordersList.length === 0" class="flex flex-col h-[calc(100vh-31vh)]
         items-center justify-center">
-         <svg class="w-16 h-16 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
-         </svg>
-         <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary text-center">No orders found</p>
-       </div>
+          <svg class="w-16 h-16 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4">
+            </path>
+          </svg>
+          <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary text-center">No orders found</p>
+        </div>
 
 
-   
+
 
       </div>
-   
+
       <!-- Footer -->
       <div class="bg-gray-50 dark:bg-[#1d1d1d] dark:border-[#333333] pl-4 p-3 rounded-bl-lg border-t border-gray-200">
         <div>
-          <button
-            id="orders-close-btn"
-            type="button"
-            (click)="closeOrdersList()"
+          <button id="orders-close-btn" type="button" (click)="closeOrdersList()"
             class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors dont-close-orders">
             Close
           </button>
@@ -126,285 +117,229 @@
 
 
 
-<div class="container mx-auto px-4 pb-24 mt-4">
-  <div class="bg-white px-1 pb-2 border-1 border-t-2 border-t-primary border-gray-200 dark:bg-[#1f1f1f] dark:border-[#333333] dark:border-t-primary rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
+<div class="container mx-auto px-4 pb-6 mt-4">
+  <div
+    class="bg-white px-1 pb-2 border-1 border-t-2 border-t-primary border-gray-200 dark:bg-[#1f1f1f] dark:border-[#333333] dark:border-t-primary rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
     <!-- Tabs Navigation - Pure Tailwind CSS with Dark Mode -->
     <div class="w-full mb-3 grid grid-cols-5" role="tablist" id="pills-tab">
       <!-- Stock Allocation Tab -->
       <div class="flex items-center justify-center relative">
-        <button
-          type="button"
+        <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 1,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 1 && isTabVisited(1),
-            'text-gray-300 dark:text-[#555555] cursor-not-allowed': currentTab !== 1 && !isTabVisited(1)
-          }"
-          (click)="onTabClick(1)"
-          [disabled]="!isTabVisited(1) && currentTab !== 1"
-          role="tab"
-          aria-selected="currentTab === 1"
-          id="pills-home-tab"
-        >
-          <span 
-            class="block"
-            [ngClass]="{
-              'font-semibold text-primary dark:text-primary': currentTab === 1,
+            'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 1 && !isTabVisited(1)
+          }" (click)="onTabClick(1)" [disabled]="!isTabVisited(1) && currentTab !== 1" role="tab"
+          aria-selected="currentTab === 1" id="pills-home-tab">
+          <span class="block" [ngClass]="{
+              'font-semibold text-primary dark:text-neutral-200': currentTab === 1,
               'font-normal': currentTab !== 1
-            }"
-          >Stock Allocation</span>
-          <span 
+            }">Stock Allocation</span>
+          <span
             class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#1f1f1f] flex items-center justify-center transition-all duration-200 z-[5]"
             [ngClass]="{
               'bg-gradient-to-r from-[#1e54d3] to-primary': currentTab === 1,
-              'bg-gray-300 dark:bg-[#555555] dark:border-[#2a2a2a]': currentTab !== 1
-            }"
-          >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
-            <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z"/>
-          </svg>
+              'bg-gray-300 dark:bg-[#808080] dark:border-[#2a2a2a]': currentTab !== 1
+            }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
+              <path
+                d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z" />
+            </svg>
           </span>
         </button>
         <!-- Active tab bottom border (blue) -->
-        <div 
-          *ngIf="currentTab === 1"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab === 1"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
-        <div 
-          *ngIf="currentTab !== 1"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab !== 1"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
+        </div>
       </div>
 
       <!-- Orders Tab -->
       <div class="flex items-center justify-center relative">
-        <button
-          type="button"
+        <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 2,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 2 && isTabVisited(2),
-            'text-gray-300 dark:text-[#555555] cursor-not-allowed': currentTab !== 2 && !isTabVisited(2)
-          }"
-          (click)="onTabClick(2)"
-          [disabled]="!isTabVisited(2) && currentTab !== 2"
-          role="tab"
-          aria-selected="currentTab === 2"
-          id="pills-orders-tab"
-        >
-          <span 
-            class="block"
-            [ngClass]="{
+            'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 2 && !isTabVisited(2)
+          }" (click)="onTabClick(2)" [disabled]="!isTabVisited(2) && currentTab !== 2" role="tab"
+          aria-selected="currentTab === 2" id="pills-orders-tab">
+          <span class="block" [ngClass]="{
               'font-semibold text-primary dark:text-primary': currentTab === 2,
               'font-normal': currentTab !== 2
-            }"
-          >Orders</span>
-          <span 
+            }">Orders</span>
+          <span
             class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#1f1f1f] flex items-center justify-center transition-all duration-200 z-[5]"
             [ngClass]="{
               'bg-gradient-to-r from-[#1e54d3] to-primary': currentTab === 2,
-              'bg-gray-300 dark:bg-[#555555] dark:border-[#2a2a2a]': currentTab !== 2
-            }"
-          >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z"/>
-            <path d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z"/>
-            <path fill-rule="evenodd" d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z"/>
-          </svg>
+              'bg-gray-300 dark:bg-[#808080] dark:border-[#2a2a2a]': currentTab !== 2
+            }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
+              <path fill-rule="evenodd"
+                d="M2 2.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5V3a.5.5 0 0 0-.5-.5zM3 3H2v1h1z" />
+              <path
+                d="M5 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5M5.5 7a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1zm0 4a.5.5 0 0 0 0 1h9a.5.5 0 0 0 0-1z" />
+              <path fill-rule="evenodd"
+                d="M1.5 7a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H2a.5.5 0 0 1-.5-.5zM2 7h1v1H2zm0 3.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm1 .5H2v1h1z" />
+            </svg>
           </span>
         </button>
         <!-- Active tab bottom border (blue) -->
-        <div 
-          *ngIf="currentTab === 2"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab === 2"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
-        <div 
-          *ngIf="currentTab !== 2"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab !== 2"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
+        </div>
       </div>
 
       <!-- Credit Tab -->
       <div class="flex items-center justify-center relative">
-        <button
-          type="button"
+        <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 3,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 3 && isTabVisited(3),
-            'text-gray-300 dark:text-[#555555] cursor-not-allowed': currentTab !== 3 && !isTabVisited(3)
-          }"
-          (click)="onTabClick(3)"
-          [disabled]="!isTabVisited(3) && currentTab !== 3"
-          role="tab"
-          aria-selected="currentTab === 3"
-          id="pills-contact-tab"
-        >
-          <span 
-            class="block"
-            [ngClass]="{
+            'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 3 && !isTabVisited(3)
+          }" (click)="onTabClick(3)" [disabled]="!isTabVisited(3) && currentTab !== 3" role="tab"
+          aria-selected="currentTab === 3" id="pills-contact-tab">
+          <span class="block" [ngClass]="{
               'font-semibold text-primary dark:text-primary': currentTab === 3,
               'font-normal': currentTab !== 3
-            }"
-          >Credit</span>
-          <span 
+            }">Credit</span>
+          <span
             class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#1f1f1f] flex items-center justify-center transition-all duration-200 z-[5]"
             [ngClass]="{
               'bg-gradient-to-r from-[#1e54d3] to-primary': currentTab === 3,
-              'bg-gray-300 dark:bg-[#555555] dark:border-[#2a2a2a]': currentTab !== 3
-            }"
-          >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
-            <path d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z"/>
-          </svg>
+              'bg-gray-300 dark:bg-[#808080] dark:border-[#2a2a2a]': currentTab !== 3
+            }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
+              <path
+                d="M4 10.781c.148 1.667 1.513 2.85 3.591 3.003V15h1.043v-1.216c2.27-.179 3.678-1.438 3.678-3.3 0-1.59-.947-2.51-2.956-3.028l-.722-.187V3.467c1.122.11 1.879.714 2.07 1.616h1.47c-.166-1.6-1.54-2.748-3.54-2.875V1H7.591v1.233c-1.939.23-3.27 1.472-3.27 3.156 0 1.454.966 2.483 2.661 2.917l.61.162v4.031c-1.149-.17-1.94-.8-2.131-1.718zm3.391-3.836c-1.043-.263-1.6-.825-1.6-1.616 0-.944.704-1.641 1.8-1.828v3.495l-.2-.05zm1.591 1.872c1.287.323 1.852.859 1.852 1.769 0 1.097-.826 1.828-2.2 1.939V8.73z" />
+            </svg>
           </span>
         </button>
         <!-- Active tab bottom border (blue) -->
-        <div 
-          *ngIf="currentTab === 3"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab === 3"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
-        <div 
-          *ngIf="currentTab !== 3"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab !== 3"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
+        </div>
       </div>
 
       <!-- Load Tab -->
       <div class="flex items-center justify-center relative">
-        <button
-          type="button"
+        <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 4,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 4 && isTabVisited(4),
-            'text-gray-300 dark:text-[#555555] cursor-not-allowed': currentTab !== 4 && !isTabVisited(4)
-          }"
-          (click)="onTabClick(4)"
-          [disabled]="!isTabVisited(4) && currentTab !== 4"
-          role="tab"
-          aria-selected="currentTab === 4"
-          id="pills-load-tab"
-        >
-          <span 
-            class="block"
-            [ngClass]="{
+            'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 4 && !isTabVisited(4)
+          }" (click)="onTabClick(4)" [disabled]="!isTabVisited(4) && currentTab !== 4" role="tab"
+          aria-selected="currentTab === 4" id="pills-load-tab">
+          <span class="block" [ngClass]="{
               'font-semibold text-primary dark:text-primary': currentTab === 4,
               'font-normal': currentTab !== 4
-            }"
-          >Load</span>
-          <span 
+            }">Load</span>
+          <span
             class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#1f1f1f] flex items-center justify-center transition-all duration-200 z-[5]"
             [ngClass]="{
               'bg-gradient-to-r from-[#1e54d3] to-primary': currentTab === 4,
-              'bg-gray-300 dark:bg-[#555555] dark:border-[#2a2a2a]': currentTab !== 4
-            }"
-          >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
-            <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
-          </svg>
+              'bg-gray-300 dark:bg-[#808080] dark:border-[#2a2a2a]': currentTab !== 4
+            }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
+              <path
+                d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
+            </svg>
           </span>
         </button>
         <!-- Active tab bottom border (blue) -->
-        <div 
-          *ngIf="currentTab === 4"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab === 4"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
-        <div 
-          *ngIf="currentTab !== 4"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab !== 4"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
+        </div>
       </div>
 
       <!-- Final Tab -->
       <div class="flex items-center justify-center relative">
-        <button
-          type="button"
+        <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
             'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 5,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 5 && isTabVisited(5),
-            'text-gray-300 dark:text-[#555555] cursor-not-allowed': currentTab !== 5 && !isTabVisited(5)
-          }"
-          (click)="onTabClick(5)"
-          [disabled]="!isTabVisited(5) && currentTab !== 5"
-          role="tab"
-          aria-selected="currentTab === 5"
-          id="pills-final-tab"
-        >
-          <span 
-            class="block"
-            [ngClass]="{
+            'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 5 && !isTabVisited(5)
+          }" (click)="onTabClick(5)" [disabled]="!isTabVisited(5) && currentTab !== 5" role="tab"
+          aria-selected="currentTab === 5" id="pills-final-tab">
+          <span class="block" [ngClass]="{
               'font-semibold text-primary dark:text-primary': currentTab === 5,
               'font-normal': currentTab !== 5
-            }"
-          >Final</span>
-          <span 
+            }">Final</span>
+          <span
             class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#1f1f1f] flex items-center justify-center transition-all duration-200 z-[5]"
             [ngClass]="{
               'bg-gradient-to-r from-[#1e54d3] to-primary': currentTab === 5,
               'bg-gray-300 dark:bg-[#555555] dark:border-[#2a2a2a]': currentTab !== 5
-            }"
-          >
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
-            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
-            <path d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05"/>
-          </svg>
+            }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="w-[20px] h-[20px] text-white" viewBox="0 0 16 16">
+              <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+              <path
+                d="m10.97 4.97-.02.022-3.473 4.425-2.093-2.094a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05" />
+            </svg>
           </span>
         </button>
         <!-- Active tab bottom border (blue) -->
-        <div 
-          *ngIf="currentTab === 5"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab === 5"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
-        <div 
-          *ngIf="currentTab !== 5"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
-        ></div>
+        <div *ngIf="currentTab !== 5"
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
+        </div>
       </div>
     </div>
 
 
     <!-- Stock Allocation Tab Content - AG Grid -->
-    <div
-      *ngIf="currentTab === 1"
-      class="tab-pane p-0 pt-5 tab_M active show"
-      id="pills-contact"
-      role="tabpanel"
-      aria-labelledby="pills-contact-tab"
-    >
+    <div *ngIf="currentTab === 1" class="tab-pane p-0 pt-5 tab_M active show" id="pills-contact" role="tabpanel"
+      aria-labelledby="pills-contact-tab">
       <div>
         <div class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative">
           <!-- Header -->
-          <div class="flex justify-between items-center text-secondary rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative">
+          <div
+            class="flex justify-between items-center text-secondary rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative">
             <div>
-              <h2 class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
+              <h2
+                class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
                 Products &nbsp;<span class="font-light">List</span>
                 <div class="ml-2 my-auto flex items-center">
-                  <span class="bg-primary text-white text-[9px] p-[4px] leading-[1] rounded font-primary">{{ stockAllocation?.length || 0 }}</span>
+                  <span class="bg-primary text-white text-[9px] p-[4px] leading-[1] rounded font-primary">{{
+                    stockAllocation?.length || 0 }}</span>
                 </div>
               </h2>
             </div>
             <div class="text-secondary dark:text-white">
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <svg class="h-4 w-4 text-gray-400" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5014 7.00039C11.5014 7.59133 11.385 8.1765 11.1588 8.72246C10.9327 9.26843 10.6012 9.7645 10.1833 10.1824C9.76548 10.6002 9.2694 10.9317 8.72344 11.1578C8.17747 11.384 7.59231 11.5004 7.00136 11.5004C6.41041 11.5004 5.82525 11.384 5.27929 11.1578C4.73332 10.9317 4.23725 10.6002 3.81938 10.1824C3.40152 9.7645 3.07005 9.26843 2.8439 8.72246C2.61776 8.1765 2.50136 7.59133 2.50136 7.00039C2.50136 5.80691 2.97547 4.66232 3.81938 3.81841C4.6633 2.97449 5.80789 2.50039 7.00136 2.50039C8.19484 2.50039 9.33943 2.97449 10.1833 3.81841C11.0273 4.66232 11.5014 5.80691 11.5014 7.00039ZM10.6814 11.7404C9.47574 12.6764 7.95873 13.1177 6.43916 12.9745C4.91959 12.8314 3.51171 12.1145 2.50211 10.9698C1.49252 9.8251 0.957113 8.33868 1.0049 6.81314C1.05268 5.28759 1.68006 3.83759 2.75932 2.75834C3.83857 1.67908 5.28856 1.0517 6.81411 1.00392C8.33966 0.956136 9.82608 1.49154 10.9708 2.50114C12.1154 3.51073 12.8323 4.91862 12.9755 6.43819C13.1187 7.95775 12.6773 9.47476 11.7414 10.6804L14.5314 13.4704C14.605 13.539 14.6642 13.6218 14.7051 13.7138C14.7461 13.8058 14.7682 13.9052 14.77 14.0059C14.7717 14.1066 14.7532 14.2066 14.7155 14.3C14.6778 14.3934 14.6216 14.4782 14.5504 14.5494C14.4792 14.6206 14.3943 14.6768 14.301 14.7145C14.2076 14.7522 14.1075 14.7708 14.0068 14.769C13.9061 14.7672 13.8068 14.7452 13.7148 14.7042C13.6228 14.6632 13.54 14.6041 13.4714 14.5304L10.6814 11.7404Z" fill="currentColor"></path>
+                  <svg class="h-4 w-4 text-gray-400" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd"
+                      d="M11.5014 7.00039C11.5014 7.59133 11.385 8.1765 11.1588 8.72246C10.9327 9.26843 10.6012 9.7645 10.1833 10.1824C9.76548 10.6002 9.2694 10.9317 8.72344 11.1578C8.17747 11.384 7.59231 11.5004 7.00136 11.5004C6.41041 11.5004 5.82525 11.384 5.27929 11.1578C4.73332 10.9317 4.23725 10.6002 3.81938 10.1824C3.40152 9.7645 3.07005 9.26843 2.8439 8.72246C2.61776 8.1765 2.50136 7.59133 2.50136 7.00039C2.50136 5.80691 2.97547 4.66232 3.81938 3.81841C4.6633 2.97449 5.80789 2.50039 7.00136 2.50039C8.19484 2.50039 9.33943 2.97449 10.1833 3.81841C11.0273 4.66232 11.5014 5.80691 11.5014 7.00039ZM10.6814 11.7404C9.47574 12.6764 7.95873 13.1177 6.43916 12.9745C4.91959 12.8314 3.51171 12.1145 2.50211 10.9698C1.49252 9.8251 0.957113 8.33868 1.0049 6.81314C1.05268 5.28759 1.68006 3.83759 2.75932 2.75834C3.83857 1.67908 5.28856 1.0517 6.81411 1.00392C8.33966 0.956136 9.82608 1.49154 10.9708 2.50114C12.1154 3.51073 12.8323 4.91862 12.9755 6.43819C13.1187 7.95775 12.6773 9.47476 11.7414 10.6804L14.5314 13.4704C14.605 13.539 14.6642 13.6218 14.7051 13.7138C14.7461 13.8058 14.7682 13.9052 14.77 14.0059C14.7717 14.1066 14.7532 14.2066 14.7155 14.3C14.6778 14.3934 14.6216 14.4782 14.5504 14.5494C14.4792 14.6206 14.3943 14.6768 14.301 14.7145C14.2076 14.7522 14.1075 14.7708 14.0068 14.769C13.9061 14.7672 13.8068 14.7452 13.7148 14.7042C13.6228 14.6632 13.54 14.6041 13.4714 14.5304L10.6814 11.7404Z"
+                      fill="currentColor"></path>
                   </svg>
                 </div>
-                <input
-                  type="text"
-                  id="stock-filter-text-box"
-                  placeholder="Search products..."
-                  autocomplete="off"
+                <input type="text" id="stock-filter-text-box" placeholder="Search products..." autocomplete="off"
                   class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
-                  (input)="onStockQuickFilterChanged($event)"
-                />
+                  (input)="onStockQuickFilterChanged($event)" />
               </div>
             </div>
           </div>
@@ -412,21 +347,11 @@
           <!-- AG Grid Container -->
           <div>
             <div *ngIf="!loading && stockAllocation" class="ag-theme-quartz ag-grid-container w-[80px]">
-              <ag-grid-angular
-                [rowData]="stockAllocation"
-                [columnDefs]="stockAllocationColumnDefs"
-                [defaultColDef]="defaultColDef"
-                [pagination]="true"
-                [paginationPageSize]="10"
-                [paginationPageSizeSelector]="[10, 20, 50, 100]"
-                [suppressPaginationPanel]="false"
-                [domLayout]="'autoHeight'"
-                [animateRows]="true"
-                [rowSelection]="{ type: 'single' }"
-                [theme]="'legacy'"
-                [stopEditingWhenCellsLoseFocus]="true"
-                (gridReady)="onStockAllocationGridReady($event)"
-              >
+              <ag-grid-angular [rowData]="stockAllocation" [columnDefs]="stockAllocationColumnDefs"
+                [defaultColDef]="defaultColDef" [pagination]="true" [paginationPageSize]="10"
+                [paginationPageSizeSelector]="[10, 20, 50, 100]" [suppressPaginationPanel]="false"
+                [domLayout]="'autoHeight'" [animateRows]="true" [rowSelection]="{ type: 'single' }" [theme]="'legacy'"
+                [stopEditingWhenCellsLoseFocus]="true" (gridReady)="onStockAllocationGridReady($event)">
               </ag-grid-angular>
             </div>
 
@@ -438,17 +363,17 @@
         </div>
 
         <!-- Allocation Errors Alert -->
-        <div *ngIf="showAllocationErrors && allocationErrors" class="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+        <div *ngIf="showAllocationErrors && allocationErrors"
+          class="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
           <div class="flex justify-between items-start">
             <div class="flex-1">
-              <strong class="text-red-800 dark:text-red-300 block mb-2">The available quantities for the following Products are less than the allocated Quantities.</strong>
-              <ul class="list-disc list-inside text-red-700 dark:text-red-400 text-sm" [innerHTML]="allocationErrors"></ul>
+              <strong class="text-red-800 dark:text-red-300 block mb-2">The available quantities for the following
+                Products are less than the allocated Quantities.</strong>
+              <ul class="list-disc list-inside text-red-700 dark:text-red-400 text-sm" [innerHTML]="allocationErrors">
+              </ul>
             </div>
-            <button
-              type="button"
-              (click)="closeAllocationAlert()"
-              class="text-red-800 dark:text-red-300 hover:text-red-900 dark:hover:text-red-200 text-xl font-bold ml-4"
-            >
+            <button type="button" (click)="closeAllocationAlert()"
+              class="text-red-800 dark:text-red-300 hover:text-red-900 dark:hover:text-red-200 text-xl font-bold ml-4">
               &times;
             </button>
           </div>
@@ -456,16 +381,14 @@
 
         <!-- Check Allocation Button -->
         <div class="flex justify-end mt-4">
-          <button
-            type="button"
-            (click)="onCheckAllocation()"
-            [disabled]="tabLoading || !stockAllocation"
-            class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          >
+          <button type="button" (click)="onCheckAllocation()" [disabled]="tabLoading || !stockAllocation"
+            class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
             <div *ngIf="tabLoading" class="inline-block animate-spin mr-2">
               <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                </path>
               </svg>
             </div>
             {{ tabLoading ? "" : "Check Allocation" }}
@@ -474,254 +397,206 @@
       </div>
     </div>
 
-  <div class="tab-content" id="pills-tabContent">
-    <div
-      *ngIf="currentTab === 2"
-      class="tab-pane tab_M p-0 PT-15 active show"
-      id="pills-home"
-      role="tabpanel"
-      aria-labelledby="pills-home-tab"
-    >
-      <div class="flex">
-        <div id="orderList-id" class="w-[300px] shrink-0">
-          <app-retailer-sub-list
-            [retailers]="ordersRetailers"
-            [loading]="loading || loadingProduct || savingOrder"
-            (retailerChanged)="getOrderDetailsByRetailer($event)"
-          ></app-retailer-sub-list>
-        </div>
-
-        <div class="flex-1 pl-3 pr-2">
-          <div class="rightHeight h-[calc(100vh-200px)] overflow-y-auto">
-            <app-order-items-list 
-              *ngIf="!savingOrder && selectedRetailer"
-              [orderDetail]="orderDetails" 
-              [schemes]="schemes"
-              [loyaltyoffers]="loyaltyoffers"
-              [selectedRetailer]="selectedRetailer"
-              [orders]="ordersRetailers"
-              [allProducts]="inventory"
-              [specialDiscounts]="specialDiscounts"
-              [merchantDiscount]="merchantDiscount"
-              [discountSlabs]="discountSlabs"
-              [taxClasses]="taxClasses"
-              [newProduct]="newProduct"
-              [orderType]="'dispatch'"
-              [stockAllocation]="stockAllocation"
-              (openDrawer)="openProductsList()"
-              (domChange)="onDomChange($event)"
-            >
-            </app-order-items-list>
-            <div class="col-12" *ngIf="savingOrder">
-              <app-loader-white></app-loader-white>
-            </div>
-            <div
-            *ngIf="!savingOrder && !selectedRetailer"
-            class="no-content w-full h-[calc(100vh-204px)] flex"
-          >
-            <div class="no-content-container m-auto table text-center text-[#b7b7b7]">
-              <img
-                src="assets/images/select order-icon.svg"
-                alt=""
-                class="w-[70px] h-[70px] mx-auto mb-[10px] block"
-              />
-              <strong>Select order to see details</strong>
-            </div>
+    <div class="tab-content" id="pills-tabContent">
+      <div *ngIf="currentTab === 2" class="tab-pane tab_M p-0 PT-15 active show" id="pills-home" role="tabpanel"
+        aria-labelledby="pills-home-tab">
+        <div class="flex">
+          <div id="orderList-id" class="w-[300px] shrink-0">
+            <app-retailer-sub-list [retailers]="ordersRetailers" [loading]="loading || loadingProduct || savingOrder"
+              (retailerChanged)="getOrderDetailsByRetailer($event)"></app-retailer-sub-list>
           </div>
 
-          </div>
-          <div *ngIf="selectedRetailer" class="text-right pt-[15px]">
-            <button
-              *ngIf="!savingOrder"
-              (click)="setOrderItems()"
-              [disabled]="!orderDetails?.items?.length"
-              class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Save Order
-            </button>
-
-            
-            <button
-            [disabled]="!orderDetails?.items?.length"
-            *ngIf="!savingOrder"
-            (click)="showHoldOrderModal = true"
-            class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            > 
-            Hold Order 
-           </button>
-
-            <button
-              [disabled]="!orderDetails?.items?.length"
-              *ngIf="!savingOrder"
-              (click)="showCancelOrderModal = true"
-              class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              Cancel Order
-            </button>
-
-            <button
-              *ngIf="savingOrder"
-              type="submit"
-              class="btn btn-primary mr-2"
-              disabled
-            >
-              <div class="spinner-border text-light" role="status">
-                <span class="sr-only"></span>
+          <div class="flex-1 pl-3 pr-2">
+            <div class="rightHeight h-[calc(100vh-200px)] overflow-y-auto">
+              <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [orderDetail]="orderDetails"
+                [schemes]="schemes" [loyaltyoffers]="loyaltyoffers" [selectedRetailer]="selectedRetailer"
+                [orders]="ordersRetailers" [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
+                [merchantDiscount]="merchantDiscount" [discountSlabs]="discountSlabs" [taxClasses]="taxClasses"
+                [newProduct]="newProduct" [orderType]="'dispatch'" [stockAllocation]="stockAllocation"
+                (openDrawer)="openProductsList()" (domChange)="onDomChange($event)">
+              </app-order-items-list>
+              <div *ngIf="savingOrder" class="flex justify-center items-center p-8">
+                <app-loader-white></app-loader-white>
               </div>
-            </button>
+              <div *ngIf="!savingOrder && !selectedRetailer" class="no-content w-full h-[calc(100vh-204px)] flex">
+                <div class="no-content-container m-auto table text-center text-[#b7b7b7]">
+                  <img src="assets/images/select order-icon.svg" alt=""
+                    class="w-[70px] h-[70px] mx-auto mb-[10px] block" />
+                  <strong>Select order to see details</strong>
+                </div>
+              </div>
+
+            </div>
+            <div *ngIf="selectedRetailer" class="text-right pt-[15px]">
+              <button *ngIf="!savingOrder" (click)="setOrderItems()" [disabled]="!orderDetails?.items?.length"
+                class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                Save Order
+              </button>
+
+
+              <button [disabled]="!orderDetails?.items?.length" *ngIf="!savingOrder" (click)="showHoldOrderModal = true"
+                class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed">
+                Hold Order
+              </button>
+
+              <button [disabled]="!orderDetails?.items?.length" *ngIf="!savingOrder"
+                (click)="showCancelOrderModal = true"
+                class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                Cancel Order
+              </button>
+
+              <button *ngIf="savingOrder" type="submit" class="btn btn-primary mr-2" disabled>
+                <div class="spinner-border text-light" role="status">
+                  <span class="sr-only"></span>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div
-      *ngIf="currentTab === 3"
-      class="tab-pane p-0 PT-20 tab_M active show"
-      id="pills-contact"
-      role="tabpanel"
-      aria-labelledby="pills-contact-tab"
-    >
-      <app-retailer-recovery></app-retailer-recovery>
-    </div>
+      <div *ngIf="currentTab === 3" class="tab-pane p-0 PT-20 tab_M active show" id="pills-contact" role="tabpanel"
+        aria-labelledby="pills-contact-tab">
+        <app-retailer-recovery></app-retailer-recovery>
+      </div>
 
-    <div
-      *ngIf="currentTab === 4"
-      class="tab-pane tab_M p-0 PT-15 active show"
-      id="pills-load"
-      role="tabpanel"
-      aria-labelledby="pills-load-tab"
-    >
+      <div *ngIf="currentTab === 4" class="tab-pane tab_M p-0 PT-15 active show" id="pills-load" role="tabpanel"
+        aria-labelledby="pills-load-tab">
 
- 
-      <div class="flex">
-        <div *ngIf="!loading" id="orderList-id2" class="w-[300px] shrink-0">
-          <div class="_selectProList ProListHeight">
-            <div class="header ProListHD">
-              <div class="row">
-                <div class="col-12">
-                  <h2 class="w-100">Orders <span> List</span></h2>
 
-                  <div class="select-all-op">
-                    <label nz-checkbox [(ngModel)]="isAllSelected" (ngModelChange)="allSelected()" id="all-s">
+        <div class="flex">
+          <div *ngIf="!loading" id="orderList-id2" class="w-[300px] shrink-0">
+            <div
+              class="w-full h-[calc(100vh-200px)] flex flex-col bg-[#f6f6f6] border-l border-b border-[#e4e4e4] rounded-lg">
+              <div
+                class="w-inherit px-[15px] pt-[15px] pb-[10px] border-b border-[#e5e5e5] bg-[linear-gradient(0deg,#f6f6f6,#fff_50%)]">
+
+                <div class="flex justify-between items-center mb-3">
+                  <h2
+                    class="relative flex items-start text-base pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[3px] font-primary font-medium">
+                    Orders &nbsp;<span class="font-light">List</span>
+                  </h2>
+
+                  <div>
+                    <label class="text-[13px] !pr-0" nz-checkbox [(ngModel)]="isAllSelected"
+                      (ngModelChange)="allSelected()" id="all-s">
                       Select All
                     </label>
                   </div>
                 </div>
-                  <div class="col-12">
-                  <div class="APS-list">
-                    <i class="fa fa-search"></i>
-                    <input
-                      nz-input
-                      type="text"
-                      class="form-control"
-                      id=""
-                      placeholder="Search"
-                    />
+
+                <div class="relative">
+                  <div class="absolute z-10 inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
                   </div>
+                  <input nz-input type="text"
+                    class="w-full pl-8 pr-3 py-1.5 border border-[#ececec] dark:border-[#1d1d1d] rounded-lg bg-[#f6f6f6] dark:bg-[#1d1d1d] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
+                    placeholder="Search" />
                 </div>
               </div>
-            </div>
 
-            <div class="ProList-div">
-              <div
-                *ngFor="let order of ordersDispList; let ind = index"
-                class="col-12 order-list select-checkmark"
-              >
-                <div class="ord-no">{{ ind + 1 }}</div>
-                <div class="row">
-                  <div class="col-8 pr-0">
-                    <strong style="margin-bottom: 2px">{{
-                      order.retailer_name
-                    }}</strong>
-                    <span
-                      ><strong>Order Booker:</strong>
-                      {{ order.emp_name }}</span
-                    >
-                    <span
-                      ><i class="fa fa-map-marker-alt"></i>
-                      {{ order.retailer_address }}</span
-                    >
+              <div class="flex-1 py-[10px] px-[8px] text-sm overflow-y-auto overflow-x-hidden h-[calc(100vh-300px)]">
+                <div *ngFor="let order of ordersDispList; let ind = index"
+                  [ngClass]="order.isSelected ? 'shadow-[0_0_15px_#0000002e] scale-100 z-[3]' : ''"
+                  class="w-full text-[12px] bg-white rounded-lg px-[10px] py-[6px] mb-1 border border-[#eaeaea] relative transition-all duration-200 transform scale-[0.97] cursor-pointer hover:shadow-[0_0_15px_#0000002e] hover:scale-100 hover:z-[3] select-checkmark">
+                  <div
+                    class="font-[Poppins,sans-serif] leading-none text-[42px] font-extrabold pt-0 text-[#ececec] absolute right-[80px] top-[7px]">
+                    {{ ind + 1 }}
                   </div>
-                  <div class="col-4 pl-0">
-                    <label
-                      nz-checkbox
-                      [(ngModel)]="order.isSelected"
-                      (ngModelChange)="retailerSelected(order)"
-                      [id]="'ord' + ind"
-                    ></label>
-                    <div class="text-right">
-                      Total Sales<span class="or-val"
-                        >Rs.
-                        {{
-                          order.total_amount_after_tax || 0 | number: "1.2-2"
-                        }}</span
-                      >
+                  <div class="flex flex-wrap">
+                    <div class="w-8/12 pr-0">
+                      <strong class="text-gray-800 dark:text-white font-medium text-sm">{{
+                        order.retailer_name
+                        }}</strong>
+                      <span class="block text-neutral-700">
+                        <strong>Order Booker:</strong>
+                        {{ order.emp_name }}
+                      </span>
+                      <span class="flex items-center text-neutral-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                          class="w-3 h-3 mr-1 text-gray-400" viewBox="0 0 16 16">
+                          <path
+                            d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6" />
+                        </svg>
+                        {{ order.retailer_address }}
+                      </span>
+                    </div>
+                    <div class="w-4/12 pl-0 text-right text-neutral-700">
+                      <label nz-checkbox [(ngModel)]="order.isSelected" (ngModelChange)="retailerSelected(order)"
+                        [id]="'ord' + ind" class="block mb-1 w-[20px] h-[20px] ml-auto mr-0"></label>
+                      Total Sales
+                      <span class="block font-[Rationale,sans-serif] text-[16.5px] leading-none text-[#0038ba]">
+                        Rs. {{ order.total_amount_after_tax || 0 | number: "1.2-2" }}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div> 
 
-        <div *ngIf="!loading" class="flex-1 pl-3 pr-2">
-          <div class="rightHeight h-[calc(100vh-200px)] overflow-y-auto pt-4">
-            <div class="header-tabs">
-              <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                <a
-                  class="nav-item nav-link"
-                  [id]="cont.loadNumber"
-                  [ngClass]="
-                    cont.loadNumber === currentLoadContent.loadNumber
-                      ? 'active'
-                      : ''
-                  "
-                  (click)="changeCurrentLoad(cont.loadNumber)"
-                  *ngFor="let cont of load?.content; let i = index"
-                  id="nav-load1-tab"
-                  >Load {{ cont.loadNumber }}</a
-                >
+          <div *ngIf="!loading" class="flex-1 pl-3 pr-2">
+            <div class="rightHeight h-[calc(100vh-200px)] overflow-y-auto pt-4">
+              <div class="shadow-none border-b border-[#e2e2e2] mb-[15px]">
+                <div class="flex border-none" id="nav-tab" role="tablist">
+                  <a class="nav-item px-[26px] py-[10px] h-[42px] bg-white text-sm font-semibold tracking-[1px] cursor-pointer transition-colors duration-200"
+                    [ngClass]="{
+                    'text-[#282828] border-b border-[#e2e2e2] hover:!text-[#0038ba]': cont.loadNumber !== currentLoadContent.loadNumber,
+                    'text-[#0038ba] border-b-2 border-[#0038ba]': cont.loadNumber === currentLoadContent.loadNumber
+                  }" [id]="cont.loadNumber" (click)="changeCurrentLoad(cont.loadNumber)"
+                    *ngFor="let cont of load?.content; let i = index" id="nav-load1-tab">Load {{ cont.loadNumber }}</a>
+                </div>
               </div>
-            </div>
 
-            <div class="tab-content" id="nav-tabContent">
-              <div
-                class="tab-pane fade show active body_sales_agants"
-                id="nav-load1"
-                role="tabpanel"
-                aria-labelledby="nav-load1-tab"
-              >
-                <div class="col-12 retailerTable">
-                  <table
-                    class="table table-hover dt-responsive nowrap th-boarder"
-                    style="width: 100%"
-                  >
-                    <thead>
-                      <tr>
-                        <th rowspan="2">SN</th>
-                        <th rowspan="2">Product Name</th>
-                        <th colspan="2" style="text-align: center">
-                           BOX/PIECE
-                        </th> 
-                      </tr>
-                      <tr>
-                        <th style="text-align: center">Order QTY</th>
-                        <th style="text-align: center">FOC QTY</th>
-                       <!--  <th style="text-align: center">Issued QTY</th> -->
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr
-                        *ngFor="
+              <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active body_sales_agants" id="nav-load1" role="tabpanel"
+                  aria-labelledby="nav-load1-tab">
+                  <div class="w-full">
+                    <table
+                      class="w-full table-hover dt-responsive nowrap th-boarder text-[#282828] dark:text-neutral-300"
+                      style="width: 100%">
+                      <thead class="bg-[#f6f6f6] dark:bg-[#2a2a2a]">
+                        <tr>
+                          <th rowspan="2"
+                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px]">
+                            SN</th>
+                          <th rowspan="2"
+                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px]">
+                            Product Name</th>
+                          <th colspan="2"
+                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px] text-center">
+                            BOX/PIECE
+                          </th>
+                        </tr>
+                        <tr>
+                          <th
+                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px] text-center">
+                            Order QTY</th>
+                          <th
+                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px] text-center">
+                            FOC QTY</th>
+                          <!--  <th class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px] text-center">Issued QTY</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="
                           let item of currentLoadContent.items; 
                           let i = index
-                        "
-                      >
-                        <td>{{ getItemSKU(item.item_id) }}</td>
-                        <td>{{ getItemName(item.item_id) }}</td>
-                        <td style="text-align: center">{{ (+item.actual_qty- +item.foc_qty) | number }}</td>
-                        <td style="text-align: center">{{ item.foc_qty | number }}</td>
-                        <!-- <td style="text-align: center">{{ item.issued_qty | number }}</td> -->
-                        <!-- <td>
+                        " class="hover:bg-gray-50">
+                          <td class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none">{{
+                            getItemSKU(item.item_id) }}</td>
+                          <td class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none">{{
+                            getItemName(item.item_id) }}</td>
+                          <td
+                            class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none text-center">
+                            {{ (+item.actual_qty- +item.foc_qty) | number }}</td>
+                          <td
+                            class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none text-center">
+                            {{ item.foc_qty | number }}</td>
+                          <!-- <td class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none text-center">{{ item.issued_qty | number }}</td> -->
+                          <!-- <td>
                           <input
                             class="value_input"
                             [(ngModel)]="item.issued_qty"
@@ -732,353 +607,308 @@
                             (keydown)="isNumber($event, 'quantity')"
                           />
                         </td> -->
-                      </tr>
-                    </tbody>
-                  </table>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
+
         </div>
-        <div class="col-12" *ngIf="loading">
+        <div *ngIf="loading" class="flex justify-center items-center p-8">
           <app-loader-white></app-loader-white>
         </div>
+
       </div>
-      
-    </div>
 
-    <div
-      *ngIf="currentTab === 5"
-      class="tab-pane tab_M p-0 PT-15 active show"
-      id="pills-final"
-      role="tabpanel"
-      aria-labelledby="pills-final-tab"
-    >
-      <div class="col-12">
-        <div class="row">
-          <div class="col-8 PB-30">
-            <div class="header PT-10 PB-10 mb-15">
-              <h2 class="w-100">Load <span> Sheet</span></h2>
+      <div *ngIf="currentTab === 5" class="tab-pane tab_M p-0 PT-15 active show" id="pills-final" role="tabpanel"
+        aria-labelledby="pills-final-tab">
+        <div class="flex w-full pt-3">
+
+          <div class="flex-1 pr-3 pl-2"> 
+            <div class="flex items-center justify-between">
+              <h2 class="relative flex items-start text-base pl-0 mb-3 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-12px] before:top-[3px] font-primary font-medium">
+                Load  &nbsp; <span class="font-light"> Sheet</span></h2>
+             
+
+            <!-- Search Input -->
+            <div *ngIf="showFinalLoad && finalLoad && finalLoad.load" class="mb-3 w-56 relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+              <input 
+                type="text" 
+                id="load-sheet-filter-text-box" 
+                placeholder="Search products..." 
+                autocomplete="off"
+                class="w-56 pl-10 pr-4 py-2 h-[32px] border border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-primary dark:focus:border-primary focus:outline-none font-primary text-sm"
+                (input)="onLoadSheetQuickFilterChanged($event)" 
+              />
             </div>
 
-            <table
-              *ngIf="showFinalLoad"
-              datatable
-              [dtOptions]="dtOptions"
-              class="table table-hover dt-responsive nowrap dc-table"
-              id="example2"
-              style="width: 100%"
-            >
-              <thead>
-                <tr>
-                  <th rowspan="2" style="vertical-align: middle">SN</th>
-                  <th rowspan="2" style="vertical-align: middle;min-width:200px !important">
-                    Product Name
-                  </th>
-                  <th
-                    colspan="3"
-                    style="text-align: center"
-                    *ngFor="
-                      let number of finalLoad.load[0].content;
-                      let i = index
-                    "
-                  >
-                    Load {{ i + 1 }}
-                  </th>
-                  <th colspan="2" style="text-align: center">
-                    Extra Issuance
-                  </th>
-                  <th colspan="3" style="text-align: center">
-                    Total Issuance
-                  </th>
-                </tr>
-                <tr *ngIf="finalLoad.count == 3">
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>Weight</th>
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>Weight</th>
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>Weight</th>
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>Weight</th>
-                </tr>
-                <tr *ngIf="finalLoad.count == 2">
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>Weight</th>
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>Weight</th>
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>Weight</th>
-                </tr>
-                <tr *ngIf="finalLoad.count == 1">
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>Weight</th>
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>CTN/Bundle</th>
-                  <th>Box/Piece</th>
-                  <th>Weight</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let product of finalLoad.load">
-                  <td>{{ product.item_sku }}</td>
-                  <td style="min-width:200px !important">{{ product.item_name }}</td>
-                  <ng-container
-                    *ngFor="let loadContent of product.content"
-                  >
-                    <td>{{ loadContent.parent_qty | number }}</td>
-                    <td>{{ loadContent.child_qty }}</td>
-                    <td>{{ loadContent.total_weight }}</td>
-                  </ng-container>
-                  <td>{{ product.total_extra_primary_qty | number }}</td>
-                  <td>{{ product.total_extra_secondary_qty | number }}</td>
-                  <td>{{ product.total_primary_qty | number }}</td>
-                  <td>{{ product.total_secondary_qty | number }}</td>
-                  <td> {{product.total_weight }}</td> 
-                 
-                </tr>
-              </tbody>
-            </table>
+            </div>
+            
+            <!-- AG Grid -->
+            <div *ngIf="showFinalLoad && finalLoad && finalLoad.load && loadSheetColumnDefs.length > 0" class="ag-theme-quartz ag-grid-container w-full">
+              <ag-grid-angular 
+                [rowData]="finalLoad.load" 
+                [columnDefs]="loadSheetColumnDefs"
+                [defaultColDef]="defaultColDef" 
+                [pagination]="true"
+                [paginationPageSize]="10"
+                [paginationPageSizeSelector]="[10, 20, 50, 100]"
+                [suppressPaginationPanel]="false"
+                [domLayout]="'autoHeight'"
+                [animateRows]="true"
+                [theme]="'legacy'"
+                [suppressHorizontalScroll]="false"
+                [suppressColumnVirtualisation]="true"
+                (gridReady)="onLoadSheetGridReady($event)">
+              </ag-grid-angular>
+            </div>
+
           </div>
 
-          <div class="col-4">
-            <div class="cash-report" *ngIf="finalLoad">
-              <div class="header">
-                <div class="report_value">
-                  <strong>Gross Total:</strong>
-                  <span>{{
+          <div class="w-[370px] shrink-0">
+            <div class="bg-[#f8f8f8] dark:bg-[#1a1a1a] min-h-[calc(100vh-122px)]" *ngIf="finalLoad">
+              <div class="text-[#424242] dark:text-gray-300 px-5 py-[15px] relative shadow-none">
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
+                  <strong class="text-gray-900 dark:text-gray-200">Gross Total:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
                     finalLoad.summary.total_gross_amount | number: "1.2-2"
-                  }}</span>
+                    }}</span>
                 </div>
-                <div class="report_value">
-                  <strong>Trade Offer:</strong>
-                  <span>{{
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
+                  <strong class="text-gray-900 dark:text-gray-200">Trade Offer:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
                     finalLoad.summary.total_trade_offer | number: "1.2-2"
-                  }}</span>
+                    }}</span>
                 </div>
-                <div class="report_value">
-                  <strong>Trade Discount:</strong>
-                  <span>{{
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
+                  <strong class="text-gray-900 dark:text-gray-200">Trade Discount:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
                     finalLoad.summary.total_trade_discount
-                      | number: "1.2-2"
-                  }}</span>
+                    | number: "1.2-2"
+                    }}</span>
                 </div>
-                <div class="report_value">
-                  <strong>Special Discount:</strong>
-                  <span>{{
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
+                  <strong class="text-gray-900 dark:text-gray-200">Special Discount:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
                     finalLoad.summary.total_special_discount
-                      | number: "1.2-2"
-                  }}</span>
+                    | number: "1.2-2"
+                    }}</span>
                 </div>
-                <div class="report_value">
-                  <strong>Booker Discount:</strong>
-                  <span>{{
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
+                  <strong class="text-gray-900 dark:text-gray-200">Booker Discount:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
                     finalLoad.summary.total_booker_discount
-                      | number: "1.2-2"
-                  }}</span>
+                    | number: "1.2-2"
+                    }}</span>
                 </div>
-                <div class="report_value">
-                  <strong>Loyalty Discount:</strong>
-                  <span>{{
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
+                  <strong class="text-gray-900 dark:text-gray-200">Loyalty Discount:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
                     finalLoad.summary.total_loyalty_discount
-                      | number: "1.2-2"
-                  }}</span>
+                    | number: "1.2-2"
+                    }}</span>
                 </div>
-                <div class="report_value">
-                  <strong>Total:</strong>
-                  <span>{{
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
+                  <strong class="text-gray-900 dark:text-gray-200">Total:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
                     finalLoad.summary.total_gross_amount -
-                      finalLoad.summary.total_trade_offer -
-                      finalLoad.summary.total_trade_discount -
-                      finalLoad.summary.total_special_discount -
-                      finalLoad.summary.total_booker_discount  -
-                      finalLoad.summary.total_loyalty_discount
-                      | number: "1.2-2"
-                  }}</span>
+                    finalLoad.summary.total_trade_offer -
+                    finalLoad.summary.total_trade_discount -
+                    finalLoad.summary.total_special_discount -
+                    finalLoad.summary.total_booker_discount -
+                    finalLoad.summary.total_loyalty_discount
+                    | number: "1.2-2"
+                    }}</span>
                 </div>
-                <div class="report_value"><strong>Tax:</strong><span>{{finalLoad.summary.total_tax_amount | number: "1.2-2" }}</span>
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
+                  <strong class="text-gray-900 dark:text-gray-200">Tax:</strong>
+                  <span
+                    class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{finalLoad.summary.total_tax_amount
+                    | number: "1.2-2" }}</span>
                 </div>
-                <div class="report_value" style="color: #0038ba">
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center text-[#0038ba] dark:text-[#4a9eff]">
                   <strong>Total Amount Due:</strong>
-                  <span>{{
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg">{{
                     finalLoad.summary.total_net_sale | number: "1.2-2"
-                  }}</span>
+                    }}</span>
                 </div>
-                <div class="report_value">
-                  <strong>Recovery:</strong>
-                  <span>{{
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
+                  <strong class="text-gray-900 dark:text-gray-200">Recovery:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
                     finalLoad.summary.total_recovery_amount
-                      | number: "1.2-2"
-                  }}</span>
+                    | number: "1.2-2"
+                    }}</span>
                 </div>
-                <div class="report_value" style="color: #0038ba">
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center text-[#0038ba] dark:text-[#4a9eff]">
                   <strong>Total Issued Amount:</strong>
-                  <span>{{
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg">{{
                     finalLoad.summary.issued_total_price | number: "1.2-2"
-                  }}</span>
+                    }}</span>
                 </div>
-                <div class="report_value" style="color: #0038ba">
+                <div
+                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center text-[#0038ba] dark:text-[#4a9eff]">
                   <strong>Total Weight:</strong>
-                  <span>{{finalLoad.summary.total_weight | number: "1.2-2"}}Kg</span>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg">{{finalLoad.summary.total_weight |
+                    number: "1.2-2"}}Kg</span>
                 </div>
               </div>
-              <div style="padding: 10px 15px">
-                <div class="row act-btn-print">
-                  <div class="col-4">
-                    <a
-                      (click)="getBookingSheet()"
-                      class="btn btn-primary print-btn fontSize"
-                      ><i class="fa fa-print"></i> Booking Sheet</a
-                    >
+              <div class="p-[0px_18px_10px_18px]">
+                <div class="flex gap-1.5">
+                  <div class="w-1/3">
+                    <a (click)="getBookingSheet()"
+                      class="flex flex-col justify-center text-center bg-white dark:bg-[#1f1f1f] text-gray-900 dark:text-white border border-[#0038ba] rounded-[5px] px-1 py-[10px] w-full min-h-[80px] whitespace-normal hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] hover:text-white dark:hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] transition-colors cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="w-5 h-5 mx-auto mb-2" viewBox="0 0 16 16">
+                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1" />
+                        <path
+                          d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1" />
+                      </svg> Booking Sheet
+                    </a>
                   </div>
-                  <div class="col-4">
-                    <a
-                      (click)="generateLSPDF()"
-                      class="btn btn-primary print-btn fontSize"
-                      ><i class="fa fa-print"></i> Load Sheet</a
-                    >
+                  <div class="w-1/3">
+                    <a (click)="generateLSPDF()"
+                      class="flex flex-col justify-center text-center bg-white dark:bg-[#1f1f1f] text-gray-900 dark:text-white border border-[#0038ba] rounded-[5px] px-1 py-[10px] w-full min-h-[80px] whitespace-normal hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] hover:text-white dark:hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] transition-colors cursor-pointer">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="w-5 h-5 mx-auto mb-2" viewBox="0 0 16 16">
+                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1" />
+                        <path
+                          d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1" />
+                      </svg> Load Sheet
+                    </a>
                   </div>
-                  <div class="col-4">
+                  <div class="w-1/3">
                     <button
-                      class="btn btn-primary print-btn fontSize"
-                      data-toggle="modal"
-                      data-target="#billsModal"
-                    >
-                      <i class="fa fa-print"></i> Bills
+                      class="flex flex-col justify-center text-center bg-white dark:bg-[#1f1f1f] text-gray-900 dark:text-white border border-[#0038ba] rounded-[5px] px-1 py-[10px] w-full min-h-[80px] whitespace-normal hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] hover:text-white dark:hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] transition-colors cursor-pointer"
+                      (click)="showBillsModal = true">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="w-5 h-5 mx-auto mb-2" viewBox="0 0 16 16">
+                        <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1" />
+                        <path
+                          d="M5 1a2 2 0 0 0-2 2v2H2a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h1v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-1h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1V3a2 2 0 0 0-2-2zM4 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2H4zm1 5a2 2 0 0 0-2 2v1H2a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v-1a2 2 0 0 0-2-2zm7 2v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1" />
+                      </svg> Bills
                     </button>
-                  </div>
-                  <div class="col-6 pl-5 pt-5">
-                    <button
-                      *ngIf="!loading"
-                      class="btn btn-primary red-bg cancel_dispatch w-100"
-                      (click)="revertDispatch()"
-                    >
-                      Reset
-                    </button>
-                    <button
-                      *ngIf="loading"
-                      type="submit"
-                      class="btn btn-primary red-bg w-100 mr-2"
-                      disabled
-                    >
-                      <div
-                        class="spinner-border text-light"
-                        role="status"
-                      >
-                        <span class="sr-only">Loading...</span>
-                      </div>
-                    </button>
-                  </div>
-                  <div class="col-6 pl-0 pr-5 pt-5">
-                    <button
-                      *ngIf="!loading"
-                      class="btn btn-primary m-0 nextButton w-100"
-                      (click)="completeDispatch()"
-                    >
-                      Complete
-                    </button>
-                    <button
-                      *ngIf="loading"
-                      type="submit"
-                      class="btn btn-primary w-100 mr-2"
-                      disabled
-                    >
-                      <div
-                        class="spinner-border text-light"
-                        role="status"
-                      >
-                        <span class="sr-only">Loading...</span>
-                      </div>
-                    </button>
-                  </div>
+                  </div> 
                 </div>
               </div>
+
+              <div class="flex p-[0px_18px_10px_18px] gap-2">
+                <div class="w-1/2">
+                  <button
+                    *ngIf="!loading"
+                    class="w-full px-4 py-2 leading-none text-sm font-primary text-white bg-[#f12300] border border-[#f12300] rounded-[5px] hover:bg-[#d11f00] hover:border-[#d11f00] transition-colors"
+                    (click)="revertDispatch()"
+                  >
+                    Reset
+                  </button>
+                  <button
+                    *ngIf="loading"
+                    type="button"
+                    class="w-full px-4 py-2 leading-none text-sm font-primary text-white bg-[#f12300] border border-[#f12300] rounded-[5px] opacity-50 cursor-not-allowed flex items-center justify-center"
+                    disabled
+                  >
+                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </button>
+                </div>
+                <div class="w-1/2">
+                  <button
+                    *ngIf="!loading"
+                    class="w-full px-4 py-2 leading-none text-sm font-primary text-white bg-primary border border-primary rounded-[5px] hover:bg-blue-700 hover:border-blue-700 transition-colors"
+                    (click)="completeDispatch()"
+                  >
+                    Complete
+                  </button>
+                  <button
+                    *ngIf="loading"
+                    type="button"
+                    class="w-full px-4 py-2 leading-none text-sm font-primary text-white bg-primary border border-primary rounded-[5px] opacity-50 cursor-not-allowed flex items-center justify-center"
+                    disabled
+                  >
+                    <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            
             </div>
           </div>
+
         </div>
       </div>
+
     </div>
 
-  </div>
-
-  <!-- Previous/Next Navigation Buttons - Global for all tabs -->
-  <div class="flex justify-center gap-2 mt-4 p-3 bg-[#f6f6f6] dark:bg-[#1a1a1a] rounded-lg">
-    <button
-      type="button"
-      (click)="goToPreviousTab()"
-      [disabled]="currentTab === 1 || loading || savingOrder || (currentTab === 4 && load?.content?.[0]?.items?.length > 0)"
-      class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-    >
-      Previous
-    </button>
-    <button
-      *ngIf="currentTab !== 4"
-      type="button"
-      (click)="goToNextTab()"
-      [disabled]="currentTab === 5 || loading || loadingProduct || savingOrder || (currentTab === 1 && !checkAllocationSuccess)"
-      class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-    >
-      <div *ngIf="tabLoading" class="inline-block animate-spin mr-2">
-        <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-        </svg>
-      </div>
-      {{ tabLoading ? "" : "Next" }}
-    </button>
-    <button
-      *ngIf="currentTab === 4"
-      type="button"
-      (click)="openConfirmationModal()"
-      [disabled]="loading || loadingProduct"
-      class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-    >
-      Next
-    </button>
-  </div>
+    <!-- Previous/Next Navigation Buttons - Global for all tabs -->
+    <div *ngIf="currentTab !== 5" class="flex justify-center gap-2 mt-4 p-3 bg-[#f6f6f6] dark:bg-[#1a1a1a] rounded-lg">
+      <button type="button" (click)="goToPreviousTab()"
+        [disabled]="currentTab === 1 || loading || savingOrder || (currentTab === 4 && load?.content?.[0]?.items?.length > 0)"
+        class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        Previous
+      </button>
+      <button *ngIf="currentTab !== 4" type="button" (click)="goToNextTab()"
+        [disabled]="currentTab === 5 || loading || loadingProduct || savingOrder || (currentTab === 1 && !checkAllocationSuccess)"
+        class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        <div *ngIf="tabLoading" class="inline-block animate-spin mr-2">
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            </path>
+          </svg>
+        </div>
+        {{ tabLoading ? "" : "Next" }}
+      </button>
+      <button *ngIf="currentTab === 4" type="button" (click)="openConfirmationModal()"
+        [disabled]="loading || loadingProduct"
+        class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+        Next
+      </button>
+    </div>
 
   </div>
 </div>
 
 
- 
+
 
 
 
 <!-- Cancel Order Modal - Tailwind CSS -->
-<div
-  *ngIf="showCancelOrderModal"
+<div *ngIf="showCancelOrderModal"
   class="fixed inset-0 bg-black/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-[200] flex items-center justify-center p-4"
-  (click)="closeCancelOrderModal($event)"
->
-  <div 
-    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-red-600"
-    (click)="$event.stopPropagation()"
-  >
+  (click)="closeCancelOrderModal($event)">
+  <div class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-red-600"
+    (click)="$event.stopPropagation()">
     <!-- Modal Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
       <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
         Cancel <span class="font-light text-gray-600 dark:text-gray-400">Order</span>
       </h5>
-      <button
-        type="button"
-        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-        (click)="closeCancelOrderModal($event)"
-        aria-label="Close"
-      >
+      <button type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeCancelOrderModal($event)" aria-label="Close">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -1093,173 +923,175 @@
     </div>
 
     <!-- Modal Footer -->
-    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3 flex-wrap">
-      <button
-        type="button"
+    <div
+      class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3 flex-wrap">
+      <button type="button"
         class="px-4 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-        (click)="cancelOrder()"
-        aria-label="Cancel Without Allocation"
-      >
+        (click)="cancelOrder()" aria-label="Cancel Without Allocation">
         Cancel Without Allocation
       </button>
-      <button
-        type="button"
+      <button type="button"
         class="px-4 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-        (click)="cancelOrder(1)"
-        aria-label="Cancel With Allocation"
-      >
+        (click)="cancelOrder(1)" aria-label="Cancel With Allocation">
         Cancel With Allocation
       </button>
-      <button
-        type="button"
+      <button type="button"
         class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
-        (click)="closeCancelOrderModal($event)"
-        aria-label="Close"
-      >
+        (click)="closeCancelOrderModal($event)" aria-label="Close">
         No
       </button>
     </div>
   </div>
 </div>
 
+<!-- Print Bills Modal - Tailwind CSS with Light/Dark Mode -->
 <div
-  class="modal fade"
-  id="billsModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="billsModalLabel"
-  aria-hidden="true"
+  *ngIf="showBillsModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="closeBillsModal()"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="billsModalLabel">
-          Please chose invoice date<span></span>
-        </h5>
-        <button
-          type="button"
-          id="close-bills"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-auto" style="padding-top: 6px; font-size: 14px">
+  <div 
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-2xl mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-300 font-primary">
+        Please chose invoice date
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeBillsModal()"
+        aria-label="Close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-6 py-5">
+      <!-- Date Selection -->
+      <div class="mb-6">
+        <div class="flex items-center gap-4 mb-4">
+          <label class="text-sm font-medium text-gray-700 dark:text-gray-300 flex-shrink-0">
             Select Date
-          </div>
-          <div class="col">
-            <nz-date-picker
-              id="invoice-date"
-              [(ngModel)]="invoiceDate"
+          </label>
+          <div class="flex-1">
+            <nz-date-picker 
+              id="invoice-date" 
+              [(ngModel)]="invoiceDate" 
               nzFormat="yyyy-MM-dd"
-              class="form-control select-date"
-              name="invoice-date"
-              nzPlaceholder=""
+              class="w-full payment-datepicker"
+              name="invoice-date" 
+              nzPlaceHolder="Select date"
             ></nz-date-picker>
           </div>
-          <div class="col-12">
-            <hr />
-          </div>
         </div>
-        <div class="row">
-          <div class="col-12">
-            <h3 class="heading3">Select paper size for print</h3>
-          </div>
-        </div>
-        <div class="row print-icon-div pb-0">
-          <div class="col-6 pl-0">
-            <a (click)="getBills('A4')"
-              ><img class="print-icon" src="assets/images/a4.svg" alt="" />
-              <strong>A4 Portrait Paper</strong></a
-            >
-          </div>
-          <div class="col-6 pr-0">
-            <a (click)="getBills('A5')"
-              ><img class="print-icon" src="assets/images/a5.svg" alt="" />
-              <strong>A5 Landscape Paper</strong></a
-            >
-          </div>
-        </div>
+        <div class="border-t border-gray-200 dark:border-[#333333] pt-4"></div>
+      </div>
+
+      <!-- Paper Size Selection -->
+      <h2 class="text-base font-medium text-gray-800 dark:text-neutral-300 mb-6 font-primary">
+        Select paper size for print
+      </h2>
+      
+      <div class="grid grid-cols-2 gap-4">
+        <!-- A4 Option -->
+        <button
+          (click)="getBills('A4')"
+          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-neutral-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#ffffff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
+        >
+          <img
+            class="w-12 h-12 mb-4 opacity-60 group-hover:opacity-100 transition-opacity grayscale dark:invert dark:grayscale"
+            src="assets/images/a4.svg"
+            alt="A4 Paper"
+          />
+          <strong class="text-sm text-gray-800 dark:text-neutral-400 group-hover:text-primary dark:group-hover:text-[#ffffff] transition-colors">
+            A4 Portrait Paper
+          </strong>
+        </button>
+
+        <!-- A5 Option -->
+        <button
+          (click)="getBills('A5')"
+          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-neutral-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#ffffff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
+        >
+          <img
+            class="w-12 h-12 mb-4 opacity-60 group-hover:opacity-100 transition-opacity grayscale dark:invert dark:grayscale"
+            src="assets/images/a5.svg"
+            alt="A5 Paper"
+          />
+          <strong class="text-sm text-gray-800 dark:text-neutral-400 group-hover:text-primary dark:group-hover:text-[#ffffff] transition-colors">
+            A5 Landscape Paper
+          </strong>
+        </button>
       </div>
     </div>
   </div>
 </div>
 
-<div
-  class="modal fade"
-  id="create-load"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="create-loadLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top-borderRed">
-      <div class="modal-header">
-        <h5 class="modal-title" id="create-loadLabel">
-          Confirm Load <span></span>
-        </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
+<!-- Confirm Load Modal - Tailwind CSS with Light/Dark Mode -->
+<div *ngIf="showCreateLoadModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="closeCreateLoadModal($event)" id="create-load" role="dialog" aria-labelledby="create-loadLabel"
+  aria-modal="true">
+  <div class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()">
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary" id="create-loadLabel">
+        Confirm <span class="font-light text-gray-600 dark:text-gray-400">Load</span>
+      </h5>
+      <button type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeCreateLoadModal($event)" aria-label="Close">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-6 py-5">
+      <div class="w-full">
+        <p class="text-sm text-gray-700 dark:text-gray-300 font-primary">
+          Are you sure you want to create New Load?
+        </p>
       </div>
-      <div class="modal-body">
-        <div class="col-md-12">
-          <p>Are you sure you want to create New Load?</p>
-        </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="addCurrentLoad()"
-        >
-          Yes
-        </button>
-        <button
-          type="submit"
-          id="close-confirm-load"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          No
-        </button>
-      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div
+      class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3 flex-wrap">
+      <button type="button"
+        class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white transition-colors"
+        (click)="addCurrentLoad()">
+        Yes
+      </button>
+      <button type="button" id="close-confirm-load"
+        class=" px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        (click)="closeCreateLoadModal($event)" aria-label="Close">
+        No
+      </button>
     </div>
   </div>
 </div>
 
 <!-- Hold Order Modal - Tailwind CSS -->
-<div
-  *ngIf="showHoldOrderModal"
+<div *ngIf="showHoldOrderModal"
   class="fixed inset-0 bg-black/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-[200] flex items-center justify-center p-4"
-  (click)="closeHoldOrderModal($event)"
->
-  <div 
-    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
-    (click)="$event.stopPropagation()"
-  >
+  (click)="closeHoldOrderModal($event)">
+  <div class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()">
     <!-- Modal Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
       <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
         Hold <span class="font-light text-gray-600 dark:text-gray-400">Order</span>
       </h5>
-      <button
-        type="button"
-        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
-        (click)="closeHoldOrderModal($event)"
-        aria-label="Close"
-      >
+      <button type="button" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeHoldOrderModal($event)" aria-label="Close">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
@@ -1270,24 +1102,22 @@
     <div class="px-6 py-5 space-y-4">
       <!-- Hold Reason Input -->
       <div class="flex flex-col sm:flex-row sm:items-start gap-2">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0 pt-2">Hold Reason:</label>
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0 pt-2">Hold
+          Reason:</label>
         <div class="flex-1">
-          <input
-            nz-input
-            type="text"
+          <input nz-input type="text"
             class="w-full px-3 py-1.5 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary focus:box-shadow-none font-primary text-sm"
-            placeholder="Reason"
-            required
-            [(ngModel)]="holdOrderParams.hold_reason"
-          />
+            placeholder="Reason" required [(ngModel)]="holdOrderParams.hold_reason" />
         </div>
       </div>
 
       <!-- Delete Allocation Checkbox -->
       <div class="flex flex-col sm:flex-row sm:items-start gap-2 pt-2">
-        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0">Delete Allocation:</label>
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0">Delete
+          Allocation:</label>
         <div class="flex-1">
-          <label nz-checkbox [(ngModel)]="holdOrderParams.delete_allocation" id="deleteAllocationCheckbox" class="primary-checkbox">
+          <label nz-checkbox [(ngModel)]="holdOrderParams.delete_allocation" id="deleteAllocationCheckbox"
+            class="primary-checkbox">
             <span class="ml-1.5 text-sm text-gray-700 dark:text-gray-300 font-primary">Yes</span>
           </label>
         </div>
@@ -1295,24 +1125,18 @@
     </div>
 
     <!-- Modal Footer -->
-    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
-      <button
-        type="button"
+    <div
+      class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
+      <button type="button"
         class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
-        (click)="closeHoldOrderModal($event)"
-        aria-label="Close"
-      >
+        (click)="closeHoldOrderModal($event)" aria-label="Close">
         Cancel
       </button>
-      <button
-        type="button"
+      <button type="button"
         class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors"
-        (click)="holdOrder($event)"
-        aria-label="Save"
-      >
+        (click)="holdOrder($event)" aria-label="Save">
         Save
       </button>
     </div>
   </div>
 </div>
-

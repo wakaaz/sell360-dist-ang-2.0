@@ -1,74 +1,7 @@
-.dispatch-order {
-  padding: 0px !important;
-}
-.dispatch-order .container {
-  max-width: 1220px;
-}
-.dispatch-order {
-  padding: 0;
-}
-.retailerTable .table thead th {
-  font-size: 12px;
-  border: solid 1px #fff !important;
-  vertical-align: middle;
-  padding: 2px 5px !important;
-}
-.retailerTable .table tbody td {
-  font-size: 12px !important;
-  padding: 5px 4px !important;
-  vertical-align: middle;
-  line-height: 1;
-}
+ 
 #wrapper #content-wrapper {
   padding-left: 0 !important;
-}
-.container {
-  max-width: 1280px;
-}
-.add-stock-input {
-  font-size: 13px;
-  width: 80px;
-  height: 25px;
-  box-shadow: none;
-  border-color: #dddddd;
-  padding: 0px 5px 0 8px;
-}
-.CP-name {
-  letter-spacing: 1px;
-}
-.CP-name span {
-  letter-spacing: 1px;
-  display: block;
-  margin-top: 4px;
-}
-.ProList-div .table img {
-  margin-top: -2px;
-  margin-bottom: -2px;
-  margin-left: 4px;
-}
-._selectProList .header .add_button {
-  padding: 4px 8px 3px 8px;
-  right: 15px;
-}
-#orderList-id {
-  flex: 0 0 300px;
-  max-width: 300px;
-  width: 300px;
-}
-#orderList-id2 {
-  flex: 0 0 300px;
-  max-width: 300px;
-  width: 300px;
-}
-.value_input {
-  padding: 2px;
-  margin: 0 !important;
-  font-size: 12px;
-  box-shadow: none;
-  height: 22px;
-  width: 52px;
-  border: solid 1px #e2e6ea;
-}
+}  
  
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -80,233 +13,9 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
-.no-products {
-  text-align: center;
-  color: lightgray;
-}
-.daily-operations .nav_M a,
-.daily-operations .nav_M .nav-link.active {
-  padding-top: 15px;
-}
-.cash-report {
-  background-color: #f8f8f8;
-  min-height: calc(100vh - 210px);
-}
-.cash-report .header {
-  background: linear-gradient(0deg, #f8f8f8 0%, #f8f8f8 50%);
-  padding: 15px 20px;
-}
-.cash-report .report_value {
-  background-color: #fff;
-  font-size: 13px;
-  position: relative;
-  padding: 10px 10px;
-  letter-spacing: 0.5px;
-  margin-bottom: 5px;
-  margin-top: 5px;
-  -webkit-box-shadow: 0 2px 8px 0 rgba(79, 79, 79, 0.1);
-  -moz-box-shadow: 0 2px 8px 0 rgba(79, 79, 79, 0.1);
-  box-shadow: 0 2px 8px 0 rgba(79, 79, 79, 0.1);
-  line-height: 1;
-}
-.cash-report .report_value span {
-  font-family: "Rationale", sans-serif;
-  line-height: 1;
-  font-size: 18px;
-  float: right;
-  margin-top: -2px;
-}
-.totalcash span {
-  font-size: 20px !important;
-  color: #0038ba;
-}
-.cash-report .value_input {
-  float: right;
-  width: 85px;
-}
-.addsalesman {
-  font-size: 11px;
-  width: 100%;
-  line-height: 1;
-  margin-top: 5px;
-}
-.return-btn {
-  line-height: 1;
-  margin-top: 10px;
-}
-.add-expense {
-  font-size: 13px;
-  padding: 2px 10px;
-  position: absolute;
-  right: 0;
-}
-.red-bg {
-  border: solid 1px #f12300;
-}
-.input-error {
-  font-size: 13px;
-  color: red;
-}
-.act-btn-print {
-  margin: 0px 0 0 0;
-}
-.act-btn-print .col-4 {
-  padding: 5px;
-}
-.print-btn {
-  font-size: 14px;
-  text-align: center;
-  background: linear-gradient(90deg, #fff 0%, #fff 100%);
-  color: #282828 !important;
-  border: solid 1px #0038ba;
-  box-shadow: none;
-  padding: 10px 14px;
-  white-space: normal;
-  width: 100%;
-  min-height: 85px;
-  line-height: 16px;
-}
-.print-btn:hover {
-  background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%);
-  color: #fff !important;
-}
-.print-btn .fa {
-  display: block;
-  font-size: 16px;
-  padding: 5px;
-  margin-bottom: 5px;
-}
-.select-checkmark .salevalue {
-  text-align: right;
-  margin: auto;
-  vertical-align: middle;
-}
-.select-checkmark .ord-no {
-  top: 14px;
-  font-size: 45px;
-}
-.select-checkmark .custom-control {
-  text-align: right;
-  margin-top: -15px;
-  margin-right: -10px;
-  margin-bottom: 13px;
-}
-.select-all-op {
-  position: absolute;
-  top: -3px;
-  right: 15px;
-}
-.select-all-op .custom-control-label {
-  font-size: 12px;
-  line-height: 2.2;
-}
-.header-tabs {
-  box-shadow: none;
-  border-bottom: solid 1px #e2e2e2;
-}
-.header-tabs .nav-tabs .nav-link {
-  border-bottom: solid 1px #e2e2e2;
-}
-.header-tabs .nav-tabs .nav-item.show .nav-link,
-.header-tabs .nav-tabs .nav-link,
-.header-tabs .nav-tabs .nav-link.active {
-  padding: 10px 26px;
-  height: 42px;
-}
-.header-tabs .add_button {
-  letter-spacing: 1px;
-  padding: 4px 15px;
-  right: 15px;
-  box-shadow: none;
-}
-.dc-table thead th {
-  vertical-align: middle;
-  padding: 4px 5px;
-  border: solid 1px #fff !important;
-}
-.dc-table td {
-  padding: 5px 8px !important;
-}
-.wz-icon .fa {
-  color: #fff;
-}
-.th-boarder thead th {
-  border: solid 1px #fff !important;
-  vertical-align: middle;
-  padding: 2px 5px !important;
-}
-.daily-operations .tab-content {
-  padding-bottom: 10px;
-}
-.bottom-act-btn {
-  text-align: right;
-  padding-top: 15px;
-  padding-bottom: 15px;
-}
-.bottom-act-btn .btn {
-  letter-spacing: 1px;
-  font-size: 12px;
-  padding: 4px 12px;
-  box-shadow: none;
-}
-.execFooter {
-  background: #f6f6f6;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  margin-top: 5px;
-}
-.cash-report .value_input {
-  float: right;
-  width: 95px;
-}
-._selectProList .header {
-  padding: 15px 15px !important;
-}
-.print-icon-div {
-  text-align: center;
-  padding: 15px;
-}
-.print-icon-div a {
-  display: inline-block;
-  border: solid 1px #e9ecef;
-  padding: 15px;
-  width: 100%;
-  text-align: center;
-  text-decoration: none;
-  color: #282828;
-  font-size: 13px;
-}
-.print-icon-div a:hover {
-  border: solid 1px #0038ba;
-  color: #0038ba;
-  box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.3);
-}
-.print-icon {
-  filter: grayscale(1);
-  width: 45px;
-  opacity: 0.7;
-  display: block;
-  margin: auto;
-  margin-top: 10px;
-  margin-bottom: 15px;
-}
-.print-icon-div a:hover .print-icon {
-  filter: none;
-  opacity: 1;
-}
-.heading3 {
-  margin: 0;
-  font-size: 16px;
-}
-.select-date,
-.select-date:focus {
-  box-shadow: none;
-  border: none;
-  background-color: #f6f6f6;
-  font-size: 14px;
-  height: 30px;
-  width: 200px;
-}
+ 
+ 
+   
 /* AG Grid Container Styles */
 .ag-grid-container {
   width: 100%;
@@ -369,4 +78,63 @@ input[type="number"] {
 
 ::ng-deep .primary-checkbox.ant-checkbox-wrapper .ant-checkbox-checked::after {
   border-color: #0038ba;
+}
+
+/* Hide the animated border effect on checked checkboxes */
+::ng-deep .select-checkmark .ant-checkbox-checked::after {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+::ng-deep .select-checkmark .ant-checkbox::after {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* Show checkbox hover border when hovering over the order item container */
+::ng-deep .select-checkmark:hover .ant-checkbox .ant-checkbox-inner {
+  border-color: #0038ba !important;
+}
+
+::ng-deep .select-checkmark:hover .ant-checkbox-wrapper:hover .ant-checkbox-inner {
+  border-color: #0038ba !important;
+}
+
+/* Load Sheet AG Grid Borders - Match table borders */
+::ng-deep .ag-theme-quartz .ag-cell,
+::ng-deep .ag-theme-quartz .ag-header-cell {
+  border-right: 1px solid #dee2e6 !important;
+  border-bottom: 1px solid #dee2e6 !important;
+}
+
+::ng-deep .dark .ag-theme-quartz .ag-cell,
+::ng-deep .dark .ag-theme-quartz .ag-header-cell {
+  border-right: 1px solid #333333 !important;
+  border-bottom: 1px solid #333333 !important;
+}
+
+::ng-deep .ag-theme-quartz .ag-header-cell {
+  border-top: 1px solid #dee2e6 !important;
+}
+
+::ng-deep .dark .ag-theme-quartz .ag-header-cell {
+  border-top: 1px solid #333333 !important;
+}
+
+::ng-deep .ag-theme-quartz .ag-pinned-left-cols-container .ag-cell,
+::ng-deep .ag-theme-quartz .ag-pinned-left-header .ag-header-cell {
+  border-right: 1px solid #dee2e6 !important;
+}
+
+::ng-deep .dark .ag-theme-quartz .ag-pinned-left-cols-container .ag-cell,
+::ng-deep .dark .ag-theme-quartz .ag-pinned-left-header .ag-header-cell {
+  border-right: 1px solid #333333 !important;
+}
+
+::ng-deep .ag-theme-quartz .ag-root-wrapper {
+  border: 1px solid #dee2e6 !important;
+}
+
+::ng-deep .dark .ag-theme-quartz .ag-root-wrapper {
+  border: 1px solid #333333 !important;
 }

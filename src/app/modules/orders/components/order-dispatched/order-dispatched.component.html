@@ -130,10 +130,10 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 1,
-            'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 1 && isTabVisited(1),
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 1,
+            'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 1 && isTabVisited(1),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 1 && !isTabVisited(1)
-          }" (click)="onTabClick(1)" [disabled]="!isTabVisited(1) && currentTab !== 1" role="tab"
+          }" [disabled]="true" role="tab"
           aria-selected="currentTab === 1" id="pills-home-tab">
           <span class="block" [ngClass]="{
               'font-semibold text-primary dark:text-neutral-300': currentTab === 1,
@@ -166,10 +166,10 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 2,
-            'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 2 && isTabVisited(2),
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 2,
+            'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 2 && isTabVisited(2),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 2 && !isTabVisited(2)
-          }" (click)="onTabClick(2)" [disabled]="!isTabVisited(2) && currentTab !== 2" role="tab"
+          }" [disabled]="true" role="tab"
           aria-selected="currentTab === 2" id="pills-orders-tab">
           <span class="block" [ngClass]="{
               'font-semibold text-primary dark:text-neutral-300': currentTab === 2,
@@ -206,10 +206,10 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 3,
-            'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 3 && isTabVisited(3),
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 3,
+            'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 3 && isTabVisited(3),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 3 && !isTabVisited(3)
-          }" (click)="onTabClick(3)" [disabled]="!isTabVisited(3) && currentTab !== 3" role="tab"
+          }" [disabled]="true" role="tab"
           aria-selected="currentTab === 3" id="pills-contact-tab">
           <span class="block" [ngClass]="{
               'font-semibold text-primary dark:text-neutral-300': currentTab === 3,
@@ -242,10 +242,10 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 4,
-            'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 4 && isTabVisited(4),
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 4,
+            'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 4 && isTabVisited(4),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 4 && !isTabVisited(4)
-          }" (click)="onTabClick(4)" [disabled]="!isTabVisited(4) && currentTab !== 4" role="tab"
+          }" [disabled]="true" role="tab"
           aria-selected="currentTab === 4" id="pills-load-tab">
           <span class="block" [ngClass]="{
               'font-semibold text-primary dark:text-neutral-300': currentTab === 4,
@@ -278,10 +278,10 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 5,
-            'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 5 && isTabVisited(5),
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 5,
+            'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 5 && isTabVisited(5),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 5 && !isTabVisited(5)
-          }" (click)="onTabClick(5)" [disabled]="!isTabVisited(5) && currentTab !== 5" role="tab"
+          }" [disabled]="true" role="tab"
           aria-selected="currentTab === 5" id="pills-final-tab">
           <span class="block" [ngClass]="{
               'font-semibold text-primary dark:text-neutral-300': currentTab === 5,

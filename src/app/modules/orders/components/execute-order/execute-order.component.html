@@ -1,387 +1,3 @@
-<div
-  class="modal fade"
-  id="billsModalCounterSale"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="billsModalCounterSaleLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="billsModalCounterSaleLabel">
-          Print bill for this order<span></span>
-        </h5>
-        <button
-          type="button"
-          id="close-bills"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <!-- <div class="row">
-          <div class="col-auto" style="padding-top:6px;font-size:14px">Select Date</div>
-          <div class="col"> <input type="date" id="invoice-date" [(ngModel)]="invoiceDate"
-              class="form-control select-date" name="invoice-date" placeholder="">
-          </div>
-          <div class="col-12">
-            <hr>
-          </div>
-        </div> -->
-        <div class="row">
-          <div class="col-12">
-            <h3 class="heading3">Select paper size for print</h3>
-          </div>
-        </div>
-        <div class="row print-icon-div pb-0">
-          <div class="col-6 pl-0">
-            <a (click)="getBills('A4')"
-              ><img class="print-icon" src="assets/images/a4.svg" alt="" />
-              <strong>A4 Portrait Paper</strong></a
-            >
-          </div>
-          <div class="col-6 pr-0">
-            <a (click)="getBills('A5')"
-              ><img class="print-icon" src="assets/images/a5.svg" alt="" />
-              <strong>A5 Landscape Paper</strong></a
-            >
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Hold Order -->
-<div
-  class="modal fade"
-  id="order-hold-model"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="holdOrderModalLabel">
-          Product <span> Detail</span>
-        </h5>
-        <button
-          type="button"
-          class="close dont-close-products"
-          data-dismiss="modal"
-          (click)="closeHoldOrderModal($event)"
-          aria-label="Close"
-        >
-          <span class="dont-close-products" aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body AddDetailPR">
-        <div class="row">
-          <div class="col-md-4 pt-7 mb-15">Hold Reason:</div>
-          <div class="col-md-8 mb-15">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Reason"
-              required
-              [(ngModel)]="holdOrderParams.hold_reason"
-              style="font-size: 13px"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer border-0" style="background-color: #f6f6f6">
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="holdOrder($event)"
-          aria-label="Close"
-        >
-          Save
-        </button>
-        <button
-          type="button"
-          id="close-hold-model"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          (click)="closeHoldOrderModal($event)"
-          aria-label="Close"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Cancel Order -->
-<div
-  class="modal fade"
-  id="order-del"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="orderLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top-borderRed">
-      <div class="modal-header">
-        <h5 class="modal-title" id="orderLabel">Cancel Order <span></span></h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="col-md-12">
-          <p>Are you sure you want to cancel the order?</p>
-        </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button
-          *ngIf="currentTab === 1"
-          type="button"
-          class="btn btn-primary"
-          (click)="cancelOrder()"
-        >
-          Yes
-        </button>
-        <button
-          *ngIf="currentTab === 2"
-          type="button"
-          class="btn btn-primary"
-          (click)="cancelSpotSale()"
-        >
-          Yes
-        </button>
-        <button
-          type="submit"
-          id="close-del"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          No
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Complete Execution -->
-<div
-  class="modal fade"
-  id="order-complete"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="orderCompleteLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="orderLabel">
-          Complete Execution <span></span>
-        </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="col-md-12">
-          <p>Are you sure you want to Mark the order as Completed?</p>
-        </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button type="button" class="btn btn-primary" (click)="markCompelet()">
-          Yes
-        </button>
-        <button
-          type="submit"
-          id="close-complete"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          No
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
-<button
-  hidden
-  data-target="#order-complete"
-  data-toggle="modal"
-  id="show-complete"
->
-  show complete
-</button>
-
-<!-- Add Expense -->
-<div
-  class="modal fade"
-  id="expenseModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="expenseLabel"
-  aria-hidden="true"
->
-  <div
-    class="modal-dialog modal-dialog-centered"
-    style="max-width: 850px"
-    role="document"
-  >
-    <div class="modal-content top-borderBlue">
-      <div class="modal-header">
-        <h5 class="modal-title" id="expnseLabel">Add <span>Expense</span></h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div *ngIf="finalLoad" class="modal-body">
-        <div class="row mb-20">
-          <div class="col-md-4 pr-0">
-            <label class="font12 mb-5">Expense Type</label>
-            <div class="form-s2 focused" data-select2-id="39">
-              <select
-                class="form-control formselect expense_id select2-hidden-accessible"
-                #expenseType
-                id="expense_type"
-                placeholder="Expense Type"
-                style="width: 100%; font-size: 12px"
-                tabindex="-1"
-                aria-hidden="true"
-                value=""
-              >
-                <option value="" disabled selected>Select Expense Type</option>
-                <option
-                  *ngFor="let expType of finalLoad?.expense_types"
-                  [value]="expType.id"
-                >
-                  {{ expType.name }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div class="col-md-3 pr-0">
-            <div class="form-group focused">
-              <label class="control-label">Amount</label>
-              <input
-                type="number"
-                id="expense-amount"
-                (keydown)="isNumber($event)"
-                #expenseAmount
-                class="form-control expense_amount"
-                placeholder=""
-              />
-            </div>
-          </div>
-          <div class="col-2" style="padding-top: 29px">
-            <button
-              type="button"
-              (click)="addExpense(expenseType, expenseAmount)"
-              class="btn btn-primary add_expense_btn"
-            >
-              Add
-            </button>
-          </div>
-        </div>
-        <div class="expense_table">
-          <div
-            id="expenseAddedTable_wrapper"
-            class="dataTables_wrapper dt-bootstrap4 no-footer"
-          >
-            <div class="row">
-              <div class="col-12">
-                <table
-                  *ngIf="!isExpenseAdded"
-                  class="table"
-                  datatable
-                  [dtOptions]="dtOPtions"
-                  id="expenseAddedTable"
-                  style="width: 100%"
-                  role="grid"
-                  aria-describedby="expenseAddedTable_info"
-                >
-                  <thead>
-                    <tr role="row">
-                      <th>Expense Type</th>
-                      <th>Amount</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let expense of finalLoad?.expense_detail">
-                      <td>{{ getExpense(expense.expense_type) }}</td>
-                      <td>{{ expense.amount }}</td>
-                      <td>
-                        <button
-                          class="btn btn-default red-bg mb-0 remove_expense"
-                          [id]="expense.type"
-                          (click)="removeExpense(expense.expense_type)"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div
-                  *ngIf="isExpenseAdded"
-                  class="col-md-12"
-                  style="text-align: center; padding: 30px"
-                >
-                  <div
-                    class="spinner-border"
-                    style="width: 5rem; height: 5rem; color: #0038ba"
-                    role="status"
-                  >
-                    <span class="sr-only">Loading...</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button type="button" (click)="saveExpense()" class="btn btn-primary">
-          Save
-        </button>
-        <button
-          type="button"
-          id="close-expense"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <app-products-drawer
   *ngIf="showProducts"
@@ -954,62 +570,64 @@
             role="tabpanel"
             aria-labelledby="pills-home-tab"
           >
-            <div class="topstats">
-              <div class="row m-0">
-                <div class="col pr-0">
-                  <div class="gary-box">
-                    <strong>Date:</strong>
-                    <span class="execution_date">{{
-                      dispatchSummary?.date || "--"
-                    }}</span>
-                  </div>
-                </div>
-                <div class="col-auto pr-0">
-                  <div class="gary-box min-w">
-                    <strong>Order Booker:</strong>
-                    <b class="execution_bookers float-right">{{
-                      dispatchSummary?.order_bookers?.join(
-                        ",
-                                            "
-                      ) || "--"
-                    }}</b>
-                  </div>
-                </div>
-                <div class="col-auto pr-0">
-                  <div class="gary-box min-w">
-                    <strong>Territory:</strong>
-                    <span class="execution_territories">{{
-                      dispatchSummary?.territories?.join(
-                        ",
-                                            "
-                      ) || "--"
-                    }}</span>
-                  </div>
-                </div>
-                <div class="col pr-0">
-                  <div class="gary-box">
-                    <strong>Total Outlets:</strong>
-                    <span class="execution_order">{{
-                      dispatchSummary?.total_outlets || "--"
-                    }}</span>
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="gary-box" style="min-width: 200px">
-                    <strong>Total Amount:</strong>
-                    <span class="execution_amount"
-                      >Rs.
-                      {{
-                        dispatchSummary?.total_amount || 0 | number: "1.2-2"
-                      }}</span
-                    >
-                  </div>
-                </div>
-              </div>
-            </div>
 
-            <div class="row m-0 grayTopborder">
-              <div id="orderList-id" class="col-4 p-0">
+          <div class="text-[13px] pt-3">
+            <div class="flex gap-3">
+              <!-- Date -->
+       
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="text-gray-900 dark:text-gray-300">Date:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ dispatchSummary?.date || "--" }}
+                  </span>
+                </div>
+              
+          
+              <!-- Order Booker -->
+              
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Order Booker:</strong>
+                  <b class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ dispatchSummary?.order_bookers?.join(', ') || "--" }}
+                  </b>
+                </div>
+              
+          
+              <!-- Territory -->
+              
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Territory:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ dispatchSummary?.territories?.join(', ') || "--" }}
+                  </span>
+                </div>
+              
+          
+              <!-- Total Outlets -->
+              
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Total Outlets:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ dispatchSummary?.total_outlets || "--" }}
+                  </span>
+                </div>
+              
+          
+              <!-- Total Amount -->
+              
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Total Amount:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    Rs. {{ dispatchSummary?.total_amount || 0 | number: "1.2-2" }}
+                  </span>
+                </div>
+              
+            </div>
+          </div>
+          
+
+            <div class="flex">
+              <div id="orderList-id" class="w-[300px] shrink-0">
                 <app-retailer-sub-list
                   [loading]="loading || savingOrder"
                   [currentTab]="currentTab"
@@ -1019,8 +637,8 @@
                 ></app-retailer-sub-list>
               </div>
 
-              <div class="col p-0">
-                <div class="rightHeight">
+              <div class="flex-1 pl-3 pr-2">
+                <div class="h-[calc(100vh-249px)] overflow-y-auto">
                   <app-order-items-list
                     *ngIf="!savingOrder && selectedRetailer"
                     [currentTab]="currentTab"
@@ -1056,20 +674,10 @@
                   <div class="col-12" *ngIf="savingOrder">
                     <app-loader-white></app-loader-white>
                   </div>
-                  <div
-                    class="no-content"
-                    *ngIf="!savingOrder && !selectedRetailer"
-                  >
-                    <div
-                      class="no-content-container"
-                      style="
-                        margin: auto;
-                        display: table;
-                        text-align: center;
-                        color: #b7b7b7;
-                      "
-                    >
-                      <img src="assets/images/select order-icon.svg" alt="" />
+                  <div *ngIf="!savingOrder && !selectedRetailer" class="no-content w-full h-[calc(100vh-204px)] flex">
+                    <div class="no-content-container m-auto table text-center text-[#b7b7b7] dark:text-gray-500">
+                      <img src="assets/images/select order-icon.svg" alt=""
+                        class="w-[70px] h-[70px] mx-auto mb-[10px] block dark:invert dark:opacity-70" />
                       <strong>Select order to see details</strong>
                     </div>
                   </div>
@@ -1077,11 +685,11 @@
 
                 <div
                   *ngIf="!savingOrder && selectedRetailer"
-                  class="col-md-12 bottom-act-btn"
+                  class="text-right pt-[15px]"
                 >
                   <button
                     *ngIf="!savingOrder && !isChequeAdded"
-                    class="btn btn-primary float-left mr-2 font13"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 float-left disabled:opacity-50 disabled:cursor-not-allowed"
                     [disabled]="!selectedRetailer"
                     (click)="
                       isCredit = false; isFullyPaymentAdded('Cheque Payment')
@@ -1092,7 +700,7 @@
                   <button
                     *ngIf="!savingOrder && isChequeAdded"
                     [disabled]="!selectedRetailer"
-                    class="btn btn-primary float-left font13 mr-2 red-bg"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-red-600 rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 hover:border-red-700 focus:outline-none transition-colors mr-2 float-left disabled:opacity-50 disabled:cursor-not-allowed"
                     (click)="removeCheque()"
                   >
                     Remove Cheque
@@ -1100,7 +708,7 @@
                   <button
                     *ngIf="!savingOrder && !isCreditAdded"
                     [disabled]="!selectedRetailer"
-                    class="btn btn-primary float-left font13"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 float-left disabled:opacity-50 disabled:cursor-not-allowed"
                     (click)="isCredit = true; isFullyPaymentAdded('Credit')"
                   >
                     Add Credit
@@ -1108,7 +716,7 @@
                   <button
                     *ngIf="!savingOrder && isCreditAdded"
                     [disabled]="!selectedRetailer"
-                    class="btn btn-primary float-left font13 red-bg"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-red-600 rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 hover:border-red-700 focus:outline-none transition-colors mr-2 float-left disabled:opacity-50 disabled:cursor-not-allowed"
                     (click)="removeCredit()"
                   >
                     Remove Credit
@@ -1116,7 +724,7 @@
                   <button
                     *ngIf="!savingOrder"
                     id="open-modal-payment"
-                    style="display: none"
+                    class="hidden"
                     data-toggle="modal"
                     data-target="#exampleModal2"
                   >
@@ -1126,7 +734,7 @@
                   <button
                     [disabled]="savingOrder || !selectedRetailer"
                     (click)="saveExecutionQuantity()"
-                    class="btn btn-primary mr-2 save_order_execution font13"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Save Order
                   </button>
@@ -1136,14 +744,14 @@
                   *ngIf="!savingOrder"
                   data-toggle="modal"
                   data-target="#order-hold-model"
-                  class="btn btn-cancel mr-2 hold_order_btn font13"
+                  class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   > 
                   Hold Order 
                  </button>
 
                   <button
                     [disabled]="savingOrder || !selectedRetailer"
-                    class="btn btn-cancel cancel_order_btn font13"
+                    class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     data-toggle="modal"
                     data-target="#order-del"
                   >
@@ -1162,48 +770,46 @@
             role="tabpanel"
             aria-labelledby="pills-sale-tab"
           >
-            <div class="topstats">
-              <div class="row m-0">
-                <div class="col pr-0">
-                  <div class="gary-box">
-                    <strong>Date:</strong>
-                    <span class="execution_date">{{ spotSaleOrder.date }}</span>
-                  </div>
+            <div class="text-[13px] pt-3">
+              <div class="flex gap-3">
+                <!-- Date -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="text-gray-900 dark:text-gray-300">Date:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ spotSaleOrder.date }}
+                  </span>
                 </div>
-                <div class="col-auto pr-0">
-                  <div class="gary-box min-w">
-                    <strong>Order Booker:</strong>
-                    <b class="execution_bookers float-right">{{
-                      spotSaleOrder.orderBookerName
-                    }}</b>
-                  </div>
+                
+                <!-- Order Booker -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Order Booker:</strong>
+                  <b class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ spotSaleOrder.orderBookerName }}
+                  </b>
                 </div>
-                <div class="col-auto pr-0">
-                  <div class="gary-box min-w">
-                    <strong>Territory:</strong>
-                    <span class="execution_territories">{{
-                      spotSaleOrder.territory
-                    }}</span>
-                  </div>
+                
+                <!-- Territory -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Territory:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ spotSaleOrder.territory }}
+                  </span>
                 </div>
-                <div class="col pr-0">
-                  <div class="gary-box">
-                    <strong>Total Outlets:</strong>
-                    <span class="execution_order">{{
-                      spotSaleOrder.retailers.length
-                    }}</span>
-                  </div>
+                
+                <!-- Total Outlets -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Total Outlets:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ spotSaleOrder.retailers.length }}
+                  </span>
                 </div>
-                <div class="col">
-                  <div class="gary-box" style="min-width: 200px">
-                    <strong>Total Amount:</strong>
-                    <span class="execution_amount"
-                      >Rs.
-                      {{
-                        spotSaleOrder.order_total || 0 | number: "1.2-2"
-                      }}</span
-                    >
-                  </div>
+                
+                <!-- Total Amount -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Total Amount:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    Rs. {{ spotSaleOrder.order_total || 0 | number: "1.2-2" }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -1298,7 +904,7 @@
               </div>
 
               <div class="col p-0">
-                <div class="rightHeight">
+                <div class="h-[calc(100vh-249px)] overflow-y-auto">
                   <app-order-items-list
                     *ngIf="!savingOrder && selectedRetailer"
                     [currentTab]="currentTab"
@@ -1353,11 +959,11 @@
 
                 <div
                   *ngIf="!savingOrder && selectedRetailer"
-                  class="col-md-12 bottom-act-btn"
+                  class="text-right pt-[15px]"
                 >
                   <button
                     *ngIf="!savingOrder && !isChequeAdded"
-                    class="btn btn-primary float-left mr-2 font13"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 float-left disabled:opacity-50 disabled:cursor-not-allowed"
                     (click)="
                       isCredit = false; isFullyPaymentAdded('Cheque Payment')
                     "
@@ -1366,21 +972,21 @@
                   </button>
                   <button
                     *ngIf="!savingOrder && isChequeAdded"
-                    class="btn btn-primary float-left font13 mr-2 red-bg"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-red-600 rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 hover:border-red-700 focus:outline-none transition-colors mr-2 float-left disabled:opacity-50 disabled:cursor-not-allowed"
                     (click)="removeCheque()"
                   >
                     Remove Cheque
                   </button>
                   <button
                     *ngIf="!savingOrder && !isCreditAdded"
-                    class="btn btn-primary float-left font13"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 float-left disabled:opacity-50 disabled:cursor-not-allowed"
                     (click)="isCredit = true; isFullyPaymentAdded('Credit')"
                   >
                     Add Credit
                   </button>
                   <button
                     *ngIf="!savingOrder && isCreditAdded"
-                    class="btn btn-primary float-left font13 red-bg"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-red-600 rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 hover:border-red-700 focus:outline-none transition-colors mr-2 float-left disabled:opacity-50 disabled:cursor-not-allowed"
                     (click)="removeCredit()"
                   >
                     Remove Credit
@@ -1388,7 +994,7 @@
                   <button
                     *ngIf="!savingOrder"
                     id="open-modal-payment"
-                    style="display: none"
+                    class="hidden"
                     data-toggle="modal"
                     data-target="#exampleModal2"
                   >
@@ -1400,14 +1006,14 @@
                       !orderDetails?.items?.length &&
                       !orderDetails?.returned_items?.length
                     "
-                    class="btn btn-primary mr-2 save_order_execution font13"
+                    class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     (click)="saveSpotSaleOrder()"
                   >
                     Save Order
                   </button>
                   <button
                     [disabled]="!orderDetails"
-                    class="btn btn-cancel cancel_order_btn font13"
+                    class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     data-toggle="modal"
                     data-target="#order-del"
                   >
@@ -1532,48 +1138,46 @@
             role="tabpanel"
             aria-labelledby="pills-final-tab"
           >
-            <div class="topstats">
-              <div class="row m-0">
-                <div class="col pr-0">
-                  <div class="gary-box">
-                    <strong>Date:</strong>
-                    <span class="execution_date">{{
-                      finalLoad?.dsr?.executed_date?.split(" ")[0] || "--"
-                    }}</span>
-                  </div>
+            <div class="text-[13px] pt-3">
+              <div class="flex gap-3">
+                <!-- Date -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="text-gray-900 dark:text-gray-300">Date:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ finalLoad?.dsr?.executed_date?.split(" ")[0] || "--" }}
+                  </span>
                 </div>
-                <div class="col-auto pr-0">
-                  <div class="gary-box min-w">
-                    <strong>Order Booker:</strong>
-                    <b class="execution_bookers float-right">{{ "--" }}</b>
-                  </div>
+                
+                <!-- Order Booker -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Order Booker:</strong>
+                  <b class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ "--" }}
+                  </b>
                 </div>
-                <div class="col-auto pr-0">
-                  <div class="gary-box min-w">
-                    <strong>Territory:</strong>
-                    <span class="execution_territories">{{
-                      finalLoad?.dsr?.territory || "--"
-                    }}</span>
-                  </div>
+                
+                <!-- Territory -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Territory:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ finalLoad?.dsr?.territory || "--" }}
+                  </span>
                 </div>
-                <div class="col pr-0">
-                  <div class="gary-box">
-                    <strong>Total Outlets:</strong>
-                    <span class="execution_order">{{
-                      finalLoad?.dsr?.total_orders || "--"
-                    }}</span>
-                  </div>
+                
+                <!-- Total Outlets -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Total Outlets:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    {{ finalLoad?.dsr?.total_orders || "--" }}
+                  </span>
                 </div>
-                <div class="col">
-                  <div class="gary-box" style="min-width: 200px">
-                    <strong>Total Amount:</strong>
-                    <span class="execution_amount"
-                      >Rs.
-                      {{
-                        finalLoad?.dsr?.total_net_amount || 0 | number: "1.2-2"
-                      }}</span
-                    >
-                  </div>
+                
+                <!-- Total Amount -->
+                <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
+                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Total Amount:</strong>
+                  <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
+                    Rs. {{ finalLoad?.dsr?.total_net_amount || 0 | number: "1.2-2" }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -1843,4 +1447,390 @@
   >
     Bill
   </button>
+</div>
+
+
+<div
+  class="modal fade"
+  id="billsModalCounterSale"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="billsModalCounterSaleLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top_border">
+      <div class="modal-header">
+        <h5 class="modal-title" id="billsModalCounterSaleLabel">
+          Print bill for this order<span></span>
+        </h5>
+        <button
+          type="button"
+          id="close-bills"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- <div class="row">
+          <div class="col-auto" style="padding-top:6px;font-size:14px">Select Date</div>
+          <div class="col"> <input type="date" id="invoice-date" [(ngModel)]="invoiceDate"
+              class="form-control select-date" name="invoice-date" placeholder="">
+          </div>
+          <div class="col-12">
+            <hr>
+          </div>
+        </div> -->
+        <div class="row">
+          <div class="col-12">
+            <h3 class="heading3">Select paper size for print</h3>
+          </div>
+        </div>
+        <div class="row print-icon-div pb-0">
+          <div class="col-6 pl-0">
+            <a (click)="getBills('A4')"
+              ><img class="print-icon" src="assets/images/a4.svg" alt="" />
+              <strong>A4 Portrait Paper</strong></a
+            >
+          </div>
+          <div class="col-6 pr-0">
+            <a (click)="getBills('A5')"
+              ><img class="print-icon" src="assets/images/a5.svg" alt="" />
+              <strong>A5 Landscape Paper</strong></a
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Hold Order -->
+<div
+  class="modal fade"
+  id="order-hold-model"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top_border">
+      <div class="modal-header">
+        <h5 class="modal-title" id="holdOrderModalLabel">
+          Product <span> Detail</span>
+        </h5>
+        <button
+          type="button"
+          class="close dont-close-products"
+          data-dismiss="modal"
+          (click)="closeHoldOrderModal($event)"
+          aria-label="Close"
+        >
+          <span class="dont-close-products" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body AddDetailPR">
+        <div class="row">
+          <div class="col-md-4 pt-7 mb-15">Hold Reason:</div>
+          <div class="col-md-8 mb-15">
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Reason"
+              required
+              [(ngModel)]="holdOrderParams.hold_reason"
+              style="font-size: 13px"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0" style="background-color: #f6f6f6">
+        <button
+          type="button"
+          class="btn btn-primary"
+          (click)="holdOrder($event)"
+          aria-label="Close"
+        >
+          Save
+        </button>
+        <button
+          type="button"
+          id="close-hold-model"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          (click)="closeHoldOrderModal($event)"
+          aria-label="Close"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Cancel Order -->
+<div
+  class="modal fade"
+  id="order-del"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="orderLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content top-borderRed">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderLabel">Cancel Order <span></span></h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12">
+          <p>Are you sure you want to cancel the order?</p>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button
+          *ngIf="currentTab === 1"
+          type="button"
+          class="btn btn-primary"
+          (click)="cancelOrder()"
+        >
+          Yes
+        </button>
+        <button
+          *ngIf="currentTab === 2"
+          type="button"
+          class="btn btn-primary"
+          (click)="cancelSpotSale()"
+        >
+          Yes
+        </button>
+        <button
+          type="submit"
+          id="close-del"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Complete Execution -->
+<div
+  class="modal fade"
+  id="order-complete"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="orderCompleteLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="orderLabel">
+          Complete Execution <span></span>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12">
+          <p>Are you sure you want to Mark the order as Completed?</p>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" class="btn btn-primary" (click)="markCompelet()">
+          Yes
+        </button>
+        <button
+          type="submit"
+          id="close-complete"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<button
+  hidden
+  data-target="#order-complete"
+  data-toggle="modal"
+  id="show-complete"
+>
+  show complete
+</button>
+
+<!-- Add Expense -->
+<div
+  class="modal fade"
+  id="expenseModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="expenseLabel"
+  aria-hidden="true"
+>
+  <div
+    class="modal-dialog modal-dialog-centered"
+    style="max-width: 850px"
+    role="document"
+  >
+    <div class="modal-content top-borderBlue">
+      <div class="modal-header">
+        <h5 class="modal-title" id="expnseLabel">Add <span>Expense</span></h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div *ngIf="finalLoad" class="modal-body">
+        <div class="row mb-20">
+          <div class="col-md-4 pr-0">
+            <label class="font12 mb-5">Expense Type</label>
+            <div class="form-s2 focused" data-select2-id="39">
+              <select
+                class="form-control formselect expense_id select2-hidden-accessible"
+                #expenseType
+                id="expense_type"
+                placeholder="Expense Type"
+                style="width: 100%; font-size: 12px"
+                tabindex="-1"
+                aria-hidden="true"
+                value=""
+              >
+                <option value="" disabled selected>Select Expense Type</option>
+                <option
+                  *ngFor="let expType of finalLoad?.expense_types"
+                  [value]="expType.id"
+                >
+                  {{ expType.name }}
+                </option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-3 pr-0">
+            <div class="form-group focused">
+              <label class="control-label">Amount</label>
+              <input
+                type="number"
+                id="expense-amount"
+                (keydown)="isNumber($event)"
+                #expenseAmount
+                class="form-control expense_amount"
+                placeholder=""
+              />
+            </div>
+          </div>
+          <div class="col-2" style="padding-top: 29px">
+            <button
+              type="button"
+              (click)="addExpense(expenseType, expenseAmount)"
+              class="btn btn-primary add_expense_btn"
+            >
+              Add
+            </button>
+          </div>
+        </div>
+        <div class="expense_table">
+          <div
+            id="expenseAddedTable_wrapper"
+            class="dataTables_wrapper dt-bootstrap4 no-footer"
+          >
+            <div class="row">
+              <div class="col-12">
+                <table
+                  *ngIf="!isExpenseAdded"
+                  class="table"
+                  datatable
+                  [dtOptions]="dtOPtions"
+                  id="expenseAddedTable"
+                  style="width: 100%"
+                  role="grid"
+                  aria-describedby="expenseAddedTable_info"
+                >
+                  <thead>
+                    <tr role="row">
+                      <th>Expense Type</th>
+                      <th>Amount</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let expense of finalLoad?.expense_detail">
+                      <td>{{ getExpense(expense.expense_type) }}</td>
+                      <td>{{ expense.amount }}</td>
+                      <td>
+                        <button
+                          class="btn btn-default red-bg mb-0 remove_expense"
+                          [id]="expense.type"
+                          (click)="removeExpense(expense.expense_type)"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div
+                  *ngIf="isExpenseAdded"
+                  class="col-md-12"
+                  style="text-align: center; padding: 30px"
+                >
+                  <div
+                    class="spinner-border"
+                    style="width: 5rem; height: 5rem; color: #0038ba"
+                    role="status"
+                  >
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer border-0">
+        <button type="button" (click)="saveExpense()" class="btn btn-primary">
+          Save
+        </button>
+        <button
+          type="button"
+          id="close-expense"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
 </div>

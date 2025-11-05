@@ -739,6 +739,7 @@ export class OrderDispatchedComponent implements OnInit {
 
   onUpdateOrderAllocation(order: any): void {
     order.updateLoading = true;
+    this.cdr.detectChanges();
     this.orderService
       .updateLoadOrderItemAllocation(
         this.assignmentId,
@@ -749,6 +750,7 @@ export class OrderDispatchedComponent implements OnInit {
       .subscribe(
         (x) => {
           order.updateLoading = false;
+          this.cdr.detectChanges();
           const toast: Toaster = {
             type: 'success',
             message: 'Allocated Quantity Updated',
@@ -760,6 +762,7 @@ export class OrderDispatchedComponent implements OnInit {
         },
         (err) => {
           order.updateLoading = false;
+          this.cdr.detectChanges();
           const toast: Toaster = {
             type: 'error',
             message: 'Failed to update allocation. Please try again',

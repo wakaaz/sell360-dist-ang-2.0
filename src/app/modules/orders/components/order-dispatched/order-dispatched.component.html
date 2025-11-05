@@ -38,7 +38,7 @@
       <!-- Content - Orders Table -->
       <div class="flex-1 overflow-auto p-4 bg-[#f6f6f6] dark:bg-darkprimary">
         <div *ngIf="ordersList.length > 0"
-          class="bg-white dark:bg-[#1f1f1f] rounded-lg border border-gray-200 dark:border-[#333333] overflow-hidden">
+          class="bg-white dark:bg-[#252525] rounded-lg border border-gray-200 dark:border-[#333333] overflow-hidden">
           <!-- Table -->
           <div class="overflow-x-auto">
             <table class="w-full text-sm">
@@ -76,8 +76,11 @@
                     }}</td>
                   <td class="px-4 py-3">
                     <button (click)="onUpdateOrderAllocation(order)" [disabled]="order.updateLoading"
-                      class="bg-transparent h-auto leading-none py-[6px] px-[6px]  bg-[#404040] text-[13px] border border-[#404040] hover:bg-primary text-white hover:text-white font-primary rounded-[5px] mb-1 ml-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dont-close-orders">
-                      <span *ngIf="order.updateLoading" class="inline-block mr-1">⏳</span>
+                      class="bg-transparent h-auto leading-none py-[6px] px-[6px] bg-white dark:bg-[#404040] text-[13px] border border-primary dark:border-[#404040] hover:bg-primary dark:hover:bg-primary text-primary dark:text-white hover:text-white font-primary rounded-[5px] mb-1 ml-0.5 disabled:opacity-50 disabled:cursor-not-allowed transition-colors dont-close-orders flex items-center justify-center">
+                      <svg *ngIf="order.updateLoading" class="animate-spin h-4 w-4 text-primary dark:text-neutral-300 mr-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
                       {{ order.updateLoading ? 'Updating...' : 'Update' }}
                     </button>
                   </td>
@@ -119,7 +122,7 @@
 
 <div class="container mx-auto px-4 pb-6 mt-4">
   <div
-    class="bg-white px-1 pb-2 border-1 border-t-2 border-t-primary border-gray-200 dark:bg-[#1f1f1f] dark:border-[#333333] dark:border-t-primary rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
+    class="bg-white px-1 pb-2 border-1 border-t-2 border-t-primary border-gray-200 dark:bg-[#252525] dark:border-[#333333] dark:border-t-primary rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
     <!-- Tabs Navigation - Pure Tailwind CSS with Dark Mode -->
     <div class="w-full mb-3 grid grid-cols-5" role="tablist" id="pills-tab">
       <!-- Stock Allocation Tab -->
@@ -127,17 +130,17 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 1,
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 1,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 1 && isTabVisited(1),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 1 && !isTabVisited(1)
           }" (click)="onTabClick(1)" [disabled]="!isTabVisited(1) && currentTab !== 1" role="tab"
           aria-selected="currentTab === 1" id="pills-home-tab">
           <span class="block" [ngClass]="{
-              'font-semibold text-primary dark:text-neutral-200': currentTab === 1,
+              'font-semibold text-primary dark:text-neutral-300': currentTab === 1,
               'font-normal': currentTab !== 1
             }">Stock Allocation</span>
           <span
-            class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#1f1f1f] flex items-center justify-center transition-all duration-200 z-[5]"
+            class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#252525] flex items-center justify-center transition-all duration-200 z-[5]"
             [ngClass]="{
               'bg-gradient-to-r from-[#1e54d3] to-primary': currentTab === 1,
               'bg-gray-300 dark:bg-[#808080] dark:border-[#2a2a2a]': currentTab !== 1
@@ -151,7 +154,7 @@
         </button>
         <!-- Active tab bottom border (blue) -->
         <div *ngIf="currentTab === 1"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
         <div *ngIf="currentTab !== 1"
           class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
@@ -163,17 +166,17 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 2,
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 2,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 2 && isTabVisited(2),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 2 && !isTabVisited(2)
           }" (click)="onTabClick(2)" [disabled]="!isTabVisited(2) && currentTab !== 2" role="tab"
           aria-selected="currentTab === 2" id="pills-orders-tab">
           <span class="block" [ngClass]="{
-              'font-semibold text-primary dark:text-primary': currentTab === 2,
+              'font-semibold text-primary dark:text-neutral-300': currentTab === 2,
               'font-normal': currentTab !== 2
             }">Orders</span>
           <span
-            class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#1f1f1f] flex items-center justify-center transition-all duration-200 z-[5]"
+            class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#252525] flex items-center justify-center transition-all duration-200 z-[5]"
             [ngClass]="{
               'bg-gradient-to-r from-[#1e54d3] to-primary': currentTab === 2,
               'bg-gray-300 dark:bg-[#808080] dark:border-[#2a2a2a]': currentTab !== 2
@@ -191,7 +194,7 @@
         </button>
         <!-- Active tab bottom border (blue) -->
         <div *ngIf="currentTab === 2"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
         <div *ngIf="currentTab !== 2"
           class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
@@ -203,17 +206,17 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 3,
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 3,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 3 && isTabVisited(3),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 3 && !isTabVisited(3)
           }" (click)="onTabClick(3)" [disabled]="!isTabVisited(3) && currentTab !== 3" role="tab"
           aria-selected="currentTab === 3" id="pills-contact-tab">
           <span class="block" [ngClass]="{
-              'font-semibold text-primary dark:text-primary': currentTab === 3,
+              'font-semibold text-primary dark:text-neutral-300': currentTab === 3,
               'font-normal': currentTab !== 3
             }">Credit</span>
           <span
-            class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#1f1f1f] flex items-center justify-center transition-all duration-200 z-[5]"
+            class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#252525] flex items-center justify-center transition-all duration-200 z-[5]"
             [ngClass]="{
               'bg-gradient-to-r from-[#1e54d3] to-primary': currentTab === 3,
               'bg-gray-300 dark:bg-[#808080] dark:border-[#2a2a2a]': currentTab !== 3
@@ -227,7 +230,7 @@
         </button>
         <!-- Active tab bottom border (blue) -->
         <div *ngIf="currentTab === 3"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
         <div *ngIf="currentTab !== 3"
           class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
@@ -239,17 +242,17 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 4,
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 4,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 4 && isTabVisited(4),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 4 && !isTabVisited(4)
           }" (click)="onTabClick(4)" [disabled]="!isTabVisited(4) && currentTab !== 4" role="tab"
           aria-selected="currentTab === 4" id="pills-load-tab">
           <span class="block" [ngClass]="{
-              'font-semibold text-primary dark:text-primary': currentTab === 4,
+              'font-semibold text-primary dark:text-neutral-300': currentTab === 4,
               'font-normal': currentTab !== 4
             }">Load</span>
           <span
-            class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#1f1f1f] flex items-center justify-center transition-all duration-200 z-[5]"
+            class="absolute left-1/2 -translate-x-1/2 w-[38px] h-[38px] rounded-full border-2 border-white dark:border-[#252525] flex items-center justify-center transition-all duration-200 z-[5]"
             [ngClass]="{
               'bg-gradient-to-r from-[#1e54d3] to-primary': currentTab === 4,
               'bg-gray-300 dark:bg-[#808080] dark:border-[#2a2a2a]': currentTab !== 4
@@ -263,7 +266,7 @@
         </button>
         <!-- Active tab bottom border (blue) -->
         <div *ngIf="currentTab === 4"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
         <div *ngIf="currentTab !== 4"
           class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
@@ -275,13 +278,13 @@
         <button type="button"
           class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
           [ngClass]="{
-            'bg-white dark:bg-[#1f1f1f] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 5,
+            'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 5,
             'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 5 && isTabVisited(5),
             'text-gray-300 dark:text-[#808080] cursor-not-allowed': currentTab !== 5 && !isTabVisited(5)
           }" (click)="onTabClick(5)" [disabled]="!isTabVisited(5) && currentTab !== 5" role="tab"
           aria-selected="currentTab === 5" id="pills-final-tab">
           <span class="block" [ngClass]="{
-              'font-semibold text-primary dark:text-primary': currentTab === 5,
+              'font-semibold text-primary dark:text-neutral-300': currentTab === 5,
               'font-normal': currentTab !== 5
             }">Final</span>
           <span
@@ -300,7 +303,7 @@
         </button>
         <!-- Active tab bottom border (blue) -->
         <div *ngIf="currentTab === 5"
-          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary transition-all duration-200"></div>
+          class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"></div>
         <!-- Inactive tab bottom border (gray) -->
         <div *ngIf="currentTab !== 5"
           class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200">
@@ -313,7 +316,7 @@
     <div *ngIf="currentTab === 1" class="tab-pane p-0 pt-5 tab_M active show" id="pills-contact" role="tabpanel"
       aria-labelledby="pills-contact-tab">
       <div>
-        <div class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative">
+        <div class="bg-white dark:bg-[#141414] dark:border-[#333333] border p-0 rounded-lg relative">
           <!-- Header -->
           <div
             class="flex justify-between items-center text-secondary rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative">
@@ -421,7 +424,7 @@
               <div *ngIf="!savingOrder && !selectedRetailer" class="no-content w-full h-[calc(100vh-204px)] flex">
                 <div class="no-content-container m-auto table text-center text-[#b7b7b7]">
                   <img src="assets/images/select order-icon.svg" alt=""
-                    class="w-[70px] h-[70px] mx-auto mb-[10px] block" />
+                    class="w-[70px] h-[70px] mx-auto mb-[10px] block dark:invert dark:opacity-70" />
                   <strong>Select order to see details</strong>
                 </div>
               </div>
@@ -466,18 +469,18 @@
         <div class="flex">
           <div *ngIf="!loading" id="orderList-id2" class="w-[300px] shrink-0">
             <div
-              class="w-full h-[calc(100vh-200px)] flex flex-col bg-[#f6f6f6] border-l border-b border-[#e4e4e4] rounded-lg">
+              class="w-full h-[calc(100vh-200px)] flex flex-col bg-[#f6f6f6] dark:bg-[#171717] border-l border-b border-[#e4e4e4] dark:border-[#000000] rounded-lg">
               <div
-                class="w-inherit px-[15px] pt-[15px] pb-[10px] border-b border-[#e5e5e5] bg-[linear-gradient(0deg,#f6f6f6,#fff_50%)]">
+                class="w-inherit px-[15px] pt-[15px] pb-[10px] border-b border-[#e5e5e5] dark:border-[#000000] bg-[linear-gradient(0deg,#f6f6f6,#fff_50%)] dark:bg-[linear-gradient(0deg,#171717,#1f1f1f_100%)]">
 
                 <div class="flex justify-between items-center mb-3">
                   <h2
-                    class="relative flex items-start text-base pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[3px] font-primary font-medium">
+                    class="relative flex items-start text-base pl-0 mb-0 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[3px] font-primary font-medium">
                     Orders &nbsp;<span class="font-light">List</span>
                   </h2>
 
                   <div>
-                    <label class="text-[13px] !pr-0" nz-checkbox [(ngModel)]="isAllSelected"
+                    <label class="text-[13px] dark:text-neutral-300 !pr-0" nz-checkbox [(ngModel)]="isAllSelected"
                       (ngModelChange)="allSelected()" id="all-s">
                       Select All
                     </label>
@@ -492,7 +495,7 @@
                     </svg>
                   </div>
                   <input nz-input type="text"
-                    class="w-full pl-8 pr-3 py-1.5 border border-[#ececec] dark:border-[#1d1d1d] rounded-lg bg-[#f6f6f6] dark:bg-[#1d1d1d] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
+                    class="w-full pl-8 pr-3 py-1.5 border border-[#ececec] dark:border-[#2c2c2c] rounded-lg bg-[#f6f6f6] dark:bg-[#222222] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
                     placeholder="Search" />
                 </div>
               </div>
@@ -500,21 +503,21 @@
               <div class="flex-1 py-[10px] px-[8px] text-sm overflow-y-auto overflow-x-hidden h-[calc(100vh-300px)]">
                 <div *ngFor="let order of ordersDispList; let ind = index"
                   [ngClass]="order.isSelected ? 'shadow-[0_0_15px_#0000002e] scale-100 z-[3]' : ''"
-                  class="w-full text-[12px] bg-white rounded-lg px-[10px] py-[6px] mb-1 border border-[#eaeaea] relative transition-all duration-200 transform scale-[0.97] cursor-pointer hover:shadow-[0_0_15px_#0000002e] hover:scale-100 hover:z-[3] select-checkmark">
+                  class="w-full text-[12px] bg-white dark:bg-[#222222] rounded-lg px-[10px] py-[6px] mb-1 border border-[#eaeaea] dark:border-[#2c2c2c] relative transition-all duration-200 transform scale-[0.97] cursor-pointer hover:shadow-[0_0_15px_#0000002e] dark:hover:shadow-[0_0_15px_#0000004d] hover:scale-100 hover:z-[3] select-checkmark">
                   <div
-                    class="font-[Poppins,sans-serif] leading-none text-[42px] font-extrabold pt-0 text-[#ececec] absolute right-[80px] top-[7px]">
+                    class="font-[Poppins,sans-serif] leading-none text-[42px] font-extrabold pt-0 text-[#ececec] dark:text-neutral-700 absolute right-[80px] top-[7px] opacity-70 z-[-1]">
                     {{ ind + 1 }}
                   </div>
                   <div class="flex flex-wrap">
                     <div class="w-8/12 pr-0">
-                      <strong class="text-gray-800 dark:text-white font-medium text-sm">{{
+                      <strong class="text-gray-800 dark:text-neutral-200 font-medium text-sm">{{
                         order.retailer_name
                         }}</strong>
-                      <span class="block text-neutral-700">
+                      <span class="block text-neutral-700 dark:text-neutral-300">
                         <strong>Order Booker:</strong>
                         {{ order.emp_name }}
                       </span>
-                      <span class="flex items-center text-neutral-700">
+                      <span class="flex items-center text-neutral-700 dark:text-neutral-300">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                           class="w-3 h-3 mr-1 text-gray-400" viewBox="0 0 16 16">
                           <path
@@ -523,11 +526,11 @@
                         {{ order.retailer_address }}
                       </span>
                     </div>
-                    <div class="w-4/12 pl-0 text-right text-neutral-700">
+                    <div class="w-4/12 pl-0 text-right text-neutral-700 dark:text-neutral-300">
                       <label nz-checkbox [(ngModel)]="order.isSelected" (ngModelChange)="retailerSelected(order)"
                         [id]="'ord' + ind" class="block mb-1 w-[20px] h-[20px] ml-auto mr-0"></label>
                       Total Sales
-                      <span class="block font-[Rationale,sans-serif] text-[16.5px] leading-none text-[#0038ba]">
+                      <span class="block font-[Rationale,sans-serif] text-[16.5px] leading-none text-[#0038ba] dark:text-neutral-200">
                         Rs. {{ order.total_amount_after_tax || 0 | number: "1.2-2" }}
                       </span>
                     </div>
@@ -539,12 +542,12 @@
 
           <div *ngIf="!loading" class="flex-1 pl-3 pr-2">
             <div class="rightHeight h-[calc(100vh-200px)] overflow-y-auto pt-4">
-              <div class="shadow-none border-b border-[#e2e2e2] mb-[15px]">
+              <div class="shadow-none border-b border-[#e2e2e2] dark:border-[#444444] mb-[15px]">
                 <div class="flex border-none" id="nav-tab" role="tablist">
-                  <a class="nav-item px-[26px] py-[10px] h-[42px] bg-white text-sm font-semibold tracking-[1px] cursor-pointer transition-colors duration-200"
+                  <a class="nav-item px-[26px] py-[10px] h-[42px] bg-white dark:!bg-transparent text-sm font-semibold tracking-[1px] cursor-pointer transition-colors duration-200"
                     [ngClass]="{
-                    'text-[#282828] border-b border-[#e2e2e2] hover:!text-[#0038ba]': cont.loadNumber !== currentLoadContent.loadNumber,
-                    'text-[#0038ba] border-b-2 border-[#0038ba]': cont.loadNumber === currentLoadContent.loadNumber
+                    'text-[#282828] dark:text-neutral-300 border-b border-[#e2e2e2] dark:border-[#444444] hover:!text-[#0038ba] dark:hover:!text-neutral-200': cont.loadNumber !== currentLoadContent.loadNumber,
+                    'text-[#0038ba] dark:text-neutral-200 border-b-2 border-[#0038ba] dark:border-[#a0a0a0]': cont.loadNumber === currentLoadContent.loadNumber
                   }" [id]="cont.loadNumber" (click)="changeCurrentLoad(cont.loadNumber)"
                     *ngFor="let cont of load?.content; let i = index" id="nav-load1-tab">Load {{ cont.loadNumber }}</a>
                 </div>
@@ -555,47 +558,47 @@
                   aria-labelledby="nav-load1-tab">
                   <div class="w-full">
                     <table
-                      class="w-full table-hover dt-responsive nowrap th-boarder text-[#282828] dark:text-neutral-300"
+                      class="w-full table-hover dt-responsive nowrap th-boarder text-[#282828] dark:text-neutral-300 bg-white dark:bg-[#1a1a1a]"
                       style="width: 100%">
-                      <thead class="bg-[#f6f6f6] dark:bg-[#2a2a2a]">
+                      <thead class="bg-[#f6f6f6] dark:bg-[#2d2d2d]">
                         <tr>
                           <th rowspan="2"
-                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px]">
+                            class="font-primary font-medium text-xs text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#000000] align-middle py-[2px] px-[5px]">
                             SN</th>
                           <th rowspan="2"
-                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px]">
+                            class="font-primary font-medium text-xs text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#000000] align-middle py-[2px] px-[5px]">
                             Product Name</th>
                           <th colspan="2"
-                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px] text-center">
+                            class="font-primary font-medium text-xs text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#000000] align-middle py-[2px] px-[5px] text-center">
                             BOX/PIECE
                           </th>
                         </tr>
                         <tr>
                           <th
-                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px] text-center">
+                            class="font-primary font-medium text-xs text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#000000] align-middle py-[2px] px-[5px] text-center">
                             Order QTY</th>
                           <th
-                            class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px] text-center">
+                            class="font-primary font-medium text-xs text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#000000] align-middle py-[2px] px-[5px] text-center">
                             FOC QTY</th>
-                          <!--  <th class="font-primary font-medium text-xs border border-white align-middle py-[2px] px-[5px] text-center">Issued QTY</th> -->
+                          <!--  <th class="font-primary font-medium text-xs text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#000000] align-middle py-[2px] px-[5px] text-center">Issued QTY</th> -->
                         </tr>
                       </thead>
-                      <tbody>
+                      <tbody class="bg-white dark:bg-[#1a1a1a]">
                         <tr *ngFor="
                           let item of currentLoadContent.items; 
                           let i = index
-                        " class="hover:bg-gray-50">
-                          <td class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none">{{
+                        " class="hover:bg-gray-50 dark:hover:bg-[#2d2d2d] bg-white dark:bg-[#1a1a1a] transition-colors">
+                          <td class="text-xs text-gray-900 dark:text-[#e0e0e0] py-[5px] px-[4px] border-t border-[#dee2e6] dark:border-[#333333] align-middle leading-none">{{
                             getItemSKU(item.item_id) }}</td>
-                          <td class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none">{{
+                          <td class="text-xs text-gray-900 dark:text-[#e0e0e0] py-[5px] px-[4px] border-t border-[#dee2e6] dark:border-[#333333] align-middle leading-none">{{
                             getItemName(item.item_id) }}</td>
                           <td
-                            class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none text-center">
+                            class="text-xs text-gray-900 dark:text-[#e0e0e0] py-[5px] px-[4px] border-t border-[#dee2e6] dark:border-[#333333] align-middle leading-none text-center">
                             {{ (+item.actual_qty- +item.foc_qty) | number }}</td>
                           <td
-                            class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none text-center">
+                            class="text-xs text-gray-900 dark:text-[#e0e0e0] py-[5px] px-[4px] border-t border-[#dee2e6] dark:border-[#333333] align-middle leading-none text-center">
                             {{ item.foc_qty | number }}</td>
-                          <!-- <td class="text-xs py-[5px] px-[4px] border-t border-[#dee2e6] align-middle leading-none text-center">{{ item.issued_qty | number }}</td> -->
+                          <!-- <td class="text-xs text-gray-900 dark:text-[#e0e0e0] py-[5px] px-[4px] border-t border-[#dee2e6] dark:border-[#333333] align-middle leading-none text-center">{{ item.issued_qty | number }}</td> -->
                           <!-- <td>
                           <input
                             class="value_input"
@@ -629,7 +632,7 @@
 
           <div class="flex-1 pr-3 pl-2"> 
             <div class="flex items-center justify-between">
-              <h2 class="relative flex items-start text-base pl-0 mb-3 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-12px] before:top-[3px] font-primary font-medium">
+              <h2 class="relative flex items-start text-base pl-0 mb-3 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-12px] before:top-[3px] font-primary font-medium">
                 Load  &nbsp; <span class="font-light"> Sheet</span></h2>
              
 
@@ -674,58 +677,58 @@
           </div>
 
           <div class="w-[370px] shrink-0">
-            <div class="bg-[#f8f8f8] dark:bg-[#1a1a1a] min-h-[calc(100vh-122px)]" *ngIf="finalLoad">
-              <div class="text-[#424242] dark:text-gray-300 px-5 py-[15px] relative shadow-none">
+            <div class="bg-[#f8f8f8] dark:bg-[#1a1a1a] min-h-[calc(100vh-122px)] rounded-lg" *ngIf="finalLoad">
+              <div class="text-[#424242] dark:text-gray-300 px-5 py-[15px] relative shadow-none rounded-lg">
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
-                  <strong class="text-gray-900 dark:text-gray-200">Gross Total:</strong>
-                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md">
+                  <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Gross Total:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
                     finalLoad.summary.total_gross_amount | number: "1.2-2"
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
-                  <strong class="text-gray-900 dark:text-gray-200">Trade Offer:</strong>
-                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md">
+                  <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Trade Offer:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
                     finalLoad.summary.total_trade_offer | number: "1.2-2"
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
-                  <strong class="text-gray-900 dark:text-gray-200">Trade Discount:</strong>
-                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md">
+                  <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Trade Discount:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
                     finalLoad.summary.total_trade_discount
                     | number: "1.2-2"
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
-                  <strong class="text-gray-900 dark:text-gray-200">Special Discount:</strong>
-                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md">
+                  <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Special Discount:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
                     finalLoad.summary.total_special_discount
                     | number: "1.2-2"
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
-                  <strong class="text-gray-900 dark:text-gray-200">Booker Discount:</strong>
-                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md">
+                  <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Booker Discount:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
                     finalLoad.summary.total_booker_discount
                     | number: "1.2-2"
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
-                  <strong class="text-gray-900 dark:text-gray-200">Loyalty Discount:</strong>
-                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md">
+                  <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Loyalty Discount:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
                     finalLoad.summary.total_loyalty_discount
                     | number: "1.2-2"
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
-                  <strong class="text-gray-900 dark:text-gray-200">Total:</strong>
-                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md">
+                  <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Total:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
                     finalLoad.summary.total_gross_amount -
                     finalLoad.summary.total_trade_offer -
                     finalLoad.summary.total_trade_discount -
@@ -736,37 +739,37 @@
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
-                  <strong class="text-gray-900 dark:text-gray-200">Tax:</strong>
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md">
+                  <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Tax:</strong>
                   <span
-                    class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{finalLoad.summary.total_tax_amount
+                    class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{finalLoad.summary.total_tax_amount
                     | number: "1.2-2" }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center text-[#0038ba] dark:text-[#4a9eff]">
-                  <strong>Total Amount Due:</strong>
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md text-[#0038ba] dark:text-neutral-200">
+                  <strong class="font-semibold font-primary">Total Amount Due:</strong>
                   <span class="font-[Rationale,sans-serif] leading-none text-lg">{{
                     finalLoad.summary.total_net_sale | number: "1.2-2"
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center">
-                  <strong class="text-gray-900 dark:text-gray-200">Recovery:</strong>
-                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-gray-200">{{
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md">
+                  <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Recovery:</strong>
+                  <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
                     finalLoad.summary.total_recovery_amount
                     | number: "1.2-2"
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center text-[#0038ba] dark:text-[#4a9eff]">
-                  <strong>Total Issued Amount:</strong>
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md text-[#0038ba] dark:text-neutral-200">
+                  <strong class="font-semibold font-primary">Total Issued Amount:</strong>
                   <span class="font-[Rationale,sans-serif] leading-none text-lg">{{
                     finalLoad.summary.issued_total_price | number: "1.2-2"
                     }}</span>
                 </div>
                 <div
-                  class="bg-white dark:bg-[#1f1f1f] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center text-[#0038ba] dark:text-[#4a9eff]">
-                  <strong>Total Weight:</strong>
+                  class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center  rounded-md text-[#0038ba] dark:text-neutral-200">
+                  <strong class="font-semibold font-primary">Total Weight:</strong>
                   <span class="font-[Rationale,sans-serif] leading-none text-lg">{{finalLoad.summary.total_weight |
                     number: "1.2-2"}}Kg</span>
                 </div>
@@ -775,7 +778,7 @@
                 <div class="flex gap-1.5">
                   <div class="w-1/3">
                     <a (click)="getBookingSheet()"
-                      class="flex flex-col justify-center text-center bg-white dark:bg-[#1f1f1f] text-gray-900 dark:text-white border border-[#0038ba] rounded-[5px] px-1 py-[10px] w-full min-h-[80px] whitespace-normal hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] hover:text-white dark:hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] transition-colors cursor-pointer">
+                      class="flex flex-col justify-center text-center bg-white dark:bg-[#252525] text-gray-900 dark:text-white border border-[#0038ba] rounded-[5px] px-1 py-[10px] w-full min-h-[80px] whitespace-normal hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] hover:text-white dark:hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] transition-colors cursor-pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="w-5 h-5 mx-auto mb-2" viewBox="0 0 16 16">
                         <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1" />
@@ -786,7 +789,7 @@
                   </div>
                   <div class="w-1/3">
                     <a (click)="generateLSPDF()"
-                      class="flex flex-col justify-center text-center bg-white dark:bg-[#1f1f1f] text-gray-900 dark:text-white border border-[#0038ba] rounded-[5px] px-1 py-[10px] w-full min-h-[80px] whitespace-normal hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] hover:text-white dark:hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] transition-colors cursor-pointer">
+                      class="flex flex-col justify-center text-center bg-white dark:bg-[#252525] text-gray-900 dark:text-white border border-[#0038ba] rounded-[5px] px-1 py-[10px] w-full min-h-[80px] whitespace-normal hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] hover:text-white dark:hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] transition-colors cursor-pointer">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="w-5 h-5 mx-auto mb-2" viewBox="0 0 16 16">
                         <path d="M2.5 8a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1" />
@@ -797,7 +800,7 @@
                   </div>
                   <div class="w-1/3">
                     <button
-                      class="flex flex-col justify-center text-center bg-white dark:bg-[#1f1f1f] text-gray-900 dark:text-white border border-[#0038ba] rounded-[5px] px-1 py-[10px] w-full min-h-[80px] whitespace-normal hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] hover:text-white dark:hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] transition-colors cursor-pointer"
+                      class="flex flex-col justify-center text-center bg-white dark:bg-[#252525] text-gray-900 dark:text-white border border-[#0038ba] rounded-[5px] px-1 py-[10px] w-full min-h-[80px] whitespace-normal hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] hover:text-white dark:hover:bg-[linear-gradient(90deg,#1e54d3_0%,#0038ba_100%)] transition-colors cursor-pointer"
                       (click)="showBillsModal = true">
                       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="w-5 h-5 mx-auto mb-2" viewBox="0 0 16 16">
@@ -900,7 +903,7 @@
 <div *ngIf="showCancelOrderModal"
   class="fixed inset-0 bg-black/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-[200] flex items-center justify-center p-4"
   (click)="closeCancelOrderModal($event)">
-  <div class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-red-600"
+  <div class="bg-white dark:bg-[#252525] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-red-600"
     (click)="$event.stopPropagation()">
     <!-- Modal Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
@@ -951,7 +954,7 @@
   (click)="closeBillsModal()"
 >
   <div 
-    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-2xl mx-auto border-t-4 border-t-primary"
+    class="bg-white dark:bg-[#252525] rounded-lg shadow-xl w-full max-w-2xl mx-auto border-t-4 border-t-primary"
     (click)="$event.stopPropagation()"
   >
     <!-- Modal Header -->
@@ -1002,7 +1005,7 @@
         <!-- A4 Option -->
         <button
           (click)="getBills('A4')"
-          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-neutral-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#ffffff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
+          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-neutral-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#ffffff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#252525]"
         >
           <img
             class="w-12 h-12 mb-4 opacity-60 group-hover:opacity-100 transition-opacity grayscale dark:invert dark:grayscale"
@@ -1017,7 +1020,7 @@
         <!-- A5 Option -->
         <button
           (click)="getBills('A5')"
-          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-neutral-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#ffffff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#1f1f1f]"
+          class="group flex flex-col items-center p-6 border border-gray-200 dark:border-neutral-700 rounded-lg hover:border-[#0038ba] dark:hover:border-[#ffffff] hover:shadow-lg transition-all duration-200 bg-white dark:bg-[#252525]"
         >
           <img
             class="w-12 h-12 mb-4 opacity-60 group-hover:opacity-100 transition-opacity grayscale dark:invert dark:grayscale"
@@ -1038,7 +1041,7 @@
   class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
   (click)="closeCreateLoadModal($event)" id="create-load" role="dialog" aria-labelledby="create-loadLabel"
   aria-modal="true">
-  <div class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+  <div class="bg-white dark:bg-[#252525] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
     (click)="$event.stopPropagation()">
     <!-- Modal Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
@@ -1083,7 +1086,7 @@
 <div *ngIf="showHoldOrderModal"
   class="fixed inset-0 bg-black/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-[200] flex items-center justify-center p-4"
   (click)="closeHoldOrderModal($event)">
-  <div class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+  <div class="bg-white dark:bg-[#252525] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
     (click)="$event.stopPropagation()">
     <!-- Modal Header -->
     <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">

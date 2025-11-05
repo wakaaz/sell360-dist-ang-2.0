@@ -866,4 +866,7 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
 .dark .ag-theme-quartz .ag-filter-filter .ag-input-wrapper:before{
   filter: invert();
 }
- 
+.dark .ant-checkbox-inner{
+  background-color: transparent !important;
+  border-color: 1px solid #7b7b7b !important;
+} 

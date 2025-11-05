@@ -83,12 +83,12 @@
 
 <div class="py-3 flex justify-between items-center">
   <h2 *ngIf="orderType === 'dispatch'"
-  class="relative flex items-start text-base pl-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[3px] font-primary font-medium">
+  class="relative flex items-start text-base pl-0 text-secondary dark:text-neutral-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[3px] font-primary font-medium">
   Product &nbsp;<span class="font-light">List</span>
 </h2>
 
 <h2  *ngIf="orderType === 'execution'"
-class="relative flex items-start text-base pl-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[3px] font-primary font-medium">
+class="relative flex items-start text-base pl-0 text-secondary dark:text-neutral-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[3px] font-primary font-medium">
 Orders &nbsp;<span class="font-light">Detail</span>
 </h2>
 
@@ -118,36 +118,36 @@ Orders &nbsp;<span class="font-light">Detail</span>
 
 <div class="w-full">
   <div class="overflow-x-auto rounded-[5px] overflow-hidden">
-    <table class="w-full border-collapse">
+    <table class="w-full border-collapse bg-white dark:bg-[#1a1a1a]">
     <thead>
-        <tr class="bg-gray-100 dark:bg-[#2a2a2a]">
-          <th class="font-primary font-medium w-[200px] text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px] text-left">Product Name</th>
-          <th class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">{{ orderType === "dispatch" ? "Bkd Qty" : "Disp.Qty" }}</th>
-          <th class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">{{ orderType === "dispatch" ? "Dely.Qty" : "Exec.Qty" }}</th>
-          <th class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">T.P.</th>
-          <th class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">GR.Amt</th>
-          <th class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">T.O.</th>
-          <th class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">T.Disc</th>
-          <th class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">Spec.Disc</th>
-          <th *ngIf="permissions?.Secondary_Orders?.extra_discount" class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">B.Disc</th>
-          <th title="General Sales Tax" class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">GST</th>
-          <th title="Advance Income Tax" class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">AIT</th> 
-          <th class="font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">Net Amt</th>
-          <th class="w-[48px] font-primary font-medium text-[12px] border border-white dark:border-transparent align-middle px-[5px] py-[2px]">Action</th>
+        <tr class="bg-gray-100 dark:bg-[#2d2d2d]">
+          <th class="font-primary font-medium w-[200px] text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px] text-left">Product Name</th>
+          <th class="font-primary font-medium text-[12px] text-gray-900 dark:text-neutral-200 border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">{{ orderType === "dispatch" ? "Bkd Qty" : "Disp.Qty" }}</th>
+          <th class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">{{ orderType === "dispatch" ? "Dely.Qty" : "Exec.Qty" }}</th>
+          <th class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">T.P.</th>
+          <th class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">GR.Amt</th>
+          <th class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">T.O.</th>
+          <th class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">T.Disc</th>
+          <th class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">Spec.Disc</th>
+          <th *ngIf="permissions?.Secondary_Orders?.extra_discount" class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">B.Disc</th>
+          <th title="General Sales Tax" class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">GST</th>
+          <th title="Advance Income Tax" class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">AIT</th> 
+          <th class="font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">Net Amt</th>
+          <th class="w-[48px] font-primary font-medium text-[12px] text-gray-900 dark:text-[#e0e0e0] border border-white dark:border-[#333333] align-middle px-[5px] py-[2px]">Action</th>
       </tr>
     </thead>
-      <tbody class="divide-y divide-gray-200 dark:divide-[#333333]">
+      <tbody class="divide-y divide-gray-200 dark:divide-[#333333] bg-white dark:bg-[#1a1a1a]">
       <tr 
         *ngFor="let item of orderDetail?.items; let i = index"
-          [ngClass]="((orderType !== 'execution' && !item.item_quantity_booker) || (orderType === 'execution' && !item.dispatch_qty)) && item.isDeleted ? 'hidden': 'hover:bg-gray-50 dark:hover:bg-[#2a2a2a]'"
-          class="transition-colors"
+          [ngClass]="((orderType !== 'execution' && !item.item_quantity_booker) || (orderType === 'execution' && !item.dispatch_qty)) && item.isDeleted ? 'hidden': 'hover:bg-gray-50 dark:hover:bg-[#2d2d2d]'"
+          class="transition-colors bg-white dark:bg-[#1a1a1a]"
       >
-          <td class="w-[200px] text-[12px] px-[4px] py-[5px] align-middle leading-none">
+          <td class="w-[200px] text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">
           {{ item.item_name }}  
           <!-- ({{item.selectedScheme ?item.selectedScheme.title:''}} id-{{item.scheme_id}}) (slb-id: {{item.slab_id}}) (LDIS:{{item.loyalty_offer_discount_pkr ? (+item.loyalty_offer_discount_pkr *  +item.stockQty | number: "1.2-2"):''}}) -->
         </td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ orderType !== "execution" ? item.item_quantity_booker : item.dispatch_qty || 0 }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ orderType !== "execution" ? item.item_quantity_booker : item.dispatch_qty || 0 }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">
           <input
             type="number"
             (paste)="$event.preventDefault()"
@@ -158,16 +158,16 @@ Orders &nbsp;<span class="font-light">Detail</span>
             (keyup)="setQuantity(item)"
             (keydown)="isNumber($event, 'quantity')"
             [(ngModel)]="item.stockQty"
-              class="px-[2px] m-0 text-[12px] shadow-none h-[22px] w-[52px] border border-[#e2e6ea] dark:border-[#333333] bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:outline-none focus:border-primary rounded-[5px]"
+              class="px-[2px] m-0 text-[12px] shadow-none h-[22px] w-[52px] border border-[#e2e6ea] dark:border-[#333333] bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:outline-none focus:border-primary dark:focus:border-primary rounded-[5px]"
             placeholder="0"
           />
         </td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.item_trade_price | number: "1.2-2" }}</td> 
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ +(item.original_price?item.original_price:item.original_ampunt) * +item.stockQty || 0 | number: "1.2-2" }}</td>
-          <td [ngClass]="item.scheme_quantity_free > 0 ? 'bg-[#05C71F6E]' : ''" class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.scheme_id && item.scheme_type =='bundle_offer' ?  ( (+item.scheme_discount * +item.scheme_bundle_interval) | number: "1.2-2") : +item.stockQty * item.scheme_discount | number: "1.2-2" }} {{item.scheme_quantity_free > 0 ? "("+item.scheme_quantity_free+")":"" }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.trade_discount }} {{ item.slab_discount_type == 'percentage' ? '%':''}} ({{item.trade_discount_pkr * item.stockQty  | number: "1.2-2"}})</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.special_discount * item.stockQty | number: "1.2-2" }}</td>
-          <td *ngIf="permissions?.Secondary_Orders?.extra_discount" class="text-[12px] px-[4px] py-[5px] align-middle leading-none">
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.item_trade_price | number: "1.2-2" }}</td> 
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ +(item.original_price?item.original_price:item.original_ampunt) * +item.stockQty || 0 | number: "1.2-2" }}</td>
+          <td [ngClass]="item.scheme_quantity_free > 0 ? 'bg-[#05C71F6E] dark:bg-[#05C71F4D]' : ''" class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.scheme_id && item.scheme_type =='bundle_offer' ?  ( (+item.scheme_discount * +item.scheme_bundle_interval) | number: "1.2-2") : +item.stockQty * item.scheme_discount | number: "1.2-2" }} {{item.scheme_quantity_free > 0 ? "("+item.scheme_quantity_free+")":"" }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.trade_discount }} {{ item.slab_discount_type == 'percentage' ? '%':''}} ({{item.trade_discount_pkr * item.stockQty  | number: "1.2-2"}})</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.special_discount * item.stockQty | number: "1.2-2" }}</td>
+          <td *ngIf="permissions?.Secondary_Orders?.extra_discount" class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">
           <input
             type="text" 
             (paste)="$event.preventDefault()"
@@ -177,14 +177,14 @@ Orders &nbsp;<span class="font-light">Detail</span>
             [(ngModel)]="item.extra_discount"
             (keyup)="calculateExtraDiscount(item)"
             (keydown)="isNumber($event)"
-              class="px-[2px] m-0 text-[12px] shadow-none h-[22px] w-[52px] border border-[#e2e6ea] dark:border-[#333333] bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:outline-none focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed rounded-[5px]"
+              class="px-[2px] m-0 text-[12px] shadow-none h-[22px] w-[52px] border border-[#e2e6ea] dark:border-[#333333] bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:outline-none focus:border-primary dark:focus:border-primary disabled:opacity-50 disabled:cursor-not-allowed rounded-[5px]"
             placeholder="0"
           />
         </td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.gst_tax_amount_temp || 0 | number: "1.2-2" }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.adv_inc_tax_amount_temp || 0 | number: "1.2-2" }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.total_amount_after_tax || 0 | number: "1.2-2" }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.gst_tax_amount_temp || 0 | number: "1.2-2" }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.adv_inc_tax_amount_temp || 0 | number: "1.2-2" }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.total_amount_after_tax || 0 | number: "1.2-2" }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">
           <button
             *ngIf="!item.isDeleted"
             [disabled]="isChequeAdded || isCreditAdded"
@@ -198,12 +198,12 @@ Orders &nbsp;<span class="font-light">Detail</span>
       </tr>
       <tr
         *ngFor="let item of orderDetail?.returned_items; let ind = index"
-          [ngClass]="!item.item_quantity_booker && item.isDeleted ? 'hidden' : 'hover:bg-gray-50 dark:hover:bg-[#2a2a2a]'"
-          class="transition-colors"
+          [ngClass]="!item.item_quantity_booker && item.isDeleted ? 'hidden' : 'hover:bg-gray-50 dark:hover:bg-[#2d2d2d]'"
+          class="transition-colors bg-white dark:bg-[#1a1a1a]"
         >
-          <td class="w-[200px] text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.item_name }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.dispatch_qty || 0 }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">
+          <td class="w-[200px] text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.item_name }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.dispatch_qty || 0 }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">
           <input
             type="text"
             (paste)="$event.preventDefault()"
@@ -218,12 +218,12 @@ Orders &nbsp;<span class="font-light">Detail</span>
             placeholder="0"
           />
         </td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.item_trade_price | number: "1.2-2" }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.gross_amount || 0 | number: "1.2-2" }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.scheme_discount | number: "1.2-2" }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.trade_discount }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.special_discount * item.stockQty | number: "1.2-2" }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.item_trade_price | number: "1.2-2" }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.gross_amount || 0 | number: "1.2-2" }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.scheme_discount | number: "1.2-2" }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.trade_discount }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.special_discount * item.stockQty | number: "1.2-2" }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">
           <input
             type="text"
             (paste)="$event.preventDefault()"
@@ -237,10 +237,10 @@ Orders &nbsp;<span class="font-light">Detail</span>
             placeholder="0"
           />
         </td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.gst_tax_amount_temp || 0 | number: "1.2-2"}}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.adv_inc_tax_amount_temp || 0 | number: "1.2-2"}}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">{{ item.total_amount_after_tax || 0 | number: "1.2-2" }}</td>
-          <td class="text-[12px] px-[4px] py-[5px] align-middle leading-none">
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.gst_tax_amount_temp || 0 | number: "1.2-2"}}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.adv_inc_tax_amount_temp || 0 | number: "1.2-2"}}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">{{ item.total_amount_after_tax || 0 | number: "1.2-2" }}</td>
+          <td class="text-[12px] text-gray-900 dark:text-[#e0e0e0] px-[4px] py-[5px] align-middle leading-none">
           <button
             *ngIf="!item.isDeleted"
             type="button"
@@ -265,76 +265,76 @@ Orders &nbsp;<span class="font-light">Detail</span>
 
   <div class="flex justify-end gap-4 mt-4">
     <div class="flex-1"></div>
-    <div class="w-[318px] min-h-[173px] text-[13px] px-2 py-[5px]  ml-auto mr-0 bg-[#f7f7f7] dark:bg-[#2a2a2a] rounded-md border border-[#ececec] dark:border-[#333333]">
-      <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Gross Amount:</div>
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ grossAmount | number: "1.2-2" }}</span>
+    <div class="w-[318px] min-h-[173px] text-[13px] px-2 py-[5px]  ml-auto mr-0 bg-[#f7f7f7] dark:bg-[#2d2d2d] rounded-md border border-[#ececec] dark:border-[#333333]">
+      <div class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300">Gross Amount:</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300">
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ grossAmount | number: "1.2-2" }}</span>
         </div>
           </div>
-      <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Trade Offer:</div>
+      <div class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300">Trade Offer:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ totalSchemeDiscount | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ totalSchemeDiscount | number: "1.2-2" }}</span>
         </div>
           </div>
-      <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Trade Discount:</div>
+      <div class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300">Trade Discount:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ totalMerchantDiscount | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ totalMerchantDiscount | number: "1.2-2" }}</span>
         </div>
           </div>
-      <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Special Discount:</div>
+      <div class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300">Special Discount:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ totalSpecialDiscount | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ totalSpecialDiscount | number: "1.2-2" }}</span>
         </div>
           </div>
-      <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Booker Discount:</div>
+      <div class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300">Booker Discount:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ totalBookerDiscount | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ totalBookerDiscount | number: "1.2-2" }}</span>
         </div>
           </div>
-      <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Loyalty Discount:</div>
+      <div class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300">Loyalty Discount:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ totalloyaltyDiscount | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ totalloyaltyDiscount | number: "1.2-2" }}</span>
         </div>
       </div>
-      <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary" title="General Sales Tax">General Sales Tax:</div>
+      <div class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300" title="General Sales Tax">General Sales Tax:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ gst_tax | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-neutral-300 text-right block">{{ gst_tax | number: "1.2-2" }}</span>
         </div>
       </div>
-      <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary" title="Advance Income Tax">Advance Income Tax:</div>
+      <div class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300" title="Advance Income Tax">Advance Income Tax:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ adv_inc_tax | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-neutral-300 text-right block">{{ adv_inc_tax | number: "1.2-2" }}</span>
         </div>
       </div>
-      <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Total Tax:</div>
+      <div class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300">Total Tax:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ totalTax| number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-neutral-300 text-right block">{{ totalTax| number: "1.2-2" }}</span>
         </div>
           </div>
-      <div *ngIf="orderType === 'execution'" class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Less Return:</div>
+      <div *ngIf="orderType === 'execution'" class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-neutral-300">Less Return:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ returnAmount | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-neutral-300 text-right block">{{ returnAmount | number: "1.2-2" }}</span>
         </div>
           </div>
-      <div *ngIf="orderType !== 'execution'" class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba]">Total Amount Due:</div>
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba]">
+      <div *ngIf="orderType !== 'execution'" class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba] dark:text-neutral-200">Total Amount Due:</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba] dark:text-neutral-200">
           <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ netAmount | number: "1.2-2" }}</span>
         </div>
       </div>
-      <div *ngIf="orderType === 'execution'" class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba]">Total Bill:</div>
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba]">
+      <div *ngIf="orderType === 'execution'" class="flex border-b border-[#e8e6e6] dark:border-[#363636]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba] dark:text-neutral-200">Total Bill:</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba] dark:text-neutral-200">
           <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{
               grossAmount - 
               totalSchemeDiscount - 
@@ -348,20 +348,20 @@ Orders &nbsp;<span class="font-light">Detail</span>
           </div>
         </div>
       </div>
-    <div *ngIf="orderType === 'execution'" class="w-[318px] min-h-[173px] text-[13px] px-5 py-[5px] bg-[#f7f7f7] dark:bg-[#2a2a2a] border border-[#ececec] dark:border-[#333333]">
+    <div *ngIf="orderType === 'execution'" class="w-[318px] min-h-[173px] text-[13px] px-5 py-[5px] bg-[#f7f7f7] dark:bg-[#2d2d2d] border border-[#ececec] dark:border-[#333333]">
       <!-- <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Amount Due:</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-[#e0e0e0]">Amount Due:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ dueAmount | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ dueAmount | number: "1.2-2" }}</span>
           </div>
         </div> -->
       <!-- <div *ngIf="currentTab === 1" class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Recovery:</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-[#e0e0e0]">Recovery:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
           <div class="w-1/2 float-right">
               <input
                 type="number"
-              class="text-right font-[Rationale,sans-serif] text-[18px] px-[2px] h-[calc(1.25rem+2px)]"
+              class="text-right font-[Rationale,sans-serif] text-[18px] px-[2px] h-[calc(1.25rem+2px)] text-gray-900 dark:text-[#e0e0e0] bg-white dark:bg-[#1a1a1a] border border-[#e2e6ea] dark:border-[#333333]"
                 [disabled]="isChequeAdded || isCreditAdded"
                 name="recovered"
                 id="recovered"
@@ -373,33 +373,33 @@ Orders &nbsp;<span class="font-light">Detail</span>
           </div>
         </div> -->
       <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Net Receivable:</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-[#e0e0e0]">Net Receivable:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ receivableAmount | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ receivableAmount | number: "1.2-2" }}</span>
         </div>
           </div>
       <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Cheque:</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-[#e0e0e0]">Cheque:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ cheque?.amount_received || 0 | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ cheque?.amount_received || 0 | number: "1.2-2" }}</span>
         </div>
           </div>
       <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Cash Payment:</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-[#e0e0e0]">Cash Payment:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ cash?.amount_received || 0 | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ cash?.amount_received || 0 | number: "1.2-2" }}</span>
         </div>
           </div>
       <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba]">Total Payment</div>
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba]">
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba] dark:text-neutral-300">Total Payment</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-[#0038ba] dark:text-neutral-300">
           <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ totalPayment | number: "1.2-2" }}</span>
         </div>
           </div>
       <div class="flex border-b border-[#e8e6e6] dark:border-[#333333]">
-        <div class="w-1/2 px-[2px] leading-[1.5] font-primary">Credit:</div>
+        <div class="w-1/2 px-[2px] leading-[1.5] font-primary text-gray-900 dark:text-[#e0e0e0]">Credit:</div>
         <div class="w-1/2 px-[2px] leading-[1.5] font-primary">
-          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-right block">{{ credit?.amount_received || 0 | number: "1.2-2" }}</span>
+          <span class="font-[Rationale,sans-serif] leading-[1.1] text-[18px] text-gray-900 dark:text-[#e0e0e0] text-right block">{{ credit?.amount_received || 0 | number: "1.2-2" }}</span>
         </div>
       </div>
     </div>

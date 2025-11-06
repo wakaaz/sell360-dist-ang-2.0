@@ -18,6 +18,9 @@ import { PaymentDetail } from '../../models/counter-sale.model';
 import { ExecutionService } from '../../services/execution.service';
 import { OrdersService } from '../../services/orders.service';
 import { SpotSaleService } from '../../services/spot-sale.service';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -33,11 +36,24 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   system_discount_type:number;
   dtOPtions: DataTables.Settings = {};
 
+  // AG Grid for Delivery Challan
+  private deliveryChallanGridApi!: GridApi;
+  deliveryChallanColumnDefs: ColDef[] = [];
+  defaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: false
+  };
+
   executionData: any;
   loading: boolean;
   savingOrder: boolean;
   showReturned: boolean;
   showProducts: boolean;
+  showPaymentModal: boolean = false;
+  showHoldModal: boolean = false;
+  showCancelModal: boolean = false;
+  showExpenseModal: boolean = false;
   isCredit: boolean;
   alreadyFullPayment: boolean;
   isChequeAdded: boolean;
@@ -46,8 +62,10 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   isSpotSaleActive: boolean;
   isExpenseAdded: boolean;
   showAddRetailer: boolean;
+  selectedExpenseType: number | null = null;
+  selectedExpenseAmount: number | null = null;
 
-  paymentDate: string;
+  paymentDate: string | Date;
   orderDate: string;
   paymentTypeCredit: string;
   paymentTypeCheque: string;
@@ -905,11 +923,6 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.toastService.showToaster(toast);
       return;
     }
-    if (current === 'Credit') {
-      this.paymentTypeCredit = '';
-    } else {
-      this.paymentTypeCheque = '';
-    }
     if (!this.selectedRetailer) {
       const toast: Toaster = {
         type: 'error',
@@ -917,34 +930,54 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         title: `Payment cannot be added`,
       };
       this.toastService.showToaster(toast);
-    } else {
-      if (
-        (this.paymentTypeCheque === 'full' ||
-          this.paymentTypeCredit === 'full') &&
-        this.addedPayment !== current
-      ) {
-        const toast: Toaster = {
-          type: 'error',
-          message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${this.currentPayment}!`,
-          title: `Full Payment selected for ${this.addedPayment}`,
-        };
-        this.toastService.showToaster(toast);
-      } else {
-        // this.focusForPaymentValues();
-        document.getElementById('open-modal-payment').click();
-      }
+      return;
     }
-  }
-
-  currentFullPayment(current: string, other: string): void {
+    
+    // Check if payment is already added
+    if (current === 'Credit' && this.isCreditAdded) {
+      return;
+    }
+    if (current === 'Cheque Payment' && this.isChequeAdded) {
+      return;
+    }
+    
+    // Check for full payment conflict
     if (
-      (this.paymentTypeCheque === 'full' ||
-        this.paymentTypeCredit === 'full') &&
-      this.addedPayment !== current
+      this.addedPayment &&
+      this.addedPayment !== current &&
+      (this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full')
     ) {
       const toast: Toaster = {
         type: 'error',
-        message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${this.currentPayment}!`,
+        message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${current}!`,
+        title: `Full Payment selected for ${this.addedPayment}`,
+      };
+      this.toastService.showToaster(toast);
+      return;
+    }
+    
+    // Set default values and open modal
+    if (current === 'Credit') {
+      this.paymentTypeCredit = 'full';
+      this.creditAmount = null;
+    } else {
+      this.paymentTypeCheque = 'full';
+      this.chequeAmount = null;
+    }
+    this.showPaymentModal = true;
+  }
+
+  currentFullPayment(current: string, other: string): void {
+    // Only check for conflict if payment is already added (not empty and different from current)
+    if (
+      this.addedPayment &&
+      this.addedPayment.trim() !== '' &&
+      this.addedPayment !== current &&
+      (this.paymentTypeCheque === 'full' || this.paymentTypeCredit === 'full')
+    ) {
+      const toast: Toaster = {
+        type: 'error',
+        message: `You already selected Full payment for ${this.addedPayment} please remove it if you want to add ${other}!`,
         title: `Full Payment selected for ${this.addedPayment}`,
       };
       this.toastService.showToaster(toast);
@@ -975,10 +1008,10 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   checkPaymentHasValues(): boolean {
     if (this.isCredit) {
       if (this.paymentTypeCredit === 'full') {
-        return this.paymentTypeCredit.length > 0;
+        return this.paymentTypeCredit && this.paymentTypeCredit.length > 0;
       } else {
         return (
-          this.paymentTypeCredit.length > 0 &&
+          this.paymentTypeCredit && this.paymentTypeCredit.length > 0 &&
           this.creditAmount > -1 &&
           this.creditAmount <=
             this.dueAmount - (this.cheque ? this.cheque.amount_received : 0)
@@ -987,19 +1020,19 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     } else {
       if (this.paymentTypeCheque === 'full') {
         return (
-          this.paymentTypeCheque.length > 0 &&
-          this.bankName.length > 0 &&
-          this.chequeNumber.length > 0 &&
-          this.paymentDate.length > 0
+          this.paymentTypeCheque && this.paymentTypeCheque.length > 0 &&
+          this.bankName && this.bankName.length > 0 &&
+          this.chequeNumber && this.chequeNumber.length > 0 &&
+          this.paymentDate && (typeof this.paymentDate === 'string' ? this.paymentDate.length > 0 : true)
         );
       } else {
         return (
-          this.paymentTypeCheque.length > 0 &&
+          this.paymentTypeCheque && this.paymentTypeCheque.length > 0 &&
           this.chequeAmount > -1 &&
           this.chequeAmount <= this.cash.amount_received &&
-          this.bankName.length > 0 &&
-          this.chequeNumber.length > 0 &&
-          this.paymentDate.length > 0
+          this.bankName && this.bankName.length > 0 &&
+          this.chequeNumber && this.chequeNumber.length > 0 &&
+          this.paymentDate && (typeof this.paymentDate === 'string' ? this.paymentDate.length > 0 : true)
         );
       }
     }
@@ -1052,7 +1085,9 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
             this.paymentTypeCheque === 'full' ? JSON.parse(JSON.stringify(this.receivableAmount)): JSON.parse(JSON.stringify(this.chequeAmount)),
           bank_name: JSON.parse(JSON.stringify(this.bankName)),
           cheque_number: JSON.parse(JSON.stringify(this.chequeNumber)),
-          cheque_date: JSON.parse(JSON.stringify(this.paymentDate)),
+          cheque_date: (this.paymentDate && typeof this.paymentDate === 'object' && 'toISOString' in this.paymentDate)
+            ? JSON.parse(JSON.stringify((this.paymentDate as any).toISOString().split('T')[0]))
+            : JSON.parse(JSON.stringify(this.paymentDate)),
         },
         dispatched_bill_amount: 0,
         recovery: 0,
@@ -1070,12 +1105,31 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     if (isPaymentAdded) {
       this.isAdded = false;
       this.makePayment();
-      document.getElementById('open-modal-payment').click();
+      this.showPaymentModal = false;
+    }
+  }
+
+  onChequePaymentTypeChange(): void {
+    if (this.paymentTypeCheque === 'full') {
+      this.chequeAmount = null;
+      this.currentFullPayment('Cheque Payment', 'Credit');
+    } else {
+      this.setPartial('Cheque Payment');
+    }
+  }
+
+  onCreditPaymentTypeChange(): void {
+    if (this.paymentTypeCredit === 'full') {
+      this.creditAmount = null;
+      this.currentFullPayment('Credit', 'Cheque payment');
+    } else {
+      this.setPartial('Credit');
     }
   }
 
   paymentCancelled(): void {
     this.isAdded = false;
+    this.showPaymentModal = false;
     // this.resetPaymentValues();
     this.paymentTypeCredit = '';
     this.paymentTypeCheque = '';
@@ -1362,7 +1416,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   cancelOrder(): void {
-    document.getElementById('close-del').click();
+    this.showCancelModal = false;
     if (this.validateCancel()) {
       this.savingOrder = true;
       this.orderService.canceleExecutionOrder(this.orderDetails.id).subscribe(
@@ -1401,11 +1455,11 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   closeHoldOrderModal(event: Event):void{
-    document.getElementById('close-hold-model').click();
+    this.showHoldModal = false;
   }
   holdOrder(event: Event):void{
     if(this.holdOrderParams.hold_reason.trim() != ''){
-      document.getElementById('close-hold-model').click();
+      this.showHoldModal = false;
       this.savingOrder = true;
       this.holdOrderParams.order_id = this.orderDetails.id;
       this.holdOrderParams.assignment_id = this.orderDetails.assignment_id;
@@ -1459,12 +1513,12 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
       this.cancelSpotSaleOrder();
     } else {
       this.removeSpotOrder();
-      document.getElementById('close-del').click();
+      this.showCancelModal = false;
     }
   }
 
   cancelSpotSaleOrder(): void {
-    document.getElementById('close-del').click();
+    this.showCancelModal = false;
     if (this.validateCancel()) {
       this.savingOrder = true;
       this.orderService.cancelSpotSaleOrder(this.orderDetails.id).subscribe(
@@ -1541,6 +1595,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
           this.loading = false;
           if (res.status === 200) {
             this.finalLoad = res.data;
+            this.initializeDeliveryChallanColumns();
+            this.initializeDeliveryChallanColumns();
             this.recoveryListing = res.data.out_of_route_recovery.map((x) => {
               x.recovery = x.amount_received;
               x.retailer_id = x.id;
@@ -1581,20 +1637,26 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   }
 
   addExpense(type: any, amount: any): void {
-    if (type.value && amount.value) {
+    const expenseTypeValue = type?.value;
+    const expenseAmountValue = amount?.value;
+    
+    if (expenseTypeValue && expenseAmountValue) {
       const expenses = JSON.parse(
         JSON.stringify(this.finalLoad.expense_detail)
       );
       const expIndex = expenses.findIndex(
-        (x) => x.expense_type === +type.value
+        (x) => x.expense_type === +expenseTypeValue
       );
       if (expIndex > -1) {
-        expenses[expIndex].amount = amount.value;
+        expenses[expIndex].amount = expenseAmountValue;
       } else {
-        expenses.push({ expense_type: +type.value, amount: +amount.value });
+        expenses.push({ expense_type: +expenseTypeValue, amount: +expenseAmountValue });
       }
-      type.value = '';
-      amount.value = '';
+      
+      // Reset values
+      this.selectedExpenseType = null;
+      this.selectedExpenseAmount = null;
+      
       this.finalLoad.expense_detail = JSON.parse(JSON.stringify(expenses));
 
       this.setIsExpenseAdded();
@@ -1621,8 +1683,16 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }, 500);
   }
 
+  openExpenseModal(): void {
+    this.showExpenseModal = true;
+  }
+
+  closeExpenseModal(): void {
+    this.showExpenseModal = false;
+  }
+
   saveExpense(): void {
-    document.getElementById('close-expense').click();
+    this.closeExpenseModal();
     // if (this.finalLoad.expense_detail.length) {
     //     this.isAdded = true;
     //     this.finalLoad.expense_detail = this.finalLoad.expense_detail.map(x => {
@@ -1638,6 +1708,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     //                     type: 'success'
     //                 });
     //                 this.finalLoad = res.data;
+            this.initializeDeliveryChallanColumns();
     //             }
     //         }, error => {
     //             this.isAdded = false;
@@ -1672,6 +1743,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
               type: 'success',
             });
             this.finalLoad = res.data;
+            this.initializeDeliveryChallanColumns();
             this.getExecutionFinalLoad();
           }
         },
@@ -1837,6 +1909,112 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
           }
         }
       );
+  }
+
+  initializeDeliveryChallanColumns(): void {
+    if (!this.finalLoad || !this.finalLoad.dsr || !this.finalLoad.dsr.contents) {
+      this.deliveryChallanColumnDefs = [];
+      return;
+    }
+
+    this.deliveryChallanColumnDefs = [
+      {
+        headerName: 'SN',
+        field: 'item_id',
+        width: 80,
+        minWidth: 80,
+        sortable: true,
+        filter: false,
+        cellStyle: { textAlign: 'center' },
+        headerClass: 'text-center'
+      },
+      {
+        headerName: 'Product Name',
+        field: 'item_name',
+        flex: 1,
+        sortable: true,
+        filter: false,
+        cellStyle: { textAlign: 'left' },
+        headerClass: 'text-left'
+      },
+      {
+        headerName: 'Unit',
+        field: 'unit_name',
+        width: 100,
+        minWidth: 100,
+        sortable: true,
+        filter: false,
+        cellStyle: { textAlign: 'center' },
+        headerClass: 'text-center'
+      },
+      {
+        headerName: 'Issue QTY.',
+        field: 'total_dispatch_qty',
+        width: 120,
+        minWidth: 120,
+        sortable: true,
+        filter: false,
+        cellStyle: { textAlign: 'center' },
+        headerClass: 'text-center',
+        valueFormatter: (params) => {
+          return params.value ? (+params.value).toLocaleString() : '0';
+        }
+      },
+      {
+        headerName: 'Return QTY.',
+        field: 'total_return_qty',
+        width: 120,
+        minWidth: 120,
+        sortable: true,
+        filter: false,
+        cellStyle: { textAlign: 'center' },
+        headerClass: 'text-center',
+        valueFormatter: (params) => {
+          return params.value ? (+params.value).toLocaleString() : '0';
+        }
+      },
+      {
+        headerName: 'Sold QTY.',
+        field: 'total_sold_qty',
+        width: 120,
+        minWidth: 120,
+        sortable: true,
+        filter: false,
+        cellStyle: { textAlign: 'center' },
+        headerClass: 'text-center',
+        valueFormatter: (params) => {
+          return params.value ? (+params.value).toLocaleString() : '0';
+        }
+      },
+      {
+        headerName: 'Inventory Return',
+        field: 'total_cancel_qty',
+        width: 140,
+        minWidth: 140,
+        sortable: true,
+        filter: false,
+        cellStyle: { textAlign: 'center' },
+        headerClass: 'text-center',
+        valueFormatter: (params) => {
+          return params.value ? (+params.value).toLocaleString() : '0';
+        }
+      }
+    ];
+  }
+
+  onDeliveryChallanGridReady(params: GridReadyEvent): void {
+    this.deliveryChallanGridApi = params.api;
+    // Refresh grid when ready
+    if (this.finalLoad && this.finalLoad.dsr && this.finalLoad.dsr.contents) {
+      params.api.setGridOption('rowData', this.finalLoad.dsr.contents);
+    }
+  }
+
+  onDeliveryChallanQuickFilterChanged(event: any): void {
+    const filterValue = event.target.value;
+    if (this.deliveryChallanGridApi) {
+      this.deliveryChallanGridApi.setGridOption('quickFilterText', filterValue);
+    }
   }
 
   generateDSR(): void {

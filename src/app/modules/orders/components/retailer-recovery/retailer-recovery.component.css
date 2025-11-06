@@ -58,3 +58,14 @@
   overflow: visible !important;
 }
 
+/* Prevent cell focus when clicking buttons in action column */
+::ng-deep .ag-cell-button-container {
+  pointer-events: auto;
+}
+
+::ng-deep .ag-cell-button-container button {
+  pointer-events: auto;
+  position: relative;
+  z-index: 10;
+}
+

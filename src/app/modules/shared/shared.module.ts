@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { ClickOutsideModule } from 'ng-click-outside';
 
 import { WhiteLoaderComponent } from './components/loader-white/loader-white.component';
@@ -29,6 +30,7 @@ const components = [
     FormsModule,
     ClickOutsideModule,
     NgSelectModule,
+    NzSelectModule,
     PipeModule,
   ],
   exports: [...components, Decimal, FilterPipe],

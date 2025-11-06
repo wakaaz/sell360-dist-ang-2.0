@@ -870,3 +870,178 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
   background-color: transparent !important;
   border-color: 1px solid #7b7b7b !important;
 } 
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
+/* Firefox */input[type=number] {-moz-appearance: textfield;}
+.ng-select .ng-clear-wrapper {display: none;}
+
+/* ========================================
+   NG-ZORRO SELECT STYLING - LIGHT/DARK MODE
+   Matching counter-sale.component.css
+   ======================================== */
+
+/* Light Mode - Select Container */
+::ng-deep .ret-product-select .ant-select-selector,
+::ng-deep .return-type-select .ant-select-selector {
+  min-height: 32px !important;
+  height: 32px !important;
+  padding: 0 11px !important;
+  font-size: 14px !important;
+  border-radius: 5px !important;
+  background-color: #ffffff !important;
+  border-color: #d9d9d9 !important;
+  transition: all 0.3s !important;
+}
+
+::ng-deep .ret-product-select .ant-select-selection-item,
+::ng-deep .return-type-select .ant-select-selection-item {
+  line-height: 36px !important;
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+
+::ng-deep .ret-product-select .ant-select-selection-placeholder,
+::ng-deep .return-type-select .ant-select-selection-placeholder {
+  line-height: 36px !important;
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Light Mode - Focus and Hover States with Primary Color */
+::ng-deep .ret-product-select.ant-select-focused .ant-select-selector,
+::ng-deep .ret-product-select:not(.ant-select-disabled):hover .ant-select-selector,
+::ng-deep .return-type-select.ant-select-focused .ant-select-selector,
+::ng-deep .return-type-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.1) !important;
+}
+
+/* Dark Mode - Select Container */
+::ng-deep .dark .ret-product-select .ant-select-selector,
+::ng-deep html.dark .ret-product-select .ant-select-selector,
+::ng-deep .dark .return-type-select .ant-select-selector,
+::ng-deep html.dark .return-type-select .ant-select-selector {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: #ffffff !important;
+  border-radius: 5px !important;
+}
+
+::ng-deep .dark .ret-product-select .ant-select-selection-item,
+::ng-deep html.dark .ret-product-select .ant-select-selection-item,
+::ng-deep .dark .return-type-select .ant-select-selection-item,
+::ng-deep html.dark .return-type-select .ant-select-selection-item {
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .ret-product-select .ant-select-selection-placeholder,
+::ng-deep html.dark .ret-product-select .ant-select-selection-placeholder,
+::ng-deep .dark .return-type-select .ant-select-selection-placeholder,
+::ng-deep html.dark .return-type-select .ant-select-selection-placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Dark Mode - Focus and Hover States with Primary Color */
+::ng-deep .dark .ret-product-select.ant-select-focused .ant-select-selector,
+::ng-deep .dark .ret-product-select:not(.ant-select-disabled):hover .ant-select-selector,
+::ng-deep html.dark .ret-product-select.ant-select-focused .ant-select-selector,
+::ng-deep html.dark .ret-product-select:not(.ant-select-disabled):hover .ant-select-selector,
+::ng-deep .dark .return-type-select.ant-select-focused .ant-select-selector,
+::ng-deep .dark .return-type-select:not(.ant-select-disabled):hover .ant-select-selector,
+::ng-deep html.dark .return-type-select.ant-select-focused .ant-select-selector,
+::ng-deep html.dark .return-type-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.2) !important;
+}
+
+/* Dark Mode - Disabled State */
+::ng-deep .dark .ret-product-select.ant-select-disabled .ant-select-selector,
+::ng-deep html.dark .ret-product-select.ant-select-disabled .ant-select-selector,
+::ng-deep .dark .return-type-select.ant-select-disabled .ant-select-selector,
+::ng-deep html.dark .return-type-select.ant-select-disabled .ant-select-selector {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.25) !important;
+  border-color: #434343 !important;
+}
+
+/* Clear button styling - Light Mode */
+::ng-deep .ret-product-select .ant-select-clear,
+::ng-deep .return-type-select .ant-select-clear {
+  color: rgba(0, 0, 0, 0.25) !important;
+  font-size: 12px !important;
+}
+
+::ng-deep .ret-product-select .ant-select-clear:hover,
+::ng-deep .return-type-select .ant-select-clear:hover {
+  color: rgba(0, 0, 0, 0.45) !important;
+}
+
+/* Clear button styling - Dark Mode */
+::ng-deep .dark .ret-product-select .ant-select-clear,
+::ng-deep html.dark .ret-product-select .ant-select-clear,
+::ng-deep .dark .return-type-select .ant-select-clear,
+::ng-deep html.dark .return-type-select .ant-select-clear {
+  color: rgba(255, 255, 255, 0.45) !important;
+  background-color: transparent !important;
+  border-radius: 50% !important;
+  transition: all 0.2s !important;
+}
+
+::ng-deep .dark .ret-product-select .ant-select-clear:hover,
+::ng-deep html.dark .ret-product-select .ant-select-clear:hover,
+::ng-deep .dark .return-type-select .ant-select-clear:hover,
+::ng-deep html.dark .return-type-select .ant-select-clear:hover {
+  color: rgba(255, 255, 255, 0.85) !important;
+  background-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+/* Arrow icon styling - Light Mode */
+::ng-deep .ret-product-select .ant-select-arrow,
+::ng-deep .return-type-select .ant-select-arrow {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Arrow icon styling - Dark Mode */
+::ng-deep .dark .ret-product-select .ant-select-arrow,
+::ng-deep html.dark .ret-product-select .ant-select-arrow,
+::ng-deep .dark .return-type-select .ant-select-arrow,
+::ng-deep html.dark .return-type-select .ant-select-arrow {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+/* Input field styling - Match select height (32px) - Scoped to returned-products modal */
+#returnsmodal input[type="number"],
+#returnsmodal input[type="text"] {
+  height: 32px !important;
+  min-height: 32px !important;
+  font-size: 14px !important;
+  line-height: 1.5 !important;
+  padding: 0 11px !important;
+  border-radius: 5px !important;
+}
+
+/* Dark mode input styling - Scoped */
+.dark #returnsmodal input[type="number"],
+html.dark #returnsmodal input[type="number"],
+.dark #returnsmodal input[type="text"],
+html.dark #returnsmodal input[type="text"] {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: #ffffff !important;
+}
+
+.dark #returnsmodal input[type="number"]:focus,
+html.dark #returnsmodal input[type="number"]:focus,
+.dark #returnsmodal input[type="text"]:focus,
+html.dark #returnsmodal input[type="text"]:focus {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.2) !important;
+}
+
+.dark #returnsmodal input[type="number"]:hover,
+html.dark #returnsmodal input[type="number"]:hover,
+.dark #returnsmodal input[type="text"]:hover,
+html.dark #returnsmodal input[type="text"]:hover {
+  border-color: #0038ba !important;
+}

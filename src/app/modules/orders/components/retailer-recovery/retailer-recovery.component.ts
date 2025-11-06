@@ -1,5 +1,5 @@
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   deleteRetailerCreditInvoice,
@@ -11,6 +11,7 @@ import { OrdersService } from '../../services/orders.service';
 import { DataService } from '../../../shared/services/data.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
@@ -26,7 +27,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 
 
 })
-export class RetailerRecoveryComponent implements OnInit {
+export class RetailerRecoveryComponent implements OnInit, OnDestroy {
   permissions: any;
   @Input() executionData: any = null;
   @Input() retailerId: number = 0;
@@ -47,12 +48,17 @@ export class RetailerRecoveryComponent implements OnInit {
     filter: false
   };
   
+  processingIndex: number | null = null;
+
+  private globalCallbacksRegistered = false;
+
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
     private storageService: LocalStorageService,
     private readonly dataService: DataService,
-    private toastService: ToasterService
+    private toastService: ToasterService,
+    private ngZone: NgZone
   ) {
     this.permissions = this.storageService.getItem(
       localStorageKeys.permissions
@@ -60,8 +66,7 @@ export class RetailerRecoveryComponent implements OnInit {
     this.isRecoverydiscountActivated =
       this.permissions.Secondary_Orders.recovery_invoice_discount;
     
-    // Setup global reference for cell renderers
-    (window as any).ngRef = this;
+    this.registerGlobalCallbacks();
   }
 
   ngOnInit(): void {
@@ -124,6 +129,32 @@ export class RetailerRecoveryComponent implements OnInit {
     }
     this.initializeColumns();
   }
+
+  private registerGlobalCallbacks(): void {
+    (window as any).ngRef = {
+      updateRecoveryAmount: (index: number, value: string, isExecutionMode: boolean) => {
+        this.ngZone.run(() => this.updateRecoveryAmount(index, value, isExecutionMode));
+      },
+      isNumberKey: (event: KeyboardEvent) => {
+        let result = true;
+        this.ngZone.run(() => {
+          result = this.isNumberKey(event);
+        });
+        return result;
+      },
+      addOrderBill: (index: number, isAdded: boolean) => {
+        this.ngZone.run(() => this.addOrderBill(index, isAdded));
+      }
+    };
+    this.globalCallbacksRegistered = true;
+  }
+
+  ngOnDestroy(): void {
+    if (this.globalCallbacksRegistered && (window as any).ngRef) {
+      delete (window as any).ngRef;
+      this.globalCallbacksRegistered = false;
+    }
+  }
   
   initializeColumns(): void {
     this.columnDefs = [
@@ -139,7 +170,7 @@ export class RetailerRecoveryComponent implements OnInit {
         headerName: 'Invoice', 
         sortable: true, 
         filter: false,
-        flex: 1,
+        width: 120,
         valueGetter: (params) => {
           return params.data?.invoice_number || 'Opening Balance';
         }
@@ -174,7 +205,7 @@ export class RetailerRecoveryComponent implements OnInit {
         headerName: 'Invoice DISC',
         sortable: false,
         filter: false,
-        width: 140,
+        width: 100,
         cellRenderer: (params: any) => {
           const inv = params.data;
           const index = this.retailer_credit_Invoices.findIndex(x => x === inv);
@@ -213,7 +244,7 @@ export class RetailerRecoveryComponent implements OnInit {
         headerName: 'Assigned',
         sortable: true,
         filter: false,
-        width: 80,
+        width: 100,
         valueFormatter: (params) => {
           if (!params.value) return '0.00';
           return parseFloat(params.value).toFixed(2);
@@ -224,7 +255,7 @@ export class RetailerRecoveryComponent implements OnInit {
         headerName: this.executionData === null && this.retailerId === 0 ? 'Add To Current' : 'Recovery',
         sortable: false,
         filter: false,
-        width: 140,
+        width: 100,
         cellRenderer: (params: any) => {
           const inv = params.data;
           const index = this.retailer_credit_Invoices.findIndex(x => x === inv);
@@ -239,8 +270,11 @@ export class RetailerRecoveryComponent implements OnInit {
                 type="number" 
                 value="${value}"
                 ${disabled ? 'disabled' : ''}
+                id="added_to_current_${index}"
                 oninput="window.ngRef.updateRecoveryAmount(${index}, this.value, false)"
+                onchange="window.ngRef.updateRecoveryAmount(${index}, this.value, false)"
                 onkeydown="return window.ngRef.isNumberKey(event)"
+                onblur="window.ngRef.updateRecoveryAmount(${index}, this.value, false)"
                 class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="0"
                 min="0"
@@ -255,8 +289,11 @@ export class RetailerRecoveryComponent implements OnInit {
                 type="number" 
                 value="${value}"
                 ${disabledSecond ? 'disabled' : ''}
+                id="recoverd_amount_${index}"
                 oninput="window.ngRef.updateRecoveryAmount(${index}, this.value, true)"
+                onchange="window.ngRef.updateRecoveryAmount(${index}, this.value, true)"
                 onkeydown="return window.ngRef.isNumberKey(event)"
+                onblur="window.ngRef.updateRecoveryAmount(${index}, this.value, true)"
                 class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="0"
                 min="0"
@@ -275,7 +312,8 @@ export class RetailerRecoveryComponent implements OnInit {
         headerName: 'Action',
         sortable: false,
         filter: false,
-        width: 150,
+        width: 130,
+        suppressMovable: true,
         cellRenderer: (params: any) => {
           const inv = params.data;
           const index = this.retailer_credit_Invoices.findIndex(x => x === inv);
@@ -285,27 +323,36 @@ export class RetailerRecoveryComponent implements OnInit {
             const isAdded = inv.is_added;
             const hasValue = (inv.added_to_current || 0) > 0;
             // Enable button when value is entered OR when already added (to allow removal)
-            const disabled = !hasValue && !isAdded;
+            const isProcessing = this.processingIndex === index;
+            const disabled = (!hasValue && !isAdded) || isProcessing;
             const buttonClass = isAdded ? 
               'bg-red-600 dark:bg-red-600 hover:bg-red-700 text-white' : 
               'bg-transparent border border-primary text-primary dark:text-white hover:bg-primary hover:text-white';
+            const spinner = '<span class="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>';
+            const buttonLabel = isProcessing ? spinner : (isAdded ? 'Remove to Bill' : 'Add to Bill');
             
             return `
               <button 
-                onclick="window.ngRef.addOrderBill(${index}, ${isAdded})"
+                onmousedown="event.preventDefault(); event.stopPropagation(); window.ngRef.addOrderBill(${index}, ${isAdded})"
+                onclick="event.preventDefault(); event.stopPropagation(); return false;"
                 ${disabled ? 'disabled' : ''}
-                class="px-3 py-1 text-xs rounded-md font-primary transition-colors ${buttonClass} disabled:opacity-50 disabled:cursor-not-allowed"
+                class="px-3 py-1 text-xs rounded-md font-primary transition-colors ${buttonClass} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[110px]"
               >
-                ${isAdded ? 'Remove to Bill' : 'Add to Bill'}
+                ${buttonLabel}
               </button>
             `;
           } else {
+            const isProcessing = this.processingIndex === index;
+            const spinner = '<span class="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>';
+            const buttonLabel = isProcessing ? spinner : 'Save';
             return `
               <button 
-                onclick="window.ngRef.addOrderBill(${index}, false)"
-                class="px-3 py-1 text-xs rounded-md font-primary transition-colors bg-transparent border border-primary text-primary dark:text-white hover:bg-primary hover:text-white"
+                onmousedown="event.preventDefault(); event.stopPropagation(); window.ngRef.addOrderBill(${index}, false)"
+                onclick="event.preventDefault(); event.stopPropagation(); return false;"
+                ${isProcessing ? 'disabled' : ''}
+                class="px-3 py-1 text-xs rounded-md font-primary transition-colors bg-transparent border border-primary text-primary dark:text-white hover:bg-primary hover:text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[90px]"
               >
-                Save
+                ${buttonLabel}
               </button>
             `;
           }
@@ -316,7 +363,9 @@ export class RetailerRecoveryComponent implements OnInit {
           justifyContent: 'center',
           padding: '4px'
         },
-        pinned: 'right'
+        pinned: 'right',
+        editable: false,
+        cellClass: 'ag-cell-button-container'
       }
     ];
   }
@@ -345,26 +394,41 @@ export class RetailerRecoveryComponent implements OnInit {
   updateRecoveryAmount(index: number, value: string, isExecutionMode: boolean): void {
     if (this.retailer_credit_Invoices[index]) {
       if (isExecutionMode) {
-        this.retailer_credit_Invoices[index].recoverd_amount = parseFloat(value) || 0;
+        const parsedValue = parseFloat(value) || 0;
+        this.retailer_credit_Invoices[index].recoverd_amount = parsedValue;
+        if (this.gridApi) {
+          this.gridApi.forEachNode((rowNode) => {
+            if (rowNode.data === this.retailer_credit_Invoices[index]) {
+              rowNode.data.recoverd_amount = parsedValue;
+              this.gridApi.refreshCells({
+                rowNodes: [rowNode],
+                columns: ['actions'],
+                force: true,
+              });
+            }
+          });
+        }
       } else {
         const parsedValue = parseFloat(value) || 0;
+        // Update the data model first
         this.retailer_credit_Invoices[index].added_to_current = parsedValue;
-        // Refresh the grid to update button state
+        
+        // Update AG Grid row data directly to ensure data is synced
         if (this.gridApi) {
-          const inv = this.retailer_credit_Invoices[index];
-          // Use setTimeout to ensure the update happens after the input event
-          setTimeout(() => {
-            this.gridApi.forEachNode((rowNode) => {
-              if (rowNode.data === inv) {
-                // Force refresh of the actions column to update button state
-                this.gridApi.refreshCells({ 
-                  rowNodes: [rowNode], 
-                  columns: ['actions'],
-                  force: true 
-                });
-              }
-            });
-          }, 0);
+          // Update AG Grid's row data directly (same reference)
+          this.gridApi.forEachNode((rowNode) => {
+            // Find the row by comparing the reference
+            if (rowNode.data === this.retailer_credit_Invoices[index]) {
+              // Directly update the row data property (same object reference)
+              rowNode.data.added_to_current = parsedValue;
+              // Force refresh of both the added_to_current column and actions column
+              this.gridApi.refreshCells({ 
+                rowNodes: [rowNode], 
+                columns: ['added_to_current', 'actions'],
+                force: true 
+              });
+            }
+          });
         }
       }
     }
@@ -390,33 +454,88 @@ export class RetailerRecoveryComponent implements OnInit {
     });
   }
 
+  private setProcessingIndex(index: number | null): void {
+    this.processingIndex = index;
+    if (this.gridApi) {
+      this.gridApi.refreshCells({ columns: ['actions'], force: true });
+    }
+  }
+
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
   }
 
   addOrderBill(index: number, isAdded: boolean): void {
     const retailer_credit_Invoices = this.retailer_credit_Invoices[index];
+    if (!retailer_credit_Invoices) {
+      return;
+    }
     if (!isAdded) {
-      // Check if value is entered
-      if ((retailer_credit_Invoices.added_to_current || 0) <= 0) {
-        const toast: Toaster = {
-          type: 'error',
-          message: 'Please enter a value in Add To Current field',
-          title: 'Error:',
-        };
-        this.toastService.showToaster(toast);
-        return;
+      const isExecutionMode = this.executionData !== null || !!this.assignment_idOutRoute || this.retailerId > 0;
+      let currentValue = 0;
+      let fieldLabel = 'Add To Current';
+
+      if (isExecutionMode) {
+        fieldLabel = 'Recovery';
+        const inputElement = document.getElementById(`recoverd_amount_${index}`) as HTMLInputElement;
+        if (inputElement && inputElement.value !== undefined) {
+          currentValue = parseFloat(inputElement.value) || 0;
+        } else {
+          currentValue = retailer_credit_Invoices?.recoverd_amount || 0;
+        }
+
+        if (currentValue <= 0) {
+          const toast: Toaster = {
+            type: 'error',
+            message: `Please enter a value in ${fieldLabel} field`,
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+          return;
+        }
+
+        retailer_credit_Invoices.recoverd_amount = currentValue;
+        if (this.gridApi) {
+          this.gridApi.forEachNode((rowNode) => {
+            if (rowNode.data === retailer_credit_Invoices) {
+              rowNode.data.recoverd_amount = currentValue;
+            }
+          });
+        }
+      } else {
+        const inputElement = document.getElementById(`added_to_current_${index}`) as HTMLInputElement;
+        if (inputElement && inputElement.value !== undefined) {
+          currentValue = parseFloat(inputElement.value) || 0;
+        } else {
+          currentValue = retailer_credit_Invoices?.added_to_current || 0;
+        }
+
+        if (currentValue <= 0) {
+          const toast: Toaster = {
+            type: 'error',
+            message: `Please enter a value in ${fieldLabel} field`,
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+          return;
+        }
+
+        retailer_credit_Invoices.added_to_current = currentValue;
+        if (this.gridApi) {
+          this.gridApi.forEachNode((rowNode) => {
+            if (rowNode.data === retailer_credit_Invoices) {
+              rowNode.data.added_to_current = currentValue;
+            }
+          });
+        }
       }
-      
+
       let parentOrderId = retailer_credit_Invoices.parent_order_id;
       if (this.executionData === null && this.retailerId === 0) {
         parentOrderId = this.ordersRetailers.find(
           (x) => x.retailer_id === retailer_credit_Invoices.retailer_id
         ).id;
-      } else {
-        console.log('retailer_credit_Invoices', retailer_credit_Invoices);
       }
-      console.log('retailer_credit_Invoices ', retailer_credit_Invoices[0]);
       const postModel = getRetailersCreditInvoice(
         retailer_credit_Invoices,
         parentOrderId,
@@ -425,9 +544,12 @@ export class RetailerRecoveryComponent implements OnInit {
       if (this.retailerId > 0) {
         postModel.parent_order_id = null;
       }
+      this.setProcessingIndex(index);
       this.orderService
         .postRetailersCreditInvoices(postModel)
-        .subscribe((x) => {
+        .pipe(finalize(() => this.setProcessingIndex(null)))
+        .subscribe({
+          next: (x) => {
           this.retailer_credit_Invoices[index].id = x.result.id;
           this.retailer_credit_Invoices[index].is_added = 1;
           // Refresh the grid to update button state
@@ -445,14 +567,26 @@ export class RetailerRecoveryComponent implements OnInit {
             title: 'Success:',
           };
           this.toastService.showToaster(toast);
+          },
+          error: (error) => {
+            const toast: Toaster = {
+              type: 'error',
+              message: error?.error?.message || 'Unable to add recovery amount. Please try again.',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
         });
     } else {
       const postModel = deleteRetailerCreditInvoice(
         retailer_credit_Invoices.id
       );
+      this.setProcessingIndex(index);
       this.orderService
         .postRetailersCreditInvoices(postModel)
-        .subscribe((x) => {
+        .pipe(finalize(() => this.setProcessingIndex(null)))
+        .subscribe({
+          next: () => {
           // Clear the added_to_current value when removing
           this.retailer_credit_Invoices[index].added_to_current = 0;
           this.retailer_credit_Invoices[index].is_added = 0;
@@ -472,6 +606,15 @@ export class RetailerRecoveryComponent implements OnInit {
             title: 'Success:',
           };
           this.toastService.showToaster(toast);
+          },
+          error: (error) => {
+            const toast: Toaster = {
+              type: 'error',
+              message: error?.error?.message || 'Unable to update recovery amount. Please try again.',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
         });
     }
   }

@@ -25,348 +25,287 @@
 >
 </app-returned-products>
 
-<!-- Credit and Cheque info -->
+<!-- Credit and Cheque info - Tailwind Modal -->
 <div
-  class="modal fade"
   id="exampleModal2"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
+  *ngIf="showPaymentModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="paymentCancelled()"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div *ngIf="!isCredit" class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">
-          Add <span> Cheque Information</span>
+  <div 
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Cheque Modal Header -->
+    <div *ngIf="!isCredit" class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
+        Add <span class="font-light text-gray-600 dark:text-gray-400">Cheque Information</span>
         </h5>
         <button
           type="button"
+          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
           (click)="paymentCancelled()"
-          class="close"
-          data-dismiss="modal"
           aria-label="Close"
         >
-          <span aria-hidden="true">&times;</span>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
         </button>
       </div>
 
-      <div *ngIf="!isCredit" class="col-12">
-        <div id="floating-label" class="form-wrap p-0">
-          <div class="row pt-10">
-            <div class="col-4">
-              <div class="custom-control custom-radio">
-                <input
-                  class="custom-control-input"
-                  type="radio"
-                  [(ngModel)]="paymentTypeCheque"
-                  (click)="
-                    chequeAmount = null;
-                    currentFullPayment('Cheque Payment', 'Credit')
-                  "
-                  name="payment"
-                  id="payment1"
-                  value="full"
-                />
-                <label
-                  class="custom-control-label"
-                  style="font-size: 13px; line-height: 25px"
-                  for="payment1"
-                  >Full Amount</label
-                >
-              </div>
-            </div>
-            <div class="col-4">
-              <div class="custom-control custom-radio">
-                <input
-                  (click)="setPartial('Cheque Payment')"
-                  class="custom-control-input"
-                  type="radio"
-                  [(ngModel)]="paymentTypeCheque"
-                  name="payment"
-                  id="payment2"
-                  value="partial"
-                />
-                <label
-                  class="custom-control-label"
-                  style="font-size: 13px; line-height: 25px"
-                  for="payment2"
-                  >Partial Amount</label
-                >
-              </div>
-            </div>
-          </div>
-          <div
-            *ngIf="paymentTypeCheque === '' && isAdded"
-            class="col-12 input-error"
+    <!-- Modal Body - Cheque -->
+    <div *ngIf="!isCredit" class="px-6 py-5">
+      <!-- Payment Type Selection with ng-zorro Radio -->
+      <nz-radio-group 
+        [(ngModel)]="paymentTypeCheque" 
+        (ngModelChange)="onChequePaymentTypeChange()"
+        name="paymentTypeCheque"
+        class="payment-radio-group flex items-center gap-6 mb-4">
+        <label 
+          nz-radio 
+          nzValue="full"
+          class="text-sm font-normal text-gray-700 dark:text-gray-300 cursor-pointer">
+          Full Amount
+        </label>
+        <label 
+          nz-radio 
+          nzValue="partial"
+          class="text-sm font-normal text-gray-700 dark:text-gray-300 cursor-pointer">
+          Partial Amount
+        </label>
+      </nz-radio-group>
+      <span
+        *ngIf="paymentTypeCheque === '' && isAdded"
+        class="text-red-500 text-xs block mb-3"
+      >
+        Please select a payment method!
+      </span>
+
+      <!-- Form Fields with ng-zorro -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Cheque Number -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Cheque Number<span class="text-red-500">*</span>
+          </label>
+          <input
+            nz-input
+            type="text"
+            id="chequeNum"
+            name="cheque_num"
+            required
+            [(ngModel)]="chequeNumber"
+            #chequNo="ngModel"
+            placeholder="Enter cheque number"
+            class="payment-input rounded-md focus:border-primary hover:border-primary  dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300"
+          />
+          <span
+            *ngIf="chequNo.errors?.required && isAdded"
+            class="text-red-500 text-xs mt-1 block"
           >
-            Please select a payment method!
-          </div>
+            Please add Cheque Number!
+          </span>
+        </div>
 
-          <div class="row">
-            <div class="col-md-6 PT-10">
-              <div class="form-group focused">
-                <label class="control-label mb-10">Cheque Number*</label>
-                <input
-                  type="text"
-                  id="chequeNum"
-                  name="cheque_num"
-                  (focus)="focused($event)"
-                  required
-                  (blur)="left($event)"
-                  [(ngModel)]="chequeNumber"
-                  #chequNo="ngModel"
-                  autocomplete="off"
-                  class="form-control cheque_num"
-                />
-              </div>
-              <span
-                *ngIf="chequNo.errors?.required && isAdded"
-                class="input-error"
-              >
-                Please add Cheque Number!
-              </span>
-            </div>
-            <div class="col-md-6 PT-10">
-              <div class="form-group focused">
-                <label class="control-label mb-10">Date*</label>
-                <input
-                  type="date"
-                  id="datepicker"
-                  (focus)="focused($event)"
-                  required
-                  placeholder=""
-                  autocomplete="off"
-                  (blur)="left($event)"
-                  name="payment_date"
-                  [(ngModel)]="paymentDate"
-                  #payDate="ngModel"
-                  class="form-control cheque_date"
-                />
-              </div>
-              <span *ngIf="paymentDate === '  ' && isAdded" class="input-error">
-                Please add Payment Date!
-              </span>
-            </div>
-            <div class="col-md-6 PT-5">
-              <div class="form-group focused">
-                <label class="control-label mb-10">Bank Name*</label>
-                <input
-                  type="text"
-                  name="cheque_bank_name"
-                  id="chequeBankName"
-                  (focus)="focused($event)"
-                  required
-                  (blur)="left($event)"
-                  [(ngModel)]="bankName"
-                  #bank_Name="ngModel"
-                  autocomplete="off"
-                  class="form-control cheque_bank_name"
-                />
-              </div>
-              <span
-                *ngIf="bank_Name.errors?.required && isAdded"
-                class="input-error"
-              >
-                Please add Bank Name!
-              </span>
-            </div>
-            <div *ngIf="paymentTypeCheque !== 'full'" class="col-md-6 PT-5">
-              <div class="form-group focused">
-                <label class="control-label mb-10">Total Amount*</label>
-                <input
-                  type="number"
-                  min="0"
-                  [max]="cash?.amount_received"
-                  name="cheque_amount"
-                  (focus)="focused($event)"
-                  required
-                  (blur)="left($event)"
-                  [(ngModel)]="chequeAmount"
-                  #cheqAmount="ngModel"
-                  id="Amount1"
-                  autocomplete="off"
-                  class="form-control cheque_amount"
-                />
-              </div>
-              <span
-                *ngIf="cheqAmount.errors?.required && isAdded"
-                class="input-error"
-              >
-                Please add Total Amount!
-              </span>
-              <span
-                *ngIf="
-                  !cheqAmount.errors?.required && chequeAmount < 0 && isAdded
-                "
-                class="input-error"
-              >
-                Negative values not allowed
-              </span>
-              <span
-                *ngIf="
-                  !cheqAmount.errors?.required &&
-                  chequeAmount > cash?.amount_received &&
-                  isAdded
-                "
-                class="input-error"
-              >
-                Amount should not be greater than
-                {{ cash?.amount_received | number: "1.2-2" }}
-              </span>
-            </div>
-          </div>
+        <!-- Date with ng-zorro DatePicker -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Date<span class="text-red-500">*</span>
+          </label>
+          <nz-date-picker
+            id="datepicker"
+            name="payment_date"
+            [(ngModel)]="paymentDate"
+            #payDate="ngModel"
+            nzPlaceHolder="Select date"
+            class="payment-datepicker w-full"
+            [nzFormat]="'dd/MM/yyyy'"
+          ></nz-date-picker>
+          <span *ngIf="!paymentDate && isAdded" class="text-red-500 text-xs mt-1 block">
+            Please add Payment Date!
+          </span>
+        </div>
+
+        <!-- Bank Name -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Bank Name<span class="text-red-500">*</span>
+          </label>
+          <input
+            nz-input
+            type="text"
+            name="cheque_bank_name"
+            id="chequeBankName"
+            required
+            [(ngModel)]="bankName"
+            #bank_Name="ngModel"
+            placeholder="Enter bank name"
+            class="payment-input rounded-md focus:border-primary hover:border-primary  dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300"
+          />
+          <span
+            *ngIf="bank_Name.errors?.required && isAdded"
+            class="text-red-500 text-xs mt-1 block"
+          >
+            Please add Bank Name!
+          </span>
+        </div>
+
+        <!-- Total Amount with ng-zorro InputNumber -->
+        <div *ngIf="paymentTypeCheque !== 'full'">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            Total Amount<span class="text-red-500">*</span>
+          </label>
+          <nz-input-number
+            [(ngModel)]="chequeAmount"
+            #cheqAmount="ngModel"
+            [nzMin]="0"
+            [nzMax]="cash?.amount_received"
+            [nzStep]="1"
+            nzPlaceHolder="Enter amount"
+            class="payment-input-number w-full rounded-md focus:border-primary hover:border-primary  dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300" 
+            id="Amount1"
+            name="cheque_amount"
+          ></nz-input-number>
+          <span
+            *ngIf="cheqAmount.errors?.required && isAdded"
+            class="text-red-500 text-xs mt-1 block"
+          >
+            Please add Total Amount!
+          </span>
+          <span *ngIf="+chequeAmount === 0 && isAdded" class="text-red-500 text-xs mt-1 block">
+            Zero value not allowed
+          </span>
+          <span
+            *ngIf="
+              !cheqAmount.errors?.required &&
+              chequeAmount > cash?.amount_received &&
+              isAdded
+            "
+            class="text-red-500 text-xs mt-1 block"
+          >
+            Amount should not be greater than
+            {{ cash?.amount_received | number: "1.2-2" }}
+          </span>
         </div>
       </div>
-      <div *ngIf="isCredit" class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">
-          Add <span>Credit Information</span>
-        </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
+    </div>
+    <!-- Credit Modal Header -->
+    <div *ngIf="isCredit" class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
+        Add <span class="font-light text-gray-600 dark:text-gray-400">Credit Information</span>
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="paymentCancelled()"
+        aria-label="Close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body - Credit -->
+    <div *ngIf="isCredit" class="px-6 py-5">
+      <!-- Payment Type Selection with ng-zorro Radio -->
+      <nz-radio-group 
+        [(ngModel)]="paymentTypeCredit"
+        (ngModelChange)="onCreditPaymentTypeChange()"
+        name="paymentTypeCredit"
+        class="payment-radio-group flex items-center gap-6 mb-4">
+        <label 
+          nz-radio 
+          nzValue="full"
+          class="text-sm font-normal text-gray-700 dark:text-gray-300 cursor-pointer">
+          Full Amount
+        </label>
+        <label 
+          nz-radio 
+          nzValue="partial"
+          class="text-sm font-normal text-gray-700 dark:text-gray-300 cursor-pointer">
+          Partial Amount
+        </label>
+      </nz-radio-group>
+      <span
+        *ngIf="paymentTypeCredit === '' && isAdded"
+        class="text-red-500 text-xs block mb-3"
+      >
+        Please select a payment method!
+      </span>
+
+      <!-- Amount Field with ng-zorro InputNumber -->
+      <div *ngIf="paymentTypeCredit !== 'full'" class="max-w-md">
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Amount<span class="text-red-500">*</span>
+        </label>
+        <nz-input-number
+          [(ngModel)]="creditAmount"
+          #credAmount="ngModel"
+          [nzMin]="0"
+          [nzMax]="dueAmount - (cheque?.amount_received || 0)"
+          [nzStep]="1"
+          nzPlaceHolder="Enter amount"
+          class="payment-input-number w-[250px] rounded-md focus:border-primary hover:border-primary  dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300"
+          name="credit_amount"
+        ></nz-input-number>
+        <span
+          *ngIf="credAmount.errors?.required && isAdded"
+          class="text-red-500 text-xs mt-1 block"
         >
-          <span aria-hidden="true">&times;</span>
-        </button>
+          Please add Total Amount!
+        </span>
+        <span *ngIf="+creditAmount === 0 && isAdded" class="text-red-500 text-xs mt-1 block">
+          Zero value not allowed
+        </span>
+        <span
+          *ngIf="
+            !credAmount.errors?.required &&
+            +creditAmount > dueAmount - (cheque?.amount_received || 0) &&
+            isAdded
+          "
+          class="text-red-500 text-xs mt-1 block"
+        >
+          Amount should not be greater than {{ (dueAmount - (cheque?.amount_received || 0)) | number: "1.2-2" }}
+        </span>
       </div>
+    </div>
 
-      <div *ngIf="isCredit" id="floating-label" class="form-wrap p-0">
-        <div class="col-12">
-          <div class="row pt-10">
-            <div class="col-6">
-              <div class="custom-control custom-radio">
-                <input
-                  class="custom-control-input"
-                  [(ngModel)]="paymentTypeCredit"
-                  type="radio"
-                  (click)="
-                    creditAmount = null;
-                    currentFullPayment('Credit', 'Cheque payment')
-                  "
-                  name="payment"
-                  id="Amount1"
-                  value="full"
-                />
-                <label
-                  class="custom-control-label"
-                  style="font-size: 13px; line-height: 25px"
-                  for="Amount1"
-                  >Full Amount</label
-                >
-              </div>
-              <span
-                *ngIf="paymentTypeCredit === '' && isAdded"
-                class="input-error"
-              >
-                Please select a payment method!
-              </span>
-            </div>
-            <div class="col-6">
-              <div class="custom-control custom-radio">
-                <input
-                  (click)="setPartial('Credit')"
-                  class="custom-control-input"
-                  [(ngModel)]="paymentTypeCredit"
-                  type="radio"
-                  name="payment"
-                  id="Amount2"
-                  value="partial"
-                />
-                <label
-                  class="custom-control-label"
-                  style="font-size: 13px; line-height: 25px"
-                  for="Amount2"
-                  >Partial Amount</label
-                >
-              </div>
-            </div>
-            <div *ngIf="paymentTypeCredit !== 'full'" class="col-md-6 PT-10">
-              <div class="form-group focused">
-                <label class="control-label mb-10">Amount*</label>
-                <input
-                  type="number"
-                  min="0"
-                  [max]="dueAmount - (cheque?.amount_received || 0)"
-                  name="cheque_amount"
-                  (focus)="focused($event)"
-                  required
-                  (blur)="left($event)"
-                  [(ngModel)]="creditAmount"
-                  #credAmount="ngModel"
-                  autocomplete="off"
-                  class="form-control cheque_amount"
-                />
-              </div>
-              <span
-                *ngIf="credAmount.errors?.required && isAdded"
-                class="input-error"
-              >
-                Please add Total Amount!
-              </span>
-              <span
-                *ngIf="
-                  !credAmount.errors?.required && creditAmount < 0 && isAdded
-                "
-                class="input-error"
-              >
-                Negative values not allowed
-              </span>
-              <span
-                *ngIf="
-                  !credAmount.errors?.required &&
-                  creditAmount > dueAmount - (cheque?.amount_received || 0) &&
-                  isAdded
-                "
-                class="input-error"
-              >
-                Amount should not be greater than
-                {{
-                  dueAmount - (cheque?.amount_received || 0) | number: "1.2-2"
-                }}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <!-- Error Message for Mixed Payment -->
       <div
         *ngIf="
           (paymentTypeCheque === 'partial' && paymentTypeCredit === 'full') ||
           (paymentTypeCheque === 'full' && paymentTypeCredit === 'partial')
         "
-        class="form-wrap p-10"
-      >
-        <h5 class="input-error">
-          You have to choose "Partial Amount" to use both Credit and Cheque
-          Payment!
-        </h5>
+      class="px-6 py-4 bg-red-50 dark:bg-red-900/20 border-t border-b border-red-200 dark:border-red-800"
+    >
+      <p class="text-red-600 dark:text-red-400 text-sm font-medium">
+        You have to choose "Partial Amount" to use both Credit and Cheque Payment!
+      </p>
       </div>
 
-      <div class="modal-footer border-0">
-        <button
-          type="submit"
-          [disabled]="
-            (paymentTypeCheque === 'partial' && paymentTypeCredit === 'full') ||
-            (paymentTypeCheque === 'full' && paymentTypeCredit === 'partial')
-          "
-          class="btn btn-primary"
-          (click)="addPaymentMethod()"
-        >
-          Add
-        </button>
-        <button
-          type="button"
-          id="close-payment-modal"
-          (click)="paymentCancelled()"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          Cancel
-        </button>
-      </div>
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
+      <button
+        type="button"
+        id="close-payment-modal"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        (click)="paymentCancelled()"
+        aria-label="Close"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        [disabled]="
+          (paymentTypeCheque === 'partial' && paymentTypeCredit === 'full') ||
+          (paymentTypeCheque === 'full' && paymentTypeCredit === 'partial')
+        "
+        class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:border-gray-400"
+        (click)="addPaymentMethod()"
+      >
+        Add
+      </button>
     </div>
   </div>
 </div>
@@ -722,16 +661,6 @@
                     Remove Credit
                   </button>
                   <button
-                    *ngIf="!savingOrder"
-                    id="open-modal-payment"
-                    class="hidden"
-                    data-toggle="modal"
-                    data-target="#exampleModal2"
-                  >
-                    Show Modal
-                  </button>
-
-                  <button
                     [disabled]="savingOrder || !selectedRetailer"
                     (click)="saveExecutionQuantity()"
                     class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -742,8 +671,7 @@
                   <button
                   [disabled]="!orderDetails?.items?.length"
                   *ngIf="!savingOrder"
-                  data-toggle="modal"
-                  data-target="#order-hold-model"
+                  (click)="showHoldModal = true"
                   class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors mr-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   > 
                   Hold Order 
@@ -752,8 +680,7 @@
                   <button
                     [disabled]="savingOrder || !selectedRetailer"
                     class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    data-toggle="modal"
-                    data-target="#order-del"
+                    (click)="showCancelModal = true"
                   >
                     Cancel Order
                   </button>
@@ -784,7 +711,7 @@
                 <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
                   <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Order Booker:</strong>
                   <b class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
-                    {{ spotSaleOrder.orderBookerName }}
+                    {{ spotSaleOrder.orderBookerName }}  
                   </b>
                 </div>
                 
@@ -814,86 +741,113 @@
               </div>
             </div>
 
-            <div class="col-12">
-              <div class="Product-Filter border-0">
-                <div class="row">
-                  <div class="col-3 pr-0">
-                    <div class="_cust_filter p-0 m-0 w-100">
-                      <div class="form-s2">
-                        <ng-select
-                          class="formselect"
-                          (change)="getOrderBookerRoutes()"
-                          [(ngModel)]="selectedOrderBooker"
-                          name="order-booker"
-                          placeholder="Select Order Booker"
-                          style="width: 100% !important"
-                        >
-                          <ng-option
-                            *ngFor="let item of orderBookers; let i = index"
-                            [value]="item"
-                            >{{ item.employee_first_name }}
-                            {{ item.employee_last_name }}
-                          </ng-option>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-3 pr-0" *ngIf="selectedOrderBooker">
-                    <div class="_cust_filter p-0 m-0 w-100">
-                      <div class="form-s2">
-                        <ng-select
-                          class="formselect"
-                          (change)="getRetaielrsByRoute($event)"
-                          [(ngModel)]="selectedRoute"
-                          name="booker-route"
-                          placeholder="Select Route"
-                          style="width: 100% !important"
-                        >
-                          <ng-option
-                            *ngFor="let item of bookerRoutes; let i = index"
-                            [value]="item.route_id"
-                            >{{ item.name }}</ng-option
-                          >
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="col-3 pr-0" *ngIf="selectedRoute">
-                    <div class="_cust_filter p-0 m-0 w-100">
-                      <div class="form-s2">
-                        <ng-select
-                          class="formselect"
-                          [(ngModel)]="spotRetailer"
-                          name="spot-retailer"
-                          placeholder="Select Retailer"
-                          style="width: 100% !important"
-                        >
-                          <ng-container
-                            *ngFor="let item of routeRetailers; let i = index"
-                          >
-                            <ng-option *ngIf="!item.isAdded" [value]="item">
-                              {{ item.retailer_name }}</ng-option
-                            >
-                          </ng-container>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    *ngIf="spotRetailer && showAddRetailer"
-                    (click)="setSpotSaleRetailer()"
-                    class="btn add_button addpr addReturn add-ordr"
+            <div class="bg-[#f9f9f9] dark:bg-[#252525] px-[15px] border border-[#efefef] dark:border-[#333333] py-[10px] mt-3 rounded-lg relative mb-2">
+              <div class="flex flex-wrap items-center gap-3">
+                <div class="dark:text-gray-200">Order Booker:</div>
+                <!-- Order Booker Select -->
+                <div class="w-[240px]">
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    [(ngModel)]="selectedOrderBooker"
+                    (ngModelChange)="getOrderBookerRoutes()"
+                    nzPlaceHolder="Select Order Booker"
+                    [nzDropdownMatchSelectWidth]="false"
+                    [nzDropdownStyle]="{ 'z-index': '9999' }"
+                    class="w-full employee-select"
                   >
-                    Add Order
-                  </button>
+                    <nz-option nzDisabled nzLabel="Select Order Booker" [nzValue]="null"></nz-option>
+                    <nz-option
+                      *ngFor="let item of orderBookers"
+                      [nzValue]="item"
+                      [nzLabel]="item.employee_first_name + ' ' + item.employee_last_name"
+                    ></nz-option>
+                  </nz-select>
                 </div>
+
+                <!-- Route Select -->
+                <div class="dark:text-gray-200">Route:</div>
+                <div class="w-[240px]">
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    [(ngModel)]="selectedRoute"
+                    (ngModelChange)="getRetaielrsByRoute($event)"
+                    [nzPlaceHolder]="!selectedOrderBooker ? 'Select Order Booker First' : 'Select Route'"
+                    [nzDropdownMatchSelectWidth]="false"
+                    [nzDropdownStyle]="{ 'z-index': '9999' }"
+                    [nzDisabled]="!selectedOrderBooker"
+                    class="w-full route-select"
+                  >
+                    <nz-option 
+                      *ngIf="!selectedOrderBooker" 
+                      nzDisabled 
+                      nzLabel="Select Order Booker First" 
+                      [nzValue]="null"
+                    ></nz-option>
+                    <nz-option 
+                      *ngIf="selectedOrderBooker" 
+                      nzDisabled 
+                      nzLabel="Select Route" 
+                      [nzValue]="null"
+                    ></nz-option>
+                    <nz-option
+                      *ngFor="let item of bookerRoutes"
+                      [nzValue]="item.route_id"
+                      [nzLabel]="item.name"
+                    ></nz-option>
+                  </nz-select>
+                </div>
+
+                <!-- Retailer Select -->
+                <div class="dark:text-gray-200">Retailer:</div>
+                <div class="w-[240px]">
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    [(ngModel)]="spotRetailer"
+                    [nzPlaceHolder]="!selectedRoute ? 'Select Route First' : 'Select Retailer'"
+                    [nzDropdownMatchSelectWidth]="false"
+                    [nzDropdownStyle]="{ 'z-index': '9999' }"
+                    [nzDisabled]="!selectedRoute"
+                    class="w-full retailer-select"
+                  >
+                    <nz-option 
+                      *ngIf="!selectedRoute" 
+                      nzDisabled 
+                      nzLabel="Select Route First" 
+                      [nzValue]="null"
+                    ></nz-option>
+                    <nz-option 
+                      *ngIf="selectedRoute" 
+                      nzDisabled 
+                      nzLabel="Select Retailer" 
+                      [nzValue]="null"
+                    ></nz-option>
+                    <ng-container *ngFor="let item of routeRetailers">
+                      <nz-option
+                        *ngIf="!item.isAdded"
+                        [nzValue]="item"
+                        [nzLabel]="item.retailer_name"
+                      ></nz-option>
+                    </ng-container>
+                  </nz-select>
+                </div>
+
+                <!-- Add Order Button -->
+                <button
+                  *ngIf="spotRetailer && showAddRetailer"
+                  (click)="setSpotSaleRetailer()"
+                  class="px-6 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 transition-all duration-200"
+                >
+                  Add Order
+                </button>
               </div>
             </div>
+ 
 
-            <div class="row m-0 grayTopborder">
-              <div id="orderList-id" class="col-4 p-0">
+            <div class="flex">
+              <div id="orderList-id" class="w-[300px] shrink-0">
                 <app-retailer-sub-list
                   [retailers]="spotSaleOrder.retailers"
                   [currentTab]="currentTab"
@@ -903,7 +857,7 @@
                 ></app-retailer-sub-list>
               </div>
 
-              <div class="col p-0">
+              <div class="flex-1 pl-3 pr-2">
                 <div class="h-[calc(100vh-249px)] overflow-y-auto">
                   <app-order-items-list
                     *ngIf="!savingOrder && selectedRetailer"
@@ -938,20 +892,10 @@
                   <div class="col-12" *ngIf="savingOrder">
                     <app-loader-white></app-loader-white>
                   </div>
-                  <div
-                    class="no-content"
-                    *ngIf="!savingOrder && !selectedRetailer"
-                  >
-                    <div
-                      class="no-content-container"
-                      style="
-                        margin: auto;
-                        display: table;
-                        text-align: center;
-                        color: #b7b7b7;
-                      "
-                    >
-                      <img src="assets/images/select order-icon.svg" alt="" />
+                  <div *ngIf="!savingOrder && !selectedRetailer" class="no-content w-full h-[calc(100vh-249px)] flex">
+                    <div class="no-content-container m-auto table text-center text-[#b7b7b7] dark:text-gray-500">
+                      <img src="assets/images/select order-icon.svg" alt=""
+                        class="w-[70px] h-[70px] mx-auto mb-[10px] block dark:invert dark:opacity-70" />
                       <strong>Select order to see details</strong>
                     </div>
                   </div>
@@ -991,15 +935,6 @@
                   >
                     Remove Credit
                   </button>
-                  <button
-                    *ngIf="!savingOrder"
-                    id="open-modal-payment"
-                    class="hidden"
-                    data-toggle="modal"
-                    data-target="#exampleModal2"
-                  >
-                    Show Modal
-                  </button>
 
                   <button
                     [disabled]="
@@ -1014,8 +949,7 @@
                   <button
                     [disabled]="!orderDetails"
                     class="px-3 py-1.5 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                    data-toggle="modal"
-                    data-target="#order-del"
+                    (click)="showCancelModal = true"
                   >
                     Cancel
                   </button>
@@ -1046,79 +980,103 @@
             role="tabpanel"
             aria-labelledby="pills-load-tab"
           >
-            <div class="col-12">
-              <div class="Product-Filter border-0">
-                <div class="row">
-                  <div class="col-3 pr-0">
-                    <div class="_cust_filter p-0 m-0 w-100">
-                      <div class="form-s2">
-                        <ng-select
-                          class="formselect"
-                          (change)="getOrderBookerRoutes()"
-                          [(ngModel)]="selectedOrderBooker"
-                          name="order-booker"
-                          placeholder="Select Order Booker"
-                          style="width: 100% !important"
-                        >
-                          <ng-option
-                            *ngFor="let item of orderBookers; let i = index"
-                            [value]="item"
-                            >{{ item.employee_first_name }}
-                            {{ item.employee_last_name }}
-                          </ng-option>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
+            <div class="bg-[#f9f9f9] dark:bg-[#252525] px-[15px] border border-[#efefef] dark:border-[#333333] py-[10px] mt-6 rounded-lg relative mb-2">
+              <div class="flex flex-wrap items-center gap-3">
+                <div class="dark:text-gray-200">Order Booker:</div>
+                <!-- Order Booker Select -->
+                <div class="w-[240px]">
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    [(ngModel)]="selectedOrderBooker"
+                    (ngModelChange)="getOrderBookerRoutes()"
+                    nzPlaceHolder="Select Order Booker"
+                    [nzDropdownMatchSelectWidth]="false"
+                    [nzDropdownStyle]="{ 'z-index': '9999' }"
+                    class="w-full employee-select"
+                  >
+                    <nz-option nzDisabled nzLabel="Select Order Booker" [nzValue]="null"></nz-option>
+                    <nz-option
+                      *ngFor="let item of orderBookers"
+                      [nzValue]="item"
+                      [nzLabel]="item.employee_first_name + ' ' + item.employee_last_name"
+                    ></nz-option>
+                  </nz-select>
+                </div>
 
-                  <div class="col-3 pr-0" *ngIf="selectedOrderBooker">
-                    <div class="_cust_filter p-0 m-0 w-100">
-                      <div class="form-s2">
-                        <ng-select
-                          class="formselect"
-                          (change)="getRetaielrsByRoute($event)"
-                          [(ngModel)]="selectedRoute"
-                          name="booker-route"
-                          placeholder="Select Route"
-                          style="width: 100% !important"
-                        >
-                          <ng-option
-                            *ngFor="let item of bookerRoutes; let i = index"
-                            [value]="item.route_id"
-                            >{{ item.name }}</ng-option
-                          >
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
+                <!-- Route Select -->
+                <div class="dark:text-gray-200">Route:</div>
+                <div class="w-[240px]">
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    [(ngModel)]="selectedRoute"
+                    (ngModelChange)="getRetaielrsByRoute($event)"
+                    [nzPlaceHolder]="!selectedOrderBooker ? 'Select Order Booker First' : 'Select Route'"
+                    [nzDropdownMatchSelectWidth]="false"
+                    [nzDropdownStyle]="{ 'z-index': '9999' }"
+                    [nzDisabled]="!selectedOrderBooker"
+                    class="w-full route-select"
+                  >
+                    <nz-option 
+                      *ngIf="!selectedOrderBooker" 
+                      nzDisabled 
+                      nzLabel="Select Order Booker First" 
+                      [nzValue]="null"
+                    ></nz-option>
+                    <nz-option 
+                      *ngIf="selectedOrderBooker" 
+                      nzDisabled 
+                      nzLabel="Select Route" 
+                      [nzValue]="null"
+                    ></nz-option>
+                    <nz-option
+                      *ngFor="let item of bookerRoutes"
+                      [nzValue]="item.route_id"
+                      [nzLabel]="item.name"
+                    ></nz-option>
+                  </nz-select>
+                </div>
 
-                  <div class="col-3 pr-0" *ngIf="selectedRoute">
-                    <div class="_cust_filter p-0 m-0 w-100">
-                      <div class="form-s2">
-                        <ng-select
-                          class="formselect"
-                          [(ngModel)]="recoveryRetailer"
-                          name="spot-retailer"
-                          placeholder="Select Retailer"
-                          (change)="setRecoveryRetailer()"
-                          style="width: 100% !important"
-                        >
-                          <ng-container
-                            *ngFor="let item of routeRetailers; let i = index"
-                          >
-                            <ng-option *ngIf="!item.isAdded" [value]="item">
-                              {{ item.retailer_name }}</ng-option
-                            >
-                          </ng-container>
-                        </ng-select>
-                      </div>
-                    </div>
-                  </div>
+                <!-- Retailer Select -->
+                <div class="dark:text-gray-200">Retailer:</div>
+                <div class="w-[240px]">
+                  <nz-select
+                    nzShowSearch
+                    nzAllowClear
+                    [(ngModel)]="recoveryRetailer"
+                    (ngModelChange)="setRecoveryRetailer()"
+                    [nzPlaceHolder]="!selectedRoute ? 'Select Route First' : 'Select Retailer'"
+                    [nzDropdownMatchSelectWidth]="false"
+                    [nzDropdownStyle]="{ 'z-index': '9999' }"
+                    [nzDisabled]="!selectedRoute"
+                    class="w-full retailer-select"
+                  >
+                    <nz-option 
+                      *ngIf="!selectedRoute" 
+                      nzDisabled 
+                      nzLabel="Select Route First" 
+                      [nzValue]="null"
+                    ></nz-option>
+                    <nz-option 
+                      *ngIf="selectedRoute" 
+                      nzDisabled 
+                      nzLabel="Select Retailer" 
+                      [nzValue]="null"
+                    ></nz-option>
+                    <ng-container *ngFor="let item of routeRetailers">
+                      <nz-option
+                        *ngIf="!item.isAdded"
+                        [nzValue]="item"
+                        [nzLabel]="item.retailer_name"
+                      ></nz-option>
+                    </ng-container>
+                  </nz-select>
                 </div>
               </div>
             </div>
 
-            <div class="col-12 PT-10">
+            <div class="h-[calc(100vh-204px)]">
               <app-retailer-recovery
                 *ngIf="isRecvoryRetailerCanged"
                 [retailerId]="this.recoveryRetailer?.retailer_id"
@@ -1142,7 +1100,7 @@
               <div class="flex gap-3">
                 <!-- Date -->
                 <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
-                  <strong class="text-gray-900 dark:text-gray-300">Date:</strong>
+                  <strong class="font-primary font-medium text-gray-900 dark:text-gray-300">Date:</strong>
                   <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
                     {{ finalLoad?.dsr?.executed_date?.split(" ")[0] || "--" }}
                   </span>
@@ -1150,7 +1108,7 @@
                 
                 <!-- Order Booker -->
                 <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
-                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Order Booker:</strong>
+                  <strong class="font-primary font-medium text-gray-900 dark:text-gray-300">Order Booker:</strong>
                   <b class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
                     {{ "--" }}
                   </b>
@@ -1158,7 +1116,7 @@
                 
                 <!-- Territory -->
                 <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
-                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Territory:</strong>
+                  <strong class="font-primary font-medium text-gray-900 dark:text-gray-300">Territory:</strong>
                   <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
                     {{ finalLoad?.dsr?.territory || "--" }}
                   </span>
@@ -1166,7 +1124,7 @@
                 
                 <!-- Total Outlets -->
                 <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
-                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Total Outlets:</strong>
+                  <strong class="font-primary font-medium text-gray-900 dark:text-gray-300">Total Outlets:</strong>
                   <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
                     {{ finalLoad?.dsr?.total_orders || "--" }}
                   </span>
@@ -1174,7 +1132,7 @@
                 
                 <!-- Total Amount -->
                 <div class="flex justify-between items-center w-full bg-[#f9f9f9] dark:bg-[#252525] border-b border-[#d1d1d1] dark:border-[#333333] p-[10px] leading-none rounded-md">
-                  <strong class="font-primary font-semibold text-gray-900 dark:text-gray-300">Total Amount:</strong>
+                  <strong class="font-primary font-medium text-gray-900 dark:text-gray-300">Total Amount:</strong>
                   <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">
                     Rs. {{ finalLoad?.dsr?.total_net_amount || 0 | number: "1.2-2" }}
                   </span>
@@ -1182,259 +1140,284 @@
               </div>
             </div>
 
-            <div class="col-12 PT-10">
-              <div *ngIf="!loading" class="row">
-                <div class="col-8 PB-30 pr-0">
-                  <div class="header PT-10 PB-10 mb-15">
-                    <h2 class="w-100">Delivery <span> Challan</span></h2>
-                  </div>
+            <div class="flex flex-col w-full pt-3">
+              <div *ngIf="!loading" class="flex w-full">
+                <div class="flex-1 pr-3 pl-2"> 
+                  <div class="flex items-center justify-between">
+                    <h2 class="relative flex items-start text-base pl-0 mb-3 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-12px] before:top-[3px] font-primary font-medium">
+                      Delivery &nbsp; <span class="font-light"> Challan</span></h2>
+                  
 
-                  <table
-                    *ngIf="finalLoad?.dsr?.contents"
-                    datatable
-                    [dtOptions]="dtOPtions"
-                    class="table table-hover dt-responsive nowrap"
-                    id="example3"
-                    style="width: 100%"
-                  >
-                    <thead>
-                      <tr>
-                        <th>SN</th>
-                        <th>Product Name</th>
-                        <th>Unit</th>
-                        <th>Issue QTY.</th>
-                        <th>Return QTY.</th>
-                        <th>Sold QTY.</th>
-                        <th>Inventory Return</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let item of finalLoad?.dsr?.contents">
-                        <td>{{ item.item_id }}</td>
-                        <td>{{ item.item_name }}</td>
-                        <td>{{ item.unit_name }}</td>
-                        <td>{{ item.total_dispatch_qty }}</td>
-                        <td>{{ item.total_return_qty }}</td>
-                        <td>{{ item.total_sold_qty }}</td>
-                        <td>{{ item.total_cancel_qty }}</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                    <!-- Search Input -->
+                    <div *ngIf="finalLoad?.dsr?.contents" class="mb-3 w-56 relative">
+                      <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                      </div>
+                      <input 
+                        type="text" 
+                        id="delivery-challan-filter-text-box" 
+                        placeholder="Search products..." 
+                        autocomplete="off"
+                        class="w-56 pl-10 pr-4 py-2 h-[32px] border border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:border-primary dark:focus:border-primary focus:outline-none font-primary text-sm"
+                        (input)="onDeliveryChallanQuickFilterChanged($event)" 
+                      />
+                    </div>
+
+                  </div>
+                  
+                  <!-- AG Grid -->
+                  <div *ngIf="finalLoad?.dsr?.contents && deliveryChallanColumnDefs.length > 0" class="ag-theme-quartz ag-grid-container w-full">
+                    <ag-grid-angular 
+                      [rowData]="finalLoad.dsr.contents" 
+                      [columnDefs]="deliveryChallanColumnDefs"
+                      [defaultColDef]="defaultColDef" 
+                      [pagination]="true"
+                      [paginationPageSize]="10"
+                      [paginationPageSizeSelector]="[10, 20, 50, 100]"
+                      [suppressPaginationPanel]="false"
+                      [domLayout]="'autoHeight'"
+                      [animateRows]="true"
+                      [theme]="'legacy'"
+                      [suppressHorizontalScroll]="false"
+                      [suppressColumnVirtualisation]="true"
+                      (gridReady)="onDeliveryChallanGridReady($event)">
+                    </ag-grid-angular>
+                  </div>
                 </div>
 
-                <div class="col-4">
-                  <div class="cash-report">
-                    <div class="header">
-                      <h2 class="cash-title w-100 mb-15">
-                        Cash <span>Report</span>
+                <div class="w-[370px] shrink-0">
+                  <div class="bg-[#f8f8f8] dark:bg-[#1a1a1a] min-h-[calc(100vh-122px)] rounded-lg" *ngIf="finalLoad">
+                    <div class="text-[#424242] dark:text-gray-300 px-5 py-[15px] relative shadow-none rounded-lg">
+                      <!-- Header with Add Expense Button -->
+                      <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-base font-semibold font-primary text-gray-900 dark:text-neutral-300">
+                          Cash <span class="font-light">Report</span>
+                        </h2>
                         <button
                           *ngIf="!isAdded"
-                          class="btn btn-primary add-expense"
-                          data-toggle="modal"
-                          data-target="#expenseModal"
+                          class="px-3 py-1.5 text-[13px] leading-none font-primary text-white bg-primary border border-primary rounded-[5px] hover:bg-blue-700 hover:border-blue-700 transition-colors"
+                          (click)="openExpenseModal()"
                         >
                           Add Expense
                         </button>
                         <button
                           *ngIf="isAdded"
-                          class="btn btn-primary add-expense"
+                          class="px-3 py-1.5 text-xs font-primary text-white bg-primary border border-primary rounded-[5px] opacity-50 cursor-not-allowed flex items-center justify-center"
                           disabled
                         >
-                          <div class="spinner-border text-light" role="status">
-                            <span class="sr-only">Loading...</span>
-                          </div>
+                          <svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                          </svg>
                         </button>
-                      </h2>
-                      <div class="report_value">
-                        <strong>Gross Amount:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_gross_amount | number: "1.2-2"
-                        }}</span>
-                      </div>
-                      <div class="report_value">
-                        <strong>Trade Offer:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_trade_offer | number: "1.2-2"
-                        }}</span>
-                      </div>
-                      <div class="report_value">
-                        <strong>Trade Discount:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_trade_discount | number: "1.2-2"
-                        }}</span>
-                      </div>
-                      <div class="report_value">
-                        <strong>Special Discount:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_special_discount
-                            | number: "1.2-2"
-                        }}</span>
-                      </div>
-                      <div class="report_value">
-                        <strong>Extra Discount:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_booker_discount
-                            | number: "1.2-2"
-                        }}</span>
-                      </div>
-                      <div class="report_value">
-                        <strong>Loyalty Discount:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_loyalty_discount
-                            | number: "1.2-2"
-                        }}</span>
-                      </div>
-                      <div class="report_value">
-                        <strong>Total Tax:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_tax_amount | number: "1.2-2"
-                        }}</span>
-                      </div>
-                      <div class="report_value" style="color: #0038ba">
-                        <strong>Total Net Sale:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_net_amount | number: "1.2-2"
-                        }}</span>
                       </div>
 
-                      <div class="report_value">
-                        <strong>Expense:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_expense | number: "1.2-2"
-                        }}</span>
-                      </div>
-
-                      <div class="report_value">
-                        <strong>Return Amount:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_return_amount | number: "1.2-2"
-                        }}</span>
-                      </div>
-
-                      <div class="report_value">
-                        <strong>Recovery:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_recovered_amount
-                            | number: "1.2-2"
-                        }}</span>
-                      </div>
-
-                      <div class="report_value" style="color: #0038ba">
-                        <strong>Total Net Receivable:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_net_after_recovery
-                            | number: "1.2-2"
-                        }}</span>
-                      </div>
-
-                      <div class="report_value">
-                        <strong>Cheque:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_cheque_amount | number: "1.2-2"
-                        }}</span>
-                      </div>
-
-                      <div class="report_value">
-                        <strong>Credit:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_credit_amount | number: "1.2-2"
-                        }}</span>
-                      </div>
-                      <div class="report_value">
-                        <strong>Cash:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_cash_amount | number: "1.2-2"
-                        }}</span>
-                      </div>
-                      <!-- (keyup)="amountReceivedMax()" -->
                       <div
-                        class="report_value"
-                        style="height: 40px; line-height: 22px"
-                      >
-                        <strong>AMT. Received:</strong>
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Gross Amount:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_gross_amount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Trade Offer:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_trade_offer | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Trade Discount:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_trade_discount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Special Discount:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_special_discount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Extra Discount:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_booker_discount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Loyalty Discount:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_loyalty_discount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Total Tax:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_tax_amount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md text-[#0038ba] dark:text-neutral-200">
+                        <strong class="font-semibold font-primary">Total Net Sale:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg">{{
+                          finalLoad?.dsr?.total_net_amount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Expense:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_expense | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Return Amount:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_return_amount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Recovery:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_recovered_amount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md text-[#0038ba] dark:text-neutral-200">
+                        <strong class="font-semibold font-primary">Total Net Receivable:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg">{{
+                          finalLoad?.dsr?.total_net_after_recovery | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Cheque:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_cheque_amount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Credit:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_credit_amount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">Cash:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg text-gray-900 dark:text-neutral-400">{{
+                          finalLoad?.dsr?.total_cash_amount | number: "1.2-2"
+                          }}</span>
+                      </div>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md">
+                        <strong class="font-semibold font-primary text-gray-900 dark:text-neutral-400">AMT. Received:</strong>
                         <input
                           type="number"
                           [(ngModel)]="amountReceived"
                           (keydown)="isNumber($event)"
-                          class="form-control value_input amount_recieved_cashReport"
+                          class="w-20 text-right px-2 py-1 border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none font-[Rationale,sans-serif] text-lg leading-none"
                           placeholder="0"
                         />
                       </div>
-                      <div class="report_value" style="color: #0038ba">
-                        <strong>Balance AMT:</strong>
-                        <span>{{
-                          finalLoad?.dsr?.total_amount_recieveable -
-                            amountReceived || 0 | number: "1.2-2"
-                        }}</span>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md text-[#0038ba] dark:text-neutral-200">
+                        <strong class="font-semibold font-primary">Balance AMT:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg">{{
+                          (finalLoad?.dsr?.total_amount_recieveable - amountReceived) || 0 | number: "1.2-2"
+                          }}</span>
                       </div>
-                      <div class="report_value" style="color: #0038ba">
-                        <strong>Gross Weight:</strong> 
-                        <span>{{ finalLoad?.dsr?.total_weight || 0 | number: "1.2-2" }}Kg</span>
+                      <div
+                        class="bg-white dark:bg-[#252525] text-[13px] relative p-[10px] tracking-[0.5px] mb-[5px] mt-[5px] shadow-[0_2px_8px_#4f4f4f1a] leading-none flex justify-between items-center rounded-md text-[#0038ba] dark:text-neutral-200">
+                        <strong class="font-semibold font-primary">Gross Weight:</strong>
+                        <span class="font-[Rationale,sans-serif] leading-none text-lg">{{ finalLoad?.dsr?.total_weight || 0 | number: "1.2-2" }}Kg</span>
                       </div>
+                    </div>
 
-                      <div class="report_value">
-                        <div class="row">
-                          <div *ngIf="!loading" class="col-12 PB-10">
-                            <a
-                              class="btn btn-primary w-100"
-                              (click)="generateDSR()"
-                              >Generate DSR</a
-                            >
-                          </div>
-                          <div *ngIf="!loading" class="col-12">
-                            <button
-                              [disabled]="+amountReceived < 0"
-                              class="btn btn-primary w-100"
-                              (click)="checkRecieveable()"
-                            >
-                              Mark Complete
-                            </button>
-                          </div>
-                          <div *ngIf="loading" class="col-12">
-                            <button
-                              type="submit"
-                              class="btn btn-primary w-100 mr-2"
-                              disabled
-                            >
-                              <div
-                                class="spinner-border text-light"
-                                role="status"
-                              >
-                                <span class="sr-only">Loading...</span>
-                              </div>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
+                    <!-- Action Buttons -->
+                    <div class="p-[0px_18px_10px_18px] flex flex-col gap-2">
+                      <button
+                        *ngIf="!loading"
+                        class="w-full px-4 py-2 leading-none text-sm font-primary text-white bg-primary border border-primary rounded-[5px] hover:bg-blue-700 hover:border-blue-700 transition-colors"
+                        (click)="generateDSR()"
+                      >
+                        Generate DSR
+                      </button>
+                      <button
+                        *ngIf="loading"
+                        type="button"
+                        class="w-full px-4 py-2 leading-none text-sm font-primary text-white bg-primary border border-primary rounded-[5px] opacity-50 cursor-not-allowed flex items-center justify-center"
+                        disabled
+                      >
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      </button>
+                      <button
+                        *ngIf="!loading"
+                        [disabled]="+amountReceived < 0"
+                        class="w-full px-4 py-2 leading-none text-sm font-primary text-white bg-primary border border-primary rounded-[5px] hover:bg-blue-700 hover:border-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        (click)="checkRecieveable()"
+                      >
+                        Mark Complete
+                      </button>
+                      <button
+                        *ngIf="loading"
+                        type="button"
+                        class="w-full px-4 py-2 leading-none text-sm font-primary text-white bg-primary border border-primary rounded-[5px] opacity-50 cursor-not-allowed flex items-center justify-center"
+                        disabled
+                      >
+                        <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                      </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-12" *ngIf="loading">
+              <div *ngIf="loading" class="flex justify-center items-center w-full p-8">
                 <app-loader-white></app-loader-white>
               </div>
             </div>
           </div>
 
-          <div class="col-md-12 text-center">
-            <div class="execFooter">
-              <button
-                [disabled]="currentTab === 1 || isSpotSaleActive || loading"
-                type="submit"
-                (click)="changeTab(currentTab - 1,'prev')"
-                class="btn btn-primary m-0 mr-2"
-              >
-                Previous
-              </button>
-              <button
-                type="submit"
-                [disabled]="isSpotSaleActive || loading || currentTab === 5"
-                (click)="changeTab(currentTab + 1,'next')"
-                class="btn btn-primary m-0"
-              >
-                Next
-              </button>
-            </div>
+          <!-- Previous/Next Navigation Buttons - Global for all tabs -->
+          <div *ngIf="currentTab !== 5" class="flex justify-center gap-2 mt-4 p-3 bg-[#f6f6f6] dark:bg-[#1a1a1a] rounded-lg">
+            <button type="button" (click)="changeTab(currentTab - 1,'prev')"
+              [disabled]="currentTab === 1 || isSpotSaleActive || loading"
+              class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              Previous
+            </button>
+            <button *ngIf="currentTab !== 4" type="button" (click)="changeTab(currentTab + 1,'next')"
+              [disabled]="isSpotSaleActive || loading || currentTab === 5"
+              class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              <div *ngIf="loading" class="inline-block animate-spin mr-2">
+                <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                  </path>
+                </svg>
+              </div>
+              {{ loading ? "" : "Next" }}
+            </button>
+            <button *ngIf="currentTab === 4" type="button" (click)="changeTab(currentTab + 1,'next')"
+              [disabled]="isSpotSaleActive || loading"
+              class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
+              Next
+            </button>
           </div>
         </div>
       </div> 
@@ -1510,122 +1493,132 @@
 
 <!-- Hold Order -->
 <div
-  class="modal fade"
   id="order-hold-model"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
+  *ngIf="showHoldModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="closeHoldOrderModal($event)"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="holdOrderModalLabel">
-          Product <span> Detail</span>
-        </h5>
-        <button
-          type="button"
-          class="close dont-close-products"
-          data-dismiss="modal"
-          (click)="closeHoldOrderModal($event)"
-          aria-label="Close"
-        >
-          <span class="dont-close-products" aria-hidden="true">&times;</span>
-        </button>
+  <div 
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
+        Hold <span class="font-light text-gray-600 dark:text-gray-400">Order</span>
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeHoldOrderModal($event)"
+        aria-label="Close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-6 py-5">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          Hold Reason<span class="text-red-500">*</span>
+        </label>
+        <input
+          nz-input
+          type="text"
+          placeholder="Enter reason"
+          required
+          [(ngModel)]="holdOrderParams.hold_reason"
+          class="payment-input rounded-md focus:border-primary hover:border-primary dark:bg-[#141414] dark:border-[#434343] dark:text-neutral-300 w-full"
+        />
       </div>
-      <div class="modal-body AddDetailPR">
-        <div class="row">
-          <div class="col-md-4 pt-7 mb-15">Hold Reason:</div>
-          <div class="col-md-8 mb-15">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Reason"
-              required
-              [(ngModel)]="holdOrderParams.hold_reason"
-              style="font-size: 13px"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer border-0" style="background-color: #f6f6f6">
-        <button
-          type="button"
-          class="btn btn-primary"
-          (click)="holdOrder($event)"
-          aria-label="Close"
-        >
-          Save
-        </button>
-        <button
-          type="button"
-          id="close-hold-model"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          (click)="closeHoldOrderModal($event)"
-          aria-label="Close"
-        >
-          Cancel
-        </button>
-      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
+      <button
+        type="button"
+        id="close-hold-model"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        (click)="closeHoldOrderModal($event)"
+        aria-label="Close"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors"
+        (click)="holdOrder($event)"
+        aria-label="Save"
+      >
+        Save
+      </button>
     </div>
   </div>
 </div>
 
 <!-- Cancel Order -->
 <div
-  class="modal fade"
   id="order-del"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="orderLabel"
-  aria-hidden="true"
+  *ngIf="showCancelModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="showCancelModal = false"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top-borderRed">
-      <div class="modal-header">
-        <h5 class="modal-title" id="orderLabel">Cancel Order <span></span></h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="col-md-12">
-          <p>Are you sure you want to cancel the order?</p>
-        </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button
-          *ngIf="currentTab === 1"
-          type="button"
-          class="btn btn-primary"
-          (click)="cancelOrder()"
-        >
-          Yes
-        </button>
-        <button
-          *ngIf="currentTab === 2"
-          type="button"
-          class="btn btn-primary"
-          (click)="cancelSpotSale()"
-        >
-          Yes
-        </button>
-        <button
-          type="submit"
-          id="close-del"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          No
-        </button>
-      </div>
+  <div 
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-red-600"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
+        Cancel <span class="font-light text-gray-600 dark:text-gray-400">Order</span>
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="showCancelModal = false"
+        aria-label="Close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div class="px-6 py-5">
+      <p class="text-gray-700 dark:text-gray-300">Are you sure you want to cancel the order?</p>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
+      <button
+        type="button"
+        id="close-del"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        (click)="showCancelModal = false"
+        aria-label="Close"
+      >
+        No
+      </button>
+      <button
+        *ngIf="currentTab === 1"
+        type="button"
+        class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors"
+        (click)="cancelOrder()"
+      >
+        Yes
+      </button>
+      <button
+        *ngIf="currentTab === 2"
+        type="button"
+        class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors"
+        (click)="cancelSpotSale()"
+      >
+        Yes
+      </button>
     </div>
   </div>
 </div>
@@ -1685,152 +1678,158 @@
   show complete
 </button>
 
-<!-- Add Expense -->
+<!-- Add Expense - Tailwind Modal -->
 <div
-  class="modal fade"
-  id="expenseModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="expenseLabel"
-  aria-hidden="true"
+  *ngIf="showExpenseModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="closeExpenseModal()"
 >
-  <div
-    class="modal-dialog modal-dialog-centered"
-    style="max-width: 850px"
-    role="document"
+  <div 
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-3xl mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
   >
-    <div class="modal-content top-borderBlue">
-      <div class="modal-header">
-        <h5 class="modal-title" id="expnseLabel">Add <span>Expense</span></h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div *ngIf="finalLoad" class="modal-body">
-        <div class="row mb-20">
-          <div class="col-md-4 pr-0">
-            <label class="font12 mb-5">Expense Type</label>
-            <div class="form-s2 focused" data-select2-id="39">
-              <select
-                class="form-control formselect expense_id select2-hidden-accessible"
-                #expenseType
-                id="expense_type"
-                placeholder="Expense Type"
-                style="width: 100%; font-size: 12px"
-                tabindex="-1"
-                aria-hidden="true"
-                value=""
-              >
-                <option value="" disabled selected>Select Expense Type</option>
-                <option
-                  *ngFor="let expType of finalLoad?.expense_types"
-                  [value]="expType.id"
-                >
-                  {{ expType.name }}
-                </option>
-              </select>
-            </div>
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
+        Add <span class="font-light text-gray-600 dark:text-gray-400">Expense</span>
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeExpenseModal()"
+        aria-label="Close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div *ngIf="finalLoad" class="px-6 py-5">
+        <!-- Expense Input Section -->
+        <div class="flex gap-4 mb-6">
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Expense Type
+            </label>
+            <nz-select
+              #expenseType
+              nzPlaceHolder="Select Expense Type"
+              nzAllowClear
+              class="w-full"
+              [(ngModel)]="selectedExpenseType"
+            >
+              <nz-option
+                *ngFor="let expType of finalLoad?.expense_types"
+                [nzValue]="expType.id"
+                [nzLabel]="expType.name"
+              ></nz-option>
+            </nz-select>
           </div>
-          <div class="col-md-3 pr-0">
-            <div class="form-group focused">
-              <label class="control-label">Amount</label>
-              <input
-                type="number"
-                id="expense-amount"
-                (keydown)="isNumber($event)"
-                #expenseAmount
-                class="form-control expense_amount"
-                placeholder=""
-              />
-            </div>
+          <div class="flex-1">
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Amount
+            </label>
+            <input 
+              type="number" 
+              id="expense-amount" 
+              name="expense-amount"
+              #expenseAmount
+              [(ngModel)]="selectedExpenseAmount" 
+              (keydown)="isNumber($event)" 
+              class="w-full !h-[32px] px-3 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
+              placeholder="0"
+            >
           </div>
-          <div class="col-2" style="padding-top: 29px">
+          <div class="flex items-end">
             <button
               type="button"
-              (click)="addExpense(expenseType, expenseAmount)"
-              class="btn btn-primary add_expense_btn"
+              (click)="addExpense({value: selectedExpenseType}, expenseAmount)"
+              class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors"
             >
               Add
             </button>
           </div>
         </div>
-        <div class="expense_table">
-          <div
-            id="expenseAddedTable_wrapper"
-            class="dataTables_wrapper dt-bootstrap4 no-footer"
-          >
-            <div class="row">
-              <div class="col-12">
-                <table
-                  *ngIf="!isExpenseAdded"
-                  class="table"
-                  datatable
-                  [dtOptions]="dtOPtions"
-                  id="expenseAddedTable"
-                  style="width: 100%"
-                  role="grid"
-                  aria-describedby="expenseAddedTable_info"
+
+        <!-- Expense List Table -->
+        <div *ngIf="!isExpenseAdded" class="border border-gray-200 dark:border-[#333333] rounded-lg overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-[#f9f9f9] dark:bg-[#252525]">
+                <tr>
+                  <th class="px-3 py-2 text-left text-sm font-medium text-gray-900 dark:text-gray-300 border-b border-gray-200 dark:border-[#333333]">
+                    Expense Type
+                  </th>
+                  <th class="px-3 py-2 text-left text-sm font-medium text-gray-900 dark:text-gray-300 border-b border-gray-200 dark:border-[#333333]">
+                    Amount
+                  </th>
+                  <th class="px-3 py-2 text-center text-sm font-medium text-gray-900 dark:text-gray-300 border-b border-gray-200 dark:border-[#333333]">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white dark:bg-[#1a1a1a]">
+                <tr
+                  *ngFor="let expense of finalLoad?.expense_detail"
+                  class="border-b border-gray-200 dark:border-[#333333] hover:bg-gray-50 dark:hover:bg-[#252525]"
                 >
-                  <thead>
-                    <tr role="row">
-                      <th>Expense Type</th>
-                      <th>Amount</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let expense of finalLoad?.expense_detail">
-                      <td>{{ getExpense(expense.expense_type) }}</td>
-                      <td>{{ expense.amount }}</td>
-                      <td>
-                        <button
-                          class="btn btn-default red-bg mb-0 remove_expense"
-                          [id]="expense.type"
-                          (click)="removeExpense(expense.expense_type)"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <div
-                  *ngIf="isExpenseAdded"
-                  class="col-md-12"
-                  style="text-align: center; padding: 30px"
-                >
-                  <div
-                    class="spinner-border"
-                    style="width: 5rem; height: 5rem; color: #0038ba"
-                    role="status"
-                  >
-                    <span class="sr-only">Loading...</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+                  <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-300">
+                    {{ getExpense(expense.expense_type) }}
+                  </td>
+                  <td class="px-3 py-2 text-sm text-gray-900 dark:text-gray-300 w-[200px]">
+                    {{ expense.amount }}
+                  </td>
+                  <td class="px-3 py-2 text-center w-[130px]">
+                    <button
+                      type="button"
+                      (click)="removeExpense(expense.expense_type)"
+                      class="px-4 py-1.5 text-[13px] leading-none font-primary text-white bg-red-600 border border-red-600 rounded-[5px] hover:bg-red-700 hover:border-red-700 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+                <tr *ngIf="!finalLoad?.expense_detail || finalLoad?.expense_detail.length === 0">
+                  <td colspan="3" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                    No expenses added yet
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
-      </div>
-      <div class="modal-footer border-0">
-        <button type="button" (click)="saveExpense()" class="btn btn-primary">
-          Save
-        </button>
-        <button
-          type="button"
-          id="close-expense"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
+
+        <!-- Loading State -->
+        <div
+          *ngIf="isExpenseAdded"
+          class="flex justify-center items-center py-12"
         >
-          Cancel
-        </button>
-      </div>
+          <svg class="animate-spin h-12 w-12 text-primary" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
+      <button
+        type="button"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        (click)="closeExpenseModal()"
+        aria-label="Close"
+      >
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:border-gray-400"
+        (click)="saveExpense()"
+      >
+        Save
+      </button>
     </div>
   </div>
 </div>

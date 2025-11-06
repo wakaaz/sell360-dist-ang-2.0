@@ -1,82 +1,155 @@
-<div class="modal fade" id="returnsmodal" role="dialog" data-backdrop="static" data-keyboard="false"
-    aria-labelledby="returnsModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 900px">
-        <div class="modal-content top_border">
-            <div class="modal-header">
-                <h5 class="modal-title" id="returnsModalLabel">Add <span> Returns</span></h5>
-                <button type="button" class="close" data-dismiss="modal" (click)="close()" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-            <div class="col-12 PT-10">
-                <div id="floating-label" class="form-wrap p-0">
-
-                    <div class="row">
-                    </div>
-
-                    <table class="table dt-responsive nowrap table-padd" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th><strong>Select Product</strong></th>
-                                <th><strong>QTY.</strong></th>
-                                <th><strong>DISC</strong></th>
-                                <th><strong>Value</strong></th>
-                                <th><strong>Type</strong></th>
-                                <th style="width: 70px"><strong>Action</strong></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="form-s2">
-                                        <ng-select class="formselect" #productRet placeholder="Select Product" id="ret-product"
-                                            name="ret-product" (change)="productSelected($event)" style="width: 230px">
-                                            <ng-container *ngFor="let product of productsList">
-                                                <ng-option *ngIf="!isAlreadyInOrder(product)" [value]="product">{{product.item_name}}
-                                                </ng-option>
-                                            </ng-container>
-                                        </ng-select>
-                                    </div>
-                                </td>
-                                <td><input type="number" id="ret-qty" name="ret-qty"
-                                        [(ngModel)]="selectedProduct.stockQty" (keyup)="setReturnedQty()"
-                                        (keydown)="isNumber($event, 'quantity')" class="form-control"></td>
-                                <td><input type="number" id="ret-dis" name="ret-dis" (keyup)="setExtraDiscount()"
-                                        [(ngModel)]="selectedProduct.extra_discount" (keydown)="isNumber($event)"
-                                        class="form-control"></td>
-                                <td>
-                                    <input type="text" id="ret-val" name="ret-val"
-                                        value="{{selectedProduct.net_amount | number: '1.2-2'}}" readonly class="form-control">
-                                </td>
-                                <td>
-                                    <div class="form-s2">
-                                        <select class="form-control formselect" name="return-type"
-                                            [(ngModel)]="selectedProduct.returnType" placeholder="Select Sellable"
-                                            style="width: 230px">
-                                            <option value="Sellable">Sellable</option>
-                                            <option value="Damage">Damage</option>
-                                        </select>
-                                    </div>
-                                </td>
-                                <td><button class="btn btn-primary add_return_item" (click)="addReturned()">Add</button></td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-
-                </div>
-            </div>
-
-            <div class="modal-footer border-0">
-                <!-- <button type="button" class="btn btn-primary">Save</button> -->
-                <button type="submit" (click)="close()" class="btn btn-cancel" data-dismiss="modal"
-                    aria-label="Close">Close</button>
-            </div>
-        </div>
+<!-- Add Returns Modal - Tailwind CSS with Light/Dark Mode -->
+<div 
+  *ngIf="showModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="closeModal($event)"
+  id="returnsmodal"
+  role="dialog"
+  aria-labelledby="returnsModalLabel"
+  aria-modal="true"
+>
+  <div 
+    class="bg-white dark:bg-[#252525] rounded-lg shadow-xl w-full max-w-4xl mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary" id="returnsModalLabel">
+        Add &nbsp;<span class="font-light text-gray-600 dark:text-gray-400">Returns</span>
+      </h5>
+      <button 
+        type="button" 
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeModal($event)" 
+        aria-label="Close"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
     </div>
+
+    <!-- Modal Body -->
+    <div class="p-1">
+      <div class="overflow-x-auto flex my-auto justify-center items-center">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 dark:bg-[#2a2a2a] border-b border-gray-200 dark:border-[#333333]">
+            <tr>
+              <th class="px-1 py-1.5 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary">
+                Select Product
+              </th>
+              <th class="px-1 py-1.5 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary">
+                QTY.
+              </th>
+              <th class="px-1 py-1.5 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary">
+                DISC
+              </th>
+              <th class="px-1 py-1.5 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary">
+                Value
+              </th>
+              <th class="px-1 py-1.5 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary">
+                Type
+              </th>
+              <th class="px-1 py-1.5 text-left text-[13px] font-semibold text-gray-700 dark:text-gray-300 font-primary w-[100px]">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 dark:divide-[#333333] bg-white dark:bg-[#1a1a1a]">
+            <tr class="hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors">
+              <td class="px-1 py-1.5 w-[240px] align-middle">
+                <nz-select
+                  nzShowSearch
+                  nzAllowClear
+                  [ngModel]="selectedProductForSelect"
+                  (ngModelChange)="productSelected($event)"
+                  nzPlaceHolder="Select Product"
+                  id="ret-product"
+                  name="ret-product"
+                  [nzDropdownMatchSelectWidth]="false"
+                  [nzDropdownStyle]="{ 'z-index': '9999' }"
+                  [nzCompareWith]="compareProducts"
+                  class="w-[240px] ret-product-select"
+                >
+                  <nz-option 
+                    *ngFor="let product of productsList"
+                    [nzValue]="product"
+                    [nzLabel]="product.item_name"
+                    [nzDisabled]="isAlreadyInOrder(product)"
+                  ></nz-option>
+                </nz-select>
+              </td>
+              <td class="px-1 py-1.5">
+                <input 
+                  type="number" 
+                  id="ret-qty" 
+                  name="ret-qty"
+                  [(ngModel)]="selectedProduct.stockQty" 
+                  (keyup)="setReturnedQty()"
+                  (keydown)="isNumber($event, 'quantity')" 
+                  class="w-full !h-[32px] px-3 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
+                  placeholder="0"
+                >
+              </td>
+              <td class="px-1 py-1.5">
+                <input 
+                  type="number" 
+                  id="ret-dis" 
+                  name="ret-dis" 
+                  (keyup)="setExtraDiscount()"
+                  [(ngModel)]="selectedProduct.extra_discount" 
+                  (keydown)="isNumber($event)"
+                  class="w-full !h-[32px] px-3 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
+                  placeholder="0"
+                >
+              </td>
+              <td class="px-1 py-1.5">
+                <input 
+                  type="text" 
+                  id="ret-val" 
+                  name="ret-val"
+                  [value]="(selectedProduct?.net_amount || 0) | number: '1.2-2'" 
+                  readonly 
+                  class="w-full !h-[32px] px-3 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-gray-50 dark:bg-[#1a1a1a] text-gray-900 dark:text-gray-300 font-primary text-sm cursor-not-allowed"
+                >
+              </td>
+              <td class="px-1 py-1.5 w-[170px] align-middle">
+                <nz-select
+                  [(ngModel)]="selectedProduct.returnType"
+                  nzPlaceHolder="Select Type"
+                  name="return-type"
+                  [nzDropdownMatchSelectWidth]="false"
+                  [nzDropdownStyle]="{ 'z-index': '9999' }"
+                  class="w-[170px] return-type-select"
+                >
+                  <nz-option nzValue="Sellable" nzLabel="Sellable"></nz-option>
+                  <nz-option nzValue="Damage" nzLabel="Damage"></nz-option>
+                </nz-select>
+              </td>
+              <td class="px-1 py-1.5">
+                <button 
+                  class="px-5 py-1.5 !h-[32px] leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none transition-colors add_return_item" 
+                  (click)="addReturned()"
+                >
+                  Add
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end">
+      <button 
+        type="button" 
+        (click)="closeModal($event)" 
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        aria-label="Close"
+      >
+        Close
+      </button>
+    </div>
+  </div>
 </div>
-<button id="open-returned" class="dont-close-returned" style="display: none;" data-toggle="modal"
-    data-target="#returnsmodal">
-    Open Modal
-</button>

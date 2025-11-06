@@ -244,6 +244,13 @@ export class OrderItemsListComponent implements OnInit, OnChanges {
     this.showDeleteModal = true;
   }
 
+  confirmDeleteReturned(selecteditem: any): void {
+    const itemCopy = JSON.parse(JSON.stringify(selecteditem));
+    itemCopy.productType = 'returned';
+    this.selectedItem = itemCopy;
+    this.showDeleteModal = true;
+  }
+
   closeDeleteModal(): void {
     this.showDeleteModal = false;
   }

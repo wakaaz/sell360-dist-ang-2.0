@@ -50,20 +50,32 @@
       <!-- Modal footer -->
       <div class="bg-gray-50 dark:bg-[#151515] px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-gray-200 dark:border-[#303030]">
         <div class="flex justify-end gap-2 flex-wrap">
+          <!-- Regular order items buttons -->
+          <ng-container *ngIf="!selectedItem?.productType || selectedItem?.productType !== 'returned'">
+            <button
+              type="button"
+              class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white transition-colors"
+              (click)="deleteProductAndClose()"
+            >
+              Booked Qty
+            </button>
+            <button
+              *ngIf="selecteddeleteSchemes?.length"
+              type="button"
+              class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white transition-colors"
+              (click)="deleteProductAndClose(1)"
+            >
+              Booked Qty AND Schemes
+            </button>
+          </ng-container>
+          <!-- Returned items button -->
           <button
+            *ngIf="selectedItem?.productType === 'returned'"
             type="button"
             class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white transition-colors"
             (click)="deleteProductAndClose()"
           >
-            Booked Qty
-          </button>
-          <button
-            *ngIf="selecteddeleteSchemes?.length"
-            type="button"
-            class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white transition-colors"
-            (click)="deleteProductAndClose(1)"
-          >
-            Booked Qty AND Schemes
+            Delete Return
           </button>
           <button
             type="button"
@@ -244,10 +256,8 @@ Orders &nbsp;<span class="font-light">Detail</span>
           <button
             *ngIf="!item.isDeleted"
             type="button"
-            (click)="selectedItem = item"
+            (click)="confirmDeleteReturned(item)"
               class="px-[4px] py-[4px] text-[11px] rounded-[5px] capitalize bg-[#e20000] hover:bg-[#c50000] text-white text-center font-semibold leading-none min-w-[22px] transition-colors"
-            data-toggle="modal"
-            data-target="#exampleModal-del"
           >
             Delete
           </button>
@@ -258,7 +268,7 @@ Orders &nbsp;<span class="font-light">Detail</span>
   </div>
   <h4
     *ngIf="!orderDetail?.items?.length && !orderDetail?.returned_items?.length"
-    class="text-center text-gray-300 dark:text-gray-600 mt-4"
+    class="text-center text-gray-300 dark:text-gray-600 rounded-bottom-md border border-gray-100 dark:border-[#2d2d2d] pt-[80px] pb-[80px]"
   >
     No items to display yet please select order!
   </h4>

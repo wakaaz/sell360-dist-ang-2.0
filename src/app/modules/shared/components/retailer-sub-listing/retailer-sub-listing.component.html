@@ -1,7 +1,7 @@
-<div class="w-full h-[calc(100vh-200px)] flex flex-col  bg-[#f6f6f6] dark:bg-[#171717] border-l border-b border-[#e4e4e4] dark:border-[#000000] rounded-lg">
+<div class="w-full h-[calc(100vh-214px)] flex flex-col  bg-[#f6f6f6] dark:bg-[#171717] border-l border-b border-[#e4e4e4] dark:border-[#000000] rounded-lg">
 
   <div
-    class="w-inherit px-[15px] pt-[15px] pb-[10px] border-b border-[#e5e5e5] dark:border-[#000000] bg-[linear-gradient(0deg,#f6f6f6,#fff_50%)] dark:bg-[linear-gradient(0deg,#171717,#1f1f1f_100%)]">
+    class="w-inherit px-[15px] pt-[15px] pb-[10px] border-b border-[#e5e5e5] dark:border-[#000000] bg-[linear-gradient(0deg,#f6f6f6,#fff_50%)] dark:bg-[linear-gradient(0deg,#171717,#252525_100%)]">
     <h2
       class="relative flex items-start text-base pl-0 mb-3 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[3px] font-primary font-medium">
       Orders &nbsp;<span class="font-light">List</span>
@@ -32,7 +32,7 @@
 
 
 
-    <div class="flex-1 py-[10px] px-[8px] text-sm overflow-y-auto overflow-x-hidden h-[calc(100vh-300px)]"
+    <div class="flex-1 py-[10px] px-[8px] text-sm overflow-y-auto overflow-x-hidden h-[calc(100vh-314px)]"
       *ngIf="!loading && retailerDispList?.length">
       <div *ngFor="let retailer of retailerDispList; let i = index"
         [ngClass]="retailer.isActive ? 'active shadow-[0_0_22px_#0000002e] scale-100 z-[3]' : ''"

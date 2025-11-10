@@ -54,6 +54,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
   showHoldModal: boolean = false;
   showCancelModal: boolean = false;
   showExpenseModal: boolean = false;
+  showBillsModal: boolean = false;
+  showCompleteModal: boolean = false;
   isCredit: boolean;
   alreadyFullPayment: boolean;
   isChequeAdded: boolean;
@@ -1267,16 +1269,16 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     );
   }
 
-  openBillsModal() {
-    (
-      document.getElementById(
-        'billsPrintPaperModalTrigger'
-      ) as HTMLButtonElement
-    ).click();
+  openBillsModal(): void {
+    this.showBillsModal = true;
+  }
+
+  closeBillsModal(): void {
+    this.showBillsModal = false;
   }
 
   getBills(size: string = 'A4'): void {
-    document.getElementById('close-bills').click();
+    this.closeBillsModal();
     const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.billsData.salesman_id}&date=${this.billsData.order_date}&dist_id=${this.billsData.distributorId}&size=${size}&status=processed&orderID=${this.spotSaleOrderId}`;
     window.open(billsUrl, '_blank');
   }
@@ -1856,7 +1858,7 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         type: 'error',
       });
     } else {
-      document.getElementById('show-complete').click();
+      this.openCompleteModal();
     }
   }
 
@@ -1872,8 +1874,16 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
     }
   }
 
+  openCompleteModal(): void {
+    this.showCompleteModal = true;
+  }
+
+  closeCompleteModal(): void {
+    this.showCompleteModal = false;
+  }
+
   markCompelet(): void {
-    document.getElementById('close-complete').click();
+    this.closeCompleteModal();
     this.loading = true;
     this.orderService
       .markCompeleteExecution(this.loadId, {
@@ -1925,8 +1935,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         minWidth: 80,
         sortable: true,
         filter: false,
-        cellStyle: { textAlign: 'center' },
-        headerClass: 'text-center'
+        cellStyle: { textAlign: 'left' },
+        headerClass: 'text-left'
       },
       {
         headerName: 'Product Name',
@@ -1944,8 +1954,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         minWidth: 100,
         sortable: true,
         filter: false,
-        cellStyle: { textAlign: 'center' },
-        headerClass: 'text-center'
+        cellStyle: { textAlign: 'left' },
+        headerClass: 'text-left'
       },
       {
         headerName: 'Issue QTY.',
@@ -1954,8 +1964,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         minWidth: 120,
         sortable: true,
         filter: false,
-        cellStyle: { textAlign: 'center' },
-        headerClass: 'text-center',
+        cellStyle: { textAlign: 'left' },
+        headerClass: 'text-left',
         valueFormatter: (params) => {
           return params.value ? (+params.value).toLocaleString() : '0';
         }
@@ -1967,8 +1977,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         minWidth: 120,
         sortable: true,
         filter: false,
-        cellStyle: { textAlign: 'center' },
-        headerClass: 'text-center',
+        cellStyle: { textAlign: 'left' },
+        headerClass: 'text-left',
         valueFormatter: (params) => {
           return params.value ? (+params.value).toLocaleString() : '0';
         }
@@ -1980,8 +1990,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         minWidth: 120,
         sortable: true,
         filter: false,
-        cellStyle: { textAlign: 'center' },
-        headerClass: 'text-center',
+        cellStyle: { textAlign: 'left' },
+        headerClass: 'text-left',
         valueFormatter: (params) => {
           return params.value ? (+params.value).toLocaleString() : '0';
         }
@@ -1993,8 +2003,8 @@ export class ExecuteOrderComponent implements OnInit, OnDestroy {
         minWidth: 140,
         sortable: true,
         filter: false,
-        cellStyle: { textAlign: 'center' },
-        headerClass: 'text-center',
+        cellStyle: { textAlign: 'left' },
+        headerClass: 'text-left',
         valueFormatter: (params) => {
           return params.value ? (+params.value).toLocaleString() : '0';
         }

@@ -410,7 +410,7 @@
           </div>
 
           <div class="flex-1 pl-3 pr-2">
-            <div class="rightHeight h-[calc(100vh-200px)] overflow-y-auto">
+            <div class="rightHeight h-[calc(100vh-210px)] overflow-y-auto">
               <app-order-items-list *ngIf="!savingOrder && selectedRetailer" [orderDetail]="orderDetails"
                 [schemes]="schemes" [loyaltyoffers]="loyaltyoffers" [selectedRetailer]="selectedRetailer"
                 [orders]="ordersRetailers" [allProducts]="inventory" [specialDiscounts]="specialDiscounts"
@@ -421,7 +421,7 @@
               <div *ngIf="savingOrder" class="flex justify-center items-center p-8">
                 <app-loader-white></app-loader-white>
               </div>
-              <div *ngIf="!savingOrder && !selectedRetailer" class="no-content w-full h-[calc(100vh-204px)] flex">
+              <div *ngIf="!savingOrder && !selectedRetailer" class="no-content w-full h-[calc(100vh-210px)] flex">
                 <div class="no-content-container m-auto table text-center text-[#b7b7b7]">
                   <img src="assets/images/select order-icon.svg" alt=""
                     class="w-[70px] h-[70px] mx-auto mb-[10px] block dark:invert dark:opacity-70" />
@@ -469,7 +469,7 @@
         <div class="flex">
           <div *ngIf="!loading" id="orderList-id2" class="w-[300px] shrink-0">
             <div
-              class="w-full h-[calc(100vh-200px)] flex flex-col bg-[#f6f6f6] dark:bg-[#171717] border-l border-b border-[#e4e4e4] dark:border-[#000000] rounded-lg">
+              class="w-full h-[calc(100vh-224px)] flex flex-col bg-[#f6f6f6] dark:bg-[#171717] border-l border-b border-[#e4e4e4] dark:border-[#000000] rounded-lg">
               <div
                 class="w-inherit px-[15px] pt-[15px] pb-[10px] border-b border-[#e5e5e5] dark:border-[#000000] bg-[linear-gradient(0deg,#f6f6f6,#fff_50%)] dark:bg-[linear-gradient(0deg,#171717,#1f1f1f_100%)]">
 
@@ -954,7 +954,7 @@
   (click)="closeBillsModal()"
 >
   <div 
-    class="bg-white dark:bg-[#252525] rounded-lg shadow-xl w-full max-w-2xl mx-auto border-t-4 border-t-primary"
+    class="bg-white dark:bg-[#252525] rounded-lg shadow-xl w-full max-w-xl mx-auto border-t-4 border-t-primary"
     (click)="$event.stopPropagation()"
   >
     <!-- Modal Header -->

@@ -205,7 +205,7 @@ export class RetailerRecoveryComponent implements OnInit, OnDestroy {
         headerName: 'Invoice DISC',
         sortable: false,
         filter: false,
-        width: 100,
+        width: 110,
         cellRenderer: (params: any) => {
           const inv = params.data;
           const index = this.retailer_credit_Invoices.findIndex(x => x === inv);
@@ -218,7 +218,7 @@ export class RetailerRecoveryComponent implements OnInit, OnDestroy {
               ${disabled ? 'disabled' : ''}
               oninput="window.ngRef.updateInvoiceDiscount(${index}, this.value)"
               onkeydown="return window.ngRef.isNumberKey(event)"
-              class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              class="!w-[90px] px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="0"
               min="0"
             />
@@ -255,7 +255,7 @@ export class RetailerRecoveryComponent implements OnInit, OnDestroy {
         headerName: this.executionData === null && this.retailerId === 0 ? 'Add To Current' : 'Recovery',
         sortable: false,
         filter: false,
-        width: 100,
+        width: 110,
         cellRenderer: (params: any) => {
           const inv = params.data;
           const index = this.retailer_credit_Invoices.findIndex(x => x === inv);
@@ -275,7 +275,7 @@ export class RetailerRecoveryComponent implements OnInit, OnDestroy {
                 onchange="window.ngRef.updateRecoveryAmount(${index}, this.value, false)"
                 onkeydown="return window.ngRef.isNumberKey(event)"
                 onblur="window.ngRef.updateRecoveryAmount(${index}, this.value, false)"
-                class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                class="!w-[90px] px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="0"
                 min="0"
                 max="${inv.balance || 0}"
@@ -294,7 +294,7 @@ export class RetailerRecoveryComponent implements OnInit, OnDestroy {
                 onchange="window.ngRef.updateRecoveryAmount(${index}, this.value, true)"
                 onkeydown="return window.ngRef.isNumberKey(event)"
                 onblur="window.ngRef.updateRecoveryAmount(${index}, this.value, true)"
-                class="w-full px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                class="!w-[90px] px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
                 placeholder="0"
                 min="0"
                 max="${inv.balance || 0}"

@@ -86,22 +86,43 @@
           <div class="col-md-8">
             <div *ngFor="let scheme of selectedProduct.schemes; let i = index">
               <div class="custom-control custom-radio">
-                <input
+                <!-- <input
                   [(ngModel)]="selectedProduct.selectedScheme"
                   [disabled]="
                     !selectedProduct.stockQty || +selectedProduct.stockQty <= 0
+                  "
+                  (click)="
+                    selectedProduct.pref_id &&
+                      selectedProduct.stockQty &&
+                      calculateProductDiscounts(selectedProduct, scheme)
                   "
                   class="custom-control-input"
                   type="radio"
                   name="AssignCatalogue"
                   id="byTerritory-{{ i }}"
                   [value]="scheme"
+                /> -->
+                <input
+                  [(ngModel)]="selectedProduct.scheme_id"
+                  (click)="
+                    selectedProduct.pref_id &&
+                      selectedProduct.stockQty &&
+                      calculateProductDiscounts(selectedProduct, scheme)
+                  "
+                  class="custom-control-input"
+                  type="radio"
+                  name="AssignCatalogue"
+                  id="byTerritory-{{ i }}"
+                  [value]="scheme.id"
+                  [disabled]="
+                    !selectedProduct.stockQty || +selectedProduct.stockQty <= 0
+                  "
                 />
                 <label
                   class="custom-control-label font13"
                   for="byTerritory-{{ i }}"
                   style="line-height: 25px"
-                  >{{ scheme.title }}</label
+                  >{{ scheme.title }} (Min QTy:{{ scheme.min_qty }})</label
                 >
               </div>
             </div>
@@ -368,8 +389,9 @@
                         <th>T.O</th>
                         <th>Dist.Disc%</th>
                         <th>Spec.Disc</th>
-                        <th>B.Disc.Amt</th>
-                        <th>Tax</th>
+                        <!-- <th>Tax</th> -->
+                        <th>GST</th>
+                        <th>AIT</th>
                         <th>Total Bill</th>
                         <th>Action</th>
                       </tr>
@@ -398,11 +420,11 @@
                         <th></th>
                         <th></th>
                         <th></th>
-                        <th></th>
                         <th>Gross Amount.</th>
                         <th class="order_gross_amount">
-                          {{ order.grossPrice | number: "1.2-2" }}
+                          {{ order.grossPrice | number : "1.2-2" }}
                         </th>
+                        <th></th>
                         <th></th>
                       </tr>
                       <tr>
@@ -417,7 +439,7 @@
                         <th></th>
                         <th>Order Discount.</th>
                         <th class="order_total_discount">
-                          - {{ order.discount | number: "1.2-2" }}
+                          - {{ order.discount | number : "1.2-2" }}
                         </th>
                         <th></th>
                       </tr>
@@ -433,7 +455,7 @@
                         <th></th>
                         <th>Subtotal PKR.</th>
                         <th class="order_sub_total">
-                          {{ order.subTotal | number: "1.2-2" }}
+                          {{ order.subTotal | number : "1.2-2" }}
                         </th>
                         <th></th>
                       </tr>
@@ -473,7 +495,9 @@
                         <th></th>
                         <th>Subtotal PKR.</th>
                         <th class="order_sub_total_af_FP">
-                          {{ order.subTotalPlusFrieghtPrice | number: "1.2-2" }}
+                          {{
+                            order.subTotalPlusFrieghtPrice | number : "1.2-2"
+                          }}
                         </th>
                         <th></th>
                       </tr>
@@ -489,7 +513,7 @@
                         <th></th>
                         <th>Tax.</th>
                         <th class="order_tax">
-                          + {{ order.tax | number: "1.2-2" }}
+                          + {{ order.tax | number : "1.2-2" }}
                         </th>
                         <th></th>
                       </tr>
@@ -505,7 +529,7 @@
                         <th></th>
                         <th>Total PKR.</th>
                         <th class="order_grand_total">
-                          {{ order.total | number: "1.2-2" }}
+                          {{ order.total | number : "1.2-2" }}
                         </th>
                         <th></th>
                       </tr>
@@ -530,6 +554,7 @@
                             placeholder="Quanity"
                             class="itemQTY"
                             [(ngModel)]="item.parent_qty_sold"
+                            (keyup)="setQuantity(item, true)"
                           />
 
                           {{
@@ -539,21 +564,26 @@
                           }}
                         </td>
                         <!-- T.P -->
-                        <td>{{ item.parent_tp | number: "1.2-2" }}</td>
+                        <td>{{ item.parent_tp | number : "1.2-2" }}</td>
                         <!-- GR.Amt -->
                         <td>
-                          {{ item.grossPrice | number: "1.2-2" }}
+                          {{ item.grossPrice | number : "1.2-2" }}
                         </td>
                         <!-- T.O -->
                         <td>
-                          {{ item.tradeOffer | number: "1.2-2" }}
+                          {{ item.tradeOffer | number : "1.2-2" }}
+                          {{
+                            item.scheme_id && item.scheme_type == "free_product" && item.scheme_quantity_free > 0 && item.scheme_rule === 4
+                              ? `(${item.scheme_quantity_free})`
+                              : ""
+                          }}
                         </td>
                         <!-- Dist.Disc% -->
                         <td>
-                          {{ item.distributor_discount | number: "1.2-2" }}
+                          {{ item.distributor_discount | number : "1.2-2" }}
                         </td>
                         <!-- Spec.Disc% -->
-                        <td>{{ item.specialDiscount | number: "1.2-2" }}</td>
+                        <!-- <td>{{ item.specialDiscount | number : "1.2-2" }}</td> -->
                         <!-- E.Disc.Amt -->
                         <td>
                           <input
@@ -566,12 +596,20 @@
                           />
                         </td>
                         <!-- Tax -->
+                        <!-- <td>
+                          {{ item.tax_amount | number : "1.2-2" }}
+                        </td> -->
+                        <td>{{ item.gst_tax | number : "1.2-2" }}</td>
                         <td>
-                          {{ item.tax_amount | number: "1.2-2" }}
+                          {{ item.advance_income_tax | number : "1.2-2" }}
                         </td>
                         <!-- Total Bill -->
                         <td>
-                          {{ item.totalBill | number: "1.2-2" }}
+                          {{
+                            item.totalBill +
+                              item?.gst_tax +
+                              item?.advance_income_tax | number : "1.2-2"
+                          }}
                         </td>
                         <td>
                           <button

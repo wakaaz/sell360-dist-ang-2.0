@@ -87,9 +87,9 @@
       >
         <div class="row">
           <div class="col-md-4 mb-10">Product:</div>
-          <div class="col-md-8 mb-10">{{selectedProduct.item_name}}</div>
+          <div class="col-md-8 mb-10">{{ selectedProduct.item_name }}</div>
           <div class="col-md-4 mb-15">SKU:</div>
-          <div class="col-md-8 mb-15">{{selectedProduct.item_sku}}</div>
+          <div class="col-md-8 mb-15">{{ selectedProduct.item_sku }}</div>
           <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
           <div class="col-md-8 mb-15">
             <input
@@ -159,13 +159,13 @@
                   name="AssignCatalogue"
                   id="byTerritory-{{ i }}"
                   [value]="scheme"
-                  [disabled]="checkBundleScheme(scheme,selectedProduct)"
+                  [disabled]="checkBundleScheme(scheme, selectedProduct)"
                 />
                 <label
                   class="custom-control-label font13"
                   for="byTerritory-{{ i }}"
                   style="line-height: 25px"
-                  >{{ scheme.title }} (Min QTy:{{scheme.min_qty}})</label
+                  >{{ scheme.title }} (Min QTy:{{ scheme.min_qty }})</label
                 >
               </div>
             </div>
@@ -377,7 +377,7 @@
                 class="input-error"
               >
                 Amount should not be greater than
-                {{ cash?.amount_received | number: "1.2-2" }}
+                {{ cash?.amount_received | number : "1.2-2" }}
               </span>
             </div>
           </div>
@@ -610,16 +610,16 @@
                             data-target="#exampleModal"
                             class="btn btn-default mb-0 dont-close-quantity"
                             (click)="openQuantityModal(product)"
-                            [disabled]="+product.availble_stock<1"
+                            [disabled]="+product.availble_stock < 1"
                           >
-                            Add 
+                            Add
                           </button>
                           <button
                             *ngIf="product.qtyAdded"
                             class="btn btn-default mb-0 red-bg dont-close-quantity"
                             [disabled]="product.isAdded"
-                            >
-                            Added 
+                          >
+                            Added
                           </button>
                           <!-- <button
                             *ngIf="product.isAdded"
@@ -768,7 +768,14 @@
               <div class="row">
                 <div class="col-md-6">
                   <strong>Retailer Name: &nbsp; </strong>
-                  {{ selectedRetailer?.retailer_name || "--" }} {{ selectedRetailer ? (selectedRetailer?.retailer_register == 1 ? '(Registered)':'(Non Registered)'):''  }}
+                  {{ selectedRetailer?.retailer_name || "--" }}
+                  {{
+                    selectedRetailer
+                      ? selectedRetailer?.retailer_register == 1
+                        ? "(Registered)"
+                        : "(Non Registered)"
+                      : ""
+                  }}
                 </div>
                 <div class="col-md-6">
                   <strong>Channel Type: &nbsp; </strong>
@@ -830,7 +837,7 @@
 
                   <div class="addItemCell unit-w">
                     <div class="addItemCell2 _h25">
-                      {{ product.unit_name }} 
+                      {{ product.unit_name }}
                     </div>
                   </div>
 
@@ -848,22 +855,35 @@
                     />
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.item_trade_price  || 0.0 | number: "1.2-2" }}
+                    {{ product.item_trade_price || 0.0 | number : "1.2-2" }}
                   </div>
 
-                  
-
-                  <div class="addItemCell2 _h25 {{product.scheme_quantity_free > 0 ? 'free-product':''}}">
-                    {{ product.scheme_id && product.scheme_type =='bundle_offer' ?  ( (+product.scheme_discount * +product.scheme_bundle_interval )| number: "1.2-2") : +product.stockQty * product.scheme_discount | number: "1.2-2" }} {{product.scheme_quantity_free > 0 ? "("+product.scheme_quantity_free+")":"" }}
+                  <div
+                    class="addItemCell2 _h25 {{
+                      product.scheme_quantity_free > 0 ? 'free-product' : ''
+                    }}"
+                  >
+                    {{
+                      product.scheme_id && product.scheme_type == "bundle_offer"
+                        ? (+product.scheme_discount *
+                            +product.scheme_bundle_interval | number : "1.2-2")
+                        : (+product.stockQty * product.scheme_discount
+                          | number : "1.2-2")
+                    }}
+                    {{
+                      product.scheme_quantity_free > 0
+                        ? "(" + product.scheme_quantity_free + ")"
+                        : ""
+                    }}
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.trade_discount }} {{ product.slab_discount_type == 'percentage' ? '%':''}} 
-                    
+                    {{ product.trade_discount }}
+                    {{ product.slab_discount_type == "percentage" ? "%" : "" }}
                   </div>
                   <div class="addItemCell2 _h25">
                     {{
                       +product.stockQty * product.special_discount || 0.0
-                        | number: "1.2-2"
+                        | number : "1.2-2"
                     }}
                   </div>
                   <div
@@ -876,7 +896,7 @@
                       "
                       class="addItemCell2_input"
                       type="text"
-                      id="extraDiscount-{{product.item_id}}"
+                      id="extraDiscount-{{ product.item_id }}"
                       placeholder="0"
                       [(ngModel)]="product.extra_discount"
                       (keyup)="calculateExtraDiscount(product)"
@@ -885,13 +905,17 @@
                     />
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.gst_tax_amount_temp || 0.0 | number: "1.2-2" }}
+                    {{ product.gst_tax_amount_temp || 0.0 | number : "1.2-2" }}
                   </div>
                   <div class="addItemCell2 _h25">
-                    {{ product.adv_inc_tax_amount_temp || 0.0 | number: "1.2-2" }}
+                    {{
+                      product.adv_inc_tax_amount_temp || 0.0 | number : "1.2-2"
+                    }}
                   </div>
                   <div class="addItemCell3 _h25">
-                    {{ product.total_amount_after_tax || 0.0 | number: "1.2-2" }}
+                    {{
+                      product.total_amount_after_tax || 0.0 | number : "1.2-2"
+                    }}
                   </div>
                   <a
                     [disabled]="isChequeAdded || isCreditAdded"
@@ -920,7 +944,7 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25 width-t">Gross Amount:</div>
                 <div class="addItemCell3 _h25">
-                  {{ grossAmount | number: "1.2-2" }}
+                  {{ grossAmount | number : "1.2-2" }}
                 </div>
               </div>
 
@@ -935,7 +959,7 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25 width-t">Trade Offer:</div>
                 <div class="addItemCell3 _h25">
-                  {{ schemeDiscount | number: "1.2-2" }}
+                  {{ schemeDiscount | number : "1.2-2" }}
                 </div>
               </div>
 
@@ -950,7 +974,7 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25 width-t">Trade Discount:</div>
                 <div class="addItemCell3 _h25">
-                  {{ tradeDiscount | number: "1.2-2" }}
+                  {{ tradeDiscount | number : "1.2-2" }}
                 </div>
               </div>
 
@@ -966,7 +990,7 @@
                 <div class="addItemCell2 _h25 width-t">Special Discount:</div>
 
                 <div class="addItemCell3 _h25">
-                  {{ specialDiscount | number: "1.2-2" }}
+                  {{ specialDiscount | number : "1.2-2" }}
                 </div>
               </div>
 
@@ -982,11 +1006,9 @@
                 <div class="addItemCell2 _h25 width-t">Extra Discount:</div>
 
                 <div class="addItemCell3 _h25">
-                  {{ extraDiscount | number: "1.2-2" }}
+                  {{ extraDiscount | number : "1.2-2" }}
                 </div>
               </div>
-
-              
 
               <div class="row _totalBar2">
                 <div class="addItemCell _h25 PL-5"></div>
@@ -1000,7 +1022,7 @@
                 <div class="addItemCell2 _h25 width-t">Loyalty Discount:</div>
 
                 <div class="addItemCell3 _h25">
-                  {{ loyaltyDiscount | number: "1.2-2" }}
+                  {{ loyaltyDiscount | number : "1.2-2" }}
                 </div>
               </div>
 
@@ -1013,23 +1035,13 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
-                <div class="addItemCell2 _h25 width-t" title="">General Sales Tax(GST):</div>
+                <div class="addItemCell2 _h25 width-t" title="">
+                  General Sales Tax(GST):
+                </div>
 
-                <div class="addItemCell3 _h25">{{ gst_tax | number: "1.2-2" }}</div>
-              </div>
-              
-              <div class="row _totalBar2">
-                <div class="addItemCell _h25 PL-5"></div>
-                <div class="addItemCell _h25 unit-w"></div>
-                <div class="addItemCell2 _h25"></div>
-                <div class="addItemCell2 _h25"></div>
-                <div class="addItemCell2 _h25"></div>
-                <div class="addItemCell2 _h25"></div>
-                <div class="addItemCell2 _h25"></div>
-                <div class="addItemCell2 _h25"></div>
-                <div class="addItemCell2 _h25 width-t" title="Advance Income Tax">Advance Income Tax(AIT):</div>
-
-                <div class="addItemCell3 _h25">{{ adv_inc_tax | number: "1.2-2" }}</div>
+                <div class="addItemCell3 _h25">
+                  {{ gst_tax | number : "1.2-2" }}
+                </div>
               </div>
 
               <div class="row _totalBar2">
@@ -1041,9 +1053,34 @@
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
                 <div class="addItemCell2 _h25"></div>
-                <div class="addItemCell2 _h25 width-t" title="Total Tax">Total Tax:</div>
+                <div
+                  class="addItemCell2 _h25 width-t"
+                  title="Advance Income Tax"
+                >
+                  Advance Income Tax(AIT):
+                </div>
 
-                <div class="addItemCell3 _h25">{{ tax | number: "1.2-2" }}</div>
+                <div class="addItemCell3 _h25">
+                  {{ adv_inc_tax | number : "1.2-2" }}
+                </div>
+              </div>
+
+              <div class="row _totalBar2">
+                <div class="addItemCell _h25 PL-5"></div>
+                <div class="addItemCell _h25 unit-w"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25"></div>
+                <div class="addItemCell2 _h25 width-t" title="Total Tax">
+                  Total Tax:
+                </div>
+
+                <div class="addItemCell3 _h25">
+                  {{ tax | number : "1.2-2" }}
+                </div>
               </div>
 
               <div class="row _totalBar2">
@@ -1063,7 +1100,7 @@
                   class="addItemCell3 _h25"
                   style="font-size: 18px; color: #0038ba"
                 >
-                  {{ dueAmount | number: "1.2-2" }}
+                  {{ dueAmount | number : "1.2-2" }}
                 </div>
               </div>
               <div class="row _totalBar2">
@@ -1083,7 +1120,7 @@
                   class="addItemCell3 _h25"
                   style="font-size: 18px; color: #0038ba"
                 >
-                  {{ cash?.amount_received || 0 | number: "1.2-2" }}
+                  {{ cash?.amount_received || 0 | number : "1.2-2" }}
                 </div>
               </div>
               <div class="row _totalBar2">
@@ -1103,7 +1140,7 @@
                   class="addItemCell3 _h25"
                   style="font-size: 18px; color: #0038ba"
                 >
-                  {{ cheque?.amount_received || 0 | number: "1.2-2" }}
+                  {{ cheque?.amount_received || 0 | number : "1.2-2" }}
                 </div>
               </div>
               <div class="row _totalBar2">
@@ -1123,7 +1160,7 @@
                   class="addItemCell3 _h25"
                   style="font-size: 18px; color: #0038ba"
                 >
-                  {{ credit?.amount_received || 0 | number: "1.2-2" }}
+                  {{ credit?.amount_received || 0 | number : "1.2-2" }}
                 </div>
               </div>
               <!-- <div class="row _notesTER">

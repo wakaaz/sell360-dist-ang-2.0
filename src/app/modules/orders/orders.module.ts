@@ -4,6 +4,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { OrdersRoutingModule } from './orders-routing.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzInputNumberModule } from 'ng-zorro-antd/input-number';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 import { AgGridModule } from 'ag-grid-angular';
 import { DataTablesModule } from 'angular-datatables';
 import { ClickOutsideModule } from 'ng-click-outside';
@@ -20,6 +28,7 @@ import { CounterSaleComponent } from './components/counter-sale/counter-sale.com
 import { BookingVsExecutionComponent } from './components/booking-vs-execution/booking-vs-execution.component';
 import { CompletedOrdersDetailComponent } from './components/completed-orders-detail/completed-orders-detail.component';
 import { OrderDispatchedComponent } from './components/order-dispatched/order-dispatched.component';
+import { SalesmanSelectCellRendererComponent } from './components/orders-list/salesman-select-cell-renderer.component';
 
 import { OrdersService } from './services/orders.service';
 
@@ -42,6 +51,14 @@ import { NewCounterSaleComponent } from './components/new-counter-sale/new-count
     ReactiveFormsModule,
     ClickOutsideModule,
     NgSelectModule,
+    NzSelectModule,
+    NzDatePickerModule,
+    NzFormModule,
+    NzInputModule,
+    NzRadioModule,
+    NzCheckboxModule,
+    NzInputNumberModule,
+    NzModalModule,
     SharedModule,
     AgGridModule,
     DataTablesModule,
@@ -61,6 +78,7 @@ import { NewCounterSaleComponent } from './components/new-counter-sale/new-count
     CompletedOrdersDetailComponent,
     RetailerRecoveryComponent,
     StockAllocationComponent,
+    SalesmanSelectCellRendererComponent,
   ],
   providers: [
     OrderDispatchService,

@@ -139,18 +139,21 @@ export class ProductsRightPanelComponent implements OnInit, OnChanges {
         JSON.parse(JSON.stringify(this.selectedProduct))
       );
 
-      document.getElementById('pl-qty-close').click();
-    }
-  }
-
-  closeQuantityModal(event: Event): void {
-    if (
-      this.showQuantityModal &&
-      !(event.target as HTMLElement).classList.contains('dont-close-quantity')
-    ) {
+      // Close modal
       this.showQuantityModal = false;
       this.selectedProduct = JSON.parse(JSON.stringify({}));
     }
+  }
+
+  closeQuantityModal(event?: Event): void {
+    if (event) {
+      const target = event.target as HTMLElement;
+      if (target.classList.contains('dont-close-products') || target.closest('.dont-close-products')) {
+        return;
+      }
+    }
+    this.showQuantityModal = false;
+    this.selectedProduct = JSON.parse(JSON.stringify({}));
   }
 
   searchProduct(): void {

@@ -1,0 +1,261 @@
+/* Date Picker Container */
+.date-picker-wrapper {
+  position: relative;
+}
+
+/* Native Date Input Styling */
+.date-input {
+  min-width: 190px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.date-input:hover {
+  border-color: var(--ant-datepicker-border-color-hover) !important;
+}
+
+.date-input:focus {
+  box-shadow: var(--ant-datepicker-focus-shadow) !important;
+}
+
+/* Dark mode focus */
+.dark .date-input:focus {
+  box-shadow: var(--ant-datepicker-focus-shadow) !important;
+}
+
+/* Calendar icon styling for Webkit browsers */
+.date-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: opacity(0.6);
+}
+
+.dark .date-input::-webkit-calendar-picker-indicator {
+  filter: invert(1) opacity(0.6);
+}
+
+.date-input::-webkit-calendar-picker-indicator:hover {
+  filter: opacity(1);
+}
+
+.dark .date-input::-webkit-calendar-picker-indicator:hover {
+  filter: invert(1) opacity(1);
+}
+
+.completed-orders-date-picker {
+  position: relative;
+}
+
+/* Ant Design DatePicker Styling - Light Mode */
+.completed-orders-date-picker .ant-picker {
+  height: 32px !important;
+  border-radius: 8px !important;
+  border: 1px solid #d9d9d9 !important;
+  background-color: #ffffff !important;
+  font-size: 14px !important;
+  font-family: 'Outfit', sans-serif !important;
+  transition: all 0.3s !important;
+}
+
+.completed-orders-date-picker .ant-picker-input > input {
+  color: rgba(0, 0, 0, 0.88) !important;
+  font-size: 14px !important;
+  font-family: 'Outfit', sans-serif !important; 
+}
+
+.completed-orders-date-picker .ant-picker-input > input::placeholder {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.completed-orders-date-picker .ant-picker-suffix {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Light Mode - Hover and Focus States */
+.completed-orders-date-picker .ant-picker:hover:not(.ant-picker-disabled) {
+  border-color: var(--ant-datepicker-border-color-hover) !important;
+}
+
+.completed-orders-date-picker .ant-picker-focused:not(.ant-picker-disabled) {
+  border-color: var(--ant-datepicker-focus-border-color) !important;
+  box-shadow: var(--ant-datepicker-focus-shadow) !important;
+}
+
+/* Ant Design DatePicker Styling - Dark Mode */
+.dark .completed-orders-date-picker .ant-picker,
+html.dark .completed-orders-date-picker .ant-picker {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.dark .completed-orders-date-picker .ant-picker-input > input,
+html.dark .completed-orders-date-picker .ant-picker-input > input {
+  background-color: #141414 !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.dark .completed-orders-date-picker .ant-picker-input > input::placeholder,
+html.dark .completed-orders-date-picker .ant-picker-input > input::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
+}
+
+.dark .completed-orders-date-picker .ant-picker-suffix,
+html.dark .completed-orders-date-picker .ant-picker-suffix {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+/* Dark Mode - Hover and Focus States */
+.dark .completed-orders-date-picker .ant-picker:hover:not(.ant-picker-disabled),
+html.dark .completed-orders-date-picker .ant-picker:hover:not(.ant-picker-disabled) {
+  border-color: var(--ant-datepicker-border-color-hover) !important;
+}
+
+.dark .completed-orders-date-picker .ant-picker-focused:not(.ant-picker-disabled),
+html.dark .completed-orders-date-picker .ant-picker-focused:not(.ant-picker-disabled) {
+  border-color: var(--ant-datepicker-focus-border-color) !important;
+  box-shadow: var(--ant-datepicker-focus-shadow) !important;
+}
+
+/* DatePicker Dropdown Panel - Light Mode */
+.completed-orders-date-picker .ant-picker-dropdown {
+  border-radius: 8px !important;
+}
+
+/* DatePicker Dropdown Panel - Dark Mode */
+.dark .completed-orders-date-picker .ant-picker-dropdown,
+html.dark .completed-orders-date-picker .ant-picker-dropdown,
+html.dark body > .ant-picker-dropdown,
+body.dark > .ant-picker-dropdown {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.48), 0 3px 6px -4px rgba(0, 0, 0, 0.36), 0 9px 28px 8px rgba(0, 0, 0, 0.20) !important;
+}
+
+/* Calendar Panel - Dark Mode */
+.dark .ant-picker-panel,
+html.dark .ant-picker-panel,
+html.dark body > .ant-picker-dropdown .ant-picker-panel,
+body.dark > .ant-picker-dropdown .ant-picker-panel {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+}
+
+/* Calendar Header - Dark Mode */
+.dark .ant-picker-header,
+html.dark .ant-picker-header {
+  background-color: #141414 !important;
+  border-bottom-color: #434343 !important;
+}
+
+.dark .ant-picker-header button,
+html.dark .ant-picker-header button {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.dark .ant-picker-header button:hover,
+html.dark .ant-picker-header button:hover {
+  color: var(--ant-datepicker-header-hover-color) !important;
+}
+
+.dark .ant-picker-header-view button,
+html.dark .ant-picker-header-view button {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.dark .ant-picker-header-view button:hover,
+html.dark .ant-picker-header-view button:hover {
+  color: var(--ant-datepicker-header-hover-color) !important;
+}
+
+/* Calendar Body - Dark Mode */
+.dark .ant-picker-body,
+html.dark .ant-picker-body {
+  background-color: #141414 !important;
+}
+
+.dark .ant-picker-cell,
+html.dark .ant-picker-cell {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.dark .ant-picker-cell:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) .ant-picker-cell-inner,
+html.dark .ant-picker-cell:hover:not(.ant-picker-cell-disabled):not(.ant-picker-cell-selected) .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-hover-bg) !important;
+}
+
+.dark .ant-picker-cell-selected .ant-picker-cell-inner,
+html.dark .ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-selected-bg) !important;
+  color: var(--ant-datepicker-selected-color) !important;
+}
+
+.dark .ant-picker-cell-today .ant-picker-cell-inner,
+html.dark .ant-picker-cell-today .ant-picker-cell-inner {
+  border-color: var(--ant-datepicker-today-border-color) !important;
+}
+
+.dark .ant-picker-cell-in-range:not(.ant-picker-cell-selected) .ant-picker-cell-inner,
+html.dark .ant-picker-cell-in-range:not(.ant-picker-cell-selected) .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-in-range-bg) !important;
+}
+
+.dark .ant-picker-cell-disabled,
+html.dark .ant-picker-cell-disabled {
+  color: rgba(255, 255, 255, 0.25) !important;
+}
+
+.dark .ant-picker-cell-disabled .ant-picker-cell-inner,
+html.dark .ant-picker-cell-disabled .ant-picker-cell-inner {
+  background-color: transparent !important;
+}
+
+/* Calendar Footer - Dark Mode */
+.dark .ant-picker-footer,
+html.dark .ant-picker-footer {
+  background-color: #141414 !important;
+  border-top-color: #434343 !important;
+}
+
+/* Week Header - Dark Mode */
+.dark .ant-picker-week-panel-row > th,
+html.dark .ant-picker-week-panel-row > th {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+/* Month/Year Panel - Dark Mode */
+.dark .ant-picker-month-panel .ant-picker-cell,
+html.dark .ant-picker-month-panel .ant-picker-cell,
+.dark .ant-picker-year-panel .ant-picker-cell,
+html.dark .ant-picker-year-panel .ant-picker-cell {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+.dark .ant-picker-month-panel .ant-picker-cell:hover:not(.ant-picker-cell-disabled) .ant-picker-cell-inner,
+html.dark .ant-picker-month-panel .ant-picker-cell:hover:not(.ant-picker-cell-disabled) .ant-picker-cell-inner,
+.dark .ant-picker-year-panel .ant-picker-cell:hover:not(.ant-picker-cell-disabled) .ant-picker-cell-inner,
+html.dark .ant-picker-year-panel .ant-picker-cell:hover:not(.ant-picker-cell-disabled) .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-hover-bg) !important;
+}
+
+.dark .ant-picker-month-panel .ant-picker-cell-selected .ant-picker-cell-inner,
+html.dark .ant-picker-month-panel .ant-picker-cell-selected .ant-picker-cell-inner,
+.dark .ant-picker-year-panel .ant-picker-cell-selected .ant-picker-cell-inner,
+html.dark .ant-picker-year-panel .ant-picker-cell-selected .ant-picker-cell-inner {
+  background-color: var(--ant-datepicker-selected-bg) !important;
+  color: var(--ant-datepicker-selected-color) !important;
+}
+
+/* DatePicker Dropdown Positioning Fix */
+.completed-orders-date-picker ~ .ant-picker-dropdown,
+.completed-orders-date-picker .ant-picker-dropdown,
+body > .ant-picker-dropdown {
+  position: absolute !important;
+  z-index: 1050 !important;
+}
+
+/* Ensure dropdown appears relative to parent container */
+.completed-orders-date-picker {
+  position: relative !important;
+}
+

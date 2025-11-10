@@ -25,6 +25,7 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "node_modules/datatables.net-buttons-dt/css/buttons.dataTables.css",
+              "node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "src/styles.css"
             ],
             "scripts": [

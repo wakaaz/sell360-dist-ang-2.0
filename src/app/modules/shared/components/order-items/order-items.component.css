@@ -1,16 +1,4 @@
-.retailerTable .table thead th { font-size: 12px; border: solid 1px #fff !important; vertical-align: middle; padding: 2px 5px!important; }
-.retailerTable .table tbody td { font-size: 12px!important; padding: 5px 4px!important; vertical-align: middle; line-height: 1 }
-.value_input { padding: 2px; margin: 0!important; font-size: 12px; box-shadow: none; height: 22px; width: 52px; border: solid 1px #e2e6ea; }
-.total-valu-div{width:318px; min-height: 173px; font-size: 13px; padding-left: 20px; padding-right: 20px; margin-left: auto; margin-right: 0; padding-top: 5px; background-color: #f7f7f7; border: solid 1px #ececec}
-.total-valu-div .row{border-bottom:solid 1px #e8e6e6}
-.total-valu-div .row .col-6{padding:2px; line-height: 1.5;font-family: proximanova-semibold, sans-serif!important; }
-.total-valu-div span{font-family: 'Rationale', sans-serif; line-height: 1.1; font-size: 18px; text-align: right; display: block}
-.addPR-head { padding: 15px 15px 0px 20px !important; background:none!important }
-.addpr{padding: 4px 8px; font-size: 12px; top: 11px; right: 15px;}
-.addpr {padding: 4px 8px;font-size: 12px;top: 11px;right: 15px; cursor: pointer; }
-.no-products {text-align: center; color: lightgray;}
-.addReturn{right: 128px; box-shadow: none}
-.recovered { height: calc(1.25rem + 2px) !important;font-family: 'Rationale', sans-serif;font-size: 18px;padding: 2px !important; }
+ 
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
 /* Firefox */

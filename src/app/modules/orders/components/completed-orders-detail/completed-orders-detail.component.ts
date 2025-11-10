@@ -3,7 +3,7 @@ import { environment } from 'src/environments/environment';
 import { OrdersService } from './../../services/orders.service';
 import { ReportsService } from './../../../reports/services/reports.service';
 import { ToasterService } from './../../../../core/services/toaster.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -19,13 +19,16 @@ export class CompletedOrdersDetailComponent implements OnInit {
   private gridApi!: GridApi;
 
   loading = false;
-  date =
-    new Date().getFullYear() +
-    '-' +
-    (new Date().getMonth() + 1) +
-    '-' +
-    new Date().getDate();
+  dateValue = new Date();
   loadsheets = [];
+
+  get date(): string {
+    const year = this.dateValue.getFullYear();
+    const month = (this.dateValue.getMonth() + 1).toString().padStart(2, '0');
+    const day = this.dateValue.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
 
   columnDefs: ColDef[] = [
     { field: 'id', headerName: 'Load ID', sortable: true, filter: true, width: 120 },
@@ -135,6 +138,13 @@ export class CompletedOrdersDetailComponent implements OnInit {
         `${environment.apiDomain}/pdfDSRNew/${sheet.dsrId}`,
         '_blank'
       );
+  }
+
+  onDateChange(date: Date | null): void {
+    if (date) {
+      this.dateValue = date;
+      this.getData();
+    }
   }
 
   getData() {

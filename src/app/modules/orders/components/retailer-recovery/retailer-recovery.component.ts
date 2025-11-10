@@ -1,4 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
+
+import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   deleteRetailerCreditInvoice,
@@ -10,8 +11,12 @@ import { OrdersService } from '../../services/orders.service';
 import { DataService } from '../../../shared/services/data.service';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -22,7 +27,7 @@ import { localStorageKeys } from 'src/app/core/constants/localstorage.constants'
 
 
 })
-export class RetailerRecoveryComponent implements OnInit {
+export class RetailerRecoveryComponent implements OnInit, OnDestroy {
   permissions: any;
   @Input() executionData: any = null;
   @Input() retailerId: number = 0;
@@ -33,18 +38,35 @@ export class RetailerRecoveryComponent implements OnInit {
   assignmentId: string;
   isRecoverydiscountActivated: boolean;
   retailer_credit_Invoices: RecoveryRetailer[] = [];
+  
+  // AG Grid
+  private gridApi!: GridApi;
+  columnDefs: ColDef[] = [];
+  defaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: false
+  };
+  
+  processingIndex: number | null = null;
+
+  private globalCallbacksRegistered = false;
+
   constructor(
     private orderService: OrdersService,
     private route: ActivatedRoute,
     private storageService: LocalStorageService,
     private readonly dataService: DataService,
-    private toastService: ToasterService
+    private toastService: ToasterService,
+    private ngZone: NgZone
   ) {
     this.permissions = this.storageService.getItem(
       localStorageKeys.permissions
     );
     this.isRecoverydiscountActivated =
       this.permissions.Secondary_Orders.recovery_invoice_discount;
+    
+    this.registerGlobalCallbacks();
   }
 
   ngOnInit(): void {
@@ -102,8 +124,318 @@ export class RetailerRecoveryComponent implements OnInit {
           ),
             // ];
             (this.loading = false);
+            this.initializeColumns();
         });
     }
+    this.initializeColumns();
+  }
+
+  private registerGlobalCallbacks(): void {
+    (window as any).ngRef = {
+      updateRecoveryAmount: (index: number, value: string, isExecutionMode: boolean) => {
+        this.ngZone.run(() => this.updateRecoveryAmount(index, value, isExecutionMode));
+      },
+      isNumberKey: (event: KeyboardEvent) => {
+        let result = true;
+        this.ngZone.run(() => {
+          result = this.isNumberKey(event);
+        });
+        return result;
+      },
+      addOrderBill: (index: number, isAdded: boolean) => {
+        this.ngZone.run(() => this.addOrderBill(index, isAdded));
+      }
+    };
+    this.globalCallbacksRegistered = true;
+  }
+
+  ngOnDestroy(): void {
+    if (this.globalCallbacksRegistered && (window as any).ngRef) {
+      delete (window as any).ngRef;
+      this.globalCallbacksRegistered = false;
+    }
+  }
+  
+  initializeColumns(): void {
+    this.columnDefs = [
+      { 
+        field: 'shop_code', 
+        headerName: 'Shop Code', 
+        sortable: true, 
+        filter: false,
+        width: 120
+      },
+      { 
+        field: 'invoice_number', 
+        headerName: 'Invoice', 
+        sortable: true, 
+        filter: false,
+        width: 120,
+        valueGetter: (params) => {
+          return params.data?.invoice_number || 'Opening Balance';
+        }
+      },
+      { 
+        field: 'retailer_name', 
+        headerName: 'Shop Name', 
+        sortable: true, 
+        filter: false,
+        flex: 1
+      },
+      { 
+        field: 'agingValue', 
+        headerName: 'Aging', 
+        sortable: true, 
+        filter: false,
+        width: 120
+      },
+      { 
+        field: 'amount', 
+        headerName: 'Pending AMNT', 
+        sortable: true, 
+        filter: false,
+        width: 130,
+        valueFormatter: (params) => {
+          if (!params.value) return '0.00';
+          return parseFloat(params.value).toFixed(2);
+        }
+      },
+      ...(this.isRecoverydiscountActivated ? [{
+        field: 'invoice_discount',
+        headerName: 'Invoice DISC',
+        sortable: false,
+        filter: false,
+        width: 110,
+        cellRenderer: (params: any) => {
+          const inv = params.data;
+          const index = this.retailer_credit_Invoices.findIndex(x => x === inv);
+          const disabled = inv.is_added && this.executionData === null && !this.assignment_idOutRoute;
+          const value = inv.invoice_discount || 0;
+          return `
+            <input 
+              type="number" 
+              value="${value}"
+              ${disabled ? 'disabled' : ''}
+              oninput="window.ngRef.updateInvoiceDiscount(${index}, this.value)"
+              onkeydown="return window.ngRef.isNumberKey(event)"
+              class="!w-[90px] px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+              placeholder="0"
+              min="0"
+            />
+          `;
+        },
+        cellStyle: {
+          padding: '0px'
+        }
+      }] : []),
+      ...(this.isRecoverydiscountActivated ? [{
+        field: 'balance',
+        headerName: 'Balance',
+        sortable: true,
+        filter: false,
+        width: 120,
+        valueFormatter: (params) => {
+          if (!params.value) return '0.00';
+          return parseFloat(params.value).toFixed(2);
+        }
+      }] : []),
+      ...(this.executionData !== null ? [{
+        field: 'added_to_current',
+        headerName: 'Assigned',
+        sortable: true,
+        filter: false,
+        width: 100,
+        valueFormatter: (params) => {
+          if (!params.value) return '0.00';
+          return parseFloat(params.value).toFixed(2);
+        }
+      }] : []),
+      {
+        field: 'added_to_current',
+        headerName: this.executionData === null && this.retailerId === 0 ? 'Add To Current' : 'Recovery',
+        sortable: false,
+        filter: false,
+        width: 110,
+        cellRenderer: (params: any) => {
+          const inv = params.data;
+          const index = this.retailer_credit_Invoices.findIndex(x => x === inv);
+          const showFirstInput = this.executionData === null && !this.assignment_idOutRoute;
+          const showSecondInput = this.executionData !== null || this.assignment_idOutRoute;
+          const disabled = (inv.balance === 0 || inv.is_added) && this.executionData === null && !this.assignment_idOutRoute;
+          
+          if (showFirstInput) {
+            const value = inv.added_to_current || 0;
+            return `
+              <input 
+                type="number" 
+                value="${value}"
+                ${disabled ? 'disabled' : ''}
+                id="added_to_current_${index}"
+                oninput="window.ngRef.updateRecoveryAmount(${index}, this.value, false)"
+                onchange="window.ngRef.updateRecoveryAmount(${index}, this.value, false)"
+                onkeydown="return window.ngRef.isNumberKey(event)"
+                onblur="window.ngRef.updateRecoveryAmount(${index}, this.value, false)"
+                class="!w-[90px] px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                placeholder="0"
+                min="0"
+                max="${inv.balance || 0}"
+              />
+            `;
+          } else if (showSecondInput) {
+            const value = inv.recoverd_amount || 0;
+            const disabledSecond = (inv.balance === 0 || inv.is_added) && this.executionData === null && !this.assignment_idOutRoute;
+            return `
+              <input 
+                type="number" 
+                value="${value}"
+                ${disabledSecond ? 'disabled' : ''}
+                id="recoverd_amount_${index}"
+                oninput="window.ngRef.updateRecoveryAmount(${index}, this.value, true)"
+                onchange="window.ngRef.updateRecoveryAmount(${index}, this.value, true)"
+                onkeydown="return window.ngRef.isNumberKey(event)"
+                onblur="window.ngRef.updateRecoveryAmount(${index}, this.value, true)"
+                class="!w-[90px] px-2 py-1 text-xs border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed"
+                placeholder="0"
+                min="0"
+                max="${inv.balance || 0}"
+              />
+            `;
+          }
+          return '';
+        },
+        cellStyle: {
+          padding: '0px'
+        }
+      },
+      {
+        field: 'actions',
+        headerName: 'Action',
+        sortable: false,
+        filter: false,
+        width: 130,
+        suppressMovable: true,
+        cellRenderer: (params: any) => {
+          const inv = params.data;
+          const index = this.retailer_credit_Invoices.findIndex(x => x === inv);
+          const isExecutionMode = this.executionData !== null || this.retailerId > 0;
+          
+          if (this.executionData === null && this.retailerId === 0) {
+            const isAdded = inv.is_added;
+            const hasValue = (inv.added_to_current || 0) > 0;
+            // Enable button when value is entered OR when already added (to allow removal)
+            const isProcessing = this.processingIndex === index;
+            const disabled = (!hasValue && !isAdded) || isProcessing;
+            const buttonClass = isAdded ? 
+              'bg-red-600 dark:bg-red-600 hover:bg-red-700 text-white' : 
+              'bg-transparent border border-primary text-primary dark:text-white hover:bg-primary hover:text-white';
+            const spinner = '<span class="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>';
+            const buttonLabel = isProcessing ? spinner : (isAdded ? 'Remove to Bill' : 'Add to Bill');
+            
+            return `
+              <button 
+                onmousedown="event.preventDefault(); event.stopPropagation(); window.ngRef.addOrderBill(${index}, ${isAdded})"
+                onclick="event.preventDefault(); event.stopPropagation(); return false;"
+                ${disabled ? 'disabled' : ''}
+                class="px-3 py-1 text-xs rounded-md font-primary transition-colors ${buttonClass} disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[110px]"
+              >
+                ${buttonLabel}
+              </button>
+            `;
+          } else {
+            const isProcessing = this.processingIndex === index;
+            const spinner = '<span class="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>';
+            const buttonLabel = isProcessing ? spinner : 'Save';
+            return `
+              <button 
+                onmousedown="event.preventDefault(); event.stopPropagation(); window.ngRef.addOrderBill(${index}, false)"
+                onclick="event.preventDefault(); event.stopPropagation(); return false;"
+                ${isProcessing ? 'disabled' : ''}
+                class="px-3 py-1 text-xs rounded-md font-primary transition-colors bg-transparent border border-primary text-primary dark:text-white hover:bg-primary hover:text-white disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 min-w-[90px]"
+              >
+                ${buttonLabel}
+              </button>
+            `;
+          }
+        },
+        cellStyle: {
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '4px'
+        },
+        pinned: 'right',
+        editable: false,
+        cellClass: 'ag-cell-button-container'
+      }
+    ];
+  }
+  
+  onGridReady(params: GridReadyEvent): void {
+    this.gridApi = params.api;
+  }
+  
+  updateInvoiceDiscount(index: number, value: string): void {
+    if (this.retailer_credit_Invoices[index]) {
+      // Setting invoice_discount will automatically recalculate balance (it's a getter)
+      this.retailer_credit_Invoices[index].invoice_discount = parseFloat(value) || 0;
+      if (this.gridApi) {
+        // Find the row node by matching the data object
+        const inv = this.retailer_credit_Invoices[index];
+        this.gridApi.forEachNode((rowNode) => {
+          if (rowNode.data === inv) {
+            // Refresh balance column (it's a computed getter) and invoice_discount column
+            this.gridApi.refreshCells({ rowNodes: [rowNode], columns: ['balance', 'invoice_discount'] });
+          }
+        });
+      }
+    }
+  }
+  
+  updateRecoveryAmount(index: number, value: string, isExecutionMode: boolean): void {
+    if (this.retailer_credit_Invoices[index]) {
+      if (isExecutionMode) {
+        const parsedValue = parseFloat(value) || 0;
+        this.retailer_credit_Invoices[index].recoverd_amount = parsedValue;
+        if (this.gridApi) {
+          this.gridApi.forEachNode((rowNode) => {
+            if (rowNode.data === this.retailer_credit_Invoices[index]) {
+              rowNode.data.recoverd_amount = parsedValue;
+              this.gridApi.refreshCells({
+                rowNodes: [rowNode],
+                columns: ['actions'],
+                force: true,
+              });
+            }
+          });
+        }
+      } else {
+        const parsedValue = parseFloat(value) || 0;
+        // Update the data model first
+        this.retailer_credit_Invoices[index].added_to_current = parsedValue;
+        
+        // Update AG Grid row data directly to ensure data is synced
+        if (this.gridApi) {
+          // Update AG Grid's row data directly (same reference)
+          this.gridApi.forEachNode((rowNode) => {
+            // Find the row by comparing the reference
+            if (rowNode.data === this.retailer_credit_Invoices[index]) {
+              // Directly update the row data property (same object reference)
+              rowNode.data.added_to_current = parsedValue;
+              // Force refresh of both the added_to_current column and actions column
+              this.gridApi.refreshCells({ 
+                rowNodes: [rowNode], 
+                columns: ['added_to_current', 'actions'],
+                force: true 
+              });
+            }
+          });
+        }
+      }
+    }
+  }
+  
+  isNumberKey(event: KeyboardEvent): boolean {
+    return this.dataService.isNumber(event, 'charges');
   }
 
   getCreditTabData() {
@@ -115,7 +447,18 @@ export class RetailerRecoveryComponent implements OnInit {
         this.retailer_credit_Invoices
       );
       this.loading = false;
+      this.initializeColumns();
+      if (this.gridApi) {
+        this.gridApi.refreshCells();
+      }
     });
+  }
+
+  private setProcessingIndex(index: number | null): void {
+    this.processingIndex = index;
+    if (this.gridApi) {
+      this.gridApi.refreshCells({ columns: ['actions'], force: true });
+    }
   }
 
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
@@ -124,16 +467,75 @@ export class RetailerRecoveryComponent implements OnInit {
 
   addOrderBill(index: number, isAdded: boolean): void {
     const retailer_credit_Invoices = this.retailer_credit_Invoices[index];
+    if (!retailer_credit_Invoices) {
+      return;
+    }
     if (!isAdded) {
+      const isExecutionMode = this.executionData !== null || !!this.assignment_idOutRoute || this.retailerId > 0;
+      let currentValue = 0;
+      let fieldLabel = 'Add To Current';
+
+      if (isExecutionMode) {
+        fieldLabel = 'Recovery';
+        const inputElement = document.getElementById(`recoverd_amount_${index}`) as HTMLInputElement;
+        if (inputElement && inputElement.value !== undefined) {
+          currentValue = parseFloat(inputElement.value) || 0;
+        } else {
+          currentValue = retailer_credit_Invoices?.recoverd_amount || 0;
+        }
+
+        if (currentValue <= 0) {
+          const toast: Toaster = {
+            type: 'error',
+            message: `Please enter a value in ${fieldLabel} field`,
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+          return;
+        }
+
+        retailer_credit_Invoices.recoverd_amount = currentValue;
+        if (this.gridApi) {
+          this.gridApi.forEachNode((rowNode) => {
+            if (rowNode.data === retailer_credit_Invoices) {
+              rowNode.data.recoverd_amount = currentValue;
+            }
+          });
+        }
+      } else {
+        const inputElement = document.getElementById(`added_to_current_${index}`) as HTMLInputElement;
+        if (inputElement && inputElement.value !== undefined) {
+          currentValue = parseFloat(inputElement.value) || 0;
+        } else {
+          currentValue = retailer_credit_Invoices?.added_to_current || 0;
+        }
+
+        if (currentValue <= 0) {
+          const toast: Toaster = {
+            type: 'error',
+            message: `Please enter a value in ${fieldLabel} field`,
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+          return;
+        }
+
+        retailer_credit_Invoices.added_to_current = currentValue;
+        if (this.gridApi) {
+          this.gridApi.forEachNode((rowNode) => {
+            if (rowNode.data === retailer_credit_Invoices) {
+              rowNode.data.added_to_current = currentValue;
+            }
+          });
+        }
+      }
+
       let parentOrderId = retailer_credit_Invoices.parent_order_id;
       if (this.executionData === null && this.retailerId === 0) {
         parentOrderId = this.ordersRetailers.find(
           (x) => x.retailer_id === retailer_credit_Invoices.retailer_id
         ).id;
-      } else {
-        console.log('retailer_credit_Invoices', retailer_credit_Invoices);
       }
-      console.log('retailer_credit_Invoices ', retailer_credit_Invoices[0]);
       const postModel = getRetailersCreditInvoice(
         retailer_credit_Invoices,
         parentOrderId,
@@ -142,32 +544,77 @@ export class RetailerRecoveryComponent implements OnInit {
       if (this.retailerId > 0) {
         postModel.parent_order_id = null;
       }
+      this.setProcessingIndex(index);
       this.orderService
         .postRetailersCreditInvoices(postModel)
-        .subscribe((x) => {
+        .pipe(finalize(() => this.setProcessingIndex(null)))
+        .subscribe({
+          next: (x) => {
           this.retailer_credit_Invoices[index].id = x.result.id;
           this.retailer_credit_Invoices[index].is_added = 1;
+          // Refresh the grid to update button state
+          if (this.gridApi) {
+            const inv = this.retailer_credit_Invoices[index];
+            this.gridApi.forEachNode((rowNode) => {
+              if (rowNode.data === inv) {
+                this.gridApi.refreshCells({ rowNodes: [rowNode], columns: ['actions'], force: true });
+              }
+            });
+          }
           const toast: Toaster = {
             type: 'success',
             message: 'Added Successfully',
             title: 'Success:',
           };
           this.toastService.showToaster(toast);
+          },
+          error: (error) => {
+            const toast: Toaster = {
+              type: 'error',
+              message: error?.error?.message || 'Unable to add recovery amount. Please try again.',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
         });
     } else {
       const postModel = deleteRetailerCreditInvoice(
         retailer_credit_Invoices.id
       );
+      this.setProcessingIndex(index);
       this.orderService
         .postRetailersCreditInvoices(postModel)
-        .subscribe((x) => {
-          this.getCreditTabData();
+        .pipe(finalize(() => this.setProcessingIndex(null)))
+        .subscribe({
+          next: () => {
+          // Clear the added_to_current value when removing
+          this.retailer_credit_Invoices[index].added_to_current = 0;
+          this.retailer_credit_Invoices[index].is_added = 0;
+          // Refresh the grid to update button state and input field
+          if (this.gridApi) {
+            const inv = this.retailer_credit_Invoices[index];
+            this.gridApi.forEachNode((rowNode) => {
+              if (rowNode.data === inv) {
+                // Refresh both the actions column and the added_to_current input field
+                this.gridApi.refreshCells({ rowNodes: [rowNode], columns: ['actions', 'added_to_current'], force: true });
+              }
+            });
+          }
           const toast: Toaster = {
             type: 'success',
             message: 'Remove Successfully',
             title: 'Success:',
           };
           this.toastService.showToaster(toast);
+          },
+          error: (error) => {
+            const toast: Toaster = {
+              type: 'error',
+              message: error?.error?.message || 'Unable to update recovery amount. Please try again.',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
         });
     }
   }

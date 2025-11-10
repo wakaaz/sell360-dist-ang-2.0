@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DataService } from '../../../shared/services';
 import {
@@ -19,6 +19,9 @@ import {
 } from '../../models/recovery-retailler.model';
 import { number } from 'echarts';
 import { exit } from 'process';
+import { ColDef, ColGroupDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -38,16 +41,40 @@ export class OrderDispatchedComponent implements OnInit {
   loading: boolean;
   loadingProduct: boolean;
   showProducts: boolean;
+  showOrdersSidebar: boolean = false;
+  showHoldOrderModal: boolean = false;
+  showCancelOrderModal: boolean = false;
+  showCreateLoadModal: boolean = false;
+  showBillsModal: boolean = false;
+  ordersList: any[] = [];
+  currentPrefId: number = null;
+  private sidebarJustOpened: boolean = false;
   savingOrder: boolean;
   isAllSelected: boolean;
   showFinalLoad: boolean;
   isShopPendingApproval: boolean;
+  showAllocationErrors: boolean = false;
+  allocationErrors: string = '';
+  
+  // AG Grid
+  private stockAllocationGridApi!: GridApi;
+  stockAllocationColumnDefs: ColDef[] = [];
+  defaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: false
+  };
+
+  // Load Sheet AG Grid
+  private loadSheetGridApi!: GridApi;
+  loadSheetColumnDefs: (ColDef | ColGroupDef)[] = [];
 
   retailer_credit_Invoices: RecoveryRetailer[];
 
   searchText: string;
   assignmentId: string;
   employeeId: number;
+  visitedTabs: Set<number> = new Set([1]); // Track visited tabs, start with tab 1
 
   salemanId: number;
   currentTab: number;
@@ -85,7 +112,8 @@ export class OrderDispatchedComponent implements OnInit {
     private dataService: DataService,
     private storageService: LocalStorageService,
     private dispatchService: OrderDispatchService,
-    private orderService: OrdersService
+    private orderService: OrdersService,
+    private cdr: ChangeDetectorRef
   ) {
     this.distributorId = this.storageService.getItem('distributor').id;
     this.retailer_credit_Invoices = new Array<RecoveryRetailer>();
@@ -123,7 +151,643 @@ export class OrderDispatchedComponent implements OnInit {
     } else {
       this.getProducts();
       this.getSchemes();
+      this.initializeStockAllocationColumns();
     }
+  }
+
+  initializeStockAllocationColumns(): void {
+    this.stockAllocationColumnDefs = [
+      { field: 'item_sku', headerName: 'SKU', sortable: true, filter: false, width: 120 },
+      { field: 'item_main_description', headerName: 'Name', sortable: true, filter: false, flex: 1 },
+      { 
+        field: 'availble_stock_qty', 
+        headerName: 'Stock in Hand', 
+        sortable: true, 
+        filter: false,  
+        width: 110,
+        valueGetter: (params) => {
+          return params.data ? +params.data.availble_stock_qty : 0;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      { 
+        field: 'allocated_stock_qty', 
+        headerName: 'Allocated Stock', 
+        sortable: true, 
+        filter: false,  
+        width: 115,
+        valueGetter: (params) => {
+          return params.data ? +params.data.allocated_stock_qty : 0;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      { 
+        headerName: 'Available QTY.', 
+        sortable: true, 
+        filter: false,  
+        width: 115,
+        valueGetter: (params) => {
+          const available = +(params.data?.availble_stock_qty || 0);
+          const allocated = +(params.data?.allocated_stock_qty || 0);
+          return available - allocated;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      { 
+        field: 'current_load_foc_qty', 
+        headerName: 'FOC QTY.', 
+        sortable: true, 
+        filter: false,  
+        width: 100,
+        valueGetter: (params) => {
+          return params.data ? +params.data.current_load_foc_qty : 0;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      { 
+        headerName: 'Booked QTY.', 
+        sortable: true, 
+        filter: false,  
+        width: 110,
+        valueGetter: (params) => {
+          const booked = +(params.data?.current_load_booked_qty || 0);
+          const foc = +(params.data?.current_load_foc_qty || 0);
+          return booked - foc;
+        },
+        valueFormatter: (params) => {
+          return Math.floor(params.value || 0).toString();
+        }
+      },
+      {
+        field: 'current_load_allocated_qty',
+        headerName: 'Allocated QTY.',
+        sortable: false,
+        filter: false,
+        width: 115, 
+        cellRenderer: (params: any) => {
+          const item = params.data;
+          const value = Math.floor(+(item.current_load_allocated_qty || 0));
+          return `
+            <input 
+              type="text" 
+              value="${value}"
+              oninput="window.ngRef.updateAllocatedQty('${item.pref_id}', this.value, this)"
+              onkeydown="return window.ngRef.isNumberKey(event)"
+              class="!w-[80px] px-3 py-1 border border-gray-300 dark:border-[#333333] rounded-md bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white focus:border-primary dark:focus:border-primary focus:outline-none text-sm"
+              placeholder="0"
+            />
+          `;
+        },
+        cellStyle: {
+          padding: '0px'
+        }
+      },
+      {
+        field: 'actions',
+        headerName: 'ACTIONS',
+        cellRenderer: (params: any) => {
+          const item = params.data;
+          
+          return `
+            <div class="flex gap-1 items-center">
+              <button onclick="event.stopPropagation(); window.ngRef.extraLoadItemAllocation('${item.pref_id}')" 
+                class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5">
+                ${item.updateLoading ? 'Updating...' : 'Update'}
+              </button>
+              <button onclick="var e=event||window.event; if(e){e.stopPropagation();e.preventDefault();} window.ngRef.viewOrders('${item.pref_id}'); return false;" 
+                class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5">
+                View Orders
+              </button>
+              <button onclick="event.stopPropagation(); window.ngRef.clearAllocation('${item.pref_id}')" 
+                class="bg-red-600 dark:bg-red-600 dark:border-red-600 h-auto leading-none py-[4px] px-[5px] text-white text-[11px] border border-red-600 hover:bg-red-700 font-primary rounded-[5px] mb-1 ml-0.5">
+                ${item.cancelLoading ? 'Cancelling...' : 'Cancel All'}
+              </button>
+            </div>
+          `;
+        },
+        cellStyle: {
+          display: 'flex',
+          alignItems: 'center'
+        },
+        width: 230, 
+        sortable: false,
+        filter: false,
+        pinned: 'right'
+      }
+    ];
+  }
+
+  initializeLoadSheetColumns(): void {
+    if (!this.finalLoad || !this.finalLoad.load || this.finalLoad.load.length === 0) {
+      console.warn('Load sheet data not available:', this.finalLoad);
+      this.loadSheetColumnDefs = [];
+      return;
+    }
+
+    if (!this.finalLoad.load[0] || !this.finalLoad.load[0].content) {
+      console.warn('Load sheet content not available:', this.finalLoad.load[0]);
+      this.loadSheetColumnDefs = [];
+      return;
+    }
+
+    const loadCount = this.finalLoad.count || 1;
+    const loadContent = this.finalLoad.load[0].content || [];
+    
+    const columns: (ColDef | ColGroupDef)[] = [
+      {
+        headerName: 'SN',
+        field: 'item_sku',
+        width: 100,
+        minWidth: 100,
+        sortable: true,
+        filter: false,
+        pinned: 'left',
+        cellStyle: { textAlign: 'center' },
+        headerClass: 'text-center'
+      },
+      {
+        headerName: 'Product Name',
+        field: 'item_name',
+        width: 180,
+        minWidth: 180,
+        sortable: true,
+        filter: false,
+        pinned: 'left',
+        cellStyle: { minWidth: '180px' },
+        headerClass: 'text-left'
+      }
+    ];
+
+    // Add Load columns dynamically
+    loadContent.forEach((load: any, index: number) => {
+      columns.push({
+        headerName: `Load ${index + 1}`,
+        children: [
+          {
+            headerName: 'CTN/Bundle',
+            field: `load_${index}_parent_qty`,
+            width: 100,
+            minWidth: 100,
+            sortable: false,
+            filter: false,
+            valueGetter: (params) => {
+              const content = params.data?.content || [];
+              return content[index]?.parent_qty || 0;
+            },
+            valueFormatter: (params) => {
+              return params.value ? (+params.value).toLocaleString() : '0';
+            },
+            cellStyle: { textAlign: 'center' }
+          },
+          {
+            headerName: 'Box/Piece',
+            field: `load_${index}_child_qty`,
+            width: 90,
+            minWidth: 90,
+            sortable: false,
+            filter: false,
+            valueGetter: (params) => {
+              const content = params.data?.content || [];
+              return content[index]?.child_qty || 0;
+            },
+            cellStyle: { textAlign: 'center' }
+          },
+          {
+            headerName: 'Weight',
+            field: `load_${index}_total_weight`,
+            width: 80,
+            minWidth: 80,
+            sortable: false,
+            filter: false,
+            valueGetter: (params) => {
+              const content = params.data?.content || [];
+              return content[index]?.total_weight || 0;
+            },
+            cellStyle: { textAlign: 'center' }
+          }
+        ]
+      });
+    });
+
+    // Extra Issuance group
+    columns.push({
+      headerName: 'Extra Issuance',
+      children: [
+        {
+          headerName: 'CTN/Bundle',
+          field: 'total_extra_primary_qty',
+          width: 100,
+          minWidth: 100,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_extra_primary_qty || 0;
+          },
+          valueFormatter: (params) => {
+            return params.value ? (+params.value).toLocaleString() : '0';
+          },
+          cellStyle: { textAlign: 'center' }
+        },
+        {
+          headerName: 'Box/Piece',
+          field: 'total_extra_secondary_qty',
+          width: 90,
+          minWidth: 90,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_extra_secondary_qty || 0;
+          },
+          cellStyle: { textAlign: 'center' }
+        }
+      ]
+    });
+
+    // Total Issuance group
+    columns.push({
+      headerName: 'Total Issuance',
+      children: [
+        {
+          headerName: 'CTN/Bundle',
+          field: 'total_primary_qty',
+          width: 100,
+          minWidth: 100,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_primary_qty || 0;
+          },
+          valueFormatter: (params) => {
+            return params.value ? (+params.value).toLocaleString() : '0';
+          },
+          cellStyle: { textAlign: 'center' }
+        },
+        {
+          headerName: 'Box/Piece',
+          field: 'total_secondary_qty',
+          width: 90,
+          minWidth: 90,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_secondary_qty || 0;
+          },
+          cellStyle: { textAlign: 'center' }
+        },
+        {
+          headerName: 'Weight',
+          field: 'total_weight',
+          width: 80,
+          minWidth: 80,
+          sortable: false,
+          filter: false,
+          valueGetter: (params) => {
+            return params.data?.total_weight || 0;
+          },
+          cellStyle: { textAlign: 'center' }
+        }
+      ]
+    });
+
+    this.loadSheetColumnDefs = columns;
+    console.log('Load sheet columns initialized:', columns.length);
+    console.log('Load sheet data:', this.finalLoad.load);
+  }
+
+  onLoadSheetGridReady(params: GridReadyEvent): void {
+    this.loadSheetGridApi = params.api;
+    // Refresh grid when ready
+    if (this.finalLoad && this.finalLoad.load) {
+      params.api.setGridOption('rowData', this.finalLoad.load);
+    }
+  }
+
+  onLoadSheetQuickFilterChanged(event: any): void {
+    const filterValue = event.target.value;
+    if (this.loadSheetGridApi) {
+      this.loadSheetGridApi.setGridOption('quickFilterText', filterValue);
+    }
+  }
+
+  onStockAllocationGridReady(params: GridReadyEvent): void {
+    this.stockAllocationGridApi = params.api;
+    // Expose methods to window for button clicks
+    (window as any).ngRef = {
+      extraLoadItemAllocation: (prefId: string) => {
+        const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
+        if (item) this.onExtraLoadItemAllocation(item);
+      },
+      viewOrders: (prefId: string) => {
+        const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
+        if (item) {
+          this.onShowViewOrders(null, item.pref_id);
+        }
+      },
+      clearAllocation: (prefId: string) => {
+        const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
+        if (item) this.clearLoadItemAllocation(item);
+      },
+      updateAllocatedQty: (prefId: string, value: string, inputElement: HTMLInputElement) => {
+        const item = this.stockAllocation.find((x: any) => x.pref_id.toString() === prefId);
+        if (item) {
+          const newValue = Math.floor(+(value || 0));
+          const availableQty = Math.floor(+(item.availble_stock_qty || 0) - +(item.allocated_stock_qty || 0));
+          
+          if (newValue > availableQty) {
+            item.current_load_allocated_qty = availableQty;
+            if (inputElement) {
+              inputElement.value = availableQty.toString();
+            }
+          } else {
+            item.current_load_allocated_qty = newValue;
+          }
+          this.stockAllocationGridApi.refreshCells();
+        }
+      },
+      isNumberKey: (event: KeyboardEvent) => {
+        const charCode = event.which ? event.which : event.keyCode;
+        // Allow: backspace, delete, tab, escape, enter
+        if ([46, 8, 9, 27, 13].indexOf(charCode) !== -1 ||
+            // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+            (charCode === 65 && event.ctrlKey === true) ||
+            (charCode === 67 && event.ctrlKey === true) ||
+            (charCode === 86 && event.ctrlKey === true) ||
+            (charCode === 88 && event.ctrlKey === true) ||
+            // Allow: home, end, left, right
+            (charCode >= 35 && charCode <= 39)) {
+          return true;
+        }
+        // Ensure that it is a number and stop the keypress
+        if ((event.shiftKey || (charCode < 48 || charCode > 57)) && (charCode < 96 || charCode > 105)) {
+          event.preventDefault();
+          return false;
+        }
+        return true;
+      }
+    };
+  }
+
+  onStockQuickFilterChanged(event: any): void {
+    const filterValue = event.target.value;
+    if (this.stockAllocationGridApi) {
+      this.stockAllocationGridApi.setGridOption('quickFilterText', filterValue);
+    }
+  }
+
+
+  onCheckAllocation(): void {
+    this.allocationErrors = '';
+    this.showAllocationErrors = false;
+    this.tabLoading = true;
+    
+    if (this.isShopPendingApproval) {
+      this.tabLoading = false;
+      this.orderService.setCheckAllocationSuccess(false);
+      const toast: Toaster = {
+        type: 'error',
+        message: 'Approve all pending Retailers First.',
+        title: 'Failed:',
+      };
+      this.toastService.showToaster(toast);
+      return;
+    }
+    
+    this.orderService.saveLoadItemAllocation(this.assignmentId).subscribe(
+      (x) => {
+        this.tabLoading = false;
+        this.orderService.setCheckAllocationSuccess(true);
+        const toast: Toaster = {
+          type: 'success',
+          message: 'Allocation Quantity Verified',
+          title: 'Success:',
+        };
+        this.toastService.showToaster(toast);
+      },
+      (err) => {
+        this.tabLoading = false;
+        this.orderService.setCheckAllocationSuccess(false);
+        this.showAllocationErrors = true;
+        let itemErrorList: string = '';
+        if (err.error?.error) {
+          err.error.error.forEach((x: any) => {
+            itemErrorList += `<li>Product SKU: ${x.item_sku}, Product Name: ${x.item_name}</li>`;
+          });
+        }
+        this.allocationErrors = itemErrorList;
+      }
+    );
+  }
+
+  closeAllocationAlert(): void {
+    this.showAllocationErrors = false;
+    this.allocationErrors = '';
+  }
+
+  onExtraLoadItemAllocation(item: any): void {
+    item.updateLoading = true;
+    if (+item.current_load_allocated_qty < item.current_load_booked_qty) {
+      item.updateLoading = false;
+      const toast: Toaster = {
+        type: 'error',
+        message: `Requested allocation quantity is less than Booked Qty. Minimum Booked Qty is ${item.current_load_booked_qty}`,
+        title: 'Error:',
+      };
+      this.toastService.showToaster(toast);
+    } else {
+      this.orderService
+        .extraLoadItemAllocation(
+          this.assignmentId,
+          item.pref_id,
+          item.current_load_allocated_qty
+        )
+        .subscribe(
+          (x) => {
+            item.updateLoading = false;
+            this.stockAllocationGridApi.refreshCells();
+            const toast: Toaster = {
+              type: 'success',
+              message: 'Allocated Quantity Updated',
+              title: 'Success:',
+            };
+            this.toastService.showToaster(toast);
+            this.getDispatchDetails();
+          },
+          (err) => {
+            item.updateLoading = false;
+            this.stockAllocationGridApi.refreshCells();
+            const toast: Toaster = {
+              type: 'error',
+              message: 'Requested allocation quantity is greater than available stock.',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+        );
+    }
+  }
+
+  onShowViewOrders(event: any, pref_id: number): void {
+    console.log('onShowViewOrders called', pref_id);
+    
+    // Close sidebar if already open
+    if (this.showOrdersSidebar) {
+      this.closeOrdersList();
+    }
+    
+    this.currentPrefId = pref_id;
+    
+    // Set flag to prevent immediate closure - set this FIRST
+    this.sidebarJustOpened = true;
+    
+    // Open sidebar immediately (before API call) so it shows right away
+    this.showOrdersSidebar = true;
+    document.body.classList.add('no-scroll');
+    
+    // Manually trigger change detection to render sidebar immediately
+    this.cdr.detectChanges();
+    
+    this.orderService
+      .getLoadOrdersPrefs(this.assignmentId, pref_id)
+      .subscribe(
+        (x) => {
+          console.log('Orders fetched', x);
+          this.ordersList = (x.data || []).map((order: any) => ({
+            ...order,
+            updateLoading: false,
+            booked_qty: order.booked_qty || 0,
+          }));
+          
+          // Trigger change detection after orders are loaded
+          this.cdr.detectChanges();
+          
+          // Allow click-outside after a delay (prevents immediate closure from button click)
+          setTimeout(() => {
+            this.sidebarJustOpened = false;
+            console.log('Sidebar protection disabled');
+          }, 500);
+        },
+        (error) => {
+          console.error('Error fetching orders', error);
+          this.sidebarJustOpened = false;
+          this.showOrdersSidebar = false;
+          document.body.classList.remove('no-scroll');
+          this.cdr.detectChanges();
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Cannot fetch orders. Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      );
+  }
+
+  closeOrdersList(): void {
+    this.showOrdersSidebar = false;
+    this.ordersList = [];
+    this.currentPrefId = null;
+    this.sidebarJustOpened = false;
+    document.body.classList.remove('no-scroll');
+    this.cdr.detectChanges();
+  }
+
+  clickedOutSide(event: Event): void {
+    console.log('clickedOutSide called', {
+      showOrdersSidebar: this.showOrdersSidebar,
+      sidebarJustOpened: this.sidebarJustOpened,
+      target: (event.target as HTMLElement)?.id
+    });
+    
+    // Don't process if sidebar is not open
+    if (!this.showOrdersSidebar) {
+      return;
+    }
+    
+    // Prevent closing if sidebar just opened (within 500ms)
+    if (this.sidebarJustOpened) {
+      console.log('Sidebar just opened, preventing close');
+      return;
+    }
+    
+    const target = event.target as HTMLElement;
+    
+    // Don't close if clicking on sidebar content or elements marked to not close
+    if (
+      target.classList.contains('dont-close-orders') ||
+      target.closest('.dont-close-orders') ||
+      target.closest('#orders-list-sidebar > div')
+    ) {
+      console.log('Clicking on sidebar content, not closing');
+      return;
+    }
+    
+    // Only close if clicking on the backdrop itself (not on any child elements)
+    const sidebarElement = document.getElementById('orders-list-sidebar');
+    if (sidebarElement && (target === sidebarElement || target === event.currentTarget)) {
+      console.log('Closing sidebar - backdrop clicked');
+      this.closeOrdersList();
+    }
+  }
+
+  onUpdateOrderAllocation(order: any): void {
+    order.updateLoading = true;
+    this.cdr.detectChanges();
+    this.orderService
+      .updateLoadOrderItemAllocation(
+        this.assignmentId,
+        order.order_id,
+        this.currentPrefId,
+        +order.booked_qty + +order.free_qty
+      )
+      .subscribe(
+        (x) => {
+          order.updateLoading = false;
+          this.cdr.detectChanges();
+          const toast: Toaster = {
+            type: 'success',
+            message: 'Allocated Quantity Updated',
+            title: 'Success:',
+          };
+          this.toastService.showToaster(toast);
+          // Refresh stock allocation after update
+          this.getDispatchDetails();
+        },
+        (err) => {
+          order.updateLoading = false;
+          this.cdr.detectChanges();
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Failed to update allocation. Please try again',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+      );
+  }
+
+  clearLoadItemAllocation(item: any): void {
+    item.cancelLoading = true;
+    this.orderService
+      .clearLoadItemAllocation(this.assignmentId, item.pref_id)
+      .subscribe((x) => {
+        item.cancelLoading = false;
+        this.stockAllocationGridApi.refreshCells();
+        const toast: Toaster = {
+          type: 'success',
+          message: 'Allocated Quantity Updated',
+          title: 'Success:',
+        };
+        this.toastService.showToaster(toast);
+        this.getDispatchDetails();
+      });
   }
 
   setLoad(): void {
@@ -162,6 +826,36 @@ export class OrderDispatchedComponent implements OnInit {
   closeSideBarEvent(value: any) {
     this.stockAllocation = null;
     this.getDispatchDetails();
+  }
+
+  // Check if a tab has been visited
+  isTabVisited(tabNumber: number): boolean {
+    return this.visitedTabs.has(tabNumber);
+  }
+
+  // Handle tab click - only allow if visited
+  onTabClick(tabNumber: number): void {
+    if (this.isTabVisited(tabNumber)) {
+      this.currentTab = tabNumber;
+      this.tabChanged();
+    }
+  }
+
+  // Navigate to next tab
+  goToNextTab(): void {
+    if (this.currentTab < 5) {
+      this.currentTab++;
+      this.visitedTabs.add(this.currentTab); // Mark new tab as visited
+      this.tabChanged();
+    }
+  }
+
+  // Navigate to previous tab
+  goToPreviousTab(): void {
+    if (this.currentTab > 1) {
+      this.currentTab--;
+      this.tabChanged();
+    }
   }
 
   tabChanged(): void {
@@ -268,6 +962,14 @@ export class OrderDispatchedComponent implements OnInit {
               this.currentTab = 5;
               setTimeout(() => {
                 this.showFinalLoad = true;
+                this.initializeLoadSheetColumns();
+                // Refresh grid after columns are initialized
+                setTimeout(() => {
+                  if (this.loadSheetGridApi) {
+                    this.loadSheetGridApi.refreshCells();
+                    this.loadSheetGridApi.sizeColumnsToFit();
+                  }
+                }, 100);
               }, 500);
             } 
             else {
@@ -888,7 +1590,7 @@ export class OrderDispatchedComponent implements OnInit {
   }
 
   cancelOrder(delete_allocation=0): void {
-    document.getElementById('close-del').click();
+    this.showCancelOrderModal = false;
     this.savingOrder = true;
     this.orderService.cancelOrder(this.orderDetails.id,delete_allocation,1).subscribe(
       (res) => {
@@ -924,13 +1626,29 @@ export class OrderDispatchedComponent implements OnInit {
     );
   }
 
-  closeHoldOrderModal(event: Event):void{
-    document.getElementById('close-hold-model').click();
+  closeHoldOrderModal(event?: Event):void{
+    this.showHoldOrderModal = false;
+    if (this.holdOrderParams) {
+      this.holdOrderParams.hold_reason = '';
+      this.holdOrderParams.delete_allocation = false;
+    }
+  }
+
+  closeCancelOrderModal(event?: Event):void{
+    this.showCancelOrderModal = false;
+  }
+
+  closeCreateLoadModal(event?: Event): void {
+    this.showCreateLoadModal = false;
+  }
+
+  closeBillsModal(event?: Event): void {
+    this.showBillsModal = false;
   }
 
   holdOrder(event: Event):void{
-    if(this.holdOrderParams.hold_reason.trim() != ''){
-      document.getElementById('close-hold-model').click();
+    if(this.holdOrderParams.hold_reason && this.holdOrderParams.hold_reason.trim() != ''){
+      this.showHoldOrderModal = false;
       this.savingOrder = true;
       this.holdOrderParams.order_id       = this.orderDetails.id;
       this.holdOrderParams.assignment_id  = this.orderDetails.assignment_id;
@@ -1070,7 +1788,7 @@ export class OrderDispatchedComponent implements OnInit {
       }
       if (this.load.content.length !== 3 && unSelected.length !== 0) {
         if (this.currentLoadContent.items.length) {
-          document.getElementById('open-create-load').click();
+          this.showCreateLoadModal = true;
         } else {
           this.toastService.showToaster({
             type: 'error',
@@ -1128,6 +1846,14 @@ export class OrderDispatchedComponent implements OnInit {
           setTimeout(() => {
             this.loading = false;
             this.showFinalLoad = true;
+            this.initializeLoadSheetColumns();
+            // Refresh grid after columns are initialized
+            setTimeout(() => {
+              if (this.loadSheetGridApi) {
+                this.loadSheetGridApi.refreshCells();
+                this.loadSheetGridApi.sizeColumnsToFit();
+              }
+            }, 100);
           }, 500);
           this.dispatchOrderDetail = null;
           this.ordersDispList = [];
@@ -1299,7 +2025,7 @@ export class OrderDispatchedComponent implements OnInit {
       this.isAllSelected = true;
       this.allSelected();
     }
-    document.getElementById('close-confirm-load').click();
+    this.showCreateLoadModal = false;
   }
 
   removeAllOrdersFromCurrentLoad(): void {
@@ -1387,7 +2113,7 @@ export class OrderDispatchedComponent implements OnInit {
         .subscribe(
           (res) => {
             if (res.status === 200) {
-              document.getElementById('close-bills').click();
+              this.showBillsModal = false;
               const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.salemanId}&date=${this.orderDate}&dist_id=${this.distributorId}&size=${size}&status=processed&loadId=${this.finalLoad.load_id}`;
               window.open(billsUrl);
             } else {

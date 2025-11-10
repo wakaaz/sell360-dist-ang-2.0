@@ -10,6 +10,7 @@ module.exports = {
         primary: '#0038ba',
         secondary: '#282828',
         secondarygray: '#f5f5f5',
+        darkprimary: '#0a0a0a',
       },
       fontFamily: {
         primary: ['Outfit','sans-serif'],
@@ -17,5 +18,13 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addBase, theme }) {
+      addBase({
+        'body': {
+          fontFamily: theme('fontFamily.secondary'),
+        },
+      })
+    },
+  ],
 }

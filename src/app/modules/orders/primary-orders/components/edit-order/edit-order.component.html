@@ -1,701 +1,364 @@
-<!-- Unit, Quantity and Trade Offer of Products -->
+<!-- Unit, Quantity and Trade Offer of Products - Tailwind Modal -->
 <div
-  class="modal fade"
   id="exampleModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
+  *ngIf="showQuantityModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] !flex items-center justify-center p-4 pl-0"
+  (click)="closeQuantityModal($event)"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">
-          Product <span> Detail</span>
-        </h5>
-        <button
-          type="button"
-          class="close dont-close-products"
-          data-dismiss="modal"
-          (click)="closeQuantityModal($event)"
-          aria-label="Close"
-        >
-          <span class="dont-close-products" aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div
-        *ngIf="selectedProduct?.parent?.hasOwnProperty('quantity')"
-        class="modal-body AddDetailPR"
+  <div
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div
+      class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]"
+    >
+      <h5
+        class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary"
       >
-        <div class="row">
-          <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
-          <div class="col-md-8 mb-15">
-            <input
-              type="text"
-              class="form-control"
-              placeholder=""
-              (keyup)="setQuantity(selectedProduct)"
-              required
-              (keydown)="isNumber($event, 'quantity')"
-              [(ngModel)]="selectedProduct.stockQty"
-              #selectedQty="ngModel"
-              placeholder="0"
-              style="font-size: 13px"
-            />
-            <span
-              *ngIf="selectedQty.errors?.required && isAdded"
-              class="input-error"
-            >
-              Please add Quantity!
-            </span>
-            <span
-              *ngIf="
-                +selectedProduct.stockQty === 0 &&
-                isAdded &&
-                !selectedQty.errors?.required
-              "
-              class="input-error"
-            >
-              Quantity should be greater than 0!
-            </span>
-          </div>
-          <div class="col-md-4 pt-7 mb-15">Unit:</div>
-          <div class="col-md-8 mb-15">
-            {{ selectedProduct.unit_name }}
-            <!-- <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
-                            name="prefrences" (change)="setPrefrence($event.target.value, selectedProduct)"
-                            #selectedPrefs="ngModel">
-                            <option [value]="null" disbaled>Select Unit</option>
-                            <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
-                            </option>
-                        </select> -->
-            <!-- <span *ngIf="selectedProduct.pref_id === null && isAdded" class="input-error">
-                            Please select a Unit!
-                        </span>
-                        <span *ngIf="alreadyAdded && selectedProduct.pref_id !== null" class="input-error">
-                            Selected Unit already added please change unit or update the quantity in the list!
-                        </span> -->
-          </div>
-          <div
-            class="col-md-4"
-            *ngIf="selectedProduct.schemes.length"
-            style="padding-top: 2px"
+        Product
+        <span class="font-light text-gray-600 dark:text-gray-400">Detail</span>
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors dont-close-products"
+        (click)="closeQuantityModal($event)"
+        aria-label="Close"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div
+      *ngIf="selectedProduct?.parent?.hasOwnProperty('quantity')"
+      class="px-6 py-5 space-y-4"
+    >
+      <!-- Add Quantity -->
+      <div class="flex flex-col sm:flex-row sm:items-start gap-2">
+        <label
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0 pt-2"
+          >Add Quantity:</label
+        >
+        <div class="flex-1">
+          <input
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors dont-close-products"
+            placeholder="0"
+            (keyup)="setQuantity(selectedProduct)"
+            (keydown)="isNumber($event, 'quantity')"
+            [(ngModel)]="selectedProduct.stockQty"
+            #selectedQty="ngModel"
+            required
+          />
+          <span
+            *ngIf="selectedQty.errors?.required && isAdded"
+            class="text-red-500 text-xs mt-1 block"
           >
-            Trade Offer:
-          </div>
-          <div class="col-md-8">
-            <div *ngFor="let scheme of selectedProduct.schemes; let i = index">
-              <div class="custom-control custom-radio">
-                <!-- <input
-                  [(ngModel)]="selectedProduct.selectedScheme"
-                  [disabled]="
-                    !selectedProduct.stockQty || +selectedProduct.stockQty <= 0
-                  "
-                  (click)="
-                    selectedProduct.pref_id &&
-                      selectedProduct.stockQty &&
-                      calculateProductDiscounts(selectedProduct, scheme)
-                  "
-                  class="custom-control-input"
-                  type="radio"
-                  name="AssignCatalogue"
-                  id="byTerritory-{{ i }}"
-                  [value]="scheme"
-                /> -->
-                <input
-                  [(ngModel)]="selectedProduct.scheme_id"
-                  (click)="
-                    selectedProduct.pref_id &&
-                      selectedProduct.stockQty &&
-                      calculateProductDiscounts(selectedProduct, scheme)
-                  "
-                  class="custom-control-input"
-                  type="radio"
-                  name="AssignCatalogue"
-                  id="byTerritory-{{ i }}"
-                  [value]="scheme.id"
-                  [disabled]="
-                    !selectedProduct.stockQty || +selectedProduct.stockQty <= 0
-                  "
-                />
-                <label
-                  class="custom-control-label font13"
-                  for="byTerritory-{{ i }}"
-                  style="line-height: 25px"
-                  >{{ scheme.title }} (Min QTy:{{ scheme.min_qty }})</label
+            Please add Quantity!
+          </span>
+          <span
+            *ngIf="
+              +selectedProduct.stockQty === 0 &&
+              isAdded &&
+              !selectedQty.errors?.required
+            "
+            class="text-red-500 text-xs mt-1 block"
+          >
+            Quantity should be greater than 0!
+          </span>
+        </div>
+      </div>
+
+      <!-- Unit -->
+      <div class="flex flex-col sm:flex-row sm:items-start gap-2">
+        <label
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0"
+          >Unit:</label
+        >
+        <div class="text-sm text-gray-900 dark:text-white font-primary flex-1">
+          {{ selectedProduct.unit_name }}
+        </div>
+      </div>
+
+      <!-- Trade Offer (Schemes) -->
+      <div
+        *ngIf="selectedProduct.schemes && selectedProduct.schemes.length"
+        class="flex flex-col sm:flex-row sm:items-start gap-2 pt-2"
+      >
+        <label
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0"
+          >Trade Offer:</label
+        >
+        <div class="flex-1 space-y-3">
+          <div
+            *ngFor="let scheme of selectedProduct.schemes; let i = index"
+            class="flex items-start"
+          >
+            <div class="flex items-center h-5">
+              <input
+                [(ngModel)]="selectedProduct.scheme_id"
+                (click)="
+                  selectedProduct.pref_id &&
+                    selectedProduct.stockQty &&
+                    calculateProductDiscounts(selectedProduct, scheme)
+                "
+                class="w-4 h-4 text-primary bg-white dark:bg-[#141414] border-gray-300 dark:border-[#434343] focus:ring-primary focus:ring-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                type="radio"
+                name="AssignCatalogue"
+                id="byTerritory-{{ i }}"
+                [value]="scheme.id"
+                [disabled]="
+                  !selectedProduct.stockQty || +selectedProduct.stockQty <= 0
+                "
+              />
+            </div>
+            <div class="ml-3 text-sm">
+              <label
+                class="font-normal text-gray-700 dark:text-gray-300 cursor-pointer"
+                for="byTerritory-{{ i }}"
+              >
+                {{ scheme.title }}
+                <span class="text-gray-500 dark:text-gray-400"
+                  >(Min QTy: {{ scheme.min_qty }})</span
                 >
-              </div>
+              </label>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer border-0" style="background-color: #f6f6f6">
-        <button
-          type="button"
-          id="pl-qty-close"
-          class="btn btn-primary"
-          data-dismiss="modal"
-          (click)="addProductToOrder($event)"
-          aria-label="Close"
-          [disabled]="
-            !selectedProduct.stockQty || selectedProduct.stockQty <= 0
-          "
-        >
-          Confirm
-        </button>
-        <button
-          type="button"
-          id="pl-qty-close"
-          class="btn btn-cancel dont-close-products"
-          data-dismiss="modal"
-          (click)="closeQuantityModal($event)"
-          aria-label="Close"
-        >
-          Cancel
-        </button>
-      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div
+      class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3"
+    >
+      <button
+        type="button"
+        id="pl-qty-close"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors dont-close-products"
+        (click)="closeQuantityModal($event)"
+        aria-label="Close"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors dont-close-products"
+        (click)="addProductToOrder($event)"
+        [disabled]="
+          !selectedProduct.stockQty || selectedProduct.stockQty <= 0
+        "
+      >
+        Confirm
+      </button>
     </div>
   </div>
 </div>
-<!-- Products Listing -->
+
+<!-- Products Listing Sidebar - Tailwind CSS -->
 <div
   id="product-cl-sec"
   (clickOutside)="clickedOutSide($event)"
-  [ngClass]="showProducts ? 'active' : ''"
+  [ngClass]="showProducts ? 'flex' : 'hidden'"
+  class="fixed inset-0 bg-white/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-50 items-center justify-center p-4"
 >
-  <a id="pl-close" (click)="closeProductsList()" class="close-btn-pl"></a>
-  <div class="pro-header-text">Add <span>Product</span></div>
-  <div class="se_cus-type form-wrap p-15">
-    <div class="row">
-      <div class="col-12">
-        <div class="productSearch">
-          <i class="fa fa-search"></i>
+  <div
+    class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[1000] flex-row flex-none flex w-full md:w-[600px]"
+  >
+    <div
+      class="flex flex-col h-full w-full md:w-[600px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]"
+    >
+      <!-- Header -->
+      <div
+        class="relative flex items-center justify-between h-auto rounded-tl-lg bg-gradient-to-r from-[#1e54d3] to-[#0038ba] text-white px-4 py-3 text-[16px] leading-[22px]"
+      >
+        <h2 class="text-base font-bold text-white font-primary mb-0">
+          Add
+          <span class="font-light">Product</span>
+        </h2>
+        <div>
+          <button
+            id="pl-close"
+            (click)="closeProductsList()"
+            class="hover:opacity-80 transition-opacity"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="26"
+              height="26"
+              fill="currentColor"
+              class="bi bi-x mt-1"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div
+        class="px-4 py-3 bg-white dark:bg-darkprimary border-b border-gray-200 dark:border-[#333333]"
+      >
+        <div class="relative">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <svg
+              class="h-5 w-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+          </div>
           <input
             type="text"
-            class="form-control"
-            id=""
+            class="w-full pl-10 pr-4 py-2 border border-[#ececec] dark:border-[#1d1d1d] rounded-lg bg-[#f6f6f6] dark:bg-[#1d1d1d] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary font-primary text-sm dont-close-products"
             [(ngModel)]="productSearchText"
             (keyup)="searchProduct()"
-            placeholder="Search"
+            placeholder="Search products..."
           />
         </div>
       </div>
-    </div>
-  </div>
-  <div class="pc-cartlist">
-    <div class="overflow-plist">
-      <div class="plist-content">
-        <div class="_left-filter pt-0">
-          <div class="container">
-            <div class="row">
-              <div class="col-12">
-                <div class="card top_border p-15">
-                  <table
-                    *ngIf="!loadingProducts"
-                    class="AddProductTable"
-                    width="100%"
+
+      <!-- Content - Product Listing -->
+      <div class="flex-1 overflow-auto p-4 bg-[#f6f6f6] dark:bg-darkprimary">
+        <div *ngIf="!loadingProducts" class="space-y-2">
+          <!-- Product items -->
+          <div
+            *ngFor="let product of dispProducts; let i = index"
+            class="bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#252525] rounded-lg p-2 hover:shadow-md transition-shadow relative"
+          >
+            <!-- Scheme Badge -->
+            <div
+              *ngIf="product.schemes?.length"
+              class="absolute leading-none bottom-1.5 -left-1 bg-yellow-400 text-black text-[10px] font-medium px-1 py-1 rounded shadow-sm z-10"
+            >
+              Scheme
+            </div>
+
+            <div class="flex items-start justify-between gap-3">
+              <!-- Product Image & Info -->
+              <div class="flex items-start space-x-3 flex-1">
+                <img
+                  class="w-12 h-12 rounded border border-gray-200 dark:border-[#434343] object-cover flex-shrink-0"
+                  src="{{ product.thumbnail }}"
+                  alt="{{ product.item_name }}"
+                  onerror="this.src='assets/images/default_product.jpg'"
+                />
+                <div class="flex-1 my-auto min-w-0">
+                  <h2
+                    class="text-[15px] font-medium text-neutral-800 dark:text-neutral-300 font-primary leading-snug"
                   >
-                    <tbody>
-                      <tr *ngFor="let product of dispProducts; let i = index">
-                        <td>
-                          <div class="ProListDiv">
-                            <div
-                              *ngIf="product.schemes?.length"
-                              class="lab-promotion"
-                            >
-                              Scheme
-                            </div>
-                            <img
-                              class="PrList_img"
-                              src="{{ product.thumbnail }}"
-                              alt=""
-                            />
-                            <div class="PR_Name">{{ product.item_name }}</div>
-                          </div>
-                        </td>
-                        <td>
-                          <button
-                            *ngIf="!product.isAdded"
-                            data-toggle="modal"
-                            data-target="#exampleModal"
-                            class="btn btn-default mb-0 dont-close-quantity"
-                            (click)="openQuantityModal(product)"
-                          >
-                            Add
-                          </button>
-                          <button
-                            *ngIf="product.isAdded"
-                            class="btn btn-default mb-0 red-bg"
-                            (click)="deleteOrderItem(product.item_id)"
-                          >
-                            Remove
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="col-md-12 loader" *ngIf="loadingProducts">
-                    <h2 class="loading">Loading Products...</h2>
-                  </div>
+                    {{ product.item_name }}
+                  </h2> 
                 </div>
+              </div>
+
+              <!-- Add Button -->
+              <div class="flex my-auto">
+                <button
+                  *ngIf="!product.isAdded"
+                  data-toggle="modal"
+                  data-target="#exampleModal"
+                  class="px-4 py-1.5 text-[13px] leading-none font-primary bg-transparent text-primary border border-primary dark:border-[#333333] dark:text-neutral-300 rounded-md transition-colors whitespace-nowrap dont-close-quantity hover:enabled:bg-primary hover:enabled:text-white"
+                  (click)="openQuantityModal(product)"
+                >
+                  Add
+                </button>
+                <button
+                  *ngIf="product.isAdded"
+                  class="px-4 py-1.5 text-[13px] leading-none font-primary bg-red-600 text-white rounded-md cursor-not-allowed whitespace-nowrap"
+                  (click)="deleteOrderItem(product.item_id)"
+                >
+                  Remove
+                </button>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Loading State -->
+        <div
+          *ngIf="loadingProducts"
+          class="flex flex-col items-center justify-center py-12"
+        >
+          <div
+            class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
+          ></div>
+          <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary">
+            Loading Products...
+          </p>
+        </div>
+
+        <!-- Empty State -->
+        <div
+          *ngIf="!loadingProducts && dispProducts?.length === 0"
+          class="flex flex-col h-[calc(100vh-31vh)] items-center justify-center"
+        >
+          <svg
+            class="w-16 h-16 text-gray-300 dark:text-gray-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+            ></path>
+          </svg>
+          <p
+            class="mt-4 text-gray-500 dark:text-gray-400 font-primary text-center"
+          >
+            No products found
+          </p>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="_cl-bottom">
-    <!-- <button type="submit" class="btn btn-primary mr-2">Add</button> -->
-    <button
-      id="pl-prod-close"
-      type="butotn"
-      (click)="closeProductsList()"
-      class="btn btn-cancel mr-2"
-    >
-      Cancel
-    </button>
-  </div>
-</div>
 
-<div id="blureEffct-1" class="container-fluid">
-  <div class="overlay-blure"></div>
-  <div class="container">
-    <div class="row mt-2 mb-3">
-      <div class="col-lg-6 col-md-6 col-sm-6">
-        <h2 class="_head01">Order <span> Management</span></h2>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-6">
-        <ol class="breadcrumb">
-          <li>
-            <a href="#"><span>Order Management</span></a>
-          </li>
-          <li><span>Edit</span></li>
-        </ol>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card">
-          <div class="header">
-            <h2>
-              {{ title }}
-              <span> Order</span>
-            </h2>
-          </div>
-          <div class="body PT-15">
-            <div *ngIf="loading" class="col-md-12">
-              <app-loader-white></app-loader-white>
-            </div>
-            <div id="floating-label" *ngIf="!loading">
-              <div class="form-wrap p-0">
-                <div class="topstats">
-                  <div class="row">
-                    <div
-                      *ngIf="!isNew || isReturn"
-                      class="_sa-customer"
-                      class="col-md-6"
-                    >
-                      <div class="form-s2">
-                        <ng-select
-                          [multiple]="false"
-                          class="formselect"
-                          [(ngModel)]="selectedSubDistributor"
-                          (change)="onSubDistributorChanged()"
-                          placeholder="Select Sub Distributor"
-                        >
-                          <ng-option disabled>Select Sub Distributor</ng-option>
-                          <ng-option
-                            *ngFor="let sDist of subDistributors"
-                            [value]="sDist.id"
-                            >{{ sDist.distributor_name }}</ng-option
-                          >
-                        </ng-select>
-                      </div>
-                    </div>
-                    <div *ngIf="showEditFields" class="col-2 pr-0">
-                      <div class="gary-box">
-                        <strong>Date:</strong>
-                        <span class="execution_date">{{ order.date }}</span>
-                      </div>
-                    </div>
-                    <div *ngIf="showEditFields" class="col-4 pr-0">
-                      <div class="gary-box">
-                        <strong>Distributor:</strong>
-                        <span class="execution_date">{{
-                          order.distributor_name
-                        }}</span>
-                      </div>
-                    </div>
-                    <div *ngIf="showEditFields" class="col-3 pr-0">
-                      <div class="gary-box">
-                        <strong>Employee:</strong>
-                        <span class="execution_date">{{
-                          order.employee_name
-                        }}</span>
-                      </div>
-                    </div>
-                    <div class="col-3">
-                      <button
-                        id="productlist01"
-                        type="submit"
-                        class="btn btn-primary w-100 PT-5 PB-5"
-                        (click)="showProductsList($event)"
-                      >
-                        Add Product
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div *ngIf="!isNew" class="_cut-detail">
-                <div class="row">
-                  <div class="col-md-6">
-                    <strong>Distributor Name: &nbsp; </strong>
-                    {{ subDistributor?.distributor_name || "--" }}
-                  </div>
-                  <div class="col-md-6">
-                    <strong>Town: &nbsp; </strong>
-                    {{ subDistributor?.city_name || "--" }}
-                  </div>
-                  <div class="col-md-6">
-                    <strong>Distributor Address: &nbsp; </strong>
-                    {{ subDistributor?.distributor_address || "--" }}
-                  </div>
-                  <div class="col-md-6">
-                    <strong>TSM. Name: &nbsp; </strong>
-                    {{ subDistributor?.tsm || "--" }}
-                  </div>
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="col-md-12">
-                  <hr class="mt-5" />
-                </div>
-                <div class="col-md-12">
-                  <table
-                    class="table table-hover dt-responsive nowrap table_order"
-                    id="example"
-                    style="width: 100%"
-                  >
-                    <thead>
-                      <tr>
-                        <th>SKU</th>
-                        <th>Item Name</th>
-                        <th>Quantity</th>
-                        <th>T.P</th>
-                        <th>GR.Amt</th>
-                        <th>T.O</th>
-                        <th>Dist.Disc%</th>
-                        <th>Spec.Disc</th>
-                        <!-- <th>Tax</th> -->
-                        <th>GST</th>
-                        <th>AIT</th>
-                        <th>Total Bill</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-
-                    <tfoot
-                      style="
-                        background: linear-gradient(
-                          0deg,
-                          #f6f6f6 0%,
-                          #f6f6f6 100%
-                        );
-                        font-size: 14px;
-                      "
-                    >
-                      <tr>
-                        <th>Total items:</th>
-                        <th class="order_total_items">
-                          {{
-                            order.orderContent ? order.orderContent.length : 0
-                          }}
-                        </th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Gross Amount.</th>
-                        <th class="order_gross_amount">
-                          {{ order.grossPrice | number : "1.2-2" }}
-                        </th>
-                        <th></th>
-                        <th></th>
-                      </tr>
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Order Discount.</th>
-                        <th class="order_total_discount">
-                          - {{ order.discount | number : "1.2-2" }}
-                        </th>
-                        <th></th>
-                      </tr>
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Subtotal PKR.</th>
-                        <th class="order_sub_total">
-                          {{ order.subTotal | number : "1.2-2" }}
-                        </th>
-                        <th></th>
-                      </tr>
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Frieght Price.</th>
-                        <th>
-                          <!-- onkeyup="isNumber(event)" -->
-                          <input
-                            type="number"
-                            min="0"
-                            class="itemQTY frieght_price"
-                            [(ngModel)]="order.frieght_price"
-                            value="0"
-                          />
-                        </th>
-                        <th></th>
-                      </tr>
-
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Subtotal PKR.</th>
-                        <th class="order_sub_total_af_FP">
-                          {{
-                            order.subTotalPlusFrieghtPrice | number : "1.2-2"
-                          }}
-                        </th>
-                        <th></th>
-                      </tr>
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Tax.</th>
-                        <th class="order_tax">
-                          + {{ order.tax | number : "1.2-2" }}
-                        </th>
-                        <th></th>
-                      </tr>
-                      <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th></th>
-                        <th>Total PKR.</th>
-                        <th class="order_grand_total">
-                          {{ order.total | number : "1.2-2" }}
-                        </th>
-                        <th></th>
-                      </tr>
-                    </tfoot>
-
-                    <tbody>
-                      <tr
-                        *ngFor="
-                          let item of order.orderContent;
-                          let index = index
-                        "
-                      >
-                        <!-- sku -->
-                        <td>{{ item.item_sku }}</td>
-                        <!-- item name -->
-                        <td>{{ item.item_name }}</td>
-                        <!-- Quantity -->
-                        <td>
-                          <input
-                            type="number"
-                            min="1"
-                            placeholder="Quanity"
-                            class="itemQTY"
-                            [(ngModel)]="item.parent_qty_sold"
-                            (keyup)="setQuantity(item, true)"
-                          />
-
-                          {{
-                            item.schemeFreeProdsCount
-                              ? "+" + item.schemeFreeProdsCount
-                              : ""
-                          }}
-                        </td>
-                        <!-- T.P -->
-                        <td>{{ item.parent_tp | number : "1.2-2" }}</td>
-                        <!-- GR.Amt -->
-                        <td>
-                          {{ item.grossPrice | number : "1.2-2" }}
-                        </td>
-                        <!-- T.O -->
-                        <td>
-                          {{ item.tradeOffer | number : "1.2-2" }}
-                          {{
-                            item.scheme_id && item.scheme_type == "free_product" && item.scheme_quantity_free > 0 && item.scheme_rule === 4
-                              ? `(${item.scheme_quantity_free})`
-                              : ""
-                          }}
-                        </td>
-                        <!-- Dist.Disc% -->
-                        <td>
-                          {{ item.distributor_discount | number : "1.2-2" }}
-                        </td>
-                        <!-- Spec.Disc% -->
-                        <!-- <td>{{ item.specialDiscount | number : "1.2-2" }}</td> -->
-                        <!-- E.Disc.Amt -->
-                        <td>
-                          <input
-                            type="number"
-                            placeholder="0"
-                            min="0"
-                            max="{{ item.maxBookerDiscount }}"
-                            [(ngModel)]="item.booker_discount"
-                            class="itemQTY"
-                          />
-                        </td>
-                        <!-- Tax -->
-                        <!-- <td>
-                          {{ item.tax_amount | number : "1.2-2" }}
-                        </td> -->
-                        <td>{{ item.gst_tax | number : "1.2-2" }}</td>
-                        <td>
-                          {{ item.advance_income_tax | number : "1.2-2" }}
-                        </td>
-                        <!-- Total Bill -->
-                        <td>
-                          {{
-                            item.totalBill +
-                              item?.gst_tax +
-                              item?.advance_income_tax | number : "1.2-2"
-                          }}
-                        </td>
-                        <td>
-                          <button
-                            type="button"
-                            (click)="deleteOrderItem(item.item_id)"
-                            class="btn smBTN red-bg mb-0"
-                          >
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div class="col-md-12 p-0">
-                    <div
-                      style="
-                        background-color: #f6f6f6;
-                        padding: 15px;
-                        margin-top: 15px;
-                        margin-bottom: 0px;
-                        text-align: center;
-                        margin-bottom: 1px;
-                      "
-                    >
-                      <button
-                        *ngIf="showEditFields"
-                        type="button"
-                        (click)="saveOrder()"
-                        class="btn btn-primary mr-2"
-                      >
-                        <span
-                          class="spinner-grow spinner-grow-sm"
-                          role="status"
-                          aria-hidden="true"
-                          *ngIf="saving"
-                        ></span>
-                        {{ saving ? "Updateing" : "Save Order" }}
-                      </button>
-                      <button
-                        *ngIf="!isNew && !isReturn"
-                        type="button"
-                        (click)="saveOrder()"
-                        class="btn btn-primary mr-2"
-                      >
-                        <span
-                          class="spinner-grow spinner-grow-sm"
-                          role="status"
-                          aria-hidden="true"
-                          *ngIf="saving"
-                        ></span>
-                        {{ saving ? "Creating" : "Save Order" }}
-                      </button>
-
-                      <button
-                        *ngIf="isReturn"
-                        type="button"
-                        (click)="saveOrder()"
-                        class="btn btn-primary mr-2"
-                      >
-                        <span
-                          class="spinner-grow spinner-grow-sm"
-                          role="status"
-                          aria-hidden="true"
-                          *ngIf="saving"
-                        ></span>
-                        {{ saving ? "Returning" : "Return Order" }}
-                      </button>
-                      <button
-                        type="button"
-                        [routerLink]="['/primaryOrders']"
-                        class="btn btn-cancel mr-2"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+      <!-- Footer -->
+      <div
+        class="bg-gray-50 dark:bg-[#1d1d1d] dark:border-[#333333] pl-4 p-3 rounded-bl-lg border-t border-gray-200"
+      >
+        <div>
+          <button
+            id="pl-prod-close"
+            type="button"
+            (click)="closeProductsList()"
+            class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>
   </div>
 </div>
 
+<!-- Duplicate Modal (if needed) -->
 <div
   class="modal fade"
   id="holdorder-reason"
@@ -703,129 +366,447 @@
   role="dialog"
   aria-labelledby="exampleModalLabel"
   aria-hidden="true"
+  style="display: none"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="holdOrderModalLabel">
-          Product <span> Detail</span>
-        </h5>
-        <button
-          type="button"
-          class="close dont-close-products"
-          data-dismiss="modal"
-          (click)="closeQuantityModal($event)"
-          aria-label="Close"
+  <!-- This modal appears to be a duplicate, keeping it for compatibility -->
+</div>
+
+
+
+<div class="container mx-auto px-4 pb-24">
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1
+          class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0"
         >
-          <span class="dont-close-products" aria-hidden="true">&times;</span>
+          Order <span class="font-light">Management</span>
+        </h1>
+      </div>
+      <div></div>
+    </div>
+  </div>
+
+  <div
+    class="bg-white dark:bg-[#1f1f1f] border-t-[3px] border-primary p-4 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]"
+  >
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <app-loader-white></app-loader-white>
+    </div>
+
+    <!-- Main Content -->
+    <div *ngIf="!loading" id="floating-label">
+      <!-- Header Section -->
+      <div class="flex flex-wrap items-center gap-3 mb-3">
+        <!-- Sub Distributor Select -->
+        <div class="dark:text-gray-200">Selected Sub Distributor:</div>
+        <div *ngIf="!isNew || isReturn" class="w-[290px]">
+          <nz-select
+            nzShowSearch
+            nzAllowClear
+            [(ngModel)]="selectedSubDistributor"
+            (ngModelChange)="onSubDistributorChanged()"
+            nzPlaceHolder="Select Sub Distributor"
+            [nzDropdownMatchSelectWidth]="false"
+            [nzDropdownStyle]="{ 'z-index': '9999' }"
+            class="w-full"
+          >
+            <nz-option
+              nzDisabled
+              nzLabel="Select Sub Distributor"
+              [nzValue]="null"
+            ></nz-option>
+            <nz-option
+              *ngFor="let sDist of subDistributors"
+              [nzValue]="sDist.id"
+              [nzLabel]="sDist.distributor_name"
+            ></nz-option>
+          </nz-select>
+        </div>
+
+        <!-- Date Display -->
+        <div *ngIf="showEditFields" class="flex items-center gap-2">
+          <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"
+            >Date:</span
+          >
+          <span class="text-sm text-gray-900 dark:text-gray-200">{{
+            order.date
+          }}</span>
+        </div>
+
+        <!-- Distributor Display -->
+        <div *ngIf="showEditFields" class="flex items-center gap-2">
+          <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"
+            >Distributor:</span
+          >
+          <span class="text-sm text-gray-900 dark:text-gray-200">{{
+            order.distributor_name
+          }}</span>
+        </div>
+
+        <!-- Employee Display -->
+        <div *ngIf="showEditFields" class="flex items-center gap-2">
+          <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"
+            >Employee:</span
+          >
+          <span class="text-sm text-gray-900 dark:text-gray-200">{{
+            order.employee_name
+          }}</span>
+        </div>
+
+        <!-- Add Product Button -->
+        <button
+          id="productlist01"
+          type="button"
+          class="px-6 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none transition-all duration-200"
+          (click)="showProductsList($event)"
+        >
+          Add Product
         </button>
       </div>
+
+      <!-- Sub Distributor Details -->
       <div
-        *ngIf="selectedProduct?.parent?.hasOwnProperty('quantity')"
-        class="modal-body AddDetailPR"
+        *ngIf="!isNew"
+        class="grid grid-cols-1 md:grid-cols-2 gap-y-1 gap-x-4 border border-gray-200 dark:border-[#333333] bg-gray-50 dark:bg-[#141414] rounded-lg p-2 mb-4"
       >
-        <div class="row">
-          <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
-          <div class="col-md-8 mb-15">
-            <input
-              type="text"
-              class="form-control"
-              placeholder=""
-              (keyup)="setQuantity(selectedProduct)"
-              required
-              (keydown)="isNumber($event, 'quantity')"
-              [(ngModel)]="selectedProduct.stockQty"
-              #selectedQty="ngModel"
-              placeholder="0"
-              style="font-size: 13px"
-            />
-            <span
-              *ngIf="selectedQty.errors?.required && isAdded"
-              class="input-error"
-            >
-              Please add Quantity!
-            </span>
-            <span
-              *ngIf="
-                +selectedProduct.stockQty === 0 &&
-                isAdded &&
-                !selectedQty.errors?.required
-              "
-              class="input-error"
-            >
-              Quantity should be greater than 0!
-            </span>
-          </div>
-          <div class="col-md-4 pt-7 mb-15">Unit:</div>
-          <div class="col-md-8 mb-15">
-            {{ selectedProduct.unit_name }}
-            <!-- <select class="custom-select custom-select-sm" [(ngModel)]="selectedProduct.pref_id"
-                            name="prefrences" (change)="setPrefrence($event.target.value, selectedProduct)"
-                            #selectedPrefs="ngModel">
-                            <option [value]="null" disbaled>Select Unit</option>
-                            <option *ngFor="let unit of selectedProduct.units" [value]="unit.pref_id">{{unit.unit_name}}
-                            </option>
-                        </select> -->
-            <!-- <span *ngIf="selectedProduct.pref_id === null && isAdded" class="input-error">
-                            Please select a Unit!
-                        </span>
-                        <span *ngIf="alreadyAdded && selectedProduct.pref_id !== null" class="input-error">
-                            Selected Unit already added please change unit or update the quantity in the list!
-                        </span> -->
-          </div>
-          <div
-            class="col-md-4"
-            *ngIf="selectedProduct.schemes.length"
-            style="padding-top: 2px"
+        <div class="text-gray-800 dark:text-gray-400">
+          <strong
+            class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
+            >Distributor Name:&nbsp;</strong
           >
-            Trade Offer:
-          </div>
-          <div class="col-md-8">
-            <div *ngFor="let scheme of selectedProduct.schemes; let i = index">
-              <div class="custom-control custom-radio">
-                <input
-                  [(ngModel)]="selectedProduct.selectedScheme"
-                  [disabled]="
-                    !selectedProduct.stockQty || +selectedProduct.stockQty <= 0
-                  "
-                  class="custom-control-input"
-                  type="radio"
-                  name="AssignCatalogue"
-                  id="byTerritory-{{ i }}"
-                  [value]="scheme"
-                />
-                <label
-                  class="custom-control-label font13"
-                  for="byTerritory-{{ i }}"
-                  style="line-height: 25px"
-                  >{{ scheme.title }}</label
-                >
-              </div>
-            </div>
-          </div>
+          {{ subDistributor?.distributor_name || "--" }}
+        </div>
+        <div class="text-gray-800 dark:text-gray-400">
+          <strong
+            class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
+            >Town:&nbsp;</strong
+          >
+          {{ subDistributor?.city_name || "--" }}
+        </div>
+        <div class="text-gray-800 dark:text-gray-400">
+          <strong
+            class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
+            >Distributor Address:&nbsp;</strong
+          >
+          {{ subDistributor?.distributor_address || "--" }}
+        </div>
+        <div class="text-gray-800 dark:text-gray-400">
+          <strong
+            class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
+            >TSM. Name:&nbsp;</strong
+          >
+          {{ subDistributor?.tsm || "--" }}
         </div>
       </div>
-      <div class="modal-footer border-0" style="background-color: #f6f6f6">
+
+      <!-- Product Table - Original Bootstrap Table -->
+      <div class="rounded-md border-primary bg-white dark:bg-[#1f1f1f] shadow-sm transition-colors duration-200">
+        <table
+        class="table table-hover dt-responsive nowrap table_order w-full"
+        id="example"
+        style="width: 100%"
+      >
+        <thead class="bg-gray-50 dark:bg-[#141414]">
+          <tr>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">SKU</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left w-[250px]">Item Name</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Quantity</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">T.P</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">GR.Amt</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">T.O</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Dist.Disc%</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Spec.Disc</th>
+            <!-- <th>Tax</th> -->
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">GST</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">AIT</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Total Bill</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Action</th>
+          </tr>
+        </thead>
+
+        <tfoot class="bg-gray-50 dark:bg-[#141414] text-[13px]">
+          <tr class="border-t border-gray-200 dark:border-[#333333]">
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Total items:</th>
+            <th class="order_total_items font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+              {{
+                order.orderContent ? order.orderContent.length : 0
+              }}
+            </th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Gross Amount.</th>
+            <th class="order_gross_amount font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+              {{ order.grossPrice | number : "1.2-2" }}
+            </th> 
+            <th class="font-primary font-medium px-2 py-2"></th>
+          </tr>
+          <tr class="border-t border-gray-200 dark:border-[#333333]">
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Order Discount.</th>
+            <th class="order_total_discount font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+              - {{ order.discount | number : "1.2-2" }}
+            </th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+          </tr>
+          <tr class="border-t border-gray-200 dark:border-[#333333]">
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Subtotal PKR.</th>
+            <th class="order_sub_total font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+              {{ order.subTotal | number : "1.2-2" }}
+            </th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+          </tr>
+          <tr class="border-t border-gray-200 dark:border-[#333333]">
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Frieght Price.</th>
+            <th class="font-primary font-medium px-2 py-2 text-left">
+              <!-- onkeyup="isNumber(event)" -->
+              <input
+                type="number"
+                min="0"
+                class="itemQTY frieght_price w-[80px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
+                [(ngModel)]="order.frieght_price"
+                value="0"
+              />
+            </th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+          </tr>
+
+          <tr class="border-t border-gray-200 dark:border-[#333333]">
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Subtotal PKR.</th>
+            <th class="order_sub_total_af_FP font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+              {{
+                order.subTotalPlusFrieghtPrice | number : "1.2-2"
+              }}
+            </th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+          </tr>
+          <tr class="border-t border-gray-200 dark:border-[#333333]">
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Tax.</th>
+            <th class="order_tax font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+              + {{ order.tax | number : "1.2-2" }}
+            </th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+          </tr>
+          <tr class="border-t border-gray-200 dark:border-[#333333]">
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Total PKR.</th>
+            <th class="order_grand_total font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+              {{ order.total | number : "1.2-2" }}
+            </th>
+            <th class="font-primary font-medium px-2 py-2"></th>
+          </tr>
+        </tfoot>
+
+        <tbody class="bg-white dark:bg-[#1f1f1f]">
+          <tr
+            *ngIf="!order.orderContent || order.orderContent.length === 0"
+            class="border-t border-gray-200 dark:border-[#333333]"
+          >
+            <td colspan="12" class="text-center py-8">
+              <p class="text-gray-500 dark:text-gray-400">Add products to order...</p>
+            </td>
+          </tr>
+          <tr
+            *ngFor="
+              let item of order.orderContent;
+              let index = index
+            "
+            class="border-t border-gray-200 dark:border-[#333333] hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors duration-150"
+          >
+            <!-- sku -->
+            <td class="text-[13px] text-gray-800 dark:text-gray-200 px-2 py-2">{{ item.item_sku }}</td>
+            <!-- item name -->
+            <td class="text-[13px] text-gray-800 dark:text-gray-200 px-2 py-2">{{ item.item_name }}</td>
+            <!-- Quantity -->
+            <td class="px-2 py-2">
+              <input
+                type="number"
+                min="1"
+                placeholder="Quanity"
+                class="itemQTY w-[80px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
+                [(ngModel)]="item.parent_qty_sold"
+                (keyup)="setQuantity(item, true)"
+              />
+
+              <span
+                *ngIf="item.schemeFreeProdsCount"
+                class="text-[13px] text-green-600 dark:text-green-400 font-semibold block mt-1"
+              >
+                +{{ item.schemeFreeProdsCount }}
+              </span>
+            </td>
+            <!-- T.P -->
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">{{ item.parent_tp | number : "1.2-2" }}</td>
+            <!-- GR.Amt -->
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">
+              {{ item.grossPrice | number : "1.2-2" }}
+            </td>
+            <!-- T.O -->
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2"
+              [ngClass]="{
+                'text-green-600 dark:text-green-400 font-semibold': item.scheme_quantity_free > 0,
+                'text-gray-800 dark:text-gray-300': item.scheme_quantity_free <= 0
+              }"
+            >
+              {{ item.tradeOffer | number : "1.2-2" }}
+              {{
+                item.scheme_id && item.scheme_type == "free_product" && item.scheme_quantity_free > 0 && item.scheme_rule === 4
+                  ? `(${item.scheme_quantity_free})`
+                  : ""
+              }}
+            </td>
+            <!-- Dist.Disc% -->
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">
+              {{ item.distributor_discount | number : "1.2-2" }}
+            </td>
+            <!-- Spec.Disc% -->
+            <!-- <td>{{ item.specialDiscount | number : "1.2-2" }}</td> -->
+            <!-- E.Disc.Amt -->
+            <td class="px-2 py-2">
+              <input
+                type="number"
+                placeholder="0"
+                min="0"
+                max="{{ item.maxBookerDiscount }}"
+                [(ngModel)]="item.booker_discount"
+                class="itemQTY w-[80px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
+              />
+            </td>
+            <!-- Tax -->
+            <!-- <td>
+              {{ item.tax_amount | number : "1.2-2" }}
+            </td> -->
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">{{ item.gst_tax | number : "1.2-2" }}</td>
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">
+              {{ item.advance_income_tax | number : "1.2-2" }}
+            </td>
+            <!-- Total Bill -->
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2 font-medium">
+              {{
+                item.totalBill +
+                  item?.gst_tax +
+                  item?.advance_income_tax | number : "1.2-2"
+              }}
+            </td>
+            <td class="px-2 py-2">
+              <button
+                type="button"
+                (click)="deleteOrderItem(item.item_id)"
+                class="px-2 py-1.5 text-[11px] leading-none rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 focus:outline-none transition-colors"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <!-- Action Buttons -->
+      <div
+        class="mt-4 bg-gray-50 dark:bg-[#151515] border border-gray-200 dark:border-[#333333] rounded-lg p-4 flex justify-center gap-3"
+      >
         <button
+          *ngIf="showEditFields"
           type="button"
-          id="pl-qty-close"
-          class="btn btn-primary"
-          data-dismiss="modal"
-          (click)="addProductToOrder($event)"
-          aria-label="Close"
-          [disabled]="
-            !selectedProduct.stockQty || selectedProduct.stockQty <= 0
-          "
+          (click)="saveOrder()"
+          class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors flex items-center gap-2"
+          [disabled]="saving"
         >
-          Confirm
+          <span
+            *ngIf="saving"
+            class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+          ></span>
+          {{ saving ? "Updating" : "Save Order" }}
+        </button>
+        <button
+          *ngIf="!isNew && !isReturn"
+          type="button"
+          (click)="saveOrder()"
+          class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors flex items-center gap-2"
+          [disabled]="saving"
+        >
+          <span
+            *ngIf="saving"
+            class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+          ></span>
+          {{ saving ? "Creating" : "Save Order" }}
+        </button>
+        <button
+          *ngIf="isReturn"
+          type="button"
+          (click)="saveOrder()"
+          class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors flex items-center gap-2"
+          [disabled]="saving"
+        >
+          <span
+            *ngIf="saving"
+            class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+          ></span>
+          {{ saving ? "Returning" : "Return Order" }}
         </button>
         <button
           type="button"
-          id="pl-qty-close"
-          class="btn btn-cancel dont-close-products"
-          data-dismiss="modal"
-          (click)="closeQuantityModal($event)"
-          aria-label="Close"
+          [routerLink]="['/primaryOrders']"
+          class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
         >
           Cancel
         </button>
@@ -833,3 +814,8 @@
     </div>
   </div>
 </div>
+
+ 
+
+
+

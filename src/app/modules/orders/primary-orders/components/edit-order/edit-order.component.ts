@@ -614,6 +614,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         ? +product.extra_discount
         : 0;
     // Extra Discount => Booker Discount
+
     return product;
   }
 
@@ -656,6 +657,9 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     const { selectedScheme, stockQty, parent_qty_sold, parent_tp } = !isUpdate
       ? selectedProduct
       : createdPrimaryOrder || {};
+    const item_trade_price = isUpdate
+      ? parent_tp
+      : selectedProduct.item_trade_price;
     const { scheme_rule, scheme_type, min_qty, quantity_free } =
       selectedScheme || {};
 
@@ -679,7 +683,16 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           }
         } else if (scheme_rule === 1) {
           if (this.isSchemeValid(selectedScheme)) {
-            // const scheme = (parent_tp * parent_qty_sold) / (min_qty * quantity_free)
+            const freeQtyInterval = Math.floor(
+              (isUpdate ? parent_qty_sold : +stockQty) / min_qty
+            );
+            const orderFreeQty = freeQtyInterval * quantity_free;
+            const quantityToUse = isUpdate ? parent_qty_sold : +stockQty;
+            const TO =
+              (item_trade_price * quantityToUse) / (min_qty + orderFreeQty);
+
+            createdPrimaryOrder['trade_offer'] = TO;
+            createdPrimaryOrder['selectedScheme'] = selectedScheme;
           } else {
             const toast: Toaster = {
               type: 'error',

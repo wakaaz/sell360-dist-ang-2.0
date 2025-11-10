@@ -253,6 +253,32 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
       this.tax
     );
   }
+
+  public get grossPriceAfterDistributorDiscount(): number {
+    const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
+    const bookerDiscountValue = this.booker_discount || 0;
+    
+    return this.grossPrice - this.distributorDiscount - tradeOfferValue - bookerDiscountValue ;
+  }
+
+  public get TotalBill(): number {
+    const gstTax = (this as any).gst_tax || 0;
+    const advanceIncomeTax = (this as any).advance_income_tax || 0;
+    return this.grossPriceAfterDistributorDiscount + gstTax + advanceIncomeTax;
+  }
+
+  public get TotalDiscount(): number {
+    const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
+    const specialDiscountValue = this.booker_discount || 0;
+    return tradeOfferValue + this.distributorDiscount + specialDiscountValue;
+  }
+
+  public get TotalTax(): number {
+    const gstTax = (this as any).gst_tax || 0;
+    const advanceIncomeTax = (this as any).advance_income_tax || 0;
+    return gstTax + advanceIncomeTax;
+  }
+
   private _maxBookerDiscount: number;
   public get maxBookerDiscount(): number {
     return this._maxBookerDiscount;

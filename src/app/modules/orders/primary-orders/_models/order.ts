@@ -274,6 +274,31 @@ export class PrimaryOrder {
 
   //#endregion
 
+  public get totalGrossPrice(): number {
+    return this._orderContent
+      ? this.orderContent.reduce((a: any, b: any) => a + b.grossPrice, 0)
+      : 0;
+  }
+  public get totalPKRBill(): number {
+    return this._orderContent
+      ? this.orderContent.reduce((a: any, b: any) => a + b.TotalBill, 0)
+      : 0;
+  }
+
+  public get finaltotalTax(): number {
+    console.log("finaltotalTax", this._orderContent
+      ? this.orderContent.reduce((a: any, b: any) => a + b.TotalTax, 0)
+      : 0);
+    return this._orderContent
+      ? this.orderContent.reduce((a: any, b: any) => a + b.TotalTax, 0)
+      : 0;
+  }
+
+  public get totalDiscount(): number {
+    return this._orderContent
+      ? this.orderContent.reduce((a: any, b: any) => a + b.TotalDiscount, 0)
+      : 0;
+  }
   //#region  priavte cal function for this class
   private getDiscountByField(field: string) {
     return this.orderContent.reduce((a: any, b: any) => a + b[field], 0);

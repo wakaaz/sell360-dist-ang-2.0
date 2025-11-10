@@ -1,232 +1,273 @@
-<!-- Unit, Quantity and Trade Offer of Products -->
+<!-- Unit, Quantity and Trade Offer of Products - Tailwind Modal -->
 <div
-  class="modal fade"
-  [ngClass]="{'active': showQuantityModal}"
   id="exampleModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
+  *ngIf="showQuantityModal"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="closeQuantityModal($event)"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">
-          Product <span> Detail</span>
-        </h5>
-        <button
-          type="button"
-          class="close dont-close-products"
-          data-dismiss="modal"
-          (click)="closeQuantityModal($event)"
-          aria-label="Close"
-        >
-          <span class="dont-close-products" aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div
-        *ngIf="selectedProduct.hasOwnProperty('quantity')"
-        class="modal-body AddDetailPR"
+  <div 
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-lg mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
+  >
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]">
+      <h5 class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary">
+        Product <span class="font-light text-gray-600 dark:text-gray-400">Detail</span>
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors dont-close-products"
+        (click)="closeQuantityModal($event)"
+        aria-label="Close"
       >
-        <div class="row">
-          <div class="col-md-4 pt-7 mb-15">Add Quantity:</div>
-          <div class="col-md-8 mb-15">
-            <input
-              type="text"
-              class="form-control"
-              placeholder=""
-              (keyup)="setQuantity(selectedProduct);checkAvailableQty(selectedProduct)"
-              required
-              (keydown)="isNumber($event, 'quantity')"
-              [(ngModel)]="selectedProduct.stockQty"
-              #selectedQty="ngModel"
-              style="font-size: 13px"
-            />
-            <span
-              *ngIf="selectedQty.errors?.required && isAdded"
-              class="input-error"
-            >
-              Please add Quantity!
-            </span>
-            <span
-              *ngIf="+selectedProduct.stockQty === 0 && isAdded && !selectedQty.errors?.required"
-              class="input-error"
-            >
-              Quantity should be greater than 0!
-            </span>
-          </div>
-          <div class="col-md-4 pt-7 mb-15">Unit:</div>
-          <div class="col-md-8 mb-15">{{selectedProduct.unit_name}}</div>
-          <div
-            class="col-md-4"
-            *ngIf="selectedProduct.schemes.length"
-            style="padding-top: 2px"
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Modal Body -->
+    <div
+      *ngIf="selectedProduct.hasOwnProperty('quantity')"
+      class="px-6 py-5 space-y-4"
+    >
+      <!-- Add Quantity -->
+      <div class="flex flex-col sm:flex-row sm:items-start gap-2">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0 pt-2">Add Quantity:</label>
+        <div class="flex-1">
+          <input
+            type="text"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary font-primary text-sm dont-close-products"
+            placeholder="Enter quantity"
+            (keyup)="setQuantity(selectedProduct);checkAvailableQty(selectedProduct)"
+            required
+            (keydown)="isNumber($event, 'quantity')"
+            [(ngModel)]="selectedProduct.stockQty"
+            #selectedQty="ngModel"
+          />
+          <span
+            *ngIf="selectedQty.errors?.required && isAdded"
+            class="text-red-500 text-xs mt-1 block"
           >
-            Trade Offer:
-          </div>
-          <div class="col-md-8">
-            <div *ngFor="let scheme of selectedProduct.schemes;let i=index">
-              <div class="custom-control custom-radio">
-                <input
-                  [(ngModel)]="selectedProduct.selectedScheme"
-                  (click)="selectedProduct.pref_id && selectedProduct.quantity && calculateProductDiscounts(selectedProduct, scheme)"
-                  class="custom-control-input"
-                  type="radio"
-                  name="AssignCatalogue"
-                  id="byTerritory-{{i}}"
-                  [value]="scheme"
-                  [disabled]="checkBundleScheme(scheme,selectedProduct)"
-                />
-                <label
-                  class="custom-control-label font13"
-                  for="byTerritory-{{i}}"
-                  style="line-height: 25px"
-                  >{{scheme.title}} (Min QTy:{{scheme.min_qty}})</label
-                >
-              </div>
+            Please add Quantity!
+          </span>
+          <span
+            *ngIf="+selectedProduct.stockQty === 0 && isAdded && !selectedQty.errors?.required"
+            class="text-red-500 text-xs mt-1 block"
+          >
+            Quantity should be greater than 0!
+          </span>
+        </div>
+      </div>
+           
+      <!-- Unit -->
+      <div class="flex flex-col sm:flex-row sm:items-start gap-2">
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0">Unit:</label>
+        <div class="text-sm text-gray-900 dark:text-white font-primary flex-1">
+          {{ selectedProduct.unit_name }}
+        </div>
+      </div>
+
+      <!-- Trade Offer (Schemes) -->
+      <div
+        *ngIf="selectedProduct.schemes && selectedProduct.schemes.length"
+        class="flex flex-col sm:flex-row sm:items-start gap-2 pt-2"
+      >
+        <label class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0">Trade Offer:</label>
+        <div class="flex-1 space-y-3">
+          <div *ngFor="let scheme of selectedProduct.schemes; let i = index" class="flex items-start">
+            <div class="flex items-center h-5">
+              <input
+                [(ngModel)]="selectedProduct.selectedScheme"
+                (click)="selectedProduct.pref_id && selectedProduct.quantity && calculateProductDiscounts(selectedProduct, scheme)"
+                class="w-4 h-4 text-primary bg-white dark:bg-[#141414] border-gray-300 dark:border-[#434343] focus:ring-primary focus:ring-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed dont-close-products"
+                type="radio"
+                name="AssignCatalogue"
+                id="byTerritory-{{ i }}"
+                [value]="scheme"
+                [disabled]="checkBundleScheme(scheme,selectedProduct)"
+              />
+            </div>
+            <div class="ml-3 text-sm">
+              <label
+                class="font-normal text-gray-700 dark:text-gray-300 cursor-pointer dont-close-products"
+                for="byTerritory-{{ i }}"
+              >
+                {{ scheme.title }} <span class="text-gray-500 dark:text-gray-400">(Min QTy: {{scheme.min_qty}})</span>
+              </label>
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer border-0" style="background-color: #f6f6f6">
-        <button
-          type="submit"
-          class="btn btn-primary dont-close-products"
-          (click)="addProductToOrder()"
-        >
-          Confirm
-        </button>
-        <button
-          type="button"
-          id="pl-qty-close"
-          class="btn btn-cancel dont-close-products"
-          data-dismiss="modal"
-          (click)="closeQuantityModal($event)"
-          aria-label="Close"
-        >
-          Cancel
-        </button>
-      </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end gap-3">
+      <button
+        type="button"
+        id="pl-qty-close"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors dont-close-products"
+        (click)="closeQuantityModal($event)"
+        aria-label="Close"
+      >
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors dont-close-products"
+        (click)="addProductToOrder()"
+      >
+        Confirm
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Products listing -->
-<div id="product-cl-sec" class="active" (clickOutside)="clickedOutSide($event)">
-  <a id="pl-close" (click)="closeProductsList()" class="close-btn-pl"></a>
-  <div class="pro-header-text">Add <span>Product</span></div>
-  <div class="se_cus-type form-wrap p-15">
-    <div class="row">
-      <div class="col-12">
-        <div class="productSearch">
-          <i class="fa fa-search"></i>
+<!-- Products Listing Sidebar - Tailwind CSS -->
+<div  
+  id="product-cl-sec"
+  class="fixed inset-0 bg-white/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-50"
+  (click)="closeProductsList()"
+>
+  <div 
+    class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[1000] flex-row flex-none flex w-full md:w-[600px]"
+    (click)="$event.stopPropagation()"
+  >
+    <div
+      class="flex flex-col h-full w-full md:w-[600px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]">
+      
+      <!-- Header -->
+      <div
+        class="relative flex items-center justify-between h-auto rounded-tl-lg bg-gradient-to-r from-[#1e54d3] to-[#0038ba] text-white px-4 py-3 text-[16px] leading-[22px]">
+        <h2 class="text-base font-bold text-white font-primary mb-0">
+          Add
+          <span class="font-light">Product</span>
+        </h2>
+        <div>
+          <button 
+            id="pl-close" 
+            (click)="closeProductsList()" 
+            class="hover:opacity-80 transition-opacity">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-x mt-1"
+              viewBox="0 0 16 16">
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708">
+              </path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="px-4 py-3 bg-white dark:bg-darkprimary border-b border-gray-200 dark:border-[#333333]">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
           <input
             type="text"
-            class="form-control"
-            id=""
+            class="w-full pl-10 pr-4 py-2 border border-[#ececec] dark:border-[#1d1d1d] rounded-lg bg-[#f6f6f6] dark:bg-[#1d1d1d] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary font-primary text-sm dont-close-products"
             [(ngModel)]="productSearchText"
             (keyup)="searchProduct()"
-            placeholder="Search"
+            placeholder="Search products..."
           />
         </div>
       </div>
-    </div>
-  </div>
-  <div class="pc-cartlist">
-    <div class="overflow-plist">
-      <div class="plist-content">
-        <div class="_left-filter pt-0">
-          <div class="container">
-            <div class="row">
-              <div class="col-12">
-                <div class="card top_border p-15">
-                  <table
-                    *ngIf="!loadingProducts"
-                    class="AddProductTable"
-                    width="100%"
-                  >
-                    <tbody>
-                      <ng-container
-                        *ngFor="let product of dispProducts; let i=index"
-                      >
-                        <tr>
-                          <td>
-                            <div class="ProListDiv">
-                              <div
-                                *ngIf="product.schemes?.length"
-                                class="lab-promotion"
-                              >
-                                Scheme
-                              </div>
-                              <img
-                                class="PrList_img"
-                                src="{{product.thumbnail}}"
-                                alt=""
-                              />
-                              <div class="PR_Name">
-                                {{product.item_name}}
-                                <span
-                                  style="
-                                    display: block;
-                                    opacity: 0.6;
-                                    padding-top: 5px;
-                                  "
-                                >
-                                  SKU: {{ product.item_sku }}
-                                </span>
-                                <span
-                                  *ngIf="orderType === 'execution'"
-                                  style="display: block"
-                                  >available: {{product.extra_qty}}</span> 
-                                <span
-                                  *ngIf="orderType !== 'execution'"
-                                  style="display: block; opacity: 0.6"
-                                > 
-                                  available: {{+product?.current_load_allocated_qty - +product?.current_load_booked_qty}}
-                                </span>
-                              </div>
-                            </div>
-                          </td>
-                          <td>
-                            <button
-                              *ngIf="!product.isAdded && !(orderType === 'execution' && +product.extra_qty == 0 ) && !(orderType !== 'execution' && +product?.current_load_allocated_qty - +product?.current_load_booked_qty == 0 )"
-                              class="btn btn-default mb-0 dont-close-quantity"
-                              data-toggle="modal"
-                              data-target="#exampleModal"
-                              (click)="openQuantityModal(product)"
-                            >
-                              Add
-                            </button>
-                            <span
-                              *ngIf="product.isAdded"
-                              class="btn btn-added mb-0 dont-close-quantity"
-                              >Added </span>
-                            <!-- <span *ngIf="product.isDeleted"
-                                                            class="btn btn-added mb-0 dont-close-quantity">Cancelled</span> -->
-                          </td>
-                        </tr>
-                      </ng-container>
-                    </tbody>
-                  </table>
-                  <div class="col-md-12 loader" *ngIf="loadingProducts">
-                    <h2 class="loading">Loading Products...</h2>
-                  </div>
+
+      <!-- Content - Product Listing -->
+      <div class="flex-1 overflow-auto p-4 bg-[#f6f6f6] dark:bg-darkprimary">
+        <div *ngIf="!loadingProducts" class="space-y-2">
+          <!-- Product items -->
+          <div 
+            *ngFor="let product of dispProducts; let i = index"
+            class="bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#252525] rounded-lg p-3 hover:shadow-md transition-shadow relative">
+            <!-- Scheme Badge -->
+            <div
+              *ngIf="product.schemes?.length"
+              class="absolute top-[64px] -left-2 bg-yellow-400 text-black text-[11px] font-semibold px-1.5 py-0.5 rounded shadow-sm z-10">
+              Scheme
+            </div>
+            
+            <div class="flex items-start justify-between gap-3">
+              <!-- Product Image & Info -->
+              <div class="flex items-start space-x-3 flex-1">
+                <img
+                  class="w-14 h-14 rounded border border-gray-200 dark:border-[#434343] object-cover flex-shrink-0"
+                  src="{{ product.thumbnail }}"
+                  alt="{{ product.item_name }}"
+                  onerror="this.src='assets/images/default_product.jpg'"
+                />
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-sm font-medium text-gray-900 dark:text-neutral-300 font-primary leading-snug">
+                    {{ product.item_name }}
+                  </h3>
+                  <p class="text-[13px] text-gray-600 dark:text-gray-400 mt-1">
+                    SKU: {{ product.item_sku }}
+                  </p>
+                  <p class="text-[13px] text-gray-600 dark:text-gray-300 mt-1 font-medium">
+                    Available: <span class="text-primary dark:text-neutral-300">
+                      <span *ngIf="orderType === 'execution'">{{ product.extra_qty || 0 }}</span>
+                      <span *ngIf="orderType !== 'execution'">{{ +product?.current_load_allocated_qty - +product?.current_load_booked_qty || 0 }}</span>
+                    </span>
+                  </p>
                 </div>
+              </div>
+              
+              <!-- Add Button -->
+              <div class="flex my-auto">
+                <button
+                  *ngIf="!product.isAdded && !(orderType === 'execution' && +product.extra_qty == 0) && !(orderType !== 'execution' && +product?.current_load_allocated_qty - +product?.current_load_booked_qty == 0)"
+                  class="px-4 py-2 text-[13px] leading-none font-primary bg-transparent text-primary border border-primary 
+                         dark:border-[#333333] dark:text-neutral-300 rounded-md 
+                         transition-colors whitespace-nowrap 
+                         disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-200 
+                         dark:disabled:bg-neutral-700 disabled:text-black
+                         hover:enabled:bg-primary hover:enabled:text-white dont-close-quantity"
+                  (click)="openQuantityModal(product)"
+                >
+                  Add
+                </button>
+                <button
+                  *ngIf="product.isAdded"
+                  class="px-4 py-2 text-[13px] leading-none font-primary bg-primary text-white rounded-md cursor-not-allowed whitespace-nowrap dont-close-quantity"
+                  disabled
+                >
+                  Added 
+                </button>
               </div>
             </div>
           </div>
         </div>
+
+        <!-- Loading State -->
+        <div *ngIf="loadingProducts" class="flex flex-col items-center justify-center py-12">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary">Loading Products...</p>
+        </div>
+
+        <!-- Empty State -->
+        <div *ngIf="!loadingProducts && dispProducts?.length === 0" class="flex flex-col h-[calc(100vh-31vh)] items-center justify-center">
+          <svg class="w-16 h-16 text-gray-300 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+          </svg>
+          <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary text-center">No products found</p>
+        </div>
+      </div>
+ 
+      <!-- Footer -->
+      <div class="bg-gray-50 dark:bg-[#1d1d1d] dark:border-[#333333] pl-4 p-3 rounded-bl-lg border-t border-gray-200">
+        <div>
+          <button
+            id="pl-prod-close"
+            type="button"
+            (click)="closeProductsList()"
+            class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors">
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="_cl-bottom">
-    <button
-      id="pl-prod-close"
-      type="butotn"
-      (click)="closeProductsList()"
-      class="btn btn-cancel mr-2"
-    >
-      Cancel
-    </button>
   </div>
 </div>

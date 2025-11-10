@@ -1,5 +1,5 @@
 .loader-sell360 {
-    height: 75vh;
+    height: 66vh;
     width: 100%;
     display: flex;
     align-items: center;
@@ -34,8 +34,7 @@
     bottom: -23px;
     left: 5px;
     font-size: 11px;
-    letter-spacing: 3px;
-    color: #282828;
+    letter-spacing: 3px; 
 }
 
 .loader-sell360 .loader .txt span {
@@ -88,7 +87,7 @@
     background-repeat: no-repeat;
     width: 18px;
     height: 18px;
-    filter: invert(60%);
+    filter: invert(50%);
 }
 
 .loader-sell360 .loader .box-icon:nth-child(1)::before {
@@ -118,7 +117,9 @@
 .loader-sell360 .loader.amit::before, .loader.amit::after {
     transform: scale(1);
 }
-
+.dark .loader-sell360 .loader .box-icon::before, .dark .loader-sell360 .loader .box-icon::after{
+    filter: none !important;
+}
 @keyframes a {
     0% {
         transform: translate(30px, 0) rotate(30deg);

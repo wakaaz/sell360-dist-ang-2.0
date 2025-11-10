@@ -1,10 +1,103 @@
+/* Legacy styles for order details modal */
 .OrderLogo{ text-align: left; padding-left:0}
 .OrderLogo img{ width:auto; height: 46px}	
 .OrderInfo{font-size: 14px}
-.OrderInfo span{width: 105px; float:left}
-.Order-Detail-table table td{border: solid 1px #333333; padding: 5px!important; font-size:12px}
-.Order-Detail-table table th{border: solid 1px #333333!important; background-color: #ededed!important; color:#000; padding: 5px!important; font-size:12px}
-.button-list .btn-primary{font-size: 14px!important; letter-spacing: 1px}
-.button-list .btn-primary .fa{padding-right:3px}
-.ord-no{padding-top:17px; font-size:14px; text-align: right}
+.OrderInfo span{width: 105px; float:left; opacity: 0.7;}
+.Order-Detail-table table{width: 100%; border-collapse: collapse;}
+.Order-Detail-table table strong{font-weight: 500;}
+.Order-Detail-table table td{border: solid 1px #333333; padding: 5px; font-size:12px}
+.Order-Detail-table table th{border: solid 1px #333333; background-color: #ededed; padding: 5px; font-size:12px}
+.dark .Order-Detail-table table th{border: solid 1px #333333; background-color: #252525;}
+.button-list .btn-primary{font-size: 14px; letter-spacing: 1px}
+.button-list .btn-primary .fa{padding-right:3px} 
 .active {display: block !important;}
+
+/* Dark mode styles for table */
+:host ::ng-deep .dark .Order-Detail-table table td{
+  border-color: #333333;
+  color: #e5e7eb;
+  background-color: transparent;
+}
+
+:host ::ng-deep .dark .Order-Detail-table table th{
+  border-color: #333333;
+  background-color: #1a1a1a;
+  color: #e5e7eb;
+}
+
+:host ::ng-deep .dark .Order-Detail-table table strong{
+  color: #e5e7eb;
+}
+
+:host ::ng-deep .dark .Order-Detail-table table thead th{
+  background-color: #1a1a1a;
+  color: #e5e7eb;
+}
+
+:host ::ng-deep .dark .Order-Detail-table table tbody tr:hover{
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* AG Grid styles and Tailwind compatibility */
+.ag-grid-container {
+  height: 400px;
+  width: 100%;
+}
+
+/* Fix for ag-grid dropdown visibility */
+::ng-deep .ag-row {
+    overflow: visible !important;
+}
+
+::ng-deep .ag-cell-wrapper {
+    overflow: visible !important;
+}
+
+::ng-deep .ag-cell {
+    overflow: visible !important;
+}
+
+/* Custom AG Grid theme adjustments */
+::ng-deep .ag-theme-quartz {
+  --ag-header-background-color: #f8f9fa;
+  --ag-header-foreground-color: #495057;
+  --ag-border-color: #dee2e6;
+  --ag-row-hover-color: #f8f9fa;
+  --ag-selected-row-background-color: #e3f2fd;
+}
+
+/* Dark mode support for AG Grid */
+::ng-deep .dark .ag-theme-quartz {
+  --ag-header-background-color: #1a1a1a;
+  --ag-header-foreground-color: #e5e7eb;
+  --ag-border-color: #333333;
+  --ag-row-hover-color: #1a1a1a;
+  --ag-selected-row-background-color: #1f2937;
+  --ag-background-color: #000000;
+  --ag-foreground-color: #ffffff;
+}
+
+/* Modal styles for order details */
+.modal-overlay {
+  backdrop-filter: blur(4px);
+}
+
+/* Prevent body scroll when modal is open */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* Responsive table styles */
+@media (max-width: 768px) {
+  .ag-grid-container {
+    height: 300px;
+  }
+  
+  ::ng-deep .ag-header-cell-label {
+    font-size: 12px;
+  }
+  
+  ::ng-deep .ag-cell {
+    font-size: 12px;
+  }
+}

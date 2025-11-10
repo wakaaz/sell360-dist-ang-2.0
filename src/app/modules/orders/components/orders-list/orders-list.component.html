@@ -1,5 +1,5 @@
 <!-- Order details Popup -->
-<div class="modal fade" [ngClass]="showDetailsPopup ? 'show active' : ''" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<!-- <div class="modal fade" [ngClass]="showDetailsPopup ? 'show active' : ''" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-full modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -169,186 +169,115 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 
-<!-- Order Managemenet -->
-<div class="container">
-    <div class="row mt-2 mb-2">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Orders <span> Management</span></h2>
+
+<div class="container mx-auto px-4">
+    <div class="mt-3 mb-3">
+      <div class="flex justify-between items-center text-left">
+        <div>
+          <h1
+            class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0"
+          >
+          Orders
+            <span class="font-light"> Management</span>
+          </h1>
         </div>
 
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <ol class="breadcrumb">
-                <li><a routerLink="/orders"><span>Orders</span></a></li>
-                <li><span>List</span></li>
-            </ol>
+        <div> 
         </div>
+
+      </div>
     </div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="header-tabs mb-0" style="min-height:47px">
-                <div class="row">
-                    <div class="col-auto">
-                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                            <!-- <a class="nav-item nav-link" [ngClass]="byOrderBooker === false ? 'active' : ''"
-                                id="NewOrder-tab" data-toggle="tab" (click)="byOrderBooker=false;" role="tab"
-                                aria-controls="NewOrder" aria-selected="true">Assign By Order</a> -->
-                            <a class="nav-item nav-link" [ngClass]="byOrderBooker === true ? 'active' : ''"
-                                id="ProcessedOrder-tab" data-toggle="tab" role="tab" aria-controls="ProcessedOrder"
-                                (click)="byOrderBooker=true;" aria-selected="false">Assign By Order Booker</a>
-                        </div>
-                    </div>
-                </div>
+    <!-- AG Grid Section for Assign By Order Booker -->
+    <div
+      class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a]"
+    >
+      <div
+        class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-black dark:from-transparent dark:to-transparent shadow-none"
+      >
+        <div>
+          <h2
+            class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium"
+          >
+            Assign By Order &nbsp;<span class="font-light">Booker</span>
+            <div class="ml-2 my-auto flex items-center">
+              <span
+                class="bg-primary text-white text-[9px] p-[4px] leading-[1] rounded font-primary"
+                >{{ orders.length }}</span
+              >
             </div>
+          </h2>
         </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="tab-content" id="nav-tabContent">
-                <!-- Assign By Order -->
-                <div class="tab-pane fade" [ngClass]="byOrderBooker === false ? 'active show' : ''" id="NewOrder"
-                    role="tabpanel" aria-labelledby="NewOrder-tab">
-                    <div class="Product-Filter border-0">
-                        <div class="row">
-                            <div class="col-auto pr-0">
-                                <div class="CL-Product" style="width: 180px!important;">
-                                    <input type="date" id="datepicker" class="form-control pl-15">
-                                </div>
-                            </div>
-
-                            <div class="col pl-0">
-                                <div class="_cust_filter">
-                                    <div class="form-s2">
-                                        <ng-select class="form-control formselect" placeholder="Select Order Booker"
-                                            name="order-booker" style="width: 100%!important" [multiple]="false"
-                                            [(ngModel)]="selectedOrderBooker" id="order-booker">
-                                            <ng-option [value]="orderBooker.id"
-                                                *ngFor="let orderBooker of orderBookers">
-                                                {{orderBooker.name}}
-                                            </ng-option>
-                                        </ng-select>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        <div class="clearfix"></div>
-                    </div>
-
-                    <div class="card p-15">
-                        <div class="col-12 p-0" style="min-height:360px;">
-                            <table datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap"
-                                id="example" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th> Select
-                                        </th>
-                                        <th>Retailer</th>
-                                        <th>Channel</th>
-                                        <th>Order Total</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let order of orders; let i=index">
-                                        <td>
-                                            <div class="custom-control custom-checkbox cus-che-table">
-                                                <input type="checkbox" name="" class="custom-control-input" value=""
-                                                    [id]="i">
-                                                <label class="custom-control-label" [for]="i"></label>
-                                            </div>
-                                        </td>
-                                        <td>{{order.emp_name}}</td>
-                                        <td>{{order.retailer_name}}</td>
-                                        <td>{{order.order_total | number: '1.2-2'}}</td>
-                                        <td><button (click)="showDetailsPopup=true;openDetailsModal(order)"
-                                                class="btn btn-default btn-line mb-0">Detail</button></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="col-12 bottom-gray">
-
-                            <div class="row justify-content-end">
-
-                                <div class="col-auto pr-0">
-                                    <div class="_cust_filter m-0">
-                                        <div class="form-s2">
-                                            <ng-select class="form-control formselect" placeholder="Select Salesman" name="select-saleman"
-                                                style="width: 100%!important" [(ngModel)]="selectedOrderBooker" id="select-saleman">
-                                                <ng-option [value]="orderBooker.id" *ngFor="let orderBooker of orderBookers">
-                                                    {{orderBooker.name}}
-                                                </ng-option>
-                                            </ng-select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-auto pl-0">
-                                    <button type="submit" class="btn btn-primary">Assign Orders</button>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-                <!-- Assign By Order Booker -->
-                <div class="tab-pane fade" [ngClass]="byOrderBooker === true ? 'active show' : ''" id="ProcessedOrder"
-                    role="tabpanel" aria-labelledby="ProcessedOrder-tab">
-                    <div class="card p-15 mt-15">
-                        <div class="col-12 p-0" style="min-height:360px;">
-                            <table *ngIf="!loading" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap"
-                                id="example2" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Order Booker</th>
-                                        <th>Hold Orders</th>
-                                        <th>Total Orders</th>
-                                        <th>Assign To Salesman</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr *ngFor="let order of orders;let i=index">
-                                        <td>{{order.date}}</td>
-                                        <td>{{order.emp_name}}</td>
-                                        <td>{{order.hold_orders}}</td>
-                                        <td>{{order.total_orders}}</td>
-                                        <td>
-                                            <ng-select class="formselect" (change)="addOrderToAssignment(order)" placeholder="Select Salesman" name="select-saleman-{{i}}" [multiple]="false"
-                                                style="width: 95%!important" [(ngModel)]="order.selectedSaleman" id="select-saleman-{{i}}">
-                                                <ng-option *ngFor="let saleman of salesMen; let in=index" [value]="saleman">{{saleman.name}}</ng-option>
-                                            </ng-select>
-                                        </td>
-                                        <td>
-                                            <a [routerLink]="['/orders/order-list-details', order.employee_id ,order.date]"
-                                                class="btn btn-default btn-line mb-0">View Orders</a>
-                                            <!-- <a (click)="loadBookingSheet(order)" class="btn btn-default mb-0">BS</a> -->
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div *ngIf="loading" class="col-md-12">
-                                <app-loader-white></app-loader-white>
-                            </div>
-                        </div>
-
-                        <div *ngIf="!loading" class="col-12 bottom-gray">
-                            <div class="row justify-content-end">
-                                <div class="col-auto pl-0">
-                                    <button type="submit" [disabled]="selectedOrders.length === 0" (click)="assignSaleman()" class="btn btn-primary">{{selectedOrders.length === 0 ? 'Select Salesman' : 'Assign Salesman'}}</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="text-secondary dark:text-white">
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <svg
+                class="h-4 w-4 text-gray-400"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M11.5014 7.00039C11.5014 7.59133 11.385 8.1765 11.1588 8.72246C10.9327 9.26843 10.6012 9.7645 10.1833 10.1824C9.76548 10.6002 9.2694 10.9317 8.72344 11.1578C8.17747 11.384 7.59231 11.5004 7.00136 11.5004C6.41041 11.5004 5.82525 11.384 5.27929 11.1578C4.73332 10.9317 4.23725 10.6002 3.81938 10.1824C3.40152 9.7645 3.07005 9.26843 2.8439 8.72246C2.61776 8.1765 2.50136 7.59133 2.50136 7.00039C2.50136 5.80691 2.97547 4.66232 3.81938 3.81841C4.6633 2.97449 5.80789 2.50039 7.00136 2.50039C8.19484 2.50039 9.33943 2.97449 10.1833 3.81841C11.0273 4.66232 11.5014 5.80691 11.5014 7.00039ZM10.6814 11.7404C9.47574 12.6764 7.95873 13.1177 6.43916 12.9745C4.91959 12.8314 3.51171 12.1145 2.50211 10.9698C1.49252 9.8251 0.957113 8.33868 1.0049 6.81314C1.05268 5.28759 1.68006 3.83759 2.75932 2.75834C3.83857 1.67908 5.28856 1.0517 6.81411 1.00392C8.33966 0.956136 9.82608 1.49154 10.9708 2.50114C12.1154 3.51073 12.8323 4.91862 12.9755 6.43819C13.1187 7.95775 12.6773 9.47476 11.7414 10.6804L14.5314 13.4704C14.605 13.539 14.6642 13.6218 14.7051 13.7138C14.7461 13.8058 14.7682 13.9052 14.77 14.0059C14.7717 14.1066 14.7532 14.2066 14.7155 14.3C14.6778 14.3934 14.6216 14.4782 14.5504 14.5494C14.4792 14.6206 14.3943 14.6768 14.301 14.7145C14.2076 14.7522 14.1075 14.7708 14.0068 14.769C13.9061 14.7672 13.8068 14.7452 13.7148 14.7042C13.6228 14.6632 13.54 14.6041 13.4714 14.5304L10.6814 11.7404Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
             </div>
+            <input
+              type="text"
+              id="filter-text-box"
+              placeholder="Search orders..." autocomplete="off"
+              class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
+              (input)="onQuickFilterChanged($event)"
+            />
+          </div>
         </div>
+      </div>
+      <div>
+        <!-- AG Grid with Quartz theme -->
+        <div *ngIf="!loading" class="ag-theme-quartz ag-grid-container">
+          <ag-grid-angular
+            [rowData]="orders"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [pagination]="true"
+            [paginationPageSize]="10"
+            [paginationPageSizeSelector]="[10, 20, 50, 100]"
+            [suppressPaginationPanel]="false"
+            [domLayout]="'autoHeight'"
+            [animateRows]="true"
+            [rowSelection]="{ type: 'single' }"
+            [theme]="'legacy'"
+            (gridReady)="onGridReady($event)"
+          >
+          </ag-grid-angular>
+        </div>
+
+        <div *ngIf="loading" class="flex justify-center items-center p-8">
+          <app-loader-white></app-loader-white>
+        </div>
+      </div>
+      
+      <div *ngIf="!loading && orders.length > 0" class="flex justify-end p-2 bg-[#f6f6f6] dark:bg-[#1a1a1a] m-2 rounded-lg">
+        <button 
+          type="submit" 
+          [disabled]="selectedOrders.length === 0" 
+          (click)="assignSaleman()" 
+          class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-600"
+        >
+          {{selectedOrders.length === 0 ? 'Select Salesman' : 'Assign Salesman'}}
+        </button>
+      </div>
     </div>
-</div>
+
+    </div>
+
+ 

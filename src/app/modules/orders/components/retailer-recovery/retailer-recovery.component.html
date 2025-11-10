@@ -1,154 +1,41 @@
+<!-- No Content State -->
 <div
-                    class="no-content"
-                    *ngIf="!retailer_credit_Invoices.length"
-                  >
-                    <div
-                      class="no-content-container"
-                      style="
-                        margin: auto;
-                        display: table;
-                        text-align: center;
-                        color: #b7b7b7;
-                      "
-                    >
-                      <img src="assets/images/select order-icon.svg" alt="" />
-                      <strong>No Credit invoice Found</strong>
-                    </div>
-                  </div>
+  *ngIf="!retailer_credit_Invoices.length && !loading"
+  class="no-content w-full h-[calc(100vh-204px)] flex"
+>
+  <div class="no-content-container m-auto table text-center text-[#b7b7b7]">
+    <img 
+      src="assets/images/select order-icon.svg" 
+      alt="" 
+      class="w-[70px] h-[70px] mx-auto mb-[10px] block dark:invert dark:opacity-70"
+    />
+    <strong>No Credit invoice Found</strong>
+  </div>
+</div>
 
-
-<div class="col-12 PT-15">
-  <table
-    datatable
-    [dtOptions]="dtOptions"
-    *ngIf="retailer_credit_Invoices?.length && !loading"
-    class="table table-hover dt-responsive nowrap"
-    id="example"
-    style="width: 100%"
+<!-- AG Grid Container -->
+<div  *ngIf="retailer_credit_Invoices?.length && !loading"  class="w-full pt-5 min-h-[calc(100vh-200px)]">   
+  <div   class="ag-theme-quartz ag-grid-container"
   >
-    <thead>
-      <tr>
-        <th>Shop Code</th>
-        <th>Invoice</th>
-        <th>Shop Name</th>
-        <!-- <th>Sales Man</th> -->
-        <th>Aging</th>
-        <th>Pending AMNT</th>
-        <th *ngIf="isRecoverydiscountActivated">Invoice DISC</th>
-        <th *ngIf="isRecoverydiscountActivated">Balance</th>
-        <th *ngIf="executionData !== null">Assigned</th>
-        <th>
-          {{
-            executionData === null && retailerId === 0
-              ? "Add To Current"
-              : "Recovery"
-          }}
-        </th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let inv of retailer_credit_Invoices; let ind = index">
-        <th>{{ inv.shop_code }}</th>
-        <th>
-          {{ inv.invoice_number ? inv.invoice_number : "Opening Balance" }}
-        </th>
-        <th>{{ inv.retailer_name }}</th>
-        <th>{{ inv.agingValue }}</th>
-        <th>{{ inv.amount | number: "1.2-2" }}</th>
-        <th *ngIf="isRecoverydiscountActivated">
-          <input
-            type="number"
-            [id]="ind"
-            [(ngModel)]="inv.invoice_discount"
-            [disabled]="
-              inv.is_added && executionData === null && !assignment_idOutRoute
-            "
-            (keydown)="isNumber($event)"
-            name="recoveryDiscount"
-            ngModel
-            #recoveryDiscount="ngModel"
-            class="form-control value_input"
-            placeholder="0"
-            [min]="0"
-          />
-        </th>
-        <th *ngIf="isRecoverydiscountActivated">
-          {{ inv.balance | number: "1.2-2" }}
-        </th>
-        <th *ngIf="executionData !== null">
-          {{ inv.added_to_current | number: "1.2-2" }}
-        </th>
-        <th>
-          <input
-            *ngIf="executionData === null && !assignment_idOutRoute"
-            type="number"
-            [id]="ind"
-            [disabled]="
-              (inv.balance === 0 || inv.is_added) && executionData === null
-            "
-            ngModel
-            #recoveryAmount="ngModel"
-            [(ngModel)]="inv.added_to_current"
-            (keydown)="isNumber($event)"
-            name="recoveryAmount"
-            max="{{ inv.balance }}"
-            class="form-control value_input"
-            placeholder="0"
-            [min]="0"
-          />
-          <input
-            *ngIf="executionData !== null || assignment_idOutRoute"
-            type="number"
-            [id]="ind"
-            [disabled]="
-              (inv.balance === 0 || inv.is_added) &&
-              executionData === null &&
-              !assignment_idOutRoute
-            "
-            ngModel
-            #recoveryAmount="ngModel"
-            [(ngModel)]="inv.recoverd_amount"
-            (keydown)="isNumber($event)"
-            name="recoveryAmount"
-            max="{{ inv.balance }}"
-            class="form-control value_input"
-            placeholder="0"
-            [min]="0"
-          />
-        </th>
-        <th>
-          <button
-            *ngIf="executionData === null && retailerId === 0"
-            class="btn btn-default"
-            [disabled]="inv.isAddToBill"
-            [ngClass]="
-              inv.is_addedc && executionData === null ? 'red-bg' : 'btn-line'
-            "
-            (click)="addOrderBill(ind, inv.is_added)"
-          >
-            {{ inv.is_added ? "Remove Bill" : "Add to Bill" }}
-          </button>
+    <ag-grid-angular
+      [rowData]="retailer_credit_Invoices"
+      [columnDefs]="columnDefs"
+      [defaultColDef]="defaultColDef"
+      [pagination]="true"
+      [paginationPageSize]="10"
+      [paginationPageSizeSelector]="[10, 20, 50, 100]"
+      [suppressPaginationPanel]="false"
+      [domLayout]="'autoHeight'"
+      [animateRows]="true"
+      [rowSelection]="{ type: 'single' }"
+      [theme]="'legacy'"
+      (gridReady)="onGridReady($event)"
+    >
+    </ag-grid-angular>
+  </div>
 
-          <button
-            *ngIf="executionData !== null || retailerId > 0"
-            class="btn btn-default btn-line"
-            (click)="addOrderBill(ind, false)"
-          >
-            <!-- [ngClass]="
-              inv.is_added && executionData === null ? 'red-bg' : 'btn-line'
-            " -->
-            <!-- [disabled]="
-              (recoveryAmount ? !recoveryAmount?.dirty : true) &&
-              !recoveryDiscount.dirty
-            " -->
-            Save
-          </button>
-        </th>
-      </tr>
-    </tbody>
-  </table>
-  <div class="col-12" *ngIf="loading">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="flex justify-center items-center p-8">
     <app-loader-white></app-loader-white>
   </div>
 </div>

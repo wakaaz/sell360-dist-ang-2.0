@@ -318,13 +318,12 @@
           <!-- Orders Tab -->
           <div class="flex items-center justify-center relative">
             <button type="button"
-              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
+              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light pointer-events-none"
               [ngClass]="{
-                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 1,
-                'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 1,
-                'text-gray-300 dark:text-[#808080] cursor-not-allowed': false
-              }" (click)="changeTab(1, 'direct')" role="tab"
-              aria-selected="currentTab === 1" id="pills-home-tab">
+                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 1,
+                'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 1
+              }" role="tab"
+              aria-selected="currentTab === 1" id="pills-home-tab" disabled>
               <span class="block" [ngClass]="{
                   'font-semibold text-primary dark:text-neutral-300': currentTab === 1,
                   'font-normal': currentTab !== 1
@@ -352,13 +351,12 @@
           <!-- Spot Sale Tab -->
           <div class="flex items-center justify-center relative">
             <button type="button"
-              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
+              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light pointer-events-none"
               [ngClass]="{
-                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 2,
-                'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 2,
-                'text-gray-300 dark:text-[#808080] cursor-not-allowed': false
-              }" (click)="changeTab(2, 'direct')" role="tab"
-              aria-selected="currentTab === 2" id="pills-sale-tab">
+                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 2,
+                'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 2
+              }" role="tab"
+              aria-selected="currentTab === 2" id="pills-sale-tab" disabled>
               <span class="block" [ngClass]="{
                   'font-semibold text-primary dark:text-neutral-300': currentTab === 2,
                   'font-normal': currentTab !== 2
@@ -386,13 +384,12 @@
           <!-- Load Recovery Tab -->
           <div class="flex items-center justify-center relative">
             <button type="button"
-              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
+              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light pointer-events-none"
               [ngClass]="{
-                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 3,
-                'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 3,
-                'text-gray-300 dark:text-[#808080] cursor-not-allowed': false
-              }" (click)="changeTab(3, 'direct')" role="tab"
-              aria-selected="currentTab === 3" id="pills-load-recovery-tab">
+                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 3,
+                'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 3
+              }" role="tab"
+              aria-selected="currentTab === 3" id="pills-load-recovery-tab" disabled>
               <span class="block" [ngClass]="{
                   'font-semibold text-primary dark:text-neutral-300': currentTab === 3,
                   'font-normal': currentTab !== 3
@@ -421,13 +418,12 @@
           <!-- Recovery Tab -->
           <div class="flex items-center justify-center relative">
             <button type="button"
-              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
+              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light pointer-events-none"
               [ngClass]="{
-                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 4,
-                'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 4,
-                'text-gray-300 dark:text-[#808080] cursor-not-allowed': false
-              }" (click)="changeTab(4, 'direct')" role="tab"
-              aria-selected="currentTab === 4" id="pills-recovery-tab">
+                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 4,
+                'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 4
+              }" role="tab"
+              aria-selected="currentTab === 4" id="pills-recovery-tab" disabled>
               <span class="block" [ngClass]="{
                   'font-semibold text-primary dark:text-neutral-300': currentTab === 4,
                   'font-normal': currentTab !== 4
@@ -456,13 +452,12 @@
           <!-- Final Tab -->
           <div class="flex items-center justify-center relative">
             <button type="button"
-              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light"
+              class="relative w-full pt-2 pb-6 px-5 text-center transition-all duration-200 font-primary text-[15px] font-light pointer-events-none"
               [ngClass]="{
-                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-pointer': currentTab === 5,
-                'text-gray-400 dark:text-[#808080] hover:text-gray-600 dark:hover:text-[#b0b0b0] cursor-pointer': currentTab !== 5,
-                'text-gray-300 dark:text-[#808080] cursor-not-allowed': false
-              }" (click)="changeTab(5, 'direct')" role="tab"
-              aria-selected="currentTab === 5" id="pills-final-tab">
+                'bg-white dark:bg-[#252525] text-secondary dark:text-neutral-300 cursor-default': currentTab === 5,
+                'text-gray-400 dark:text-[#808080] cursor-default': currentTab !== 5
+              }" role="tab"
+              aria-selected="currentTab === 5" id="pills-final-tab" disabled>
               <span class="block" [ngClass]="{
                   'font-semibold text-primary dark:text-neutral-300': currentTab === 5,
                   'font-normal': currentTab !== 5
@@ -1385,13 +1380,13 @@
           </div>
 
           <!-- Previous/Next Navigation Buttons - Global for all tabs -->
-          <div *ngIf="currentTab !== 5" class="flex justify-center gap-2 mt-4 p-3 bg-[#f6f6f6] dark:bg-[#1a1a1a] rounded-lg">
+          <div class="flex justify-center gap-2 mt-4 p-3 bg-[#f6f6f6] dark:bg-[#1a1a1a] rounded-lg">
             <button type="button" (click)="changeTab(currentTab - 1,'prev')"
               [disabled]="currentTab === 1 || isSpotSaleActive || loading"
               class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
               Previous
             </button>
-            <button *ngIf="currentTab !== 4" type="button" (click)="changeTab(currentTab + 1,'next')"
+            <button *ngIf="currentTab !== 4 && currentTab !== 5" type="button" (click)="changeTab(currentTab + 1,'next')"
               [disabled]="isSpotSaleActive || loading || currentTab === 5"
               class="px-6 py-2 leading-none text-[15px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors">
               <div *ngIf="loading" class="inline-block animate-spin mr-2">

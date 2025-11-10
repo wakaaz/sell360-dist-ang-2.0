@@ -133,3 +133,15 @@
     }
 }
 
+/* Fix for ag-grid dropdown visibility */
+::ng-deep .ag-row {
+    overflow: visible !important;
+}
+
+::ng-deep .ag-cell-wrapper {
+    overflow: visible !important;
+}
+
+::ng-deep .ag-cell {
+    overflow: visible !important;
+}

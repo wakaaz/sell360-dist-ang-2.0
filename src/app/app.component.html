@@ -310,8 +310,9 @@
 <div *ngIf="isLoggedIn" id="_subNav-id" #subNav (clickOutside)="closeSubMenu()">
   <div *ngIf="selectedSubMenu" class="_subNav font-primary">
     <a id="SN-close" (click)="closeSubMenu()" class="SN-close-btn"
-      ><i class="fa fa-arrow-left"></i
-    ></a>
+      > <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-[28px] h-[28px]" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
+      </svg></a>
     <h2>{{ selectedSubMenu.title }}</h2>
     <ul>
       <li *ngFor="let menu of selectedSubMenu.subMenu">
@@ -324,7 +325,7 @@
 </div>
 
 <div *ngIf="isLoggedIn" id="wrapper">
-  <div id="content-wrapper" class="!pl-0 xl:!pl-[185px] !pt-[46px] xl:!pt-[0px]" [ngClass]="isSideNavHidden ? 'pl-0' : ''">
+  <div id="content-wrapper" class="!pl-0 !pt-[46px] xl:!pt-[0px]" [ngClass]="isSideNavHidden ? 'xl:!pl-0' : 'xl:!pl-[185px]'">
     
     <div
       *ngIf="showToast"
@@ -398,7 +399,7 @@
   </div>
 
     <footer
-      class="bg-[#e9ecef] pl-[185px] dark:bg-stone-800 p-[10px] fixed flex justify-center bottom-0 w-full"
+      class="bg-[#e9ecef] pl-[185px] dark:bg-stone-800 p-[10px] fixed flex justify-center bottom-0 w-full" [ngClass]="isSideNavHidden ? 'hidden' : ''"
     >
       <div class="container mx-auto px-4 text-center text-opacity-60 text-[13px] text-secondary  dark:text-gray-400 font-primary">
         2021 Sell3sixty All rights reserved

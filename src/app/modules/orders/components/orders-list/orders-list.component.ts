@@ -2,6 +2,10 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { ToasterService } from 'src/app/core/services/toaster.service';
 import { GeneralDataService } from '../../../shared/services';
 import { OrdersService } from '../../services/orders.service';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import { SalesmanSelectCellRendererComponent } from './salesman-select-cell-renderer.component';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -15,6 +19,8 @@ import { OrdersService } from '../../services/orders.service';
 })
 
 export class OrdersListComponent implements OnInit {
+    private gridApi!: GridApi;
+    
     selectedOrderBooker: number;
     showDetailsPopup: boolean;
     submitted: boolean;
@@ -25,6 +31,52 @@ export class OrdersListComponent implements OnInit {
     orders: Array<any> = [];
     dtOptions: DataTables.Settings = {};
     selectedOrders: Array<any> = [];
+    
+    columnDefs: ColDef[] = [
+        { field: 'date', headerName: 'Date', sortable: true, filter: true, width: 120 },
+        { field: 'emp_name', headerName: 'Order Booker', sortable: true, filter: true, flex: 1 },
+        { field: 'hold_orders', headerName: 'Hold Orders', sortable: true, filter: true, width: 130 },
+        { field: 'total_orders', headerName: 'Total Orders', sortable: true, filter: true, width: 130 },
+        {
+            field: 'salesman_selector',
+            headerName: 'Assign To Salesman',
+            cellRenderer: SalesmanSelectCellRendererComponent,
+            cellRendererParams: {
+                salesMen: () => this.salesMen,
+                onSelectSalesman: (order: any, salesman: any) => this.addOrderToAssignment(order)
+            },
+            width: 230,
+            sortable: false,
+            filter: false
+        },
+        {
+            field: 'actions',
+            headerName: 'Action',
+            cellRenderer: (params: any) => {
+                const order = params.data;
+                return `
+                    <div class="flex gap-1">
+                        <a href="/orders/order-list-details/${order.employee_id}/${order.date}" 
+                           class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5">View Orders</a>
+                    </div>
+                `;
+            },
+            cellStyle: {
+                display: 'flex',
+                alignItems: 'center', 
+            },
+            width: 150,
+            sortable: false,
+            filter: false,
+            pinned: 'right'
+        }
+    ];
+
+    defaultColDef: ColDef = {
+        resizable: true,
+        sortable: true,
+        filter: true
+    };
 
     constructor(
         private generalDataService: GeneralDataService,
@@ -40,6 +92,59 @@ export class OrdersListComponent implements OnInit {
         };
         this.getAllSalesMen();
         this.getNewOrders();
+    }
+    
+    onGridReady(params: GridReadyEvent): void {
+        this.gridApi = params.api;
+    }
+    
+    // Old method - can be removed later if not needed
+    /* setupSalesmanSelectors(): void {
+        this.orders.forEach((order, index) => {
+            const container = document.getElementById(`salesman-selector-${index}`);
+            if (container) {
+                container.innerHTML = '';
+                
+                const select = document.createElement('select');
+                select.className = 'form-select formselect';
+                select.style.width = '95%';
+                select.style.height = '25px';
+                select.style.fontSize = '14px';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.text = 'Select Salesman';
+                defaultOption.value = '';
+                select.appendChild(defaultOption);
+                
+                this.salesMen.forEach(salesman => {
+                    const option = document.createElement('option');
+                    option.value = salesman.id;
+                    option.text = salesman.name;
+                    if (order.selectedSaleman && order.selectedSaleman.id === salesman.id) {
+                        option.selected = true;
+                    }
+                    select.appendChild(option);
+                });
+                
+                select.addEventListener('change', (event: any) => {
+                    const selectedId = event.target.value;
+                    const salesman = this.salesMen.find(s => s.id === parseInt(selectedId));
+                    if (salesman) {
+                        order.selectedSaleman = salesman;
+                        this.addOrderToAssignment(order);
+                    }
+                });
+                
+                container.appendChild(select);
+            }
+        });
+    } */
+
+    onQuickFilterChanged(event: any): void {
+        const filterValue = event.target.value;
+        if (this.gridApi) {
+            this.gridApi.setGridOption('quickFilterText', filterValue);
+        }
     }
 
     getAllSalesMen(): void {
@@ -79,6 +184,7 @@ export class OrdersListComponent implements OnInit {
     }
 
     addOrderToAssignment(order: any): void {
+        console.log('addOrderToAssignment called with:', order);
         this.selectedOrders = this.selectedOrders.filter(odr => odr.id !== order.id);
         const assignment = {
             sales_man: order.selectedSaleman.id,
@@ -87,10 +193,11 @@ export class OrdersListComponent implements OnInit {
             date: order.date
         };
         this.selectedOrders.push(assignment);
-
+        console.log('selectedOrders:', this.selectedOrders);
     }
 
     assignSaleman(): void {
+        console.log('assignSaleman called, selectedOrders:', this.selectedOrders);
         if (this.selectedOrders.length) {
             const assigned = {
                 salesman: this.selectedOrders.map(x => {

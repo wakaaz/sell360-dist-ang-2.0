@@ -1,5 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild, ViewEncapsulation } from '@angular/core';
-import { NgSelectComponent } from '@ng-select/ng-select';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { DataService } from '../../services';
 
@@ -14,13 +13,14 @@ import { DataService } from '../../services';
 
 })
 
-export class ReturnedProductsComponent implements OnInit, AfterViewInit {
+export class ReturnedProductsComponent implements OnInit {
 
     @Input() productsList: Array<any>;
     @Input() orderReturnedItems: Array<any>;
-    @ViewChild('productRet') productRet: NgSelectComponent;
 
     selectedProduct: any = {};
+    selectedProductForSelect: any = null;
+    showModal: boolean = true;
 
     @Output() productReturned: EventEmitter<any> = new EventEmitter();
     @Output() closeReturned: EventEmitter<boolean> = new EventEmitter();
@@ -34,10 +34,6 @@ export class ReturnedProductsComponent implements OnInit, AfterViewInit {
     ngOnInit(): void {
     }
 
-    ngAfterViewInit(): void {
-        document.getElementById('open-returned').click();
-    }
-
     isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
         return this.dataService.isNumber(event, type);
     }
@@ -46,13 +42,32 @@ export class ReturnedProductsComponent implements OnInit, AfterViewInit {
         return this.orderReturnedItems.find(x => x.item_id === product.item_id) ? true : false;
     }
 
-    close(): void {
+    compareProducts = (o1: any, o2: any): boolean => {
+        if (!o1 || !o2) {
+            return false;
+        }
+        return o1.item_id === o2.item_id;
+    }
+
+    closeModal(event?: Event): void {
+        if (event) {
+            event.stopPropagation();
+        }
+        this.showModal = false;
         this.closeReturned.emit(true);
+    }
+
+    close(): void {
+        this.closeModal();
     }
 
     productSelected(product: any): void {
         if (product) {
             this.selectedProduct = JSON.parse(JSON.stringify(product));
+            this.selectedProductForSelect = product;
+        } else {
+            this.selectedProduct = {};
+            this.selectedProductForSelect = null;
         }
     }
 
@@ -126,7 +141,7 @@ export class ReturnedProductsComponent implements OnInit, AfterViewInit {
             this.selectedProduct.item_quantity_booker = 0;
             this.productReturned.emit(this.selectedProduct);
             this.selectedProduct = {};
-            this.productRet.handleClearClick();
+            this.selectedProductForSelect = null;
         }
     }
 

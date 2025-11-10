@@ -83,11 +83,12 @@ export function setPrimarOrderItem(
 // TODO:CODE CLEAN
 export function getNewPrimaryOderItem(selectedProduct: any): PrimaryOrderItem {
   const primOrderItem = new PrimaryOrderItem();
+
   primOrderItem.brand_id = selectedProduct.brand_id;
   primOrderItem.parent_unit_quantity = selectedProduct.parent.quantity;
   // primOrderItem.division_id = selectedProduct.division_id; TODO: Maybe Addedd
   primOrderItem.scheme_discount = selectedProduct.scheme_discount;
-  // primOrderItem.selectedScheme = selectedProduct.selectedScheme; TODO: slected scheme when add prodcut
+  // primOrderItem.selectedScheme = selectedProduct.selectedScheme;   TODO: slected scheme when add prodcut
   // primOrderItem.dispatch_status = selectedProduct.dispatch_status;
   // primOrderItem.dispatch_qty = selectedProduct.dispatch_qty;
   // primOrderItem.dispatch_amount = selectedProduct.dispatch_amount;
@@ -220,6 +221,11 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
       this.parent_qty_sold
     );
   }
+
+  public set totalBill(value: number) {
+    this.totalBill = value;
+  }
+
   public get tax(): number {
     return Utility.calTax(
       this.tax_amount,
@@ -535,6 +541,8 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     return this._tax_amount;
   }
   public set tax_amount(v: number) {
+    console.log('Setter Function called with value:', v);
+
     this._tax_amount = v;
   }
 

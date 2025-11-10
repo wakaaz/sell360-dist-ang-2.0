@@ -15,10 +15,11 @@ import {
 } from 'src/app/core/constants/schemes.constant';
 import { DataService } from 'src/app/modules/shared/services';
 import { IOrderItemDto } from '../../_models/orderItemDtos';
-import { EMPTY, Subscription } from 'rxjs';
+import { catchError, EMPTY, of, Subscription, switchMap, tap } from 'rxjs';
 import { LocalStorageService } from 'src/app/core/services/storage.service';
 import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 import { environment } from 'src/environments/environment';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-edit-order',
@@ -55,9 +56,11 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   status: string;
   isNew: boolean;
   distributor: any;
+  productsMetaDataDistributor: any;
   subDistributor: any;
   selectedSubDistributor: number;
   subDistributors: any[];
+  taxClasses: any[];
   isReturn = false;
   title: string;
   showEditFields = false;
@@ -153,6 +156,17 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   //#region  show product list
   showProductsList(event: Event): void {
     event.stopPropagation();
+
+    if (!this.subDistributor?.id) {
+      const toast: Toaster = {
+        type: 'error',
+        message: 'Please select sub distributor',
+        title: 'Error:',
+      };
+      this.toastService.showToaster(toast);
+      return;
+    }
+
     this.allProducts = this.allProducts.map((product) => {
       return product;
     });
@@ -167,61 +181,90 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region API call get products meta data
+
   getProductsMetaData(): void {
     this.loadingProducts = true;
-    const sub = this.primarySrvc.getProductsMetaData().subscribe(
-      (res: any) => {
-        if (res.status === 200) {
-          if (this.showEditFields) {
-            for (let i = 0; i < this.order.orderContent.length; i++) {
+
+    const sub = this.primarySrvc
+      .getProductsMetaData()
+      .pipe(
+        tap((res: any) => {
+          if (res?.status === 200) {
+            if (this.showEditFields) {
+              for (let i = 0; i < this.order.orderContent.length; i++) {
+                this.allProducts = res.data.inventory.map((pr) => {
+                  if (this.order.orderContent[i].item_id === pr.item_id) {
+                    pr.isAdded = true;
+                  } else {
+                    pr.isAdded = false;
+                  }
+                  pr.net_amount = 0.0;
+                  return pr;
+                });
+              }
+            } else {
               this.allProducts = res.data.inventory.map((pr) => {
-                if (this.order.orderContent[i].item_id === pr.item_id) {
-                  pr.isAdded = true;
-                } else {
-                  pr.isAdded = false;
-                }
+                pr.isAdded = false;
                 pr.net_amount = 0.0;
                 return pr;
               });
             }
+
+            this.correctIamgeURL();
+            this.specialDiscounts = res.data.special_discount;
+            // this.prefrences = res.data.prefs;
+            this.dispProducts = [...this.allProducts];
+            this.subInventory = res.data.sub_inventory;
+            this.tradeoffers = res.data.tradeoffers;
+            this.loadingProducts = false;
+            this.productsMetaDataDistributor = res?.data?.distributor;
           } else {
-            this.allProducts = res.data.inventory.map((pr) => {
-              pr.isAdded = false;
-              pr.net_amount = 0.0;
-              return pr;
-            });
+            const toast: Toaster = {
+              type: 'error',
+              message: res.message,
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
           }
-          this.correctIamgeURL();
-          this.specialDiscounts = res.data.special_discount;
-          // this.prefrences = res.data.prefs;
-          this.dispProducts = [...this.allProducts];
-          this.subInventory = res.data.sub_inventory;
-          this.tradeoffers = res.data.tradeoffers;
+        }),
+        switchMap((res: any) => {
+          const province_id = res?.data?.distributor?.province_id;
+
+          if (res?.status === 200 && province_id) {
+            return this.primarySrvc.getTaxClasses(province_id);
+          } else {
+            return of(null);
+          }
+        }),
+        catchError((error: any) => {
           this.loadingProducts = false;
+          if (error.status !== 1 && error.status !== 401) {
+            const toast: Toaster = {
+              type: 'error',
+              message: 'Cannot fetch counter sale data. Please try again',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+          return of(null);
+        })
+      )
+      .subscribe((tax_classes: any) => {
+        if (tax_classes?.status === 200) {
+          this.taxClasses = tax_classes.data;
         } else {
           const toast: Toaster = {
             type: 'error',
-            message: res.message,
+            message: tax_classes.message,
             title: 'Error:',
           };
           this.toastService.showToaster(toast);
         }
-      },
-      (error) => {
-        this.loadingProducts = false;
-        if (error.status !== 1 && error.status !== 401) {
-          const toast: Toaster = {
-            type: 'error',
-            message: 'Cannot fetch counter sale data. Please try again',
-            title: 'Error:',
-          };
-          this.toastService.showToaster(toast);
-        }
-      }
-    );
+      });
 
     this.subscriptions.push(sub);
   }
+
   //#endregion
 
   //#region click outside event when side bar prod opened
@@ -282,10 +325,22 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     if (!this.order.orderContent && !this.isNew) {
       this.order.orderContent = new Array<PrimaryOrderItem>();
     }
-    this.order.orderContent.push(getNewPrimaryOderItem(this.selectedProduct));
+
+    let primary_order = getNewPrimaryOderItem(this.selectedProduct);
+
+    if (primary_order.scheme_id) {
+      primary_order = this.applySchemesNew(this.selectedProduct, primary_order);
+    }
+
+    if (this.selectedProduct.is_tax) {
+      primary_order = this.applyTaxesNew(this.selectedProduct, primary_order);
+    }
+
+    this.order.orderContent.push(primary_order);
     this.displayProductsIsAddedStatus(true, this.selectedProduct.item_id);
     this.showQuantityModal = false;
   }
+
   //#endregion
 
   //#region Remove product from order
@@ -362,7 +417,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region set Quantity model
-  setQuantity(product: any): void {
+  setQuantity(product: any, isUpdate: boolean = false): void {
     if (+product.stockQty > 1000) {
       product.stockQty = 0;
     }
@@ -370,6 +425,14 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       if (this.selectedProducts.find((x) => x.item_id === product.item_id)) {
         this.grossAmount = this.grossAmount - product.original_amount || 0;
       }
+    }
+
+    if (isUpdate && product.selectedScheme?.id) {
+      product = this.applySchemesNew(null, product, true);
+    }
+
+    if (isUpdate) {
+      product = this.applyTaxesNew(null, product, true);
     }
   }
   //#endregion
@@ -502,6 +565,233 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         this.saving = false;
       }
     }
+  }
+
+  calculateProductDiscounts(product: any, scheme?: any): any {
+    // Trade Offer
+    product.scheme_id = 0;
+    product.scheme_type = 0;
+    product.scheme_rule = 0;
+    product.scheme_min_quantity = 0;
+    product.scheme_discount_type = 0;
+    product.discount_on_tp = 0;
+    product.scheme_quantity_free = 0;
+    product.scheme_discount = 0;
+    product.scheme_free_items = [];
+    if (scheme) {
+      product.selectedScheme = scheme;
+    }
+
+    if (product.selectedScheme) {
+      product.scheme_id = product.selectedScheme.id;
+      product.scheme_type = product.selectedScheme.scheme_type;
+      product.scheme_rule = product.selectedScheme.scheme_rule;
+      product.scheme_min_quantity = product.selectedScheme.min_qty;
+      product.scheme_discount_type = product.selectedScheme.discount_type;
+      product.discount_on_tp = product.selectedScheme.discount_on_tp;
+      product = this.applyScheme(product);
+    } else {
+      product.scheme_discount = 0;
+      product.price = JSON.parse(JSON.stringify(product.item_trade_price));
+      product.unit_price_after_scheme_discount = JSON.parse(
+        JSON.stringify(product.item_trade_price)
+      );
+    }
+
+    product.trade_discount = 0;
+    product.trade_discount_pkr = 0;
+    product.unit_price_after_merchant_discount = JSON.parse(
+      JSON.stringify(product.original_price)
+    );
+    //console.log(this.orderDetail);
+    product.special_discount = 0;
+    product.unit_price_after_special_discount =
+      product.unit_price_after_merchant_discount;
+    // Special Discount
+    product.unit_price_after_individual_discount =
+      +product.unit_price_after_special_discount - product.extra_discount
+        ? +product.extra_discount
+        : 0;
+    // Extra Discount => Booker Discount
+    return product;
+  }
+
+  calculateProductSpecialDiscount(product: any): any {
+    return this.dataService.getSpecialDiscounts(
+      this.selectedSegment,
+      this.selectedRegion,
+      product,
+      this.specialDiscounts
+    );
+  }
+
+  applyScheme(product: any): any {
+    switch (product.selectedScheme.scheme_type) {
+      case 'free_product':
+        product = this.dataService.applyFreeProductScheme(product);
+        break;
+      // case 'dotp':
+      //   product = this.dataService.getSDForDOTP(product);
+      //   break;
+      // case 'comp_product':
+      //   product = this.dataService.applyComplementaryScheme(product);
+      //   break;
+      // case 'bundle_offer': //it will be applied on after item added to order details because it depends on multiple items
+      //   break;
+      // case 'mix_match': //it will be applied on after item added to order details because it depends on multiple items
+      //   break;
+      default:
+        product = this.dataService.getSDForGift(product);
+        break;
+    }
+    return product;
+  }
+
+  applySchemesNew(
+    selectedProduct: any,
+    createdPrimaryOrder: any,
+    isUpdate: boolean = false
+  ): any {
+    const { selectedScheme, stockQty, parent_qty_sold, parent_tp } = !isUpdate
+      ? selectedProduct
+      : createdPrimaryOrder || {};
+    const { scheme_rule, scheme_type, min_qty, quantity_free } =
+      selectedScheme || {};
+
+    switch (scheme_type) {
+      case 'free_product':
+        if (scheme_rule === 4) {
+          if (this.isSchemeValid(selectedScheme)) {
+            const freeQtyInterval = Math.floor(
+              (isUpdate ? parent_qty_sold : +stockQty) / min_qty
+            );
+            const orderFreeQty = freeQtyInterval * quantity_free;
+            createdPrimaryOrder['scheme_quantity_free'] = orderFreeQty;
+            createdPrimaryOrder['selectedScheme'] = selectedScheme;
+          } else {
+            const toast: Toaster = {
+              type: 'error',
+              message: 'Please select sub distributor',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+        } else if (scheme_rule === 1) {
+          if (this.isSchemeValid(selectedScheme)) {
+            // const scheme = (parent_tp * parent_qty_sold) / (min_qty * quantity_free)
+          } else {
+            const toast: Toaster = {
+              type: 'error',
+              message: 'Please select sub distributor',
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+        }
+        break;
+      default:
+        break;
+    }
+
+    return createdPrimaryOrder;
+  }
+
+  isSchemeValid(scheme: any): boolean {
+    const current_date = moment().format('YYYY-MM-DD');
+    const { start_date, end_date } = scheme || {};
+
+    if (current_date >= start_date && current_date <= end_date) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  applyTaxesNew(
+    selectedProduct: any,
+    createdPrimaryOrder: any,
+    isUpdate: boolean = false
+  ) {
+    const { is_tax, tax_class_id } = isUpdate
+      ? createdPrimaryOrder
+      : selectedProduct || {};
+
+    createdPrimaryOrder['tax_class_id'] = tax_class_id;
+    createdPrimaryOrder['is_tax'] = is_tax;
+
+    const is_distributor_filer =
+      this.productsMetaDataDistributor.filer_status === 1;
+    const tax_class = this.taxClasses?.find(
+      (tax_class) => tax_class.tax_class_id === tax_class_id
+    );
+
+    const {
+      adv_inc_filer_distributor_value,
+      adv_inc_nonfiler_distributor_value,
+      gst_filer_distributor_value,
+      gst_nonfiler_distributor_value,
+      tax_applied_on,
+    } = tax_class || {};
+
+    switch (tax_applied_on) {
+      case 'net_price':
+        if (is_distributor_filer) {
+        } else {
+        }
+        break;
+      case 'retail_price':
+        if (is_distributor_filer) {
+          const single_gst =
+            (1 * +createdPrimaryOrder.parent_tp * gst_filer_distributor_value) /
+            100;
+
+          const gst_tax =
+            single_gst *
+            (+createdPrimaryOrder?.scheme_quantity_free +
+              +createdPrimaryOrder.parent_qty_sold);
+
+          const single_advance_income_tax =
+            (adv_inc_filer_distributor_value / 100) *
+            (single_gst + createdPrimaryOrder.parent_tp);
+
+          const advance_income_tax =
+            single_advance_income_tax *
+            (+createdPrimaryOrder?.scheme_quantity_free +
+              +createdPrimaryOrder.parent_qty_sold);
+
+          createdPrimaryOrder['gst_tax'] = gst_tax;
+          createdPrimaryOrder['advance_income_tax'] = advance_income_tax;
+          createdPrimaryOrder.tax_amount = gst_tax + advance_income_tax;
+        } else {
+          const single_gst =
+            (1 *
+              +createdPrimaryOrder.parent_tp *
+              gst_nonfiler_distributor_value) /
+            100;
+
+          const gst_tax =
+            single_gst *
+            (+createdPrimaryOrder?.scheme_quantity_free +
+              +createdPrimaryOrder.parent_qty_sold);
+
+          const single_advance_income_tax =
+            (adv_inc_nonfiler_distributor_value / 100) *
+            (single_gst + createdPrimaryOrder.parent_tp);
+
+          const advance_income_tax =
+            single_advance_income_tax *
+            (+createdPrimaryOrder?.scheme_quantity_free +
+              +createdPrimaryOrder.parent_qty_sold);
+
+          createdPrimaryOrder['gst_tax'] = gst_tax;
+          createdPrimaryOrder['advance_income_tax'] = advance_income_tax;
+        }
+        break;
+      default:
+        break;
+    }
+
+    return createdPrimaryOrder;
   }
 
   //#endregion

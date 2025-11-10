@@ -46,6 +46,10 @@ export class PrimaryOrdersService {
     return this.baseService.get(API_URLS.GET_PRODUCTS_META_DATA);
   }
 
+  getTaxClasses(provinceId: number): Observable<any> {
+    return this.baseService.get(`${API_URLS.GET_TAX_CLASSES}/${provinceId}`);
+  }
+
   getDistributorsEmployees(id: number): Observable<any> {
     return this.baseService.get(API_URLS.DISTRIBUTORS_EMPLOYEES + id);
   }

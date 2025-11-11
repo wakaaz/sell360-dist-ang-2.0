@@ -130,11 +130,11 @@
   (click)="closeProductsList()"
 >
   <div 
-    class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[1000] flex-row flex-none flex w-full md:w-[600px]"
+    class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[1000] flex-row flex-none flex w-full md:w-[500px]"
     (click)="$event.stopPropagation()"
   >
     <div
-      class="flex flex-col h-full w-full md:w-[600px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]">
+      class="flex flex-col h-full w-full md:w-[500px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]">
       
       <!-- Header -->
       <div
@@ -186,7 +186,7 @@
             <!-- Scheme Badge -->
             <div
               *ngIf="product.schemes?.length"
-              class="absolute top-[64px] -left-2 bg-yellow-400 text-black text-[11px] font-semibold px-1.5 py-0.5 rounded shadow-sm z-10">
+              class="absolute top-[64px] -left-2 bg-yellow-400 text-black text-[10px] font-medium px-1.5 py-0.5 rounded shadow-sm z-10">
               Scheme
             </div>
             
@@ -242,8 +242,8 @@
         </div>
 
         <!-- Loading State -->
-        <div *ngIf="loadingProducts" class="flex flex-col items-center justify-center py-12">
-          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div *ngIf="loadingProducts" class="flex flex-col items-center justify-center py-12 h-[calc(100vh-31vh)]">
+          <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
           <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary">Loading Products...</p>
         </div>
 

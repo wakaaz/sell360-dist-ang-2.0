@@ -321,6 +321,14 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.onerror = null;
+      img.src = 'assets/images/default_product.jpg';
+    }
+  }
+
   //#region  add prioduct to order
   addProductToOrder(event: Event): void {
     if (!this.order.orderContent && !this.isNew) {
@@ -652,9 +660,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     const item_trade_price = isUpdate
       ? parent_tp
       : selectedProduct.item_trade_price;
-    const { scheme_rule, scheme_type, min_qty, quantity_free , discount_on_tp } =
+    const { scheme_rule, scheme_type, min_qty, quantity_free, discount_on_tp } =
       selectedScheme || {};
- 
 
     switch (scheme_type) {
       case 'free_product':
@@ -698,10 +705,9 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         break;
       case 'dotp':
         if (this.isSchemeValid(selectedScheme)) {
-          
           const quantityToUse = isUpdate ? parent_qty_sold : +stockQty;
           let TO = 0;
-          if(quantityToUse >= min_qty){
+          if (quantityToUse >= min_qty) {
             TO = quantityToUse * discount_on_tp;
           } else {
             const toast: Toaster = {
@@ -711,8 +717,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
             };
             this.toastService.showToaster(toast);
           }
-       
-          createdPrimaryOrder['trade_offer'] = TO ;
+
+          createdPrimaryOrder['trade_offer'] = TO;
           createdPrimaryOrder['selectedScheme'] = selectedScheme;
         } else {
           const toast: Toaster = {
@@ -731,7 +737,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   }
 
   isSchemeValid(scheme: any): boolean {
-
     const current_date = moment().format('YYYY-MM-DD');
     const { start_date, end_date } = scheme || {};
     const id = scheme?.id || 0;

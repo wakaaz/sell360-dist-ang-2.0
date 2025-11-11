@@ -176,7 +176,7 @@
   border-color: #0038ba !important;
 }
 .dark .ant-radio-checked:after {
-  border-color: #434343 !important;
+  border-color: #0038ba !important;
 }
 .ant-radio-inner:after {
   background-color: #0038ba !important;
@@ -189,10 +189,25 @@
   border-color: #3b3b3b;
 }
 .dark .ant-radio-inner:after {
-  background-color: #c7c7c7 !important;
+  background-color: #0038ba !important;
 }
 .dark .ant-radio-checked .ant-radio-inner {
-  border-color: #878787 !important;
+  border-color: #0038ba !important;
+}
+
+/* ========================================
+   Global Native HTML Radio Button Styles
+   ======================================== */
+
+/* Light Mode - Native Radio Buttons */
+input[type="radio"] {
+  accent-color: #0038ba !important;
+}
+
+/* Dark Mode - Native Radio Buttons */
+.dark input[type="radio"],
+html.dark input[type="radio"] {
+  accent-color: #0038ba !important;
 }
 
 /* Global Ant Design Checkbox Styles - Light Mode (Default) */

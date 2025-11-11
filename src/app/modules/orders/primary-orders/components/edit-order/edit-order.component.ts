@@ -662,6 +662,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       : selectedProduct.item_trade_price;
     const { scheme_rule, scheme_type, min_qty, quantity_free, discount_on_tp } =
       selectedScheme || {};
+ 
 
     switch (scheme_type) {
       case 'free_product':
@@ -737,6 +738,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   }
 
   isSchemeValid(scheme: any): boolean {
+
     const current_date = moment().format('YYYY-MM-DD');
     const { start_date, end_date } = scheme || {};
     const id = scheme?.id || 0;

@@ -803,7 +803,10 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           (+createdPrimaryOrder.parent_tp || 0) *
           (+createdPrimaryOrder.parent_qty_sold || 0);
 
-        const trade_offer_total = +createdPrimaryOrder.tradeOffer || 0;
+        const trade_offer_total =
+          +createdPrimaryOrder.trade_offer ||
+          +createdPrimaryOrder.tradeOffer ||
+          0;
         const gross_amount_after_to = gross_amount - trade_offer_total;
 
         const distributor_discount_amount =

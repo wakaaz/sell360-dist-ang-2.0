@@ -157,7 +157,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   showProductsList(event: Event): void {
     event.stopPropagation();
 
-    if (!this.subDistributor?.id) {
+    // Skip sub distributor validation in edit mode since distributor is already selected
+    if (!this.showEditFields && !this.subDistributor?.id) {
       const toast: Toaster = {
         type: 'error',
         message: 'Please select sub distributor',

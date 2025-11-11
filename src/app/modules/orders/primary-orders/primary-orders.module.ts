@@ -5,8 +5,10 @@ import { PrimaryOrdersRoutingModule } from './primary-orders-routing.module';
 import { ListComponent } from './components/list/list.component';
 // import { SharedModule } from '../shared/shared.module';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { FormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
+import { AgGridModule } from 'ag-grid-angular';
 import { PrimaryOrdersService } from './services/primary-orders.service';
 import { EditOrderComponent } from './components/edit-order/edit-order.component';
 import { PrimaryOrdersComponent } from './primary-orders.component';
@@ -23,8 +25,10 @@ import { SharedModule } from '../../shared/shared.module';
     ClickOutsideModule,
     FormsModule,
     DataTablesModule,
+    AgGridModule,
     SharedModule,
     NgSelectModule,
+    NzSelectModule,
   ],
   providers: [PrimaryOrdersService, OrdersService],
 })

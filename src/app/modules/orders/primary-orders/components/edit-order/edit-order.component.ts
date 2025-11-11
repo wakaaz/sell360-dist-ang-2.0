@@ -321,6 +321,14 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   }
   //#endregion
 
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.onerror = null;
+      img.src = 'assets/images/default_product.jpg';
+    }
+  }
+
   //#region  add prioduct to order
   addProductToOrder(event: Event): void {
     if (!this.order.orderContent && !this.isNew) {

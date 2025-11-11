@@ -163,22 +163,31 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   public get grossPrice(): number {
     return Utility.calGrossAmount(this.parent_tp, this.parent_qty_sold);
   }
+
+  private _tradeOffer: number = 0;
+
   public get tradeOffer(): number {
-    if (this.scheme_id && this.rule_name !== FREE_PRODUCT_RULES.FREE_PRODUCTS) {
-      return Utility.calTradeOfferPrice(
-        this.scheme_type,
-        this.scheme_min_quantity,
-        this._scheme_quantity_free,
-        this.parent_qty_sold,
-        this.scheme_discount_on_tp,
-        this.rule_name,
-        this.grossPrice,
-        this.parent_tp,
-        null
-      );
-    } else {
-      return 0;
-    }
+    return this._tradeOffer;
+    // if (this.scheme_id && this.rule_name !== FREE_PRODUCT_RULES.FREE_PRODUCTS) {
+    //   // return Utility.calTradeOfferPrice(
+    //   //   this.scheme_type,
+    //   //   this.scheme_min_quantity,
+    //   //   this._scheme_quantity_free,
+    //   //   this.parent_qty_sold,
+    //   //   this.scheme_discount_on_tp,
+    //   //   this.rule_name,
+    //   //   this.grossPrice,
+    //   //   this.parent_tp,
+    //   //   null
+    //   // );
+    // } else {
+    //   return 0;
+    // }
+  }
+
+  public set tradeOffer(v: number) {
+    console.log('tradeOffer: ', v);
+    this._tradeOffer = v;
   }
 
   public get schemeFreeProdsCount(): number {
@@ -234,6 +243,30 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     );
   }
 
+  private _gst_tax: number;
+  public get gst_tax(): number {
+    return this._gst_tax;
+  }
+  public set gst_tax(v: number) {
+    this._gst_tax = v;
+  }
+
+  private _advance_income_tax: number;
+  public get advance_income_tax(): number {
+    return this._advance_income_tax;
+  }
+  public set advance_income_tax(v: number) {
+    this._advance_income_tax = v;
+  }
+
+  private _total_bill: number;
+  public get total_bill(): number {
+    return this._total_bill;
+  }
+  public set total_bill(v: number) {
+    this._total_bill = v;
+  }
+
   public get totalBill(): number {
     return (
       this.grossPrice -
@@ -244,6 +277,7 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
       this.tax
     );
   }
+
   public get totalBillWithoutExtraDisocunt(): number {
     return (
       this.grossPrice -

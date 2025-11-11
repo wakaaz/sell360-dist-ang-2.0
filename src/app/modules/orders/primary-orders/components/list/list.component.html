@@ -1,506 +1,312 @@
-<!-- // cancel order yes no confirmation -->
+<!-- Cancel order confirmation modal -->
 <div
-  class="modal fade"
-  id="cancelYesNo"
-  tabindex="-1"
+  *ngIf="showCancelModal"
+  class="fixed inset-0 z-50 overflow-y-auto"
+  aria-labelledby="orderLabel"
   role="dialog"
-  aria-labelledby="cancelYesNoLabel"
-  aria-hidden="true"
+  aria-modal="true"
 >
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top-borderRed">
-      <div class="modal-header">
-        <h5 class="modal-title" id="cancelYesNoLabel">Delete <span></span></h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
+  <!-- Background overlay -->
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-black/50 dark:backdrop-blur-sm transition-opacity" (click)="closeCancelModal()"></div>
+  
+  <!-- Modal container -->
+  <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+    <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-[#1f1f1f] text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+      <!-- Red top border -->
+      <div class="h-1 bg-red-600"></div>
+      
+      <!-- Modal header -->
+      <div class="bg-white dark:bg-[#1f1f1f] px-3 pb-3 pt-4 sm:p-5 sm:pb-4 border-b border-gray-200 dark:border-[#333333]">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-neutral-200 font-primary" id="orderLabel">
+            Cancel Order
+          </h3>
+          <button
+            type="button"
+            class="rounded-md bg-white dark:bg-[#1f1f1f] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
+            (click)="closeCancelModal()"
+            aria-label="Close"
+          >
+            <span class="sr-only">Close</span>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
       </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-12">
-            <strong>Are you sure you want to cancel this Order?</strong>
+      
+      <!-- Modal body -->
+      <div class="bg-white dark:bg-[#1f1f1f] px-3 pb-3 pt-4 sm:p-5 sm:pb-4">
+        <div class="sm:flex sm:items-start">
+          <div class="text-center sm:mt-0 sm:text-left w-full pb-6">
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              Are you sure you want to cancel this Order?
+            </p>
           </div>
         </div>
       </div>
-      <div class="modal-footer border-0">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-dismiss="modal"
-          aria-label="Close"
-          (click)="
-            onUpdateOrderStatus(
-              confirmDeleteOrderID,
-              PRIMARY_ORDER_STATUS_UPDATE.CANCELED
-            )
-          "
-        >
-          Yes
-        </button>
-        <button
-          type="submit"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
-        >
-          No
-        </button>
+      
+      <!-- Modal footer -->
+      <div class="bg-gray-50 dark:bg-[#151515] px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 border-t border-gray-200 dark:border-[#303030]">
+        <div class="flex justify-end gap-2">
+          <button
+            type="button"
+            title="Yes"
+            class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white transition-colors"
+            (click)="
+              onUpdateOrderStatus(
+                confirmDeleteOrderID,
+                PRIMARY_ORDER_STATUS_UPDATE.CANCELED
+              );
+              closeCancelModal();
+            "
+          >
+            Yes
+          </button>
+          <button
+            type="button"
+            title="No"
+            class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+            (click)="closeCancelModal()"
+          >
+            No
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Order details Popup -->
-<div
-  class="modal fade"
-  id="exampleModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="exampleModalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog modal-full modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header border-0">
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-          style="font-size: 30px"
-        >
-          ×
-        </button>
-      </div>
-      <div class="modal-body p-0">
-        <div class="container">
-          <div class="row">
-            <div class="col-12">
-              <!-- <div *ngIf="loading" class="col-md-12">
-                <app-loader-white></app-loader-white>
-              </div> -->
-              <div class="card" *ngIf="!loading && order">
-                <div class="p-10" style="border-bottom: solid 2px #000">
-                  <div class="row m-0">
-                    <div class="col-8 OrderLogo">
-                      <img
-                        src="../../../../../assests/images/sell-360.svg"
-                        alt=""
-                      />
-                    </div>
-                    <div class="col-4 ord-no">
-                      Order # <strong>{{ order.id }}</strong>
-                    </div>
-                  </div>
-                </div>
-                <div class="body" style="padding: 15px 20px">
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="form-body">
-                        <div class="row OrderInfo">
-                          <div class="col-md-9">
-                            <span>Dist Name: </span>
-                            <strong class="retailer_name">{{
-                              order.distributor_name
-                            }}</strong
-                            ><br />
-                            <span>Phone No: </span>
-                            <strong class="retailer_phone">{{
-                              order.distributor_phone
-                            }}</strong
-                            ><br />
-                            <span>Location: </span>
-                            <strong class="retailer_location">{{
-                              order.distributor_address
-                            }}</strong>
-                          </div>
+<!-- Order details Popup - Full Screen -->
+<div *ngIf="showOrderDetailModal" class="fixed inset-0 z-[1100]">
+  <!-- Full screen modal container -->
+  <div class="w-full h-full bg-white dark:bg-gray-900 flex flex-col">
+    <button
+      type="button"
+      class="absolute top-2 right-2 z-[1101] rounded-md bg-white dark:bg-black text-gray-500 hover:text-gray-800 dark:hover:text-white focus:outline-none focus:ring-primary"
+      (click)="closeOrderDetailModal()"
+      aria-label="Close"
+    >
+      <span class="sr-only">Close</span>
+      <svg class="h-[28px] w-[28px]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
 
-                          <div class="col-md-3 p-0">
-                            <span>Status: </span>
-                            <strong class="status">
-                              {{ order.status ? order?.status : "--" }} </strong
-                            ><br />
-                            <span>Booking Date: </span>
-                            <strong class="booking_date">{{
-                              order.date
-                            }}</strong
-                            ><br />
-                            <span>Employee: </span>
-                            <strong class="employee_name">{{
-                              order.employee_name
-                            }}</strong>
-                          </div>
-                        </div>
+    <!-- Modal body - Scrollable content -->
+    <div class="bg-white dark:bg-black px-4 py-8 flex-1 overflow-y-auto">
+      <div class="w-full h-full">
+        <div class="container mx-auto px-4 max-w-7xl">
+          <div *ngIf="orderDetailLoading" class="flex justify-center items-center p-8">
+            <app-loader-white></app-loader-white>
+          </div>
 
-                        <div class="seprator-block"></div>
-
-                        <div class="Order-Detail-table mt-30">
-                          <div class="Order-Detail-table mt-30">
-                            <table class="table">
-                              <thead>
-                                <tr>
-                                  <th><strong>Code</strong></th>
-                                  <th><strong>Product Name</strong></th>
-                                  <th><strong>Qty</strong></th>
-                                  <th><strong>T.P</strong></th>
-                                  <th><strong>GR Amt</strong></th>
-                                  <th><strong>T.O</strong></th>
-                                  <th><strong>Dist.Disc%</strong></th>
-                                  <th><strong>SPC.Disc</strong></th>
-                                  <th><strong>B.Disc</strong></th>
-                                  <th><strong>Tax</strong></th>
-                                  <th><strong>Net.Amt</strong></th>
-                                </tr>
-                              </thead>
-                              <tbody class="order_items_body">
-                                <tr *ngFor="let item of order.orderContent">
-                                  <td>{{ item.item_sku }}</td>
-                                  <!--Code -->
-                                  <td>{{ item.item_name }}</td>
-                                  <!--Product Name -->
-                                  <td>
-                                    {{ item.parent_qty_sold }}
-                                    {{
-                                      item.schemeFreeProdsCount
-                                        ? "+" + item.schemeFreeProdsCount
-                                        : ""
-                                    }}
-                                  </td>
-                                  <!--Qty -->
-                                  <td>
-                                    {{ item.parent_tp | number: "1.2-2" }}
-                                  </td>
-                                  <!--T.P -->
-                                  <td>
-                                    {{ item.grossPrice | number: "1.2-2" }}
-                                  </td>
-                                  <!-- GR Amt -->
-                                  <td>
-                                    {{ item.tradeOffer | number: "1.2-2" }}
-                                  </td>
-                                  <!--T.O -->
-                                  <td>
-                                    {{
-                                      item.distributor_discount
-                                        | number: "1.2-2"
-                                    }}
-                                  </td>
-                                  <!-- DIST.Disc % -->
-                                  <td>
-                                    {{
-                                      item?.specialDiscount | number: "1.2-2"
-                                    }}
-                                  </td>
-                                  <!--SPC.DIST -->
-                                  <td>
-                                    {{ item.booker_discount }}
-                                  </td>
-                                  <!--B.Disc -->
-                                  <td>
-                                    {{ item.tax_amount | number: "1.2-2" }}
-                                  </td>
-                                  <!--Tax -->
-                                  <td>
-                                    <!-- gross amt - trade offer - trade discount - 
-                                      speacial discount - extra discount -->
-                                    {{ item.totalBill | number: "1.2-2" }}
-                                  </td>
-                                  <!--Net.Amt -->
-                                </tr>
-                                <tr>
-                                  <td class="bold_text" colspan="2">Total:</td>
-                                  <td class="bold_text">
-                                    {{ order.totalItemsQty }}
-                                  </td>
-                                  <td class="bold_text"></td>
-                                  <td class="bold_text">
-                                    {{ order.grossPrice | number: "1.2-2" }}
-                                  </td>
-                                  <td class="bold_text" colspan="6"></td>
-                                </tr>
-                                <tr>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td><strong>Gross PKR.</strong></td>
-                                  <td>
-                                    <strong>{{
-                                      order.grossPrice | number: "1.2-2"
-                                    }}</strong>
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td><strong>Discount PKR.</strong></td>
-                                  <td>
-                                    <strong>
-                                      <!-- t.o + dist disc% + spc dist + b dist -->
-                                      {{ order.discount > 0 ? "-" : "" }}
-                                      {{
-                                        order.discount | number: "1.2-2"
-                                      }}</strong
-                                    >
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td><strong>Frieght Price PKR.</strong></td>
-                                  <td>
-                                    <strong>
-                                      + {{ order.frieght_price }}</strong
-                                    >
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td><strong>Tax PKR.</strong></td>
-                                  <td>
-                                    <strong
-                                      >+
-                                      {{ order.tax | number: "1.2-2" }}</strong
-                                    >
-                                  </td>
-                                </tr>
-                                <tr>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td class="border-0"></td>
-                                  <td
-                                    style="background-color: #000; color: #fff"
-                                  >
-                                    <strong>Total PKR.</strong>
-                                  </td>
-                                  <td
-                                    style="background-color: #000; color: #fff"
-                                  >
-                                    <strong>{{
-                                      order.total | number: "1.2-2"
-                                    }}</strong>
-                                  </td>
-                                </tr>
-                              </tbody>
-                            </table>
-                            <div class="clearfix"></div>
-                          </div>
-
-                          <div class="clearfix"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+          <div *ngIf="!orderDetailLoading && order" class="bg-white dark:bg-black dark:border-[#333333] border p-6 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_#ffffff1a]">
+            <div class="flex mb-5 pb-2 border-b border-gray-300 dark:border-[#333333] font-primary">
+              <div class="w-2/3 flex items-center OrderLogo">
+                <img src="assets/images/sell-360.svg" alt="" class="max-h-12 dark:hidden" />
+                <img src="assets/images/logo-w.svg" alt="" class="max-h-12 hidden dark:block" />
               </div>
+              <div class="w-1/3 text-right flex items-center justify-end my-au to text-gray-900 dark:text-white">
+                Order # <strong class="ml-1 font-medium">{{ order.id }}</strong>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap OrderInfo font-primary text-gray-900 dark:text-white">
+              <!-- Left column -->
+              <div class="w-full md:w-3/4 mb-2 md:mb-0">
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Dist Name:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.distributor_name }}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Phone No:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.distributor_phone }}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Location:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.distributor_address }}</strong>
+                </p>
+              </div>
+
+              <!-- Right column -->
+              <div class="w-full md:w-1/4 md:p-0">
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Status:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.status ? order?.status : "--" }}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Booking Date:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.date }}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Employee:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.employee_name }}</strong>
+                </p>
+              </div>
+            </div>
+
+            <div class="w-full Order-Detail-table mt-6">
+              <table class="table font-primary w-full border-collapse">
+                <thead>
+                  <tr class="bg-black dark:bg-[#252525] text-white">
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Code</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Product Name</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Qty</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">T.P</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">GR Amt</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">T.O</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Dist.Disc%</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">SPC.Disc</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">B.Disc</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Tax</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Net.Amt</strong></th>
+                  </tr>
+                </thead>
+                <tbody class="order_items_body">
+                  <tr *ngFor="let item of order.orderContent" class="text-gray-900 dark:text-white">
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.item_sku }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.item_name }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">
+                      {{ item.parent_qty_sold }}
+                      {{
+                        item.schemeFreeProdsCount
+                          ? "+" + item.schemeFreeProdsCount
+                          : ""
+                      }}
+                    </td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.parent_tp | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.grossPrice | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.tradeOffer | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.distributor_discount | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item?.specialDiscount | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.booker_discount }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.tax_amount | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.totalBill | number: "1.2-2" }}</td>
+                  </tr>
+                  <tr class="bg-gray-200 dark:bg-[#333333] text-gray-900 dark:text-white">
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200" colspan="2">Total:</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">{{ order.totalItemsQty }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">{{ order.grossPrice | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Gross PKR.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ order.grossPrice | number: "1.2-2" }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Discount PKR.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">
+                      <strong class="font-primary font-medium">
+                        {{ order.discount > 0 ? "-" : "" }}
+                        {{ order.discount | number: "1.2-2" }}
+                      </strong>
+                    </td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Frieght Price PKR.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">+ {{ order.frieght_price }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Tax PKR.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">+ {{ order.tax | number: "1.2-2" }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-black dark:bg-neutral-800 text-white dark:text-white">
+                      <strong class="font-primary font-medium">Total PKR.</strong>
+                    </td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-black dark:bg-neutral-800 text-white dark:text-white">
+                      <strong class="font-primary font-medium">{{ order.total | number: "1.2-2" }}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>
       </div>
-
-      <!--
-      <div class="modal-footer button-list"> 
-	 <button type="button" class="btn btn-primary btn-outline"><i class="fa fa-file-pdf"> </i> <span> Save PDF</span>  </button> <button type="button" class="btn btn-primary btn-outline">  <i class="fa fa-envelope"> </i> <span> Send Email</span>  </button> <button type="button" class="btn btn-primary btn-outline"><i class="fa fa-print"></i> <span> Print</span>  </button> 
-
-      </div>
--->
     </div>
   </div>
 </div>
 
 <!-- Order Booked -->
-<div class="container">
-  <div class="row mt-2 mb-3">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <h2 *ngIf="isReports" class="_head01">Reports</h2>
-      <h2 *ngIf="!isReports" class="_head01">Order <span> Management</span></h2>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <ol class="breadcrumb">
-        <li>
-          <a
-            ><span>{{ isReports ? "Reports" : "Order Management" }}</span></a
-          >
-        </li>
-        <li>
-          <span>{{ orderStatus | titlecase }} Orders</span>
-        </li>
-      </ol>
+<div class="container mx-auto px-4">
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1
+          class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0"
+        >
+          <span *ngIf="isReports">Reports</span>
+          <span *ngIf="!isReports">Order <span class="font-light">Management</span></span>
+        </h1>
+      </div>
+      <div>
+ 
+      </div>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="header">
-          <h2>{{ orderStatus | titlecase }} <span> Orders List</span></h2>
-        </div>
-        <div class="body PT-15">
-          <div id="floating-label">
-            <div class="form-wrap p-0">
-              <div class="row">
-                <div class="col-md-12">
-                  <table
-                    datatable
-                    [dtOptions]="dtOptions"
-                    *ngIf="!loading"
-                    class="table table-hover dt-responsive nowrap"
-                    id="primaryOrdersId"
-                    style="width: 100%"
-                  >
-                    <thead>
-                      <tr>
-                        <th>Order ID</th>
-                        <th>Date</th>
-                        <th>Distributor</th>
-                        <th>Employee</th>
-                        <th>Order Total</th>
-                        <th>Action</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr *ngFor="let order of primaryOrders">
-                        <td>{{ order.id }}</td>
-                        <td>{{ order.created_at }}</td>
-                        <td>{{ order.distributor_name }}</td>
-                        <td>{{ order.employee_name }}</td>
-                        <td>{{ order.order_total | number: "1.2-2" }}</td>
-                        <td>
-                          <button
-                            type="button"
-                            (click)="onOrderDetail(order.id)"
-                            data-toggle="modal"
-                            data-target="#exampleModal"
-                            class="btn btn-default btn-line"
-                          >
-                            Detail
-                          </button>
-                          <button
-                            *ngIf="PRIMARY_ORDER_CONST.BOOKED === orderStatus"
-                            (click)="
-                              onUpdateOrderStatus(
-                                order.id,
-                                PRIMARY_ORDER_STATUS_UPDATE.PROCESSED
-                              )
-                            "
-                            class="btn btn-default"
-                          >
-                            Process
-                          </button>
 
-                          <button
-                            *ngIf="
-                              PRIMARY_ORDER_CONST.PROCESSED === orderStatus
-                            "
-                            class="btn btn-default"
-                            (click)="
-                              onUpdateOrderStatus(
-                                order.id,
-                                PRIMARY_ORDER_STATUS_UPDATE.EXECUTE
-                              )
-                            "
-                          >
-                            Execute
-                          </button>
-                          <button
-                            *ngIf="PRIMARY_ORDER_CONST.EXECUTE === orderStatus"
-                            (click)="
-                              onUpdateOrderStatus(
-                                order.id,
-                                PRIMARY_ORDER_STATUS_UPDATE.COMPLETED
-                              )
-                            "
-                            class="btn btn-default"
-                          >
-                            Complete
-                          </button>
-                          <button
-                            class="btn btn-default"
-                            *ngIf="
-                              !(
-                                PRIMARY_ORDER_CONST.COMPLETED === orderStatus ||
-                                PRIMARY_ORDER_CONST.CANCELED === orderStatus
-                              ) &&
-                              orderStatus !== 'purchased' &&
-                              orderStatus !== 'returned'
-                            "
-                            [routerLink]="['edit', order.id]"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            class="btn btn-default"
-                            *ngIf="
-                              !(
-                                PRIMARY_ORDER_CONST.COMPLETED === orderStatus ||
-                                PRIMARY_ORDER_CONST.CANCELED === orderStatus
-                              ) &&
-                              orderStatus !== 'purchased' &&
-                              orderStatus !== 'returned'
-                            "
-                            data-toggle="modal"
-                            data-target="#cancelYesNo"
-                            (click)="onConfirmationDelete(order.id)"
-                          >
-                            Cancel
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                  <div *ngIf="loading" class="col-md-12">
-                    <app-loader-white></app-loader-white>
-                  </div>
-                </div>
-              </div>
-            </div>
+  <div class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a]">
+    <div class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-black dark:from-transparent dark:to-transparent shadow-none">
+      <div>
+        <h2 class="relative pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
+          {{ orderStatus | titlecase }} &nbsp;<span class="font-light">Orders List</span>
+        </h2>
+      </div>
+      <div class="text-secondary dark:text-white">
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <svg class="h-4 w-4 text-gray-400" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5014 7.00039C11.5014 7.59133 11.385 8.1765 11.1588 8.72246C10.9327 9.26843 10.6012 9.7645 10.1833 10.1824C9.76548 10.6002 9.2694 10.9317 8.72344 11.1578C8.17747 11.384 7.59231 11.5004 7.00136 11.5004C6.41041 11.5004 5.82525 11.384 5.27929 11.1578C4.73332 10.9317 4.23725 10.6002 3.81938 10.1824C3.40152 9.7645 3.07005 9.26843 2.8439 8.72246C2.61776 8.1765 2.50136 7.59133 2.50136 7.00039C2.50136 5.80691 2.97547 4.66232 3.81938 3.81841C4.6633 2.97449 5.80789 2.50039 7.00136 2.50039C8.19484 2.50039 9.33943 2.97449 10.1833 3.81841C11.0273 4.66232 11.5014 5.80691 11.5014 7.00039ZM10.6814 11.7404C9.47574 12.6764 7.95873 13.1177 6.43916 12.9745C4.91959 12.8314 3.51171 12.1145 2.50211 10.9698C1.49252 9.8251 0.957113 8.33868 1.0049 6.81314C1.05268 5.28759 1.68006 3.83759 2.75932 2.75834C3.83857 1.67908 5.28856 1.0517 6.81411 1.00392C8.33966 0.956136 9.82608 1.49154 10.9708 2.50114C12.1154 3.51073 12.8323 4.91862 12.9755 6.43819C13.1187 7.95775 12.6773 9.47476 11.7414 10.6804L14.5314 13.4704C14.605 13.539 14.6642 13.6218 14.7051 13.7138C14.7461 13.8058 14.7682 13.9052 14.77 14.0059C14.7717 14.1066 14.7532 14.2066 14.7155 14.3C14.6778 14.3934 14.6216 14.4782 14.5504 14.5494C14.4792 14.6206 14.3943 14.6768 14.301 14.7145C14.2076 14.7522 14.1075 14.7708 14.0068 14.769C13.9061 14.7672 13.8068 14.7452 13.7148 14.7042C13.6228 14.6632 13.54 14.6041 13.4714 14.5304L10.6814 11.7404Z" fill="currentColor"></path>
+            </svg>
           </div>
+          <input 
+            type="text" 
+            id="filter-text-box" 
+            placeholder="Search orders..." 
+            autocomplete="off"
+            class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
+            (input)="onQuickFilterChanged($event)"
+          />
         </div>
       </div>
     </div>
-  </div>
-  <footer class="sticky-footer">
-    <div class="container my-auto">
-      <div class="copyright text-center my-auto">
-        {{ currentYear }} © Sell360 All rights reserved
+    <div>
+      <!-- AG Grid with Quartz theme -->
+      <div *ngIf="!loading" class="ag-theme-quartz ag-grid-container">
+        <ag-grid-angular
+          [rowData]="primaryOrders"
+          [columnDefs]="columnDefs"
+          [defaultColDef]="defaultColDef"
+          [pagination]="true"
+          [paginationPageSize]="10"
+          [paginationPageSizeSelector]="[10, 20, 50, 100]"
+          [suppressPaginationPanel]="false"
+          [domLayout]="'autoHeight'"
+          [animateRows]="true"
+          [rowSelection]="{ type: 'single' }"
+          [theme]="'legacy'"
+          (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
       </div>
+      
+      <div *ngIf="loading" class="flex justify-center items-center p-8">
+        <app-loader-white></app-loader-white>
+      </div>  
     </div>
-  </footer>
+  </div>
+
+ 
 </div>

@@ -55,7 +55,7 @@
         <div class="flex-1">
           <input
             type="text"
-            class="w-full px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors dont-close-products"
+            class="w-full h-[32px] px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors dont-close-products"
             placeholder="0"
             (keyup)="setQuantity(selectedProduct)"
             (keydown)="isNumber($event, 'quantity')"
@@ -176,10 +176,10 @@
   class="fixed inset-0 bg-white/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-50 items-center justify-center p-4"
 >
   <div
-    class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[1000] flex-row flex-none flex w-full md:w-[600px]"
+    class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[1000] flex-row flex-none flex w-full md:w-[500px]"
   >
     <div
-      class="flex flex-col h-full w-full md:w-[600px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]"
+      class="flex flex-col h-full w-full md:w-[500px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]"
     >
       <!-- Header -->
       <div
@@ -397,10 +397,27 @@
 
     <!-- Main Content -->
     <div *ngIf="!loading" id="floating-label">
+
+      <div *ngIf="isNew && !isReturn" class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base px-[15px] ml-[-16px] mr-[-16px] pb-4 !mb-4 relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-transparent dark:from-transparent dark:to-transparent shadow-none">
+        <div>
+         <h2 class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
+           Edit &nbsp;<span class="font-light"> Order</span> 
+         </h2>
+       </div>
+      </div>  
+
+      <div *ngIf="isReturn" class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base px-[15px] ml-[-16px] mr-[-16px] pb-4 !mb-4 relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-transparent dark:from-transparent dark:to-transparent shadow-none">
+        <div>
+         <h2 class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
+           Return &nbsp;<span class="font-light"> Order</span> 
+         </h2>
+       </div>
+      </div>  
+
       <!-- Header Section -->
-      <div class="flex flex-wrap items-center gap-3 mb-3">
+      <div class="flex flex-wrap items-center gap-3 mb-3 border-b border-gray-200 dark:border-[#333333] pb-3">
         <!-- Sub Distributor Select -->
-        <div class="dark:text-gray-200">Selected Sub Distributor:</div>
+        <div *ngIf="!isNew || isReturn" class="dark:text-gray-200">Selected Sub Distributor:</div>
         <div *ngIf="!isNew || isReturn" class="w-[290px]">
           <nz-select
             nzShowSearch
@@ -424,37 +441,26 @@
             ></nz-option>
           </nz-select>
         </div>
+        
+        <div *ngIf="showEditFields" class="flex gap-3">
+          <!-- Date Display -->
+          <div class="flex w-[280px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md">
+            <strong class="text-gray-900 dark:text-gray-300 font-primary font-medium">Date:</strong>
+            <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[16px]">{{ order.date }}</span>
+          </div>
 
-        <!-- Date Display -->
-        <div *ngIf="showEditFields" class="flex items-center gap-2">
-          <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"
-            >Date:</span
-          >
-          <span class="text-sm text-gray-900 dark:text-gray-200">{{
-            order.date
-          }}</span>
+          <!-- Distributor Display -->
+          <div class="flex w-[280px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md">
+            <strong class="text-gray-900 dark:text-gray-300 font-primary font-medium">Distributor:</strong>
+            <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[16px]">{{ order.distributor_name }}</span>
+          </div>
+
+          <!-- Employee Display -->
+          <div class="flex w-[280px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md">
+            <strong class="text-gray-900 dark:text-gray-300 font-primary font-medium">Employee:</strong>
+            <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[16px]">{{ order.employee_name }}</span>
+          </div>
         </div>
-
-        <!-- Distributor Display -->
-        <div *ngIf="showEditFields" class="flex items-center gap-2">
-          <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"
-            >Distributor:</span
-          >
-          <span class="text-sm text-gray-900 dark:text-gray-200">{{
-            order.distributor_name
-          }}</span>
-        </div>
-
-        <!-- Employee Display -->
-        <div *ngIf="showEditFields" class="flex items-center gap-2">
-          <span class="text-sm text-gray-700 dark:text-gray-300 font-medium"
-            >Employee:</span
-          >
-          <span class="text-sm text-gray-900 dark:text-gray-200">{{
-            order.employee_name
-          }}</span>
-        </div>
-
         <!-- Add Product Button -->
         <button
           id="productlist01"
@@ -510,151 +516,151 @@
       >
         <thead class="bg-gray-50 dark:bg-[#141414]">
           <tr>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">SKU</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left w-[250px]">Item Name</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Quantity</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">T.P</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">GR.Amt</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">T.O</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Dist.Disc%</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Spec.Disc</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">SKU</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left w-[250px]">Item Name</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Quantity</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">T.P</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">GR.Amt</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">T.O</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Dist.Disc%</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Spec.Disc</th>
             <!-- <th>Tax</th> -->
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">GST</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">AIT</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Total Bill</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-2 py-2 text-left">Action</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">GST</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">AIT</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Total Bill</th>
+            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Action</th>
           </tr>
         </thead>
-
+    
         <tfoot class="bg-gray-50 dark:bg-[#141414] text-[13px]">
           <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Total items:</th>
-            <th class="order_total_items font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Total items:</th>
+            <th class="order_total_items font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
               {{
                 order.orderContent ? order.orderContent.length : 0
               }}
             </th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Gross Amount.</th>
-            <th class="order_gross_amount font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Gross Amount.</th>
+            <th class="order_gross_amount font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
               {{ order.grossPrice | number : "1.2-2" }}
             </th> 
-            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
           </tr>
           <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Order Discount.</th>
-            <th class="order_total_discount font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Order Discount.</th>
+            <th class="order_total_discount font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
               - {{ order.discount | number : "1.2-2" }}
             </th>
-            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
           </tr>
           <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Subtotal PKR.</th>
-            <th class="order_sub_total font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Subtotal PKR.</th>
+            <th class="order_sub_total font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
               {{ order.subTotal | number : "1.2-2" }}
             </th>
-            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
           </tr>
           <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Frieght Price.</th>
-            <th class="font-primary font-medium px-2 py-2 text-left">
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Frieght Price.</th>
+            <th class="font-primary font-medium px-1.5 py-1.5 text-left">
               <!-- onkeyup="isNumber(event)" -->
               <input
                 type="number"
                 min="0"
-                class="itemQTY frieght_price w-[80px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
+                class="itemQTY frieght_price w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
                 [(ngModel)]="order.frieght_price"
                 value="0"
               />
             </th>
-            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
           </tr>
-
+    
           <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Subtotal PKR.</th>
-            <th class="order_sub_total_af_FP font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Subtotal PKR.</th>
+            <th class="order_sub_total_af_FP font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
               {{
                 order.subTotalPlusFrieghtPrice | number : "1.2-2"
               }}
             </th>
-            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
           </tr>
           <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Tax.</th>
-            <th class="order_tax font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Tax.</th>
+            <th class="order_tax font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
               + {{ order.tax | number : "1.2-2" }}
             </th>
-            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
           </tr>
           <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium px-2 py-2"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">Total PKR.</th>
-            <th class="order_grand_total font-primary font-medium text-gray-800 dark:text-gray-300 px-2 py-2 text-left">
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Total PKR.</th>
+            <th class="order_grand_total font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
               {{ order.total | number : "1.2-2" }}
             </th>
-            <th class="font-primary font-medium px-2 py-2"></th>
+            <th class="font-primary font-medium px-1.5 py-1.5"></th>
           </tr>
         </tfoot>
-
+    
         <tbody class="bg-white dark:bg-[#1f1f1f]">
           <tr
             *ngIf="!order.orderContent || order.orderContent.length === 0"
@@ -669,23 +675,23 @@
               let item of order.orderContent;
               let index = index
             "
-            class="border-t border-gray-200 dark:border-[#333333] hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors duration-150"
+            class="border-t border-gray-200 dark:border-[#333333] hover:bg-[#ededed] dark:hover:bg-[#2a2a2a] transition-colors duration-150"
           >
             <!-- sku -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-200 px-2 py-2">{{ item.item_sku }}</td>
+            <td class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5">{{ item.item_sku }}</td>
             <!-- item name -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-200 px-2 py-2">{{ item.item_name }}</td>
+            <td class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5">{{ item.item_name }}</td>
             <!-- Quantity -->
-            <td class="px-2 py-2">
+            <td class="px-1.5 py-1.5">
               <input
                 type="number"
                 min="1"
                 placeholder="Quanity"
-                class="itemQTY w-[80px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
+                class="itemQTY w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
                 [(ngModel)]="item.parent_qty_sold"
                 (keyup)="setQuantity(item, true)"
               />
-
+    
               <span
                 *ngIf="item.schemeFreeProdsCount"
                 class="text-[13px] text-green-600 dark:text-green-400 font-semibold block mt-1"
@@ -694,13 +700,13 @@
               </span>
             </td>
             <!-- T.P -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">{{ item.parent_tp | number : "1.2-2" }}</td>
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">{{ item.parent_tp | number : "1.2-2" }}</td>
             <!-- GR.Amt -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">
               {{ item.grossPrice | number : "1.2-2" }}
             </td>
             <!-- T.O -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2"
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
               [ngClass]="{
                 'text-green-600 dark:text-green-400 font-semibold': item.scheme_quantity_free > 0,
                 'text-gray-800 dark:text-gray-300': item.scheme_quantity_free <= 0
@@ -714,43 +720,43 @@
               }}
             </td>
             <!-- Dist.Disc% -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">
               {{ item.distributor_discount | number : "1.2-2" }}
             </td>
             <!-- Spec.Disc% -->
             <!-- <td>{{ item.specialDiscount | number : "1.2-2" }}</td> -->
             <!-- E.Disc.Amt -->
-            <td class="px-2 py-2">
+            <td class="px-1.5 py-1.5">
               <input
                 type="number"
                 placeholder="0"
                 min="0"
                 max="{{ item.maxBookerDiscount }}"
                 [(ngModel)]="item.booker_discount"
-                class="itemQTY w-[80px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
+                class="itemQTY w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
               />
             </td>
             <!-- Tax -->
             <!-- <td>
               {{ item.tax_amount | number : "1.2-2" }}
             </td> -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">{{ item.gst_tax | number : "1.2-2" }}</td>
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2">
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">{{ item.gst_tax | number : "1.2-2" }}</td>
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">
               {{ item.advance_income_tax | number : "1.2-2" }}
             </td>
             <!-- Total Bill -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-2 py-2 font-medium">
+            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5 font-medium">
               {{
                 item.totalBill +
                   item?.gst_tax +
                   item?.advance_income_tax | number : "1.2-2"
               }}
             </td>
-            <td class="px-2 py-2">
+            <td class="px-1.5 py-1.5">
               <button
                 type="button"
                 (click)="deleteOrderItem(item.item_id)"
-                class="px-2 py-1.5 text-[11px] leading-none rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 focus:outline-none transition-colors"
+                class="px-1.5 py-1.5 text-[11px] leading-none rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 focus:outline-none transition-colors"
               >
                 Delete
               </button>

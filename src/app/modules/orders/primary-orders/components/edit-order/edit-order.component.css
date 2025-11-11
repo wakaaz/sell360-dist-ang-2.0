@@ -1,0 +1,11 @@
+@media (max-width: 1366px) {
+    .table th{
+        font-size: 12px !important;
+        } 
+        .table tbody tr td{
+        font-size: 12px !important;
+        }
+        .table th input, .table tbody tr td input{
+            width: 69px !important; height: 24px !important;
+        }
+}

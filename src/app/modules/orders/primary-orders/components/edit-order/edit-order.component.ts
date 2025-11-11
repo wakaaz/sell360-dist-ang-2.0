@@ -652,9 +652,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     const item_trade_price = isUpdate
       ? parent_tp
       : selectedProduct.item_trade_price;
-    const { scheme_rule, scheme_type, min_qty, quantity_free , discount_on_tp } =
+    const { scheme_rule, scheme_type, min_qty, quantity_free, discount_on_tp } =
       selectedScheme || {};
- 
 
     switch (scheme_type) {
       case 'free_product':
@@ -676,14 +675,26 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           }
         } else if (scheme_rule === 1) {
           if (this.isSchemeValid(selectedScheme)) {
-            const freeQtyInterval = Math.floor(
-              (isUpdate ? parent_qty_sold : +stockQty) / min_qty
-            );
-            const orderFreeQty = freeQtyInterval * quantity_free;
+            // const freeQtyInterval = Math.floor(
+            //   (isUpdate ? parent_qty_sold : +stockQty) / min_qty
+            // );
+            // const orderFreeQty = freeQtyInterval * quantity_free;
+            let TO = 0;
             const quantityToUse = isUpdate ? parent_qty_sold : +stockQty;
-            const TO =
-              (item_trade_price * quantityToUse) / (min_qty + orderFreeQty);
-
+            if (quantityToUse >= min_qty) {
+              const tp_after_scheme =
+                (item_trade_price * min_qty) / (min_qty + quantity_free);
+              const discount_on_tp = item_trade_price - tp_after_scheme;
+              TO = discount_on_tp * quantityToUse;
+            } else {
+              TO = 0;
+              const toast: Toaster = {
+                type: 'error',
+                message: `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
+                title: 'Error:',
+              };
+              this.toastService.showToaster(toast);
+            }
             createdPrimaryOrder['trade_offer'] = TO;
             createdPrimaryOrder['selectedScheme'] = selectedScheme;
           } else {
@@ -698,10 +709,9 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         break;
       case 'dotp':
         if (this.isSchemeValid(selectedScheme)) {
-          
           const quantityToUse = isUpdate ? parent_qty_sold : +stockQty;
           let TO = 0;
-          if(quantityToUse >= min_qty){
+          if (quantityToUse >= min_qty) {
             TO = quantityToUse * discount_on_tp;
           } else {
             const toast: Toaster = {
@@ -711,8 +721,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
             };
             this.toastService.showToaster(toast);
           }
-       
-          createdPrimaryOrder['trade_offer'] = TO ;
+
+          createdPrimaryOrder['trade_offer'] = TO;
           createdPrimaryOrder['selectedScheme'] = selectedScheme;
         } else {
           const toast: Toaster = {
@@ -731,7 +741,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   }
 
   isSchemeValid(scheme: any): boolean {
-
     const current_date = moment().format('YYYY-MM-DD');
     const { start_date, end_date } = scheme || {};
     const id = scheme?.id || 0;

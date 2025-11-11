@@ -301,10 +301,10 @@
         <!-- Loading State -->
         <div
           *ngIf="loadingProducts"
-          class="flex flex-col items-center justify-center py-12"
+          class="flex flex-col items-center justify-center py-12 h-[calc(100vh-31vh)]"
         >
           <div
-            class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"
           ></div>
           <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary">
             Loading Products...
@@ -638,7 +638,8 @@
               <th
                 class="order_gross_amount font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
-                {{ order.grossPrice | number : "1.2-2" }}
+                <!-- {{ order.grossPrice | number : "1.2-2" }} -->
+                {{ order.totalGrossPrice | number : "1.2-2" }}
               </th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
@@ -660,7 +661,8 @@
               <th
                 class="order_total_discount font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
-                - {{ order.discount | number : "1.2-2" }}
+                <!-- - {{ order.discount | number : "1.2-2" }} -->
+                - {{ order.totalDiscount | number : "1.2-2" }}
               </th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
@@ -682,7 +684,10 @@
               <th
                 class="order_sub_total font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
-                {{ order.subTotal | number : "1.2-2" }}
+                <!-- {{ order.subTotal | number : "1.2-2" }} -->
+                {{
+                  order.totalGrossPrice - order.totalDiscount | number : "1.2-2"
+                }}
               </th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
@@ -732,7 +737,12 @@
               <th
                 class="order_sub_total_af_FP font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
-                {{ order.subTotalPlusFrieghtPrice | number : "1.2-2" }}
+                <!-- {{ order.subTotalPlusFrieghtPrice | number : "1.2-2" }} -->
+                {{
+                  order.totalGrossPrice -
+                    order.totalDiscount +
+                    order.frieght_price | number : "1.2-2"
+                }}
               </th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
@@ -754,7 +764,8 @@
               <th
                 class="order_tax font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
-                + {{ order.tax | number : "1.2-2" }}
+                <!-- + {{ order.tax | number : "1.2-2" }} -->
+                {{ order.finaltotalTax | number : "1.2-2" }}
               </th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
@@ -776,7 +787,10 @@
               <th
                 class="order_grand_total font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
-                {{ order.total | number : "1.2-2" }}
+                <!-- {{ order.total | number : "1.2-2" }} -->
+                {{
+                  order.totalPKRBill + order.frieght_price | number : "1.2-2"
+                }}
               </th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
@@ -849,12 +863,13 @@
                     item.scheme_quantity_free <= 0
                 }"
               >
-                {{ item.tradeOffer | number : "1.2-2" }}
                 {{
                 item.scheme_id && item.scheme_type == "free_product" && item.scheme_quantity_free > 0 && item.scheme_rule === 4
                   ? `(${item.scheme_quantity_free})`
                   : ""
                 }}
+                {{item.scheme_id && item.scheme_type == "free_product" && item.scheme_rule === 1 ? `${item.trade_offer | number : "1.2-2"}` : ""}}
+                {{item.scheme_id && item.scheme_type == "dotp" ? `${item.trade_offer | number : "1.2-2"}` : ""}}
               </td>
               <!-- Dist.Disc% -->
               <td
@@ -872,6 +887,7 @@
                   min="0"
                   max="{{ item.maxBookerDiscount }}"
                   [(ngModel)]="item.booker_discount"
+                  (keyup)="setQuantity(item, true, true)"
                   class="itemQTY w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
                 />
               </td>
@@ -893,10 +909,11 @@
               <td
                 class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5 font-medium"
               >
-                {{
+                <!-- {{
                   item.totalBill + item?.gst_tax + item?.advance_income_tax
                     | number : "1.2-2"
-                }}
+                }} -->
+                {{ item.TotalBill | number : "1.2-2" }}
               </td>
               <td class="px-1.5 py-1.5">
                 <button

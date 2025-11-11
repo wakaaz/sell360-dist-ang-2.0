@@ -80,7 +80,7 @@
               <input
                 [(ngModel)]="selectedProduct.selectedScheme"
                 (click)="selectedProduct.pref_id && selectedProduct.quantity && calculateProductDiscounts(selectedProduct, scheme)"
-                class="w-4 h-4 text-primary bg-white dark:bg-[#141414] border-gray-300 dark:border-[#434343] focus:ring-primary focus:ring-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed dont-close-products"
+                class="w-4 h-4 text-primary bg-white dark:bg-[#141414] border-gray-300 dark:border-[#434343] focus:outline-none focus:ring-0 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed dont-close-products"
                 type="radio"
                 name="AssignCatalogue"
                 id="byTerritory-{{ i }}"
@@ -88,7 +88,7 @@
                 [disabled]="checkBundleScheme(scheme,selectedProduct)"
               />
             </div>
-            <div class="ml-3 text-sm">
+            <div class="ml-2 text-sm">
               <label
                 class="font-normal text-gray-700 dark:text-gray-300 cursor-pointer dont-close-products"
                 for="byTerritory-{{ i }}"

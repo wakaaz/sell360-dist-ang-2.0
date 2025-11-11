@@ -296,9 +296,6 @@ export class PrimaryOrder {
   }
 
   public get finaltotalTax(): number {
-    console.log("finaltotalTax", this._orderContent
-      ? this.orderContent.reduce((a: any, b: any) => a + b.TotalTax, 0)
-      : 0);
     return this._orderContent
       ? this.orderContent.reduce((a: any, b: any) => a + b.TotalTax, 0)
       : 0;

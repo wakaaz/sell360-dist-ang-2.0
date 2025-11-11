@@ -158,9 +158,7 @@
         type="submit"
         class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none focus:ring-2 focus:ring-primary transition-colors dont-close-products"
         (click)="addProductToOrder($event)"
-        [disabled]="
-          !selectedProduct.stockQty || selectedProduct.stockQty <= 0
-        "
+        [disabled]="!selectedProduct.stockQty || selectedProduct.stockQty <= 0"
       >
         Confirm
       </button>
@@ -273,7 +271,7 @@
                     class="text-[15px] font-medium text-neutral-800 dark:text-neutral-300 font-primary leading-snug"
                   >
                     {{ product.item_name }}
-                  </h2> 
+                  </h2>
                 </div>
               </div>
 
@@ -303,10 +301,10 @@
         <!-- Loading State -->
         <div
           *ngIf="loadingProducts"
-          class="flex flex-col items-center justify-center py-12"
+          class="flex flex-col items-center justify-center py-12 h-[calc(100vh-31vh)]"
         >
           <div
-            class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"
           ></div>
           <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary">
             Loading Products...
@@ -371,8 +369,6 @@
   <!-- This modal appears to be a duplicate, keeping it for compatibility -->
 </div>
 
-
-
 <div class="container mx-auto px-4 pb-24">
   <div class="mt-3 mb-3">
     <div class="flex justify-between items-center text-left">
@@ -397,27 +393,40 @@
 
     <!-- Main Content -->
     <div *ngIf="!loading" id="floating-label">
-
-      <div *ngIf="isNew && !isReturn" class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base px-[15px] ml-[-16px] mr-[-16px] pb-4 !mb-4 relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-transparent dark:from-transparent dark:to-transparent shadow-none">
+      <div
+        *ngIf="isNew && !isReturn"
+        class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base px-[15px] ml-[-16px] mr-[-16px] pb-4 !mb-4 relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-transparent dark:from-transparent dark:to-transparent shadow-none"
+      >
         <div>
-         <h2 class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
-           Edit &nbsp;<span class="font-light"> Order</span> 
-         </h2>
-       </div>
-      </div>  
+          <h2
+            class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium"
+          >
+            Edit &nbsp;<span class="font-light"> Order</span>
+          </h2>
+        </div>
+      </div>
 
-      <div *ngIf="isReturn" class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base px-[15px] ml-[-16px] mr-[-16px] pb-4 !mb-4 relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-transparent dark:from-transparent dark:to-transparent shadow-none">
+      <div
+        *ngIf="isReturn"
+        class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base px-[15px] ml-[-16px] mr-[-16px] pb-4 !mb-4 relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-transparent dark:from-transparent dark:to-transparent shadow-none"
+      >
         <div>
-         <h2 class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
-           Return &nbsp;<span class="font-light"> Order</span> 
-         </h2>
-       </div>
-      </div>  
+          <h2
+            class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium"
+          >
+            Return &nbsp;<span class="font-light"> Order</span>
+          </h2>
+        </div>
+      </div>
 
       <!-- Header Section -->
-      <div class="flex flex-wrap items-center gap-3 mb-3 border-b border-gray-200 dark:border-[#333333] pb-3">
+      <div
+        class="flex flex-wrap items-center gap-3 mb-3 border-b border-gray-200 dark:border-[#333333] pb-3"
+      >
         <!-- Sub Distributor Select -->
-        <div *ngIf="!isNew || isReturn" class="dark:text-gray-200">Selected Sub Distributor:</div>
+        <div *ngIf="!isNew || isReturn" class="dark:text-gray-200">
+          Selected Sub Distributor:
+        </div>
         <div *ngIf="!isNew || isReturn" class="w-[290px]">
           <nz-select
             nzShowSearch
@@ -441,24 +450,48 @@
             ></nz-option>
           </nz-select>
         </div>
-        
+
         <div *ngIf="showEditFields" class="flex gap-3">
           <!-- Date Display -->
-          <div class="flex w-[280px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md">
-            <strong class="text-gray-900 dark:text-gray-300 font-primary font-medium">Date:</strong>
-            <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[16px]">{{ order.date }}</span>
+          <div
+            class="flex w-[280px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+          >
+            <strong
+              class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+              >Date:</strong
+            >
+            <span
+              class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[16px]"
+              >{{ order.date }}</span
+            >
           </div>
 
           <!-- Distributor Display -->
-          <div class="flex w-[280px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md">
-            <strong class="text-gray-900 dark:text-gray-300 font-primary font-medium">Distributor:</strong>
-            <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[16px]">{{ order.distributor_name }}</span>
+          <div
+            class="flex w-[280px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+          >
+            <strong
+              class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+              >Distributor:</strong
+            >
+            <span
+              class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[16px]"
+              >{{ order.distributor_name }}</span
+            >
           </div>
 
           <!-- Employee Display -->
-          <div class="flex w-[280px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md">
-            <strong class="text-gray-900 dark:text-gray-300 font-primary font-medium">Employee:</strong>
-            <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[16px]">{{ order.employee_name }}</span>
+          <div
+            class="flex w-[280px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+          >
+            <strong
+              class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+              >Employee:</strong
+            >
+            <span
+              class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[16px]"
+              >{{ order.employee_name }}</span
+            >
           </div>
         </div>
         <!-- Add Product Button -->
@@ -478,29 +511,25 @@
         class="grid grid-cols-1 md:grid-cols-2 gap-y-1 gap-x-4 border border-gray-200 dark:border-[#333333] bg-gray-50 dark:bg-[#141414] rounded-lg p-2 mb-4"
       >
         <div class="text-gray-800 dark:text-gray-400">
-          <strong
-            class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
+          <strong class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
             >Distributor Name:&nbsp;</strong
           >
           {{ subDistributor?.distributor_name || "--" }}
         </div>
         <div class="text-gray-800 dark:text-gray-400">
-          <strong
-            class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
+          <strong class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
             >Town:&nbsp;</strong
           >
           {{ subDistributor?.city_name || "--" }}
         </div>
         <div class="text-gray-800 dark:text-gray-400">
-          <strong
-            class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
+          <strong class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
             >Distributor Address:&nbsp;</strong
           >
           {{ subDistributor?.distributor_address || "--" }}
         </div>
         <div class="text-gray-800 dark:text-gray-400">
-          <strong
-            class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
+          <strong class="font-semibold pl-1.5 text-secondary dark:text-gray-300"
             >TSM. Name:&nbsp;</strong
           >
           {{ subDistributor?.tsm || "--" }}
@@ -508,262 +537,396 @@
       </div>
 
       <!-- Product Table - Original Bootstrap Table -->
-      <div class="rounded-md border-primary bg-white dark:bg-[#1f1f1f] shadow-sm transition-colors duration-200">
-        <table
-        class="table table-hover dt-responsive nowrap table_order w-full"
-        id="example"
-        style="width: 100%"
+      <div
+        class="rounded-md border-primary bg-white dark:bg-[#1f1f1f] shadow-sm transition-colors duration-200"
       >
-        <thead class="bg-gray-50 dark:bg-[#141414]">
-          <tr>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">SKU</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left w-[250px]">Item Name</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Quantity</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">T.P</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">GR.Amt</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">T.O</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Dist.Disc%</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Spec.Disc</th>
-            <!-- <th>Tax</th> -->
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">GST</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">AIT</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Total Bill</th>
-            <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">Action</th>
-          </tr>
-        </thead>
-    
-        <tfoot class="bg-gray-50 dark:bg-[#141414] text-[13px]">
-          <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Total items:</th>
-            <th class="order_total_items font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
-              {{
-                order.orderContent ? order.orderContent.length : 0
-              }}
-            </th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Gross Amount.</th>
-            <th class="order_gross_amount font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
-              {{ order.grossPrice | number : "1.2-2" }}
-            </th> 
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-          </tr>
-          <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Order Discount.</th>
-            <th class="order_total_discount font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
-              - {{ order.discount | number : "1.2-2" }}
-            </th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-          </tr>
-          <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Subtotal PKR.</th>
-            <th class="order_sub_total font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
-              {{ order.subTotal | number : "1.2-2" }}
-            </th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-          </tr>
-          <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Frieght Price.</th>
-            <th class="font-primary font-medium px-1.5 py-1.5 text-left">
-              <!-- onkeyup="isNumber(event)" -->
-              <input
-                type="number"
-                min="0"
-                class="itemQTY frieght_price w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-                [(ngModel)]="order.frieght_price"
-                value="0"
-              />
-            </th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-          </tr>
-    
-          <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Subtotal PKR.</th>
-            <th class="order_sub_total_af_FP font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
-              {{
-                order.subTotalPlusFrieghtPrice | number : "1.2-2"
-              }}
-            </th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-          </tr>
-          <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Tax.</th>
-            <th class="order_tax font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
-              + {{ order.tax | number : "1.2-2" }}
-            </th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-          </tr>
-          <tr class="border-t border-gray-200 dark:border-[#333333]">
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-            <th class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">Total PKR.</th>
-            <th class="order_grand_total font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left">
-              {{ order.total | number : "1.2-2" }}
-            </th>
-            <th class="font-primary font-medium px-1.5 py-1.5"></th>
-          </tr>
-        </tfoot>
-    
-        <tbody class="bg-white dark:bg-[#1f1f1f]">
-          <tr
-            *ngIf="!order.orderContent || order.orderContent.length === 0"
-            class="border-t border-gray-200 dark:border-[#333333]"
-          >
-            <td colspan="12" class="text-center py-8">
-              <p class="text-gray-500 dark:text-gray-400">Add products to order...</p>
-            </td>
-          </tr>
-          <tr
-            *ngFor="
-              let item of order.orderContent;
-              let index = index
-            "
-            class="border-t border-gray-200 dark:border-[#333333] hover:bg-[#ededed] dark:hover:bg-[#2a2a2a] transition-colors duration-150"
-          >
-            <!-- sku -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5">{{ item.item_sku }}</td>
-            <!-- item name -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5">{{ item.item_name }}</td>
-            <!-- Quantity -->
-            <td class="px-1.5 py-1.5">
-              <input
-                type="number"
-                min="1"
-                placeholder="Quanity"
-                class="itemQTY w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-                [(ngModel)]="item.parent_qty_sold"
-                (keyup)="setQuantity(item, true)"
-              />
-    
-              <span
-                *ngIf="item.schemeFreeProdsCount"
-                class="text-[13px] text-green-600 dark:text-green-400 font-semibold block mt-1"
+        <table
+          class="table table-hover dt-responsive nowrap table_order w-full"
+          id="example"
+          style="width: 100%"
+        >
+          <thead class="bg-gray-50 dark:bg-[#141414]">
+            <tr>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
               >
-                +{{ item.schemeFreeProdsCount }}
-              </span>
-            </td>
-            <!-- T.P -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">{{ item.parent_tp | number : "1.2-2" }}</td>
-            <!-- GR.Amt -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">
-              {{ item.grossPrice | number : "1.2-2" }}
-            </td>
-            <!-- T.O -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
-              [ngClass]="{
-                'text-green-600 dark:text-green-400 font-semibold': item.scheme_quantity_free > 0,
-                'text-gray-800 dark:text-gray-300': item.scheme_quantity_free <= 0
-              }"
+                SKU
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left w-[250px]"
+              >
+                Item Name
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Quantity
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                T.P
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                GR.Amt
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                T.O
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Dist.Disc%
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Spec.Disc
+              </th>
+              <!-- <th>Tax</th> -->
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                GST
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                AIT
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Total Bill
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Action
+              </th>
+            </tr>
+          </thead>
+
+          <tfoot class="bg-gray-50 dark:bg-[#141414] text-[13px]">
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Total items:
+              </th>
+              <th
+                class="order_total_items font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                {{ order.orderContent ? order.orderContent.length : 0 }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Gross Amount.
+              </th>
+              <th
+                class="order_gross_amount font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                <!-- {{ order.grossPrice | number : "1.2-2" }} -->
+                {{ order.totalGrossPrice | number : "1.2-2" }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Order Discount.
+              </th>
+              <th
+                class="order_total_discount font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                <!-- - {{ order.discount | number : "1.2-2" }} -->
+                - {{ order.totalDiscount | number : "1.2-2" }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Subtotal PKR.
+              </th>
+              <th
+                class="order_sub_total font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                <!-- {{ order.subTotal | number : "1.2-2" }} -->
+                {{
+                  order.totalGrossPrice - order.totalDiscount | number : "1.2-2"
+                }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Frieght Price.
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5 text-left">
+                <!-- onkeyup="isNumber(event)" -->
+                <input
+                  type="number"
+                  min="0"
+                  class="itemQTY frieght_price w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
+                  [(ngModel)]="order.frieght_price"
+                  value="0"
+                />
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Subtotal PKR.
+              </th>
+              <th
+                class="order_sub_total_af_FP font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                <!-- {{ order.subTotalPlusFrieghtPrice | number : "1.2-2" }} -->
+                {{
+                  order.totalGrossPrice -
+                    order.totalDiscount +
+                    order.frieght_price | number : "1.2-2"
+                }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Tax.
+              </th>
+              <th
+                class="order_tax font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                <!-- + {{ order.tax | number : "1.2-2" }} -->
+                {{ order.finaltotalTax | number : "1.2-2" }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Total PKR.
+              </th>
+              <th
+                class="order_grand_total font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                <!-- {{ order.total | number : "1.2-2" }} -->
+                {{
+                  order.totalPKRBill + order.frieght_price | number : "1.2-2"
+                }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+          </tfoot>
+
+          <tbody class="bg-white dark:bg-[#1f1f1f]">
+            <tr
+              *ngIf="!order.orderContent || order.orderContent.length === 0"
+              class="border-t border-gray-200 dark:border-[#333333]"
             >
-              {{ item.tradeOffer | number : "1.2-2" }}
-              {{
+              <td colspan="12" class="text-center py-8">
+                <p class="text-gray-500 dark:text-gray-400">
+                  Add products to order...
+                </p>
+              </td>
+            </tr>
+            <tr
+              *ngFor="let item of order.orderContent; let index = index"
+              class="border-t border-gray-200 dark:border-[#333333] hover:bg-[#ededed] dark:hover:bg-[#2a2a2a] transition-colors duration-150"
+            >
+              <!-- sku -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5"
+              >
+                {{ item.item_sku }}
+              </td>
+              <!-- item name -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5"
+              >
+                {{ item.item_name }}
+              </td>
+              <!-- Quantity -->
+              <td class="px-1.5 py-1.5">
+                <input
+                  type="number"
+                  min="1"
+                  placeholder="Quanity"
+                  class="itemQTY w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
+                  [(ngModel)]="item.parent_qty_sold"
+                  (keyup)="setQuantity(item, true)"
+                />
+
+                <span
+                  *ngIf="item.schemeFreeProdsCount"
+                  class="text-[13px] text-green-600 dark:text-green-400 font-semibold block mt-1"
+                >
+                  +{{ item.schemeFreeProdsCount }}
+                </span>
+              </td>
+              <!-- T.P -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+              >
+                {{ item.parent_tp | number : "1.2-2" }}
+              </td>
+              <!-- GR.Amt -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+              >
+                {{ item.grossPrice | number : "1.2-2" }}
+              </td>
+              <!-- T.O -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+                [ngClass]="{
+                  'text-green-600 dark:text-green-400 font-semibold':
+                    item.scheme_quantity_free > 0,
+                  'text-gray-800 dark:text-gray-300':
+                    item.scheme_quantity_free <= 0
+                }"
+              >
+                {{
                 item.scheme_id && item.scheme_type == "free_product" && item.scheme_quantity_free > 0 && item.scheme_rule === 4
                   ? `(${item.scheme_quantity_free})`
                   : ""
-              }}
-            </td>
-            <!-- Dist.Disc% -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">
-              {{ item.distributor_discount | number : "1.2-2" }}
-            </td>
-            <!-- Spec.Disc% -->
-            <!-- <td>{{ item.specialDiscount | number : "1.2-2" }}</td> -->
-            <!-- E.Disc.Amt -->
-            <td class="px-1.5 py-1.5">
-              <input
-                type="number"
-                placeholder="0"
-                min="0"
-                max="{{ item.maxBookerDiscount }}"
-                [(ngModel)]="item.booker_discount"
-                class="itemQTY w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
-              />
-            </td>
-            <!-- Tax -->
-            <!-- <td>
+                }}
+                {{item.scheme_id && item.scheme_type == "free_product" && item.scheme_rule === 1 ? `${item.trade_offer | number : "1.2-2"}` : ""}}
+                {{item.scheme_id && item.scheme_type == "dotp" ? `${item.trade_offer | number : "1.2-2"}` : ""}}
+              </td>
+              <!-- Dist.Disc% -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+              >
+                {{ item.distributor_discount | number : "1.2-2" }}
+              </td>
+              <!-- Spec.Disc% -->
+              <!-- <td>{{ item.specialDiscount | number : "1.2-2" }}</td> -->
+              <!-- E.Disc.Amt -->
+              <td class="px-1.5 py-1.5">
+                <input
+                  type="number"
+                  placeholder="0"
+                  min="0"
+                  max="{{ item.maxBookerDiscount }}"
+                  [(ngModel)]="item.booker_discount"
+                  (keyup)="setQuantity(item, true, true)"
+                  class="itemQTY w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary"
+                />
+              </td>
+              <!-- Tax -->
+              <!-- <td>
               {{ item.tax_amount | number : "1.2-2" }}
             </td> -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">{{ item.gst_tax | number : "1.2-2" }}</td>
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5">
-              {{ item.advance_income_tax | number : "1.2-2" }}
-            </td>
-            <!-- Total Bill -->
-            <td class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5 font-medium">
-              {{
-                item.totalBill +
-                  item?.gst_tax +
-                  item?.advance_income_tax | number : "1.2-2"
-              }}
-            </td>
-            <td class="px-1.5 py-1.5">
-              <button
-                type="button"
-                (click)="deleteOrderItem(item.item_id)"
-                class="px-1.5 py-1.5 text-[11px] leading-none rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 focus:outline-none transition-colors"
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
               >
-                Delete
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                {{ item.gst_tax | number : "1.2-2" }}
+              </td>
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+              >
+                {{ item.advance_income_tax | number : "1.2-2" }}
+              </td>
+              <!-- Total Bill -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5 font-medium"
+              >
+                <!-- {{
+                  item.totalBill + item?.gst_tax + item?.advance_income_tax
+                    | number : "1.2-2"
+                }} -->
+                {{ item.TotalBill | number : "1.2-2" }}
+              </td>
+              <td class="px-1.5 py-1.5">
+                <button
+                  type="button"
+                  (click)="deleteOrderItem(item.item_id)"
+                  class="px-1.5 py-1.5 text-[11px] leading-none rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 focus:outline-none transition-colors"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
       <!-- Action Buttons -->
@@ -811,7 +974,7 @@
         </button>
         <button
           type="button"
-          [routerLink]="['/primaryOrders']"
+          [routerLink]="['/primaryOrders/booked']"
           class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
         >
           Cancel
@@ -820,8 +983,3 @@
     </div>
   </div>
 </div>
-
- 
-
-
-

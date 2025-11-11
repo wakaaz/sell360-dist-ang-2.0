@@ -174,10 +174,14 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     this.dispProducts = [...this.allProducts];
     this.showProducts = true;
     document.body.classList.add('no-scroll');
-    document
-      .getElementsByClassName('overlay-blure')[0]
-      .classList.add('d-block');
-    document.getElementById('blureEffct-1').classList.add('blur-div');
+    const overlayEls = document.getElementsByClassName('overlay-blure');
+    if (overlayEls && overlayEls.length > 0) {
+      (overlayEls[0] as HTMLElement).classList.add('d-block');
+    }
+    const blurEl = document.getElementById('blureEffct-1');
+    if (blurEl) {
+      blurEl.classList.add('blur-div');
+    }
   }
   //#endregion
 
@@ -284,10 +288,14 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   closeProductsList(): void {
     this.showProducts = false;
     document.body.classList.remove('no-scroll');
-    document
-      .getElementsByClassName('overlay-blure')[0]
-      .classList.remove('d-block');
-    document.getElementById('blureEffct-1').classList.remove('blur-div');
+    const overlayEls = document.getElementsByClassName('overlay-blure');
+    if (overlayEls && overlayEls.length > 0) {
+      (overlayEls[0] as HTMLElement).classList.remove('d-block');
+    }
+    const blurEl = document.getElementById('blureEffct-1');
+    if (blurEl) {
+      blurEl.classList.remove('blur-div');
+    }
   }
   //#endregion
 
@@ -683,6 +691,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           }
         } else if (scheme_rule === 1) {
           if (this.isSchemeValid(selectedScheme)) {
+            createdPrimaryOrder['scheme_quantity_free'] = 0;
+
             // const freeQtyInterval = Math.floor(
             //   (isUpdate ? parent_qty_sold : +stockQty) / min_qty
             // );

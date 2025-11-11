@@ -587,6 +587,7 @@
                           }}
                           {{item.scheme_id && item.scheme_type == "free_product" && item.scheme_rule === 1 ? `${item.trade_offer | number : "1.2-2"}` : ""}}
                           <!-- {{item.scheme_id && item.scheme_type == "free_product" && item.scheme_rule === 1 ? `${item.tradeOffer | number : "1.2-2"}` : ""}} -->
+                           {{item.scheme_id && item.scheme_type == "dotp" ? `${item.trade_offer | number : "1.2-2"}` : ""}}
                         </td>
                         <!-- Dist.Disc% -->
                         <td>

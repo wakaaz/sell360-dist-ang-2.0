@@ -651,8 +651,9 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     const item_trade_price = isUpdate
       ? parent_tp
       : selectedProduct.item_trade_price;
-    const { scheme_rule, scheme_type, min_qty, quantity_free } =
+    const { scheme_rule, scheme_type, min_qty, quantity_free , discount_on_tp } =
       selectedScheme || {};
+ 
 
     switch (scheme_type) {
       case 'free_product':
@@ -694,6 +695,33 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           }
         }
         break;
+      case 'dotp':
+        if (this.isSchemeValid(selectedScheme)) {
+          
+          const quantityToUse = isUpdate ? parent_qty_sold : +stockQty;
+          let TO = 0;
+          if(quantityToUse >= min_qty){
+            TO = quantityToUse * discount_on_tp;
+          } else {
+            const toast: Toaster = {
+              type: 'error',
+              message: `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
+              title: 'Error:',
+            };
+            this.toastService.showToaster(toast);
+          }
+       
+          createdPrimaryOrder['trade_offer'] = TO ;
+          createdPrimaryOrder['selectedScheme'] = selectedScheme;
+        } else {
+          const toast: Toaster = {
+            type: 'error',
+            message: 'Please select sub distributor',
+            title: 'Error:',
+          };
+          this.toastService.showToaster(toast);
+        }
+        break;
       default:
         break;
     }
@@ -702,8 +730,10 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   }
 
   isSchemeValid(scheme: any): boolean {
+
     const current_date = moment().format('YYYY-MM-DD');
     const { start_date, end_date } = scheme || {};
+    const id = scheme?.id || 0;
 
     if (current_date >= start_date && current_date <= end_date) {
       return true;

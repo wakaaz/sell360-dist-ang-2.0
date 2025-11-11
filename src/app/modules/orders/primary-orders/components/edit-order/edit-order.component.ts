@@ -336,6 +336,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       primary_order = this.applyTaxesNew(this.selectedProduct, primary_order);
     }
 
+    primary_order = this.applyTotalBill(primary_order);
+
     this.order.orderContent.push(primary_order);
     this.displayProductsIsAddedStatus(true, this.selectedProduct.item_id);
     this.showQuantityModal = false;
@@ -417,15 +419,20 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   //#endregion
 
   //#region set Quantity model
-  setQuantity(product: any, isUpdate: boolean = false): void {
+  setQuantity(
+    product: any,
+    isUpdate: boolean = false,
+    isSpecialDiscount: boolean = false
+  ): void {
     if (+product.stockQty > 1000) {
       product.stockQty = 0;
     }
-    if (product.item_trade_price) {
-      if (this.selectedProducts.find((x) => x.item_id === product.item_id)) {
-        this.grossAmount = this.grossAmount - product.original_amount || 0;
-      }
-    }
+
+    // if (product.item_trade_price) {
+    //   if (this.selectedProducts.find((x) => x.item_id === product.item_id)) {
+    //     this.grossAmount = this.grossAmount - product.original_amount || 0;
+    //   }
+    // }
 
     if (isUpdate && product.selectedScheme?.id) {
       product = this.applySchemesNew(null, product, true);
@@ -434,6 +441,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     if (isUpdate) {
       product = this.applyTaxesNew(null, product, true);
     }
+
+    product = this.applyTotalBill(product);
   }
   //#endregion
 
@@ -597,23 +606,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         JSON.stringify(product.item_trade_price)
       );
     }
-
-    product.trade_discount = 0;
-    product.trade_discount_pkr = 0;
-    product.unit_price_after_merchant_discount = JSON.parse(
-      JSON.stringify(product.original_price)
-    );
-    //console.log(this.orderDetail);
-    product.special_discount = 0;
-    product.unit_price_after_special_discount =
-      product.unit_price_after_merchant_discount;
-    // Special Discount
-    product.unit_price_after_individual_discount =
-      +product.unit_price_after_special_discount - product.extra_discount
-        ? +product.extra_discount
-        : 0;
-    // Extra Discount => Booker Discount
-
     return product;
   }
 
@@ -748,28 +740,65 @@ export class EditOrderComponent implements OnInit, OnDestroy {
 
     switch (tax_applied_on) {
       case 'net_price':
+        // Base = Net amount after distributor and booker discounts on TP*Qty
+        const gross_amount =
+          (+createdPrimaryOrder.parent_tp || 0) *
+          (+createdPrimaryOrder.parent_qty_sold || 0);
+
+        const trade_offer_total = +createdPrimaryOrder.tradeOffer || 0;
+        const gross_amount_after_to = gross_amount - trade_offer_total;
+
+        const distributor_discount_amount =
+          (gross_amount_after_to *
+            (+createdPrimaryOrder.distributor_discount || 0)) /
+          100;
+
+        const net_amount = Math.max(
+          0,
+          gross_amount - trade_offer_total - distributor_discount_amount
+        );
+
         if (is_distributor_filer) {
+          const gst_tax =
+            (net_amount * (gst_filer_distributor_value || 0)) / 100;
+          const advance_income_tax =
+            ((adv_inc_filer_distributor_value || 0) / 100) *
+            (gst_tax + net_amount);
+          createdPrimaryOrder['gst_tax'] = gst_tax;
+          createdPrimaryOrder['advance_income_tax'] = advance_income_tax;
+          createdPrimaryOrder.tax_amount = gst_tax + advance_income_tax;
         } else {
+          const gst_tax =
+            (net_amount * (gst_nonfiler_distributor_value || 0)) / 100;
+          const advance_income_tax =
+            ((adv_inc_nonfiler_distributor_value || 0) / 100) *
+            (gst_tax + net_amount);
+
+          createdPrimaryOrder['gst_tax'] = gst_tax;
+          createdPrimaryOrder['advance_income_tax'] = advance_income_tax;
+          createdPrimaryOrder.tax_amount = gst_tax + advance_income_tax;
         }
         break;
       case 'retail_price':
         if (is_distributor_filer) {
           const single_gst =
-            (1 * +createdPrimaryOrder.parent_tp * gst_filer_distributor_value) /
+            (1 *
+              +createdPrimaryOrder.item_retail_price *
+              gst_filer_distributor_value) /
             100;
 
           const gst_tax =
             single_gst *
-            (+createdPrimaryOrder?.scheme_quantity_free +
+            ((+createdPrimaryOrder?.scheme_quantity_free || 0) +
               +createdPrimaryOrder.parent_qty_sold);
 
           const single_advance_income_tax =
             (adv_inc_filer_distributor_value / 100) *
-            (single_gst + createdPrimaryOrder.parent_tp);
+            (single_gst + createdPrimaryOrder.item_retail_price);
 
           const advance_income_tax =
             single_advance_income_tax *
-            (+createdPrimaryOrder?.scheme_quantity_free +
+            ((+createdPrimaryOrder?.scheme_quantity_free || 0) +
               +createdPrimaryOrder.parent_qty_sold);
 
           createdPrimaryOrder['gst_tax'] = gst_tax;
@@ -778,22 +807,22 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         } else {
           const single_gst =
             (1 *
-              +createdPrimaryOrder.parent_tp *
+              +createdPrimaryOrder.item_retail_price *
               gst_nonfiler_distributor_value) /
             100;
 
           const gst_tax =
             single_gst *
-            (+createdPrimaryOrder?.scheme_quantity_free +
+            ((+createdPrimaryOrder?.scheme_quantity_free || 0) +
               +createdPrimaryOrder.parent_qty_sold);
 
           const single_advance_income_tax =
             (adv_inc_nonfiler_distributor_value / 100) *
-            (single_gst + createdPrimaryOrder.parent_tp);
+            (single_gst + createdPrimaryOrder.item_retail_price);
 
           const advance_income_tax =
             single_advance_income_tax *
-            (+createdPrimaryOrder?.scheme_quantity_free +
+            ((+createdPrimaryOrder?.scheme_quantity_free || 0) +
               +createdPrimaryOrder.parent_qty_sold);
 
           createdPrimaryOrder['gst_tax'] = gst_tax;
@@ -807,5 +836,31 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     return createdPrimaryOrder;
   }
 
-  //#endregion
+  applyTotalBill(primary_order: any) {
+    let total_bill = 0;
+
+    const {
+      distributor_discount,
+      parent_tp,
+      parent_qty_sold,
+      gst_tax,
+      advance_income_tax,
+      booker_discount,
+    } = primary_order || {};
+
+    const gross_amount = parent_tp * parent_qty_sold;
+
+    const distributor_discount_amount =
+      (gross_amount * (+distributor_discount || 0)) / 100;
+
+    total_bill =
+      gross_amount -
+      distributor_discount_amount +
+      (gst_tax + advance_income_tax) -
+      (+booker_discount || 0);
+
+    primary_order['total_bill'] = total_bill;
+
+    return primary_order;
+  }
 }

@@ -579,13 +579,14 @@
                         </td>
                         <!-- T.O -->
                         <td>
-                          {{ item.tradeOffer | number : "1.2-2" }}
+                          <!-- {{ item.tradeOffer | number : "1.2-2" }} -->
                           {{
                             item.scheme_id && item.scheme_type == "free_product" && item.scheme_quantity_free > 0 && item.scheme_rule === 4
                               ? `(${item.scheme_quantity_free})`
                               : ""
                           }}
                           {{item.scheme_id && item.scheme_type == "free_product" && item.scheme_rule === 1 ? `${item.trade_offer | number : "1.2-2"}` : ""}}
+                          <!-- {{item.scheme_id && item.scheme_type == "free_product" && item.scheme_rule === 1 ? `${item.tradeOffer | number : "1.2-2"}` : ""}} -->
                         </td>
                         <!-- Dist.Disc% -->
                         <td>
@@ -602,6 +603,7 @@
                             max="{{ item.maxBookerDiscount }}"
                             [(ngModel)]="item.booker_discount"
                             class="itemQTY"
+                            (keyup)="setQuantity(item, true, true)"
                           />
                         </td>
                         <!-- Tax -->

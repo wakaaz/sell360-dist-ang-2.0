@@ -237,6 +237,16 @@ export class PrimaryOrder {
       : 0;
   }
 
+  // new one
+  public get gross_price(): number {
+    return this._orderContent
+      ? this.orderContent.reduce(
+          (a: any, b: any) => a + (+b.total_bill || 0),
+          0
+        )
+      : 0;
+  }
+
   public get discount(): number {
     let discount: number = 0;
     if (this._orderContent) {

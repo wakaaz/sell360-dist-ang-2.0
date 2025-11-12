@@ -439,10 +439,21 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   setQuantity(
     product: any,
     isUpdate: boolean = false,
-    isSpecialDiscount: boolean = false
+    field: string = ''
   ): void {
     if (+product.stockQty > 1000) {
       product.stockQty = 0;
+    }
+
+    // Keep primary_qty_sold and parent_qty_sold in sync based on unit quantity
+    if (field && field === 'primary_qty_sold') {
+      const unitQty = +product.unit_quantity || 1;
+      const primaryQty = +product.primary_qty_sold || 0;
+      product.parent_qty_sold = primaryQty * unitQty;
+    } else if (field && field === 'parent_qty_sold') {
+      const unitQty = +product.unit_quantity || 1;
+      const parentQty = +product.parent_qty_sold || 0;
+      product.primary_qty_sold = parentQty / unitQty;
     }
 
     // if (product.item_trade_price) {
@@ -667,16 +678,17 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       : createdPrimaryOrder || {};
     // Use parent.item_trade_price for schemes when adding new product
     const item_trade_price = isUpdate
-      ? (createdPrimaryOrder?.unit_item_trade_price || parent_tp)
-      : (selectedProduct.parent?.item_trade_price || selectedProduct.item_trade_price);
+      ? createdPrimaryOrder?.unit_item_trade_price || parent_tp
+      : selectedProduct.parent?.item_trade_price ||
+        selectedProduct.item_trade_price;
     const { scheme_rule, scheme_type, min_qty, quantity_free, discount_on_tp } =
       selectedScheme || {};
 
     // When adding new product, use parent_qty_sold (actual quantity) instead of stockQty (carton quantity)
     // parent_qty_sold is already calculated as stockQty * parent.item_quantity in getNewPrimaryOderItem
-    const quantityToUseForSchemes = isUpdate 
-      ? parent_qty_sold 
-      : (createdPrimaryOrder?.parent_qty_sold || +stockQty);
+    const quantityToUseForSchemes = isUpdate
+      ? parent_qty_sold
+      : createdPrimaryOrder?.parent_qty_sold || +stockQty;
 
     switch (scheme_type) {
       case 'free_product':
@@ -735,7 +747,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       case 'dotp':
         if (this.isSchemeValid(selectedScheme)) {
           const quantityToUse = quantityToUseForSchemes;
-          console.log("quantityToUse", quantityToUse);
+          console.log('quantityToUse', quantityToUse);
           let TO = 0;
           if (quantityToUse >= min_qty) {
             TO = quantityToUse * discount_on_tp;
@@ -808,7 +820,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       case 'net_price':
         // Base = Net amount after distributor and booker discounts on TP*Qty
         const gross_amount =
-          (+createdPrimaryOrder.parent_tp || 0) *
+          (+createdPrimaryOrder.unit_item_trade_price || 0) *
           (+createdPrimaryOrder.parent_qty_sold || 0);
 
         const trade_offer_total =
@@ -855,7 +867,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         if (is_distributor_filer) {
           const single_gst =
             (1 *
-              +createdPrimaryOrder.item_retail_price *
+              +createdPrimaryOrder.unit_item_retail_price *
               gst_filer_distributor_value) /
             100;
 
@@ -866,7 +878,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
 
           const single_advance_income_tax =
             (adv_inc_filer_distributor_value / 100) *
-            (single_gst + createdPrimaryOrder.item_retail_price);
+            (single_gst + createdPrimaryOrder.unit_item_retail_price);
 
           const advance_income_tax =
             single_advance_income_tax *
@@ -879,7 +891,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         } else {
           const single_gst =
             (1 *
-              +createdPrimaryOrder.item_retail_price *
+              +createdPrimaryOrder.unit_item_retail_price *
               gst_nonfiler_distributor_value) /
             100;
 
@@ -890,7 +902,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
 
           const single_advance_income_tax =
             (adv_inc_nonfiler_distributor_value / 100) *
-            (single_gst + createdPrimaryOrder.item_retail_price);
+            (single_gst + createdPrimaryOrder.unit_item_retail_price);
 
           const advance_income_tax =
             single_advance_income_tax *

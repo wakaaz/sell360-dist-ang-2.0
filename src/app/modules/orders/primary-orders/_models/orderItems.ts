@@ -113,9 +113,17 @@ export function getNewPrimaryOderItem(selectedProduct: any): PrimaryOrderItem {
   //   selectedProduct.parent_item_retail_price;
   primOrderItem.parent_pref_id = selectedProduct.parent.id;
   const unit_quantity = selectedProduct.parent?.quantity || 0;
-  primOrderItem.parent_qty_sold = (+selectedProduct.stockQty || 0) * unit_quantity; 
-  primOrderItem.parent_tp = selectedProduct.item_trade_price; 
-  primOrderItem.unit_item_trade_price = selectedProduct.parent?.item_trade_price || selectedProduct.item_trade_price;
+  primOrderItem.unit_quantity = unit_quantity;
+  primOrderItem.primary_qty_sold = selectedProduct.stockQty || 0;
+  primOrderItem.parent_qty_sold =
+    (+selectedProduct.stockQty || 0) * unit_quantity;
+  primOrderItem.parent_tp = selectedProduct.item_trade_price;
+  primOrderItem.unit_item_trade_price =
+    selectedProduct.parent?.item_trade_price ||
+    selectedProduct.item_trade_price;
+  primOrderItem.unit_item_retail_price =
+    selectedProduct?.parent?.item_retail_price ||
+    selectedProduct.item_retail_price;
   primOrderItem.parent_unit_id = selectedProduct.parent.unit_id;
   primOrderItem.pref_id = selectedProduct.pref_id;
   if (selectedProduct.selectedScheme) {
@@ -167,7 +175,10 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   }
 
   public get grossPrice1(): number {
-    return Utility.calGrossAmount(this.unit_item_trade_price, this.parent_qty_sold);
+    return Utility.calGrossAmount(
+      this.unit_item_trade_price,
+      this.parent_qty_sold
+    );
   }
   private _tradeOffer: number = 0;
 
@@ -195,6 +206,14 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     this._tradeOffer = v;
   }
 
+  private _unit_quantity: number;
+  public get unit_quantity(): number {
+    return this._unit_quantity;
+  }
+  public set unit_quantity(v: number) {
+    this._unit_quantity = v;
+  }
+
   public get schemeFreeProdsCount(): number {
     if (this.scheme_id && this.rule_name === FREE_PRODUCT_RULES.FREE_PRODUCTS) {
       return Utility.calTradeOfferPrice(
@@ -213,7 +232,6 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     }
   }
 
-  
   public get distributorDiscount(): number {
     return Utility.calDistributorDiscount(
       this.distributor_discount,
@@ -228,7 +246,7 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
       this.distributor_discount,
       this.unit_item_trade_price,
       this.parent_qty_sold,
-      tradeOffer, 
+      tradeOffer
     );
     return distributorDiscountValue;
   }
@@ -308,8 +326,13 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   public get grossPriceAfterDistributorDiscount(): number {
     const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
     const bookerDiscountValue = this.booker_discount || 0;
-    
-    return this.grossPrice1 - this.distributorDiscount1 - tradeOfferValue - bookerDiscountValue ;
+
+    return (
+      this.grossPrice1 -
+      this.distributorDiscount1 -
+      tradeOfferValue -
+      bookerDiscountValue
+    );
   }
 
   public get TotalBill(): number {
@@ -515,6 +538,20 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   }
   public set unit_item_trade_price(v: number) {
     this._unit_item_trade_price = v;
+  }
+  private _primary_qty_sold: number;
+  public get primary_qty_sold(): number {
+    return this._primary_qty_sold;
+  }
+  public set primary_qty_sold(v: number) {
+    this._primary_qty_sold = v;
+  }
+  private _unit_item_retail_price: number;
+  public get unit_item_retail_price(): number {
+    return this._unit_item_retail_price;
+  }
+  public set unit_item_retail_price(v: number) {
+    this._unit_item_retail_price = v;
   }
 
   private _parent_unit_id: number;

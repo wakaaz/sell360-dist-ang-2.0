@@ -435,7 +435,11 @@ html.dark .ant-select-clear:hover,
   color: #ffffff !important;
   background-color: rgba(255, 255, 255, 0.25) !important;
 }
-
+.dark .ant-picker-input:hover .ant-picker-clear{
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  border-radius: 12px !important;
+}
 /* Ant Design DatePicker Global Styles - Light Mode */
 .ant-picker {
   border-radius: 8px !important;

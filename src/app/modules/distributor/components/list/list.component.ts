@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ToasterService } from 'src/app/core/services/toaster.service';
 import { DistributorService } from '../../services/distributor.service';
-// import 'datatables.net';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+// Register AG Grid modules
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -13,7 +16,25 @@ import { DistributorService } from '../../services/distributor.service';
 
 })
 export class ListComponent implements OnInit {
-  dtOptions: DataTables.Settings = {};
+  private gridApi!: GridApi;
+  
+  // AG Grid column definitions
+  columnDefs: ColDef[] = [
+    { field: 'distributor_name', headerName: 'Name', sortable: true, filter: true, flex: 1 },
+    { field: 'tsm', headerName: 'TSM', sortable: true, filter: true, width: 120 },
+    { field: 'region_name', headerName: 'Region', sortable: true, filter: true, flex: 1 },
+    { field: 'area_name', headerName: 'Area', sortable: true, filter: true, flex: 1 },
+    { field: 'territory_name', headerName: 'Territory', sortable: true, filter: true, flex: 1 },
+    { field: 'city_name', headerName: 'City', sortable: true, filter: true, flex: 1 },
+    { field: 'distributor_address', headerName: 'Address', sortable: true, filter: true, flex: 2 }
+  ];
+
+  defaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: true
+  };
+
   loading: boolean;
   distributors = [];
   currentYear: number = new Date().getFullYear();
@@ -21,20 +42,25 @@ export class ListComponent implements OnInit {
     private distributorService: DistributorService,
     private toastService: ToasterService
   ) {
-    this.dtOptions = {
-      pagingType: 'simple_numbers',
-    };
   }
 
   ngOnInit(): void {
-    this.dtOptions = {
-      pagingType: 'simple_numbers',
-    };
     this.getDistributorListing();
     // retailer core api call
     // this.distributorService.getDistributorListing().subscribe((data) => {
     //   this.distributorCore = data;
     // });
+  }
+
+  onGridReady(params: GridReadyEvent): void {
+    this.gridApi = params.api;
+  }
+
+  onQuickFilterChanged(event: any): void {
+    const filterValue = event.target.value;
+    if (this.gridApi) {
+      this.gridApi.setGridOption('quickFilterText', filterValue);
+    }
   }
   getDistributorListing() {
     this.loading = true;

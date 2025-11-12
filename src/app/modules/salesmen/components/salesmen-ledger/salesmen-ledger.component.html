@@ -1,96 +1,152 @@
 <!-- Saslesmen ledger list -->
-<div class="container">
 
-  <div class="row mt-2 mb-3">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <h2 class="_head01">Salesman <span> Ledger</span></h2>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <ol class="breadcrumb">
-        <li><a href="#"><span>Salesman</span></a></li>
-        <li><span>Ledger</span></li>
-      </ol>
+<div class="container mx-auto px-4 pb-24">
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1
+          class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0"
+        >
+        Salesman <span class="font-light"> Ledger</span>
+        </h1>
+      </div>
+      <div></div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-12">
+  <div
+  class="bg-white border-1 border-gray-200 dark:bg-[#1f1f1f] dark:border-[#333333] p-3 xl:p-5 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]"
+>
 
-      <div *ngIf="loading" class="col-md-12">
-        <app-loader-white></app-loader-white>
+<div *ngIf="loading" class="flex justify-center items-center p-8">
+  <app-loader-white></app-loader-white>
+</div>
+
+
+<div  *ngIf="!loading">
+
+  <div class="flex flex-wrap items-center gap-3 mb-3 border-b border-gray-200 dark:border-[#333333] pb-3">
+    <div class="dark:text-gray-200">Select Month:</div>
+    <!-- Month Picker -->
+    <div class="w-[200px]">
+      <nz-date-picker
+        [(ngModel)]="month"
+        nzMode="month"
+        nzFormat="yyyy-MM"
+        nzPlaceHolder="Select Month"
+        class="w-full month-picker"
+        [nzDropdownStyle]="{ 'z-index': '9999' }"
+      ></nz-date-picker>
+    </div>
+
+    <!-- Salesman Select -->
+    <div class="dark:text-gray-200">Salesman:</div>
+    <div class="w-[240px]">
+      <nz-select
+        nzShowSearch
+        nzAllowClear
+        [(ngModel)]="smSelected"
+        (ngModelChange)="smChanged()"
+        nzPlaceHolder="Select Salesman"
+        [nzDropdownMatchSelectWidth]="false"
+        [nzDropdownStyle]="{ 'z-index': '9999' }"
+        class="w-full salesman-select"
+      >
+        <nz-option
+          nzDisabled
+          nzLabel="Select Salesman"
+          [nzValue]="null"
+        ></nz-option>
+        <nz-option
+          *ngFor="let sm of salesmen"
+          [nzValue]="sm.id"
+          [nzLabel]="sm.name"
+        ></nz-option>
+      </nz-select>
+    </div>
+
+    <!-- Search Button -->
+    <button 
+      [disabled]="!month || !smSelected || loading" 
+      (click)="getLedger()" 
+      class="px-6 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-200 transition-all duration-200"
+    >
+      <i class="fa fa-search mr-1"></i>
+      <span>Search</span>
+    </button>
+  </div>
+
+  <div class="flex flex-wrap items-center gap-3 mb-3 border-b border-gray-200 dark:border-[#333333] pb-3">
+    <div class="flex gap-3 flex-wrap">
+      <div class="flex w-[270px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md">
+        <strong class="text-gray-900 dark:text-gray-300 font-primary font-medium">Salary:</strong>
+        <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">PKR.{{ salesman?.salary | number }}</span>
       </div>
-      <div class="card" *ngIf="!loading">
-        <div class="header addPR-head">
-          <div class="float-left">
-            <h3>Select Month </h3>
-          </div>
-          <div class="_PR_filter datefiled">
-            <div class="form-group mb-0" style="height: auto">
-              <input type="month" [(ngModel)]="month" class="form-control" autocomplete="off">
-            </div>
-          </div>
-
-          <div class="float-left pl-20">
-            <h3>Salesman </h3>
-          </div>
-          <div class="_PR_filter">
-            <div class="form-s2">
-              <ng-select class="formselect" [(ngModel)]="smSelected" (change)="smChanged()" [multiple]="false" placeholder="Select Salesman"
-                name="order-booker">
-                <ng-option *ngFor="let sm of salesmen" [value]="sm.id">
-                  {{sm.name}} </ng-option>
-              </ng-select>
-            </div>
-          </div>
-          <button [disabled]="!month || !smSelected || loading" (click)="getLedger()" class="btn btn-primary btn-report"><i class="fa fa-search"></i>
-            <span>Search</span>
-          </button>
-        </div>
-
-        <div class="topstats">
-          <div class="row m-0">
-            <div class="col-3 pr-0">
-              <div class="gary-box"><strong>Salary:</strong> <span>PKR.{{ salesman?.salary | number }}</span></div>
-            </div>
-            <div class="col-3 pr-0">
-              <div class="gary-box"><strong>Balance:</strong> <span>PKR.{{ salesman?.balance | number }}</span></div>
-            </div>
-            <div class="col-3 pr-0">
-              <div class="gary-box"><strong>Amount Due:</strong> <span>PKR.{{ amountDue | number }}</span></div>
-            </div>
-            <div class="col-3 text-right">
-              <button class="btn btn-primary btn-report"><i class="fa fa-file-pdf"></i>
-                <span> Generate PDF</span></button>
-            </div>
-          </div>
-        </div>
-
-        <div class="body">
-          <table datatable [dtOptions]='dtOptions' class="table table-hover dt-responsive nowrap" id="example"
-            style="width:100%">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Net Sale</th>
-                <th>Cash Payable</th>
-                <th>Cash Received</th>
-                <th>Balance</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let item of ledger">
-                <td>{{ item.date }}</td>
-                <td>Rs. {{ item.net_sale | number }}</td>
-                <td>Rs. {{ item.cash_payable | number }}</td>
-                <td>Rs. {{ item.cash_received | number }}</td>
-                <td>Rs. {{ item.balance | number }}</td>
-              </tr>
-            </tbody>
-          </table>
-
-        </div>
+      <div class="flex w-[270px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md">
+        <strong class="text-gray-900 dark:text-gray-300 font-primary font-medium">Balance:</strong>
+        <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">PKR.{{ salesman?.balance | number }}</span>
+      </div>
+      <div class="flex w-[270px] justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md">
+        <strong class="text-gray-900 dark:text-gray-300 font-primary font-medium">Amount Due:</strong>
+        <span class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]">PKR.{{ amountDue | number }}</span>
       </div>
     </div>
+    <button 
+      type="button"
+      class="ml-auto px-6 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none transition-all duration-200"
+    >
+      <i class="fa fa-file-pdf mr-1"></i>
+      <span>Generate PDF</span>
+    </button>
   </div>
+
+  <div>
+    <!-- Search Input -->
+    <div class="mb-3 flex justify-end">
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+          <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"></path>
+          </svg>
+        </div>
+        <input 
+          type="text" 
+          id="filter-text-box" 
+          placeholder="Search Ledger..." 
+          autocomplete="off"
+          class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
+          (input)="onQuickFilterChanged($event)"
+        />
+      </div>
+    </div>
+
+    <!-- AG Grid -->
+    <div *ngIf="!loading" class="ag-theme-quartz ag-grid-container">
+      <ag-grid-angular
+        [rowData]="ledger"
+        [columnDefs]="columnDefs"
+        [defaultColDef]="defaultColDef"
+        [pagination]="true"
+        [paginationPageSize]="10"
+        [paginationPageSizeSelector]="[10, 20, 50, 100]"
+        [suppressPaginationPanel]="false"
+        [domLayout]="'autoHeight'"
+        [animateRows]="true"
+        [rowSelection]="{ type: 'single' }"
+        [theme]="'legacy'"
+        (gridReady)="onGridReady($event)"
+      >
+      </ag-grid-angular>
+    </div>
+
+
+  </div>
+
 
 </div>
+
+</div>
+
+</div>
+
+

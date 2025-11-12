@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
 import { InventoryService } from '../../services/inventory.service';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+// Register AG Grid modules
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -12,14 +16,62 @@ import { InventoryService } from '../../services/inventory.service';
 
 })
 export class StockComponent implements OnInit {
-  dtOptions: DataTables.Settings = {};
+  private gridApi!: GridApi;
+  
+  // AG Grid column definitions
+  columnDefs: ColDef[] = [
+    { field: 'item_sku', headerName: 'SKU', sortable: true, filter: true, width: 120 },
+    { field: 'item_name', headerName: 'Product Name', sortable: true, filter: true, flex: 1 },
+    { field: 'brand_name', headerName: 'Brand', sortable: true, filter: true, flex: 1 },
+    { field: 'sub_cat', headerName: 'Sub Category', sortable: true, filter: true, flex: 1 },
+    { 
+      field: 'stock', 
+      headerName: 'Current Stock', 
+      sortable: true, 
+      filter: true, 
+      width: 150,
+      valueFormatter: (params) => {
+        if (params.value == null) return '0';
+        return params.value.toLocaleString('en-US');
+      }
+    },
+    {
+      headerName: 'Action',
+      cellRenderer: (params: any) => {
+        const product = params.data;
+        return `
+          <button 
+            onclick="window.viewHistory('${product.item_id}')" 
+            class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px]"
+            title="View History">
+            View History
+          </button>
+        `;
+      },
+      cellStyle: {
+        display: 'flex',
+        alignItems: 'center',
+      },
+      width: 150,
+      sortable: false,
+      filter: false,
+      pinned: 'right'
+    }
+  ];
+
+  defaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: true
+  };
+
   loading: boolean;
   historyLoading: boolean;
   showHistory: boolean;
   productsStock: Array<any> = [];
   historyFilter: string;
-  historyDateFrom: string;
-  historyDateTo: string;
+  historyDateFrom: Date | string | null = null;
+  historyDateTo: Date | string | null = null;
   selectedProductId: number;
   timer: any;
   selectedName: string;
@@ -29,14 +81,33 @@ export class StockComponent implements OnInit {
   constructor(
     private inventoryService: InventoryService,
     private toasterService: ToasterService
-  ) {}
+  ) {
+    this.setupGlobalFunctions();
+  }
 
   ngOnInit(): void {
     this.historyFilter = 'monthly';
-    this.dtOptions = {
-      pagingType: 'simple_numbers',
-    };
     this.getProductsWithStock();
+  }
+
+  setupGlobalFunctions(): void {
+    (window as any).viewHistory = (itemId: string) => {
+      const product = this.productsStock.find((x) => x.item_id === parseInt(itemId));
+      if (product) {
+        this.getHistory(product.item_id, new Event('click'));
+      }
+    };
+  }
+
+  onGridReady(params: GridReadyEvent): void {
+    this.gridApi = params.api;
+  }
+
+  onQuickFilterChanged(event: any): void {
+    const filterValue = event.target.value;
+    if (this.gridApi) {
+      this.gridApi.setGridOption('quickFilterText', filterValue);
+    }
   }
 
   getProductsWithStock(): void {
@@ -70,9 +141,8 @@ export class StockComponent implements OnInit {
     ).item_name;
     this.selectedProductId = itemId;
     this.showHistory = true;
-    this.historyDateFrom = new Date().toISOString().split('T')[0];
+    this.historyDateFrom = new Date();
     this.getStockHistory();
-    document.getElementById('open-history').click();
   }
 
   dateChanged(): void {
@@ -93,17 +163,35 @@ export class StockComponent implements OnInit {
       let value = {};
       this.stockHistory = null;
       this.historyLoading = true;
+      
+      // Handle date picker value - it can be a Date object or string
+      let dateFromStr: string;
+      let dateToStr: string;
+      
+      if (this.historyDateFrom instanceof Date) {
+        dateFromStr = this.historyDateFrom.toISOString().split('T')[0];
+      } else {
+        dateFromStr = this.historyDateFrom || '';
+      }
+      
+      if (this.historyDateTo instanceof Date) {
+        dateToStr = this.historyDateTo.toISOString().split('T')[0];
+      } else {
+        dateToStr = this.historyDateTo || '';
+      }
+      
       if (this.historyFilter === 'monthly') {
+        const dateFrom = this.historyDateFrom instanceof Date ? this.historyDateFrom : new Date(this.historyDateFrom);
         value = {
-          month: new Date(this.historyDateFrom).getMonth() + 1,
-          year: new Date(this.historyDateFrom).getFullYear(),
+          month: dateFrom.getMonth() + 1,
+          year: dateFrom.getFullYear(),
         };
       } else if (this.historyFilter === 'daily') {
-        value = { date: this.historyDateFrom };
+        value = { date: dateFromStr };
       } else {
         value = {
-          from: this.historyDateFrom,
-          to: this.historyDateTo,
+          from: dateFromStr,
+          to: dateToStr,
         };
       }
       this.timer = setTimeout(() => {
@@ -158,8 +246,8 @@ export class StockComponent implements OnInit {
     if (this.showHistory) {
       this.showHistory = false;
       this.historyFilter = 'monthly';
-      this.historyDateTo = '';
-      this.historyDateFrom = '';
+      this.historyDateTo = null;
+      this.historyDateFrom = null;
     }
   }
 }

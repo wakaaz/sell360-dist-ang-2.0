@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DataTablesModule } from 'angular-datatables';
 import { AgGridModule } from 'ag-grid-angular';
 
@@ -28,6 +29,7 @@ import { reducers } from './reducers';
     ClickOutsideModule,
     NgSelectModule,
     NzSelectModule,
+    NzDatePickerModule,
     SalemenRoutingModule,
     FormsModule,
     DataTablesModule,

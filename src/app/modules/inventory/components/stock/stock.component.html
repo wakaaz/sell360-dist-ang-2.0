@@ -1,258 +1,245 @@
 <!-- History Modal -->
 <div
-  class="modal fade"
   id="historyModal"
-  tabindex="-1"
-  role="dialog"
-  aria-labelledby="historyModalLabel"
-  aria-hidden="true"
+  *ngIf="showHistory"
+  class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+  (click)="clickOutSide($event)"
 >
   <div
-    class="modal-dialog modal-dialog-centered modal-lg"
-    role="document"
-    (clickOutside)="clickOutSide($event)"
+    class="bg-white dark:bg-[#1f1f1f] rounded-lg shadow-xl w-full max-w-4xl mx-auto border-t-4 border-t-primary"
+    (click)="$event.stopPropagation()"
   >
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="historyModalLabel">
-          {{ selectedName }}<span></span>
-        </h5>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="modal"
-          aria-label="Close"
-          (click)="closeHistory()"
+    <!-- Modal Header -->
+    <div
+      class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-[#333333]"
+    >
+      <h5
+        class="text-lg font-semibold text-gray-900 dark:text-neutral-200 font-primary"
+      >
+        Stock History - <span class="font-light text-gray-600 dark:text-gray-400">{{ selectedName }}</span>
+      </h5>
+      <button
+        type="button"
+        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+        (click)="closeHistory()"
+        aria-label="Close"
+      >
+        <svg
+          class="w-6 h-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
         >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="row m-0 mb-10">
-          <div class="col-4">
-            <div class="gary-box">
-              <strong>Filter:</strong>
-              <select
-                class="form-control"
-                name="filter"
-                id="filter"
-                [(ngModel)]="historyFilter"
-                (change)="dateChanged()"
-              >
-                <option value="monthly">Monthly</option>
-                <option value="daily">Daily</option>
-                <option value="range">Date Range</option>
-              </select>
-            </div>
-          </div>
-          <div class="col-4">
-            <div class="gary-box">
-              <strong>From:</strong>
-              <input
-                class="form-control"
-                type="date"
-                name="date-from"
-                id="date-from"
-                [(ngModel)]="historyDateFrom"
-                required
-                (change)="dateChanged()"
-              />
-            </div>
-          </div>
-          <div *ngIf="historyFilter === 'range'" class="col-4">
-            <div class="gary-box">
-              <strong>To:</strong>
-              <input
-                class="form-control"
-                type="date"
-                name="date-to"
-                id="date-to"
-                [(ngModel)]="historyDateTo"
-                required
-                (change)="dateChanged()"
-              />
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <table
-              *ngIf="stockHistory && !historyLoading"
-              class="table table-hover dt-responsive nowrap"
-              datatable
-              [dtOptions]="dtOptions"
-              id="history-table"
-              style="width: 100%"
-            >
-              <thead>
-                <tr>
-                  <th>ITEM</th>
-                  <th>TRX TYPE</th>
-                  <th>STATE</th>
-                  <th>QUANTITY</th>
-                  <th>BALANCE</th>
-                  <th>DATE</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let hs of stockHistory; let in = index">
-                  <td>{{ hs.item_name }}</td>
-                  <td>{{ hs.type }}</td>
-                  <td>
-                    {{
-                      hs.module === "Return Market" && hs.status === "out"
-                        ? "Damage"
-                        : hs.module === "Return Market" && hs.status === "in"
-                        ? "Sellable"
-                        : hs.status
-                    }}
-                  </td>
-                  <td>{{ hs.child_quantity || 0 | number }}</td>
-                  <td>{{ hs.balance || 0 | number }}</td>
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M6 18L18 6M6 6l12 12"
+          ></path>
+        </svg>
+      </button>
+    </div>
 
-                  <td>{{ hs.created_at }}</td>
-                </tr>
-              </tbody>
-            </table>
-            <div class="col-md-12" style="text-align: center; padding: 30px">
-              <div
-                *ngIf="historyLoading"
-                class="spinner-border"
-                style="width: 5rem; height: 5rem; color: #0038ba"
-                role="status"
-              >
-                <span class="sr-only">Loading...</span>
-              </div>
-            </div>
-          </div>
+    <!-- Modal Body -->
+    <div class="px-6 py-5">
+      <!-- Filter Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <!-- Filter Select -->
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            Filter<span class="text-red-500">*</span>
+          </label>
+          <nz-select
+            [(ngModel)]="historyFilter"
+            (ngModelChange)="dateChanged()"
+            nzPlaceHolder="Select Filter"
+            class="w-full history-filter-select"
+            [nzDropdownStyle]="{ 'z-index': '9999' }"
+          >
+            <nz-option nzValue="monthly" nzLabel="Monthly"></nz-option>
+            <nz-option nzValue="daily" nzLabel="Daily"></nz-option>
+            <nz-option nzValue="range" nzLabel="Date Range"></nz-option>
+          </nz-select>
+        </div>
+
+        <!-- From Date -->
+        <div>
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            From<span class="text-red-500">*</span>
+          </label>
+          <nz-date-picker
+            [(ngModel)]="historyDateFrom"
+            (ngModelChange)="dateChanged()"
+            nzFormat="yyyy-MM-dd"
+            nzPlaceHolder="Select Date"
+            class="w-full history-date-picker"
+            [nzDropdownStyle]="{ 'z-index': '9999' }"
+          ></nz-date-picker>
+        </div>
+
+        <!-- To Date (only show for range) -->
+        <div *ngIf="historyFilter === 'range'">
+          <label
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+          >
+            To<span class="text-red-500">*</span>
+          </label>
+          <nz-date-picker
+            [(ngModel)]="historyDateTo"
+            (ngModelChange)="dateChanged()"
+            nzFormat="yyyy-MM-dd"
+            nzPlaceHolder="Select Date"
+            class="w-full history-date-picker"
+            [nzDropdownStyle]="{ 'z-index': '9999' }"
+          ></nz-date-picker>
         </div>
       </div>
-      <div class="modal-footer border-0" style="background-color: #f6f6f6">
-        <button
-          type="submit"
-          id="close-history-btn"
-          class="btn btn-cancel"
-          data-dismiss="modal"
-          aria-label="Close"
-          (click)="closeHistory()"
-        >
-          Close
-        </button>
+
+      <!-- History Table -->
+      <div class="border-t border-gray-200 dark:border-[#333333] pt-4">
+        <div *ngIf="historyLoading" class="flex justify-center items-center p-8">
+          <div class="spinner-border" style="width: 5rem; height: 5rem; color: #0038ba" role="status">
+            <span class="sr-only">Loading...</span>
+          </div>
+        </div>
+
+        <div *ngIf="stockHistory && !historyLoading && stockHistory.length > 0" class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200 dark:divide-[#333333]">
+            <thead class="bg-gray-50 dark:bg-[#141414]">
+              <tr>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Item</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Trx Type</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">State</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Quantity</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Balance</th>
+                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white dark:bg-[#1f1f1f] divide-y divide-gray-200 dark:divide-[#333333]">
+              <tr *ngFor="let hs of stockHistory; let in = index" class="hover:bg-gray-50 dark:hover:bg-[#262626]">
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.item_name }}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.type }}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                  {{
+                    hs.module === "Return Market" && hs.status === "out"
+                      ? "Damage"
+                      : hs.module === "Return Market" && hs.status === "in"
+                      ? "Sellable"
+                      : hs.status
+                  }}
+                </td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.child_quantity || 0 | number }}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.balance || 0 | number }}</td>
+                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.created_at }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div *ngIf="stockHistory && !historyLoading && stockHistory.length === 0" class="text-center py-8">
+          <p class="text-gray-500 dark:text-gray-400">No history found for the selected period.</p>
+        </div>
       </div>
+    </div>
+
+    <!-- Modal Footer -->
+    <div
+      class="px-6 py-4 bg-gray-50 dark:bg-[#151515] border-t border-gray-200 dark:border-[#303030] rounded-b-lg flex justify-end"
+    >
+      <button
+        type="button"
+        id="close-history-btn"
+        class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        (click)="closeHistory()"
+        aria-label="Close"
+      >
+        Close
+      </button>
     </div>
   </div>
 </div>
 
 <!-- Stock List -->
-<div class="container">
-  <div class="row mt-2 mb-3">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <h2 class="_head01">Stock <span> Report</span></h2>
-    </div>
+<div class="container mx-auto px-4 pb-24">
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1 class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0">
+          Stock Report<span class="font-light"> Management
+          </span>
+        </h1>
+      </div>
+      <div>
+ 
+      <div>
 
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <ol class="breadcrumb">
-        <li>
-          <a><span>Stock Management</span></a>
-        </li>
-        <li><span>Stock Report</span></li>
-      </ol>
+      </div>
+      </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="col-12 p-0">
-          <div class="topstats">
-            <div class="row m-0">
-              <div class="col-4">
-                <div class="gary-box">
-                  <strong>Total Products:</strong>
-                  <span>{{ productsStock?.length }}</span>
-                </div>
-              </div>
-              <!-- <div class="col-4">
-                                <div class="gary-box"><strong>Total Amount:</strong> <span>170,542</span></div>
-                            </div>
-                            <div class="col-4">
-                                <div class="gary-box"><strong>Stock Audits:</strong> <span>0</span></div>
-                            </div> -->
+  <div
+    class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a]"
+  >
+    <div *ngIf="loading" class="flex justify-center items-center p-8">
+      <app-loader-white></app-loader-white>
+    </div>
+
+    <div *ngIf="!loading">
+
+      <!-- Header with Search -->
+      <div
+        class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-black dark:from-transparent dark:to-transparent shadow-none"
+      >
+        <div>
+          <h2
+            class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium"
+          >
+            Total &nbsp;<span class="font-light"> Products</span>
+            <div class="ml-2 my-auto flex items-center">
+              <span class="bg-primary text-white text-[9px] p-[4px] leading-[1] rounded font-primary">{{
+                productsStock?.length }}</span>
             </div>
-
-            <!-- <div class="col-12">
-                            <div class="row qty-units">
-                                <div class="col"><strong>Cartons:</strong> 450</div>
-                                <div class="col"><strong>Dozen:</strong> 450</div>
-                                <div class="col"><strong>Half Dozen:</strong> 450</div>
-                            </div>
-                        </div> -->
+          </h2>
+        </div> 
+        <div class="text-secondary dark:text-white">
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-4 w-4 text-gray-400" width="16" height="16" viewBox="0 0 16 16" fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd"
+                  d="M11.5014 7.00039C11.5014 7.59133 11.385 8.1765 11.1588 8.72246C10.9327 9.26843 10.6012 9.7645 10.1833 10.1824C9.76548 10.6002 9.2694 10.9317 8.72344 11.1578C8.17747 11.384 7.59231 11.5004 7.00136 11.5004C6.41041 11.5004 5.82525 11.384 5.27929 11.1578C4.73332 10.9317 4.23725 10.6002 3.81938 10.1824C3.40152 9.7645 3.07005 9.26843 2.8439 8.72246C2.61776 8.1765 2.50136 7.59133 2.50136 7.00039C2.50136 5.80691 2.97547 4.66232 3.81938 3.81841C4.6633 2.97449 5.80789 2.50039 7.00136 2.50039C8.19484 2.50039 9.33943 2.97449 10.1833 3.81841C11.0273 4.66232 11.5014 5.80691 11.5014 7.00039ZM10.6814 11.7404C9.47574 12.6764 7.95873 13.1177 6.43916 12.9745C4.91959 12.8314 3.51171 12.1145 2.50211 10.9698C1.49252 9.8251 0.957113 8.33868 1.0049 6.81314C1.05268 5.28759 1.68006 3.83759 2.75932 2.75834C3.83857 1.67908 5.28856 1.0517 6.81411 1.00392C8.33966 0.956136 9.82608 1.49154 10.9708 2.50114C12.1154 3.51073 12.8323 4.91862 12.9755 6.43819C13.1187 7.95775 12.6773 9.47476 11.7414 10.6804L14.5314 13.4704C14.605 13.539 14.6642 13.6218 14.7051 13.7138C14.7461 13.8058 14.7682 13.9052 14.77 14.0059C14.7717 14.1066 14.7532 14.2066 14.7155 14.3C14.6778 14.3934 14.6216 14.4782 14.5504 14.5494C14.4792 14.6206 14.3943 14.6768 14.301 14.7145C14.2076 14.7522 14.1075 14.7708 14.0068 14.769C13.9061 14.7672 13.8068 14.7452 13.7148 14.7042C13.6228 14.6632 13.54 14.6041 13.4714 14.5304L10.6814 11.7404Z"
+                  fill="currentColor"></path>
+              </svg>
+            </div>
+            <input type="text" id="filter-text-box-header" placeholder="Search Stock..." autocomplete="off"
+              class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
+              (input)="onQuickFilterChanged($event)" />
           </div>
         </div>
+      </div>
 
-        <div class="body">
-          <table
-            *ngIf="productsStock && productsStock.length && !loading"
-            id="stock-table"
-            datatable
-            [dtOptions]="dtOptions"
-            class="table table-hover dt-responsive nowrap"
-            style="width: 100%"
-          >
-            <thead>
-              <tr>
-                <th>SKU</th>
-                <th>{{ "Product Name" | uppercase }}</th>
-                <th>BRAND</th>
-                <th>{{ "Sub Category" | uppercase }}</th>
-                <!-- <th>STOCK DETAILS</th> -->
-                <!-- <th>STATE</th>
-                <th>LAST ADDED ON</th> -->
-                <th>CURRENT STOCK</th>
-
-                <th>ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let product of productsStock; let i = index">
-                <td>{{ product.item_sku }}</td>
-                <td>{{ product.item_name }}</td>
-                <td>{{ product.brand_name }}</td>
-                <td>{{ product.sub_cat }}</td>
-                <!-- <td>
-                  <span *ngFor="let dt of product.stockDetail; let in = index">
-                    {{ dt.type }}: {{ dt.exact | number
-                    }}{{ in !== product.stockDetail.length - 1 ? "," : "" }}
-                  </span>
-                </td> -->
-                <!-- <td>{{ product.state }}</td>
-                <td>{{ product.created_at }}</td> -->
-                <td>{{ product.stock || 0 | number }}</td>
-
-                <td>
-                  <button
-                    class="btn btn-default mb-0"
-                    (click)="getHistory(product.item_id, $event)"
-                  >
-                    View History
-                  </button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-          <div *ngIf="loading">
-            <app-loader-white></app-loader-white>
-          </div>
-          <button
-            hidden
-            id="open-history"
-            data-toggle="modal"
-            data-target="#historyModal"
-          >
-            Open History
-          </button>
-        </div>
+      <!-- AG Grid -->
+      <div *ngIf="!loading" class="ag-theme-quartz ag-grid-container">
+        <ag-grid-angular [rowData]="productsStock" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+          [pagination]="true" [paginationPageSize]="10" [paginationPageSizeSelector]="[10, 20, 50, 100]"
+          [suppressPaginationPanel]="false" [domLayout]="'autoHeight'" [animateRows]="true"
+          [rowSelection]="{ type: 'single' }" [theme]="'legacy'" (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
       </div>
     </div>
   </div>
 </div>
+
+<button
+  hidden
+  id="open-history"
+  data-toggle="modal"
+  data-target="#historyModal"
+>
+  Open History
+</button>

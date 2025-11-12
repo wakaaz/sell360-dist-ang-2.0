@@ -5,6 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { DataTablesModule } from 'angular-datatables';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { AgGridModule } from 'ag-grid-angular';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { InvenotryRoutingModule } from './inventory-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
@@ -23,6 +26,9 @@ import { InventoryService } from './services/inventory.service';
         ClickOutsideModule,
         DataTablesModule,
         NgSelectModule,
+        AgGridModule,
+        NzDatePickerModule,
+        NzSelectModule,
         InvenotryRoutingModule,
         SharedModule,
     ],

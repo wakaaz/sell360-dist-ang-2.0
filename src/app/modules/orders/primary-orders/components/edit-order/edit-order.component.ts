@@ -816,7 +816,10 @@ export class EditOrderComponent implements OnInit, OnDestroy {
 
         const net_amount = Math.max(
           0,
-          gross_amount - trade_offer_total - distributor_discount_amount
+          gross_amount -
+            trade_offer_total -
+            distributor_discount_amount -
+            (+createdPrimaryOrder.booker_discount || 0)
         );
 
         if (is_distributor_filer) {

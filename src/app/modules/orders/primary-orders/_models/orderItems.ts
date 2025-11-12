@@ -208,12 +208,24 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     }
   }
 
+  
   public get distributorDiscount(): number {
     return Utility.calDistributorDiscount(
       this.distributor_discount,
       this.parent_tp,
       this.parent_qty_sold
     );
+  }
+  public get distributorDiscount1(): number {
+    const tradeOffer = (this as any).trade_offer || 0;
+
+    const distributorDiscountValue = Utility.calDistributorDiscount1(
+      this.distributor_discount,
+      this.parent_tp,
+      this.parent_qty_sold,
+      tradeOffer,
+    );
+    return distributorDiscountValue;
   }
 
   public get specialDiscount(): number {
@@ -292,7 +304,7 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
     const bookerDiscountValue = this.booker_discount || 0;
     
-    return this.grossPrice - this.distributorDiscount - tradeOfferValue - bookerDiscountValue ;
+    return this.grossPrice - this.distributorDiscount1 - tradeOfferValue - bookerDiscountValue ;
   }
 
   public get TotalBill(): number {
@@ -304,7 +316,7 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   public get TotalDiscount(): number {
     const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
     const specialDiscountValue = this.booker_discount || 0;
-    return tradeOfferValue + this.distributorDiscount + specialDiscountValue;
+    return tradeOfferValue + this.distributorDiscount1 + specialDiscountValue;
   }
 
   public get TotalTax(): number {

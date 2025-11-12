@@ -665,18 +665,25 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     const { selectedScheme, stockQty, parent_qty_sold, parent_tp } = !isUpdate
       ? selectedProduct
       : createdPrimaryOrder || {};
+    // Use parent.item_trade_price for schemes when adding new product
     const item_trade_price = isUpdate
-      ? parent_tp
-      : selectedProduct.item_trade_price;
+      ? (createdPrimaryOrder?.unit_item_trade_price || parent_tp)
+      : (selectedProduct.parent?.item_trade_price || selectedProduct.item_trade_price);
     const { scheme_rule, scheme_type, min_qty, quantity_free, discount_on_tp } =
       selectedScheme || {};
+
+    // When adding new product, use parent_qty_sold (actual quantity) instead of stockQty (carton quantity)
+    // parent_qty_sold is already calculated as stockQty * parent.item_quantity in getNewPrimaryOderItem
+    const quantityToUseForSchemes = isUpdate 
+      ? parent_qty_sold 
+      : (createdPrimaryOrder?.parent_qty_sold || +stockQty);
 
     switch (scheme_type) {
       case 'free_product':
         if (scheme_rule === 4) {
           if (this.isSchemeValid(selectedScheme)) {
             const freeQtyInterval = Math.floor(
-              (isUpdate ? parent_qty_sold : +stockQty) / min_qty
+              quantityToUseForSchemes / min_qty
             );
             const orderFreeQty = freeQtyInterval * quantity_free;
             createdPrimaryOrder['scheme_quantity_free'] = orderFreeQty;
@@ -698,7 +705,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
             // );
             // const orderFreeQty = freeQtyInterval * quantity_free;
             let TO = 0;
-            const quantityToUse = isUpdate ? parent_qty_sold : +stockQty;
+            const quantityToUse = quantityToUseForSchemes;
             if (quantityToUse >= min_qty) {
               const tp_after_scheme =
                 (item_trade_price * min_qty) / (min_qty + quantity_free);
@@ -727,7 +734,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         break;
       case 'dotp':
         if (this.isSchemeValid(selectedScheme)) {
-          const quantityToUse = isUpdate ? parent_qty_sold : +stockQty;
+          const quantityToUse = quantityToUseForSchemes;
+          console.log("quantityToUse", quantityToUse);
           let TO = 0;
           if (quantityToUse >= min_qty) {
             TO = quantityToUse * discount_on_tp;

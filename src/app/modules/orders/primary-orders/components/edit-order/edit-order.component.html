@@ -845,13 +845,13 @@
               <td
                 class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
               >
-                {{ item.parent_tp | number : "1.2-2" }}
+                  {{ (item.unit_item_trade_price || item.parent_tp) | number : "1.2-2" }}
               </td>
               <!-- GR.Amt -->
               <td
                 class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
               >
-                {{ item.grossPrice | number : "1.2-2" }}
+                {{ item.grossPrice1 | number : "1.2-2" }}
               </td>
               <!-- T.O -->
               <td

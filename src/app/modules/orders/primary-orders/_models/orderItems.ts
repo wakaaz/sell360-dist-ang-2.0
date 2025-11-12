@@ -112,8 +112,10 @@ export function getNewPrimaryOderItem(selectedProduct: any): PrimaryOrderItem {
   // primOrderItem.parent_item_retail_price =
   //   selectedProduct.parent_item_retail_price;
   primOrderItem.parent_pref_id = selectedProduct.parent.id;
-  primOrderItem.parent_qty_sold = selectedProduct.stockQty; // show parent
-  primOrderItem.parent_tp = selectedProduct.item_trade_price; // one qty ammount
+  const unit_quantity = selectedProduct.parent?.quantity || 0;
+  primOrderItem.parent_qty_sold = (+selectedProduct.stockQty || 0) * unit_quantity; 
+  primOrderItem.parent_tp = selectedProduct.item_trade_price; 
+  primOrderItem.unit_item_trade_price = selectedProduct.parent?.item_trade_price || selectedProduct.item_trade_price;
   primOrderItem.parent_unit_id = selectedProduct.parent.unit_id;
   primOrderItem.pref_id = selectedProduct.pref_id;
   if (selectedProduct.selectedScheme) {
@@ -164,6 +166,9 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     return Utility.calGrossAmount(this.parent_tp, this.parent_qty_sold);
   }
 
+  public get grossPrice1(): number {
+    return Utility.calGrossAmount(this.unit_item_trade_price, this.parent_qty_sold);
+  }
   private _tradeOffer: number = 0;
 
   public get tradeOffer(): number {
@@ -221,9 +226,9 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
 
     const distributorDiscountValue = Utility.calDistributorDiscount1(
       this.distributor_discount,
-      this.parent_tp,
+      this.unit_item_trade_price,
       this.parent_qty_sold,
-      tradeOffer,
+      tradeOffer, 
     );
     return distributorDiscountValue;
   }
@@ -304,7 +309,7 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
     const bookerDiscountValue = this.booker_discount || 0;
     
-    return this.grossPrice - this.distributorDiscount1 - tradeOfferValue - bookerDiscountValue ;
+    return this.grossPrice1 - this.distributorDiscount1 - tradeOfferValue - bookerDiscountValue ;
   }
 
   public get TotalBill(): number {
@@ -502,6 +507,14 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   }
   public set parent_tp(v: number) {
     this._parent_tp = v;
+  }
+
+  private _unit_item_trade_price: number;
+  public get unit_item_trade_price(): number {
+    return this._unit_item_trade_price;
+  }
+  public set unit_item_trade_price(v: number) {
+    this._unit_item_trade_price = v;
   }
 
   private _parent_unit_id: number;

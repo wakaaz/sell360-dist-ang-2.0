@@ -1130,3 +1130,10 @@ html.dark #returnsmodal input[type="number"]:hover,
 html.dark #returnsmodal input[type="text"]:hover {
   border-color: #0038ba !important;
 }
+.dark .ant-select-multiple.ant-select .ant-select-selection-item { 
+  background: #232323 !important;
+  border: 1px solid #2a2a2a !important; 
+}
+.dark .ant-select-multiple.ant-select .ant-select-selection-item-remove svg{
+  color: #dedede !important;
+}

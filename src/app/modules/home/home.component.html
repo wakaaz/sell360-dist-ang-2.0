@@ -1,8 +1,10 @@
-<div class="container mt-0" *ngIf="!loading">
-  <div *ngIf="distributor" class="row _user-TS">
-    <div class="col-md-12 _dashTOP">
+
+<div class="container mx-auto px-4" *ngIf="!loading">
+  <div *ngIf="distributor" class="w-full">
+    <div class="pt-[15px] pr-0 pb-[15px]">
+      <div class="flex items-center">
       <img
-        class="_user_Pimage"
+        class="w-[38px] h-[38px] border border-solid border-primary dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-700 p-[1px] rounded-full float-left mr-[10px]"
         onError="this.src='assets/images/avatar.svg'"
         [src]="
           distributor.distributor_image
@@ -11,58 +13,240 @@
         "
         alt=""
       />
-      <h2 class="_head01">Good Morning, {{ distributor.distributor_name }}</h2>
-      <p>
+      <h2 class="text-[22px] pt-[7px] mb-[10px] mt-0 font-primary font-medium text-neutral-800 dark:text-gray-400">
+        Good Morning, {{ distributor.distributor_name }}   
+      </h2>
+      </div>
+      <p class="m-0 block font-primary text-neutral-500 dark:text-gray-400">
         Here’s what’s happening at
-        <strong>{{ distributor.distributor_name }}.</strong>
+        <strong class="font-medium text-neutral-900 dark:text-gray-400">{{
+          distributor.distributor_name
+        }}.</strong>
       </p>
     </div>
   </div>
-  <div *ngIf="false" class="row">
-    <div class="col-12 PB-15">
-      <div class="alert alert-primary alert-dismissible fade show" role="alert">
-        <strong>Holy guacamole!</strong> You should check in on some of those
-        fields below.
-        <button class="btn btn-primary ml-2">Open Page</button>
-        <button
-          type="button"
-          class="close"
-          data-dismiss="alert"
-          aria-label="Close"
-        >
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
+
+  <div *ngIf="false" class="w-full">
+    <div class="pb-[15px]">
+      <!-- Primary Alert -->
       <div
-        class="alert alert-secondary alert-dismissible fade show"
+        class="relative flex items-center justify-between p-4 mb-4 rounded-md border border-blue-300 bg-blue-50 text-blue-800"
         role="alert"
       >
-        <strong>Holy guacamole!</strong> You should check in on some of those
-        fields below.
-        <a class="ml-2">Open Page</a>
+        <div>
+          <strong class="font-semibold">Holy guacamole!</strong>
+          You should check in on some of those fields below.
+        </div>
+        <div class="flex items-center space-x-2">
+          <button class="bg-blue-600 text-white text-sm px-3 py-1 rounded-md hover:bg-blue-700">
+            Open Page
+          </button>
+          <button
+            type="button"
+            class="text-blue-800 text-xl leading-none hover:text-blue-900"
+            aria-label="Close"
+          >
+            &times;
+          </button>
+        </div>
+      </div>
+  
+      <!-- Secondary Alert -->
+      <div
+        class="relative flex items-center justify-between p-4 mb-4 rounded-md border border-gray-300 bg-gray-100 text-gray-800"
+        role="alert"
+      >
+        <div>
+          <strong class="font-semibold">Holy guacamole!</strong>
+          You should check in on some of those fields below.
+          <a href="#" class="ml-2 underline hover:text-gray-900">Open Page</a>
+        </div>
         <button
           type="button"
-          class="close"
-          data-dismiss="alert"
+          class="text-gray-800 text-xl leading-none hover:text-gray-900"
           aria-label="Close"
         >
-          <span aria-hidden="true">&times;</span>
+          &times;
         </button>
       </div>
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Holy guacamole!</strong> You should check in on some of those
-        fields below.
+  
+      <!-- Danger Alert -->
+      <div
+        class="relative flex items-center justify-between p-4 mb-4 rounded-md border border-red-300 bg-red-50 text-red-800"
+        role="alert"
+      >
+        <div>
+          <strong class="font-semibold">Holy guacamole!</strong>
+          You should check in on some of those fields below.
+        </div>
         <button
           type="button"
-          class="close"
-          data-dismiss="alert"
+          class="text-red-800 text-xl leading-none hover:text-red-900"
           aria-label="Close"
         >
-          <span aria-hidden="true">&times;</span>
+          &times;
         </button>
       </div>
     </div>
   </div>
+
+  <div class="grid grid-cols-2 gap-4">
+    <div>
+      <div class="bg-white dark:bg-[#1f1f1f] p-4 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
+        <div class="bg-[url('/assets/images/kpi-achive-img.jpg')] bg-no-repeat bg-[position:bottom_right]">
+          <h2 class="text-[18px] pt-4 mb-4 block">
+            Today's <span class="text-[#0038ba] font-semibold">Booking</span>
+          </h2>
+      
+          <div class="border-b border-[#e1e1e1] pb-1 text-[35px] font-normal leading-none text-[#282828] font-[Rationale] relative">
+            <span class="text-[#0038ba] text-[16px] align-top pr-1">Rs.</span>
+            {{ homeReport.today_sale | decimal }}
+          </div>
+        </div>
+      
+        <div class="grid grid-cols-4 gap-2 mt-3">
+          <div class="text-[16px] text-[#282828] leading-tight">
+            Pending Sale
+            <span class="block text-[24px] font-[Rationale]">
+              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+              {{ homeReport.pending_sale | decimal }}
+            </span>
+          </div>
+      
+          <div class="text-[16px] text-[#282828] leading-tight">
+            Spot Sale
+            <span class="block text-[24px] font-[Rationale]">
+              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+              {{ homeReport.spot_sale | decimal }}
+            </span>
+          </div>
+      
+          <div class="text-[16px] text-[#282828] leading-tight">
+            Counter Sale
+            <span class="block text-[24px] font-[Rationale]">
+              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+              {{ homeReport.counter_sale | decimal }}
+            </span>
+          </div>
+      
+          <div class="text-[16px] text-[#282828] leading-tight">
+            Net Sale
+            <span class="block text-[24px] font-[Rationale]">
+              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+              {{
+                homeReport.pending_sale +
+                homeReport.spot_sale +
+                homeReport.counter_sale | decimal
+              }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    <div>
+      <div class="bg-white dark:bg-[#1f1f1f] p-4 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
+        
+        <div
+          class="bg-[url('/assets/images/kpi-achive-img.jpg')] bg-no-repeat bg-[position:bottom_right]"
+        >
+          <h2 class="text-[18px] pt-4 mb-4 block">
+            Monthly <span class="text-[#0038ba] font-semibold">Sale Trends</span>
+          </h2>
+      
+          <div
+            class="border-b border-[#e1e1e1] pb-1 text-[35px] font-normal leading-none text-[#282828] font-[Rationale] relative"
+          >
+            <span class="text-[#0038ba] text-[16px] align-top pr-1">Rs.</span>
+            {{ homeReportMonthly?.monthly_sale | decimal }}
+          </div>
+        </div>
+      
+        <div class="grid grid-cols-3 gap-2 mt-3">
+          <div class="text-[16px] text-[#282828] leading-tight">
+            Pending Sale
+            <span class="block text-[24px] font-[Rationale]">
+              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+              {{ homeReportMonthly?.pending_sale | decimal }}
+            </span>
+          </div>
+      
+          <div class="text-[16px] text-[#282828] leading-tight">
+            Spot Sale
+            <span class="block text-[24px] font-[Rationale]">
+              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+              {{ homeReportMonthly?.spot_sale | decimal }}
+            </span>
+          </div>
+      
+          <div class="text-[16px] text-[#282828] leading-tight">
+            Counter Sale
+            <span class="block text-[24px] font-[Rationale]">
+              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+              {{ homeReportMonthly?.counter_sale | decimal }}
+            </span>
+          </div>
+        </div> 
+      
+      </div>
+    </div>
+  </div>
+  
+
+
+  
+</div>
+
+
+<!-- <div *ngIf="false" class="row">
+  <div class="col-12 PB-15">
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+      <strong>Holy guacamole!</strong> You should check in on some of those
+      fields below.
+      <button class="btn btn-primary ml-2">Open Page</button>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div
+      class="alert alert-secondary alert-dismissible fade show"
+      role="alert"
+    >
+      <strong>Holy guacamole!</strong> You should check in on some of those
+      fields below.
+      <a class="ml-2">Open Page</a>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+      <strong>Holy guacamole!</strong> You should check in on some of those
+      fields below.
+      <button
+        type="button"
+        class="close"
+        data-dismiss="alert"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+  </div>
+</div> -->
+
+<div class="container mt-0" *ngIf="!loading">
+ 
+
 
   <div class="row">
     <div class="col-6">
@@ -306,6 +490,7 @@
     </div>
   </div>
 </div>
-<div class="container" *ngIf="loading">
+
+<div *ngIf="loading" class="flex justify-center items-center p-8 h-[calc(100vh-62px)]">
   <app-loader-white></app-loader-white>
 </div>

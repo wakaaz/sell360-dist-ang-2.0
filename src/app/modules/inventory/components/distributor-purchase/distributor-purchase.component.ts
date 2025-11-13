@@ -1,17 +1,10 @@
 import {
   Component,
   OnInit,
-  ViewChild,
   ChangeDetectorRef,
-  AfterViewChecked,
-  AfterViewInit,
   OnDestroy,
 } from '@angular/core';
 import { Router } from '@angular/router';
-
-import { DataTableDirective } from 'angular-datatables';
-import { from, Subject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 
 import { ToasterService } from 'src/app/core/services/toaster.service';
 import { GeneralDataService, DataService } from '../../../shared/services';
@@ -31,15 +24,8 @@ import { InventoryService } from '../../services/inventory.service';
 
 })
 export class DistributorPurchaseComponent
-  implements OnInit, AfterViewInit, OnDestroy
+  implements OnInit, OnDestroy
 {
-  @ViewChild(DataTableDirective, { static: false })
-  dtPurchasedProducts: DataTableDirective;
-
-  // We use this trigger because fetching the list of persons can be quite long,
-  // thus we ensure the data is fetched before rendering
-  dtTrigger: Subject<any> = new Subject<any>();
-  dtOptions: DataTables.Settings = {};
 
   showFreeProducts: boolean;
   addNewProducts: boolean;
@@ -48,6 +34,12 @@ export class DistributorPurchaseComponent
   loading: boolean;
 
   distributorPurchase: DistributorPurchaseModel;
+  
+  // Date picker bindings
+  receivedDate: Date | null;
+  invoiceDate: Date | null;
+  poDate: Date | null;
+  dcDate: Date | null;
 
   subTotalBill: number;
   totalBill: number;
@@ -73,9 +65,6 @@ export class DistributorPurchaseComponent
   ) {}
 
   ngOnInit(): void {
-    this.dtOptions = {
-      pagingType: 'simple_numbers',
-    };
     this.distributorPurchase = {
       dcDate: '  ',
       dcNo: '',
@@ -104,12 +93,17 @@ export class DistributorPurchaseComponent
     this.purchasedProducts = [];
     this.productPrefs = [];
     this.itemMargin = [];
+    // Initialize date picker bindings
+    this.receivedDate = null;
+    this.invoiceDate = null;
+    this.poDate = null;
+    this.dcDate = null;
     this.getDistributorInventory();
   }
 
-  ngAfterViewInit(): void {
-    this.dtTrigger.next(null);
-  }
+  getPopupContainer = (trigger: HTMLElement): HTMLElement => {
+    return trigger.parentElement!;
+  };
 
   getDistributorInventory(): void {
     this.inventoryService.getDistributorPurchaseData().subscribe(
@@ -237,12 +231,8 @@ export class DistributorPurchaseComponent
   }
 
   rerenderPurchasedProducts(): void {
-    from(this.dtPurchasedProducts.dtInstance)
-      .pipe(tap((dt) => dt.destroy()))
-      .subscribe((fr) => {
-        this.dtTrigger.next(null);
-        this.change.detectChanges();
-      });
+    // Trigger change detection for simple table
+    this.change.detectChanges();
   }
 
   removeSelectedProduct(product: any): void {
@@ -286,10 +276,35 @@ export class DistributorPurchaseComponent
   }
 
   clickOutSide(event: Event): void {
-    if (
-      !(event.target as HTMLElement).className.includes('ng-option') &&
-      !(event.target as HTMLElement).className.includes('ng-value-icon left')
-    ) {
+    const target = event.target as HTMLElement;
+    if (!target) return;
+    
+    // Handle different types of className (string, SVGAnimatedString, DOMTokenList, etc.)
+    let className = '';
+    if (typeof target.className === 'string') {
+      className = target.className;
+    } else if (target.className && typeof target.className === 'object') {
+      // Handle SVGAnimatedString or DOMTokenList
+      const classNameObj = target.className as any;
+      if ('baseVal' in classNameObj) {
+        className = classNameObj.baseVal || '';
+      } else if (typeof classNameObj.toString === 'function') {
+        className = classNameObj.toString();
+      } else if (Array.isArray(classNameObj)) {
+        className = classNameObj.join(' ');
+      }
+    }
+    
+    // Only proceed if className is a string and has the includes method
+    if (typeof className === 'string' && typeof className.includes === 'function') {
+      if (
+        !className.includes('ng-option') &&
+        !className.includes('ng-value-icon left')
+      ) {
+        this.closeNewProducts();
+      }
+    } else {
+      // If we can't determine className, close anyway to be safe
       this.closeNewProducts();
     }
   }
@@ -314,6 +329,14 @@ export class DistributorPurchaseComponent
 
   isNumber(event: KeyboardEvent, type: string = 'charges'): boolean {
     return this.dataService.isNumber(event, type);
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.onerror = null;
+      img.src = 'assets/images/default_product.jpg';
+    }
   }
 
   /*getUnits(itemId: number): Array<any> {
@@ -397,6 +420,26 @@ export class DistributorPurchaseComponent
     this.submitted = true;
     if (this.validateForm()) {
       this.loading = true;
+      
+      // Ensure all date fields are strings in the correct format
+      const formatDate = (date: any): string => {
+        if (date instanceof Date) {
+          const year = date.getFullYear();
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          const day = String(date.getDate()).padStart(2, '0');
+          return `${year}-${month}-${day}`;
+        }
+        if (typeof date === 'string') {
+          return date;
+        }
+        return '  ';
+      };
+      
+      this.distributorPurchase.dcDate = formatDate(this.distributorPurchase.dcDate);
+      this.distributorPurchase.invoiceDate = formatDate(this.distributorPurchase.invoiceDate);
+      this.distributorPurchase.poDate = formatDate(this.distributorPurchase.poDate);
+      this.distributorPurchase.receivedDate = formatDate(this.distributorPurchase.receivedDate);
+      
       this.distributorPurchase.discount = Number(
         this.distributorPurchase.discount
       );
@@ -473,24 +516,67 @@ export class DistributorPurchaseComponent
     }
   }
 
+  onDatePickerChange(date: any, field: string) {
+    console.log('date :>> ', date);
+    // Convert Date object to string format 'yyyy-MM-dd' as expected by the model
+    if (date instanceof Date) {
+      // Format date as 'yyyy-MM-dd'
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      const dateString = `${year}-${month}-${day}`;
+      this.distributorPurchase[field] = dateString;
+    } else if (date === null || date === undefined) {
+      // Reset to default empty string format
+      this.distributorPurchase[field] = '  ';
+    } else if (typeof date === 'string') {
+      // If it's already a string, use it
+      this.distributorPurchase[field] = date;
+    } else {
+      // Fallback: convert to string
+      this.distributorPurchase[field] = String(date);
+    }
+  }
+
   validateForm(): boolean {
+    // Helper function to check if date field is valid
+    const isValidDateField = (field: any): boolean => {
+      if (field === null || field === undefined) return false;
+      if (field instanceof Date) return true;
+      if (typeof field === 'string') {
+        const trimmed = field.trim();
+        return trimmed !== '' && trimmed !== '  ';
+      }
+      // Handle any other type (shouldn't happen, but be safe)
+      return false;
+    };
+
+    // Helper function to check if string field is valid
+    const isValidStringField = (field: any): boolean => {
+      if (!field) return false;
+      if (typeof field === 'string') {
+        return field.trim() !== '';
+      }
+      return false;
+    };
+
     if (
-      !this.distributorPurchase.dcDate.trim() ||
-      !this.distributorPurchase.dcNo.trim() ||
+      !isValidDateField(this.distributorPurchase.dcDate) ||
+      !isValidStringField(this.distributorPurchase.dcNo) ||
       this.distributorPurchase.discount === null ||
       this.distributorPurchase.fare === null ||
       this.distributorPurchase.gst === null ||
-      !this.distributorPurchase.invoiceDate.trim() ||
-      !this.distributorPurchase.invoiceNo.trim() ||
+      !isValidDateField(this.distributorPurchase.invoiceDate) ||
+      !isValidStringField(this.distributorPurchase.invoiceNo) ||
       (!this.purchasedProducts.length && !this.freeProducts.length) ||
       this.distributorPurchase.net_amount === null ||
       !this.distributorPurchase.original_amount ||
-      !this.distributorPurchase.poDate.trim() ||
-      !this.distributorPurchase.poNo.trim() ||
-      !this.distributorPurchase.receivedDate.trim() ||
-      !this.distributorPurchase.receivedNo.trim() ||
-      !this.distributorPurchase.remark.trim() ||
-      !this.distributorPurchase.supplier.trim()
+      !isValidDateField(this.distributorPurchase.poDate) ||
+      !isValidStringField(this.distributorPurchase.poNo) ||
+      !isValidDateField(this.distributorPurchase.receivedDate) ||
+      !isValidStringField(this.distributorPurchase.receivedNo) ||
+      !isValidStringField(this.distributorPurchase.remark) ||
+      !isValidStringField(this.distributorPurchase.supplier)
     ) {
       this.toastService.showToaster({
         title: 'Error:',
@@ -520,9 +606,6 @@ export class DistributorPurchaseComponent
   }
 
   ngOnDestroy(): void {
-    if (this.dtTrigger) {
-      this.dtTrigger.unsubscribe();
-    }
     this.change.detach();
   }
 }

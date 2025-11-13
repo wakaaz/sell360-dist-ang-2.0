@@ -69,7 +69,7 @@ export class StockComponent implements OnInit {
   historyLoading: boolean;
   showHistory: boolean;
   productsStock: Array<any> = [];
-  historyFilter: string;
+  historyFilter: string | null = null;
   historyDateFrom: Date | string | null = null;
   historyDateTo: Date | string | null = null;
   selectedProductId: number;
@@ -86,7 +86,6 @@ export class StockComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.historyFilter = 'monthly';
     this.getProductsWithStock();
   }
 
@@ -141,28 +140,45 @@ export class StockComponent implements OnInit {
     ).item_name;
     this.selectedProductId = itemId;
     this.showHistory = true;
-    this.historyDateFrom = new Date();
-    this.getStockHistory();
+    // Reset filter and dates - user will select them manually
+    this.historyFilter = null;
+    this.historyDateFrom = null;
+    this.historyDateTo = null;
+    this.stockHistory = null;
+    // Don't call getStockHistory() - wait for user to select filter and date
   }
 
   dateChanged(): void {
     this.resetTimer();
+    // Only fetch history if filter and required dates are selected
     if (
-      ((this.historyFilter === 'monthly' || this.historyFilter === 'daily') &&
-        this.historyDateFrom) ||
-      (this.historyFilter === 'range' &&
-        this.historyDateFrom &&
-        this.historyDateTo)
+      this.historyFilter &&
+      (
+        ((this.historyFilter === 'monthly' || this.historyFilter === 'daily') &&
+          this.historyDateFrom) ||
+        (this.historyFilter === 'range' &&
+          this.historyDateFrom &&
+          this.historyDateTo)
+      )
     ) {
+      // Set loading state immediately when user selects date/filter
+      this.historyLoading = true;
+      this.stockHistory = null;
       this.getStockHistory();
+    } else {
+      // Clear history if filter or date is not selected
+      this.stockHistory = null;
+      this.historyLoading = false;
     }
   }
 
   getStockHistory(): void {
+    // Ensure loading state is set (already set in dateChanged, but ensure it's set here too)
+    this.historyLoading = true;
+    this.stockHistory = null;
+    
     if (!this.timer) {
       let value = {};
-      this.stockHistory = null;
-      this.historyLoading = true;
       
       // Handle date picker value - it can be a Date object or string
       let dateFromStr: string;
@@ -245,9 +261,10 @@ export class StockComponent implements OnInit {
   closeHistory(): void {
     if (this.showHistory) {
       this.showHistory = false;
-      this.historyFilter = 'monthly';
+      this.historyFilter = null;
       this.historyDateTo = null;
       this.historyDateFrom = null;
+      this.stockHistory = null;
     }
   }
 }

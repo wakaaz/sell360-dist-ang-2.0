@@ -848,7 +848,7 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
   top: 0;
   left: -100%;
   height: 100vh;
-  z-index: 999;
+  z-index: 196;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   display: flex;
@@ -1140,4 +1140,7 @@ html.dark #returnsmodal input[type="text"]:hover {
 }
 .dark .ant-select-multiple.ant-select .ant-select-selection-item-remove svg{
   color: #dedede !important;
+}
+.dark .ant-picker-content th{
+  color: #ececec !important;
 }

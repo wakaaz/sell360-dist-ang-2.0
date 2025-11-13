@@ -1,137 +1,61 @@
-.itemQTY {
-	font-size: 12px;
-	width: 70px;
-	padding: 0px 5px;
-	border: solid 1px #e6e6e6; height: 24px;
+ 
+/* DatePicker Styling */
+::ng-deep .distributor-purchase-date-picker .ant-picker {
+  height: 32px !important;
+  border-radius: 5px !important;
+  font-size: 14px !important;
+  border-color: #d9d9d9 !important;
+  background-color: #ffffff !important;
+  transition: all 0.3s !important;
+  width: 100% !important;
 }
-.productSearch {
-	position: relative;
+
+::ng-deep .distributor-purchase-date-picker .ant-picker-input > input {
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.88) !important;
 }
-.productSearch input {
-	height: 32px;
-	border: solid 1px #eae9e9;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	padding-left: 30px;
-	font-size: 13px;
-	letter-spacing: 1px;
+
+::ng-deep .distributor-purchase-date-picker .ant-picker-input > input::placeholder {
+  color: rgba(0, 0, 0, 0.25) !important;
 }
-.productSearch .fa {
-	position: absolute;
-	top: 8px;
-	left: 8px;
-	color: #b5b5b5;
+
+::ng-deep .distributor-purchase-date-picker.ant-picker-focused .ant-picker,
+::ng-deep .distributor-purchase-date-picker .ant-picker:hover:not(.ant-picker-disabled) {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.1) !important;
 }
-.input-error { color: orangered; font-size: 13px; }
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
-/* Firefox */input[type=number] {-moz-appearance: textfield;}
-.AddProductTable {
-	padding: 0;
-	margin: 0
+
+/* Dark Mode - Date Picker */
+::ng-deep .dark .distributor-purchase-date-picker .ant-picker,
+::ng-deep html.dark .distributor-purchase-date-picker .ant-picker {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: #ffffff !important;
 }
-.AddProductTable tr {
-	border-bottom: solid 1px #eeeeee
+
+::ng-deep .dark .distributor-purchase-date-picker .ant-picker-input > input,
+::ng-deep html.dark .distributor-purchase-date-picker .ant-picker-input > input {
+  color: #ffffff !important;
+  background-color: #141414 !important;
 }
-.AddProductTable td {
-	padding-bottom: 7px;
-	padding-top: 7px
+
+::ng-deep .dark .distributor-purchase-date-picker .ant-picker-input > input::placeholder,
+::ng-deep html.dark .distributor-purchase-date-picker .ant-picker-input > input::placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
 }
-.ProListDiv {
-	padding: 0;
-	display: table;
+
+::ng-deep .dark .distributor-purchase-date-picker.ant-picker-focused .ant-picker,
+::ng-deep .dark .distributor-purchase-date-picker .ant-picker:hover:not(.ant-picker-disabled),
+::ng-deep html.dark .distributor-purchase-date-picker.ant-picker-focused .ant-picker,
+::ng-deep html.dark .distributor-purchase-date-picker .ant-picker:hover:not(.ant-picker-disabled) {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.2) !important;
 }
-.ProListDiv .PR_Name {
-	display: table-cell;
-	vertical-align: middle;
-	font-size: 14px;
-	letter-spacing: 1px;
-	line-height: 16px
+
+/* DatePicker Dropdown Positioning */
+::ng-deep .distributor-purchase-date-picker ~ .ant-picker-dropdown,
+::ng-deep .distributor-purchase-date-picker .ant-picker-dropdown,
+::ng-deep body > .ant-picker-dropdown {
+  position: absolute !important;
+  z-index: 1050 !important;
 }
-.ProListDiv .PrList_img {
-	width: 35px;
-	height: 35px;
-	margin-right: 8px;
-	border: solid 1px #e0e0e0
-}
-.AddProductTable .btn-default {
-	padding: 5px 8px;
-	font-size: 13px;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border-radius: 0;
-	-khtml-border-radius: 0;
-	background: linear-gradient(90deg, #1e54d3 0%, #0038ba 100%);
-	color: #fff;
-	text-align: center;
-	margin: 0;
-	line-height: 1;
-	min-width: 74px;
-	letter-spacing: 1px;
-	float: right;
-	border: none!important
-}
-.AddDetailPR {
-	padding: 25px;
-	font-size: 14px
-}
-.AddDetailPR .form-control {
-	height: 32px;
-	border: solid 1px #dedede;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	box-shadow: none;
-	padding: 0px 10px;
-	font-size: 13px;
-	letter-spacing: 1px;
-}
-.AddDetailPR select {
-	border-radius: 0;
-	padding: 0px 10px;
-	height: 32px;
-	border: solid 1px #dedede;
-	font-size: 14px
-}
-.dis-pr-list .ProListDiv {
-	padding: 0;
-	display: table;
-}
-.dis-pr-list .ProListDiv .PR_Name {
-	display: table-cell;
-	vertical-align: middle;
-	font-size: 12px;
-	letter-spacing: 1px;
-	line-height: normal
-}
-.dis-pr-list .ProListDiv .PrList_img {
-	width: 28px;
-	height: 28px;
-	margin-right: 8px;
-	border: solid 1px #e0e0e0
-}	
-.se_cus-type .form-control {
-    border: 1px solid #eeeeee;
-    background-color: #fff;
-}
-/* type=date */
-input[type=date] {color: transparent;}
-.focused input[type=date] {color: #212121;}
-/* type=date */
-.action-ord{background-color: #f6f6f6; padding: 10px; margin-top: 15px; margin-bottom: 0px; text-align: center; margin-bottom: 1px}
-.dis-pr-list .dataTable td, .dis-pr-list .dataTable th{padding: 8px}
-.dis-pr-list tfoot {background:linear-gradient(0deg, #f6f6f6 0%, #f6f6f6 100%); font-size: 14px}
-.dis-pr-list .custom-select-sm{
-    color: #212121;
-    height: 24px;
-    border-radius: 0;
-    font-size: 12px;
-    line-height: 1; min-width: 90px;
-    padding: 0 5px; background-color: #fff; border-color: #e6e6e6;
-}
-.add_button {
-    right: 15px!important; top: 30px!important; box-shadow: none;
-}
-.nav-item a { cursor: pointer; }
-.loader { text-align: center; padding: 30px; }
-.loading { color: #b5b5b5; font-size: 24px; margin: 0 auto;}

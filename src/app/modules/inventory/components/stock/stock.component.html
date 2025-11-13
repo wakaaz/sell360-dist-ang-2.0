@@ -43,11 +43,11 @@
     <!-- Modal Body -->
     <div class="px-6 py-5">
       <!-- Filter Section -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="flex mb-5 gap-3">
         <!-- Filter Select -->
-        <div>
+        <div class="flex gap-3">
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 my-auto"
           >
             Filter<span class="text-red-500">*</span>
           </label>
@@ -55,7 +55,7 @@
             [(ngModel)]="historyFilter"
             (ngModelChange)="dateChanged()"
             nzPlaceHolder="Select Filter"
-            class="w-full history-filter-select"
+            class="w-[200px] history-filter-select"
             [nzDropdownStyle]="{ 'z-index': '9999' }"
           >
             <nz-option nzValue="monthly" nzLabel="Monthly"></nz-option>
@@ -65,9 +65,9 @@
         </div>
 
         <!-- From Date -->
-        <div>
+         <div class="flex gap-3">
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 my-auto"
           >
             From<span class="text-red-500">*</span>
           </label>
@@ -76,15 +76,15 @@
             (ngModelChange)="dateChanged()"
             nzFormat="yyyy-MM-dd"
             nzPlaceHolder="Select Date"
-            class="w-full history-date-picker"
+            class="w-[200px] history-date-picker"
             [nzDropdownStyle]="{ 'z-index': '9999' }"
           ></nz-date-picker>
         </div>
 
         <!-- To Date (only show for range) -->
-        <div *ngIf="historyFilter === 'range'">
+        <div class="flex gap-3" *ngIf="historyFilter === 'range'">
           <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            class="block text-sm font-medium text-gray-700 dark:text-gray-300 my-auto"
           >
             To<span class="text-red-500">*</span>
           </label>
@@ -93,7 +93,7 @@
             (ngModelChange)="dateChanged()"
             nzFormat="yyyy-MM-dd"
             nzPlaceHolder="Select Date"
-            class="w-full history-date-picker"
+            class="w-[200px] history-date-picker"
             [nzDropdownStyle]="{ 'z-index': '9999' }"
           ></nz-date-picker>
         </div>
@@ -101,29 +101,37 @@
 
       <!-- History Table -->
       <div class="border-t border-gray-200 dark:border-[#333333] pt-4">
-        <div *ngIf="historyLoading" class="flex justify-center items-center p-8">
-          <div class="spinner-border" style="width: 5rem; height: 5rem; color: #0038ba" role="status">
-            <span class="sr-only">Loading...</span>
+        <div *ngIf="historyLoading" class="flex justify-center items-center p-8"> 
+          <div class="relative">
+            <svg class="animate-spin h-8 w-8" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25 dark:opacity-50 text-gray-500 dark:text-gray-400" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"></circle>
+              <path class="opacity-75 dark:opacity-1 text-primary dark:text-primary" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
           </div>
+        </div>
+
+        <!-- Message when filter/date not selected -->
+        <div *ngIf="!historyLoading && (!historyFilter || !historyDateFrom || (historyFilter === 'range' && !historyDateTo))" class="text-center py-8">
+          <p class="text-gray-500 dark:text-gray-400">Please select Filter and Date to view stock history.</p>
         </div>
 
         <div *ngIf="stockHistory && !historyLoading && stockHistory.length > 0" class="overflow-x-auto">
           <table class="min-w-full divide-y divide-gray-200 dark:divide-[#333333]">
             <thead class="bg-gray-50 dark:bg-[#141414]">
               <tr>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Item</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Trx Type</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">State</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Quantity</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Balance</th>
-                <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
+                <th class="px-2 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Item</th>
+                <th class="px-2 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Trx Type</th>
+                <th class="px-2 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">State</th>
+                <th class="px-2 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Quantity</th>
+                <th class="px-2 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Balance</th>
+                <th class="px-2 py-1.5 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</th>
               </tr>
             </thead>
             <tbody class="bg-white dark:bg-[#1f1f1f] divide-y divide-gray-200 dark:divide-[#333333]">
               <tr *ngFor="let hs of stockHistory; let in = index" class="hover:bg-gray-50 dark:hover:bg-[#262626]">
-                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.item_name }}</td>
-                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.type }}</td>
-                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                <td class="px-2 py-1.5 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.item_name }}</td>
+                <td class="px-2 py-1.5 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.type }}</td>
+                <td class="px-2 py-1.5 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
                   {{
                     hs.module === "Return Market" && hs.status === "out"
                       ? "Damage"
@@ -132,15 +140,15 @@
                       : hs.status
                   }}
                 </td>
-                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.child_quantity || 0 | number }}</td>
-                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.balance || 0 | number }}</td>
-                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.created_at }}</td>
+                <td class="px-2 py-1.5 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.child_quantity || 0 | number }}</td>
+                <td class="px-2 py-1.5 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.balance || 0 | number }}</td>
+                <td class="px-2 py-1.5 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">{{ hs.created_at }}</td>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <div *ngIf="stockHistory && !historyLoading && stockHistory.length === 0" class="text-center py-8">
+        <div *ngIf="stockHistory && !historyLoading && stockHistory.length === 0 && historyFilter && historyDateFrom" class="text-center py-8">
           <p class="text-gray-500 dark:text-gray-400">No history found for the selected period.</p>
         </div>
       </div>

@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Router } from '@angular/router';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 
 import { ToasterService } from 'src/app/core/services/toaster.service';
 import { ReportsService } from '../../services/reports.service';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -16,23 +19,71 @@ import { ReportsService } from '../../services/reports.service';
 
 export class PurchaseHisotryComponent implements OnInit {
 
-    dtOptions: DataTables.Settings = {};
-    purchasesHistory: Array<any>;
+    private gridApi!: GridApi;
+    purchasesHistory: Array<any> = [];
     loading: boolean;
-    dtTrigger: Subject<any> = new Subject();
+
+    columnDefs: ColDef[] = [
+        { field: 'poDate', headerName: 'Purchase Date', sortable: true, filter: true, flex: 1 },
+        { field: 'receivedNo', headerName: 'Received No.', sortable: true, filter: true, flex: 1 },
+        { field: 'invoiceNo', headerName: 'Inv. No.', sortable: true, filter: true, flex: 1 },
+        { field: 'poNo', headerName: 'P.O No.', sortable: true, filter: true, flex: 1 },
+        {
+            field: 'action',
+            headerName: 'Action',
+            cellRenderer: (params: any) => {
+                const history = params.data;
+                return `
+                    <button onclick="window.viewDetails('${history.id}')" 
+                            class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5" 
+                            title="Details">Details</button>
+                `;
+            },
+            cellStyle: {
+                display: 'flex',
+                alignItems: 'center',
+            },
+            width: 120,
+            sortable: false,
+            filter: false,
+            pinned: 'right'
+        }
+    ];
+
+    defaultColDef: ColDef = {
+        resizable: true,
+        sortable: true,
+        filter: true
+    };
 
     constructor(
         private reportService: ReportsService,
         private toastService: ToasterService,
+        private router: Router,
     ) {
     }
 
     ngOnInit(): void {
-        this.dtOptions = {
-            pagingType: 'simple_numbers'
-        };
         this.purchasesHistory = [];
         this.getPurchasesHistory();
+        this.setupGlobalFunctions();
+    }
+
+    setupGlobalFunctions(): void {
+        (window as any).viewDetails = (id: string) => {
+            this.router.navigate(['/reports/purchase', id]);
+        };
+    }
+
+    onGridReady(params: GridReadyEvent): void {
+        this.gridApi = params.api;
+    }
+
+    onQuickFilterChanged(event: any): void {
+        const filterValue = event.target.value;
+        if (this.gridApi) {
+            this.gridApi.setGridOption('quickFilterText', filterValue);
+        }
     }
 
     getPurchasesHistory(): void {
@@ -42,15 +93,19 @@ export class PurchaseHisotryComponent implements OnInit {
             if (res.status === 200) {
                 const historyData = res.data;
                 this.purchasesHistory = historyData.map(history => {
-                    return {...history, payload: JSON.parse(history.payload) };
+                    const payload = JSON.parse(history.payload);
+                    return {
+                        id: history.id,
+                        poDate: payload.poDate,
+                        receivedNo: payload.receivedNo,
+                        invoiceNo: payload.invoiceNo,
+                        poNo: payload.poNo
+                    };
                 });
-                console.log('this.purchasesHistory :>> ', this.purchasesHistory);
-                setTimeout(() => {
-                    this.dtTrigger.next(null);
-                }, 1);
             }
 
         }, error => {
+            this.loading = false;
             if (error.status !== 1 && error.status !== 401) {
                 this.toastService.showToaster({
                     title: 'Error:',

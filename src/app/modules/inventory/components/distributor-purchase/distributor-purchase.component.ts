@@ -54,6 +54,9 @@ export class DistributorPurchaseComponent
   productsDispList: Array<any>;
   productPrefs: Array<any>;
   itemMargin: Array<any>;
+  searchFilterText: string = '';
+  filteredPurchasedProducts: Array<any> = [];
+  filteredFreeProducts: Array<any> = [];
 
   constructor(
     private change: ChangeDetectorRef,
@@ -93,6 +96,9 @@ export class DistributorPurchaseComponent
     this.purchasedProducts = [];
     this.productPrefs = [];
     this.itemMargin = [];
+    this.searchFilterText = '';
+    this.filteredPurchasedProducts = [];
+    this.filteredFreeProducts = [];
     // Initialize date picker bindings
     this.receivedDate = null;
     this.invoiceDate = null;
@@ -227,7 +233,60 @@ export class DistributorPurchaseComponent
   }
 
   getArray(): Array<any> {
+    if (this.searchFilterText && this.searchFilterText.trim() !== '') {
+      // Return filtered array if search text exists
+      return this.showFreeProducts ? this.filteredFreeProducts : this.filteredPurchasedProducts;
+    }
+    // Return original array if no search text
     return this.showFreeProducts ? this.freeProducts : this.purchasedProducts;
+  }
+
+  onQuickFilterChanged(event: any): void {
+    const filterValue = event.target?.value || '';
+    this.searchFilterText = filterValue.trim().toLowerCase();
+    
+    if (this.searchFilterText === '') {
+      // Clear filtered arrays when search is empty
+      this.filteredPurchasedProducts = [];
+      this.filteredFreeProducts = [];
+    } else {
+      // Filter purchased products - search across all columns
+      this.filteredPurchasedProducts = this.purchasedProducts.filter((product) => {
+        const sku = (product.item_sku || '').toLowerCase();
+        const name = (product.item_name || '').toLowerCase();
+        const unitName = (product.unit_name || '').toLowerCase();
+        const stockQty = (product.stockQty || '').toString().toLowerCase();
+        const tradePrice = (product.item_trade_price || '').toString().toLowerCase();
+        const margin = (product.discount_type_value || '').toString().toLowerCase();
+        const netAmount = (product.net_amount || '').toString().toLowerCase();
+        
+        return sku.includes(this.searchFilterText) || 
+               name.includes(this.searchFilterText) ||
+               unitName.includes(this.searchFilterText) ||
+               stockQty.includes(this.searchFilterText) ||
+               tradePrice.includes(this.searchFilterText) ||
+               margin.includes(this.searchFilterText) ||
+               netAmount.includes(this.searchFilterText);
+      });
+      
+      // Filter free products - search across all columns
+      this.filteredFreeProducts = this.freeProducts.filter((product) => {
+        const sku = (product.item_sku || '').toLowerCase();
+        const name = (product.item_name || '').toLowerCase();
+        const unitName = (product.unit_name || '').toLowerCase();
+        const stockQty = (product.stockQty || '').toString().toLowerCase();
+        const tradePrice = (product.item_trade_price || '').toString().toLowerCase();
+        
+        return sku.includes(this.searchFilterText) || 
+               name.includes(this.searchFilterText) ||
+               unitName.includes(this.searchFilterText) ||
+               stockQty.includes(this.searchFilterText) ||
+               tradePrice.includes(this.searchFilterText);
+      });
+    }
+    
+    // Trigger change detection to update the table
+    this.rerenderPurchasedProducts();
   }
 
   rerenderPurchasedProducts(): void {

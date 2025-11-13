@@ -53,7 +53,11 @@ export class PurchaseHisotryComponent implements OnInit {
     defaultColDef: ColDef = {
         resizable: true,
         sortable: true,
-        filter: true
+        filter: true,
+        // Enable quick filter for all columns
+        getQuickFilterText: (params) => {
+            return params.value?.toString() || '';
+        }
     };
 
     constructor(
@@ -77,12 +81,23 @@ export class PurchaseHisotryComponent implements OnInit {
 
     onGridReady(params: GridReadyEvent): void {
         this.gridApi = params.api;
+        // Enable quick filter on grid ready
+        if (this.gridApi) {
+            this.gridApi.setGridOption('quickFilterText', '');
+        }
     }
 
     onQuickFilterChanged(event: any): void {
-        const filterValue = event.target.value;
+        const filterValue = event.target?.value || '';
         if (this.gridApi) {
             this.gridApi.setGridOption('quickFilterText', filterValue);
+        } else {
+            // If gridApi is not ready yet, try again after a short delay
+            setTimeout(() => {
+                if (this.gridApi) {
+                    this.gridApi.setGridOption('quickFilterText', filterValue);
+                }
+            }, 100);
         }
     }
 

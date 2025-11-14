@@ -593,12 +593,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       this.primarySrvc.updateOrder(this.order).subscribe(
         (res) => {
           if (res.status === 200) {
-            // const toast: Toaster = {
-            //   type: 'success',
-            //   message: 'Order updated successfully!',
-            //   title: 'Order Updated:',
-            // };
-            // this.toastService.showToaster(toast);
             this.showToastMessage(
               'Success:',
               'Order updated successfully!',
@@ -606,24 +600,12 @@ export class EditOrderComponent implements OnInit, OnDestroy {
             );
             this.router.navigate(['/primaryOrders/booked']);
           } else {
-            // const toast: Toaster = {
-            //   type: 'error',
-            //   message: res.message,
-            //   title: 'Error:',
-            // };
-            // this.toastService.showToaster(toast);
             this.showToastMessage('Error:', res.message, 'error');
           }
           this.saving = false;
         },
         (error) => {
           if (error.status !== 1 && error.status !== 401) {
-            // const toast: Toaster = {
-            //   type: 'error',
-            //   message: 'Cannot save order. Please try again',
-            //   title: 'Error:',
-            // };
-            // this.toastService.showToaster(toast);
             this.showToastMessage(
               'Error:',
               'Cannot save order. Please try again',
@@ -655,12 +637,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           .subscribe(
             (res) => {
               if (res.status === 200) {
-                // const toast: Toaster = {
-                //   type: 'success',
-                //   message: 'Order created successfully!',
-                //   title: 'Order Created:',
-                // };
-                // this.toastService.showToaster(toast);
                 this.showToastMessage(
                   'Success:',
                   'Order created successfully!',
@@ -668,24 +644,12 @@ export class EditOrderComponent implements OnInit, OnDestroy {
                 );
                 this.router.navigate(['/primaryOrders/booked']);
               } else {
-                // const toast: Toaster = {
-                //   type: 'error',
-                //   message: res.message,
-                //   title: 'Error:',
-                // };
-                // this.toastService.showToaster(toast);
                 this.showToastMessage('Error:', res.message, 'error');
               }
               this.saving = false;
             },
             (error) => {
               if (error.status !== 1 && error.status !== 401) {
-                // const toast: Toaster = {
-                //   type: 'error',
-                //   message: 'Cannot save order. Please try again',
-                //   title: 'Error:',
-                // };
-                // this.toastService.showToaster(toast);
                 this.showToastMessage(
                   'Error:',
                   'Cannot save order. Please try again',
@@ -696,12 +660,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
             }
           );
       } else if (!this.selectedSubDistributor) {
-        // const toast: Toaster = {
-        //   type: 'error',
-        //   message: 'Please select sub distributor',
-        //   title: 'Error:',
-        // };
-        // this.toastService.showToaster(toast);
         this.showToastMessage(
           'Error:',
           'Please select sub distributor',
@@ -709,12 +667,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         );
         this.saving = false;
       } else if (!this.order.orderContent?.length) {
-        // const toast: Toaster = {
-        //   type: 'error',
-        //   message: 'Please add atleast one product',
-        //   title: 'Error:',
-        // };
-        // this.toastService.showToaster(toast);
         this.showToastMessage(
           'Error:',
           'Please add atleast one product',
@@ -773,6 +725,9 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         // product = this.dataService.applyFreeProductScheme(product);
         product = this.applyFreeProductScheme(product);
         break;
+      case 'dotp':
+        product = this.applyDOTP(product);
+        break;
       // case 'dotp':
       //   product = this.dataService.getSDForDOTP(product);
       //   break;
@@ -823,12 +778,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
             createdPrimaryOrder['scheme_quantity_free'] = orderFreeQty;
             createdPrimaryOrder['selectedScheme'] = selectedScheme;
           } else {
-            // const toast: Toaster = {
-            //   type: 'error',
-            //   message: 'Please select sub distributor',
-            //   title: 'Error:',
-            // };
-            // this.toastService.showToaster(toast);
             this.showToastMessage(
               'Error:',
               'Please select sub distributor',
@@ -848,12 +797,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
               TO = discount_on_tp * quantityToUse;
             } else {
               TO = 0;
-              // const toast: Toaster = {
-              //   type: 'error',
-              //   message: `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
-              //   title: 'Error:',
-              // };
-              // this.toastService.showToaster(toast);
               this.showToastMessage(
                 'Error:',
                 `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
@@ -863,12 +806,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
             createdPrimaryOrder['trade_offer'] = TO;
             createdPrimaryOrder['selectedScheme'] = selectedScheme;
           } else {
-            // const toast: Toaster = {
-            //   type: 'error',
-            //   message: 'Please select sub distributor',
-            //   title: 'Error:',
-            // };
-            // this.toastService.showToaster(toast);
             this.showToastMessage(
               'Error:',
               'Please select sub distributor',
@@ -885,12 +822,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           if (quantityToUse >= min_qty) {
             TO = quantityToUse * discount_on_tp;
           } else {
-            // const toast: Toaster = {
-            //   type: 'error',
-            //   message: `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
-            //   title: 'Error:',
-            // };
-            // this.toastService.showToaster(toast);
             this.showToastMessage(
               'Error:',
               `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
@@ -901,12 +832,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           createdPrimaryOrder['trade_offer'] = TO;
           createdPrimaryOrder['selectedScheme'] = selectedScheme;
         } else {
-          // const toast: Toaster = {
-          //   type: 'error',
-          //   message: 'Please select sub distributor',
-          //   title: 'Error:',
-          // };
-          // this.toastService.showToaster(toast);
           this.showToastMessage(
             'Error:',
             'Please select sub distributor',
@@ -1089,6 +1014,23 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     primary_order['total_bill'] = total_bill;
 
     return primary_order;
+  }
+
+  applyDOTP(product: any): any {
+    if (
+      this.isEligibleForMinimumQuantity(
+        product.unit_quantity,
+        product.selectedScheme.min_qty
+      )
+    ) {
+      product.scheme_id = product.selectedScheme.id;
+      product.scheme_type = product.selectedScheme.scheme_type;
+      product.scheme_rule = product.selectedScheme.scheme_rule;
+      product.scheme_discount = product.selectedScheme.discount_on_tp;
+    } else {
+      this.schemeCannotApplied();
+    }
+    return product;
   }
 
   applyFreeProductScheme(product: any): any {

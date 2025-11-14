@@ -1,69 +1,9 @@
-.carousel-indicators .active {
-	background-color: #0038ba
+ 
+/* Ensure smooth transitions for carousel */
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 500ms;
 }
-.carousel-indicators li {
-	background-color: #939393
-}
-._product-RS h2 {
-	font-size: 22px;
-}
-._Cat {
-	font-size: 14px
-}
-._Cat strong {
-	color: #282828;
-	font-size: 14px;
-	width: 120px;
-}
-.distTabs {
-	margin-bottom: 30px;
-	padding: 10px 20px 10px 20px;
-}
-.distTabs {
-	margin-bottom: 30px;
-	padding: 10px 20px 10px 20px
-}
-.distTabs .header-tabs {
-	box-shadow: none;
-	-webkit-box-shadow: none;
-	-moz-box-shadow: none;
-	-ms-box-shadow: none;
-	margin-bottom: 20px;
-	border: none;
-	border-bottom: solid 1px #d9dde1;
-}
-.distTabs .header-tabs .nav-tabs .nav-link {
-	border-bottom: solid 1px #d9dde1;
-}
-.distTabs .header-tabs .nav-tabs .nav-item.show, .distTabs .header-tabs .nav-tabs .nav-link.active, .distTabs .header-tabs .nav-tabs .nav-link:HOVER {
-	border-bottom: solid 2px #0038ba;
-	color: #0038ba;
-}
-.overflow-x-div {
-	overflow-x: auto;
-}
-.items-available {
-	letter-spacing: 0.5px;
-	font-size: 12px;
-}
-.items-available ul li {
-	padding-top: 8px;
-	padding-bottom: 8px;
-}
-.items-available h3 {
-	border-bottom: solid 1px #dedede;
-	padding-bottom: 8px;
-	margin-bottom: 0;
-}
-.carousel-indicators {
-	bottom: -10px;
-}
-.items-available th, .items-available td {
-	padding: 8px 10px;
-}
-.items-available th {
-	background-color: #f6f6f6;
-	font-size: 14px;
-	color: #0038ba;
-	font-family: proximanova-semibold, sans-serif!important;
-}
+
+ 

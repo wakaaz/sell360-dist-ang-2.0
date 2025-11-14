@@ -1,292 +1,283 @@
-<div class="container">
-  <div class="row mt-2 mb-2">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <h2 class="_head01">Product Detail</h2>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <ol class="breadcrumb">
-        <li>
-          <a><span>Product Management</span></a>
-        </li>
-        <li><span>Product Detail</span></li>
-      </ol>
-    </div>
-  </div>
-
-  <div *ngIf="!loader && product" class="row">
-    <div class="col-12 mb-30">
-      <div class="card top_border _product-D">
-        <div class="row">
-          <div class="col-md-4">
-            <div
-              id="carouselExampleIndicators"
-              class="carousel slide"
-              data-ride="carousel"
-            >
-              <ol class="carousel-indicators">
-                <li
-                  *ngFor="let img of product.images; let ind = index"
-                  (click)="slideTo(ind)"
-                  [ngClass]="activeSlide === ind ? 'active' : ''"
-                ></li>
-              </ol>
-              <div class="carousel-inner">
-                <div
-                  *ngFor="let img of product.images; let ind = index"
-                  class="carousel-item"
-                  [ngClass]="activeSlide === ind ? 'active' : ''"
-                >
-                  <img class="d-block w-100" [src]="img.picture" alt="" />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-8 _product-RS">
-            <h2>
-              {{ product.item_name }}
-              <!--<a class="btn add_button" style="top:0;right:15px;letter-spacing:1px"><i class="fa fa-pencil"></i> <span>Edit</span></a>-->
-            </h2>
-            <span class="_Cat"
-              ><strong>SKU: </strong>{{ product.item_sku }}
-            </span>
-            <span class="_Cat"
-              ><strong>Category: </strong>{{ product.main_cat }}</span
-            >
-            <span class="_Cat"
-              ><strong>Sub Category: </strong>{{ product.sub_cat }}</span
-            >
-            <span class="_Cat"
-              ><strong>Brand Name: </strong>{{ product.brand_name }}
-            </span>
-            <span class="_Cat"
-              ><strong>Description: </strong
-              >{{ product.item_main_description }}</span
-            >
-
-            <div *ngIf="product.packaging" class="items-available">
-              <h3>Packaging</h3>
-
-              <div class="overflow-x-div">
-                <div style="width: max-content; min-width: 100%">
-                  <table
-                    width="100%"
-                    border="0"
-                    cellspacing="0"
-                    cellpadding="0"
-                  >
-                    <tbody></tbody>
-                    <thead>
-                      <tr>
-                        <th>Unit Name</th>
-                        <th>QTY.</th>
-                        <th>General T.P.</th>
-                        <th>G.T.-C Class</th>
-                        <th>LMT-Silver</th>
-                        <th>IMT</th>
-                        <th>Regular WS</th>
-                        <th>HoReCa</th>
-                        <th>G.T.-A Class</th>
-                        <th>G.T-B Class</th>
-                        <th>LMT-Bronze</th>
-                        <th>LMT-Golden</th>
-                        <th>Large WS</th>
-                        <th>Mega WS</th>
-                        <th>Key Account</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Piece</td>
-                        <td>1</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                      </tr>
-                      <tr>
-                        <td>Box</td>
-                        <td>1</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                      </tr>
-                      <tr>
-                        <td>Carton</td>
-                        <td>1</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 6.50</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                        <td>Rs. 8</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              <!--<ul>
-                <li>
-                  <div class="row">
-                    <div class="col pr-0" style="max-width: 100px;"><strong>Unit Name</strong></div>                        
-                    <div class="col pr-0" style="max-width: 70px;"><strong>QTY.</strong></div>
-                    <div class="col pr-0"><strong>General T.P.</strong></div>
-                    <div class="col pr-0"><strong>General Trade</strong></div>						  
-                    <div class="col pr-0"><strong>LMT</strong></div>
-                    <div class="col pr-0"><strong>IMT</strong></div>
-                    <div class="col pr-0"><strong>Wholesale</strong></div>
-                  </div>
-                </li>
-                <li>
-                  <div class="row">
-                    <div class="col pr-0">Piece</div>
-                    <div class="col pr-0" style="max-width: 70px;">1</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div> 
-                    <div class="col pr-0">Rs. 6.50</div> 
-                  </div>
-                </li>
-                  
-                <li>
-                  <div class="row">
-                    <div class="col pr-0">Box</div>
-                    <div class="col pr-0" style="max-width: 70px;">15</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div> 
-                    <div class="col pr-0">Rs. 6.50</div> 
-                  </div>
-                </li>
-                  
-                <li>
-                  <div class="row">
-                    <div class="col pr-0">Carton</div>
-                    <div class="col pr-0" style="max-width: 70px;">35</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div>
-                    <div class="col pr-0">Rs. 6.50</div> 
-                  </div>
-                </li>  
-                 
-                 
-              </ul>-->
-            </div>
-          </div>
-        </div>
+<div class="container mx-auto px-4">
+  <!-- Header -->
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1 class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0">
+          Product <span class="font-light">Detail</span>
+        </h1>
       </div>
-    </div>
-
-    <div *ngIf="product.stock" class="col-12">
-      <div class="card distTabs">
-        <div class="row">
-          <div class="col-md-12">
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="header-tabs">
-                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
-                    <a
-                      class="nav-item nav-link active"
-                      id="nav-home-tab"
-                      data-toggle="tab"
-                      href="#nav-home"
-                      role="tab"
-                      aria-controls="nav-home"
-                      aria-selected="true"
-                      >Stock Distributor
-                      <span class="_cus-val">
-                        {{ product.stock || 0 }}
-                      </span></a
-                    >
-                  </div>
-                </div>
-                <div class="tab-content" id="nav-tabContent">
-                  <div
-                    class="tab-pane fade show active body_sales_agants"
-                    id="nav-home"
-                    role="tabpanel"
-                    aria-labelledby="nav-home-tab"
-                  >
-                    <table
-                      datatable
-                      [dtOptions]="dtOptions"
-                      class="table table-hover dt-responsive nowrap"
-                      id="example"
-                      style="width: 100%"
-                    >
-                      <thead>
-                        <tr>
-                          <th>Distributor Name</th>
-                          <th>Region</th>
-                          <th>Available Stock</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td>Distributor Name Here</td>
-                          <td>Region here...</td>
-                          <td>452</td>
-                        </tr>
-                        <tr>
-                          <td>Distributor Name Here</td>
-                          <td>Region here...</td>
-                          <td>452</td>
-                        </tr>
-                        <tr>
-                          <td>Distributor Name Here</td>
-                          <td>Region here...</td>
-                          <td>452</td>
-                        </tr>
-                        <tr>
-                          <td>Distributor Name Here</td>
-                          <td>Region here...</td>
-                          <td>452</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <div>
+        
       </div>
     </div>
   </div>
 
-  <div class="row" *ngIf="loader">
-    <div class="col-md-12">
+  <!-- Product Detail Content -->
+  <div class="space-y-6">
+
+    <!-- Loading State -->
+    <div *ngIf="loader" class="flex justify-center items-center p-8">
       <app-loader-white></app-loader-white>
     </div>
+
+    <div *ngIf="!loader && product">
+    <!-- Product Card -->
+    <div class="bg-white dark:bg-black dark:border-[#333333] border rounded-lg shadow-[0_0_5px_#0000001a] overflow-hidden p-5 text-sm product-detail-bg mb-6">
+      <div class="flex gap-6">
+        <!-- Image Carousel -->
+        <div class="relative flex w-[400px]">
+          <div class="w-[400px] h-[400px] relative aspect-square bg-gray-100 dark:bg-[#1a1a1a] rounded-lg overflow-hidden">
+            <!-- Carousel Images -->
+            <div class="relative w-full h-full">
+              <div 
+                *ngFor="let img of product.images; let ind = index"
+                class="absolute inset-0 transition-opacity duration-500"
+                [ngClass]="activeSlide === ind ? 'opacity-100 z-10' : 'opacity-0 z-0'">
+                <img 
+                  [src]="img.picture" 
+                  [alt]="product.item_name"
+                  class="w-[400px] h-[400px] object-contain">
+              </div>
+            </div>
+
+            <!-- Carousel Navigation Arrows -->
+            <button
+              *ngIf="product.images && product.images.length > 1"
+              (click)="prevSlide()"
+              class="absolute left-2 top-1/2 -translate-y-1/2 z-[5] bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black text-gray-700 dark:text-gray-300 rounded-full p-2 shadow-lg transition-all"
+              aria-label="Previous image">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+              </svg>
+            </button>
+            <button
+              *ngIf="product.images && product.images.length > 1"
+              (click)="nextSlide()"
+              class="absolute right-2 top-1/2 -translate-y-1/2 z-[5] bg-white/80 dark:bg-black/80 hover:bg-white dark:hover:bg-black text-gray-700 dark:text-gray-300 rounded-full p-2 shadow-lg transition-all"
+              aria-label="Next image">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Carousel Indicators -->
+          <div 
+            *ngIf="product.images && product.images.length > 1"
+            class="flex justify-center gap-2 mt-4">
+            <button
+              *ngFor="let img of product.images; let ind = index"
+              (click)="slideTo(ind)"
+              type="button"
+              class="h-2 rounded-full transition-all"
+              [ngClass]="activeSlide === ind ? 'w-8 bg-primary' : 'w-2 bg-gray-300 dark:bg-gray-600'"
+              [attr.aria-label]="'Go to slide ' + (ind + 1)">
+            </button>
+          </div>
+        </div>
+
+        <!-- Product Information -->
+        <div class="space-y-4 flex-1">
+          <h2 class="text-xl font-primary font-medium text-primary dark:text-neutral-200">
+            {{ product.item_name }}
+          </h2>
+
+          <div class="space-y-2 text-sm">
+            <div class="flex items-start gap-2">
+              <strong class="text-neutral-900 dark:text-neutral-200 font-medium min-w-[120px]">SKU:</strong>
+              <span class="text-neutral-700 dark:text-neutral-500">{{ product.item_sku }}</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <strong class="text-neutral-900 dark:text-neutral-200 font-medium min-w-[120px]">Category:</strong>
+              <span class="text-neutral-700 dark:text-neutral-500">{{ product.main_cat }}</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <strong class="text-neutral-900 dark:text-neutral-200 font-medium min-w-[120px]">Sub Category:</strong>
+              <span class="text-neutral-700 dark:text-neutral-500">{{ product.sub_cat }}</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <strong class="text-neutral-900 dark:text-neutral-200 font-medium min-w-[120px]">Brand Name:</strong>
+              <span class="text-neutral-700 dark:text-neutral-500">{{ product.brand_name }}</span>
+            </div>
+            <div class="flex items-start gap-2">
+              <strong class="text-neutral-900 dark:text-neutral-200 font-medium min-w-[120px]">Description:</strong>
+              <span class="text-neutral-700 dark:text-neutral-500">{{ product.item_main_description }}</span>
+            </div>
+          </div>
+
+          <!-- Packaging Table -->
+          <div *ngIf="product.packaging" class="mt-6">
+            <h3 class="text-lg font-primary font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b border-gray-200 dark:border-[#333333]">
+              Packaging
+            </h3>
+
+            <div class="overflow-x-auto">
+              <table class="w-full border-collapse text-xs tracking-wide">
+                <thead>
+                  <tr class="bg-gray-50 dark:bg-[#1a1a1a]">
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      Unit Name
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      QTY.
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      General T.P.
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      G.T.-C Class
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      LMT-Silver
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      IMT
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      Regular WS
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      HoReCa
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      G.T.-A Class
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      G.T-B Class
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      LMT-Bronze
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      LMT-Golden
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      Large WS
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      Mega WS
+                    </th>
+                    <th class="px-2.5 py-2 text-left border border-gray-200 dark:border-[#333333] text-primary dark:text-primary font-primary font-semibold text-sm">
+                      Key Account
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let package of product.packaging" class="bg-white dark:bg-black">
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.unit_name || 'Piece' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.quantity || 1 }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.general_tp || 'Rs. 6.50' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.gt_c_class || 'Rs. 6.50' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.lmt_silver || 'Rs. 6.50' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.imt || 'Rs. 6.50' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.regular_ws || 'Rs. 6.50' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.horeca || 'Rs. 8' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.gt_a_class || 'Rs. 8' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.gt_b_class || 'Rs. 8' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.lmt_bronze || 'Rs. 6.50' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.lmt_golden || 'Rs. 8' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.large_ws || 'Rs. 8' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.mega_ws || 'Rs. 8' }}
+                    </td>
+                    <td class="px-2.5 py-2 border border-gray-200 dark:border-[#333333] text-gray-700 dark:text-gray-300">
+                      {{ package.key_account || 'Rs. 8' }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stock Distributor Section  -->
+    <div *ngIf="product.stock" class="bg-white dark:bg-black dark:border-[#333333] border rounded-lg shadow-[0_0_5px_#0000001a] p-4 mb-4">
+      <div class="border-b border-gray-200 dark:border-[#333333] mb-5">
+        <div class="flex items-center gap-2">
+          <button
+            class="text-primary dark:text-neutral-300 font-primary font-medium text-base border-b-2 border-primary dark:border-neutral-200 pb-2 px-1">
+            Stock Distributor <span class="bg-primary text-white text-[9px] p-[4px] leading-[1] ml-0.5 rounded font-primary">
+              {{ product.stock || 0 }}
+            </span>
+          </button>
+          
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead class="bg-gray-50 dark:bg-[#141414] text-left">
+            <tr>
+              <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">
+                Distributor Name
+              </th>
+              <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">
+                Region
+              </th>
+              <th class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left">
+                Available Stock
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white dark:bg-[#1f1f1f]">
+            <tr
+              *ngIf="!product.distributors || product.distributors.length === 0"
+              class="border-t border-gray-200 dark:border-[#333333]">
+              <td
+                colspan="3"
+                class="text-center py-8">
+                <p class="text-gray-500 dark:text-gray-400">
+                  No distributors available...
+                </p>
+              </td>
+            </tr>
+            <tr
+              *ngFor="let distributor of product.distributors || []"
+              class="border-t border-gray-200 dark:border-[#333333] hover:bg-[#ededed] dark:hover:bg-[#2a2a2a] transition-colors duration-150">
+              <td class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5">
+                {{ distributor.name || 'Distributor Name Here' }}
+              </td>
+              <td class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5">
+                {{ distributor.region || 'Region here...' }}
+              </td>
+              <td class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5">
+                {{ distributor.stock || 452 }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
+
+
 </div>

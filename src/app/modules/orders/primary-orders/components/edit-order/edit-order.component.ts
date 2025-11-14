@@ -893,7 +893,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
 
         const trade_offer_total =
           +createdPrimaryOrder.trade_offer ||
-          +createdPrimaryOrder.tradeOffer ||
           0;
         const gross_amount_after_to = gross_amount - trade_offer_total;
 

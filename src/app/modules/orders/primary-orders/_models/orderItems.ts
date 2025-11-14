@@ -15,6 +15,7 @@ export interface IPrimaryOrderItem extends IorderItems {
   special_discount_pkr: number;
   tax_amount: number; // %
   unit_name: string;
+  available_stock?: number;
 }
 
 //#region set primnaryorderItem from get order by Id
@@ -88,6 +89,7 @@ export function getNewPrimaryOderItem(selectedProduct: any): PrimaryOrderItem {
   primOrderItem.parent_unit_quantity = selectedProduct.parent.quantity;
   // primOrderItem.division_id = selectedProduct.division_id; TODO: Maybe Addedd
   primOrderItem.scheme_discount = selectedProduct.scheme_discount;
+  primOrderItem.available_stock = selectedProduct.available_stock;
   // primOrderItem.selectedScheme = selectedProduct.selectedScheme;   TODO: slected scheme when add prodcut
   // primOrderItem.dispatch_status = selectedProduct.dispatch_status;
   // primOrderItem.dispatch_qty = selectedProduct.dispatch_qty;
@@ -181,6 +183,13 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     );
   }
   private _tradeOffer: number = 0;
+  private _available_stock: number;
+  public get available_stock(): number {
+    return this._available_stock;
+  }
+  public set available_stock(v: number) {
+    this._available_stock = v;
+  }
 
   public get tradeOffer(): number {
     return this._tradeOffer;
@@ -202,7 +211,6 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   }
 
   public set tradeOffer(v: number) {
-    console.log('tradeOffer: ', v);
     this._tradeOffer = v;
   }
 
@@ -663,8 +671,6 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     return this._tax_amount;
   }
   public set tax_amount(v: number) {
-    console.log('Setter Function called with value:', v);
-
     this._tax_amount = v;
   }
 

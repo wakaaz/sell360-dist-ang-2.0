@@ -159,12 +159,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
 
     // Skip sub distributor validation in edit mode since distributor is already selected
     if (!this.showEditFields && !this.subDistributor?.id) {
-      const toast: Toaster = {
-        type: 'error',
-        message: 'Please select sub distributor',
-        title: 'Error:',
-      };
-      this.toastService.showToaster(toast);
+      this.showToastMessage('Error:', 'Please select sub distributor', 'error');
       return;
     }
 
@@ -224,12 +219,13 @@ export class EditOrderComponent implements OnInit, OnDestroy {
             this.loadingProducts = false;
             this.productsMetaDataDistributor = res?.data?.distributor;
           } else {
-            const toast: Toaster = {
-              type: 'error',
-              message: res.message,
-              title: 'Error:',
-            };
-            this.toastService.showToaster(toast);
+            // const toast: Toaster = {
+            //   type: 'error',
+            //   message: res.message,
+            //   title: 'Error:',
+            // };
+            // this.toastService.showToaster(toast);
+            this.showToastMessage('Error:', res.message, 'error');
           }
         }),
         switchMap((res: any) => {
@@ -244,12 +240,17 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         catchError((error: any) => {
           this.loadingProducts = false;
           if (error.status !== 1 && error.status !== 401) {
-            const toast: Toaster = {
-              type: 'error',
-              message: 'Cannot fetch counter sale data. Please try again',
-              title: 'Error:',
-            };
-            this.toastService.showToaster(toast);
+            // const toast: Toaster = {
+            //   type: 'error',
+            //   message: 'Cannot fetch counter sale data. Please try again',
+            //   title: 'Error:',
+            // };
+            // this.toastService.showToaster(toast);
+            this.showToastMessage(
+              'Error:',
+              'Cannot fetch counter sale data. Please try again',
+              'error'
+            );
           }
           return of(null);
         })
@@ -258,12 +259,13 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         if (tax_classes?.status === 200) {
           this.taxClasses = tax_classes.data;
         } else {
-          const toast: Toaster = {
-            type: 'error',
-            message: tax_classes.message,
-            title: 'Error:',
-          };
-          this.toastService.showToaster(toast);
+          // const toast: Toaster = {
+          //   type: 'error',
+          //   message: tax_classes.message,
+          //   title: 'Error:',
+          // };
+          // this.toastService.showToaster(toast);
+          this.showToastMessage('Error:', tax_classes.message, 'error');
         }
       });
 
@@ -445,22 +447,108 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       product.stockQty = 0;
     }
 
-    // Keep primary_qty_sold and parent_qty_sold in sync based on unit quantity
-    if (field && field === 'primary_qty_sold') {
-      const unitQty = +product.unit_quantity || 1;
-      const primaryQty = +product.primary_qty_sold || 0;
-      product.parent_qty_sold = primaryQty * unitQty;
-    } else if (field && field === 'parent_qty_sold') {
-      const unitQty = +product.unit_quantity || 1;
-      const parentQty = +product.parent_qty_sold || 0;
-      product.primary_qty_sold = parentQty / unitQty;
-    }
+    const { parent, available_stock } = product || {};
+    const { quantity } = parent || {};
 
-    // if (product.item_trade_price) {
-    //   if (this.selectedProducts.find((x) => x.item_id === product.item_id)) {
-    //     this.grossAmount = this.grossAmount - product.original_amount || 0;
-    //   }
-    // }
+    if (!isUpdate) {
+      const defaultUnit = quantity || 1;
+      if (field === 'parent_qty_sold') {
+        const parentPacks = +product.stockQty || 0;
+        const unitPerPack = defaultUnit;
+        let totalUnits = parentPacks * unitPerPack;
+        const maxUnits = +available_stock || 0;
+        if (maxUnits > 0 && totalUnits > maxUnits) {
+          totalUnits = maxUnits;
+          const adjustedPacks = unitPerPack ? totalUnits / unitPerPack : 0;
+          product.stockQty = adjustedPacks;
+
+          // const toast: Toaster = {
+          //   type: 'error',
+          //   title: 'Error:',
+          //   message: 'Quantity exceeds available stock',
+          // };
+          // this.toastService.showToaster(toast);
+          this.showToastMessage(
+            'Error:',
+            'Quantity exceeds available stock',
+            'error'
+          );
+        }
+        product.primary_qty_sold = +product.stockQty || 0;
+        product.parent_qty_sold = totalUnits;
+        product.unit_quantity = totalUnits;
+      } else if (field === 'unit_qty_sold') {
+        const unitPerPack = defaultUnit;
+        let totalUnits = +product.unit_quantity || 0;
+        const maxUnits = +available_stock || 0;
+
+        if (maxUnits > 0 && totalUnits > maxUnits) {
+          totalUnits = maxUnits;
+          product.unit_quantity = totalUnits;
+          // const toast: Toaster = {
+          //   type: 'error',
+          //   title: 'Error:',
+          //   message: 'Quantity exceeds available stock',
+          // };
+          // this.toastService.showToaster(toast);
+          this.showToastMessage(
+            'Error:',
+            'Quantity exceeds available stock',
+            'error'
+          );
+        }
+        product.parent_qty_sold = totalUnits;
+        const parentPacks = unitPerPack ? totalUnits / unitPerPack : 0;
+        product.primary_qty_sold = parentPacks;
+        product.stockQty = parentPacks;
+      }
+    } else {
+      const maxUnits = +available_stock || 0;
+      const unitQty = +product.unit_quantity || 1; // units per pack in update mode
+
+      if (field && field === 'primary_qty_sold') {
+        let packs = +product.primary_qty_sold || 0;
+        let totalUnits = packs * unitQty;
+
+        if (maxUnits > 0 && totalUnits > maxUnits) {
+          totalUnits = maxUnits;
+          packs = unitQty ? totalUnits / unitQty : 0;
+          product.primary_qty_sold = packs;
+          // const toast: Toaster = {
+          //   type: 'error',
+          //   title: 'Error:',
+          //   message: 'Quantity exceeds available stock',
+          // };
+          // this.toastService.showToaster(toast);
+          this.showToastMessage(
+            'Error:',
+            'Quantity exceeds available stock',
+            'error'
+          );
+        }
+        product.parent_qty_sold = totalUnits;
+      } else if (field && field === 'parent_qty_sold') {
+        let totalUnits = +product.parent_qty_sold || 0;
+
+        if (maxUnits > 0 && totalUnits > maxUnits) {
+          totalUnits = maxUnits;
+          product.parent_qty_sold = totalUnits;
+          // const toast: Toaster = {
+          //   type: 'error',
+          //   title: 'Error:',
+          //   message: 'Quantity exceeds available stock',
+          // };
+          // this.toastService.showToaster(toast);
+          this.showToastMessage(
+            'Error:',
+            'Quantity exceeds available stock',
+            'error'
+          );
+        }
+        const packs = unitQty ? totalUnits / unitQty : 0;
+        product.primary_qty_sold = packs;
+      }
+    }
 
     if (isUpdate && product.selectedScheme?.id) {
       product = this.applySchemesNew(null, product, true);
@@ -505,31 +593,43 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       this.primarySrvc.updateOrder(this.order).subscribe(
         (res) => {
           if (res.status === 200) {
-            const toast: Toaster = {
-              type: 'success',
-              message: 'Order updated successfully!',
-              title: 'Order Updated:',
-            };
-            this.toastService.showToaster(toast);
+            // const toast: Toaster = {
+            //   type: 'success',
+            //   message: 'Order updated successfully!',
+            //   title: 'Order Updated:',
+            // };
+            // this.toastService.showToaster(toast);
+            this.showToastMessage(
+              'Success:',
+              'Order updated successfully!',
+              'success'
+            );
             this.router.navigate(['/primaryOrders/booked']);
           } else {
-            const toast: Toaster = {
-              type: 'error',
-              message: res.message,
-              title: 'Error:',
-            };
-            this.toastService.showToaster(toast);
+            // const toast: Toaster = {
+            //   type: 'error',
+            //   message: res.message,
+            //   title: 'Error:',
+            // };
+            // this.toastService.showToaster(toast);
+            this.showToastMessage('Error:', res.message, 'error');
           }
           this.saving = false;
         },
         (error) => {
           if (error.status !== 1 && error.status !== 401) {
-            const toast: Toaster = {
-              type: 'error',
-              message: 'Cannot save order. Please try again',
-              title: 'Error:',
-            };
-            this.toastService.showToaster(toast);
+            // const toast: Toaster = {
+            //   type: 'error',
+            //   message: 'Cannot save order. Please try again',
+            //   title: 'Error:',
+            // };
+            // this.toastService.showToaster(toast);
+            this.showToastMessage(
+              'Error:',
+              'Cannot save order. Please try again',
+              'error'
+            );
+
             this.saving = false;
           }
         }
@@ -555,50 +655,71 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           .subscribe(
             (res) => {
               if (res.status === 200) {
-                const toast: Toaster = {
-                  type: 'success',
-                  message: 'Order created successfully!',
-                  title: 'Order Created:',
-                };
-                this.toastService.showToaster(toast);
+                // const toast: Toaster = {
+                //   type: 'success',
+                //   message: 'Order created successfully!',
+                //   title: 'Order Created:',
+                // };
+                // this.toastService.showToaster(toast);
+                this.showToastMessage(
+                  'Success:',
+                  'Order created successfully!',
+                  'success'
+                );
                 this.router.navigate(['/primaryOrders/booked']);
               } else {
-                const toast: Toaster = {
-                  type: 'error',
-                  message: res.message,
-                  title: 'Error:',
-                };
-                this.toastService.showToaster(toast);
+                // const toast: Toaster = {
+                //   type: 'error',
+                //   message: res.message,
+                //   title: 'Error:',
+                // };
+                // this.toastService.showToaster(toast);
+                this.showToastMessage('Error:', res.message, 'error');
               }
               this.saving = false;
             },
             (error) => {
               if (error.status !== 1 && error.status !== 401) {
-                const toast: Toaster = {
-                  type: 'error',
-                  message: 'Cannot save order. Please try again',
-                  title: 'Error:',
-                };
-                this.toastService.showToaster(toast);
+                // const toast: Toaster = {
+                //   type: 'error',
+                //   message: 'Cannot save order. Please try again',
+                //   title: 'Error:',
+                // };
+                // this.toastService.showToaster(toast);
+                this.showToastMessage(
+                  'Error:',
+                  'Cannot save order. Please try again',
+                  'error'
+                );
                 this.saving = false;
               }
             }
           );
       } else if (!this.selectedSubDistributor) {
-        const toast: Toaster = {
-          type: 'error',
-          message: 'Please select sub distributor',
-          title: 'Error:',
-        };
-        this.toastService.showToaster(toast);
+        // const toast: Toaster = {
+        //   type: 'error',
+        //   message: 'Please select sub distributor',
+        //   title: 'Error:',
+        // };
+        // this.toastService.showToaster(toast);
+        this.showToastMessage(
+          'Error:',
+          'Please select sub distributor',
+          'error'
+        );
         this.saving = false;
       } else if (!this.order.orderContent?.length) {
-        const toast: Toaster = {
-          type: 'error',
-          message: 'Please add atleast one product',
-          title: 'Error:',
-        };
-        this.toastService.showToaster(toast);
+        // const toast: Toaster = {
+        //   type: 'error',
+        //   message: 'Please add atleast one product',
+        //   title: 'Error:',
+        // };
+        // this.toastService.showToaster(toast);
+        this.showToastMessage(
+          'Error:',
+          'Please add atleast one product',
+          'error'
+        );
         this.saving = false;
       }
     }
@@ -649,7 +770,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   applyScheme(product: any): any {
     switch (product.selectedScheme.scheme_type) {
       case 'free_product':
-        product = this.dataService.applyFreeProductScheme(product);
+        // product = this.dataService.applyFreeProductScheme(product);
+        product = this.applyFreeProductScheme(product);
         break;
       // case 'dotp':
       //   product = this.dataService.getSDForDOTP(product);
@@ -701,21 +823,22 @@ export class EditOrderComponent implements OnInit, OnDestroy {
             createdPrimaryOrder['scheme_quantity_free'] = orderFreeQty;
             createdPrimaryOrder['selectedScheme'] = selectedScheme;
           } else {
-            const toast: Toaster = {
-              type: 'error',
-              message: 'Please select sub distributor',
-              title: 'Error:',
-            };
-            this.toastService.showToaster(toast);
+            // const toast: Toaster = {
+            //   type: 'error',
+            //   message: 'Please select sub distributor',
+            //   title: 'Error:',
+            // };
+            // this.toastService.showToaster(toast);
+            this.showToastMessage(
+              'Error:',
+              'Please select sub distributor',
+              'error'
+            );
           }
         } else if (scheme_rule === 1) {
           if (this.isSchemeValid(selectedScheme)) {
             createdPrimaryOrder['scheme_quantity_free'] = 0;
 
-            // const freeQtyInterval = Math.floor(
-            //   (isUpdate ? parent_qty_sold : +stockQty) / min_qty
-            // );
-            // const orderFreeQty = freeQtyInterval * quantity_free;
             let TO = 0;
             const quantityToUse = quantityToUseForSchemes;
             if (quantityToUse >= min_qty) {
@@ -725,50 +848,70 @@ export class EditOrderComponent implements OnInit, OnDestroy {
               TO = discount_on_tp * quantityToUse;
             } else {
               TO = 0;
-              const toast: Toaster = {
-                type: 'error',
-                message: `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
-                title: 'Error:',
-              };
-              this.toastService.showToaster(toast);
+              // const toast: Toaster = {
+              //   type: 'error',
+              //   message: `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
+              //   title: 'Error:',
+              // };
+              // this.toastService.showToaster(toast);
+              this.showToastMessage(
+                'Error:',
+                `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
+                'error'
+              );
             }
             createdPrimaryOrder['trade_offer'] = TO;
             createdPrimaryOrder['selectedScheme'] = selectedScheme;
           } else {
-            const toast: Toaster = {
-              type: 'error',
-              message: 'Please select sub distributor',
-              title: 'Error:',
-            };
-            this.toastService.showToaster(toast);
+            // const toast: Toaster = {
+            //   type: 'error',
+            //   message: 'Please select sub distributor',
+            //   title: 'Error:',
+            // };
+            // this.toastService.showToaster(toast);
+            this.showToastMessage(
+              'Error:',
+              'Please select sub distributor',
+              'error'
+            );
           }
         }
         break;
       case 'dotp':
         if (this.isSchemeValid(selectedScheme)) {
           const quantityToUse = quantityToUseForSchemes;
-          console.log('quantityToUse', quantityToUse);
+
           let TO = 0;
           if (quantityToUse >= min_qty) {
             TO = quantityToUse * discount_on_tp;
           } else {
-            const toast: Toaster = {
-              type: 'error',
-              message: `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
-              title: 'Error:',
-            };
-            this.toastService.showToaster(toast);
+            // const toast: Toaster = {
+            //   type: 'error',
+            //   message: `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
+            //   title: 'Error:',
+            // };
+            // this.toastService.showToaster(toast);
+            this.showToastMessage(
+              'Error:',
+              `Minimum quantity is not met . Please select more than ${min_qty} quantity`,
+              'error'
+            );
           }
 
           createdPrimaryOrder['trade_offer'] = TO;
           createdPrimaryOrder['selectedScheme'] = selectedScheme;
         } else {
-          const toast: Toaster = {
-            type: 'error',
-            message: 'Please select sub distributor',
-            title: 'Error:',
-          };
-          this.toastService.showToaster(toast);
+          // const toast: Toaster = {
+          //   type: 'error',
+          //   message: 'Please select sub distributor',
+          //   title: 'Error:',
+          // };
+          // this.toastService.showToaster(toast);
+          this.showToastMessage(
+            'Error:',
+            'Please select sub distributor',
+            'error'
+          );
         }
         break;
       default:
@@ -946,5 +1089,145 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     primary_order['total_bill'] = total_bill;
 
     return primary_order;
+  }
+
+  applyFreeProductScheme(product: any): any {
+    let productWithScheme: any = {};
+
+    switch (product.selectedScheme.scheme_rule) {
+      case 1:
+        productWithScheme = this.applyFPDOTP(product);
+        break;
+      case 4:
+        productWithScheme = this.applyFPMinQty(product);
+        break;
+
+      default:
+        productWithScheme = product;
+        break;
+    }
+    return productWithScheme;
+  }
+
+  applyFPMinQty(product: any): any {
+    if (
+      this.isEligibleForMinimumQuantity(
+        product.unit_quantity,
+        product.selectedScheme.min_qty
+      )
+    ) {
+      product.scheme_free_items = [];
+      const freeQtyInterval = Math.floor(
+        product.unit_quantity / product.selectedScheme.min_qty
+      );
+      const orderFreeQty =
+        freeQtyInterval * product.selectedScheme.quantity_free;
+      product.scheme_quantity_free = orderFreeQty;
+      product.selectedScheme = product.selectedScheme;
+      product.scheme_id = product.selectedScheme.id;
+      product.scheme_type = product.selectedScheme.scheme_type;
+      product.scheme_rule = product.selectedScheme.scheme_rule;
+      product.scheme_discount = 0;
+      product.price = product.original_price; //discounted.singleItemPrice;
+      product.unit_price_after_scheme_discount = product.original_price;
+      product.scheme_free_items = [
+        {
+          item_id: +product.item_id,
+          free_qty: +product.scheme_quantity_free,
+        },
+      ];
+      product.selectedScheme.applied = true;
+    } else {
+      product.scheme_quantity_free = 0;
+      product.selectedScheme.applied = false;
+      product.scheme_discount = 0;
+      product.price = product.original_price;
+      product.scheme_free_items = null;
+      product.unit_price_after_scheme_discount = product.original_price;
+
+      this.schemeCannotApplied();
+    }
+    return product;
+  }
+
+  applyFPDOTP(product: any): any {
+    if (
+      this.isEligibleForMinimumQuantity(
+        product.unit_quantity,
+        product.selectedScheme.min_qty
+      )
+    ) {
+      const discounted = this.getSDForFPTradePriceScheme(
+        product.original_price,
+        product.stockQty,
+        product.selectedScheme.min_qty,
+        product.selectedScheme.quantity_free
+      );
+      product.scheme_id = product.selectedScheme.id;
+      product.scheme_type = product.selectedScheme.scheme_type;
+      product.scheme_rule = product.selectedScheme.scheme_rule;
+      product.scheme_discount = discounted.schemeDiscount;
+      product.price = discounted.singleItemPrice;
+      product.unit_price_after_scheme_discount = discounted.singleItemPrice;
+      product.selectedScheme.applied = true;
+    } else {
+      this.schemeCannotApplied();
+    }
+
+    return product;
+  }
+
+  getSDForFPTradePriceScheme(
+    itemTradePrice: number,
+    userQty: number,
+    minimumQty: number,
+    freeQty: number
+  ): { singleItemPrice: number; schemeDiscount: number } {
+    const schemeUnitDscount = this.getSchemeAmount(
+      itemTradePrice,
+      minimumQty,
+      freeQty
+    );
+    const singleItemPrice = itemTradePrice - schemeUnitDscount;
+    return {
+      singleItemPrice: singleItemPrice,
+      schemeDiscount: schemeUnitDscount,
+    };
+  }
+
+  getSchemeAmount(itemTP: number, minQty: number, freeQty: number): number {
+    //
+    const totalTpMinQty = itemTP * minQty;
+    const totalItemBeingGiven = freeQty + minQty;
+    const ItemDiscountedTP = totalTpMinQty / totalItemBeingGiven;
+    const unitdiscount = itemTP - ItemDiscountedTP;
+    return unitdiscount;
+  }
+
+  isEligibleForMinimumQuantity(userQty: number, minimumQty: number): boolean {
+    return +userQty >= minimumQty;
+  }
+
+  schemeCannotApplied(): void {
+    this.showToastMessage(
+      'Scheme Not Applied',
+      'Selected Scheme cannot applied to the product because of minimum quantity contraints!',
+      'error'
+    );
+  }
+
+  showToastMessage(
+    title: string = 'Error:',
+    message: string,
+    type: 'error' | 'success' = 'error'
+  ): void {
+    const toast: Toaster = {
+      title: title,
+      message: message,
+      type: type,
+    };
+    this.toastService.showToaster(toast);
+
+    return;
   }
 }

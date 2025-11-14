@@ -46,18 +46,18 @@
       *ngIf="selectedProduct?.parent?.hasOwnProperty('quantity')"
       class="px-6 py-5 space-y-4"
     >
-      <!-- Add Quantity -->
+      <!-- Add Parent Quantity -->
       <div class="flex flex-col sm:flex-row sm:items-start gap-2">
         <label
           class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0 pt-2"
-          >Add Quantity:</label
+          >Add Parent Quantity:</label
         >
         <div class="flex-1">
           <input
             type="text"
             class="w-full h-[32px] px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors dont-close-products"
             placeholder="0"
-            (keyup)="setQuantity(selectedProduct)"
+            (keyup)="setQuantity(selectedProduct, false, 'parent_qty_sold')"
             (keydown)="isNumber($event, 'quantity')"
             [(ngModel)]="selectedProduct.stockQty"
             #selectedQty="ngModel"
@@ -72,6 +72,43 @@
           <span
             *ngIf="
               +selectedProduct.stockQty === 0 &&
+              isAdded &&
+              !selectedQty.errors?.required
+            "
+            class="text-red-500 text-xs mt-1 block"
+          >
+            Quantity should be greater than 0!
+          </span>
+        </div>
+      </div>
+
+      <!-- Add Unit Quantity -->
+
+      <div class="flex flex-col sm:flex-row sm:items-start gap-2">
+        <label
+          class="text-sm font-medium text-gray-700 dark:text-gray-300 sm:w-32 flex-shrink-0 pt-2"
+          >Add Unit Quantity:</label
+        >
+        <div class="flex-1">
+          <input
+            type="text"
+            class="w-full h-[32px] px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors dont-close-products"
+            placeholder="0"
+            (keyup)="setQuantity(selectedProduct, false, 'unit_qty_sold')"
+            (keydown)="isNumber($event, 'quantity')"
+            [(ngModel)]="selectedProduct.unit_quantity"
+            #selectedQty="ngModel"
+            required
+          />
+          <span
+            *ngIf="selectedQty.errors?.required && isAdded"
+            class="text-red-500 text-xs mt-1 block"
+          >
+            Please add Quantity!
+          </span>
+          <span
+            *ngIf="
+              +selectedProduct.unit_quantity === 0 &&
               isAdded &&
               !selectedQty.errors?.required
             "
@@ -272,6 +309,12 @@
                   >
                     {{ product.item_name }}
                   </h2>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    SKU: {{ product.item_sku }}
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    Available: {{ product.available_stock }}
+                  </p>
                 </div>
               </div>
 
@@ -283,6 +326,7 @@
                   data-target="#exampleModal"
                   class="px-4 py-1.5 text-[13px] leading-none font-primary bg-transparent text-primary border border-primary dark:border-[#333333] dark:text-neutral-300 rounded-md transition-colors whitespace-nowrap dont-close-quantity hover:enabled:bg-primary hover:enabled:text-white"
                   (click)="openQuantityModal(product)"
+                  [disabled]="!product.available_stock"
                 >
                   Add
                 </button>
@@ -635,6 +679,7 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th
                 class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
@@ -649,6 +694,7 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
             <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
@@ -681,6 +727,7 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th
                 class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
@@ -697,6 +744,7 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
             <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
@@ -734,6 +782,7 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th
                 class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
@@ -761,6 +810,7 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th
                 class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
@@ -775,6 +825,7 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
             <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>

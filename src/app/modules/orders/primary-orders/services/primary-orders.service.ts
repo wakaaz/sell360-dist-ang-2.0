@@ -123,18 +123,18 @@ export class PrimaryOrdersService {
    */
   saveOrReturnOrderV2(
     primaryOrder: PrimaryOrder,
-    distributorId: number,
+    distributor: any,
     employeeId: number,
-    isReturnOrder = false
+    isReturnOrder = false,
+    taxClasses: any[]
   ): Observable<any> {
     const payload: ICreatePrimaryOrderPayload =
       buildCreateOrderPayloadFromPrimaryOrder(
         primaryOrder,
-        distributorId,
-        employeeId
+        distributor,
+        employeeId,
+        taxClasses
       );
-
-    console.log('payload -> ', payload);
     return this.baseService.post(
       `${
         isReturnOrder

@@ -624,7 +624,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       ) {
         this.order.distributor_id = this.selectedSubDistributor;
         this.order.employee_id = this.subDistributor.tsm_id;
-        console.log('this.order -> ', this.order);
         // TODO: fields needs to be remove from order model too
         // this.order.status = 'completed';
         // this.order.booker_lats = 0;
@@ -637,9 +636,10 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           // .saveOrReturnOrder(this.order, this.distributor.id, this.isReturn)
           .saveOrReturnOrderV2(
             this.order,
-            this.distributor.id,
+            this.distributor,
             this.order.employee_id,
-            false
+            false,
+            this.taxClasses
           )
           .subscribe(
             (res) => {
@@ -898,9 +898,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           (+createdPrimaryOrder.unit_item_trade_price || 0) *
           (+createdPrimaryOrder.parent_qty_sold || 0);
 
-        const trade_offer_total =
-          +createdPrimaryOrder.trade_offer ||
-          0;
+        const trade_offer_total = +createdPrimaryOrder.trade_offer || 0;
         const gross_amount_after_to = gross_amount - trade_offer_total;
 
         const distributor_discount_amount =

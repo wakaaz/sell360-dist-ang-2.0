@@ -85,8 +85,11 @@ export function setPrimarOrderItem(
 export function getNewPrimaryOderItem(selectedProduct: any): PrimaryOrderItem {
   const primOrderItem = new PrimaryOrderItem();
 
-  primOrderItem.brand_id = selectedProduct.brand_id;
+  primOrderItem.brand_id =
+    selectedProduct.brand_id || selectedProduct.item_brand;
   primOrderItem.parent_unit_quantity = selectedProduct.parent.quantity;
+  primOrderItem.main_cat = selectedProduct.main_cat;
+  primOrderItem.sub_cat = selectedProduct.sub_cat;
   // primOrderItem.division_id = selectedProduct.division_id; TODO: Maybe Addedd
   primOrderItem.scheme_discount = selectedProduct.scheme_discount;
   primOrderItem.available_stock = selectedProduct.available_stock;
@@ -189,6 +192,22 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   }
   public set available_stock(v: number) {
     this._available_stock = v;
+  }
+
+  private _main_cat: number;
+  public get main_cat(): number {
+    return this._main_cat;
+  }
+  public set main_cat(v: number) {
+    this._main_cat = v;
+  }
+
+  private _sub_cat: number;
+  public get sub_cat(): number {
+    return this._sub_cat;
+  }
+  public set sub_cat(v: number) {
+    this._sub_cat = v;
   }
 
   public get tradeOffer(): number {

@@ -10,7 +10,7 @@
         </h1>
       </div>
       <div>
-        <a href="/reports/purchase-history" class="bg-transparent h-auto leading-none py-1.5 px-4 text-primary text-[13px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] inline-flex items-center gap-1 transition-colors">
+        <a href="/reports/purchase-history" class="bg-transparent h-auto leading-none py-1.5 px-4 text-primary text-[13px] border border-primary hover:bg-primary hover:text-white dark:hover:text-white dark:text-neutral-400 dark:border-neutral-600 hover:dark:border-primary font-primary rounded-[5px] inline-flex items-center gap-1 transition-colors">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
             <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
           </svg>
@@ -33,14 +33,14 @@
               <img src="assets/images/sell-360.svg" alt="" class="max-h-10 dark:hidden" />
               <img src="assets/images/logo-w.svg" alt="" class="max-h-10 hidden dark:block" />
             </div>
-            <div class="w-1/3 text-right flex items-center justify-end text-gray-900 dark:text-white">
+            <div class="w-1/3 text-right flex items-center justify-end text-gray-900 dark:text-white text-[13px]">
               Order Date: <strong class="ml-1 font-medium">{{ order.payload.poDate }}</strong>
             </div>
           </div>
 
           <div class="flex flex-wrap OrderInfo font-primary text-gray-900 dark:text-white mb-6">
             <!-- Column 1 -->
-            <div class="w-full md:w-1/4 mb-2 md:mb-0">
+            <div class="w-full md:w-1/4 mb-2 md:mb-0 text-[13px]">
               <p>
                 <span class="text-gray-600 dark:text-gray-300">Received No:</span>
                 <strong class="ml-1 font-medium dark:text-white">{{ order.payload.receivedNo }}</strong>
@@ -52,7 +52,7 @@
             </div>
 
             <!-- Column 2 -->
-            <div class="w-full md:w-1/4 mb-2 md:mb-0">
+            <div class="w-full md:w-1/4 mb-2 md:mb-0 text-[13px]">
               <p>
                 <span class="text-gray-600 dark:text-gray-300">Inv. No:</span>
                 <strong class="ml-1 font-medium dark:text-white">{{ order.payload.invoiceNo }}</strong>
@@ -64,7 +64,7 @@
             </div>
 
             <!-- Column 3 -->
-            <div class="w-full md:w-1/4 mb-2 md:mb-0">
+            <div class="w-full md:w-1/4 mb-2 md:mb-0 text-[13px]">
               <p>
                 <span class="text-gray-600 dark:text-gray-300">PO No:</span>
                 <strong class="ml-1 font-medium dark:text-white">{{ order.payload.poNo }}</strong>
@@ -76,7 +76,7 @@
             </div>
 
             <!-- Column 4 -->
-            <div class="w-full md:w-1/4 mb-2 md:mb-0">
+            <div class="w-full md:w-1/4 mb-2 md:mb-0 text-[13px]">
               <p>
                 <span class="text-gray-600 dark:text-gray-300">DC No:</span>
                 <strong class="ml-1 font-medium dark:text-white">{{ order.payload.dcNo }}</strong>
@@ -92,16 +92,16 @@
             <table class="table font-primary w-full border-collapse">
               <thead>
                 <tr class="bg-black dark:bg-[#252525] text-white">
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">SKU</strong></th>
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Item Name</strong></th>
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Purchased Unit</strong></th>
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Purchased QTY.</strong></th>
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Free Unit</strong></th>
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Free QTY.</strong></th>
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Discount %</strong></th>
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Discount PKR.</strong></th>
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Original Amount</strong></th>
-                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Net Amount</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">SKU</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Item Name</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Purchased Unit</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Purchased QTY.</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Free Unit</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Free QTY.</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Discount %</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Discount PKR.</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Original Amount</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Net Amount</strong></th>
                 </tr>
               </thead>
               <tbody class="order_items_body">

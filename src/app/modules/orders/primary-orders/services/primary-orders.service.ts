@@ -16,6 +16,10 @@ import {
 } from '../_models/updateOrder';
 import * as moment from 'moment';
 import { PRIMARY_ORDER_API_STATUS } from 'src/app/core/constants/primary-orders-parms.constants';
+import {
+  buildCreateOrderPayloadFromPrimaryOrder,
+  ICreatePrimaryOrderPayload,
+} from '../_models/createOrderPayload';
 
 @Injectable()
 export class PrimaryOrdersService {
@@ -109,6 +113,35 @@ export class PrimaryOrdersService {
           : API_URLS.SAVE_PRIMARY_ORDER
       }`,
       order
+    );
+  }
+
+  /**
+   * New save method that builds the payload matching the exact create-order
+   * structure requested by backend (with order_content detail lines).
+   * Pass a CSRF token if your API requires it in the body.
+   */
+  saveOrReturnOrderV2(
+    primaryOrder: PrimaryOrder,
+    distributorId: number,
+    employeeId: number,
+    isReturnOrder = false
+  ): Observable<any> {
+    const payload: ICreatePrimaryOrderPayload =
+      buildCreateOrderPayloadFromPrimaryOrder(
+        primaryOrder,
+        distributorId,
+        employeeId
+      );
+
+    console.log('payload -> ', payload);
+    return this.baseService.post(
+      `${
+        isReturnOrder
+          ? API_URLS.RETURN_PRIMARY_ORDER
+          : API_URLS.SAVE_PRIMARY_ORDER
+      }`,
+      payload
     );
   }
 

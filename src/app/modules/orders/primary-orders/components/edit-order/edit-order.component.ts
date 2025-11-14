@@ -624,6 +624,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       ) {
         this.order.distributor_id = this.selectedSubDistributor;
         this.order.employee_id = this.subDistributor.tsm_id;
+        console.log('this.order -> ', this.order);
         // TODO: fields needs to be remove from order model too
         // this.order.status = 'completed';
         // this.order.booker_lats = 0;
@@ -633,7 +634,13 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         // this.order.offline_order = 0;
         // this.order.created_at = new Date();
         this.primarySrvc
-          .saveOrReturnOrder(this.order, this.distributor.id, this.isReturn)
+          // .saveOrReturnOrder(this.order, this.distributor.id, this.isReturn)
+          .saveOrReturnOrderV2(
+            this.order,
+            this.distributor.id,
+            this.order.employee_id,
+            false
+          )
           .subscribe(
             (res) => {
               if (res.status === 200) {

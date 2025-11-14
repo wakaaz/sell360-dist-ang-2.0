@@ -1,10 +1,9 @@
-
 <div class="container mx-auto px-4" *ngIf="!loading">
-  <div *ngIf="distributor" class="w-full">
-    <div class="pt-[15px] pr-0 pb-[15px]">
-      <div class="flex items-center">
+  <!-- Header Section -->
+  <div *ngIf="distributor" class="mt-3 mb-4">
+    <div class="flex items-center gap-3 mb-2">
       <img
-        class="w-[38px] h-[38px] border border-solid border-primary dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-700 p-[1px] rounded-full float-left mr-[10px]"
+        class="w-[38px] h-[38px] border border-primary dark:border-neutral-600 bg-neutral-100 dark:bg-neutral-700 p-[1px] rounded-full"
         onError="this.src='assets/images/avatar.svg'"
         [src]="
           distributor.distributor_image
@@ -13,484 +12,246 @@
         "
         alt=""
       />
-      <h2 class="text-[22px] pt-[7px] mb-[10px] mt-0 font-primary font-medium text-neutral-800 dark:text-gray-400">
-        Good Morning, {{ distributor.distributor_name }}   
+      <h2 class="text-xl font-primary font-medium text-neutral-800 dark:text-neutral-200 mb-0">
+        Good Morning, {{ distributor.distributor_name }}
       </h2>
-      </div>
-      <p class="m-0 block font-primary text-neutral-500 dark:text-gray-400">
-        Here’s what’s happening at
-        <strong class="font-medium text-neutral-900 dark:text-gray-400">{{
-          distributor.distributor_name
-        }}.</strong>
-      </p>
     </div>
+    <p class="m-0 block font-primary text-neutral-500 dark:text-neutral-300">
+      Here's what's happening at
+      <strong class="font-medium text-neutral-900 dark:text-neutral-300">{{
+        distributor.distributor_name
+      }}.</strong>
+    </p>
   </div>
 
-  <div *ngIf="false" class="w-full">
-    <div class="pb-[15px]">
-      <!-- Primary Alert -->
-      <div
-        class="relative flex items-center justify-between p-4 mb-4 rounded-md border border-blue-300 bg-blue-50 text-blue-800"
-        role="alert"
-      >
-        <div>
-          <strong class="font-semibold">Holy guacamole!</strong>
-          You should check in on some of those fields below.
+  <!-- KPI Cards Row -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+    <!-- Today's Booking Card -->
+    <div class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative overflow-hidden shadow-[0_0_5px_#0000001a]">
+      <div class="relative z-10">
+        <h2 class="text-xl uppercase tracking-wide font-primary font-medium text-gray-900 dark:text-white relative pl-4">
+          <span class="absolute left-0 top-[6px] w-0.5 h-4 bg-primary"></span>
+          Today's <span class="font-light">Booking</span>
+        </h2>
+        <div class="px-4 text-4xl text-primary dark:text-neutral-200 font-['Rationale',sans-serif] pb-4 pt-5 mb-4 border-b border-gray-200 dark:border-[#333333] relative overflow-hidden [background-image:url(/assets/images/kpi-achive-img.jpg)] dark:[background-image:url(/assets/images/kpi-achive-img-dark.jpg)] bg-[length:auto] bg-[position:right_bottom] bg-no-repeat" 
+       >
+          <span class="text-secondary dark:text-gray-300">Rs.</span>
+          {{ homeReport?.today_sale | decimal }}
         </div>
-        <div class="flex items-center space-x-2">
-          <button class="bg-blue-600 text-white text-sm px-3 py-1 rounded-md hover:bg-blue-700">
-            Open Page
-          </button>
-          <button
-            type="button"
-            class="text-blue-800 text-xl leading-none hover:text-blue-900"
-            aria-label="Close"
-          >
-            &times;
-          </button>
-        </div>
-      </div>
-  
-      <!-- Secondary Alert -->
-      <div
-        class="relative flex items-center justify-between p-4 mb-4 rounded-md border border-gray-300 bg-gray-100 text-gray-800"
-        role="alert"
-      >
-        <div>
-          <strong class="font-semibold">Holy guacamole!</strong>
-          You should check in on some of those fields below.
-          <a href="#" class="ml-2 underline hover:text-gray-900">Open Page</a>
-        </div>
-        <button
-          type="button"
-          class="text-gray-800 text-xl leading-none hover:text-gray-900"
-          aria-label="Close"
-        >
-          &times;
-        </button>
-      </div>
-  
-      <!-- Danger Alert -->
-      <div
-        class="relative flex items-center justify-between p-4 mb-4 rounded-md border border-red-300 bg-red-50 text-red-800"
-        role="alert"
-      >
-        <div>
-          <strong class="font-semibold">Holy guacamole!</strong>
-          You should check in on some of those fields below.
-        </div>
-        <button
-          type="button"
-          class="text-red-800 text-xl leading-none hover:text-red-900"
-          aria-label="Close"
-        >
-          &times;
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-2 gap-4">
-    <div>
-      <div class="bg-white dark:bg-[#1f1f1f] p-4 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
-        <div class="bg-[url('/assets/images/kpi-achive-img.jpg')] bg-no-repeat bg-[position:bottom_right]">
-          <h2 class="text-[18px] pt-4 mb-4 block">
-            Today's <span class="text-[#0038ba] font-semibold">Booking</span>
-          </h2>
-      
-          <div class="border-b border-[#e1e1e1] pb-1 text-[35px] font-normal leading-none text-[#282828] font-[Rationale] relative">
-            <span class="text-[#0038ba] text-[16px] align-top pr-1">Rs.</span>
-            {{ homeReport.today_sale | decimal }}
-          </div>
-        </div>
-      
-        <div class="grid grid-cols-4 gap-2 mt-3">
-          <div class="text-[16px] text-[#282828] leading-tight">
+        <div class="grid grid-cols-4 gap-3 text-sm px-4">
+          <div class="text-gray-600 dark:text-gray-400">
             Pending Sale
-            <span class="block text-[24px] font-[Rationale]">
-              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
-              {{ homeReport.pending_sale | decimal }}
+            <span class="block text-2xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mt-1">
+              <small class="text-primary dark:text-neutral-400 text-base">Rs.</small>
+              {{ homeReport?.pending_sale | decimal }}
             </span>
           </div>
-      
-          <div class="text-[16px] text-[#282828] leading-tight">
+          <div class="text-gray-600 dark:text-gray-400">
             Spot Sale
-            <span class="block text-[24px] font-[Rationale]">
-              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
-              {{ homeReport.spot_sale | decimal }}
+            <span class="block text-2xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mt-1">
+              <small class="text-primary dark:text-neutral-400 text-base">Rs.</small>
+              {{ homeReport?.spot_sale | decimal }}
             </span>
           </div>
-      
-          <div class="text-[16px] text-[#282828] leading-tight">
+          <div class="text-gray-600 dark:text-gray-400">
             Counter Sale
-            <span class="block text-[24px] font-[Rationale]">
-              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
-              {{ homeReport.counter_sale | decimal }}
+            <span class="block text-2xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mt-1">
+              <small class="text-primary dark:text-neutral-400 text-base">Rs.</small>
+              {{ homeReport?.counter_sale | decimal }}
             </span>
           </div>
-      
-          <div class="text-[16px] text-[#282828] leading-tight">
+          <div class="text-gray-600 dark:text-gray-400">
             Net Sale
-            <span class="block text-[24px] font-[Rationale]">
-              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+            <span class="block text-2xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mt-1">
+              <small class="text-primary dark:text-neutral-400 text-base">Rs.</small>
               {{
-                homeReport.pending_sale +
-                homeReport.spot_sale +
-                homeReport.counter_sale | decimal
+                (homeReport?.pending_sale || 0) +
+                  (homeReport?.spot_sale || 0) +
+                  (homeReport?.counter_sale || 0) | decimal
               }}
             </span>
           </div>
         </div>
       </div>
-      
     </div>
-    <div>
-      <div class="bg-white dark:bg-[#1f1f1f] p-4 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)]">
-        
-        <div
-          class="bg-[url('/assets/images/kpi-achive-img.jpg')] bg-no-repeat bg-[position:bottom_right]"
+
+    <!-- Monthly Sale Trends Card -->
+    <div class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative overflow-hidden shadow-[0_0_5px_#0000001a]">
+      <div class="relative z-10">
+        <h2 class="text-xl uppercase tracking-wide font-primary font-medium text-gray-900 dark:text-white relative pl-4">
+          <span class="absolute left-0 top-[6px] w-0.5 h-4 bg-primary"></span>
+          Monthly <span class="font-light">Sale Trends</span>
+        </h2>
+        <div class="px-4 text-4xl text-primary dark:text-neutral-300 font-['Rationale',sans-serif] pb-4 pt-5 mb-4 border-b border-gray-200 dark:border-[#333333] relative overflow-hidden [background-image:url(/assets/images/kpi-achive-img.jpg)] dark:[background-image:url(/assets/images/kpi-achive-img-dark.jpg)] bg-[length:auto] bg-[position:right_bottom] bg-no-repeat" 
         >
-          <h2 class="text-[18px] pt-4 mb-4 block">
-            Monthly <span class="text-[#0038ba] font-semibold">Sale Trends</span>
-          </h2>
-      
-          <div
-            class="border-b border-[#e1e1e1] pb-1 text-[35px] font-normal leading-none text-[#282828] font-[Rationale] relative"
-          >
-            <span class="text-[#0038ba] text-[16px] align-top pr-1">Rs.</span>
-            {{ homeReportMonthly?.monthly_sale | decimal }}
-          </div>
+          <span class="text-secondary dark:text-gray-300">Rs.</span>
+          {{ homeReportMonthly?.monthly_sale | decimal }}
         </div>
-      
-        <div class="grid grid-cols-3 gap-2 mt-3">
-          <div class="text-[16px] text-[#282828] leading-tight">
+        <div class="grid grid-cols-3 gap-3 text-sm px-4">
+          <div class="text-gray-600 dark:text-gray-400">
             Pending Sale
-            <span class="block text-[24px] font-[Rationale]">
-              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+            <span class="block text-2xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mt-1">
+              <small class="text-primary dark:text-neutral-400 text-base">Rs.</small>
               {{ homeReportMonthly?.pending_sale | decimal }}
             </span>
           </div>
-      
-          <div class="text-[16px] text-[#282828] leading-tight">
+          <div class="text-gray-600 dark:text-gray-400">
             Spot Sale
-            <span class="block text-[24px] font-[Rationale]">
-              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+            <span class="block text-2xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mt-1">
+              <small class="text-primary dark:text-neutral-400 text-base">Rs.</small>
               {{ homeReportMonthly?.spot_sale | decimal }}
             </span>
           </div>
-      
-          <div class="text-[16px] text-[#282828] leading-tight">
+          <div class="text-gray-600 dark:text-gray-400">
             Counter Sale
-            <span class="block text-[24px] font-[Rationale]">
-              <small class="text-[#0038ba] text-[14px] align-top pr-1">Rs.</small>
+            <span class="block text-2xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mt-1">
+              <small class="text-primary dark:text-neutral-400 text-base">Rs.</small>
               {{ homeReportMonthly?.counter_sale | decimal }}
             </span>
           </div>
-        </div> 
-      
-      </div>
-    </div>
-  </div>
-  
-
-
-  
-</div>
-
-
-<!-- <div *ngIf="false" class="row">
-  <div class="col-12 PB-15">
-    <div class="alert alert-primary alert-dismissible fade show" role="alert">
-      <strong>Holy guacamole!</strong> You should check in on some of those
-      fields below.
-      <button class="btn btn-primary ml-2">Open Page</button>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div
-      class="alert alert-secondary alert-dismissible fade show"
-      role="alert"
-    >
-      <strong>Holy guacamole!</strong> You should check in on some of those
-      fields below.
-      <a class="ml-2">Open Page</a>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <strong>Holy guacamole!</strong> You should check in on some of those
-      fields below.
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">&times;</span>
-      </button>
-    </div>
-  </div>
-</div> -->
-
-<div class="container mt-0" *ngIf="!loading">
- 
-
-
-  <div class="row">
-    <div class="col-6">
-      <div class="card total-sale">
-        <div class="row">
-          <div class="col-12">
-            <div class="row">
-              <div
-                class="col-12 position-relative"
-                style="
-                  background-image: url(assets/images/kpi-achive-img.jpg);
-                  background-position: bottom right;
-                  background-repeat: no-repeat;
-                "
-              >
-                <h2 class="card-heading">Today's <span>Booking</span></h2>
-                <div
-                  class="total-amount"
-                  style="border-bottom: solid 1px #e1e1e1"
-                >
-                  <span>Rs.</span> {{ homeReport.today_sale | decimal }}
-                </div>
-              </div>
-              <div class="col unit-v pr-0">
-                Pending Sale<span
-                  ><small>Rs.</small> {{ homeReport.pending_sale | decimal }}
-                </span>
-              </div>
-              <div class="col unit-v pr-0">
-                Spot Sale<span
-                  ><small>Rs.</small> {{ homeReport.spot_sale | decimal }}</span
-                >
-              </div>
-              <div class="col unit-v pr-0">
-                Counter Sale<span
-                  ><small>Rs.</small
-                  >{{ homeReport.counter_sale | decimal }}</span
-                >
-              </div>
-              <div class="col unit-v pr-0">
-                Net Sale<span
-                  ><small>Rs.</small>
-                  {{
-                    homeReport.pending_sale +
-                      homeReport.spot_sale +
-                      homeReport.counter_sale | decimal
-                  }}</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-6">
-      <div class="card total-sale">
-        <div class="row">
-          <div class="col-12">
-            <div class="row">
-              <div
-                class="col-12 position-relative"
-                style="
-                  background-image: url(assets/images/kpi-achive-img.jpg);
-                  background-position: bottom right;
-                  background-repeat: no-repeat;
-                "
-              >
-                <h2 class="card-heading">Monthly <span>Sale Trends</span></h2>
-                <div
-                  class="total-amount"
-                  style="border-bottom: solid 1px #e1e1e1"
-                >
-                  <span>Rs.</span>
-                  {{ homeReportMonthly?.monthly_sale | decimal }}
-                </div>
-              </div>
-              <div class="col unit-v pr-0">
-                Pending Sale<span
-                  ><small>Rs.</small>
-                  {{ homeReportMonthly?.pending_sale | decimal }}
-                </span>
-              </div>
-              <div class="col unit-v pr-0">
-                Spot Sale<span
-                  ><small>Rs.</small>
-                  {{ homeReportMonthly?.spot_sale | decimal }}</span
-                >
-              </div>
-              <div class="col unit-v pr-0">
-                Counter Sale<span
-                  ><small>Rs.</small
-                  >{{ homeReportMonthly?.counter_sale | decimal }}</span
-                >
-              </div>
-              <!-- <div class="col unit-v pr-0">Net Sale<span><small>Rs.</small> {{(homeReportMonthly?.pending_sale + homeReportMonthly?.spot_sale + homeReportMonthly?.counter_sale) | decimal }}</span></div> -->
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="seabinReport">
-    <div class="row">
-      <div class="col-md-6">
-        <div class="card mt-0" style="height: 85px">
-          <h4>Current <span> Stock</span></h4>
-          <h2 class="digit">
-            <span style="font-size: 22px; margin-right: 30px"
-              ><small>QTY:</small>
-              {{ homeReportMonthly?.distributor_sellable_qty | decimal }}
-              CTNs</span
-            >
-            <small>Rs.</small>
+  <!-- Current Stock & Market Credit Row -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <!-- Current Stock Card -->
+    <div class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative overflow-hidden shadow-[0_0_5px_#0000001a] [background-image:url(/assets/images/distributor-bg.jpg)] dark:[background-image:url(/assets/images/distributor-bg-dark.jpg)] bg-[length:auto] bg-[position:right_top] bg-no-repeat">
+      <div class="relative z-10 h-full flex flex-col justify-between">
+        <h2 class="text-lg pl-4 font-primary font-medium text-primary dark:text-neutral-200 mb-4 leading-none">
+          Current <span class="font-normal text-secondary dark:text-gray-300">Stock</span>
+        </h2>
+        <div class="flex items-end justify-between px-4">
+          <div class="text-2xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] ml-auto mr-6">
+            <small class="text-primary dark:text-neutral-400">QTY:</small>
+            {{ homeReportMonthly?.distributor_sellable_qty | decimal }}
+            <span class="text-lg">CTNs</span>
+          </div>
+          <h2 class="text-3xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mb-0">
+            <small class="text-primary dark:text-neutral-400 text-xl">Rs.</small>
             {{ homeReportMonthly?.distributor_gross_value | decimal }}
           </h2>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="card mt-0" style="height: 85px">
-          <h4>Market <span>Credit</span></h4>
-          <h2 class="digit">
-            <small>Rs.</small>
-            {{ homeReportMonthly?.retailer_credits | decimal }}
-          </h2>
-        </div>
+    </div>
+
+    <!-- Market Credit Card -->
+    <div class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative overflow-hidden shadow-[0_0_5px_#0000001a] [background-image:url(/assets/images/distributor-bg.jpg)] dark:[background-image:url(/assets/images/distributor-bg-dark.jpg)] bg-[length:auto] bg-[position:right_top] bg-no-repeat">
+      <div class="relative z-10 h-full flex flex-col justify-between">
+        <h2 class="text-lg pl-4 font-primary font-medium text-primary dark:text-neutral-200 mb-4 leading-none">
+          Market <span class="font-normal text-secondary dark:text-gray-300">Credit</span>
+        </h2>
+        <h2 class="text-3xl mr-4 text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mb-0 text-right">
+          <small class="text-primary dark:text-neutral-400 text-xl">Rs.</small>
+          {{ homeReportMonthly?.retailer_credits | decimal }}
+        </h2>
       </div>
     </div>
   </div>
 
-  <!-- <div class="seabinReport">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card mt-0">
-                    <h4>Total <span>Booking</span></h4>
-                    <h2 class="digit"><small>Rs.</small> 45,000</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mt-0">
-                    <h4>New <span>Orders</span></h4>
-                    <h2 class="digit"><small>Rs.</small>1450</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mt-0">
-                    <h4>Today <span>Sale</span></h4>
-                    <h2 class="digit"><small>Rs.</small> {{homeReport.today_sale}}</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mt-0">
-                    <h4>Counter <span>Sale</span></h4>
-                    <h2 class="digit"><small>Rs.</small> {{homeReport.counter_sale}}</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mt-0">
-                    <h4>Pending <span>Sale</span></h4>
-                    <h2 class="digit"><small>Rs.</small> {{homeReport.pending_sale}}</h2>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card mt-0">
-                    <h4>Spot <span>Sale</span></h4>
-                    <h2 class="digit"><small>Rs.</small> {{homeReport.spot_sale}}</h2>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-  <div class="row">
-    <div class="col-lg-12 PB-10">
-      <h2 class="_head01 HomeHead">Top 5 <span>Booked Products</span></h2>
-    </div>
-    <div class="col-md-12">
-      <div class="row pro-list">
+  <!-- Top 5 Booked Products -->
+  <div class="mb-6">
+    <h2 class="text-xl font-primary font-medium text-secondary dark:text-gray-400 mb-4 pb-2 border-b-2 border-neutral-200 dark:border-[#333333]">
+      Top 5 <span class="font-light">Booked Products</span>
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      <ng-container *ngFor="let product of homeReport?.products_sold; let i = index">
         <div
-          class="col"
-          *ngFor="let product of homeReport.products_sold; let i = index"
-        >
-          <div class="product-card" *ngIf="i < 5">
-            <h3>{{ product.item_name }}</h3>
-            <div class="PR-Thumb"><img [src]="product.thumbnail" alt="" /></div>
-            <div class="row pr-st">
-              <div class="col-12 rev-pr">
-                <span
-                  ><small>Rs. </small
-                  >{{ product.item_trade_price | decimal }}</span
-                >
-              </div>
-              <div class="col-6">
-                <span
-                  >{{ product.ctns_booked }}
-                  <small>{{ product.unit_name }}</small></span
-                >Booked
-              </div>
-              <div class="col-6">
-                <span
-                  >{{ product.available_qty }}
-                  <small>{{ product.unit_name }}</small></span
-                >Available
-              </div>
+          *ngIf="i < 5"
+          class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#333333] rounded-lg p-4 shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_15px_#00000033] dark:hover:shadow-[0_0_15px_#ffffff1a] transition-all duration-300 hover:scale-[1.02] relative overflow-hidden">
+        <!-- Blue accent bar -->
+        <div class="absolute left-0 top-[10px] w-0.5 h-[18px] bg-primary"></div>
+        
+        <h3 class="text-sm font-primary font-medium text-gray-900 dark:text-white mb-3 line-clamp-2 min-h-[42px] pl-2">
+          {{ product.item_name }}
+        </h3>
+        
+        <div class="flex items-center justify-center h-[140px] mb-3">
+          <img
+            [src]="product.thumbnail"
+            [alt]="product.item_name"
+            class="w-[130px] h-[130px] object-contain"
+          />
+        </div>
+        
+        <div class="bg-gray-50 dark:bg-[#1f1f1f] rounded-lg p-2.5 text-center">
+          <div class="bg-white dark:bg-black border-b border-primary dark:border-primary pb-2 mb-2">
+            <span class="text-primary dark:text-neutral-400 text-base font-primary">
+              <small class="text-sm">Rs. </small>
+              <span class="text-2xl font-['Rationale',sans-serif]">{{ product.item_trade_price | decimal }}</span>
+            </span>
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400">
+            <div>
+              <span class="block text-xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mb-1">
+                {{ product.ctns_booked }}
+                <small class="text-xs">{{ product.unit_name }}</small>
+              </span>
+              Booked
+            </div>
+            <div>
+              <span class="block text-xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mb-1">
+                {{ product.available_qty }}
+                <small class="text-xs">{{ product.unit_name }}</small>
+              </span>
+              Available
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </ng-container>
     </div>
   </div>
-  <div class="row m-0">
-    <div class="col-lg-12 p-0">
-      <h2 class="_head01 HomeHead">Shortcuts <span></span></h2>
-    </div>
 
-    <div class="col-12 h_dash">
-      <div class="row">
-        <div class="col-4">
-          <a [routerLink]="['/orders', 'counter-sale']"
-            ><img src="assets/images/add-stock-01.svg" alt="" />
-            <h2 class="HD-title">
-              Add <span class="f-light"> Counter Sale</span>
-            </h2>
-          </a>
+  <!-- Shortcuts Section -->
+  <div class="mb-6">
+    <h2 class="text-xl font-primary font-medium text-secondary dark:text-gray-400 mb-4 pb-2 border-b-2 border-neutral-200 dark:border-[#333333]">
+      Shortcuts <span></span>
+    </h2>
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <a
+        [routerLink]="['/orders', 'counter-sale']"
+        class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] overflow-hidden transition-all duration-200 hover:scale-[1.02] h-[165px] shortcut-card-bg group">
+        <div class="absolute left-0 bottom-[22px] w-0.5 h-[38px] bg-primary"></div>
+        <div class="absolute top-2.5 right-2.5">
+          <img src="assets/images/add-stock-01.svg" alt="" class="w-[55px] h-[55px] dark:[filter:invert(1)_grayscale(1)]" />
         </div>
-        <div class="col-4">
-          <a [routerLink]="['/inventory', 'distributor-purchase']"
-            ><img src="assets/images/add-order.svg" alt="" />
-            <h2 class="HD-title">
-              Add<span class="f-light"> Stock Purchase</span>
-            </h2>
-          </a>
+        <h2 class="absolute bottom-[15px] left-[15px] text-lg font-primary font-medium text-gray-900 dark:text-white mb-0 pb-1 tracking-wide group-hover:text-primary dark:group-hover:text-neutral-100 transition-colors">
+          Add <span class="font-light text-gray-600 dark:text-gray-400 block text-sm">Counter Sale</span>
+        </h2>
+      </a>
+
+      <a
+        [routerLink]="['/inventory', 'distributor-purchase']"
+        class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] overflow-hidden transition-all duration-200 hover:scale-[1.02] h-[165px] shortcut-card-bg group">
+        <div class="absolute left-0 bottom-[22px] w-0.5 h-[38px] bg-primary"></div>
+        <div class="absolute top-2.5 right-2.5">
+          <img src="assets/images/add-order.svg" alt="" class="w-[55px] h-[55px]  dark:[filter:invert(1)_grayscale(1)]" />
         </div>
-        <div class="col-4">
-          <a [routerLink]="['/orders']"
-            ><img src="assets/images/dispatch-order.svg" alt="" />
-            <h2 class="HD-title">View<span class="f-light">Booking</span></h2>
-          </a>
+        <h2 class="absolute bottom-[15px] left-[15px] text-lg font-primary font-medium text-gray-900 dark:text-white mb-0 pb-1 tracking-wide group-hover:text-primary dark:group-hover:text-neutral-100 transition-colors">
+          Add<span class="font-light text-gray-600 dark:text-gray-400 block text-sm">Stock Purchase</span>
+        </h2>
+      </a>
+
+      <a
+        [routerLink]="['/orders']"
+        class="block bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] overflow-hidden transition-all duration-200 hover:scale-[1.02] h-[165px] shortcut-card-bg group">
+        <div class="absolute left-0 bottom-[22px] w-0.5 h-[38px] bg-primary"></div>
+        <div class="absolute top-2.5 right-2.5">
+          <img src="assets/images/dispatch-order.svg" alt="" class="w-[55px] h-[55px]  dark:[filter:invert(1)_grayscale(1)]" />
         </div>
-      </div>
+        <h2 class="absolute bottom-[15px] left-[15px] text-lg font-primary font-medium text-gray-900 dark:text-white mb-0 pb-1 tracking-wide group-hover:text-primary dark:group-hover:text-neutral-100 transition-colors">
+          View<span class="font-light text-gray-600 dark:text-gray-400 block text-sm">Booking</span>
+        </h2>
+      </a>
     </div>
   </div>
 </div>
 
-<div *ngIf="loading" class="flex justify-center items-center p-8 h-[calc(100vh-62px)]">
-  <app-loader-white></app-loader-white>
+<!-- Loading State -->
+<div *ngIf="loading" class="container mx-auto px-4">
+  <div class="flex justify-center items-center p-8">
+    <app-loader-white></app-loader-white>
+  </div>
 </div>

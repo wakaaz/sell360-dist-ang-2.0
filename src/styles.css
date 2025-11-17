@@ -848,7 +848,7 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
   top: 0;
   left: -100%;
   height: 100vh;
-  z-index: 196;
+  z-index: 43;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   display: flex;

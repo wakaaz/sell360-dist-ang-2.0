@@ -74,6 +74,11 @@ export const primaryOrderSubMenu = {
       link: `/primaryOrders/order/${PRIMARY_ORDER.RETURN_ORDER}`,
       icon: '/assets/images/order-return.svg',
     },
+    {
+      title: 'Order Received',
+      link: `/primaryOrders/${PRIMARY_ORDER.RECEIVED}`,
+      icon: '/assets/images/order-icon-b.svg',
+    },
   ],
 };
 export const salesmanSubMenu = {

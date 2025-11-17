@@ -9,6 +9,7 @@ export const PRIMARY_ORDER = {
   RETURN_ORDER: 'return',
   CANCELED: 'cancelled',
   RETURNED: 'returned',
+  RECEIVED: 'received',
 };
 
 export const PRIMARY_ORDER_API_STATUS = {

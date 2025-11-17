@@ -31,8 +31,8 @@ export class CreateDispatchedComponent implements OnInit {
         { field: 'sales_man', headerName: 'Sales Man', sortable: true, filter: true, flex: 1 },
         { field: 'emp_names', headerName: 'Order Bookers', sortable: true, filter: true, flex: 1  },
         { field: 'total_orders', headerName: 'Orders', sortable: true, filter: true, width: 100 },
-        { field: 'order_total', headerName: 'Booked Value', sortable: true, filter: true, width: 120 },
-        { field: 'pending_retailers', headerName: 'Pending Shops', sortable: true, filter: true, width: 100 },
+        { field: 'order_total', headerName: 'Booked Value', sortable: true, filter: true, width: 140 },
+        { field: 'pending_retailers', headerName: 'Pending Shops', sortable: true, filter: true, width: 150 },
         {
             field: 'actions',
             headerName: 'Action',

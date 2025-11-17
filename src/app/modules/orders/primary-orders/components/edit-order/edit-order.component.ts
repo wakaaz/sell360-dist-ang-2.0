@@ -127,6 +127,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     });
   }
   onSubDistributorChanged(): void {
+    console.log('this.selectedSubDistributor', this.selectedSubDistributor);
     this.subDistributor = this.subDistributors.find(
       (x) => x.id === this.selectedSubDistributor
     );
@@ -624,7 +625,9 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       ) {
         this.order.distributor_id = this.selectedSubDistributor;
         this.order.employee_id = this.subDistributor.tsm_id;
+        this.order.distributor_id = this.selectedSubDistributor;
         // TODO: fields needs to be remove from order model too
+
         // this.order.status = 'completed';
         // this.order.booker_lats = 0;
         // this.order.booker_longs = 0;
@@ -767,7 +770,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         selectedProduct.item_trade_price;
     const { scheme_rule, scheme_type, min_qty, quantity_free, discount_on_tp } =
       selectedScheme || {};
- 
 
     // When adding new product, use parent_qty_sold (actual quantity) instead of stockQty (carton quantity)
     // parent_qty_sold is already calculated as stockQty * parent.item_quantity in getNewPrimaryOderItem
@@ -855,7 +857,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   }
 
   isSchemeValid(scheme: any): boolean {
-
     const current_date = moment().format('YYYY-MM-DD');
     const { start_date, end_date } = scheme || {};
     const id = scheme?.id || 0;

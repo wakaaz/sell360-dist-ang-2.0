@@ -79,9 +79,8 @@ export interface IOrderContentItemPayload {
   secondary_items?: number | string;
   item_status?: number | string;
   isDistributorRequest?: number | string;
-  approved?: number | string;
   status?: string;
-  is_distributor_request: number | string;
+  within_radius: number | string;
 }
 
 export interface ICreatePrimaryOrderPayload {
@@ -92,6 +91,12 @@ export interface ICreatePrimaryOrderPayload {
   type: 'primary' | string;
   order_content: IOrderContentItemPayload[];
   frieght_price: number | string;
+  order_type: number | string;
+  order_fulfilment_by: number | string;
+  status: string;
+  parent_id: number | string;
+  is_distributor_request: number | string;
+  approved?: number | string;
 }
 
 /**
@@ -196,15 +201,15 @@ export function mapPrimaryOrderItemToPayload(
       ? taxClass?.adv_inc_filer_distributor_value
       : taxClass?.adv_inc_nonfiler_distributor_value,
     total_gst: totalGst,
-    is_distributor_request: 1,
     total_adv_inc_tax: totalAdvIncTax,
     ttl_amnt_aftr_tax: grossAfterAllDisc + totalTax,
     dispatch_qty: 0,
     dispatch_amount: 0,
     isDistributorRequest: 1,
-    approved: 1,
     status: 'completed',
-    scheme_quantity_free: (item as any)?.selectedScheme?.quantity_free || 0,
+    within_radius: 0,
+    // scheme_quantity_free: (item as any)?.selectedScheme?.quantity_free || 0,
+    scheme_quantity_free: item.scheme_quantity_free || 0,
     // Backends commonly accept either scheme_free_items or detailed schemeItems; set if needed:
     schemeItems:
       (item as any)?.selectedScheme &&
@@ -266,10 +271,16 @@ export function buildCreateOrderPayloadFromPrimaryOrder(
 
   const payload: ICreatePrimaryOrderPayload = {
     date: dateStr,
-    distributor_id: distributor?.id,
+    distributor_id: order.distributor_id,
+    parent_id: distributor?.id,
     employee_id: employeeId,
     type: 'primary',
+    is_distributor_request: 1,
     order_content: content,
+    approved: 1,
+    order_type: 5,
+    order_fulfilment_by: 2,
+    status: 'completed',
     frieght_price: order.frieght_price || 0,
   };
 

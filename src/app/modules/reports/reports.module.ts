@@ -7,6 +7,8 @@ import { FormsModule } from '@angular/forms';
 import { DataTablesModule } from 'angular-datatables';
 import { AgGridModule } from 'ag-grid-angular';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 import { ReportsRoutingModule } from './reports-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
@@ -31,6 +33,8 @@ import { AllocatedStockReportComponent } from './components/allocated-stock-repo
     DataTablesModule,
     AgGridModule,
     NgSelectModule,
+    NzDatePickerModule,
+    NzSelectModule,
     SharedModule,
     ReportsRoutingModule,
   ],

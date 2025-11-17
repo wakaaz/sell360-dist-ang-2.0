@@ -2,12 +2,13 @@ import { RetailerService } from './../../../retailer/services/retailer.service';
 import { API_URLS } from './../../../../core/constants/api-urls.constants';
 import { LocalStorageService } from './../../../../core/services/storage.service';
 import { environment } from 'src/environments/environment';
-import { Subject } from 'rxjs';
 import { ToasterService } from './../../../../core/services/toaster.service';
 import { OrdersService } from './../../../orders/services/orders.service';
-import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 
-import { DataTableDirective } from 'angular-datatables';
+// Register AG Grid modules
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -20,7 +21,8 @@ import { DataTableDirective } from 'angular-datatables';
 
 })
 export class OrderBookerListComponent implements OnInit {
-  dtOptions: DataTables.Settings = {};
+  private gridApi!: GridApi;
+
   OrderType: string;
   salesmanId: string;
   OrderBooker: string;
@@ -38,18 +40,21 @@ export class OrderBookerListComponent implements OnInit {
     salesmen: [],
   };
 
-  @ViewChild(DataTableDirective, { static: false })
-  dtElement: DataTableDirective;
-  isDtInitialized: boolean = false
-
-  dtTrigger: Subject<any> = new Subject();
-
   showDetailsModal = false;
+  showBillsModal = false;
 
   //Meaning yesterday date
   date = new Date(Date.now() - 864e5);
 
   distributorId = null;
+
+  // AG Grid column definitions
+  columnDefs: ColDef[] = [];
+  defaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: true
+  };
 
   constructor(
     private retailerService: RetailerService,
@@ -58,13 +63,89 @@ export class OrderBookerListComponent implements OnInit {
     private orderService: OrdersService
   ) {
     this.distributorId = this.storageService.getItem('distributor').id;
-    this.dtOptions = {
-      pagingType: 'simple_numbers'
-    };
     this.startDate = `${this.date.getFullYear()}-${("0" + (this.date.getMonth() + 1)).slice(-2)}-${("0" + this.date.getDate()).slice(-2)}`;
     this.endDate = `${new Date().getFullYear()}-${("0" + (new Date().getMonth() + 1)).slice(-2)}-${("0" + new Date().getDate()).slice(-2)}`;
     this.OrderType = "0"
     this.segment = "0"
+    this.columnDefs = this.getColumnDefs();
+    this.setupGlobalFunctions();
+  }
+
+  getColumnDefs(): ColDef[] {
+    // Capture component context
+    const component = this;
+    
+    return [
+      { field: 'date', headerName: 'Date', sortable: true, filter: true, width: 120 },
+      { field: 'invoice_number', headerName: 'Invoice#', sortable: true, filter: true, width: 150 },
+      { field: 'shop_id', headerName: 'Shop ID', sortable: true, filter: true, width: 120 },
+      { field: 'shop_name', headerName: 'Shop Name', sortable: true, filter: true, flex: 1 },
+      { field: 'segment', headerName: 'Segment', sortable: true, filter: true, width: 120 },
+      { field: 'order_booker', headerName: 'Order Booker', sortable: true, filter: true, flex: 1 },
+      { field: 'salesman', headerName: 'Salesman', sortable: true, filter: true, flex: 1 },
+      { 
+        field: 'order_total', 
+        headerName: 'Invoice Total', 
+        sortable: true, 
+        filter: true, 
+        width: 150,
+        valueFormatter: (params) => {
+          if (params.value == null) return '';
+          return params.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+      },
+      {
+        field: 'actions',
+        headerName: 'Action',
+        cellRenderer: (params: any) => {
+          const order = params.data;
+          
+          return `
+            <div class="flex gap-1 flex-wrap">
+              <button onclick="window.orderDetailClick('${order.id}')" 
+                      class="bg-gradient-to-r from-[#1e54d3] to-[#0038ba] h-auto leading-none py-[4px] px-[5px] text-white text-[11px] border border-primary font-primary rounded-[5px] ml-0.5 inline-block" title="Detail">Detail</button>
+              <button onclick="window.billsModalClick('${order.id}')" 
+                      class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px]" title="Bill">Bill</button>
+            </div>
+          `;
+        },
+        cellStyle: {
+          display: 'flex',
+          alignItems: 'center',
+        },
+        width: 200,
+        sortable: false,
+        filter: false,
+        pinned: 'right'
+      }
+    ];
+  }
+
+  setupGlobalFunctions(): void {
+    (window as any).orderDetailClick = (orderId: string) => {
+      const order = this.orders.find(o => o.id === parseInt(orderId));
+      if (order) {
+        this.openDetailsModal(null, order);
+      }
+    };
+    
+    (window as any).billsModalClick = (orderId: string) => {
+      const order = this.orders.find(o => o.id === parseInt(orderId));
+      if (order) {
+        this.openBillsModal(order);
+      }
+    };
+  }
+
+  onGridReady(params: GridReadyEvent): void {
+    this.gridApi = params.api;
+  }
+
+  onQuickFilterChanged(event: any): void {
+    const filterValue = event.target.value;
+    if (this.gridApi) {
+      this.gridApi.setGridOption('quickFilterText', filterValue);
+    }
   }
 
   ngOnInit(): void {
@@ -111,13 +192,6 @@ export class OrderBookerListComponent implements OnInit {
         type: 'error'
       });
 
-    if (this.isDtInitialized) {
-      this.dtElement.dtInstance.then((dtInstance: DataTables.Api) => {
-        dtInstance.destroy();
-      });
-      this.isDtInitialized = false;
-    }
-
     this.loading = true;
 
     let filters = `order_booker=${this.OrderBooker}&start_date=${this.startDate}&end_date=${this.endDate}`;
@@ -130,13 +204,7 @@ export class OrderBookerListComponent implements OnInit {
 
     this.orderService.getSaleHistory(filters).subscribe(res => {
       this.orders = res;
-      if (!this.isDtInitialized) {
-        this.isDtInitialized = true
-        this.dtTrigger.next(null);
-      }
-      setTimeout(() => {
-        this.loading = false;
-      }, 300);
+      this.loading = false;
     }, error => {
       this.loading = false;
       if (error.status !== 401 && error.status !== 1) {
@@ -162,10 +230,12 @@ export class OrderBookerListComponent implements OnInit {
 
   orderDetail: any = [];
 
-  openDetailsModal(e, orderId: number): void {
+  openDetailsModal(e: any, order: any): void {
     this.orderDetail = [];
-    (e.target as HTMLButtonElement).setAttribute("disabled", "disabled");
-    this.getViewOrderDetailById(e, orderId);
+    if (e && e.target) {
+      (e.target as HTMLButtonElement).setAttribute("disabled", "disabled");
+    }
+    this.getViewOrderDetailById(e, order);
   }
 
   invoiceDate = null;
@@ -174,6 +244,7 @@ export class OrderBookerListComponent implements OnInit {
   getBills(size: string = 'A4'): void {
     const billsUrl = `${environment.apiDomain}${API_URLS.BILLS}?type=bill&emp=${this.activeOrder.sales_man_id}&date=${this.activeOrder.date}&dist_id=${this.distributorId}&size=${size}&status=processed&orderID=${this.activeOrder.id}`;
     window.open(billsUrl, "_blank");
+    this.closeBillsModal();
     // if (this.invoiceDate) {
     //   this.orderService.updateDispatchInvoiceDate(this.activeOrder.load_id, this.invoiceDate).subscribe(res => {
     //     if (res.status === 200) {
@@ -200,7 +271,11 @@ export class OrderBookerListComponent implements OnInit {
 
   openBillsModal(order: any) {
     this.activeOrder = order;
-    (document.getElementById("billsPrintPaperModalTrigger") as HTMLButtonElement).click();
+    this.showBillsModal = true;
+  }
+
+  closeBillsModal(): void {
+    this.showBillsModal = false;
   }
 
   paymentInfo = {
@@ -218,7 +293,7 @@ export class OrderBookerListComponent implements OnInit {
     }
   };
 
-  getViewOrderDetailById(e, order): void {
+  getViewOrderDetailById(e: any, order: any): void {
     this.retailerService.getOrderDetail(order.id).subscribe(res => {
       this.activeOrder = order;
       this.orderDetail = res.details;
@@ -227,8 +302,9 @@ export class OrderBookerListComponent implements OnInit {
         cheque: res.payments.find(x => x.payment_mode.toLowerCase() == 'cheque'),
         credit: res.payments.find(x => x.payment_mode.toLowerCase() == 'credit'),
       };
-      (e.target as HTMLButtonElement).removeAttribute("disabled");
-      (document.getElementById("orderDetailsModalTrigger") as HTMLButtonElement).click();
+      if (e && e.target) {
+        (e.target as HTMLButtonElement).removeAttribute("disabled");
+      }
       this.orderDetail.gross_amount = this.orderDetail.map(x => x.gr_amount).reduce((a, b) => a + b, 0);
       this.orderDetail.to_discount = this.orderDetail.map(x => x.trade_offer).reduce((a, b) => a + b, 0);
       this.orderDetail.trade_discount = this.orderDetail.map(x => x.trade_discount).reduce((a, b) => a + b, 0);
@@ -243,7 +319,36 @@ export class OrderBookerListComponent implements OnInit {
   }
 
   closeDetailsModal(): void {
+    this.showDetailsModal = false;
     document.body.classList.remove('no-scroll');
+  }
+
+  onStartDateChange(date: any): void {
+    // Convert Date object to string format 'yyyy-MM-dd' for storage
+    if (date instanceof Date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      this.startDate = `${year}-${month}-${day}`;
+    } else if (date === null || date === undefined) {
+      this.startDate = null;
+    } else if (typeof date === 'string') {
+      this.startDate = date;
+    }
+  }
+
+  onEndDateChange(date: any): void {
+    // Convert Date object to string format 'yyyy-MM-dd' for storage
+    if (date instanceof Date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      this.endDate = `${year}-${month}-${day}`;
+    } else if (date === null || date === undefined) {
+      this.endDate = null;
+    } else if (typeof date === 'string') {
+      this.endDate = date;
+    }
   }
 
 }

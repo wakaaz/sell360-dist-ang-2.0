@@ -78,6 +78,9 @@ export interface IOrderContentItemPayload {
   schemeItems?: ISchemeItemPayload[];
   secondary_items?: number | string;
   item_status?: number | string;
+  isDistributorRequest?: number | string;
+  approved?: number | string;
+  status?: string;
 }
 
 export interface ICreatePrimaryOrderPayload {
@@ -182,8 +185,8 @@ export function mapPrimaryOrderItemToPayload(
     total_tax: totalTax,
     unit_price: unitPriceBeforeTax, // keep same as bf tax; adjust if API needs diff
     final_price: grossAfterAllDisc,
-    gst_tax_amount: item.gst_tax/item?.parent_qty_sold|| 0,
-    adv_inc_tax_amount: item?.advance_income_tax/item?.parent_qty_sold || 0,
+    gst_tax_amount: item.gst_tax / item?.parent_qty_sold || 0,
+    adv_inc_tax_amount: item?.advance_income_tax / item?.parent_qty_sold || 0,
     tax_type: distributor?.filer_status ? 1 : 2,
     tax_in_percentage: distributor?.filer_status
       ? taxClass?.gst_filer_distributor_value
@@ -196,6 +199,9 @@ export function mapPrimaryOrderItemToPayload(
     ttl_amnt_aftr_tax: grossAfterAllDisc + totalTax,
     dispatch_qty: 0,
     dispatch_amount: 0,
+    isDistributorRequest: 1,
+    approved: 1,
+    status: 'completed',
     scheme_quantity_free: (item as any)?.selectedScheme?.quantity_free || 0,
     // Backends commonly accept either scheme_free_items or detailed schemeItems; set if needed:
     schemeItems:

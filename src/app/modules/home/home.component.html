@@ -159,41 +159,41 @@
       <ng-container *ngFor="let product of homeReport?.products_sold; let i = index">
         <div
           *ngIf="i < 5"
-          class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#333333] rounded-lg p-4 shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_15px_#00000033] dark:hover:shadow-[0_0_15px_#ffffff1a] transition-all duration-300 hover:scale-[1.02] relative overflow-hidden">
+          class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#1e1e1e] rounded-lg  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_15px_#00000033] dark:hover:shadow-[0_0_15px_#ffffff1a] transition-all duration-300 hover:scale-[1.02] relative overflow-hidden">
         <!-- Blue accent bar -->
-        <div class="absolute left-0 top-[10px] w-0.5 h-[18px] bg-primary"></div>
+        <div class="absolute left-0 top-[13px] w-0.5 h-[18px] bg-primary"></div>
         
-        <h3 class="text-sm font-primary font-medium text-gray-900 dark:text-white mb-3 line-clamp-2 min-h-[42px] pl-2">
+        <h3 class="text-sm font-primary font-medium text-gray-900 dark:text-white mb-2 line-clamp-2 min-h-[42px] pl-4 mt-3">
           {{ product.item_name }}
         </h3>
         
-        <div class="flex items-center justify-center h-[140px] mb-3">
+        <div class="flex items-center justify-center mb-2">
           <img
             [src]="product.thumbnail"
             [alt]="product.item_name"
-            class="w-[130px] h-[130px] object-contain"
+            class="object-cover m-auto custum-size-home rounded-lg"
           />
         </div>
         
-        <div class="bg-gray-50 dark:bg-[#1f1f1f] rounded-lg p-2.5 text-center">
-          <div class="bg-white dark:bg-black border-b border-primary dark:border-primary pb-2 mb-2">
+        <div class="rounded-lg p-0 text-center">
+          <div class="border-b border-primary dark:border-primary pb-1">
             <span class="text-primary dark:text-neutral-400 text-base font-primary">
               <small class="text-sm">Rs. </small>
-              <span class="text-2xl font-['Rationale',sans-serif]">{{ product.item_trade_price | decimal }}</span>
+              <span class="text-xl font-['Rationale',sans-serif]">{{ product.item_trade_price | decimal }}</span>
             </span>
           </div>
-          <div class="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400">
-            <div>
-              <span class="block text-xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mb-1">
+          <div class="grid grid-cols-2 gap-2 text-gray-600 dark:text-gray-400 text-sm pb-[8px] pt-[8px]">
+            <div class="pl-4">
+              <span class="block text-lg text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none">
                 {{ product.ctns_booked }}
-                <small class="text-xs">{{ product.unit_name }}</small>
+                <small class="text-[14px]">{{ product.unit_name }}</small>
               </span>
               Booked
             </div>
-            <div>
-              <span class="block text-xl text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none mb-1">
+            <div class="pr-4">
+              <span class="block text-lg text-secondary dark:text-gray-300 font-['Rationale',sans-serif] leading-none">
                 {{ product.available_qty }}
-                <small class="text-xs">{{ product.unit_name }}</small>
+                <small class="text-[14px]">{{ product.unit_name }}</small>
               </span>
               Available
             </div>

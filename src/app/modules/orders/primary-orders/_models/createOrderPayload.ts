@@ -81,6 +81,7 @@ export interface IOrderContentItemPayload {
   isDistributorRequest?: number | string;
   approved?: number | string;
   status?: string;
+  is_distributor_request: number | string;
 }
 
 export interface ICreatePrimaryOrderPayload {
@@ -195,6 +196,7 @@ export function mapPrimaryOrderItemToPayload(
       ? taxClass?.adv_inc_filer_distributor_value
       : taxClass?.adv_inc_nonfiler_distributor_value,
     total_gst: totalGst,
+    is_distributor_request: 1,
     total_adv_inc_tax: totalAdvIncTax,
     ttl_amnt_aftr_tax: grossAfterAllDisc + totalTax,
     dispatch_qty: 0,

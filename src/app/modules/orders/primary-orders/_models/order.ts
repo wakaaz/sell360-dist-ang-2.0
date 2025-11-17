@@ -286,7 +286,7 @@ export class PrimaryOrder {
 
   public get totalGrossPrice(): number {
     return this._orderContent
-      ? this.orderContent.reduce((a: any, b: any) => a + b.grossPrice, 0)
+      ? this.orderContent.reduce((a: any, b: any) => a + b.grossPrice1, 0)
       : 0;
   }
   public get totalPKRBill(): number {

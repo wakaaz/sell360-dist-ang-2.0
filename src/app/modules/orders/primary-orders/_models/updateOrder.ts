@@ -15,6 +15,7 @@ export interface IupdateOrdercontent extends IorderItems {
   parent_value_sold: number;
   booker_discount_pkr: number;
   special_discount_pkr: number;
+  booker_discount_value: number;
 }
 
 export interface IupdateOrder {
@@ -103,6 +104,7 @@ export const getNewOrderContentObject = (
     tax_in_value: primaryOrderItem.tax, // not know that is that
     total_tax_amount: primaryOrderItem.tax,
     special_discount_pkr: primaryOrderItem.specialDiscount, // calc total tax amount
+    booker_discount_value: primaryOrderItem.booker_discount_value,
     // );
   };
   return orderContent;

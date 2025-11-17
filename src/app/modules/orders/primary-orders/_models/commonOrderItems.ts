@@ -23,6 +23,7 @@ export interface IorderItems {
   special_discount: number; // amount pkr
   unit_price_after_special_discount: number;
   booker_discount: number; // booker discount amount pkr
+  booker_discount_value: number;
   unit_price_after_booker_discount: number;
   total_discount: number;
   unit_price: number;

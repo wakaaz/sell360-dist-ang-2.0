@@ -15,6 +15,7 @@ export interface IPrimaryOrderItem extends IorderItems {
   special_discount_pkr: number;
   tax_amount: number; // %
   unit_name: string;
+  available_stock?: number;
 }
 
 //#region set primnaryorderItem from get order by Id
@@ -84,10 +85,14 @@ export function setPrimarOrderItem(
 export function getNewPrimaryOderItem(selectedProduct: any): PrimaryOrderItem {
   const primOrderItem = new PrimaryOrderItem();
 
-  primOrderItem.brand_id = selectedProduct.brand_id;
+  primOrderItem.brand_id =
+    selectedProduct.brand_id || selectedProduct.item_brand;
   primOrderItem.parent_unit_quantity = selectedProduct.parent.quantity;
+  primOrderItem.main_cat = selectedProduct.main_cat;
+  primOrderItem.sub_cat = selectedProduct.sub_cat;
   // primOrderItem.division_id = selectedProduct.division_id; TODO: Maybe Addedd
   primOrderItem.scheme_discount = selectedProduct.scheme_discount;
+  primOrderItem.available_stock = selectedProduct.available_stock;
   // primOrderItem.selectedScheme = selectedProduct.selectedScheme;   TODO: slected scheme when add prodcut
   // primOrderItem.dispatch_status = selectedProduct.dispatch_status;
   // primOrderItem.dispatch_qty = selectedProduct.dispatch_qty;
@@ -112,8 +117,18 @@ export function getNewPrimaryOderItem(selectedProduct: any): PrimaryOrderItem {
   // primOrderItem.parent_item_retail_price =
   //   selectedProduct.parent_item_retail_price;
   primOrderItem.parent_pref_id = selectedProduct.parent.id;
-  primOrderItem.parent_qty_sold = selectedProduct.stockQty; // show parent
-  primOrderItem.parent_tp = selectedProduct.item_trade_price; // one qty ammount
+  const unit_quantity = selectedProduct.parent?.quantity || 0;
+  primOrderItem.unit_quantity = unit_quantity;
+  primOrderItem.primary_qty_sold = selectedProduct.stockQty || 0;
+  primOrderItem.parent_qty_sold =
+    (+selectedProduct.stockQty || 0) * unit_quantity;
+  primOrderItem.parent_tp = selectedProduct.item_trade_price;
+  primOrderItem.unit_item_trade_price =
+    selectedProduct.parent?.item_trade_price ||
+    selectedProduct.item_trade_price;
+  primOrderItem.unit_item_retail_price =
+    selectedProduct?.parent?.item_retail_price ||
+    selectedProduct.item_retail_price;
   primOrderItem.parent_unit_id = selectedProduct.parent.unit_id;
   primOrderItem.pref_id = selectedProduct.pref_id;
   if (selectedProduct.selectedScheme) {
@@ -164,7 +179,36 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     return Utility.calGrossAmount(this.parent_tp, this.parent_qty_sold);
   }
 
+  public get grossPrice1(): number {
+    return Utility.calGrossAmount(
+      this.unit_item_trade_price,
+      this.parent_qty_sold
+    );
+  }
   private _tradeOffer: number = 0;
+  private _available_stock: number;
+  public get available_stock(): number {
+    return this._available_stock;
+  }
+  public set available_stock(v: number) {
+    this._available_stock = v;
+  }
+
+  private _main_cat: number;
+  public get main_cat(): number {
+    return this._main_cat;
+  }
+  public set main_cat(v: number) {
+    this._main_cat = v;
+  }
+
+  private _sub_cat: number;
+  public get sub_cat(): number {
+    return this._sub_cat;
+  }
+  public set sub_cat(v: number) {
+    this._sub_cat = v;
+  }
 
   public get tradeOffer(): number {
     return this._tradeOffer;
@@ -186,8 +230,15 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   }
 
   public set tradeOffer(v: number) {
-    console.log('tradeOffer: ', v);
     this._tradeOffer = v;
+  }
+
+  private _unit_quantity: number;
+  public get unit_quantity(): number {
+    return this._unit_quantity;
+  }
+  public set unit_quantity(v: number) {
+    this._unit_quantity = v;
   }
 
   public get schemeFreeProdsCount(): number {
@@ -214,6 +265,17 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
       this.parent_tp,
       this.parent_qty_sold
     );
+  }
+  public get distributorDiscount1(): number {
+    const tradeOffer = (this as any).trade_offer || 0;
+
+    const distributorDiscountValue = Utility.calDistributorDiscount1(
+      this.distributor_discount,
+      this.unit_item_trade_price,
+      this.parent_qty_sold,
+      tradeOffer
+    );
+    return distributorDiscountValue;
   }
 
   public get specialDiscount(): number {
@@ -290,9 +352,14 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
 
   public get grossPriceAfterDistributorDiscount(): number {
     const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
-    const bookerDiscountValue = this.booker_discount || 0;
-    
-    return this.grossPrice - this.distributorDiscount - tradeOfferValue - bookerDiscountValue ;
+    const bookerDiscountValue = this.booker_discount_value || 0;
+
+    return (
+      this.grossPrice1 -
+      this.distributorDiscount1 -
+      tradeOfferValue -
+      bookerDiscountValue
+    );
   }
 
   public get TotalBill(): number {
@@ -303,8 +370,9 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
 
   public get TotalDiscount(): number {
     const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
-    const specialDiscountValue = this.booker_discount || 0;
-    return tradeOfferValue + this.distributorDiscount + specialDiscountValue;
+    const specialDiscountValue = this.booker_discount_value || 0;
+    return tradeOfferValue + this.distributorDiscount1 + specialDiscountValue;
+
   }
 
   public get TotalTax(): number {
@@ -364,10 +432,16 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
 
   private _booker_discount: number;
   public get booker_discount(): number {
-    return this._booker_discount;
+    return this._booker_discount || 0;
   }
+
   public set booker_discount(v: number) {
     this._booker_discount = v || 0;
+  }
+
+  private _booker_discount_value: number;
+  public get booker_discount_value(): number {
+    return this._booker_discount * this.parent_qty_sold || 0;
   }
 
   private _distributor_discount: number;
@@ -492,6 +566,28 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     this._parent_tp = v;
   }
 
+  private _unit_item_trade_price: number;
+  public get unit_item_trade_price(): number {
+    return this._unit_item_trade_price;
+  }
+  public set unit_item_trade_price(v: number) {
+    this._unit_item_trade_price = v;
+  }
+  private _primary_qty_sold: number;
+  public get primary_qty_sold(): number {
+    return this._primary_qty_sold;
+  }
+  public set primary_qty_sold(v: number) {
+    this._primary_qty_sold = v;
+  }
+  private _unit_item_retail_price: number;
+  public get unit_item_retail_price(): number {
+    return this._unit_item_retail_price;
+  }
+  public set unit_item_retail_price(v: number) {
+    this._unit_item_retail_price = v;
+  }
+
   private _parent_unit_id: number;
   public get parent_unit_id(): number {
     return this._parent_unit_id;
@@ -601,8 +697,6 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     return this._tax_amount;
   }
   public set tax_amount(v: number) {
-    console.log('Setter Function called with value:', v);
-
     this._tax_amount = v;
   }
 
@@ -705,6 +799,7 @@ export const setPrimaryOrderItemAPI = (item: IPrimaryOrderItem) => {
     booked_order_value: item.booked_order_value,
     booked_total_qty: item.booked_total_qty,
     booker_discount: item.booker_discount,
+    booker_discount_value: item.booker_discount_value || 0,
     distributor_discount: item.distributor_discount,
     distributor_discount_pkr: item.distributor_discount_pkr,
     final_price: item.final_price,

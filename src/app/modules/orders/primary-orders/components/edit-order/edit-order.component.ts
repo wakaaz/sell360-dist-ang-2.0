@@ -911,7 +911,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           gross_amount -
             trade_offer_total -
             distributor_discount_amount -
-            (+createdPrimaryOrder.booker_discount || 0)
+            (+createdPrimaryOrder.booker_discount_value || 0)
         );
 
         if (is_distributor_filer) {
@@ -1002,6 +1002,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       gst_tax,
       advance_income_tax,
       booker_discount,
+      booker_discount_value,
     } = primary_order || {};
 
     const gross_amount = parent_tp * parent_qty_sold;
@@ -1013,7 +1014,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       gross_amount -
       distributor_discount_amount +
       (gst_tax + advance_income_tax) -
-      (+booker_discount || 0);
+      (+booker_discount_value || 0);
 
     primary_order['total_bill'] = total_bill;
 

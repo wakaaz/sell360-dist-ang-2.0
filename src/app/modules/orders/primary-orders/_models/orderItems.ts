@@ -352,7 +352,7 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
 
   public get grossPriceAfterDistributorDiscount(): number {
     const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
-    const bookerDiscountValue = this.booker_discount || 0;
+    const bookerDiscountValue = this.booker_discount_value || 0;
 
     return (
       this.grossPrice1 -
@@ -370,8 +370,9 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
 
   public get TotalDiscount(): number {
     const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
-    const specialDiscountValue = this.booker_discount || 0;
+    const specialDiscountValue = this.booker_discount_value || 0;
     return tradeOfferValue + this.distributorDiscount1 + specialDiscountValue;
+
   }
 
   public get TotalTax(): number {
@@ -431,10 +432,16 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
 
   private _booker_discount: number;
   public get booker_discount(): number {
-    return this._booker_discount;
+    return this._booker_discount || 0;
   }
+
   public set booker_discount(v: number) {
     this._booker_discount = v || 0;
+  }
+
+  private _booker_discount_value: number;
+  public get booker_discount_value(): number {
+    return this._booker_discount * this.parent_qty_sold || 0;
   }
 
   private _distributor_discount: number;
@@ -792,6 +799,7 @@ export const setPrimaryOrderItemAPI = (item: IPrimaryOrderItem) => {
     booked_order_value: item.booked_order_value,
     booked_total_qty: item.booked_total_qty,
     booker_discount: item.booker_discount,
+    booker_discount_value: item.booker_discount_value || 0,
     distributor_discount: item.distributor_discount,
     distributor_discount_pkr: item.distributor_discount_pkr,
     final_price: item.final_price,

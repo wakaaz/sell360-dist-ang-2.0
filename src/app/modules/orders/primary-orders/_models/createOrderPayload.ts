@@ -172,18 +172,18 @@ export function mapPrimaryOrderItemToPayload(
     dist_discount: distDiscountPct,
     dist_discount_val: distDiscountVal,
     Grs_Amt_Af_TO_DD: Math.max(0, grossAfterTO - distDiscountVal),
-    special_discount: item.special_discount || 0,
+    special_discount: item.special_discount * item?.parent_qty_sold || 0,
     special_discount_val: specialDiscountVal,
-    booker_discount: 0,
-    booker_discount_val: item.booker_discount || 0,
+    booker_discount: item?.booker_discount,
+    booker_discount_val: item.booker_discount * item?.parent_qty_sold || 0,
     Grs_Amt_Af_TO_DD_SD_BD: grossAfterAllDisc,
     unit_tax:
       (+item?.advance_income_tax + +item?.gst_tax) / +item?.parent_qty_sold,
     total_tax: totalTax,
     unit_price: unitPriceBeforeTax, // keep same as bf tax; adjust if API needs diff
     final_price: grossAfterAllDisc,
-    gst_tax_amount: item.gst_tax || 0,
-    adv_inc_tax_amount: item?.advance_income_tax || 0,
+    gst_tax_amount: item.gst_tax/item?.parent_qty_sold|| 0,
+    adv_inc_tax_amount: item?.advance_income_tax/item?.parent_qty_sold || 0,
     tax_type: distributor?.filer_status ? 1 : 2,
     tax_in_percentage: distributor?.filer_status
       ? taxClass?.gst_filer_distributor_value

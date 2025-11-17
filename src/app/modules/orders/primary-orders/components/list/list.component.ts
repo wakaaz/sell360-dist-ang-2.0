@@ -105,7 +105,7 @@ export class ListComponent {
             `;
           }
           
-          if (PRIMARY_ORDER_CONST.EXECUTE === orderStatus) {
+          if (PRIMARY_ORDER_CONST.EXECUTE === orderStatus && order.status !== PRIMARY_ORDER_CONST.COMPLETED && order.status !== PRIMARY_ORDER_API_STATUS.COMPLETED) {
             buttons += `
               <button onclick="window.completeOrderClick('${order.id}')" 
                       class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px]" title="Complete">Complete</button>

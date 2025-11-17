@@ -1,174 +1,156 @@
-<div class="container">
-    <div class="row mt-2 mb-2">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Distributor <span> Purchase Detail</span></h2>
-        </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <ol class="breadcrumb">
-                <li><a><span>Reports</span></a></li>
-                <li><span>Purchase History</span></li>
-            </ol>
-        </div>
+<div class="container mx-auto px-4">
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1
+          class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0"
+        >
+          Distributor
+          <span class="font-light"> Purchase Detail</span>
+        </h1>
+      </div>
+      <div>
+        <a href="/reports/purchase-history" class="bg-transparent h-auto leading-none py-1.5 px-4 text-primary text-[13px] border border-primary hover:bg-primary hover:text-white dark:hover:text-white dark:text-neutral-400 dark:border-neutral-600 hover:dark:border-primary font-primary rounded-[5px] inline-flex items-center gap-1 transition-colors">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
+          </svg>
+          Back  
+        </a>
+      </div>
     </div>
+  </div>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="card" *ngIf="!loading && order">
-                <div class="p-10" style="border-bottom: solid 2px #000">
-                    <div class="row m-0">
-                        <div class="col-8 OrderLogo">
-                        </div>
-                        <div class="col-4 ord-no">
-                            Order Date: <strong>{{order.payload.poDate}}</strong>
-                        </div>
-                    </div>
-                </div>
-                <div class="body" style="padding:15px 20px">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="form-body">
-                                <div class="row OrderInfo">
-
-                                    <div class="col-md-3">
-                                        <span>Received No: </span> <strong>{{order.payload.receivedNo}}</strong><br>
-                                        <span>Receive Date: </span> <strong>{{order.payload.receivedDate}}</strong><br>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <span>Inv. No: </span> <strong>{{order.payload.invoiceNo}}</strong><br>
-                                        <span>Inv. Date: </span> <strong>{{order.payload.invoiceDate}}</strong><br>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <span>PO No: </span> <strong>{{order.payload.poNo}}</strong><br>
-                                        <span>PO Date: </span> <strong>{{order.payload.poDate}}</strong><br>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <span>DC No: </span> <strong>{{order.payload.dcNo}}</strong><br>
-                                        <span>DC Date: </span> <strong>{{order.payload.dcDate}}</strong><br>
-                                    </div>
-
-                                </div>
-
-
-
-                                <div class="seprator-block"></div>
-
-                                <div class="Order-Detail-table mt-30">
-
-
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th><strong>SKU</strong></th>
-                                                <th><strong>Item Name</strong></th>
-                                                <th><strong>Purchased Unit</strong></th>
-                                                <th><strong>Purchased QTY.</strong></th>
-                                                <th><strong>Free Unit</strong></th>
-                                                <th><strong>Free QTY.</strong></th>
-                                                <th><strong>Discount %</strong></th>
-                                                <th><strong>Discount PKR.</strong></th>
-                                                <th><strong>Original Amount</strong></th>
-                                                <th><strong>Net Amount</strong></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="order_items_body">
-                                            <tr *ngFor="let dt of order.detail">
-                                                <td>{{dt.item_sku}}</td>
-                                                <td>{{dt.item_name}}</td>
-                                                <td>{{dt.type === 'regular' ? dt.unit_name : ''}}</td>
-                                                <td>{{dt.type === 'regular' ? dt.quantity : 0 | number}}</td>
-                                                <td>{{dt.type === 'free' ? dt.unit_name : dt.type === 'regular' &&
-                                                    dt.free ? dt.free.unit_name : ''}}</td>
-                                                <td>{{dt.type === 'free' ? dt.free_quantity : dt.type === 'regular' &&
-                                                    dt.free ? dt.free.quantity : '' | number }}</td>
-                                                <td>{{dt.discount_type_value | number: '1.2-2'}}</td>
-                                                <td>{{dt.discount | number: '1.2-2'}}</td>
-                                                <td>{{dt.original_amount | number: '1.2-2'}}</td>
-                                                <td>{{dt.net_amount | number: '1.2-2'}}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td><strong>Subtotal PKR.</strong></td>
-                                                <td><strong>{{order.original_amount | number: '1.2-2'}}</strong></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td><strong>Distribution Discount</strong></td>
-                                                <td><strong>{{order.discount | number: '1.2-2'}}</strong></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td><strong>GST</strong></td>
-                                                <td><strong>{{order.payload.gst}}</strong>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td><strong>Freight Charges</strong></td>
-                                                <td><strong>{{order.payload.fare}}</strong>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td class="border-0"></td>
-                                                <td
-                                                    style="border: solid 1px #333333!important;background-color: #ededed!important;color: #000;">
-                                                    <strong>Total PKR.</strong>
-                                                </td>
-                                                <td
-                                                    style="border: solid 1px #333333!important;background-color: #ededed!important;color: #000;">
-                                                    <strong>{{order.net_amount | number: '1.2-2'}}</strong>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-
-                                    <div class="clearfix"></div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="card" *ngIf="loading">
-                <app-loader-white></app-loader-white>
-            </div>
+  <div class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a]">
+    <div class="w-full h-full">
+ 
+        <div *ngIf="loading" class="flex justify-center items-center p-8">
+          <app-loader-white></app-loader-white>
         </div>
-    </div>
+
+        <div *ngIf="!loading && order" class="bg-white dark:bg-black dark:border-[#333333] border p-6 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_#ffffff1a]">
+          <div class="flex mb-5 pb-2 border-b border-gray-300 dark:border-[#333333] font-primary">
+            <div class="w-2/3 flex items-center OrderLogo">
+              <img src="assets/images/sell-360.svg" alt="" class="max-h-10 dark:hidden" />
+              <img src="assets/images/logo-w.svg" alt="" class="max-h-10 hidden dark:block" />
+            </div>
+            <div class="w-1/3 text-right flex items-center justify-end text-gray-900 dark:text-white text-[13px]">
+              Order Date: <strong class="ml-1 font-medium">{{ order.payload.poDate }}</strong>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap OrderInfo font-primary text-gray-900 dark:text-white mb-6">
+            <!-- Column 1 -->
+            <div class="w-full md:w-1/4 mb-2 md:mb-0 text-[13px]">
+              <p>
+                <span class="text-gray-600 dark:text-gray-300">Received No:</span>
+                <strong class="ml-1 font-medium dark:text-white">{{ order.payload.receivedNo }}</strong>
+              </p>
+              <p>
+                <span class="text-gray-600 dark:text-gray-300">Receive Date:</span>
+                <strong class="ml-1 font-medium dark:text-white">{{ order.payload.receivedDate }}</strong>
+              </p>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="w-full md:w-1/4 mb-2 md:mb-0 text-[13px]">
+              <p>
+                <span class="text-gray-600 dark:text-gray-300">Inv. No:</span>
+                <strong class="ml-1 font-medium dark:text-white">{{ order.payload.invoiceNo }}</strong>
+              </p>
+              <p>
+                <span class="text-gray-600 dark:text-gray-300">Inv. Date:</span>
+                <strong class="ml-1 font-medium dark:text-white">{{ order.payload.invoiceDate }}</strong>
+              </p>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="w-full md:w-1/4 mb-2 md:mb-0 text-[13px]">
+              <p>
+                <span class="text-gray-600 dark:text-gray-300">PO No:</span>
+                <strong class="ml-1 font-medium dark:text-white">{{ order.payload.poNo }}</strong>
+              </p>
+              <p>
+                <span class="text-gray-600 dark:text-gray-300">PO Date:</span>
+                <strong class="ml-1 font-medium dark:text-white">{{ order.payload.poDate }}</strong>
+              </p>
+            </div>
+
+            <!-- Column 4 -->
+            <div class="w-full md:w-1/4 mb-2 md:mb-0 text-[13px]">
+              <p>
+                <span class="text-gray-600 dark:text-gray-300">DC No:</span>
+                <strong class="ml-1 font-medium dark:text-white">{{ order.payload.dcNo }}</strong>
+              </p>
+              <p>
+                <span class="text-gray-600 dark:text-gray-300">DC Date:</span>
+                <strong class="ml-1 font-medium dark:text-white">{{ order.payload.dcDate }}</strong>
+              </p>
+            </div>
+          </div>
+
+          <div class="w-full Order-Detail-table mt-6">
+            <table class="table font-primary w-full border-collapse">
+              <thead>
+                <tr class="bg-black dark:bg-[#252525] text-white">
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">SKU</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Item Name</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Purchased Unit</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Purchased QTY.</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Free Unit</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Free QTY.</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Discount %</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Discount PKR.</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Original Amount</strong></th>
+                  <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white text-left"><strong class="font-primary font-medium">Net Amount</strong></th>
+                </tr>
+              </thead>
+              <tbody class="order_items_body">
+                <tr *ngFor="let dt of order.detail" class="text-gray-900 dark:text-white">
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.item_sku }}</td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.item_name }}</td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.type === 'regular' ? dt.unit_name : '' }}</td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.type === 'regular' ? dt.quantity : 0 | number }}</td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.type === 'free' ? dt.unit_name : dt.type === 'regular' && dt.free ? dt.free.unit_name : '' }}</td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.type === 'free' ? dt.free_quantity : dt.type === 'regular' && dt.free ? dt.free.quantity : '' | number }}</td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.discount_type_value | number: '1.2-2' }}</td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.discount | number: '1.2-2' }}</td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.original_amount | number: '1.2-2' }}</td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ dt.net_amount | number: '1.2-2' }}</td>
+                </tr>
+                <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                  <td class="border-0 border-r border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="8"></td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Subtotal PKR.</strong></td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ order.original_amount | number: '1.2-2' }}</strong></td>
+                </tr>
+                <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                  <td class="border-0 border-r border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="8"></td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Distribution Discount</strong></td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ order.discount | number: '1.2-2' }}</strong></td>
+                </tr>
+                <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                  <td class="border-0 border-r border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="8"></td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">GST</strong></td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ order.payload.gst }}</strong></td>
+                </tr>
+                <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                  <td class="border-0 border-r border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="8"></td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Freight Charges</strong></td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ order.payload.fare }}</strong></td>
+                </tr>
+                <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                  <td class="border-0 border-r border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="8"></td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-black dark:bg-neutral-800 text-white dark:text-white">
+                    <strong class="font-primary font-medium">Total PKR.</strong>
+                  </td>
+                  <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-black dark:bg-neutral-800 text-white dark:text-white">
+                    <strong class="font-primary font-medium">{{ order.net_amount | number: '1.2-2' }}</strong>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+     
+  </div>
 </div>

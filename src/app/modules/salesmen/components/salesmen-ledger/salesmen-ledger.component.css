@@ -1,44 +1,184 @@
-._PR_filter{margin-top: -2px; width: 220px!important; float: left; padding-right: 10px;}
-.datefiled{width: 155px!important;}
-._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__rendered {line-height: 30px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
-._PR_filter .form-s2 .select2-container .select2-selection--single, ._PR_filter .form-s2 .select2-container--default .select2-selection--single .select2-selection__arrow{height: 31px!important;}
-
-._PR_filter .select2-container .select2-selection--single {
-    background-color: #fff;
-    border-color: #eae9e9;
-    font-size: 14px;
-    border-radius: 0;
-}
-.addPR-head h3{font-size: 13px; padding-right: 8px; line-height: 29px; margin: 0}
-._PR_filter input {
-	box-shadow: none;
-    font-size: 13px;
-    height: 31px;
-    border-color: #eae9e9; padding-right: 3px; padding-left: 8px;
-}
-.addPR-head {
-    font-size: 16px;
-    padding: 15px 15px 15px 20px !important; border-bottom: solid 1px #eae9e9; margin-bottom: 0px;
-}
-.btn-report {
-    font-size: 14px;
-    padding: 4px 15px;
-    box-shadow: none;  margin-top: -2px; letter-spacing: 1px;
-}
-::-webkit-calendar-picker-indicator{
-    margin-left: 0px;
-}
-.topstats{margin-top: 15px; font-size: 14px;}
-.topstats .gary-box{line-height: 1;background-color: #f9f9f9;border-bottom: solid 1px #d1d1d1;padding: 10px;letter-spacing: 1px;}
-.topstats .gary-box span{font-family: 'Rationale', sans-serif; color:#0038ba; font-size: 18px; float: right; margin-top: -2px; padding-left: 15px;}
-.topstats strong{padding: 0}
-
-._PR_filter .ng-select.ng-select-single .ng-select-container {
-    height: 31px;
-    min-height: 31px;
-    border-radius: 0;
-    font-size: 14px;
-    border: 1px solid #E2E6EA;
-    line-height: normal;
+/* NZ-SELECT STYLING - LIGHT/DARK MODE */
+::ng-deep .salesman-select .ant-select-selector {
+  min-height: 32px !important;
+  height: 32px !important;
+  padding: 0 11px !important;
+  font-size: 14px !important;
+  border-radius: 5px !important;
+  background-color: #ffffff !important;
+  border-color: #d9d9d9 !important;
+  transition: all 0.3s !important;
 }
 
+::ng-deep .salesman-select .ant-select-selection-item {
+  line-height: 30px !important;
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+
+::ng-deep .salesman-select .ant-select-selection-placeholder {
+  line-height: 30px !important;
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Light Mode - Focus and Hover States with Primary Color */
+::ng-deep .salesman-select.ant-select-focused .ant-select-selector,
+::ng-deep .salesman-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.1) !important;
+}
+
+/* Light Mode - Dropdown (default) */
+::ng-deep .ant-select-dropdown {
+  z-index: 9999 !important;
+  border-radius: 5px !important;
+  background-color: #ffffff !important;
+  box-shadow: 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 9px 28px 8px rgba(0, 0, 0, 0.05) !important;
+}
+
+/* Light Mode - Dropdown Items */
+::ng-deep .ant-select-item {
+  background-color: #ffffff !important;
+  color: rgba(0, 0, 0, 0.88) !important;
+  transition: background-color 0.2s !important;
+}
+
+::ng-deep .ant-select-item-option-hover:not(.ant-select-item-option-disabled) {
+  background-color: #f5f5f5 !important;
+}
+
+::ng-deep .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: #e6f4ff !important;
+  color: #0038ba !important;
+  font-weight: 500 !important;
+}
+
+::ng-deep .ant-select-item-option-active:not(.ant-select-item-option-disabled) {
+  background-color: #f5f5f5 !important;
+}
+
+/* Dark Mode - Select Container */
+::ng-deep .dark .salesman-select .ant-select-selector,
+::ng-deep html.dark .salesman-select .ant-select-selector {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: #ffffff !important;
+  border-radius: 5px !important;
+}
+
+::ng-deep .dark .salesman-select .ant-select-selection-item,
+::ng-deep html.dark .salesman-select .ant-select-selection-item {
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .salesman-select .ant-select-selection-placeholder,
+::ng-deep html.dark .salesman-select .ant-select-selection-placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+/* Dark Mode - Focus and Hover States with Primary Color */
+::ng-deep .dark .salesman-select.ant-select-focused .ant-select-selector,
+::ng-deep .dark .salesman-select:not(.ant-select-disabled):hover .ant-select-selector,
+::ng-deep html.dark .salesman-select.ant-select-focused .ant-select-selector,
+::ng-deep html.dark .salesman-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.2) !important;
+}
+
+/* Dark Mode - Dropdown */
+::ng-deep .dark .ant-select-dropdown,
+::ng-deep html.dark .ant-select-dropdown {
+  z-index: 9999 !important;
+  background-color: #1f1f1f !important;
+  border-color: #434343 !important;
+}
+
+::ng-deep .dark .ant-select-item,
+::ng-deep html.dark .ant-select-item {
+  background-color: #1f1f1f !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .ant-select-item-option-hover:not(.ant-select-item-option-disabled),
+::ng-deep html.dark .ant-select-item-option-hover:not(.ant-select-item-option-disabled) {
+  background-color: #262626 !important;
+}
+
+::ng-deep .dark .ant-select-item-option-selected:not(.ant-select-item-option-disabled),
+::ng-deep html.dark .ant-select-item-option-selected:not(.ant-select-item-option-disabled) {
+  background-color: #0038ba !important;
+  color: #ffffff !important;
+  font-weight: 500 !important;
+}
+
+/* MONTH PICKER STYLING - LIGHT/DARK MODE */
+::ng-deep .month-picker .ant-picker {
+  height: 32px !important;
+  border-radius: 5px !important;
+  font-size: 14px !important;
+  border-color: #d9d9d9 !important;
+  background-color: #ffffff !important;
+  transition: all 0.3s !important;
+}
+
+::ng-deep .month-picker .ant-picker-input > input {
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+
+::ng-deep .month-picker .ant-picker-input > input::placeholder {
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Light Mode - Focus and Hover States */
+::ng-deep .month-picker.ant-picker-focused .ant-picker,
+::ng-deep .month-picker .ant-picker:hover:not(.ant-picker-disabled) {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.1) !important;
+}
+
+/* Dark Mode - Month Picker */
+::ng-deep .dark .month-picker .ant-picker,
+::ng-deep html.dark .month-picker .ant-picker {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .month-picker .ant-picker-input > input,
+::ng-deep html.dark .month-picker .ant-picker-input > input {
+  color: #ffffff !important;
+  background-color: #141414 !important;
+}
+
+::ng-deep .dark .month-picker .ant-picker-input > input::placeholder,
+::ng-deep html.dark .month-picker .ant-picker-input > input::placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+::ng-deep .dark .month-picker.ant-picker-focused .ant-picker,
+::ng-deep .dark .month-picker .ant-picker:hover:not(.ant-picker-disabled),
+::ng-deep html.dark .month-picker.ant-picker-focused .ant-picker,
+::ng-deep html.dark .month-picker .ant-picker:hover:not(.ant-picker-disabled) {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.2) !important;
+}
+
+/* DatePicker Dropdown Positioning */
+::ng-deep .month-picker ~ .ant-picker-dropdown,
+::ng-deep .month-picker .ant-picker-dropdown,
+::ng-deep body > .ant-picker-dropdown {
+  position: absolute !important;
+  z-index: 1050 !important;
+}
+
+::ng-deep .month-picker {
+  position: relative !important;
+}
+
+/* AG Grid Container */
+.ag-grid-container {
+  width: 100%;
+  height: auto;
+}

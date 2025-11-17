@@ -16,4 +16,10 @@ export class AllReportComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onQuickFilterChanged(event: any): void {
+    // Implement search functionality here
+    const searchValue = event.target.value;
+    // Add your search logic here
+  }
+
 }

@@ -1,251 +1,151 @@
-<div class="container">
-  <div class="row mt-2 mb-2">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <h2 class="_head01">Daily <span> Sales Report</span></h2>
-    </div>
-
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <ol class="breadcrumb">
-        <li>
-          <a><span>Report</span></a>
-        </li>
-        <li><span>DSR</span></li>
-      </ol>
+<div class="container mx-auto px-4 pb-24">
+  <!-- Daily Sales Report Section -->
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1 class="text-lg text-secondary dark:text-neutral-200 font-primary font-medium mb-0">
+          Daily <span class="font-light"> Sales Report</span>
+        </h1>
+      </div>
+      <div></div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="header addPR-head">
-          <div class="float-left">
-            <h3>Select Date</h3>
-          </div>
-          <div class="_PR_filter pr-15" style="width: 170px !important">
-            <div class="form-group mb-0" style="height: auto">
-              <input
-                type="date"
-                [(ngModel)]="orderDate"
-                (change)="getSaleReportsBySalemanAndDate()"
-                id="datepicker"
-                class="form-control"
-                placeholder=""
-              />
-            </div>
-          </div>
-          <div class="float-left">
-            <h3>Select Salesman</h3>
-          </div>
-          <div class="_PR_filter pr-15" style="width: 200px !important">
-            <div class="form-s2">
-              <ng-select
-                class="form-control formselect"
-                [(ngModel)]="selecetdSalemanId"
-                (change)="getSaleReportsBySalemanAndDate()"
-                placeholder="Select Salesman"
-                style="width: 100% !important"
-              >
-                <ng-option
-                  *ngFor="let saleman of salesmen; let i = index"
-                  [value]="saleman.id"
-                  >{{ saleman.name }}</ng-option
-                >
-              </ng-select>
-            </div>
-          </div>
-          <div
-            *ngIf="selecetdSalemanId && salemanDSR.length"
-            class="float-left"
-          >
-            <h3>Select DSR</h3>
-          </div>
-          <div
-            *ngIf="selecetdSalemanId && salemanDSR.length"
-            class="_PR_filter pr-15"
-          >
-            <div class="form-s2">
-              <ng-select
-                class="formselect"
-                placeholder="Select DSR"
-                style="width: 100% !important"
-                (change)="getDSRDetail($event)"
-              >
-                <ng-option
-                  *ngFor="let dsr of salemanDSR; let i = index"
-                  [value]="dsr.id"
-                  >{{ dsr.unique_id }}</ng-option
-                >
-              </ng-select>
-            </div>
-          </div>
-          <div class="text-right p-0">
-            <button
-              *ngIf="selectedDSR"
-              (click)="generateDSR()"
-              class="btn btn-primary"
-            >
-              Generate DSR
-            </button>
-          </div>
-        </div>
-
-        <!-- 
-                <div class="body pb-0">
-                    <table *ngIf="!loading" datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>S.NO</th>
-                                <th>ITEMS/PRODUCT NAME</th>
-                                <th>ISSUE</th>
-                                <th>RETURNS</th>
-                                <th>T.P</th>
-                                <th>GROSS AMT.</th>
-                                <th>SCH DIS.</th>
-                                <th>NET AMT.</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let item of dsrData?.dsr?.content">
-                                <td>{{item.item_id}}</td>
-                                <td>{{item.item_name}}</td>
-                                <td>{{item.total_dispatch_qty}}</td>
-                                <td>{{item.total_return_qty | number}}</td>
-                                <td>Rs: {{item.item_trade_price}}</td>
-                                <td>Rs: {{item.gross_sale_amount | number: '1.2-2'}}</td>
-                                <td>{{item.total_trade_offer | number: '1.2-2'}}</td>
-                                <td>Rs. {{item.total_net_amount | number: '1.2-2'}}</td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                    <div *ngIf="!loading && dsrData" class="row">
-                        <div class="col-8"></div>
-                        <div class="col-4 PT-20">
-                            <div class="report_value totalcash"><strong>Gross Sales Amount: </strong> <span>Rs.
-                                    {{dsrData?.dsr?.total_gross_amount | number: '1.2-2'}}</span></div>
-                            <div class="report_value totalcash"><strong>Scheme Discount:</strong> <span>Rs. {{dsrData?.dsr?.total_trade_offer | number: '1.2-2'}}</span>
-                            </div>
-                            <div class="report_value totalcash"><strong>Trade Discount:</strong> <span>Rs. {{dsrData?.dsr?.total_trade_discount | number: '1.2-2'}}</span>
-                            </div>
-                            <div class="report_value totalcash"><strong>Special Discount:</strong> <span>Rs. {{dsrData?.dsr?.total_special_discount | number: '1.2-2'}}</span>
-                            </div>
-                            <div class="report_value totalcash"><strong>Ind. Discount:</strong> <span>Rs. {{dsrData?.dsr?.total_booker_discount | number: '1.2-2'}}</span></div>
-                            <div class="report_value totalcash"><strong>Less Market Return:</strong> <span>Rs. {{dsrData?.dsr?.total_return_amount | number: '1.2-2'}}</span>
-                            </div>
-                            <div class="report_value totalcash border-0"><strong>Net Sales Amount:</strong> <span>Rs.
-                                {{dsrData?.dsr?.total_net_after_expense | number: '1.2-2'}}</span></div>
-                        </div>
-                    </div>
-
-                    <div *ngIf="loading" class="col-12">
-                        <app-loader-white></app-loader-white>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 text-right"
-                            style="background-color: #f3f3f3; padding: 10px 15px; margin-top: 5px; margin-bottom: 5px;">
-                            <button *ngIf="selectedDSR" (click)="generateDSR()" class="btn btn-primary">Generate DSR</button>
-                        </div>
-                    </div>
-
-                </div> -->
+  <!-- Filter Bar -->
+  <div class="p-2 border border-gray-200 dark:border-[#2b2b2b] bg-gray-50 dark:bg-[#141414] rounded-lg mb-3">
+    <div class="flex flex-wrap items-center gap-1.5 xl:gap-2 text-[13px]">
+      <div class="dark:text-gray-200">Select Date:</div>
+      <!-- Date Picker -->
+      <div class="w-[140px] xl:w-[160px] 1366:w-[190px]">
+        <nz-date-picker
+          id="datepicker"
+          [(ngModel)]="orderDate"
+          (ngModelChange)="onOrderDateChange($event)"
+          nzPlaceHolder="Select Date"
+          [nzFormat]="'yyyy-MM-dd'"
+          class="w-full !rounded-[5px]">
+        </nz-date-picker>
+      </div>
+      <div class="dark:text-gray-200">Select Salesman:</div>
+      <!-- Salesman Filter -->
+      <div class="w-[180px] xl:w-[260px] 1366:w-[260px]">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          [(ngModel)]="selecetdSalemanId"
+          (ngModelChange)="getSaleReportsBySalemanAndDate()"
+          nzPlaceHolder="Select Salesman"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full">
+          <nz-option
+            *ngFor="let saleman of salesmen"
+            [nzValue]="saleman.id"
+            [nzLabel]="saleman.name">
+          </nz-option>
+        </nz-select>
+      </div>
+      <div
+        *ngIf="selecetdSalemanId && salemanDSR.length"
+        class="dark:text-gray-200">
+        DSR:
+      </div>
+      <!-- DSR Filter -->
+      <div
+        *ngIf="selecetdSalemanId && salemanDSR.length"
+        class="w-[200px] xl:w-[220px] 1366:w-[250px]">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          (ngModelChange)="getDSRDetail($event)"
+          nzPlaceHolder="Select DSR"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full rounded-[5px]">
+          <nz-option
+            *ngFor="let dsr of salemanDSR"
+            [nzValue]="dsr.id"
+            [nzLabel]="dsr.unique_id">
+          </nz-option>
+        </nz-select>
+      </div>
+      <div class="ml-auto">
+        <button
+          *ngIf="selectedDSR"
+          (click)="generateDSR()"
+          class="px-3 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-200 transition-all duration-200">
+          Generate DSR
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="row mt-20 mb-2">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <h2 class="_head01">Custom <span> Sales Report</span></h2>
-    </div>
-
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <ol class="breadcrumb">
-        <li>
-          <a><span>Report</span></a>
-        </li>
-        <li><span>DSR</span></li>
-      </ol>
+  <!-- Custom Sales Report Section -->
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1 class="text-lg text-secondary dark:text-neutral-200 font-primary font-medium mb-0">
+          Custom <span class="font-light"> Sales Report</span>
+        </h1>
+      </div>
+      <div></div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-12" style="min-height: 500px">
-      <div class="card">
-        <div class="header addPR-head">
-          <div class="float-left">
-            <h3>Start Date</h3>
-          </div>
-          <div class="_PR_filter pr-15" style="width: 170px !important">
-            <div class="form-group mb-0" style="height: auto">
-              <input
-                type="date"
-                name="startOrderDate"
-                [(ngModel)]="startOrderDate"
-                id="datepicker2"
-                class="form-control"
-                placeholder=""
-              />
-            </div>
-          </div>
-
-          <div class="float-left">
-            <h3>End Date</h3>
-          </div>
-          <div class="_PR_filter pr-15" style="width: 170px !important">
-            <div class="form-group mb-0" style="height: auto">
-              <input
-                type="date"
-                name="endOrderDate"
-                [(ngModel)]="endOrderDate"
-                id="datepicker3"
-                class="form-control"
-                placeholder=""
-              />
-            </div>
-          </div>
-          <div class="float-left">
-            <h3>Select Salesman</h3>
-          </div>
-          <div class="_PR_filter pr-15">
-            <div class="form-s2">
-              <!-- (change)="getSaleReportsBySalemanAndDate()" -->
-
-              <ng-select
-                class="form-control formselect"
-                [(ngModel)]="selectSalemans"
-                bindLabel="name"
-                bindValue="id"
-                [items]="salesmen"
-                [closeOnSelect]="false"
-                placeholder="Select Salesman"
-                style="width: 100% !important"
-                [multiple]="true"
-              >
-                <ng-option
-                  *ngFor="let saleman of salesmen; let i = index"
-                  [value]="saleman.id"
-                >
-                  <!-- {{ saleman.name }} -->
-                  <input
-                    id="item-{{ i }}"
-                    type="checkbox"
-                    [ngModel]="saleman.id"
-                  />
-                  {{ saleman.name }}
-                </ng-option>
-              </ng-select>
-              <!-- <small>{{ selectSalemans | json }}</small> -->
-            </div>
-          </div>
-          <div class="text-right">
-            <button
-              (click)="generateDSRCustomPdfReport()"
-              class="btn btn-primary"
-            >
-              Generate DSR
-            </button>
-          </div>
-        </div>
+  <!-- Filter Bar -->
+  <div class="p-2 border border-gray-200 dark:border-[#2b2b2b] bg-gray-50 dark:bg-[#141414] rounded-lg mb-3">
+    <div class="flex flex-wrap items-center gap-1.5 xl:gap-2 text-[13px]">
+      <div class="dark:text-gray-200">Start Date:</div>
+      <!-- Start Date Picker -->
+      <div class="w-[140px] xl:w-[160px] 1366:w-[190px]">
+        <nz-date-picker
+          id="datepicker2"
+          name="startOrderDate"
+          [(ngModel)]="startOrderDate"
+          (ngModelChange)="onStartOrderDateChange($event)"
+          nzPlaceHolder="Select Start Date"
+          [nzFormat]="'yyyy-MM-dd'"
+          class="w-full !rounded-[5px]">
+        </nz-date-picker>
+      </div>
+      <div class="dark:text-gray-200">End Date:</div>
+      <!-- End Date Picker -->
+      <div class="w-[140px] xl:w-[160px] 1366:w-[190px]">
+        <nz-date-picker
+          id="datepicker3"
+          name="endOrderDate"
+          [(ngModel)]="endOrderDate"
+          (ngModelChange)="onEndOrderDateChange($event)"
+          nzPlaceHolder="Select End Date"
+          [nzFormat]="'yyyy-MM-dd'"
+          class="w-full !rounded-[5px]">
+        </nz-date-picker>
+      </div>
+      <div class="dark:text-gray-200">Select Salesman:</div>
+      <!-- Salesman Filter (Multiple) -->
+      <div class="w-[270px] xl:w-[330px] 1366:w-[360px]">
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          [(ngModel)]="selectSalemans"
+          nzPlaceHolder="Select Salesman"
+          nzMode="multiple"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full">
+          <nz-option
+            *ngFor="let saleman of salesmen"
+            [nzValue]="saleman.id"
+            [nzLabel]="saleman.name">
+          </nz-option>
+        </nz-select>
+      </div>
+      <div class="ml-auto">
+        <button
+          (click)="generateDSRCustomPdfReport()"
+          class="px-3 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-200 transition-all duration-200">
+          Generate DSR
+        </button>
       </div>
     </div>
   </div>

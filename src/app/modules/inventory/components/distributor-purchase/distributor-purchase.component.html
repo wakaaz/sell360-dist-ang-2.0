@@ -1,359 +1,934 @@
-<!-- Add Products Drawer -->
-<div id="product-cl-sec" [ngClass]="addNewProducts ? 'active show' : ''" (clickOutside)="clickOutSide($event)">
-    <a (click)="closeNewProducts()" id="pl-close" class="close-btn-pl"></a>
-    <div class="pro-header-text">Add <span>Product</span></div>
-    <div class="se_cus-type form-wrap p-15">
-        <div class="row">
-            <div class="col-12">
-                <div class="productSearch"><i class="fa fa-search"></i>
-                    <input type="text" class="form-control" id="" (keyup)="searchProducts($event.target.value)"
-                        placeholder="Search">
-                </div>
-            </div>
+<!-- Products Listing Sidebar - Tailwind CSS -->
+<div
+  id="product-cl-sec"
+  (clickOutside)="clickOutSide($event)"
+  [ngClass]="addNewProducts ? 'flex' : 'hidden'"
+  class="fixed inset-0 bg-white/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-50 items-center justify-center p-4"
+>
+  <div
+    class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[1000] flex-row flex-none flex w-full md:w-[500px]"
+  >
+    <div
+      class="flex flex-col h-full w-full md:w-[500px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]"
+    >
+      <!-- Header -->
+      <div
+        class="relative flex items-center justify-between h-auto rounded-tl-lg bg-gradient-to-r from-[#1e54d3] to-[#0038ba] text-white px-4 py-3 text-[16px] leading-[22px]"
+      >
+        <h2 class="text-base font-bold text-white font-primary mb-0">
+          Add
+          <span class="font-light">Product</span>
+        </h2>
+        <div>
+          <button
+            id="pl-close"
+            (click)="closeNewProducts()"
+            class="hover:opacity-80 transition-opacity"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="26"
+              height="26"
+              fill="currentColor"
+              class="bi bi-x mt-1"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+              ></path>
+            </svg>
+          </button>
         </div>
-    </div>
-    <div class="pc-cartlist">
-        <div class="overflow-plist">
-            <div class="plist-content">
-                <div class="_left-filter pt-0">
-                    <div class="container">
-                        <div class="row">
-                            <div *ngIf="!loadingProducts" class="col-12">
-                                <div class="card top_border p-15">
-                                    <table class="AddProductTable" width="100%">
-                                        <tbody>
-                                            <tr *ngFor="let product of productsDispList">
-                                                <td>
-                                                    <div class="ProListDiv"><img class="PrList_img"
-                                                            src="{{product.thumbnail}}" alt="" />
-                                                        <div class="PR_Name">{{product.item_name}}</div>
-                                                    </div>
-                                                </td>
-                                                <td *ngIf="!isInTheArray(product.item_id)"><button data-toggle="modal"
-                                                        (click)="$event.stopPropagation();addSelectedProduct(product)"
-                                                        class="btn btn-default mb-0">Add</button></td>
-                                                <td *ngIf="isInTheArray(product.item_id)"><button data-toggle="modal"
-                                                        (click)="$event.stopPropagation();removeSelectedProduct(product)"
-                                                        class="btn btn-default red-bg mb-0">Remove</button></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                            <div class="col-12 loader" *ngIf="loadingProducts">
-                                <h2 class="loading">Loading products!</h2>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div
+        class="px-4 py-3 bg-white dark:bg-darkprimary border-b border-gray-200 dark:border-[#333333]"
+      >
+        <div class="relative">
+          <div
+            class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+          >
+            <svg
+              class="h-5 w-5 text-gray-400"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              ></path>
+            </svg>
+          </div>
+          <input
+            type="text"
+            class="w-full pl-10 pr-4 py-2 border border-[#ececec] dark:border-[#1d1d1d] rounded-lg bg-[#f6f6f6] dark:bg-[#1d1d1d] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary font-primary text-sm"
+            (keyup)="searchProducts($event.target.value)"
+            placeholder="Search products..."
+          />
         </div>
+      </div>
+
+      <!-- Content - Product Listing -->
+      <div class="flex-1 overflow-auto p-4 bg-[#f6f6f6] dark:bg-darkprimary">
+        <div *ngIf="!loadingProducts" class="space-y-2">
+          <!-- Product items -->
+          <div
+            *ngFor="let product of productsDispList"
+            class="bg-white dark:bg-[#141414] border border-gray-200 dark:border-[#252525] rounded-lg p-2 hover:shadow-md transition-shadow relative"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <!-- Product Image & Info -->
+              <div class="flex items-start space-x-3 flex-1">
+                <img
+                  class="w-10 h-10 rounded border border-gray-200 dark:border-[#434343] object-cover flex-shrink-0"
+                  [src]="product.thumbnail"
+                  [attr.alt]="product.item_name"
+                />
+                <div class="flex-1 my-auto min-w-0">
+                  <h2
+                    class="text-[15px] font-medium text-neutral-800 dark:text-neutral-300 font-primary leading-snug"
+                  >
+                    {{ product.item_name }}
+                  </h2>
+                </div>
+              </div>
+
+              <!-- Add/Remove Button -->
+              <div class="flex my-auto">
+                <button
+                  *ngIf="!isInTheArray(product.item_id)"
+                  data-toggle="modal"
+                  class="px-4 py-1.5 text-[13px] leading-none font-primary bg-transparent text-primary border border-primary dark:border-[#333333] dark:text-neutral-300 rounded-md transition-colors whitespace-nowrap hover:enabled:bg-primary hover:enabled:text-white"
+                  (click)="
+                    $event.stopPropagation(); addSelectedProduct(product)
+                  "
+                >
+                  Add
+                </button>
+                <button
+                  *ngIf="isInTheArray(product.item_id)"
+                  class="px-4 py-1.5 text-[13px] leading-none font-primary bg-red-600 text-white rounded-md cursor-pointer whitespace-nowrap hover:bg-red-700 transition-colors"
+                  (click)="
+                    $event.stopPropagation(); removeSelectedProduct(product)
+                  "
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Loading State -->
+        <div
+          *ngIf="loadingProducts"
+          class="flex flex-col items-center justify-center py-12 h-[calc(100vh-31vh)]"
+        >
+          <div
+            class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"
+          ></div>
+          <p class="mt-4 text-gray-500 dark:text-gray-400 font-primary">
+            Loading Products...
+          </p>
+        </div>
+
+        <!-- Empty State -->
+        <div
+          *ngIf="!loadingProducts && productsDispList?.length === 0"
+          class="flex flex-col h-[calc(100vh-31vh)] items-center justify-center"
+        >
+          <svg
+            class="w-16 h-16 text-gray-300 dark:text-gray-600"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+            ></path>
+          </svg>
+          <p
+            class="mt-4 text-gray-500 dark:text-gray-400 font-primary text-center"
+          >
+            No products found
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div
+        class="bg-gray-50 dark:bg-[#1d1d1d] dark:border-[#333333] pl-4 p-3 rounded-bl-lg border-t border-gray-200"
+      >
+        <div>
+          <button
+            id="pl-close"
+            type="button"
+            (click)="closeNewProducts()"
+            class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
     </div>
-    <div class="_cl-bottom">
-        <button id="pl-close" (click)="closeNewProducts()" class="btn btn-cancel mr-2">Close</button>
-    </div>
+  </div>
 </div>
 
-<!-- Purchase List -->
-<div class="container" id="purchase-list">
-    <div class="row mt-2 mb-2">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Distributor <span>Purchase</span></h2>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <ol class="breadcrumb">
-                <li><a><span>Distributor Purchase</span></a></li>
-                <li><span>Create</span></li>
-            </ol>
-        </div>
+<div class="container mx-auto px-4 pb-5" id="purchase-list">
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1
+          class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0"
+        >
+          Distributor <span class="font-light">Purchase</span>
+        </h1>
+      </div>
+      <div></div>
+    </div>
+  </div>
+
+  <div
+    class="bg-white dark:bg-black dark:border-[#2b2b2b] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a]"
+  >
+    <!-- Loading State -->
+    <div *ngIf="loading" class="flex justify-center items-center py-12">
+      <div
+        class="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"
+      ></div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12 mb-30">
-            <div class="card mb-30">
-                <div class="header">
-                    <h2>Create <span> Order</span></h2>
-                </div>
-                <div class="body PT-15">
-                    <div id="floating-label">
-                        <div class="form-wrap p-0">
-                            <div class="row">
+    <div *ngIf="!loading" class="w-full">
+      <div
+        class="flex justify-between items-center text-secondary rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#ffffff] to-[#ffffff] dark:bg-black dark:from-transparent dark:to-transparent shadow-none"
+      >
+        <h2
+          class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium"
+        >
+          Create &nbsp;<span class="font-light">Order</span>
+        </h2>
+      </div>
 
-                                <div class="col-2 pr-0">
-                                    <div class="form-group mb-5">
-                                        <label class="control-label mb-0">Received No.</label>
-                                        <input type="text" id="received_no" (focus)="focused($event)"
-                                            [(ngModel)]="distributorPurchase.receivedNo" #rcvNo="ngModel" required (blur)="left($event)"
-                                            class="form-control" name="received_no" placeholder="">
-                                        </div>
-                                        <span *ngIf="submitted && rcvNo.errors?.required" class="input-error">
-                                            Add Received No.
-                                        </span>
-                                </div>
-                                <div class="col-2 pr-0">
-                                    <div class="form-group mb-5">
-                                        <label class="control-label mb-0">Receive Date</label>
-                                        <input type="date" id="received_date" (focus)="focused($event)"
-                                            [(ngModel)]="distributorPurchase.receivedDate" #rcvDate="ngModel" required
-                                            (blur)="left($event)" class="form-control" name="received_date"
-                                            placeholder="" autocomplete="off">
-                                        </div>
-                                        <span *ngIf="submitted && distributorPurchase.receivedDate === '  '" class="input-error">
-                                            Add Received Date
-                                        </span>
-                                </div>
-                                <div class="col-2 pr-0">
-                                    <div class="form-group mb-5">
-                                        <label class="control-label mb-0">Inv. No.</label>
-                                        <input type="text" id="inv_no" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.invoiceNo" #invNo="ngModel" required class="form-control"
-                                            name="inv_no" placeholder="">
-                                        </div>
-                                        <span *ngIf="submitted && invNo.errors?.required" class="input-error">
-                                            Add Invoice No.
-                                        </span>
-                                </div>
-                                <div class="col-2 pr-0">
-                                    <div class="form-group mb-5">
-                                        <label class="control-label mb-0">P.O No.</label>
-                                        <input type="text" id="p_o_no" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.poNo" #poNo="ngModel" required class="form-control"
-                                            name="p_o_no" placeholder="">
-                                        </div>
-                                        <span *ngIf="submitted && poNo.errors?.required" class="input-error">
-                                            Add P.O no.
-                                        </span>
-                                </div>
-                                <div class="col-2 pr-0">
-                                    <div class="form-group mb-5">
-                                        <label class="control-label mb-0">D.C No.</label>
-                                        <input type="text" id="d_c_no" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.dcNo" #dcNo="ngModel" required class="form-control"
-                                            name="d_c_no" placeholder="">
-                                        </div>
-                                        <span *ngIf="submitted && dcNo.errors?.required" class="input-error">
-                                            Add D.C No.
-                                        </span>
-                                </div>
-                                <div class="col-2">
-                                    <div class="form-group mb-5">
-                                        <label class="control-label mb-0">Inv. Date</label>
-                                        <input type="date" id="inv_date" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.invoiceDate" #invcDate="ngModel" required class="form-control"
-                                            name="inv_date" placeholder="" autocomplete="off">
-                                        </div>
-                                        <span *ngIf="submitted && distributorPurchase.invoiceDate === '  '" class="input-error">
-                                            Add Invoice Date
-                                        </span>
-                                </div>
-                                <div class="col-6 pr-0">
-                                    <div class="form-group mb-5">
-                                        <label class="control-label mb-0">Remarks</label>
-                                        <input type="text" id="remark" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.remark" #remark="ngModel" required class="form-control"
-                                            name="remark" placeholder="">
-                                        </div>
-                                        <span *ngIf="submitted && remark.errors?.required" class="input-error">
-                                            Add Remarks
-                                        </span>
-                                </div>
-                                <div class="col-2 pr-0">
-                                    <div class="form-group mb-5">
-                                        <label class="control-label mb-0">P.O Date</label>
-                                        <input type="date" id="p_o_date" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.poDate" #poDate="ngModel" required class="form-control"
-                                            name="p_o_date" placeholder="" autocomplete="off">
-                                        </div>
-                                        <span *ngIf="submitted && distributorPurchase.poDate === '  '" class="input-error">
-                                            Add P.O Date
-                                        </span>
-                                </div>
-                                <div class="col-2 pr-0">
-                                    <div class="form-group mb-5">
-                                        <label class="control-label mb-0">D.C Date</label>
-                                        <input type="date" id="d_c_date" (focus)="focused($event)" (blur)="left($event)"
-                                            [(ngModel)]="distributorPurchase.dcDate" #dcDate="ngModel" required class="form-control"
-                                            name="d_c_date" placeholder="" autocomplete="off">
-                                        </div>
-                                        <span *ngIf="submitted && distributorPurchase.dcDate === '  '" class="input-error">
-                                            Add D.C Date
-                                        </span>
-                                </div>
+      <!-- Form Section -->
+      <div
+        class="m-3 mt-0 mb-4 p-4 border border-gray-200 dark:border-[#2b2b2b] bg-gray-50 dark:bg-[#141414] rounded-lg"
+      >
+        <div
+          class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-6 gap-3"
+        >
+          <!-- Received No. -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-primary"
+            >
+              Received No.<span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="received_no"
+              (focus)="focused($event)"
+              [(ngModel)]="distributorPurchase.receivedNo"
+              #rcvNo="ngModel"
+              required
+              (blur)="left($event)"
+              name="received_no"
+              placeholder="Enter received number"
+              autocomplete="off"
+              class="w-full h-[32px] px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors font-primary text-sm"
+            />
+            <span
+              *ngIf="submitted && rcvNo.errors?.required"
+              class="text-red-500 text-xs mt-1 block"
+            >
+              Add Received No.
+            </span>
+          </div>
 
-                                <div class="col-md-12 PT-20">
-                                    <div class="header-tabs" style="box-shadow:none; border-bottom:solid 1px #e2e9fb;">
-                                        <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                                            <li class="nav-item" (click)="showFreeProducts=false;rerenderPurchasedProducts()"> <a class="nav-link"
-                                                    [ngClass]="showFreeProducts===false ? 'active' : ''"
-                                                    id="pills-home-tab">
-                                                    <span>Product List</span> <span *ngIf="purchasedProducts?.length"
-                                                        class="_cus-val">{{purchasedProducts?.length}}</span></a>
-                                            </li>
-                                            <li class="nav-item" (click)="showFreeProducts=true;rerenderPurchasedProducts()"> <a class="nav-link"
-                                                    [ngClass]="showFreeProducts===true ? 'active' : ''"
-                                                    id="pills-profile-tab">
-                                                    <span>Free Product List</span> <span *ngIf="freeProducts?.length"
-                                                        class="_cus-val">{{freeProducts?.length}}</span></a>
-                                            </li>
-                                        </ul>
-                                        <button id="productlist01" type="submit" (click)="openNewProducts($event)"
-                                            class="btn add_button"><i class="fa fa-plus"
-                                                style="padding-right: 3px;"></i> <span>Add Product</span></button>
-                                    </div>
+          <!-- Receive Date -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-primary"
+            >
+              Receive Date<span class="text-red-500">*</span>
+            </label>
+            <nz-date-picker
+              id="received_date"
+              name="received_date"
+              nzPlaceHolder="Select date"
+              class="distributor-purchase-date-picker w-full"
+              [nzFormat]="'yyyy-MM-dd'"
+              [nzDropdownStyle]="{ 'z-index': '9999' }"
+              [(ngModel)]="receivedDate"
+              (ngModelChange)="onDatePickerChange($event, 'receivedDate')"
+            ></nz-date-picker>
+            <span
+              *ngIf="submitted && distributorPurchase.receivedDate === '  '"
+              class="text-red-500 text-xs mt-1 block"
+            >
+              Add Received Date
+            </span>
+          </div>
 
-                                    <div class="tab-content" id="pills-tabContent">
-                                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
-                                            aria-labelledby="pills-home-tab">
-                                            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger"
-                                                class="table table-hover dt-responsive nowrap dis-pr-list"
-                                                id="purchase-table" style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                        <th>SKU</th>
-                                                        <th>Item Name</th>
-                                                        <th [hidden]="showFreeProducts">Select Unit</th>
-                                                        <th [hidden]="showFreeProducts">Qty</th>
-                                                        <th [hidden]="!showFreeProducts">Select Free Unit</th>
-                                                        <th [hidden]="!showFreeProducts">Free Qty</th>
-                                                        <th>Trade Price</th>
-                                                        <th [hidden]="showFreeProducts">Margin %</th>
-                                                        <th [hidden]="showFreeProducts">Net Amount</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tfoot [hidden]="showFreeProducts">
-                                                    <tr>
-                                                        <th>Total items</th>
-                                                        <th>{{purchasedProducts?.length}}</th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th>Subtotal PKR.</th>
-                                                        <th>{{distributorPurchase.original_amount | number: '1.2-2'}}</th>
-                                                        <th></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th></th>
-                                                        <th>Distribution Discount.</th>
-                                                        <th>{{distributorPurchase.discount | number: '1.2-2'}}</th>
-                                                        <th></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th></th>
-                                                        <th>GST</th>
-                                                        <th><input placeholder="0.0" (keydown)="isNumber($event)"
-                                                            [(ngModel)]="distributorPurchase.gst" (keyup)="calculateTotal()" class="itemQTY"></th>
-                                                        <th></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th></th>
-                                                        <th>Freight Charges.</th>
-                                                        <th><input placeholder="0.0" (keydown)="isNumber($event)" (keyup)="calculateTotal()"
-                                                            [(ngModel)]="distributorPurchase.fare" class="itemQTY"></th>
-                                                        <th></th>
-                                                    </tr>
-                                                    <tr>
-                                                        <th></th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th [hidden]="showFreeProducts"></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th></th>
-                                                        <th [hidden]="!showFreeProducts"></th>
-                                                        <th></th>
-                                                        <th>Total PKR..</th>
-                                                        <th>{{distributorPurchase.net_amount | number: '1.2-2'}}</th>
-                                                        <th></th>
-                                                    </tr>
-                                                </tfoot>
-                                                <tbody>
-                                                    <tr *ngFor="let product of getArray()">
-                                                        <td>{{product.item_sku}}</td>
-                                                        <td>
-                                                            <div class="ProListDiv"><img class="PrList_img"
-                                                                    src="{{product.thumbnail}}" alt="">
-                                                                <div class="PR_Name">{{product.item_name}}</div>
-                                                            </div>
-                                                        </td>
-                                                        <td [hidden]="showFreeProducts">
-                                                            {{product.unit_name}}
-                                                            <!-- <select class="custom-select custom-select-sm" id="" name="purchased-unit"
-                                                                #preferenceUnit [(ngModel)]="product.pref_id"
-                                                                (change)="setPreference(product, $event.target.value, showFreeProducts)">
-                                                                <option disabled value="0">Select Unit</option>
-                                                                <option *ngFor="let pref of getUnits(product.item_id)"
-                                                                    [value]="pref.pref_id">{{pref.unit_name}}</option>
-                                                            </select> -->
-                                                        </td>
-                                                        <td [hidden]="!showFreeProducts">
-                                                            {{product.unit_name}}
-                                                            <!-- <select class="custom-select custom-select-sm" id="" name="free-unit"
-                                                                #preferenceUnit [(ngModel)]="product.pref_id"
-                                                                (change)="setPreference(product, $event.target.value, true)">
-                                                                <option disabled value="0">Select Unit</option>
-                                                                <option *ngFor="let pref of getUnits(product.item_id)"
-                                                                    [value]="pref.pref_id">{{pref.unit_name}}</option>
-                                                            </select> -->
-                                                        </td>
-                                                        <td [hidden]="!showFreeProducts"><input placeholder="0" class="itemQTY"
-                                                                (keydown)="isNumber($event, 'qty')" name="free-qty" type="number" min="1"
-                                                                (keyup)="getUnitPrice(product, true)"
-                                                                [(ngModel)]="product.stockQty"></td>
-                                                        <td [hidden]="showFreeProducts"><input placeholder="0" class="itemQTY"
-                                                                (keydown)="isNumber($event, 'qty')" name="purchase-qty" type="number" min="1"
-                                                                (keyup)="getUnitPrice(product, true)"
-                                                                [(ngModel)]="product.stockQty"></td>
-                                                        <td>{{product.item_trade_price}}</td>
-                                                        <td [hidden]="showFreeProducts">{{product.discount_type_value}}</td>
-                                                        <td [hidden]="showFreeProducts">{{product.net_amount | number: '1.2-2'}}
-                                                        </td>
-                                                        <td><button class="btn smBTN red-bg mb-0"
-                                                                (click)="removeSelectedProduct(product)">Delete</button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
+          <!-- Inv. No. -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-primary"
+            >
+              Inv. No.<span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="inv_no"
+              (focus)="focused($event)"
+              (blur)="left($event)"
+              [(ngModel)]="distributorPurchase.invoiceNo"
+              #invNo="ngModel"
+              required
+              name="inv_no"
+              placeholder="Enter invoice number"
+              autocomplete="off"
+              class="w-full h-[32px] px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors font-primary text-sm"
+            />
+            <span
+              *ngIf="submitted && invNo.errors?.required"
+              class="text-red-500 text-xs mt-1 block"
+            >
+              Add Invoice No.
+            </span>
+          </div>
 
-                                    <div class="col-md-12 p-0">
-                                        <div class="action-ord">
-                                            <button *ngIf="loading" type="submit"
-                                                class="btn btn-primary mr-2" disabled>
-                                                <div class="spinner-border text-light" role="status">
-                                                    <span class="sr-only">Loading...</span>
-                                                </div></button>
-                                            <button *ngIf="!loading" type="submit"
-                                                class="btn btn-primary mr-2" (click)="placeOrder()">Order</button>
-                                            <button *ngIf="!loading" id="pl-close" [routerLink]="'/inventory/gallery'"
-                                                class="btn btn-cancel mr-2">Cancel</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+          <!-- P.O No. -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-primary"
+            >
+              P.O No.<span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="p_o_no"
+              (focus)="focused($event)"
+              (blur)="left($event)"
+              [(ngModel)]="distributorPurchase.poNo"
+              #poNo="ngModel"
+              required
+              name="p_o_no"
+              placeholder="Enter P.O number"
+              autocomplete="off"
+              class="w-full h-[32px] px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors font-primary text-sm"
+            />
+            <span
+              *ngIf="submitted && poNo.errors?.required"
+              class="text-red-500 text-xs mt-1 block"
+            >
+              Add P.O no.
+            </span>
+          </div>
+
+          <!-- D.C No. -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-primary"
+            >
+              D.C No.<span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="d_c_no"
+              (focus)="focused($event)"
+              (blur)="left($event)"
+              [(ngModel)]="distributorPurchase.dcNo"
+              #dcNo="ngModel"
+              required
+              name="d_c_no"
+              placeholder="Enter D.C number"
+              autocomplete="off"
+              class="w-full h-[32px] px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors font-primary text-sm"
+            />
+            <span
+              *ngIf="submitted && dcNo.errors?.required"
+              class="text-red-500 text-xs mt-1 block"
+            >
+              Add D.C No.
+            </span>
+          </div>
+
+          <!-- Inv. Date -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-primary"
+            >
+              Inv. Date<span class="text-red-500">*</span>
+            </label>
+            <nz-date-picker
+              id="inv_date"
+              name="inv_date"
+              nzPlaceHolder="Select date"
+              class="distributor-purchase-date-picker w-full"
+              [nzFormat]="'yyyy-MM-dd'"
+              [nzDropdownStyle]="{ 'z-index': '9999' }"
+              [(ngModel)]="invoiceDate"
+              (ngModelChange)="onDatePickerChange($event, 'invoiceDate')"
+            ></nz-date-picker>
+            <span
+              *ngIf="submitted && distributorPurchase.invoiceDate === '  '"
+              class="text-red-500 text-xs mt-1 block"
+            >
+              Add Invoice Date
+            </span>
+          </div>
+
+          <!-- Remarks -->
+          <div class="md:col-span-2">
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-primary"
+            >
+              Remarks<span class="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              id="remark"
+              (focus)="focused($event)"
+              (blur)="left($event)"
+              [(ngModel)]="distributorPurchase.remark"
+              #remark="ngModel"
+              required
+              name="remark"
+              placeholder="Enter remarks"
+              autocomplete="off"
+              class="w-full h-[32px] px-3 py-2 border border-gray-300 dark:border-[#434343] rounded-md bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-colors font-primary text-sm"
+            />
+            <span
+              *ngIf="submitted && remark.errors?.required"
+              class="text-red-500 text-xs mt-1 block"
+            >
+              Add Remarks
+            </span>
+          </div>
+
+          <!-- P.O Date -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-primary"
+            >
+              P.O Date<span class="text-red-500">*</span>
+            </label>
+            <nz-date-picker
+              id="p_o_date"
+              name="p_o_date"
+              nzPlaceHolder="Select date"
+              class="distributor-purchase-date-picker w-full"
+              [nzFormat]="'yyyy-MM-dd'"
+              [nzDropdownStyle]="{ 'z-index': '9999' }"
+              [(ngModel)]="poDate"
+              (ngModelChange)="onDatePickerChange($event, 'poDate')"
+            ></nz-date-picker>
+            <span
+              *ngIf="submitted && distributorPurchase.poDate === '  '"
+              class="text-red-500 text-xs mt-1 block"
+            >
+              Add P.O Date
+            </span>
+          </div>
+
+          <!-- D.C Date -->
+          <div>
+            <label
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 font-primary"
+            >
+              D.C Date<span class="text-red-500">*</span>
+            </label>
+            <nz-date-picker
+              id="d_c_date"
+              name="d_c_date"
+              nzPlaceHolder="Select date"
+              class="distributor-purchase-date-picker w-full"
+              [nzFormat]="'yyyy-MM-dd'"
+              [nzDropdownStyle]="{ 'z-index': '9999' }"
+              [(ngModel)]="dcDate"
+              (ngModelChange)="onDatePickerChange($event, 'dcDate')"
+            ></nz-date-picker>
+            <span
+              *ngIf="submitted && distributorPurchase.dcDate === '  '"
+              class="text-red-500 text-xs mt-1 block"
+            >
+              Add D.C Date
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex flex-wrap items-center justify-between gap-3 mb-4 border-b border-gray-200 dark:border-[#2b2b2b] pb-0"
+      >
+        <!-- Tabs -->
+        <div class="flex gap-0">
+          <!-- Product List Tab -->
+          <div class="relative">
+            <button
+              type="button"
+              (click)="showFreeProducts = false; rerenderPurchasedProducts()"
+              class="flex items-center px-4 py-3 text-[16px] font-primary font-medium transition-colors relative bg-transparent"
+              [ngClass]="{
+                'text-primary dark:text-[#a0a0a0] font-medium':
+                  showFreeProducts === false,
+                'text-gray-600 dark:text-gray-400 font-medium':
+                  showFreeProducts !== false
+              }"
+            >
+              <span>Product List</span>
+              <span
+                *ngIf="purchasedProducts?.length"
+                class="text-[9px] px-[4px] py-[3px] leading-[1] rounded font-primary ml-1"
+                [ngClass]="{
+                  'bg-primary text-white dark:bg-primary dark:text-white':
+                    showFreeProducts === false,
+                  'bg-gray-200 dark:bg-[#333333] text-gray-500 dark:text-gray-400':
+                    showFreeProducts !== false
+                }"
+              >
+                {{ purchasedProducts?.length }}
+              </span>
+            </button>
+            <!-- Active tab bottom border (blue) -->
+            <div
+              *ngIf="showFreeProducts === false"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"
+            ></div>
+            <!-- Inactive tab bottom border (gray) -->
+            <div
+              *ngIf="showFreeProducts !== false"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
+            ></div>
+          </div>
+
+          <!-- Free Product List Tab -->
+          <div class="relative">
+            <button
+              type="button"
+              (click)="showFreeProducts = true; rerenderPurchasedProducts()"
+              class="flex items-center px-4 py-3 text-[16px] font-primary font-medium transition-colors relative bg-transparent"
+              [ngClass]="{
+                'text-primary dark:text-[#a0a0a0] font-medium':
+                  showFreeProducts === true,
+                'text-gray-600 dark:text-gray-400 font-medium':
+                  showFreeProducts !== true
+              }"
+            >
+              <span>Free Product List</span>
+              <span
+                *ngIf="freeProducts?.length"
+                class="text-[9px] px-[4px] py-[3px] leading-[1] rounded font-primary ml-1"
+                [ngClass]="{
+                  'bg-primary text-white dark:bg-primary dark:text-white':
+                    showFreeProducts === true,
+                  'bg-gray-200 px-[4px] py-[2px] leading-[1] rounded font-primary ml-1 dark:bg-[#333333] text-gray-500 dark:text-gray-400':
+                    showFreeProducts !== true
+                }"
+              >
+                {{ freeProducts?.length }}
+              </span>
+            </button>
+            <!-- Active tab bottom border (blue) -->
+            <div
+              *ngIf="showFreeProducts === true"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"
+            ></div>
+            <!-- Inactive tab bottom border (gray) -->
+            <div
+              *ngIf="showFreeProducts !== true"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
+            ></div>
+          </div>
+        </div>
+
+        <div class="relative ml-auto">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <svg
+                class="h-4 w-4 text-gray-400"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M11.5014 7.00039C11.5014 7.59133 11.385 8.1765 11.1588 8.72246C10.9327 9.26843 10.6012 9.7645 10.1833 10.1824C9.76548 10.6002 9.2694 10.9317 8.72344 11.1578C8.17747 11.384 7.59231 11.5004 7.00136 11.5004C6.41041 11.5004 5.82525 11.384 5.27929 11.1578C4.73332 10.9317 4.23725 10.6002 3.81938 10.1824C3.40152 9.7645 3.07005 9.26843 2.8439 8.72246C2.61776 8.1765 2.50136 7.59133 2.50136 7.00039C2.50136 5.80691 2.97547 4.66232 3.81938 3.81841C4.6633 2.97449 5.80789 2.50039 7.00136 2.50039C8.19484 2.50039 9.33943 2.97449 10.1833 3.81841C11.0273 4.66232 11.5014 5.80691 11.5014 7.00039ZM10.6814 11.7404C9.47574 12.6764 7.95873 13.1177 6.43916 12.9745C4.91959 12.8314 3.51171 12.1145 2.50211 10.9698C1.49252 9.8251 0.957113 8.33868 1.0049 6.81314C1.05268 5.28759 1.68006 3.83759 2.75932 2.75834C3.83857 1.67908 5.28856 1.0517 6.81411 1.00392C8.33966 0.956136 9.82608 1.49154 10.9708 2.50114C12.1154 3.51073 12.8323 4.91862 12.9755 6.43819C13.1187 7.95775 12.6773 9.47476 11.7414 10.6804L14.5314 13.4704C14.605 13.539 14.6642 13.6218 14.7051 13.7138C14.7461 13.8058 14.7682 13.9052 14.77 14.0059C14.7717 14.1066 14.7532 14.2066 14.7155 14.3C14.6778 14.3934 14.6216 14.4782 14.5504 14.5494C14.4792 14.6206 14.3943 14.6768 14.301 14.7145C14.2076 14.7522 14.1075 14.7708 14.0068 14.769C13.9061 14.7672 13.8068 14.7452 13.7148 14.7042C13.6228 14.6632 13.54 14.6041 13.4714 14.5304L10.6814 11.7404Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
             </div>
-        </div>
+            <input
+              type="text"
+              id="filter-text-box"
+              placeholder="Search purchase history..." autocomplete="off"
+              class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
+              (input)="onQuickFilterChanged($event)"
+            />
+          </div>
+
+        <!-- Add Product Button -->
+        <button
+          id="productlist01"
+          type="button"
+          (click)="openNewProducts($event)"
+          class="mr-3 px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors inline-flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="w-4 h-4 mr-0.5"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"
+            />
+          </svg>
+          <span>Add Product</span>
+        </button>
+      </div>
+
+      <!-- Table Container -->
+      <div
+        class="rounded-md ml-3 mr-3 border border-gray-200 dark:border-[#333333] bg-white dark:bg-[#1f1f1f] shadow-sm transition-colors duration-200 overflow-x-auto"
+      >
+        <table class="w-full border-collapse">
+          <thead class="bg-gray-50 dark:bg-[#141414] text-left">
+            <tr>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                SKU
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left w-[250px]"
+              >
+                Item Name
+              </th>
+              <th
+                *ngIf="!showFreeProducts"
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Select Unit
+              </th>
+              <th
+                *ngIf="!showFreeProducts"
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Qty
+              </th>
+              <th
+                *ngIf="showFreeProducts"
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Select Free Unit
+              </th>
+              <th
+                *ngIf="showFreeProducts"
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Free Qty
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Trade Price
+              </th>
+              <th
+                *ngIf="!showFreeProducts"
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Margin %
+              </th>
+              <th
+                *ngIf="!showFreeProducts"
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Net Amount
+              </th>
+              <th
+                class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
+              >
+                Action
+              </th>
+            </tr>
+          </thead>
+
+          <tfoot
+            *ngIf="!showFreeProducts"
+            class="bg-gray-50 dark:bg-[#141414] text-[13px]"
+          >
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Total items:
+              </th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                {{ purchasedProducts?.length }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Subtotal PKR.
+              </th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                {{ distributorPurchase.original_amount | number : "1.2-2" }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Distribution Discount.
+              </th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                {{ distributorPurchase.discount | number : "1.2-2" }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                GST
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5 text-left">
+                <input
+                  placeholder="0.0"
+                  (keydown)="isNumber($event)"
+                  [(ngModel)]="distributorPurchase.gst"
+                  (keyup)="calculateTotal()"
+                  type="number"
+                  class="w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary dark:focus:border-primary"
+                />
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Freight Charges.
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5 text-left">
+                <input
+                  placeholder="0.0"
+                  (keydown)="isNumber($event)"
+                  (keyup)="calculateTotal()"
+                  [(ngModel)]="distributorPurchase.fare"
+                  type="number"
+                  class="w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary dark:focus:border-primary"
+                />
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+            <tr class="border-t border-gray-200 dark:border-[#333333]">
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                Total PKR.
+              </th>
+              <th
+                class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
+              >
+                {{ distributorPurchase.net_amount | number : "1.2-2" }}
+              </th>
+              <th class="font-primary font-medium px-1.5 py-1.5"></th>
+            </tr>
+          </tfoot>
+
+          <tbody class="bg-white dark:bg-[#1f1f1f]">
+            <tr
+              *ngIf="!getArray() || getArray().length === 0"
+              class="border-t border-gray-200 dark:border-[#333333]"
+            >
+              <td
+                [attr.colspan]="showFreeProducts ? 6 : 8"
+                class="text-center py-8"
+              >
+                <p class="text-gray-500 dark:text-gray-400">
+                  Add products to purchase...
+                </p>
+              </td>
+            </tr>
+            <tr
+              *ngFor="let product of getArray()"
+              class="border-t border-gray-200 dark:border-[#333333] hover:bg-[#ededed] dark:hover:bg-[#2a2a2a] transition-colors duration-150"
+            >
+              <!-- SKU -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5"
+              >
+                {{ product.item_sku }}
+              </td>
+              <!-- Item Name -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-200 px-1.5 py-1.5"
+              >
+                <div class="flex items-center gap-3">
+                  <img
+                    class="w-8 h-8 rounded-[5px] border border-gray-200 dark:border-[#434343] object-cover flex-shrink-0"
+                    [src]="product.thumbnail"
+                    [attr.alt]="product.item_name"
+                    (error)="onImageError($event)"
+                  />
+                  <div class="font-primary text-gray-900 dark:text-gray-200">
+                    {{ product.item_name }}
+                  </div>
+                </div>
+              </td>
+              <!-- Select Unit (Purchased) -->
+              <td
+                *ngIf="!showFreeProducts"
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+              >
+                {{ product.unit_name }}
+              </td>
+              <!-- Qty (Purchased) -->
+              <td *ngIf="!showFreeProducts" class="px-1.5 py-1.5">
+                <input
+                  placeholder="0"
+                  (keydown)="isNumber($event, 'qty')"
+                  name="purchase-qty"
+                  type="number"
+                  min="1"
+                  (keyup)="getUnitPrice(product, true)"
+                  [(ngModel)]="product.stockQty"
+                  class="w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary dark:focus:border-primary"
+                />
+              </td>
+              <!-- Select Free Unit -->
+              <td
+                *ngIf="showFreeProducts"
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+              >
+                {{ product.unit_name }}
+              </td>
+              <!-- Free Qty -->
+              <td *ngIf="showFreeProducts" class="px-1.5 py-1.5">
+                <input
+                  placeholder="0"
+                  (keydown)="isNumber($event, 'qty')"
+                  name="free-qty"
+                  type="number"
+                  min="1"
+                  (keyup)="getUnitPrice(product, true)"
+                  [(ngModel)]="product.stockQty"
+                  class="w-[80px] h-[26px] px-2 py-1 text-[13px] border border-gray-300 dark:border-[#434343] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white focus:outline-none focus:border-primary dark:focus:border-primary"
+                />
+              </td>
+              <!-- Trade Price -->
+              <td
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+              >
+                {{ product.item_trade_price }}
+              </td>
+              <!-- Margin % -->
+              <td
+                *ngIf="!showFreeProducts"
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+              >
+                {{ product.discount_type_value }}
+              </td>
+              <!-- Net Amount -->
+              <td
+                *ngIf="!showFreeProducts"
+                class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
+              >
+                {{ product.net_amount | number : "1.2-2" }}
+              </td>
+              <!-- Action -->
+              <td class="px-1.5 py-1.5">
+                <button
+                  type="button"
+                  (click)="removeSelectedProduct(product)"
+                  class="px-1.5 py-1.5 text-[11px] leading-none rounded-[5px] font-primary bg-red-600 text-white hover:bg-red-700 focus:outline-none transition-colors"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Action Buttons -->
+      <div
+        class="ml-3 mr-3 !mb-3 mt-4 bg-gray-50 dark:bg-[#151515] border border-gray-200 dark:border-[#2b2b2b] rounded-lg p-4 flex justify-center gap-3"
+      >
+        <button
+          *ngIf="loading"
+          type="submit"
+          class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors flex items-center gap-2"
+          disabled
+        >
+          <span
+            class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"
+          ></span>
+          Processing...
+        </button>
+        <button
+          *ngIf="!loading"
+          type="submit"
+          class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:outline-none transition-colors"
+          (click)="placeOrder()"
+        >
+          Order
+        </button>
+        <button
+          *ngIf="!loading"
+          id="pl-close"
+          [routerLink]="'/inventory/gallery'"
+          class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
     </div>
+  </div>
 </div>

@@ -1,17 +1,229 @@
-.ng-select .ng-select-container {
-    border-radius: 0 !important;
-    border: 1px solid #f6f6f6 !important;
-    background-color: #f6f6f6 !important;
-    outline: none;
+:host ::ng-deep .salesmen-segment-select.ant-select {
+  width: 100%;
 }
+
+:host ::ng-deep .salesmen-segment-select.ant-select .ant-select-selector {
+  min-height: 32px;
+  border-radius: 5px;
+  border: 1px solid #d1d5db;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+}
+
+:host ::ng-deep .salesmen-segment-select.ant-select .ant-select-selection-placeholder {
+  color: #6b7280;
+}
+
+:host ::ng-deep .salesmen-segment-select.ant-select:hover .ant-select-selector,
+:host ::ng-deep .salesmen-segment-select.ant-select.ant-select-focused .ant-select-selector {
+  border-color: #1e54d3;
+  box-shadow: 0 0 0 1px rgba(30, 84, 211, 0.08);
+}
+
+:host ::ng-deep .salesmen-segment-select.ant-select-multiple .ant-select-selection-item {
+  background-color: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 2px 8px;
+  margin: 2px 4px 2px 0;
+  color: #1f2937;
+  font-size: 13px;
+  line-height: 20px;
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+}
+
+:host ::ng-deep .salesmen-segment-select.ant-select-multiple .ant-select-selection-item-content {
+  margin-right: 4px;
+}
+
+:host ::ng-deep .salesmen-segment-select.ant-select-multiple .ant-select-selection-item-remove {
+  color: #6b7280;
+  font-size: 12px;
+  margin-left: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+}
+
+:host ::ng-deep .salesmen-segment-select.ant-select-multiple .ant-select-selection-item-remove:hover {
+  color: #1e54d3;
+}
+
+:host ::ng-deep .dark .salesmen-segment-select.ant-select .ant-select-selector {
+  background-color: #141414;
+  border-color: #333333;
+  color: #ffffff;
+}
+
+:host ::ng-deep .dark .salesmen-segment-select.ant-select .ant-select-selection-placeholder {
+  color: #9ca3af;
+}
+
+:host ::ng-deep .dark .salesmen-segment-select.ant-select-multiple .ant-select-selection-item {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #f3f4f6;
+  padding: 2px 8px;
+  margin: 2px 4px 2px 0;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 20px;
+  height: 24px;
+}
+
+:host ::ng-deep .dark .salesmen-segment-select.ant-select-multiple .ant-select-selection-item-content {
+  margin-right: 4px;
+}
+
+:host ::ng-deep .dark .salesmen-segment-select.ant-select-multiple .ant-select-selection-item-remove {
+  color: #9ca3af;
+  font-size: 12px;
+  margin-left: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+}
+
+:host ::ng-deep .dark .salesmen-segment-select.ant-select-multiple .ant-select-selection-item-remove:hover {
+  color: #60a5fa;
+}
+
+/* Style for the "and X more selected" placeholder */
+:host ::ng-deep .salesmen-segment-select.ant-select-multiple .ant-select-selection-overflow-item {
+  margin: 2px 4px 2px 0;
+}
+
+:host ::ng-deep .salesmen-segment-select.ant-select-multiple .ant-select-selection-overflow-item-suffix {
+  background-color: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  padding: 2px 8px;
+  color: #6b7280;
+  font-size: 13px;
+  line-height: 20px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+}
+
+:host ::ng-deep .dark .salesmen-segment-select.ant-select-multiple .ant-select-selection-overflow-item-suffix {
+  background-color: #1f2937;
+  border-color: #374151;
+  color: #9ca3af;
+}
+
+:host ::ng-deep .salesmen-segment-select .ant-select-arrow {
+  color: #6b7280;
+}
+
+:host ::ng-deep .dark .salesmen-segment-select .ant-select-arrow {
+  color: #9ca3af;
+}
+
+/* Ensure dropdown has high z-index for sidebar */
+:host ::ng-deep .salesmen-segment-select .ant-select-dropdown {
+  z-index: 9999 !important;
+}
+
+:host ::ng-deep .dark .salesmen-segment-select .ant-select-dropdown {
+  z-index: 9999 !important;
+}
+
 .input-error {
     font-size: 11px;
     color: orangered;
     margin-top: 5px;
 }
-.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
-    background-color: #0038ba;
-    border: 1px solid #0038ba;
-    margin-right: 7px;
-    color: #fff;
+
+/* AG Grid styles and Tailwind compatibility */
+.ag-grid-container {
+  height: 400px;
+  width: 100%;
+}
+
+/* Fix for ag-grid dropdown visibility */
+::ng-deep .ag-row {
+    overflow: visible !important;
+}
+
+::ng-deep .ag-cell-wrapper {
+    overflow: visible !important;
+}
+
+::ng-deep .ag-cell {
+    overflow: visible !important;
+}
+
+/* Custom AG Grid theme adjustments - matching orders page */
+::ng-deep .ag-theme-quartz {
+  --ag-header-background-color: #f8f9fa;
+  --ag-header-foreground-color: #495057;
+  --ag-border-color: #dee2e6;
+  --ag-row-hover-color: #f8f9fa;
+  --ag-selected-row-background-color: #e3f2fd;
+}
+
+/* Dark mode support for AG Grid - matching orders page */
+::ng-deep .dark .ag-theme-quartz {
+  --ag-background-color: #1a1a1a;
+  --ag-header-background-color: #2d2d2d;
+  --ag-header-foreground-color: #e0e0e0;
+  --ag-odd-row-background-color: #1f1f1f;
+  --ag-row-hover-color: #2d2d2d;
+  --ag-selected-row-background-color: #2d2d2d;
+  --ag-foreground-color: #e0e0e0;
+  --ag-border-color: #333333;
+  --ag-panel-background-color: #1a1a1a;
+  --ag-panel-text-color: #e0e0e0;
+}
+
+::ng-deep .dark .ag-theme-quartz .ag-cell {
+  color: #e0e0e0 !important;
+}
+
+::ng-deep .dark .ag-theme-quartz button,
+::ng-deep .dark .ag-theme-quartz a {
+  background-color: #2d2d2d !important;
+  color: #e0e0e0 !important;
+  border-color: #444444 !important;
+}
+
+::ng-deep .dark .ag-theme-quartz button:hover,
+::ng-deep .dark .ag-theme-quartz a:hover {
+  background-color: #0038ba !important;
+  color: #fff !important;
+  border-color: #0038ba !important;
+}
+
+::ng-deep .dark .ag-theme-quartz .ag-icon {
+  color: #e0e0e0 !important;
+}
+
+/* Prevent body scroll when modal is open */
+body.no-scroll {
+  overflow: hidden;
+}
+
+/* Responsive table styles */
+@media (max-width: 768px) {
+  .ag-grid-container {
+    height: 300px;
+  }
+  
+  ::ng-deep .ag-header-cell-label {
+    font-size: 12px;
+  }
+  
+  ::ng-deep .ag-cell {
+    font-size: 12px;
+  }
 }

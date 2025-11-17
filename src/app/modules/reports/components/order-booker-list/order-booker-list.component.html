@@ -1,305 +1,260 @@
-<div class="modal fade" id="billsModal" tabindex="-1" role="dialog" aria-labelledby="billsModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content top_border">
-      <div class="modal-header">
-        <h5 class="modal-title" id="billsModalLabel">Print bill for this order<span></span></h5>
-        <button type="button" id="close-bills" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <!-- <div class="row">
-          <div class="col-auto" style="padding-top:6px;font-size:14px">Select Date</div>
-          <div class="col"> <input type="date" id="invoice-date" [(ngModel)]="invoiceDate"
-              class="form-control select-date" name="invoice-date" placeholder="">
-          </div>
-          <div class="col-12">
-            <hr>
-          </div>
-        </div> -->
-        <div class="row">
-          <div class="col-12">
-            <h3 class="heading3">Select paper size for print</h3>
-          </div>
-        </div>
-        <div class="row print-icon-div pb-0">
-          <div class="col-6 pl-0">
-            <a (click)="getBills('A4')"><img class="print-icon" src="assets/images/a4.svg" alt="">
-              <strong>A4 Portrait
-                Paper</strong></a>
-          </div>
-          <div class="col-6 pr-0">
-            <a (click)="getBills('A5')"><img class="print-icon" src="assets/images/a5.svg" alt="">
-              <strong>A5 Landscape
-                Paper</strong></a>
-          </div>
+<!-- Bills Modal -->
+<div
+  *ngIf="showBillsModal"
+  class="fixed inset-0 z-50 overflow-y-auto"
+  aria-labelledby="billsModalLabel"
+  role="dialog"
+  aria-modal="true"
+>
+  <!-- Background overlay -->
+  <div class="fixed inset-0 bg-gray-500 bg-opacity-75 dark:bg-black/50 dark:backdrop-blur-sm transition-opacity" (click)="closeBillsModal()"></div>
+  
+  <!-- Modal container -->
+  <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+    <div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-[#1f1f1f] text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+      <!-- Modal header -->
+      <div class="bg-white dark:bg-[#1f1f1f] px-3 pb-3 pt-4 sm:p-5 sm:pb-4 border-b border-gray-200 dark:border-[#333333]">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-neutral-200 font-primary" id="billsModalLabel">
+            Print bill for this order
+          </h3>
+          <button
+            type="button"
+            id="close-bills"
+            class="rounded-md bg-white dark:bg-[#1f1f1f] text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
+            (click)="closeBillsModal()"
+            aria-label="Close"
+          >
+            <span class="sr-only">Close</span>
+            <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
       </div>
-
+      
+      <!-- Modal body -->
+      <div class="bg-white dark:bg-[#1f1f1f] px-3 pb-3 pt-4 sm:p-5 sm:pb-4">
+        <div class="mb-4">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-neutral-200 font-primary">Select paper size for print</h3>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <button
+            type="button"
+            (click)="getBills('A4')"
+            class="flex flex-col items-center justify-center p-4 border border-gray-300 dark:border-[#333333] rounded-lg hover:border-primary dark:hover:border-primary hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors cursor-pointer">
+            <img class="w-16 h-16 mb-2" src="assets/images/a4.svg" alt="A4">
+            <strong class="text-sm text-gray-900 dark:text-white font-primary">A4 Portrait Paper</strong>
+          </button>
+          <button
+            type="button"
+            (click)="getBills('A5')"
+            class="flex flex-col items-center justify-center p-4 border border-gray-300 dark:border-[#333333] rounded-lg hover:border-primary dark:hover:border-primary hover:bg-gray-50 dark:hover:bg-[#2a2a2a] transition-colors cursor-pointer">
+            <img class="w-16 h-16 mb-2" src="assets/images/a5.svg" alt="A5">
+            <strong class="text-sm text-gray-900 dark:text-white font-primary">A5 Landscape Paper</strong>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<div class="modal fade" style="overflow-y: auto;" id="OrderDetailModal" tabindex="-1" role="dialog"
-  aria-labelledby="OrderDetailModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-full modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header border-0">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-          (click)="showDetailsModal = false;closeDetailsModal()" style="font-size:30px">×</button>
-      </div>
-      <div class="modal-body p-0">
-        <div class="container">
-          <div class="row">
-            <div class="col-12">
-              <div class="card mb-20">
-                <div class="p-10" style="border-bottom: solid 2px #000">
-                  <div class="row m-0">
-                    <div class="col-8 OrderLogo"> <img src="/assets/images/sell-360.svg" alt="" /> </div>
-                    <div class="col-4 ord-no"> Invoice# <strong>{{ activeOrder?.invoice_number }}</strong> </div>
-                  </div>
-                </div>
-                <div class="body" style="padding:15px 20px">
-                  <div class="row">
-                    <div class="col-12">
-                      <div class="form-body">
-                        <div class="row OrderInfo">
-                          <div class="col-md-9">
-                            <span>Retailer Name: </span>
-                            <strong>{{activeOrder?.shop_name}}</strong><br>
-                            <span>Segment: </span> <strong>{{ activeOrder?.segment }}</strong><br>
-                            <span>Phone No: </span> <strong>{{activeOrder?.retailer_phone}}</strong><br>
-                            <span>Address: </span> <strong>{{activeOrder?.retailer_address}}</strong>
-                          </div>
-                          <div class="col-md-3 p-0">
-                            <span>Status: </span> <strong>{{activeOrder?.status}}</strong><br>
-                            <span>Date: </span> <strong>{{activeOrder?.date}}</strong><br>
-                            <span>Order Booker: </span>
-                            <strong>{{activeOrder?.order_booker}}</strong><br>
-                            <span>Salesman: </span> <strong>{{ activeOrder?.salesman }}</strong>
-                          </div>
-                        </div>
-                        <div class="seprator-block"></div>
-                        <div class="Order-Detail-table mt-20">
-                          <table class="table">
-                            <thead>
-                              <tr>
-                                <th><strong>Code</strong></th>
-                                <th><strong>Product Name</strong></th>
-                                <th><strong>B.QTY.</strong></th>
-                                <th><strong>D.QTY.</strong></th>
-                                <th><strong>E.QTY.</strong></th>
-                                <th><strong>T.P</strong></th>
-                                <th><strong>GR.AMNT.</strong></th>
-                                <th><strong>T.O</strong></th>
-                                <th><strong>T.Disc</strong></th>
-                                <th><strong>SPC.Disc</strong></th>
-                                <th><strong>Extra.Disc</strong></th>
-                                <th><strong>TAX %</strong></th>
-                                <th><strong>TAX AMNT.</strong></th>
-                                <th><strong>Net.AMNT</strong></th>
-                              </tr>
-                            </thead>
-                            <tbody class="order_items_body">
-                              <tr *ngFor="let item of orderDetail">
-                                <td>{{ item.item_sku }}</td>
-                                <td>{{ item.item_name }}</td>
-                                <td>{{ item.booked_qty }}</td>
-                                <td>{{ item.delivered_qty }}</td>
-                                <td>{{ item.executed_qty }}</td>
-                                <td>{{ item.item_trade_price | number: '1.2-2' }}</td>
-                                <td>{{ item.gr_amount | number: '1.2-2' }}</td>
-                                <td>{{ item.trade_offer | number: '1.2-2' }}</td>
-                                <td>{{ item.trade_discount | number: '1.2-2' }}</td>
-                                <td>{{ item.special_discount | number: '1.2-2' }}</td>
-                                <td>{{ item.extra_discount | number: '1.2-2' }}</td>
-                                <td>{{ item.tax_in_percentage }}</td>
-                                <td>{{ item.tax_in_value | number: '1.2-2' }}</td>
-                                <td>{{ item.final_price | number: '1.2-2' }}</td>
-                              </tr>
-                              <!-- Footer Columns -->
-                              <tr>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td><strong>G.AMNT</strong></td>
-                                <td><strong>{{ orderDetail?.gross_amount | number: '1.2-2' }}</strong></td>
-                              </tr>
-                              <tr>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td><strong>T.O.Disc.</strong></td>
-                                <td><strong>{{ orderDetail?.to_discount | number: '1.2-2' }}</strong></td>
-                              </tr>
-                              <tr>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td><strong>Trade Disc.</strong></td>
-                                <td><strong>{{ orderDetail?.trade_discount | number: '1.2-2' }}</strong></td>
-                              </tr>
-                              <tr>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td><strong>Spc. Disc.</strong></td>
-                                <td><strong>{{ orderDetail?.special_discount | number: '1.2-2' }}</strong></td>
-                              </tr>
-                              <tr>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td><strong>Extra. Disc.</strong></td>
-                                <td><strong>{{ orderDetail?.booker_discount | number: '1.2-2' }}</strong></td>
-                              </tr>
-                              <tr>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td><strong>Discount PKR.</strong></td>
-                                <td><strong>{{ orderDetail?.discount_pkr | number: '1.2-2' }}</strong></td>
-                              </tr>
-                              <tr>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td><strong>Total TAX</strong></td>
-                                <td><strong>{{ orderDetail?.tax_amount | number: '1.2-2' }}</strong></td>
-                              </tr>
-                              <tr>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td style="background-color:#dfdfdf; color:#000"><strong>Total AMNT.</strong></td>
-                                <td style="background-color:#dfdfdf; color:#000">
-                                  <strong>{{ orderDetail?.total_amount | number: '1.2-2' }}</strong></td>
-                              </tr>
-                              <tr>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td class="border-0"></td>
-                                <td style="background-color:#dfdfdf; color:#000"><strong>Recovery AMNT.</strong></td>
-                                <td style="background-color:#d3d3d3; color:#000">
-                                  <strong>{{ orderDetail?.recovery_amount | number: '1.2-2' }}</strong></td>
-                              </tr>
-                            </tbody>
+<!-- Order details Popup - Full Screen -->
+<div *ngIf="showDetailsModal" class="fixed inset-0 z-[1100]">
+  <!-- Full screen modal container -->
+  <div class="w-full h-full bg-white dark:bg-gray-900 flex flex-col">
+    <button
+      type="button"
+      class="absolute top-2 right-2 z-[1101] rounded-md bg-white dark:bg-black text-gray-500 hover:text-gray-800 dark:hover:text-white focus:outline-none focus:ring-primary"
+      (click)="showDetailsModal = false;closeDetailsModal()"
+      aria-label="Close"
+    >
+      <span class="sr-only">Close</span>
+      <svg class="h-[28px] w-[28px]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
 
-                          </table>
-                          <div class="clearfix"></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="row justify-content-end">
-                    <div class="col-4 Order-Detail-table">
-                      <h3 class="font16">Payment Details</h3>
-                      <table class="table mb-0">
-                        <tbody class="order_items_body">
-                          <tr>
-                            <td><strong>Cash</strong></td>
-                            <td><strong>{{ (this.paymentInfo.cash ? this.paymentInfo.cash.amount : 0) | number: '1.2-2' }}</strong></td>
-                          </tr>
-                          <tr>
-                            <td><strong>Cheque</strong></td>
-                            <td><strong>{{ (this.paymentInfo.cheque ? this.paymentInfo.cheque.amount : 0) | number: '1.2-2' }}</strong></td>
-                          </tr>
-                          <tr>
-                            <td><strong>Total Payment</strong></td>
-                            <td><strong>0</strong></td>
-                          </tr>
-                          <tr>
-                            <td><strong>Credit</strong></td>
-                            <td><strong>{{ (this.paymentInfo.credit ? this.paymentInfo.credit.amount : 0) | number: '1.2-2' }}</strong></td>
-                          </tr>
-                        </tbody>
+    <!-- Modal body - Scrollable content -->
+    <div class="bg-white dark:bg-black px-4 py-8 flex-1 overflow-y-auto">
+      <div class="w-full h-full">
+        <div class="container mx-auto px-4 max-w-7xl">
+          <div *ngIf="!activeOrder || !orderDetail" class="flex justify-center items-center p-8">
+            <app-loader-white></app-loader-white>
+          </div>
 
-                      </table>
-                    </div>
-                  </div>
-                </div>
+          <div *ngIf="activeOrder && orderDetail" class="bg-white dark:bg-black dark:border-[#333333] border p-6 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_#ffffff1a]">
+            <div class="flex mb-5 pb-2 border-b border-gray-300 dark:border-[#333333] font-primary">
+              <div class="w-2/3 flex items-center OrderLogo">
+                <img src="assets/images/sell-360.svg" alt="" class="max-h-10 dark:hidden" />
+                <img src="assets/images/logo-w.svg" alt="" class="max-h-10 hidden dark:block" />
+              </div>
+              <div class="w-1/3 text-right flex items-center justify-end text-gray-900 dark:text-white">
+                Invoice# <strong class="ml-1 font-medium">{{ activeOrder?.invoice_number }}</strong>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap OrderInfo font-primary text-gray-900 dark:text-white mb-6">
+              <!-- Left column -->
+              <div class="w-full md:w-3/4 mb-2 md:mb-0">
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Retailer Name:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{activeOrder?.shop_name}}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Segment:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ activeOrder?.segment }}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Phone No:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{activeOrder?.retailer_phone}}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Address:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{activeOrder?.retailer_address}}</strong>
+                </p>
+              </div>
+
+              <!-- Right column -->
+              <div class="w-full md:w-1/4 md:p-0">
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Status:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{activeOrder?.status}}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Date:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{activeOrder?.date}}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Order Booker:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{activeOrder?.order_booker}}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Salesman:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ activeOrder?.salesman }}</strong>
+                </p>
+              </div>
+            </div>
+
+            <div class="w-full Order-Detail-table mt-6">
+              <table class="table font-primary w-full border-collapse">
+                <thead>
+                  <tr class="bg-black dark:bg-[#252525] text-white">
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Code</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Product Name</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">B.QTY.</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">D.QTY.</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">E.QTY.</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">T.P</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">GR.AMNT.</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">T.O</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">T.Disc</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">SPC.Disc</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Extra.Disc</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">TAX %</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">TAX AMNT.</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Net.AMNT</strong></th>
+                  </tr>
+                </thead>
+                <tbody class="order_items_body">
+                  <tr *ngFor="let item of orderDetail" class="text-gray-900 dark:text-white">
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.item_sku }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.item_name }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.booked_qty }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.delivered_qty }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.executed_qty }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.item_trade_price | number: '1.2-2' }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.gr_amount | number: '1.2-2' }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.trade_offer | number: '1.2-2' }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.trade_discount | number: '1.2-2' }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.special_discount | number: '1.2-2' }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.extra_discount | number: '1.2-2' }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.tax_in_percentage }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.tax_in_value | number: '1.2-2' }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.final_price | number: '1.2-2' }}</td>
+                  </tr>
+                  <!-- Footer Columns -->
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="12"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">G.AMNT</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ orderDetail?.gross_amount | number: '1.2-2' }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="12"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">T.O.Disc.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ orderDetail?.to_discount | number: '1.2-2' }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="12"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Trade Disc.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ orderDetail?.trade_discount | number: '1.2-2' }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="12"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Spc. Disc.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ orderDetail?.special_discount | number: '1.2-2' }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="12"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Extra. Disc.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ orderDetail?.booker_discount | number: '1.2-2' }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="12"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Discount PKR.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ orderDetail?.discount_pkr | number: '1.2-2' }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="12"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Total TAX</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ orderDetail?.tax_amount | number: '1.2-2' }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="12"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-gray-200 dark:bg-neutral-800 text-gray-900 dark:text-white">
+                      <strong class="font-primary font-medium">Total AMNT.</strong>
+                    </td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-gray-200 dark:bg-neutral-800 text-gray-900 dark:text-white">
+                      <strong class="font-primary font-medium">{{ orderDetail?.total_amount | number: '1.2-2' }}</strong>
+                    </td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="12"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-gray-200 dark:bg-neutral-800 text-gray-900 dark:text-white">
+                      <strong class="font-primary font-medium">Recovery AMNT.</strong>
+                    </td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-gray-200 dark:bg-neutral-800 text-gray-900 dark:text-white">
+                      <strong class="font-primary font-medium">{{ orderDetail?.recovery_amount | number: '1.2-2' }}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Payment Details -->
+            <div class="flex justify-end mt-6">
+              <div class="w-full md:w-1/3 Order-Detail-table">
+                <h3 class="text-base font-medium text-gray-900 dark:text-white font-primary mb-3">Payment Details</h3>
+                <table class="table font-primary w-full border-collapse">
+                  <tbody class="order_items_body">
+                    <tr class="text-gray-900 dark:text-white">
+                      <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs"><strong class="font-primary font-medium">Cash</strong></td>
+                      <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs"><strong class="font-primary font-medium">{{ (this.paymentInfo.cash ? this.paymentInfo.cash.amount : 0) | number: '1.2-2' }}</strong></td>
+                    </tr>
+                    <tr class="text-gray-900 dark:text-white">
+                      <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs"><strong class="font-primary font-medium">Cheque</strong></td>
+                      <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs"><strong class="font-primary font-medium">{{ (this.paymentInfo.cheque ? this.paymentInfo.cheque.amount : 0) | number: '1.2-2' }}</strong></td>
+                    </tr>
+                    <tr class="text-gray-900 dark:text-white">
+                      <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs"><strong class="font-primary font-medium">Total Payment</strong></td>
+                      <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs"><strong class="font-primary font-medium">0</strong></td>
+                    </tr>
+                    <tr class="text-gray-900 dark:text-white">
+                      <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs"><strong class="font-primary font-medium">Credit</strong></td>
+                      <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs"><strong class="font-primary font-medium">{{ (this.paymentInfo.credit ? this.paymentInfo.credit.amount : 0) | number: '1.2-2' }}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -310,151 +265,206 @@
 </div>
 
 <!-- Order Booker List -->
-<div class="container" id="retailer-list">
-
-  <div class="row mt-2 mb-2">
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <h2 class="_head01">Sale Order <span>History</span></h2>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <ol class="breadcrumb">
-        <li><a href="#"><span>Order Booker</span></a></li>
-        <li><span>List</span></li>
-      </ol>
+<div class="container mx-auto px-4 pb-24" id="retailer-list">
+  <!-- Header -->
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1 class="text-lg text-secondary dark:text-neutral-200 font-primary font-medium mb-0">
+          Sale Order <span class="font-light">History</span>
+        </h1>
+      </div>
+      <div></div>
     </div>
   </div>
 
-  <div class="row" [style.display]="loading ? 'none' : ''">
-    <div class="col-lg-12">
-      <div class="header-tabs">
-        <div class="Product-Filter">
-          <div class="row">
-            <div class="col-12 mb-10">
-              <div class="CL-Product" style="width: 100%; padding-right:0"><i class="fa fa-search"></i>
-                <input type="text" class="form-control" id="" placeholder="Search by Invoice No or Shop ID">
-              </div>
-            </div>
-            <div class="col-12">
-              <div class="CL-Product" style="width: 116px!important;">
-                <input placeholder="Start Date" type="text" onfocus="(this.type = 'date')" id="date"
-                  class="form-control pad-date" [(ngModel)]="startDate">
-              </div>
-              <div class="CL-Product" style="width: 116px!important;">
-                <input placeholder="End Date" type="text" onfocus="(this.type = 'date')" id="date"
-                  class="form-control pad-date" [(ngModel)]="endDate">
-              </div>
+  <!-- Filter Bar -->
+  <div class="p-2 border border-gray-200 dark:border-[#2b2b2b] bg-gray-50 dark:bg-[#141414] rounded-lg mb-3">
+    <div class="grid grid-cols-12 gap-1.5 xl:gap-2 text-[13px]">
+      <!-- Search Input -->
+      <div class="col-span-8">
+      <div class="dark:text-gray-200 text-[12px] mb-1.5">Search</div>
 
-              <div class="_cust_filter">
-                <div class="form-s2">
-                  <ng-select class="formselect" [multiple]="false" id="OrderType" placeholder="All Order Types"
-                    name="order-type" [(ngModel)]="OrderType" required>
-                    <ng-option value="0" selected>
-                      All
-                    </ng-option>
-                    <ng-option value="executed">
-                      Executed
-                    </ng-option>
-                    <ng-option value="counter_sale">
-                      Counter Sale
-                    </ng-option>
-                    <ng-option value="spot_sale">
-                      Spot Sale
-                    </ng-option>
-                  </ng-select>
-                </div>
-              </div>
-
-              <div class="_cust_filter">
-                <div class="form-s2">
-                  <ng-select class="formselect" [multiple]="false" id="AllSalesmen" placeholder="All Salesmen"
-                    name="all-salesmen" [(ngModel)]="salesmanId" required>
-                    <ng-option value="0">
-                      All Salesmen
-                    </ng-option>
-                    <ng-option *ngFor="let sman of criterias.salesmen" value="{{ sman.id }}">
-                      {{ sman.name }}
-                    </ng-option>
-                  </ng-select>
-                </div>
-              </div>
-
-              <div class="_cust_filter">
-                <div class="form-s2">
-                  <ng-select class="formselect" [multiple]="false" id="OrderBooker" placeholder="All Order Bookers"
-                    name="OrderBooker" [(ngModel)]="OrderBooker" required>
-                    <ng-option *ngFor="let ob of criterias.order_booker" value="{{ob.employee_id}}">
-                      {{ ob.employee_name }}
-                    </ng-option>
-                  </ng-select>
-                </div>
-              </div>
-
-              <div class="_cust_filter">
-                <div class="form-s2">
-                  <ng-select class="formselect" [multiple]="false" id="segment" placeholder="All Segments"
-                    name="segment" [(ngModel)]="segment" required>
-                    <ng-option value="0">
-                      All
-                    </ng-option>
-                    <ng-option *ngFor="let s of criterias.segments" value="{{s.id}}">
-                      {{s.name}}
-                    </ng-option>
-                  </ng-select>
-                </div>
-              </div>
-
-              <button class="btn btn-primary" (click)="getOrderBookersList()"><i class="fa fa-search"></i>
-                Search</button>
-            </div>
+        <div class="relative w-full">
+          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10 text-gray-500 dark:text-neutral-400">
+            <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+              <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+            </svg>
           </div>
-          <div class="clearfix"></div>
-        </div>
+          <input 
+            nz-input
+            type="text" 
+            id="search-order" 
+            placeholder="Search orders..."
+            autocomplete="off"
+            class="w-full h-8 pl-10 pr-3 border border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:border-primary dark:focus:border-primary font-primary text-sm"
+            (input)="onQuickFilterChanged($event)"
+          >
+       </div>
+      </div>
+ 
+      <!-- Start Date Picker -->
+      <div class="col-span-2">
+      <div class="dark:text-gray-200 text-[12px] mb-1.5">Start Date</div>
+
+        <nz-date-picker
+          id="startDate"
+          [(ngModel)]="startDate"
+          (ngModelChange)="onStartDateChange($event)"
+          nzPlaceHolder="Select Start Date"
+          [nzFormat]="'yyyy-MM-dd'"
+          class="w-full !rounded-[5px]">
+        </nz-date-picker>
+      </div>
+      <!-- End Date Picker -->
+      <div class="col-span-2">
+      <div class="dark:text-gray-200 text-[12px] mb-1.5">End Date</div>
+
+        <nz-date-picker
+          id="endDate"
+          [(ngModel)]="endDate"
+          (ngModelChange)="onEndDateChange($event)"
+          nzPlaceHolder="Select End Date"
+          [nzFormat]="'yyyy-MM-dd'"
+          class="w-full !rounded-[5px]">
+        </nz-date-picker>
+      </div>
+      <!-- Order Type Filter -->
+      <div class="col-span-2">
+      <div class="dark:text-gray-200 text-[12px] mb-1.5">Order Type</div>
+
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          id="OrderType"
+          name="order-type"
+          [(ngModel)]="OrderType"
+          nzPlaceHolder="All Order Types"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full">
+          <nz-option
+            [nzValue]="'0'"
+            nzLabel="All">
+          </nz-option>
+          <nz-option
+            [nzValue]="'executed'"
+            nzLabel="Executed">
+          </nz-option>
+          <nz-option
+            [nzValue]="'counter_sale'"
+            nzLabel="Counter Sale">
+          </nz-option>
+          <nz-option
+            [nzValue]="'spot_sale'"
+            nzLabel="Spot Sale">
+          </nz-option>
+        </nz-select>
+      </div>
+      <!-- Salesman Filter -->
+      <div class="col-span-3">
+      <div class="dark:text-gray-200 text-[12px] mb-1.5">Salesman</div>
+
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          id="AllSalesmen"
+          name="all-salesmen"
+          [(ngModel)]="salesmanId"
+          nzPlaceHolder="All Salesmen"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full">
+          <nz-option
+            [nzValue]="'0'"
+            nzLabel="All Salesmen">
+          </nz-option>
+          <nz-option
+            *ngFor="let sman of criterias.salesmen"
+            [nzValue]="sman.id.toString()"
+            [nzLabel]="sman.name">
+          </nz-option>
+        </nz-select>
+      </div>
+      <!-- Order Booker Filter -->
+      <div class="col-span-3">
+      <div class="dark:text-gray-200 text-[12px] mb-1.5">Order Booker</div>
+
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          id="OrderBooker"
+          name="OrderBooker"
+          [(ngModel)]="OrderBooker"
+          nzPlaceHolder="All Order Bookers"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full">
+          <nz-option
+            *ngFor="let ob of criterias.order_booker"
+            [nzValue]="ob.employee_id.toString()"
+            [nzLabel]="ob.employee_name">
+          </nz-option>
+        </nz-select>
+      </div>
+      <!-- Segment Filter -->
+      <div class="col-span-3">
+      <div class="dark:text-gray-200 text-[12px] mb-1.5">Segment</div>
+
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          id="segment"
+          name="segment"
+          [(ngModel)]="segment"
+          nzPlaceHolder="All Segments"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full">
+          <nz-option
+            [nzValue]="'0'"
+            nzLabel="All">
+          </nz-option>
+          <nz-option
+            *ngFor="let s of criterias.segments"
+            [nzValue]="s.id.toString()"
+            [nzLabel]="s.name">
+          </nz-option>
+        </nz-select>
+      </div>
+      <div class="col-span-1 mt-auto">
+        <button
+          (click)="getOrderBookersList()"
+          class="w-full px-3 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-200 transition-all duration-200">
+          Search
+        </button>
       </div>
     </div>
   </div>
 
-  <div class="row">
-    <div class="col-md-12">
-      <div class="card">
-        <div class="body">
-          <table [style.display]="loading ? 'none' : ''" [dtTrigger]="dtTrigger" datatable [dtOptions]="dtOptions"
-            class="table table-hover dt-responsive nowrap" id="example" style="width:100%">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Invoice#</th>
-                <th>Shop ID</th>
-                <th>Shop Name</th>
-                <th>Segment </th>
-                <th>Order Booker</th>
-                <th>Salesman</th>
-                <th>Invoice Total</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let order of orders; let i=index">
-                <td>{{ order.date }}</td>
-                <td>{{ order.invoice_number }}</td>
-                <td>{{ order.shop_id }}</td>
-                <td>{{ order.shop_name }}</td>
-                <td>{{ order.segment }}</td>
-                <td>{{ order.order_booker }}</td>
-                <td>{{ order.salesman }}</td>
-                <td>{{ order.order_total }}</td>
-                <td>
-                  <button data-toggle="modal" data-target="#OrderDetailModal" id="orderDetailsModalTrigger"
-                    class="btn btn-default btn-line mb-0" hidden>Detail</button>
-                    <button (click)="openDetailsModal($event, order)" class="btn btn-default btn-line mb-0">Detail</button>
-                    <button data-toggle="modal" data-target="#billsModal" id="billsPrintPaperModalTrigger" class="btn btn-default mb-0" hidden>Bill</button>
-                    <button (click)="openBillsModal(order)" class="btn btn-default mb-0">Bill</button>
-                  </tr>
-            </tbody>
-          </table>
-          <div [style.display]="!loading ? 'none' : ''" class="col-md-12">
-            <app-loader-white></app-loader-white>
-          </div>
-        </div>
+  <!-- AG Grid Section -->
+  <div class="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-[#333333] rounded-lg shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_#ffffff1a]">
+    <div>
+      <!-- AG Grid with Quartz theme -->
+      <div *ngIf="!loading" class="ag-theme-quartz ag-grid-container">
+        <ag-grid-angular
+          [rowData]="orders"
+          [columnDefs]="columnDefs"
+          [defaultColDef]="defaultColDef"
+          [pagination]="true"
+          [paginationPageSize]="10"
+          [paginationPageSizeSelector]="[10, 20, 50, 100]"
+          [suppressPaginationPanel]="false"
+          [domLayout]="'autoHeight'"
+          [animateRows]="true"
+          [rowSelection]="{ type: 'single' }"
+          [theme]="'legacy'"
+          (gridReady)="onGridReady($event)">
+        </ag-grid-angular>
+      </div>
+      
+      <div *ngIf="loading" class="flex justify-center items-center p-8">
+        <app-loader-white></app-loader-white>
       </div>
     </div>
   </div>

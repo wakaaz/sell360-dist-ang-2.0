@@ -1,34 +1,111 @@
-._PR_filter{margin-top: -4px; width: 210px!important;}
-._PR_filter .form-s2 .ng-select {padding: 0 !important;height: 30px !important;}
-._PR_filter .form-s2 .ng-select .ng-select-container div.ng-input { top: 0 !important; }
-._PR_filter .form-s2 .ng-select .ng-select-container {line-height: 28px!important; font-family: 'proximanova-light', sans-serif!important; font-size: 13px!important;}
-._PR_filter .form-s2 .ng-select .ng-select-container, ._PR_filter .form-s2 .ng-select .ng-arrow-wrapper{height: 31px!important; min-height: 31px!important;}
-._PR_filter .form-s2 .ng-select .ng-select-container {border-radius: 0 !important;}
-._PR_filter .form-s2 .ng-select .ng-clear-wrapper {display: none !important;}
-.mw-1280 {max-width: 1280px;}
-.add-stock-input{font-size: 13px; width: 80px; height: 25px; box-shadow: none; border-color:#dddddd; padding: 0px 5px 0 8px;}	
-.retailerTable .dataTable td, .retailerTable .dataTable th {vertical-align: middle;}
-.CP-name{letter-spacing: 1px;}
-.CP-name span{letter-spacing:1px; display: block; margin-top: 4px;}	
-.ProList-div .table img{margin-top: -2px; margin-bottom: -2px; margin-left: 4px;}
-._selectProList .header .add_button {padding: 4px 8px 3px 8px; right: 15px;}
-.ProList-div .Pr_imgV {border-radius: 50%}
-.ProList-div .table img {margin-top: -2px;margin-bottom: -2px;margin-left: 4px;}
-._selectProList .header .add_button {padding: 4px 8px 3px 8px;right: 15px;}
-.action-ord {background-color: #f6f6f6;padding: 10px;margin-top: 15px;text-align: center;} 
-.dataTable .red-bg{color: #fff !important; border-color: #f12300 !important}
-.w-auto{width: 200px !important; text-align: right}
-.btn-bulk{font-size: 12px; padding: 5px 16px; box-shadow: none}
-.btn-bulk i {margin-right: 5px;}
-._PR_filter {width: 245px;float: right;padding-right: 0px;}
-._PR_filter .custom-select-sm {	border-radius: 0;	border: solid 1px #eae9e9;}
-._PR_filter .select2-container .select2-selection--single {	background-color: #fff;	border-color: #e4e4e4;	font-size: 14px; border-radius: 0;}
-.retailerTable .table img, .ProList-div .table img {width: 35px;	height: 35px;	border: solid 1px #e0e0e0;	margin-top: -5px;	margin-bottom: -5px;margin-right: 5px;	float: left}
-.retailerTable .table td, .table th {padding: 8px}
-.retailerTable .custom-select-tab {	border-radius: 0; height: 22px; padding: 0px 5px; font-size: 12px; border: none}
-.retailerTable .table thead th {border-bottom: solid 1px #0038ba !important}
-.table thead th {border: none !important; background-color: #f6f6f6;}
 /* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button, input::-webkit-inner-spin-button { -webkit-appearance: none;  margin: 0;}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
 /* Firefox */
-input[type=number] {-moz-appearance: textfield;}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* AG Grid Container */
+.ag-grid-container {
+  width: 100%;
+  height: auto;
+}
+
+/* Filter Select Styling */
+::ng-deep .filter-select .ant-select-selector {
+  min-height: 32px !important;
+  height: 32px !important;
+  padding: 0 11px !important;
+  font-size: 14px !important;
+  border-radius: 5px !important;
+  background-color: #ffffff !important;
+  border-color: #d9d9d9 !important;
+  transition: all 0.3s !important;
+}
+
+::ng-deep .filter-select .ant-select-selection-item {
+  line-height: 30px !important;
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.88) !important;
+}
+
+::ng-deep .filter-select .ant-select-selection-placeholder {
+  line-height: 30px !important;
+  font-size: 14px !important;
+  color: rgba(0, 0, 0, 0.25) !important;
+}
+
+::ng-deep .filter-select.ant-select-focused .ant-select-selector,
+::ng-deep .filter-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.1) !important;
+}
+
+/* Dark Mode - Select */
+::ng-deep .dark .filter-select .ant-select-selector,
+::ng-deep html.dark .filter-select .ant-select-selector {
+  background-color: #141414 !important;
+  border-color: #434343 !important;
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .filter-select .ant-select-selection-item,
+::ng-deep html.dark .filter-select .ant-select-selection-item {
+  color: #ffffff !important;
+}
+
+::ng-deep .dark .filter-select .ant-select-selection-placeholder,
+::ng-deep html.dark .filter-select .ant-select-selection-placeholder {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+::ng-deep .dark .filter-select.ant-select-focused .ant-select-selector,
+::ng-deep .dark .filter-select:not(.ant-select-disabled):hover .ant-select-selector,
+::ng-deep html.dark .filter-select.ant-select-focused .ant-select-selector,
+::ng-deep html.dark .filter-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: #0038ba !important;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.2) !important;
+}
+
+/* AG Grid Cell Input Styling */
+::ng-deep .ag-theme-quartz .add-stock-input {
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  height: 32px;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  color: #111827;
+  font-size: 0.875rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+::ng-deep .dark .ag-theme-quartz .add-stock-input,
+::ng-deep html.dark .ag-theme-quartz .add-stock-input {
+  background-color: #141414;
+  border-color: #333333;
+  color: #ffffff;
+}
+
+::ng-deep .ag-theme-quartz .add-stock-input:focus {
+  outline: none;
+  border-color: #0038ba;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.1);
+}
+
+::ng-deep .dark .ag-theme-quartz .add-stock-input:focus,
+::ng-deep html.dark .ag-theme-quartz .add-stock-input:focus {
+  border-color: #0038ba;
+  box-shadow: 0 0 0 2px rgba(0, 56, 186, 0.2);
+}
+
+/* AG Grid Cell Button Styling */
+::ng-deep .ag-theme-quartz .add-product-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,63 +1,98 @@
-<div class="container" style="height: 100vh">
-
-    <div class="row mt-2 mb-2">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Rate <span> List</span></h2>
-        </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <ol class="breadcrumb">
-                <li><a><span>Rate List</span></a></li>
-                <li><span>Generate</span></li>
-            </ol>
-        </div>
+<div class="container mx-auto px-4 pb-24">
+  <!-- Rate List Section -->
+  <div class="mt-3 mb-3">
+    <div class="flex justify-between items-center text-left">
+      <div>
+        <h1 class="text-lg text-secondary dark:text-neutral-200 font-primary font-medium mb-0">
+          Rate <span class="font-light"> List</span>
+        </h1>
+      </div>
+      <div></div>
     </div>
+  </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="header">
-                    <h2>Rate <span>List</span></h2>
-                </div>
-                <div class="body PT-10">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="font11 mb-4">Segment Type*</label>
-                            <div class="form-s2">
-                                <ng-select class="forselect" [multiple]="false" placeholder="Select Segment Type" name="segment-type" [(ngModel)]="selectedSegment">
-                                    <ng-option *ngFor="let s of core.segment" [value]="s.id">{{ s.name }}</ng-option>
-                                </ng-select>
-                            </div>
-                        </div>
-                        <div class="col-md-3 pl-0">
-                            <label class="font11 mb-4">Divisions*</label>
-                            <div class="form-s2">
-                                <ng-select class="formselect" name="division" [(ngModel)]="selectedDivision" placeholder="Select Divisions">
-                                    <ng-option value="All">All</ng-option>
-                                    <ng-option *ngFor="let d of core.divisions" [value]="d.id">{{ d.division }}</ng-option>
-                                </ng-select>
-                            </div>
-                        </div>
-                        <div class="col-md-3 pl-0">
-                            <label class="font11 mb-4">Product Status*</label>
-                            <div class="form-s2">
-                                <ng-select class="formselect" name="product-status" [(ngModel)]="selectedProductStatus" placeholder="Select Product Status">
-                                    <ng-option value="All">All</ng-option>
-                                    <ng-option value="1">Active</ng-option>
-                                    <ng-option value="0">Inactive</ng-option>
-                                </ng-select>
-                            </div>
-                        </div>
+  <!-- Filter Bar -->
+  <div class="p-2 border border-gray-200 dark:border-[#2b2b2b] bg-gray-50 dark:bg-[#141414] rounded-lg mb-3">
+    <div class="flex flex-wrap items-center gap-1.5 xl:gap-2 text-[13px]">
 
-                        <div class="col-3 pl-0 rate-act">
-                            <button type="button" class="btn btn-primary btn-line"
-                                style="line-height:1; height: 34px; box-shadow:none" (click)="downloadPDF()">Download PDF</button>&nbsp;
-                            <!-- <button type="button" class="btn btn-primary btn-line"
-                                style="line-height:1; height: 34px; box-shadow:none" (click)="downloadExecel()">Export Excel</button> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <!-- Segment Type Filter -->
+      <div class="w-[230px] xl:w-[260px] 1366:w-[280px]">
+        <div class="dark:text-gray-200 mb-2">Segment Type<span class="text-red-500">*</span></div>
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          name="segment-type"
+          [(ngModel)]="selectedSegment"
+          nzPlaceHolder="Select Segment Type"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full">
+          <nz-option
+            *ngFor="let s of core.segment"
+            [nzValue]="s.id"
+            [nzLabel]="s.name">
+          </nz-option>
+        </nz-select>
+      </div>
+      
+      <!-- Divisions Filter -->
+      <div class="w-[230px] xl:w-[260px] 1366:w-[280px]">
+        <div class="dark:text-gray-200 mb-2">Divisions<span class="text-red-500">*</span></div>
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          name="division"
+          [(ngModel)]="selectedDivision"
+          nzPlaceHolder="Select Divisions"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full">
+          <nz-option
+            [nzValue]="'All'"
+            nzLabel="All">
+          </nz-option>
+          <nz-option
+            *ngFor="let d of core.divisions"
+            [nzValue]="d.id"
+            [nzLabel]="d.division">
+          </nz-option>
+        </nz-select>
+      </div>
+      
+      <!-- Product Status Filter -->
+      <div class="w-[230px] xl:w-[260px] 1366:w-[280px]">
+        <div class="dark:text-gray-200 mb-2">Product Status<span class="text-red-500">*</span></div>
+        <nz-select
+          nzShowSearch
+          nzAllowClear
+          name="product-status"
+          [(ngModel)]="selectedProductStatus"
+          nzPlaceHolder="Select Product Status"
+          [nzDropdownMatchSelectWidth]="false"
+          [nzDropdownStyle]="{ 'z-index': '9999' }"
+          class="w-full">
+          <nz-option
+            [nzValue]="'All'"
+            nzLabel="All">
+          </nz-option>
+          <nz-option
+            [nzValue]="'1'"
+            nzLabel="Active">
+          </nz-option>
+          <nz-option
+            [nzValue]="'0'"
+            nzLabel="Inactive">
+          </nz-option>
+        </nz-select>
+      </div>
+      <div class="ml-auto mt-auto">
+        <button
+          type="button"
+          (click)="downloadPDF()"
+          class="px-3 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400 disabled:border-gray-400 disabled:text-gray-200 transition-all duration-200">
+          Download PDF
+        </button>
+      </div>
     </div>
+  </div>
 </div>

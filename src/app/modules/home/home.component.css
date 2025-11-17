@@ -32,3 +32,34 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+ 
+  .custum-size-home{
+     width: 250px !important;
+     height: 250px !important; 
+  } 
+
+@media (max-width: 1440px) {
+  .custum-size-home{
+     width: 225px !important;
+     height: 225px !important; 
+  }
+ }
+ @media (max-width: 1366px) {
+     .custum-size-home{
+        width: 212px !important;
+        height: 212px !important; 
+     }
+ }
+ @media (max-width: 1280px) {
+     .custum-size-home{
+        width: 196px !important;
+        height: 196px !important; 
+     }
+ }
+ @media (max-width: 1024px) {
+  .custum-size-home{
+     width: 180px !important;
+     height: 180px !important; 
+  }
+}

@@ -138,6 +138,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     const sub = this.primarySrvc
       .getOderDetailById(orderId)
       .subscribe((x: any) => {
+        console.log('\n\n this is it man: ', x);
+
         const orderRes = { ...x.data.order };
         this.order.distributor_name = orderRes.distributor_name;
         this.order.employee_name = orderRes.employee_name;
@@ -646,10 +648,12 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           )
           .subscribe(
             (res) => {
-              if (res.status === 200) {
+              console.log('res', res);
+              const { status, message } = res;
+              if (status === 'success') {
                 this.showToastMessage(
                   'Success:',
-                  'Order created successfully!',
+                  message || 'Order created successfully!',
                   'success'
                 );
                 this.router.navigate(['/primaryOrders/booked']);

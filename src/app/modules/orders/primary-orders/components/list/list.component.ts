@@ -8,7 +8,13 @@ import {
 import { ToasterService } from 'src/app/core/services/toaster.service';
 import { PrimaryOrdersService } from '../../services/primary-orders.service';
 import { PrimaryOrder } from '../../_models/order';
-import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+import {
+  ColDef,
+  GridApi,
+  GridReadyEvent,
+  ModuleRegistry,
+  AllCommunityModule,
+} from 'ag-grid-community';
 
 // Register AG Grid modules
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -21,7 +27,7 @@ ModuleRegistry.registerModules([AllCommunityModule]);
 })
 export class ListComponent {
   private gridApi!: GridApi;
-  
+
   currentYear: number = new Date().getFullYear();
   isReports = false;
   readonly PRIMARY_ORDER_CONST = PRIMARY_ORDER;
@@ -54,7 +60,7 @@ export class ListComponent {
   defaultColDef: ColDef = {
     resizable: true,
     sortable: true,
-    filter: true
+    filter: true,
   };
 
   getColumnDefs(): ColDef[] {
@@ -62,57 +68,96 @@ export class ListComponent {
     const component = this;
     const orderStatus = this.orderStatus;
     const PRIMARY_ORDER_CONST = this.PRIMARY_ORDER_CONST;
-    
+
     return [
-      { field: 'id', headerName: 'Order ID', sortable: true, filter: true, width: 120 },
-      { field: 'created_at', headerName: 'Date', sortable: true, filter: true, width: 150 },
-      { field: 'distributor_name', headerName: 'Distributor', sortable: true, filter: true, flex: 1 },
-      { field: 'employee_name', headerName: 'Employee', sortable: true, filter: true, flex: 1 },
-      { 
-        field: 'order_total', 
-        headerName: 'Order Total', 
-        sortable: true, 
-        filter: true, 
+      {
+        field: 'id',
+        headerName: 'Order ID',
+        sortable: true,
+        filter: true,
+        width: 120,
+      },
+      {
+        field: 'created_at',
+        headerName: 'Date',
+        sortable: true,
+        filter: true,
+        width: 150,
+      },
+      {
+        field: 'distributor_name',
+        headerName: 'Distributor',
+        sortable: true,
+        filter: true,
+        flex: 1,
+      },
+      {
+        field: 'employee_name',
+        headerName: 'Employee',
+        sortable: true,
+        filter: true,
+        flex: 1,
+      },
+      {
+        field: 'order_total',
+        headerName: 'Order Total',
+        sortable: true,
+        filter: true,
         width: 150,
         valueFormatter: (params) => {
           if (params.value == null) return '';
-          return params.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
+          return params.value.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+        },
       },
       {
         field: 'actions',
         headerName: 'Action',
         cellRenderer: (params: any) => {
           const order = params.data;
-          
+
           let buttons = `
             <div class="flex gap-1 flex-wrap">
               <button onclick="window.orderDetailClick('${order.id}')" 
                       class="bg-gradient-to-r from-[#1e54d3] to-[#0038ba] h-auto leading-none py-[4px] px-[5px] text-white text-[11px] border border-primary font-primary rounded-[5px] ml-0.5 inline-block" title="Detail">Detail</button>
           `;
-          
+
           if (PRIMARY_ORDER_CONST.BOOKED === orderStatus) {
             buttons += `
               <button onclick="window.processOrderClick('${order.id}')" 
                       class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px]" title="Process">Process</button>
             `;
           }
-          
+
           if (PRIMARY_ORDER_CONST.PROCESSED === orderStatus) {
             buttons += `
               <button onclick="window.executeOrderClick('${order.id}')" 
                       class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px]" title="Execute">Execute</button>
             `;
           }
-          
-          if (PRIMARY_ORDER_CONST.EXECUTE === orderStatus && order.status !== PRIMARY_ORDER_CONST.COMPLETED && order.status !== PRIMARY_ORDER_API_STATUS.COMPLETED) {
+
+          if (
+            PRIMARY_ORDER_CONST.EXECUTE === orderStatus &&
+            order.status !== PRIMARY_ORDER_CONST.COMPLETED &&
+            order.status !== PRIMARY_ORDER_API_STATUS.COMPLETED
+          ) {
             buttons += `
               <button onclick="window.completeOrderClick('${order.id}')" 
                       class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px]" title="Complete">Complete</button>
             `;
           }
-          
-          if (!(PRIMARY_ORDER_CONST.EXECUTE === orderStatus || PRIMARY_ORDER_CONST.COMPLETED === orderStatus || PRIMARY_ORDER_CONST.CANCELED === orderStatus) && orderStatus !== 'purchased' && orderStatus !== 'returned') {
+
+          if (
+            !(
+              PRIMARY_ORDER_CONST.EXECUTE === orderStatus ||
+              PRIMARY_ORDER_CONST.COMPLETED === orderStatus ||
+              PRIMARY_ORDER_CONST.CANCELED === orderStatus
+            ) &&
+            orderStatus !== 'purchased' &&
+            orderStatus !== 'returned'
+          ) {
             buttons += `
               <a href="/primaryOrders/${orderStatus}/edit/${order.id}" 
                  class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] inline-block" title="Edit">Edit</a>
@@ -120,7 +165,7 @@ export class ListComponent {
                       class="bg-red-500 dark:bg-red-600 dark:border-red-600 dark:text-white font-primary text-[11px] h-auto leading-none py-[4px] px-[5px] text-white rounded-[5px] ml-0.5" title="Cancel">Cancel</button>
             `;
           }
-          
+
           buttons += `</div>`;
           return buttons;
         },
@@ -131,8 +176,8 @@ export class ListComponent {
         width: 300,
         sortable: false,
         filter: false,
-        pinned: 'right'
-      }
+        pinned: 'right',
+      },
     ];
   }
   constructor(
@@ -195,19 +240,28 @@ export class ListComponent {
     (window as any).orderDetailClick = (orderId: string) => {
       this.openOrderDetailModal(parseInt(orderId));
     };
-    
+
     (window as any).processOrderClick = (orderId: string) => {
-      this.onUpdateOrderStatus(parseInt(orderId), PRIMARY_ORDER_API_STATUS_UPDATE.PROCESSED);
+      this.onUpdateOrderStatus(
+        parseInt(orderId),
+        PRIMARY_ORDER_API_STATUS_UPDATE.PROCESSED
+      );
     };
-    
+
     (window as any).executeOrderClick = (orderId: string) => {
-      this.onUpdateOrderStatus(parseInt(orderId), PRIMARY_ORDER_API_STATUS_UPDATE.EXECUTE);
+      this.onUpdateOrderStatus(
+        parseInt(orderId),
+        PRIMARY_ORDER_API_STATUS_UPDATE.EXECUTE
+      );
     };
-    
+
     (window as any).completeOrderClick = (orderId: string) => {
-      this.onUpdateOrderStatus(parseInt(orderId), PRIMARY_ORDER_API_STATUS_UPDATE.COMPLETED);
+      this.onUpdateOrderStatus(
+        parseInt(orderId),
+        PRIMARY_ORDER_API_STATUS_UPDATE.COMPLETED
+      );
     };
-    
+
     (window as any).cancelOrderClick = (orderId: string) => {
       this.onConfirmationDelete(parseInt(orderId));
       this.showCancelModal = true;
@@ -244,33 +298,35 @@ export class ListComponent {
 
   getOrderDetail(id: number): void {
     this.orderDetailLoading = true;
-    this.primaryOrderService.getOderDetailById(id).subscribe((res) => {
-      this.order = new PrimaryOrder();
-      {
-        const orderRes = { ...res.data.order };
-        this.order.distributor_name = orderRes.distributor_name;
-        this.order.employee_name = orderRes.employee_name;
-        this.order.date = orderRes.date;
-        this.order.id = orderRes.id;
-        this.order.distributor_phone = orderRes.distributor_phone;
-        this.order.distributor_address = orderRes.distributor_address;
-        this.order.status = orderRes.status;
-        this.order.date = orderRes.date;
-        this.order.employee_name = orderRes.employee_name;
-        this.order.frieght_price = orderRes.frieght_price;
-        this.order.orderContent = this.primaryOrderService.getPrimaryOrderItem([
-          ...res.data.content,
-        ]);
-        
+    this.primaryOrderService.getOderDetailById(id).subscribe(
+      (res) => {
+        this.order = new PrimaryOrder();
+        {
+          const orderRes = { ...res.data.order };
+          this.order.distributor_name = orderRes.distributor_name;
+          this.order.employee_name = orderRes.employee_name;
+          this.order.date = orderRes.date;
+          this.order.id = orderRes.id;
+          this.order.distributor_phone = orderRes.distributor_phone;
+          this.order.distributor_address = orderRes.distributor_address;
+          this.order.status = orderRes.status;
+          this.order.date = orderRes.date;
+          this.order.employee_name = orderRes.employee_name;
+          this.order.frieght_price = orderRes.frieght_price;
+          this.order.orderContent =
+            this.primaryOrderService.getPrimaryOrderItem([...res.data.content]);
+
+          this.orderDetailLoading = false;
+          // Trigger change detection to update the view
+          this.cdr.detectChanges();
+        }
+      },
+      (error) => {
         this.orderDetailLoading = false;
-        // Trigger change detection to update the view
+        // Trigger change detection even on error
         this.cdr.detectChanges();
       }
-    }, (error) => {
-      this.orderDetailLoading = false;
-      // Trigger change detection even on error
-      this.cdr.detectChanges();
-    });
+    );
   }
 
   onOrderDetail(id: number) {

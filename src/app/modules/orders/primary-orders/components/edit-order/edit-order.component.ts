@@ -134,7 +134,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     });
   }
   onSubDistributorChanged(): void {
-    console.log('this.selectedSubDistributor', this.selectedSubDistributor);
     this.subDistributor = this.subDistributors.find(
       (x) => x.id === this.selectedSubDistributor
     );
@@ -158,26 +157,24 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     const sub = this.primarySrvc
       .getOderDetailById(orderId)
       .subscribe((x: any) => {
-        console.log('\n\n this is it man: ', x);
-        console.log('tradeoffers', x.data.tradeoffers);
-
         const orderRes = { ...x.data.order };
         this.order.distributor_name = orderRes.distributor_name;
         this.order.employee_name = orderRes.employee_name;
         this.order.date = orderRes.date;
         this.order.id = orderRes.id;
         this.order.frieght_price = orderRes.frieght_price;
-        // // Map backend totals so footer uses server-calculated values in edit mode
-        // this.order.gross_sale_amount = orderRes.gross_sale_amount;
-        // this.order.total_discount = orderRes.total_discount;
-        // this.order.total_tax_amount = orderRes.total_tax_amount;
-        // this.order.total_amount_after_tax = orderRes.total_amount_after_tax;
-        // this.order.order_total_without_frieght_price =
-        //   orderRes.order_total_without_frieght_price;
-        // this.order.order_total = orderRes.order_total;
+        // Map backend totals so footer uses server-calculated values in edit mode
+        this.order.gross_sale_amount = orderRes.gross_sale_amount;
+        this.order.total_discount = orderRes.total_discount;
+        this.order.total_tax_amount = orderRes.total_tax_amount;
+        this.order.total_amount_after_tax = orderRes.total_amount_after_tax;
+        this.order.order_total_without_frieght_price =
+          orderRes.order_total_without_frieght_price;
+        this.order.order_total = orderRes.order_total;
         this.order.orderContent = this.primarySrvc.getPrimaryOrderItem([
           ...x.data.content,
         ]);
+
         this.loading = false;
       });
     this.subscriptions.push(sub);
@@ -683,7 +680,6 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           )
           .subscribe(
             (res) => {
-              console.log('res', res);
               const { status, message } = res;
               if (status === 'success') {
                 this.showToastMessage(

@@ -16,6 +16,14 @@ export interface IPrimaryOrderItem extends IorderItems {
   tax_amount: number; // %
   unit_name: string;
   available_stock?: number;
+  // Backend-specific fields used to map edit-mode items correctly
+  child_quantity?: number; // units per parent pack
+  total_gst_tax?: number; // total GST tax amount for this line
+  total_adv_inc_tax?: number; // total AIT amount for this line
+  gst_tax_amount?: number; // optional per-unit/rate meta
+  adv_inc_tax_amount?: number; // optional per-unit/rate meta
+  schemes?: any[];
+  selectedScheme?: any;
 }
 
 //#region set primnaryorderItem from get order by Id
@@ -27,6 +35,12 @@ export function setPrimarOrderItem(
   primOrderItem.brand_id = primaryOrderItem.brand_id;
   primOrderItem.parent_unit_quantity =
     primaryOrderItem.item_quantity_booker / primaryOrderItem.parent_qty_sold;
+  // Also set explicit units-per-pack used by edit calculations/updates
+  const unitsPerPack =
+    (primaryOrderItem.child_quantity as number) ||
+    primOrderItem.parent_unit_quantity ||
+    1;
+  primOrderItem.unit_quantity = unitsPerPack;
   primOrderItem.booked_order_value = primaryOrderItem.booked_order_value;
   primOrderItem.booked_total_qty = primaryOrderItem.booked_total_qty;
   primOrderItem.booker_discount = primaryOrderItem.booker_discount; // booker discount amount pkr
@@ -41,12 +55,25 @@ export function setPrimarOrderItem(
   primOrderItem.item_quantity_updated = primaryOrderItem.item_quantity_updated; // updated
   primOrderItem.item_retail_price = primaryOrderItem.item_retail_price;
   primOrderItem.item_sku = primaryOrderItem.item_sku;
+  // Unit trade price (per unit) in backend payload is original_price
   primOrderItem.original_price = primaryOrderItem.original_price;
+  primOrderItem.unit_item_trade_price = primaryOrderItem.original_price;
   primOrderItem.parent_item_retail_price =
     primaryOrderItem.parent_item_retail_price;
   primOrderItem.parent_pref_id = primaryOrderItem.parent_pref_id;
-  primOrderItem.parent_qty_sold = primaryOrderItem.parent_qty_sold; // show parent
+  // Quantities:
+  // - Backend parent_qty_sold = packs count
+  // - Backend item_quantity_booker = total units
+  // Component expects:
+  // - primary_qty_sold = packs
+  // - parent_qty_sold = total units
+  primOrderItem.primary_qty_sold = primaryOrderItem.parent_qty_sold;
+  primOrderItem.parent_qty_sold =
+    primaryOrderItem.item_quantity_booker ||
+    (primaryOrderItem.parent_qty_sold || 0) * unitsPerPack;
   primOrderItem.parent_tp = primaryOrderItem.parent_tp; // one qty ammount
+  // Unit retail price (per unit)
+  primOrderItem.unit_item_retail_price = primaryOrderItem.item_retail_price;
   primOrderItem.parent_unit_id = primaryOrderItem.parent_unit_id;
   primOrderItem.pref_id = primaryOrderItem.pref_id;
   primOrderItem.product_image = primaryOrderItem.product_image;
@@ -68,6 +95,29 @@ export function setPrimarOrderItem(
   primOrderItem.unit_name = primaryOrderItem.unit_name;
   primOrderItem.unit_price = primaryOrderItem.unit_price;
   primOrderItem.scheme_discount_on_tp = primaryOrderItem.scheme_discount;
+  // Taxes: map backend totals for display/calculations
+  if (typeof primaryOrderItem.total_gst_tax === 'number') {
+    primOrderItem.gst_tax = primaryOrderItem.total_gst_tax;
+  }
+  if (typeof primaryOrderItem.total_adv_inc_tax === 'number') {
+    primOrderItem.advance_income_tax = primaryOrderItem.total_adv_inc_tax;
+  }
+  // Compute Trade Offer total (for DOTP / FP rule 1) if available
+  // Backend scheme_discount is per-unit; multiply by total units
+  if (
+    typeof primaryOrderItem.scheme_discount === 'number' &&
+    primaryOrderItem.scheme_discount > 0
+  ) {
+    const totalUnits =
+      primOrderItem.parent_qty_sold ||
+      primaryOrderItem.item_quantity_booker ||
+      0;
+    (primOrderItem as any).trade_offer =
+      primaryOrderItem.scheme_discount * totalUnits;
+  } else {
+    (primOrderItem as any).trade_offer = 0;
+  }
+
   // primOrderItem.unit_price_after_booker_discount =
   //   primaryOrderItem.unit_price_after_booker_discount;
   // primOrderItem.unit_price_after_distributor_discount =
@@ -375,7 +425,6 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
     const tradeOfferValue = (this as any).trade_offer || this.tradeOffer || 0;
     const specialDiscountValue = this.booker_discount_value || 0;
     return tradeOfferValue + this.distributorDiscount1 + specialDiscountValue;
-
   }
 
   public get TotalTax(): number {

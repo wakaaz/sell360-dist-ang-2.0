@@ -164,8 +164,13 @@ export class PrimaryOrdersService {
     const length = items.length;
     let primaryOrderItems: Array<PrimaryOrderItem> =
       new Array<PrimaryOrderItem>();
+
     for (let i = 0; i < length; i++) {
-      primaryOrderItems.push(setPrimarOrderItem(items[i]));
+      const primary_order_item = setPrimarOrderItem(items[i]);
+      (primary_order_item as any).selectedScheme = items[i]?.schemes?.find(
+        (scheme: any) => scheme.id === items[i]?.scheme_id
+      );
+      primaryOrderItems.push(primary_order_item);
     }
     return primaryOrderItems;
   }

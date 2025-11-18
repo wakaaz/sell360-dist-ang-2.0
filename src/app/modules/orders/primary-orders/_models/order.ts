@@ -32,6 +32,54 @@ export interface IPrimaryOrder {
 }
 
 export class PrimaryOrder {
+  // Optional backend-calculated fields; when present, they override client-side computed totals
+  private _gross_sale_amount?: number;
+  public get gross_sale_amount(): number {
+    return this._gross_sale_amount;
+  }
+  public set gross_sale_amount(v: number) {
+    this._gross_sale_amount = v;
+  }
+
+  private _total_discount?: number;
+  public get backend_total_discount(): number {
+    return this._total_discount;
+  }
+  public set total_discount(v: number) {
+    this._total_discount = v;
+  }
+
+  private _total_tax_amount?: number;
+  public get backend_total_tax_amount(): number {
+    return this._total_tax_amount;
+  }
+  public set total_tax_amount(v: number) {
+    this._total_tax_amount = v;
+  }
+
+  private _total_amount_after_tax?: number;
+  public get total_amount_after_tax(): number {
+    return this._total_amount_after_tax;
+  }
+  public set total_amount_after_tax(v: number) {
+    this._total_amount_after_tax = v;
+  }
+
+  private _order_total_without_frieght_price?: number;
+  public get order_total_without_frieght_price(): number {
+    return this._order_total_without_frieght_price;
+  }
+  public set order_total_without_frieght_price(v: number) {
+    this._order_total_without_frieght_price = v;
+  }
+
+  private _order_total?: number;
+  public get order_total(): number {
+    return this._order_total;
+  }
+  public set order_total(v: number) {
+    this._order_total = v;
+  }
   private _retailerSegmentId: number;
   public get retailerSegmentId(): number {
     return this._retailerSegmentId;
@@ -285,23 +333,44 @@ export class PrimaryOrder {
   //#endregion
 
   public get totalGrossPrice(): number {
+    if (
+      this._gross_sale_amount !== undefined &&
+      this._gross_sale_amount !== null
+    ) {
+      return this._gross_sale_amount;
+    }
     return this._orderContent
       ? this.orderContent.reduce((a: any, b: any) => a + b.grossPrice1, 0)
       : 0;
   }
   public get totalPKRBill(): number {
+    if (
+      this._total_amount_after_tax !== undefined &&
+      this._total_amount_after_tax !== null
+    ) {
+      return this._total_amount_after_tax;
+    }
     return this._orderContent
       ? this.orderContent.reduce((a: any, b: any) => a + b.TotalBill, 0)
       : 0;
   }
 
   public get finaltotalTax(): number {
+    if (
+      this._total_tax_amount !== undefined &&
+      this._total_tax_amount !== null
+    ) {
+      return this._total_tax_amount;
+    }
     return this._orderContent
       ? this.orderContent.reduce((a: any, b: any) => a + b.TotalTax, 0)
       : 0;
   }
 
   public get totalDiscount(): number {
+    if (this._total_discount !== undefined && this._total_discount !== null) {
+      return this._total_discount;
+    }
     return this._orderContent
       ? this.orderContent.reduce((a: any, b: any) => a + b.TotalDiscount, 0)
       : 0;

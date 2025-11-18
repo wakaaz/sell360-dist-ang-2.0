@@ -103,7 +103,10 @@ export function getNewPrimaryOderItem(selectedProduct: any): PrimaryOrderItem {
   // primOrderItem.booked_order_value = selectedProduct.booked_order_value;
   // primOrderItem.booked_total_qty = selectedProduct.booked_total_qty;
   primOrderItem.booker_discount = 0; // booker discount amount pkr
-  primOrderItem.distributor_discount = selectedProduct.dist_discount; // %
+  // Default: Set distributor discount from product's dist_discount
+  // This will be overridden in addProductToOrder() if a sub-distributor is selected
+  // If no sub-distributors exist or none is selected, this product dist_discount will be used as fallback
+  primOrderItem.distributor_discount = selectedProduct.dist_discount || 0; // %
   // primOrderItem.distributor_discount_pkr =
   //   selectedProduct.distributor_discount_pkr;
   // primOrderItem.final_price = selectedProduct.final_price;

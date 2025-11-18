@@ -60,6 +60,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   subDistributor: any;
   selectedSubDistributor: number;
   subDistributors: any[];
+  subDistributorDiscount: number = 0; 
   taxClasses: any[];
   isReturn = false;
   title: string;
@@ -105,7 +106,13 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   }
   getDistributorsEmployees(id: number) {
     const sub = this.primarySrvc.getSubDistributors().subscribe((emp) => {
-      this.subDistributors = emp.data;
+      this.subDistributors = emp.data || [];
+      
+      // If no sub-distributors exist, reset discount to 0
+      // The product's dist_discount will be used as fallback in addProductToOrder()
+      if (this.subDistributors.length === 0) {
+        this.subDistributorDiscount = 0;
+      }
     });
     this.subscriptions.push(sub);
   }
@@ -131,6 +138,19 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     this.subDistributor = this.subDistributors.find(
       (x) => x.id === this.selectedSubDistributor
     );
+    if (this.subDistributor) {
+      this.subDistributorDiscount = this.subDistributor.discount || 0;
+      
+      if (this.order.orderContent && this.order.orderContent.length > 0) {
+        this.order.orderContent.forEach((item) => {
+          item.distributor_discount = this.subDistributorDiscount;
+          this.setQuantity(item, true);
+        });
+      } else {
+      }
+    } else {
+      this.subDistributorDiscount = 0;
+    }
   }
 
   //#region get order by orderId
@@ -344,12 +364,16 @@ export class EditOrderComponent implements OnInit, OnDestroy {
 
   //#region  add prioduct to order
   addProductToOrder(event: Event): void {
+    
     if (!this.order.orderContent && !this.isNew) {
       this.order.orderContent = new Array<PrimaryOrderItem>();
     }
 
     let primary_order = getNewPrimaryOderItem(this.selectedProduct);
-
+    if (this.subDistributor) {
+      primary_order.distributor_discount = this.subDistributorDiscount;
+    }
+    
     if (primary_order.scheme_id) {
       primary_order = this.applySchemesNew(this.selectedProduct, primary_order);
     }

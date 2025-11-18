@@ -375,6 +375,17 @@ export class PrimaryOrder {
       ? this.orderContent.reduce((a: any, b: any) => a + b.TotalDiscount, 0)
       : 0;
   }
+
+  
+  public clearBackendTotals(): void {
+    this._gross_sale_amount = undefined;
+    this._total_discount = undefined;
+    this._total_tax_amount = undefined;
+    this._total_amount_after_tax = undefined;
+    this._order_total_without_frieght_price = undefined;
+    this._order_total = undefined;
+  }
+
   //#region  priavte cal function for this class
   private getDiscountByField(field: string) {
     return this.orderContent.reduce((a: any, b: any) => a + b[field], 0);

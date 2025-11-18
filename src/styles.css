@@ -842,6 +842,9 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
   -webkit-overflow-scrolling: touch;
   height: 100%;
 }
+.dark ._subNav {
+  background-color: #1b1b1b; 
+}
 #_subNav-id {
   min-width: 220px;
   position: fixed;
@@ -880,8 +883,14 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
 .SN-close-btn svg {
   color: #474747;
 }
+.dark .SN-close-btn svg {
+  color: #d7d7d7;
+}
 .SN-close-btn:hover {
   opacity: 1;
+}
+.dark .SN-close-btn:hover svg {
+  opacity: 0.8;
 }
 #_subNav-id.active ._subNav ul li {
   animation: showNavigation 1.5s ease forwards;
@@ -895,6 +904,16 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
 ._subNav > ul li a:hover {
   color: #282828 !important;
   background-color: #dee6fb;
+}
+.dark ._subNav > ul li a {
+  color: #808080 !important; 
+}
+.dark ._subNav > ul li a:hover {
+  color: #cacaca !important;
+  background-color: #2d2d2d;
+}
+.dark ._subNav img { 
+  filter: invert(50%);
 }
 ._subNav > ul {
   list-style: circle;

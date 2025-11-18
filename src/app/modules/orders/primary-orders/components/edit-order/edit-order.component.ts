@@ -393,6 +393,11 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     primary_order = this.applyTotalBill(primary_order);
 
     this.order.orderContent.push(primary_order);
+    
+    if (this.showEditFields) {
+      this.order.clearBackendTotals();
+    }
+    
     this.displayProductsIsAddedStatus(true, this.selectedProduct.item_id);
     this.showQuantityModal = false;
   }
@@ -594,6 +599,11 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     }
 
     product = this.applyTotalBill(product);
+
+    // Clear backend totals in edit mode when product is updated to force recalculation
+    if (isUpdate && this.showEditFields) {
+      this.order.clearBackendTotals();
+    }
   }
   //#endregion
 
@@ -614,6 +624,10 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     this.order.orderContent = this.order.orderContent.filter(
       (item) => item.item_id !== itemId
     );
+
+    if (this.showEditFields) {
+      this.order.clearBackendTotals();
+    }
 
     this.displayProductsIsAddedStatus(false, itemId);
   }

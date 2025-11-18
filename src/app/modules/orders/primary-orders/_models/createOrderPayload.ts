@@ -34,6 +34,8 @@ export interface IOrderContentItemPayload {
   item_name: string;
   item_sku: string;
   unit_id: number | string;
+  main_category_id: number | string;
+  sub_category_id: number | string;
   is_tax: 0 | 1 | number | string;
   item_retail_price: number | string;
   tax_class_id: number | string;
@@ -160,6 +162,8 @@ export function mapPrimaryOrderItemToPayload(
       item.item_retail_price,
     tax_class_id: item.tax_class_id,
     distributor_id: distributor?.id,
+    main_category_id: item.main_cat,
+    sub_category_id: item.sub_cat,
     item_quantity_updated: 0,
     booked_total_qty: 0,
     booked_order_value: 0,

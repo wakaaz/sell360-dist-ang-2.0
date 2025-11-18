@@ -158,6 +158,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       .getOderDetailById(orderId)
       .subscribe((x: any) => {
         const orderRes = { ...x.data.order };
+        this.order.distributor_id = orderRes.distributor_id;
         this.order.distributor_name = orderRes.distributor_name;
         this.order.employee_name = orderRes.employee_name;
         this.order.date = orderRes.date;
@@ -393,11 +394,11 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     primary_order = this.applyTotalBill(primary_order);
 
     this.order.orderContent.push(primary_order);
-    
+
     if (this.showEditFields) {
       this.order.clearBackendTotals();
     }
-    
+
     this.displayProductsIsAddedStatus(true, this.selectedProduct.item_id);
     this.showQuantityModal = false;
   }
@@ -639,32 +640,41 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   saveOrder(): void {
     this.saving = true;
     if (this.showEditFields) {
-      this.primarySrvc.updateOrder(this.order).subscribe(
-        (res) => {
-          if (res.status === 200) {
-            this.showToastMessage(
-              'Success:',
-              'Order updated successfully!',
-              'success'
-            );
-            this.router.navigate(['/primaryOrders/booked']);
-          } else {
-            this.showToastMessage('Error:', res.message, 'error');
-          }
-          this.saving = false;
-        },
-        (error) => {
-          if (error.status !== 1 && error.status !== 401) {
-            this.showToastMessage(
-              'Error:',
-              'Cannot save order. Please try again',
-              'error'
-            );
-
+      // Build and send the detailed payload (same structure as create V2) for update
+      this.primarySrvc
+        .updateOrderV2(
+          this.order,
+          this.distributor,
+          this.order.employee_id,
+          this.taxClasses
+        )
+        .subscribe(
+          (res) => {
+            const { status, message } = res;
+            if (status === 'success') {
+              this.showToastMessage(
+                'Success:',
+                message || 'Order updated successfully!',
+                'success'
+              );
+              this.router.navigate(['/primaryOrders/booked']);
+            } else {
+              this.showToastMessage('Error:', res.message, 'error');
+            }
             this.saving = false;
+          },
+          (error) => {
+            if (error.status !== 1 && error.status !== 401) {
+              this.showToastMessage(
+                'Error:',
+                'Cannot save order. Please try again',
+                'error'
+              );
+
+              this.saving = false;
+            }
           }
-        }
-      );
+        );
     } else {
       if (
         this.selectedSubDistributor &&

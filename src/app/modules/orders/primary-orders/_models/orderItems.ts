@@ -69,8 +69,20 @@ export function setPrimarOrderItem(
   // - parent_qty_sold = total units
   primOrderItem.primary_qty_sold = primaryOrderItem.parent_qty_sold;
   primOrderItem.parent_qty_sold =
-    primaryOrderItem.item_quantity_booker ||
-    (primaryOrderItem.parent_qty_sold || 0) * unitsPerPack;
+    primaryOrderItem?.scheme_type === 'free_product' &&
+    primaryOrderItem?.scheme_rule === 4
+      ? primaryOrderItem.item_quantity_updated > 0
+        ? primaryOrderItem.item_quantity_updated -
+          primaryOrderItem.scheme_quantity_free
+        : primaryOrderItem.item_quantity_booker > 0
+        ? primaryOrderItem.item_quantity_booker -
+          primaryOrderItem.scheme_quantity_free
+        : 0
+      : primaryOrderItem.item_quantity_updated > 0
+      ? primaryOrderItem.item_quantity_updated
+      : primaryOrderItem.item_quantity_booker > 0
+      ? primaryOrderItem.item_quantity_booker
+      : 0;
   primOrderItem.parent_tp = primaryOrderItem.parent_tp; // one qty ammount
   // Unit retail price (per unit)
   primOrderItem.unit_item_retail_price = primaryOrderItem.item_retail_price;

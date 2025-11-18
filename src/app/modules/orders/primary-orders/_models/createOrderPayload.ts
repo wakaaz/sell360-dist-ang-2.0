@@ -87,6 +87,7 @@ export interface IOrderContentItemPayload {
 
 export interface ICreatePrimaryOrderPayload {
   _token?: string;
+  order_id?: number | string;
   date: string;
   distributor_id: number | string;
   employee_id: number | string;
@@ -190,14 +191,24 @@ export function mapPrimaryOrderItemToPayload(
     booker_discount: item?.booker_discount,
     booker_discount_val: item.booker_discount * item?.parent_qty_sold || 0,
     Grs_Amt_Af_TO_DD_SD_BD: grossAfterAllDisc,
-    unit_tax:taxClass?.tax_class_id == 2 ?
-      (+item?.advance_income_tax + +item?.gst_tax) / +item?.parent_qty_sold:
-      (+item?.advance_income_tax + +item?.gst_tax) / (item?.parent_qty_sold + item?.scheme_quantity_free),
+    unit_tax:
+      taxClass?.tax_class_id == 2
+        ? (+item?.advance_income_tax + +item?.gst_tax) / +item?.parent_qty_sold
+        : (+item?.advance_income_tax + +item?.gst_tax) /
+          (item?.parent_qty_sold + item?.scheme_quantity_free),
     total_tax: totalTax,
-    unit_price: unitPriceBeforeTax, 
+    unit_price: unitPriceBeforeTax,
     final_price: grossAfterAllDisc,
-    gst_tax_amount: taxClass?.tax_class_id == 2 ? item.gst_tax / item?.parent_qty_sold  || 0 : item.gst_tax / (item?.parent_qty_sold + item?.scheme_quantity_free) || 0,
-    adv_inc_tax_amount: taxClass?.tax_class_id == 2 ? item?.advance_income_tax / item?.parent_qty_sold  || 0 : item?.advance_income_tax / (item?.parent_qty_sold + item?.scheme_quantity_free) || 0,
+    gst_tax_amount:
+      taxClass?.tax_class_id == 2
+        ? item.gst_tax / item?.parent_qty_sold || 0
+        : item.gst_tax / (item?.parent_qty_sold + item?.scheme_quantity_free) ||
+          0,
+    adv_inc_tax_amount:
+      taxClass?.tax_class_id == 2
+        ? item?.advance_income_tax / item?.parent_qty_sold || 0
+        : item?.advance_income_tax /
+            (item?.parent_qty_sold + item?.scheme_quantity_free) || 0,
     tax_type: distributor?.filer_status ? 1 : 2,
     tax_in_percentage: distributor?.filer_status
       ? taxClass?.gst_filer_distributor_value

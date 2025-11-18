@@ -76,6 +76,31 @@ export class PrimaryOrdersService {
     );
   }
 
+  /**
+   * Update order using the same detailed payload structure as V2 create.
+   * Builds payload from current PrimaryOrder state (including order_content lines).
+   */
+  updateOrderV2(
+    primaryOrder: PrimaryOrder,
+    distributor: any,
+    employeeId: number,
+    taxClasses: any[]
+  ): Observable<any> {
+    let payload: ICreatePrimaryOrderPayload =
+      buildCreateOrderPayloadFromPrimaryOrder(
+        primaryOrder,
+        distributor,
+        employeeId,
+        taxClasses
+      );
+
+    if (primaryOrder.id) {
+      payload.order_id = primaryOrder.id;
+    }
+
+    return this.baseService.post(`${API_URLS.SAVE_PRIMARY_ORDER}`, payload);
+  }
+
   saveOrReturnOrder(
     primaryOrder: PrimaryOrder,
     userId: number,

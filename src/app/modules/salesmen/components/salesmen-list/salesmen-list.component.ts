@@ -4,6 +4,7 @@ import { select, Store } from '@ngrx/store';
 import { DataTableDirective } from 'angular-datatables';
 import { from, Subject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
 
 import { ToasterService } from 'src/app/core/services/toaster.service';
 import { addSalemens, addSaleman, updateSaleman } from '../../reducers/salesmen.reducer';
@@ -11,6 +12,8 @@ import { getSalemenState } from '../../selectors/base.selector';
 
 import { GeneralDataService } from '../../../shared/services';
 import { SalesmenService } from '../../services/salesmen.service';
+
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -29,9 +32,46 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     dtOptions: DataTables.Settings = {};
     dtTrigger: Subject<any> = new Subject();
 
+    private gridApi!: GridApi;
+    
+    columnDefs: ColDef[] = [
+        { field: 'id', headerName: 'ID', sortable: true, filter: true, width: 140 },
+        { field: 'name', headerName: 'Name', sortable: true, filter: true, flex: 1 },
+        { field: 'phone', headerName: 'Phone', sortable: true, filter: true, width: 140 },
+        {
+            field: 'actions',
+            headerName: 'Action',
+            cellRenderer: (params: any) => {
+                const saleman = params.data;
+                return `
+                    <div class="flex gap-1">
+                        <button onclick="window.editSaleman(${saleman.id})" 
+                            class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px] mb-1 ml-0.5">
+                            Edit
+                        </button>
+                    </div>
+                `;
+            },
+            cellStyle: {
+                display: 'flex',
+                alignItems: 'center',
+            },
+            width: 100,
+            sortable: false,
+            filter: false,
+            pinned: 'right'
+        }
+    ];
+
+    defaultColDef: ColDef = {
+        resizable: true,
+        sortable: true,
+        filter: true
+    };
+
     salesMen: Array<any> = [];
-    segments: Array<any>;
-    selectedSegments: Array<string>;
+    segments: Array<any> = [];
+    selectedSegments: Array<number> = [];
     tableUpdated: boolean;
 
     newEmployee: boolean;
@@ -86,6 +126,28 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
         });
         this.getAllSegments();
         this.getAllSalemen();
+        
+        // Make editSaleman available globally for AG Grid cell renderer
+        (window as any).editSaleman = (salemanId: number) => {
+            console.log('salemanId :>> ', salemanId);
+            const saleman = this.salesMen.find(s => s.id === salemanId);
+            console.log('saleman :>> ', saleman);
+            if (saleman) {
+                console.log('\n\n in this is  ');
+                this.openNewEmployeeForm(new Event('click'), saleman);
+            }
+        };
+    }
+    
+    onGridReady(params: GridReadyEvent): void {
+        this.gridApi = params.api;
+    }
+    
+    onQuickFilterChanged(event: any): void {
+        const filterValue = event.target.value;
+        if (this.gridApi) {
+            this.gridApi.setGridOption('quickFilterText', filterValue);
+        }
     }
 
     ngAfterViewInit(): void {
@@ -117,15 +179,25 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
     getAllSegments(): void {
         this.salemenService.getAllSegments().subscribe(res => {
             if (res.status === 200) {
-                this.segments = res.data;
+                this.segments = res.data || [];
+                console.log('Segments loaded:', this.segments);
             }
         }, error => {
             console.log('Segments Error :>>', error);
+            this.segments = [];
         });
     }
 
     openNewEmployeeForm(event: Event, selectedSaleman?: any): void {
+        console.log('selectedSaleman :>> ', selectedSaleman);
         event.stopPropagation();
+        
+        // Ensure segments are loaded
+        if (!this.segments || this.segments.length === 0) {
+            this.getAllSegments();
+        }
+        console.log('this.segments :>> ', this.segments);
+
         if (selectedSaleman) {
             this.selectedSaleman = selectedSaleman;
             this.name = selectedSaleman.name ? selectedSaleman.name : '';
@@ -136,25 +208,25 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
             this.addFocusWhenUpdating();
         } else {
             this.selectedSaleman = null;
+            this.selectedSegments = [];
         }
         this.newEmployee = true;
         document.body.classList.add('no-scroll');
-        document.getElementsByClassName('overlay-blure')[0].classList.add('d-block');
-        document.getElementById('emp-list').classList.add('blur-div');
     }
 
     clickOutSide(event: Event): void {
-        if (!(event.target as HTMLElement).className.includes('ng-option')
-            && !(event.target as HTMLElement).className.includes('ng-value-icon left')) {
-            this.closeNewEmployeeForm();
+        const target = event.target as HTMLElement;
+        // Don't close if clicking on nz-select dropdown or inside the sidebar content
+        if (target.closest('.ant-select-dropdown') || target.closest('.ant-select')) {
+            return;
         }
+        // Close if clicking outside (on the backdrop)
+        this.closeNewEmployeeForm();
     }
 
     closeNewEmployeeForm(): void {
         this.newEmployee = false;
         document.body.classList.remove('no-scroll');
-        document.getElementsByClassName('overlay-blure')[0].classList.remove('d-block');
-        document.getElementById('emp-list').classList.remove('blur-div');
         this.resetValues();
         this.router.navigateByUrl('/salesmen');
     }
@@ -278,6 +350,10 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
+    trackBySegmentId(index: number, segment: any): any {
+        return segment ? segment.id : index;
+    }
+
     resetValues(): void {
         this.selectedSaleman = null;
         this.name = '';
@@ -285,10 +361,18 @@ export class SalesmenListComponent implements OnInit, AfterViewInit, OnDestroy {
         this.phone = '';
         this.salary = '';
         this.selectedSegments = [];
-        document.getElementById('saleman-name').parentElement.classList.remove('focused');
-        document.getElementById('saleman-cnic').parentElement.classList.remove('focused');
-        document.getElementById('saleman-salary').parentElement.classList.remove('focused');
-        document.getElementById('saleman-phone').parentElement.classList.remove('focused');
+        if (document.getElementById('saleman-name')) {
+            document.getElementById('saleman-name').parentElement.classList.remove('focused');
+        }
+        if (document.getElementById('saleman-cnic')) {
+            document.getElementById('saleman-cnic').parentElement.classList.remove('focused');
+        }
+        if (document.getElementById('saleman-salary')) {
+            document.getElementById('saleman-salary').parentElement.classList.remove('focused');
+        }
+        if (document.getElementById('saleman-phone')) {
+            document.getElementById('saleman-phone').parentElement.classList.remove('focused');
+        }
     }
 
     ngOnDestroy(): void {

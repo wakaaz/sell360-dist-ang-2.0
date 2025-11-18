@@ -123,4 +123,7 @@ export const API_URLS = {
 
   // Employee
   DISTRIBUTORS_EMPLOYEES: '/distributors-employees/',
+
+  // Settings
+  CHANGE_PASSWORD: '/change-password',
 };

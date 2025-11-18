@@ -37,14 +37,48 @@ export class StockOutReportComponent implements OnInit {
         type: 'error'
       });
     const dist = this.storageService.getItem('distributor');
-    this.date.start = `
-      ${new Date(this.date.start).toUTCString().split(",")[1].trim().split(" ")[0]}-${new Date(this.date.start).toUTCString().split(",")[1].trim().split(" ")[1]}-${new Date(this.date.start).toUTCString().split(",")[1].trim().split(" ")[2]}
+    
+    // Convert dates to UTC string format as required by the API
+    const startDate = new Date(this.date.start);
+    const endDate = new Date(this.date.end);
+    
+    const startDateStr = `
+      ${startDate.toUTCString().split(",")[1].trim().split(" ")[0]}-${startDate.toUTCString().split(",")[1].trim().split(" ")[1]}-${startDate.toUTCString().split(",")[1].trim().split(" ")[2]}
     `;
-    this.date.end = `
-      ${new Date(this.date.end).toUTCString().split(",")[1].trim().split(" ")[0]}-${new Date(this.date.end).toUTCString().split(",")[1].trim().split(" ")[1]}-${new Date(this.date.end).toUTCString().split(",")[1].trim().split(" ")[2]}
+    const endDateStr = `
+      ${endDate.toUTCString().split(",")[1].trim().split(" ")[0]}-${endDate.toUTCString().split(",")[1].trim().split(" ")[1]}-${endDate.toUTCString().split(",")[1].trim().split(" ")[2]}
     `;
+    
     window.open(`
-    ${environment.apiDomain}/distributor-stock-pdf-report?type=dateRange&dateFrom=${this.date.start.trim()}&dateTo=${this.date.end.trim()}&region=${dist.region_id}&distributor=${dist.id}`, "_blank");
+    ${environment.apiDomain}/distributor-stock-pdf-report?type=dateRange&dateFrom=${startDateStr.trim()}&dateTo=${endDateStr.trim()}&region=${dist.region_id}&distributor=${dist.id}`, "_blank");
+  }
+
+  onStartDateChange(date: any): void {
+    // Convert Date object to string format 'yyyy-MM-dd' for storage
+    if (date instanceof Date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      this.date.start = `${year}-${month}-${day}`;
+    } else if (date === null || date === undefined) {
+      this.date.start = null;
+    } else if (typeof date === 'string') {
+      this.date.start = date;
+    }
+  }
+
+  onEndDateChange(date: any): void {
+    // Convert Date object to string format 'yyyy-MM-dd' for storage
+    if (date instanceof Date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      this.date.end = `${year}-${month}-${day}`;
+    } else if (date === null || date === undefined) {
+      this.date.end = null;
+    } else if (typeof date === 'string') {
+      this.date.end = date;
+    }
   }
 
 }

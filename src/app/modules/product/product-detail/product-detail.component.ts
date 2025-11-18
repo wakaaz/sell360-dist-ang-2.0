@@ -13,7 +13,6 @@ import { ProductService } from '../product.service';
 
 })
 export class ProductDetailsComponent implements OnInit, OnDestroy {
-  dtOptions: DataTables.Settings = {};
   productId: number;
   product: any;
   loader: boolean;
@@ -27,9 +26,6 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.dtOptions = {
-      pagingType: 'simple_numbers',
-    };
     this.productId = +this.route.snapshot.paramMap.get('id');
     this.getProduct();
   }
@@ -60,7 +56,10 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   startSlider(): void {
-    if (this.product.images?.length > 1) {
+    if (this.sliderInterval) {
+      clearInterval(this.sliderInterval);
+    }
+    if (this.product?.images?.length > 1) {
       this.sliderInterval = setInterval(() => {
         if (this.activeSlide !== this.product.images.length - 1) {
           this.activeSlide += 1;
@@ -72,11 +71,45 @@ export class ProductDetailsComponent implements OnInit, OnDestroy {
   }
 
   slideTo(id: number): void {
+    if (this.sliderInterval) {
+      clearInterval(this.sliderInterval);
+    }
     this.activeSlide = id;
     this.startSlider();
   }
 
+  nextSlide(): void {
+    if (this.sliderInterval) {
+      clearInterval(this.sliderInterval);
+    }
+    if (this.product?.images?.length) {
+      if (this.activeSlide === this.product.images.length - 1) {
+        this.activeSlide = 0;
+      } else {
+        this.activeSlide += 1;
+      }
+      this.startSlider();
+    }
+  }
+
+  prevSlide(): void {
+    if (this.sliderInterval) {
+      clearInterval(this.sliderInterval);
+    }
+    if (this.product?.images?.length) {
+      if (this.activeSlide === 0) {
+        this.activeSlide = this.product.images.length - 1;
+      } else {
+        this.activeSlide -= 1;
+      }
+      this.startSlider();
+    }
+  }
+
   ngOnDestroy(): void {
+    if (this.sliderInterval) {
+      clearInterval(this.sliderInterval);
+    }
     this.sliderInterval = null;
   }
 }

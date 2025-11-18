@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 
 import { InventoryService } from '../../services/inventory.service';
 
@@ -12,7 +12,7 @@ import { InventoryService } from '../../services/inventory.service';
 
 })
 
-export class GalleryComponent implements OnInit {
+export class GalleryComponent implements OnInit, OnDestroy {
 
     searchText: string;
     sortFilter: string;
@@ -23,10 +23,11 @@ export class GalleryComponent implements OnInit {
     totalProducts: number;
     pageNum: number;
     pageCount: number;
-    productsPerPage: number;
+    productsPerPage: number = 12;
     lastVisitedPage: number;
 
-    showList: boolean;
+    showList: boolean = true;
+
     loading: boolean;
     loadingError: boolean;
 
@@ -49,13 +50,53 @@ export class GalleryComponent implements OnInit {
         this.selectedBrand = 'All Brands';
         this.selectedCategory = 'All Categories';
         this.totalProducts = 0;
-        this.productsPerPage = 12;
         this.showList = true;
+        this.setProductsPerPage();
         this.loading = false;
         this.loadingError = false;
         this.getAllProducts();
         this.getBrands();
         this.getCategories();
+    }
+
+    @HostListener('window:resize', ['$event'])
+    onResize(event: any): void {
+        const previousProductsPerPage = this.productsPerPage;
+        this.setProductsPerPage();
+        
+        if (previousProductsPerPage !== this.productsPerPage && this.productsFilteredArray) {
+            this.countPagesAndProductsDisp(this.productsFilteredArray);
+        }
+    }
+
+    setProductsPerPage(): void {
+        // List view always uses 12 products per page
+        // Grid view: 15 products per page for screens > 1440px, otherwise 12
+        if (this.showList) {
+            this.productsPerPage = 12;
+        } else {
+            // Grid view: check screen size
+            if (typeof window !== 'undefined' && window.innerWidth > 1440) {
+                this.productsPerPage = 15;
+            } else {
+                this.productsPerPage = 12;
+            }
+        }
+    }
+
+    toggleView(isListView: boolean): void {
+        const previousProductsPerPage = this.productsPerPage;
+        this.showList = isListView;
+        this.setProductsPerPage();
+        
+        // If productsPerPage changed, recalculate pagination
+        if (previousProductsPerPage !== this.productsPerPage && this.productsFilteredArray) {
+            this.countPagesAndProductsDisp(this.productsFilteredArray);
+        }
+    }
+
+    ngOnDestroy(): void {
+        // Cleanup if needed
     }
 
     getAllProducts(): void {
@@ -93,9 +134,9 @@ export class GalleryComponent implements OnInit {
 
     countPagesAndProductsDisp(products: Array<any>): void {
         this.totalProducts = products.length;
-        this.pageCount = Math.ceil(this.totalProducts / 12);
+        this.pageCount = Math.ceil(this.totalProducts / this.productsPerPage);
         this.pageNum = 1;
-        this.lastVisitedPage = 12;
+        this.lastVisitedPage = 0;
         this.productsFilteredArray = JSON.parse(JSON.stringify(products));
         this.productDispList = products.slice(0, this.productsPerPage);
     }
@@ -111,14 +152,23 @@ export class GalleryComponent implements OnInit {
     filterProducts(): void {
         const selected = [];
         if (this.searchText) {
-            const search = item => item.item_name.toLowerCase().includes(this.searchText);
+            const searchTextLower = this.searchText.toLowerCase().trim();
+            const search = item => {
+                // Search across all columns: S.No (item_id), Item SKU, Item Name, Item Brand
+                return (
+                    String(item.item_id).toLowerCase().includes(searchTextLower) ||
+                    (item.item_sku && item.item_sku.toLowerCase().includes(searchTextLower)) ||
+                    (item.item_name && item.item_name.toLowerCase().includes(searchTextLower)) ||
+                    (item.brand_name && item.brand_name.toLowerCase().includes(searchTextLower))
+                );
+            };
             selected.push(search);
         }
-        if (this.selectedBrand !== 'All Brands') {
+        if (this.selectedBrand && this.selectedBrand !== 'All Brands') {
             const brand = product => product.brand_name.toLowerCase() === this.selectedBrand.toLowerCase();
             selected.push(brand);
         }
-        if (this.selectedCategory !== 'All Categories') {
+        if (this.selectedCategory && this.selectedCategory !== 'All Categories') {
             const category = product => product.sub_cat.toLowerCase() === this.selectedCategory.toLowerCase();
             selected.push(category);
         }
@@ -128,7 +178,7 @@ export class GalleryComponent implements OnInit {
         } else {
             this.countPagesAndProductsDisp(this.products);
         }
-        if (this.sortFilter !== '0') {
+        if (this.sortFilter && this.sortFilter !== '0') {
             this.sortProducts();
         }
     }
@@ -198,6 +248,63 @@ export class GalleryComponent implements OnInit {
         return Array.apply(0, Array(pageCount)).map((element: number, j: number) => {
             return j + start;
         });
+    }
+
+    getPaginationPages(): Array<number | string> {
+        const pages: Array<number | string> = [];
+        const current = this.pageNum;
+        const total = this.pageCount;
+        const delta = 3; // Number of pages to show after current page when at start
+
+        // If total pages is 7 or less, show all pages
+        if (total <= 7) {
+            for (let i = 1; i <= total; i++) {
+                pages.push(i);
+            }
+            return pages;
+        }
+
+        // Always show first page
+        pages.push(1);
+
+        // When on first few pages (1-4), show consecutive pages
+        if (current <= 4) {
+            // Show pages 2, 3, 4 after page 1
+            for (let i = 2; i <= Math.min(4, total - 1); i++) {
+                pages.push(i);
+            }
+            // Add ellipsis if there's a gap before last page
+            if (total > 5) {
+                pages.push('ellipsis-end');
+            }
+        } 
+        // When on last few pages
+        else if (current >= total - 3) {
+            // Add ellipsis after first page
+            pages.push('ellipsis-start');
+            // Show last few pages before last
+            for (let i = Math.max(2, total - 3); i < total; i++) {
+                pages.push(i);
+            }
+        }
+        // When in the middle
+        else {
+            // Add ellipsis after first page
+            pages.push('ellipsis-start');
+            // Show pages around current (2 pages before and after)
+            for (let i = current - 1; i <= current + 1; i++) {
+                pages.push(i);
+            }
+            // Add ellipsis before last page
+            pages.push('ellipsis-end');
+        }
+
+        // Always show last page (if more than 1 page)
+        if (total > 1) {
+            pages.push(total);
+        }
+
+        return pages;
     }
 
 }

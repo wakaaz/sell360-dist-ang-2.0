@@ -85,6 +85,12 @@ const routes: Routes = [
       import('./modules/payment/payment.module').then((m) => m.PaymentModule),
   },
   {
+    path: 'settings',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/settings/settings.module').then((m) => m.SettingsModule),
+  },
+  {
     path: '**',
     redirectTo: 'home',
   },

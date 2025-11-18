@@ -57,4 +57,31 @@ export class CashSummaryComponent implements OnInit {
         });
       }
     }
+
+    onDateChange(date: any): void {
+      // Convert Date object to string format 'yyyy-MM-dd' as expected by the API
+      if (date instanceof Date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        this.selectedDate = `${year}-${month}-${day}`;
+      } else if (date === null || date === undefined) {
+        this.selectedDate = null;
+      } else if (typeof date === 'string') {
+        this.selectedDate = date;
+      }
+    }
+
+    onMonthChange(date: any): void {
+      // Convert Date object to string format 'yyyy-MM' as expected by the API
+      if (date instanceof Date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        this.selectedMonth = `${year}-${month}`;
+      } else if (date === null || date === undefined) {
+        this.selectedMonth = null;
+      } else if (typeof date === 'string') {
+        this.selectedMonth = date;
+      }
+    }
 }

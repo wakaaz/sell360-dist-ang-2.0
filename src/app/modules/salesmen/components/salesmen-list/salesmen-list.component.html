@@ -1,186 +1,362 @@
-<!-- Add new Employee -->
-<div id="product-cl-sec" #empForm (clickOutside)="clickOutSide($event)" [ngClass]="newEmployee ? 'active' : ''"> <a
-        (click)="closeNewEmployeeForm()" id="pl-close" class="close-btn-pl"></a>
-    <div class="pro-header-text">New <span>Sales Man</span></div>
-    <div class="pc-cartlist">
-        <div class="overflow-plist">
-            <div class="plist-content">
-                <div class="_left-filter pt-0">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12">
-                                <div id="floating-label" class="card p-20 top_border mb-3">
-                                    <h2 class="_head03">Sales <span> Man Detail</span></h2>
-                                    <div class="form-wrap p-0 pt-5">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="control-label mb-10">Name*</label>
-                                                    <input type="text" pattern="^(?:[A-Za-z]+)(?:[A-Za-z0-9 _]*)$"
-                                                        [(ngModel)]="name" name="saleman-name" (focus)="focused($event)"
-                                                        (blur)="left($event)" id="saleman-name" #nameInput="ngModel"
-                                                        class="form-control" placeholder="" required>
-                                                </div>
-                                                <div *ngIf="nameInput.errors && submitted"
-                                                    class="input-error">
-                                                    <span *ngIf="nameInput.errors.required">
-                                                        Name is required
-                                                    </span>
-                                                    <span *ngIf="nameInput.errors.pattern">
-                                                        Name can only have alphabets
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="control-label mb-10">CNIC*</label>
-                                                    <input type="text" pattern="^\d+$"
-                                                        (focus)="focused($event)" (blur)="left($event)"
-                                                        name="saleman-cnic" [(ngModel)]="cnic" #cnicInput="ngModel"
-                                                        id="saleman-cnic" class="form-control" placeholder="" required>
-                                                </div>
-                                                <div *ngIf="cnicInput.errors && submitted"
-                                                    class="input-error">
-                                                    <span *ngIf="cnicInput.errors.required">
-                                                        CNIC is required
-                                                    </span>
-                                                    <span *ngIf="cnicInput.errors.pattern">
-                                                        CNIC is not valid
-                                                    </span>
+<!-- Add Sales Man Sidebar - Tailwind CSS -->
+<div
+  id="product-cl-sec"
+  #empForm
+  (clickOutside)="clickOutSide($event)"
+  [ngClass]="newEmployee ? 'flex' : 'hidden'"
+  class="fixed inset-0 bg-white/50 backdrop-blur-sm dark:bg-black/50 dark:backdrop-blur-sm z-50 items-center justify-center p-4"
+>
+  <div
+    class="h-full fixed overflow-visible top-0 bottom-0 right-0 z-[2000] flex-row flex-none flex w-full md:w-[700px]"
+  >
+    <div
+      class="flex flex-col h-full w-full md:w-[700px] transition-[width] duration-500 bg-white dark:bg-darkprimary rounded-tl-lg rounded-bl-lg shadow-[-6px_0_16px_-8px_rgba(0,0,0,0.08),_-9px_0_28px_0_rgba(0,0,0,0.05),_-12px_0_48px_16px_rgba(0,0,0,0.03)]"
+    >
+      <!-- Header -->
+      <div
+        class="relative flex items-center justify-between h-auto rounded-tl-lg bg-gradient-to-r from-[#1e54d3] to-[#0038ba] text-white px-4 py-3 text-[16px] leading-[22px]"
+      >
+        <h2 class="text-base font-bold text-white font-primary mb-0">
+          {{ selectedSaleman ? 'Edit' : 'Add' }}
+          <span class="font-light">Sales Man</span>
+        </h2>
+        <div>
+          <button
+            id="pl-close"
+            (click)="closeNewEmployeeForm()"
+            class="hover:opacity-80 transition-opacity"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="26"
+              height="26"
+              fill="currentColor"
+              class="bi bi-x mt-1"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+              ></path>
+            </svg>
+          </button>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="control-label mb-10">Phone*</label>
-                                                    <input type="text"
+
+      <!-- Content - Form -->
+      <div class="flex-1 overflow-auto p-4 bg-[#f6f6f6] dark:bg-darkprimary">
+        <div class="relative bg-white dark:bg-[#1d1d1d] p-0 rounded-lg shadow-[0_0_5px_#0000001a] space-y-4">
+    
+          <div class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-[#1d1d1d] dark:from-transparent dark:to-transparent shadow-none">
+            <h2 class="relative pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
+              Sales Man <span class="font-light">Detail</span>
+            </h2> 
+                                                </div>
+          
+          <div class="space-y-4 p-5 !mt-0">
+            <!-- Two Column Grid for Name, CNIC, Phone, Salary -->
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Name Field -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Name<span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  pattern="^(?:[A-Za-z]+)(?:[A-Za-z0-9 _]*)$"
+                  [(ngModel)]="name"
+                  name="saleman-name"
+                  (focus)="focused($event)"
+                  (blur)="left($event)"
+                  id="saleman-name"
+                  #nameInput="ngModel"
+                  placeholder="Name*"
+                  required
+                  class="w-full !h-[32px] px-3 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
+                />
+                <div *ngIf="nameInput.errors && submitted" class="input-error mt-1">
+                  <span *ngIf="nameInput.errors.required" class="text-red-500 text-xs">Name is required</span>
+                  <span *ngIf="nameInput.errors.pattern" class="text-red-500 text-xs">Name can only have alphabets</span>
+                                                </div>
+                                            </div>
+
+              <!-- CNIC Field -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  CNIC<span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
                                                         pattern="^\d+$"
-                                                        (focus)="focused($event)" (blur)="left($event)"
-                                                        name="saleman-phone" [(ngModel)]="phone" #phoneInput="ngModel"
-                                                        id="saleman-phone" class="form-control" placeholder="" required>
-                                                </div>
-                                                <div *ngIf="phoneInput.errors && submitted"
-                                                    class="input-error">
-                                                    <span *ngIf="phoneInput.errors.required">
-                                                        Phone number is required
-                                                    </span>
-                                                    <span *ngIf="phoneInput.errors.pattern">
-                                                        Phone number is not valid
-                                                    </span>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="control-label mb-10">Salary*</label>
-                                                    <input type="text" (focus)="focused($event)" (blur)="left($event)"
-                                                        name="saleman-salary" [(ngModel)]="salary" pattern="^(?!0+(?:\.0+)?$)[0-9]+(?:\.[0-9]+)?$"
-                                                        #salaryInput="ngModel" id="saleman-salary" class="form-control"
-                                                        placeholder="" required>
-                                                </div>
-                                                <div *ngIf="salaryInput.errors && submitted"
-                                                    class="input-error">
-                                                    <span *ngIf="salaryInput.errors.required">
-                                                        Salary is required
-                                                    </span>
-                                                    <span *ngIf="salaryInput.errors.pattern">
-                                                        Salary is not valid
-                                                    </span>
+                  (focus)="focused($event)"
+                  (blur)="left($event)"
+                  name="saleman-cnic"
+                  [(ngModel)]="cnic"
+                  #cnicInput="ngModel"
+                  id="saleman-cnic"
+                  placeholder="CNIC*"
+                  required
+                  class="w-full !h-[32px] px-3 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
+                />
+                <div *ngIf="cnicInput.errors && submitted" class="input-error mt-1">
+                  <span *ngIf="cnicInput.errors.required" class="text-red-500 text-xs">CNIC is required</span>
+                  <span *ngIf="cnicInput.errors.pattern" class="text-red-500 text-xs">CNIC is not valid</span>
                                                 </div>
                                             </div>
-                                            <div class="col-md-12">
-                                                <label class="font12 mb-5">Select Segment*</label>
-                                                <div class="form-s2">
-                                                    <ng-select class="formselect" [multiple]="true" id="saleman-segment"
-                                                        name="saleman-segment" [(ngModel)]="selectedSegments"
-                                                        #segmentInput="ngModel" required>
-                                                        <ng-option *ngFor="let segment of segments" [value]="segment.id">
-                                                            {{segment.name}}
-                                                        </ng-option>
-                                                    </ng-select>
+
+              <!-- Phone Field -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Phone<span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  pattern="^\d+$"
+                  (focus)="focused($event)"
+                  (blur)="left($event)"
+                  name="saleman-phone"
+                  [(ngModel)]="phone"
+                  #phoneInput="ngModel"
+                  id="saleman-phone"
+                  placeholder="Phone*"
+                  required
+                  class="w-full !h-[32px] px-3 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
+                />
+                <div *ngIf="phoneInput.errors && submitted" class="input-error mt-1">
+                  <span *ngIf="phoneInput.errors.required" class="text-red-500 text-xs">Phone number is required</span>
+                  <span *ngIf="phoneInput.errors.pattern" class="text-red-500 text-xs">Phone number is not valid</span>
                                                 </div>
-                                                <div *ngIf="segmentInput.errors && submitted"
-                                                    class="input-error">
-                                                    <span *ngIf="segmentInput.errors.required">
-                                                        Please select atleast one segment
-                                                    </span>
+                                            </div>
+
+              <!-- Salary Field -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Salary<span class="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  (focus)="focused($event)"
+                  (blur)="left($event)"
+                  name="saleman-salary"
+                  [(ngModel)]="salary"
+                  pattern="^(?!0+(?:\.0+)?$)[0-9]+(?:\.[0-9]+)?$"
+                  #salaryInput="ngModel"
+                  id="saleman-salary"
+                  placeholder="Salary*"
+                  required
+                  class="w-full !h-[32px] px-3 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary font-primary text-sm"
+                />
+                <div *ngIf="salaryInput.errors && submitted" class="input-error mt-1">
+                  <span *ngIf="salaryInput.errors.required" class="text-red-500 text-xs">Salary is required</span>
+                  <span *ngIf="salaryInput.errors.pattern" class="text-red-500 text-xs">Salary is not valid</span>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+
+            <!-- Segment Field - Full Width -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                Select Segment<span class="text-red-500">*</span>
+              </label>
+              <nz-select
+                class="salesmen-segment-select w-full"
+                nzMode="multiple"
+                nzAllowClear
+                nzPlaceHolder="Please select"
+                [(ngModel)]="selectedSegments"
+                name="saleman-segment"
+                #segmentInput="ngModel"
+                required
+              >
+                <nz-option
+                  *ngFor="let segment of segments; trackBy: trackBySegmentId"
+                  [nzValue]="segment.id"
+                  [nzLabel]="segment.name"
+                ></nz-option>
+              </nz-select>
+              <div *ngIf="!segments || segments.length === 0" class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                Loading segments...
+              </div>
+              <!-- Debug info - remove after testing
+              <div *ngIf="segments && segments.length > 0" class="text-xs text-gray-400 mt-1">
+                {{ segments.length }} segments available
+              </div> -->
+              <div *ngIf="segmentInput.errors && submitted" class="input-error mt-1">
+                <span *ngIf="segmentInput.errors.required" class="text-red-500 text-xs">Please select atleast one segment</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+      <!-- Footer -->
+      <div
+        class="bg-gray-50 dark:bg-[#1d1d1d] dark:border-[#333333] px-4 py-3 rounded-bl-lg border-t border-gray-200"
+      >
+        <div class="flex justify-start gap-2">
+          <button
+            [hidden]="!isSalemanChanging"
+            type="button"
+            class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white cursor-not-allowed opacity-50"
+            disabled
+          >
+            <div class="flex items-center gap-2">
+              <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              <span>Saving...</span>
             </div>
+          </button>
+          <button
+            [hidden]="isSalemanChanging"
+            type="button"
+            class="px-6 py-2 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white transition-colors"
+            (click)="selectedSaleman ? updateSaleman() : addNewSaleman()"
+          >
+            Save
+          </button>
+          <button
+            [hidden]="isSalemanChanging"
+            type="button"
+            (click)="closeNewEmployeeForm()"
+            class="px-6 py-2 leading-none text-[13px] rounded-[5px] font-primary border border-primary dark:border-[#717171] bg-transparent text-primary dark:text-white dark:opacity-70 hover:bg-red-600 hover:border-red-600 dark:hover:border-red-600 hover:text-white focus:bg-red-600 focus:border-red-600 focus:text-white transition-colors"
+          >
+            Cancel
+          </button>
         </div>
     </div>
-    <div class="_cl-bottom">
-        <button [hidden]="!isSalemanChanging" class="btn btn-primary mr-2" disabled>
-            <div class="spinner-border text-light" role="status">
-                <span class="sr-only">Loading...</span>
-            </div>
-        </button>
-        <button [hidden]="isSalemanChanging" type="submit" class="btn btn-primary mr-2" (click)="selectedSaleman ? updateSaleman() : addNewSaleman()">Save</button>
-        <button [hidden]="isSalemanChanging" id="pl-close" (click)="closeNewEmployeeForm()" class="btn btn-cancel mr-2">Cancel</button>
+    </div>
     </div>
 </div>
 
-<div class="container" id="emp-list">
-    <div class="row mt-2 mb-2">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Sales <span> Man</span></h2>
+<div class="container mx-auto px-4" id="emp-list">
+    <div class="mt-3 mb-3">
+      <div class="flex justify-between items-center text-left">
+        <div>
+          <h1 class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0">
+            Sales <span class="font-light">Man</span>
+          </h1>
         </div>
-
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <ol class="breadcrumb">
-                <li><a routerLink="/salesmen"><span>Sales Man</span></a></li>
-                <li><span>List</span></li>
-            </ol>
+        <div>
+          <button 
+            #newSaleMan 
+            (click)="openNewEmployeeForm($event)" 
+            class="px-3 py-1.5 leading-none text-[13px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors inline-flex items-center"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-4 h-4 mr-0.5" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+            </svg>
+            <span> New Sales Man</span>
+          </button>
         </div>
+      </div>
     </div>
 
-    <!-- Salesmen list -->
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="header">
-                    <a id="productlist01" #newSaleMan (click)="openNewEmployeeForm($event)" class="btn add_button">
-                        <i class="fa fa-plus"></i> New Sales Man
-                    </a>
-                    <h2>Sales Man <span> List</span>
-                        <div class="_list-total" *ngIf="salesMen && salesMen.length">{{salesMen.length}}</div>
-                    </h2>
-                </div>
-                <div class="body">
-                        <table *ngIf="salesMen.length && !loading" id="saleman-table" [dtTrigger]="dtTrigger"
-                        datatable [dtOptions]="dtOptions" class="table table-hover dt-responsive nowrap" id="example"
-                            style="width:100%">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Phone</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let saleman of salesMen; let i=index">
-                                    <td>{{saleman.id}}</td>
-                                    <td>{{saleman.name}}</td>
-                                    <td>{{saleman.phone}} </td>
-                                    <td><button (click)="openNewEmployeeForm($event, saleman)"
-                                            class="btn btn-default btn-line m-0">Edit</button></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="alert alert-danger" *ngIf="salemenError">
-                            Something went wrong please check your internet connection and try again!
-                        </div>
-                        <div *ngIf="loading">
-                            <app-loader-white></app-loader-white>
-                        </div>
-                    </div>
+    <!-- AG Grid Section - Top of Page -->
+    <div
+      class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a]"
+    >
+      <div
+        class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-black dark:from-transparent dark:to-transparent shadow-none"
+      >
+        <div>
+          <h2
+            class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium"
+          >
+            Sales Man &nbsp;<span class="font-light">List</span>
+            <div class="ml-2 my-auto flex items-center">
+              <span
+                *ngIf="salesMen && salesMen.length"
+                class="bg-primary text-white text-[9px] p-[4px] leading-[1] rounded font-primary"
+                >{{salesMen.length}}</span
+              >
             </div>
+          </h2>
         </div>
+        <div class="text-secondary dark:text-white">
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <svg
+                class="h-4 w-4 text-gray-400"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M11.5014 7.00039C11.5014 7.59133 11.385 8.1765 11.1588 8.72246C10.9327 9.26843 10.6012 9.7645 10.1833 10.1824C9.76548 10.6002 9.2694 10.9317 8.72344 11.1578C8.17747 11.384 7.59231 11.5004 7.00136 11.5004C6.41041 11.5004 5.82525 11.384 5.27929 11.1578C4.73332 10.9317 4.23725 10.6002 3.81938 10.1824C3.40152 9.7645 3.07005 9.26843 2.8439 8.72246C2.61776 8.1765 2.50136 7.59133 2.50136 7.00039C2.50136 5.80691 2.97547 4.66232 3.81938 3.81841C4.6633 2.97449 5.80789 2.50039 7.00136 2.50039C8.19484 2.50039 9.33943 2.97449 10.1833 3.81841C11.0273 4.66232 11.5014 5.80691 11.5014 7.00039ZM10.6814 11.7404C9.47574 12.6764 7.95873 13.1177 6.43916 12.9745C4.91959 12.8314 3.51171 12.1145 2.50211 10.9698C1.49252 9.8251 0.957113 8.33868 1.0049 6.81314C1.05268 5.28759 1.68006 3.83759 2.75932 2.75834C3.83857 1.67908 5.28856 1.0517 6.81411 1.00392C8.33966 0.956136 9.82608 1.49154 10.9708 2.50114C12.1154 3.51073 12.8323 4.91862 12.9755 6.43819C13.1187 7.95775 12.6773 9.47476 11.7414 10.6804L14.5314 13.4704C14.605 13.539 14.6642 13.6218 14.7051 13.7138C14.7461 13.8058 14.7682 13.9052 14.77 14.0059C14.7717 14.1066 14.7532 14.2066 14.7155 14.3C14.6778 14.3934 14.6216 14.4782 14.5504 14.5494C14.4792 14.6206 14.3943 14.6768 14.301 14.7145C14.2076 14.7522 14.1075 14.7708 14.0068 14.769C13.9061 14.7672 13.8068 14.7452 13.7148 14.7042C13.6228 14.6632 13.54 14.6041 13.4714 14.5304L10.6814 11.7404Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="filter-text-box"
+              placeholder="Search salesmen..." autocomplete="off"
+              class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
+              (input)="onQuickFilterChanged($event)"
+            />
+          </div>
+        </div>
+      </div>
+      <div>
+        <!-- AG Grid with Quartz theme -->
+        <div *ngIf="!loading" class="ag-theme-quartz ag-grid-container">
+          <ag-grid-angular
+            [rowData]="salesMen"
+            [columnDefs]="columnDefs"
+            [defaultColDef]="defaultColDef"
+            [pagination]="true"
+            [paginationPageSize]="10"
+            [paginationPageSizeSelector]="[10, 20, 50, 100]"
+            [suppressPaginationPanel]="false"
+            [domLayout]="'autoHeight'"
+            [animateRows]="true"
+            [rowSelection]="{ type: 'single' }"
+            [theme]="'legacy'"
+            (gridReady)="onGridReady($event)"
+          >
+          </ag-grid-angular>
+        </div>
+
+        <div *ngIf="loading" class="flex justify-center items-center p-8">
+          <app-loader-white></app-loader-white>
+        </div>
+      </div>
+      
+      <div *ngIf="salemenError" class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg m-4">
+        <p class="text-red-800 dark:text-red-200 text-sm">
+          Something went wrong please check your internet connection and try again!
+        </p>
+      </div>
     </div>
+
+    <!-- Old DataTables Section (keeping for reference, can be removed later) -->
+    <div class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a] hidden">
+        <div class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-black dark:from-transparent dark:to-transparent shadow-none">
+          <div class="flex items-center gap-2">
+            <h2 class="relative pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
+              Sales Man <span class="font-light">List</span>
+            </h2>
+            <span *ngIf="salesMen && salesMen.length" class="bg-primary text-white text-[9px] p-[4px] leading-[1] rounded font-primary">
+              {{salesMen.length}}
+            </span>
+          </div>
+        </div>
+        <div>
+          <div *ngIf="loading" class="flex justify-center items-center p-8">
+            <app-loader-white></app-loader-white>
+          </div>
+          
+          <div *ngIf="salemenError" class="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg m-4">
+            <p class="text-red-800 dark:text-red-200 text-sm">
+              Something went wrong please check your internet connection and try again!
+            </p>
+          </div>
+        </div>
+      </div>
+
 </div>
+

@@ -1,5 +1,9 @@
 import { SalesmenService } from './../../services/salesmen.service';
 import { Component, OnInit } from '@angular/core';
+import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
+
+// Register AG Grid modules
+ModuleRegistry.registerModules([AllCommunityModule]);
 
 @Component({
 
@@ -11,7 +15,63 @@ import { Component, OnInit } from '@angular/core';
 
 })
 export class SalesmenLedgerComponent implements OnInit {
-  dtOptions: DataTables.Settings = {};
+  private gridApi!: GridApi;
+  
+  // AG Grid column definitions
+  columnDefs: ColDef[] = [
+    { field: 'date', headerName: 'Date', sortable: true, filter: true, width: 150 },
+    { 
+      field: 'net_sale', 
+      headerName: 'Net Sale', 
+      sortable: true, 
+      filter: true, 
+      width: 150,
+      valueFormatter: (params) => {
+        if (params.value == null) return '';
+        return 'Rs. ' + params.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+    },
+    { 
+      field: 'cash_payable', 
+      headerName: 'Cash Payable', 
+      sortable: true, 
+      filter: true, 
+      width: 150,
+      valueFormatter: (params) => {
+        if (params.value == null) return '';
+        return 'Rs. ' + params.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+    },
+    { 
+      field: 'cash_received', 
+      headerName: 'Cash Received', 
+      sortable: true, 
+      filter: true, 
+      width: 150,
+      valueFormatter: (params) => {
+        if (params.value == null) return '';
+        return 'Rs. ' + params.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+    },
+    { 
+      field: 'balance', 
+      headerName: 'Balance', 
+      sortable: true, 
+      filter: true, 
+      width: 150,
+      valueFormatter: (params) => {
+        if (params.value == null) return '';
+        return 'Rs. ' + params.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      }
+    }
+  ];
+
+  defaultColDef: ColDef = {
+    resizable: true,
+    sortable: true,
+    filter: true
+  };
+
   salesmen = [];
   ledger = [];
   loading = false;
@@ -27,7 +87,7 @@ export class SalesmenLedgerComponent implements OnInit {
     amount: 0,
   };
 
-  month = null;
+  month: Date | string | null = null;
 
   amountDue = 0;
 
@@ -44,18 +104,43 @@ export class SalesmenLedgerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dtOptions = {
-      pagingType: 'simple_numbers',
-    };
+    // AG Grid is initialized via columnDefs
+  }
+
+  onGridReady(params: GridReadyEvent): void {
+    this.gridApi = params.api;
+  }
+
+  onQuickFilterChanged(event: any): void {
+    const filterValue = event.target.value;
+    if (this.gridApi) {
+      this.gridApi.setGridOption('quickFilterText', filterValue);
+    }
   }
 
   getLedger() {
+    if (!this.month || !this.salesman.id) {
+      return;
+    }
+    
     this.loading = true;
+    
+    // Handle date picker value - it can be a Date object or string
+    let monthStr: string;
+    if (this.month instanceof Date) {
+      const year = this.month.getFullYear();
+      const month = (this.month.getMonth() + 1).toString().padStart(2, '0');
+      monthStr = `${year}-${month}`;
+    } else {
+      monthStr = this.month;
+    }
+    
+    const monthParts = monthStr.split('-');
     this.smService
       .getSalesmanLedger(
         this.salesman.id,
-        this.month.split('-')[1],
-        this.month.split('-')[0]
+        monthParts[1],
+        monthParts[0]
       )
       .subscribe(
         (x) => {

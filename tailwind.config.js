@@ -16,6 +16,9 @@ module.exports = {
         primary: ['Outfit','sans-serif'],
         secondary: ['Outfit','sans-serif'], 
       },
+      screens: {
+        '1366': '1366px',
+      },
     },
   },
   plugins: [

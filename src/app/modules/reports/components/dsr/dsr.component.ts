@@ -170,4 +170,47 @@ export class DSReportComponent implements OnInit {
     }${dateQueryParams ? dateQueryParams : ''}`;
     window.open(url);
   }
+
+  onOrderDateChange(date: any): void {
+    // Convert Date object to string format 'yyyy-MM-dd' as expected by the API
+    if (date instanceof Date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      this.orderDate = `${year}-${month}-${day}`;
+    } else if (date === null || date === undefined) {
+      this.orderDate = null;
+    } else if (typeof date === 'string') {
+      this.orderDate = date;
+    }
+    this.getSaleReportsBySalemanAndDate();
+  }
+
+  onStartOrderDateChange(date: any): void {
+    // Convert Date object to string format 'yyyy-MM-dd' as expected by the API
+    if (date instanceof Date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      this.startOrderDate = `${year}-${month}-${day}`;
+    } else if (date === null || date === undefined) {
+      this.startOrderDate = null;
+    } else if (typeof date === 'string') {
+      this.startOrderDate = date;
+    }
+  }
+
+  onEndOrderDateChange(date: any): void {
+    // Convert Date object to string format 'yyyy-MM-dd' as expected by the API
+    if (date instanceof Date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      this.endOrderDate = `${year}-${month}-${day}`;
+    } else if (date === null || date === undefined) {
+      this.endOrderDate = null;
+    } else if (typeof date === 'string') {
+      this.endOrderDate = date;
+    }
+  }
 }

@@ -129,7 +129,9 @@ class Utility {
       if (slabDetail) {
         console.clear();
         console.log(slabDetail);
-        const orderItemIndex = order.items.findIndex(x=> x.itemId === item.itemId);
+        const orderItemIndex = order.items.findIndex(
+          (x) => x.itemId === item.itemId
+        );
         order.items[orderItemIndex].selectedSlabs = slabDetail;
         discount.dicsountValuePkr =
           (slabDetail.value / 100) * unit_price_after_scheme_discount;
@@ -137,7 +139,6 @@ class Utility {
       }
     }
 
-    
     return discount;
   }
   static getSlabDiscount(
@@ -505,6 +506,18 @@ class Utility {
     const unitQtyDiscount = distributorDiscountPercentage * (tradePrice / 100);
     return unitQtyDiscount * totalBookedQuantity;
   }
+  public static calDistributorDiscount1(
+    distributorDiscountPercentage: number,
+    tradePrice: number,
+    totalBookedQuantity: number,
+    tradeOffer: number
+  ): number {
+    const totaltradePrice = tradePrice * totalBookedQuantity;
+    const tradePriceAfterTradeOffer = totaltradePrice - tradeOffer;
+    const unitQtyDiscount = distributorDiscountPercentage * (tradePriceAfterTradeOffer / 100);
+    return unitQtyDiscount;
+  }
+
   // special discount = pkr
   // total quantity
   public static calSpeacialDiscount(

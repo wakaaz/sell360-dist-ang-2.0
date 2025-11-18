@@ -435,7 +435,11 @@ html.dark .ant-select-clear:hover,
   color: #ffffff !important;
   background-color: rgba(255, 255, 255, 0.25) !important;
 }
-
+.dark .ant-picker-input:hover .ant-picker-clear{
+  color: #ffffff !important;
+  background-color: rgba(255, 255, 255, 0.25) !important;
+  border-radius: 12px !important;
+}
 /* Ant Design DatePicker Global Styles - Light Mode */
 .ant-picker {
   border-radius: 8px !important;
@@ -838,13 +842,16 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
   -webkit-overflow-scrolling: touch;
   height: 100%;
 }
+.dark ._subNav {
+  background-color: #1b1b1b; 
+}
 #_subNav-id {
   min-width: 220px;
   position: fixed;
   top: 0;
   left: -100%;
   height: 100vh;
-  z-index: 999;
+  z-index: 43;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   display: flex;
@@ -876,8 +883,14 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
 .SN-close-btn svg {
   color: #474747;
 }
+.dark .SN-close-btn svg {
+  color: #d7d7d7;
+}
 .SN-close-btn:hover {
   opacity: 1;
+}
+.dark .SN-close-btn:hover svg {
+  opacity: 0.8;
 }
 #_subNav-id.active ._subNav ul li {
   animation: showNavigation 1.5s ease forwards;
@@ -891,6 +904,16 @@ html.dark .ant-select-dropdown .ant-select-dropdown-search input::placeholder,
 ._subNav > ul li a:hover {
   color: #282828 !important;
   background-color: #dee6fb;
+}
+.dark ._subNav > ul li a {
+  color: #808080 !important; 
+}
+.dark ._subNav > ul li a:hover {
+  color: #cacaca !important;
+  background-color: #2d2d2d;
+}
+.dark ._subNav img { 
+  filter: invert(50%);
 }
 ._subNav > ul {
   list-style: circle;
@@ -1129,4 +1152,14 @@ html.dark #returnsmodal input[type="number"]:hover,
 .dark #returnsmodal input[type="text"]:hover,
 html.dark #returnsmodal input[type="text"]:hover {
   border-color: #0038ba !important;
+}
+.dark .ant-select-multiple.ant-select .ant-select-selection-item { 
+  background: #232323 !important;
+  border: 1px solid #2a2a2a !important; 
+}
+.dark .ant-select-multiple.ant-select .ant-select-selection-item-remove svg{
+  color: #dedede !important;
+}
+.dark .ant-picker-content th{
+  color: #ececec !important;
 }

@@ -4,7 +4,10 @@ import { FormsModule } from '@angular/forms';
 
 import { ClickOutsideModule } from 'ng-click-outside';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { NzSelectModule } from 'ng-zorro-antd/select';
+import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { DataTablesModule } from 'angular-datatables';
+import { AgGridModule } from 'ag-grid-angular';
 
 import { SalemenRoutingModule } from './salesmen-routing.module';
 import { SharedModule } from '../shared/shared.module';
@@ -25,9 +28,12 @@ import { reducers } from './reducers';
     CommonModule,
     ClickOutsideModule,
     NgSelectModule,
+    NzSelectModule,
+    NzDatePickerModule,
     SalemenRoutingModule,
     FormsModule,
     DataTablesModule,
+    AgGridModule,
     SharedModule,
     StoreModule.forFeature('salemen', reducers),
   ],

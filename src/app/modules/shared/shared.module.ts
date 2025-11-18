@@ -33,7 +33,7 @@ const components = [
     NzSelectModule,
     PipeModule,
   ],
-  exports: [...components, Decimal, FilterPipe],
+  exports: [...components, Decimal, FilterPipe, NzSelectModule],
   declarations: [...components, FilterPipe],
   providers: [GeneralDataService, DataService, PipeModule],
 })

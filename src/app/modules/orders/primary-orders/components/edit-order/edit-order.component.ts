@@ -60,7 +60,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   subDistributor: any;
   selectedSubDistributor: number;
   subDistributors: any[];
-  subDistributorDiscount: number = 0; 
+  subDistributorDiscount: number = 0;
   taxClasses: any[];
   isReturn = false;
   title: string;
@@ -107,7 +107,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
   getDistributorsEmployees(id: number) {
     const sub = this.primarySrvc.getSubDistributors().subscribe((emp) => {
       this.subDistributors = emp.data || [];
-      
+
       // If no sub-distributors exist, reset discount to 0
       // The product's dist_discount will be used as fallback in addProductToOrder()
       if (this.subDistributors.length === 0) {
@@ -140,7 +140,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
     );
     if (this.subDistributor) {
       this.subDistributorDiscount = this.subDistributor.discount || 0;
-      
+
       if (this.order.orderContent && this.order.orderContent.length > 0) {
         this.order.orderContent.forEach((item) => {
           item.distributor_discount = this.subDistributorDiscount;
@@ -159,6 +159,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       .getOderDetailById(orderId)
       .subscribe((x: any) => {
         console.log('\n\n this is it man: ', x);
+        console.log('tradeoffers', x.data.tradeoffers);
 
         const orderRes = { ...x.data.order };
         this.order.distributor_name = orderRes.distributor_name;
@@ -166,6 +167,14 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         this.order.date = orderRes.date;
         this.order.id = orderRes.id;
         this.order.frieght_price = orderRes.frieght_price;
+        // // Map backend totals so footer uses server-calculated values in edit mode
+        // this.order.gross_sale_amount = orderRes.gross_sale_amount;
+        // this.order.total_discount = orderRes.total_discount;
+        // this.order.total_tax_amount = orderRes.total_tax_amount;
+        // this.order.total_amount_after_tax = orderRes.total_amount_after_tax;
+        // this.order.order_total_without_frieght_price =
+        //   orderRes.order_total_without_frieght_price;
+        // this.order.order_total = orderRes.order_total;
         this.order.orderContent = this.primarySrvc.getPrimaryOrderItem([
           ...x.data.content,
         ]);
@@ -364,16 +373,18 @@ export class EditOrderComponent implements OnInit, OnDestroy {
 
   //#region  add prioduct to order
   addProductToOrder(event: Event): void {
-    
     if (!this.order.orderContent && !this.isNew) {
       this.order.orderContent = new Array<PrimaryOrderItem>();
     }
 
     let primary_order = getNewPrimaryOderItem(this.selectedProduct);
     if (this.subDistributor) {
-      primary_order.distributor_discount = this.subDistributorDiscount;
+      primary_order.distributor_discount =
+        this.subDistributor.discount_type !== 2
+          ? this.subDistributor.discount
+          : this.selectedProduct.dist_discount;
     }
-    
+
     if (primary_order.scheme_id) {
       primary_order = this.applySchemesNew(this.selectedProduct, primary_order);
     }

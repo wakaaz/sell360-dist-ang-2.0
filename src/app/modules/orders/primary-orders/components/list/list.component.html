@@ -175,20 +175,27 @@
                           : ""
                       }}
                     </td>
-                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.parent_tp | number: "1.2-2" }}</td>
-                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.grossPrice | number: "1.2-2" }}</td>
-                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.tradeOffer | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.unit_item_trade_price | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.grossPrice1 | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{
+                      item.scheme_id && item.scheme_type == "free_product" && item.scheme_quantity_free > 0 && item.scheme_rule === 4
+                        ? `(${item.scheme_quantity_free})`
+                        : ""
+                      }}
+                      {{item.scheme_id && item.scheme_type == "free_product" && item.scheme_rule === 1 ? `${item.trade_offer | number : "1.2-2"}` : ""}}
+                      {{item.scheme_id && item.scheme_type == "dotp" ? `${item.trade_offer | number : "1.2-2"}` : ""}}
+                    </td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.distributor_discount | number: "1.2-2" }}</td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item?.specialDiscount | number: "1.2-2" }}</td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.booker_discount }}</td>
-                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.tax_amount | number: "1.2-2" }}</td>
-                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.totalBill | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.gst_tax + item.advance_income_tax | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.TotalBill | number: "1.2-2" }}</td>
                   </tr>
                   <tr class="bg-gray-200 dark:bg-[#333333] text-gray-900 dark:text-white">
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200" colspan="2">Total:</td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">{{ order.totalItemsQty }}</td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
-                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">{{ order.grossPrice | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">{{ order.totalGrossPrice | number: "1.2-2" }}</td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
@@ -199,15 +206,15 @@
                   <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
                     <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Gross PKR.</strong></td>
-                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ order.grossPrice | number: "1.2-2" }}</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ order.totalGrossPrice | number: "1.2-2" }}</strong></td>
                   </tr>
                   <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
                     <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Discount PKR.</strong></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">
                       <strong class="font-primary font-medium">
-                        {{ order.discount > 0 ? "-" : "" }}
-                        {{ order.discount | number: "1.2-2" }}
+                        {{ order.totalDiscount > 0 ? "-" : "" }}
+                        {{ order.totalDiscount | number: "1.2-2" }}
                       </strong>
                     </td>
                   </tr>
@@ -219,7 +226,7 @@
                   <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
                     <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Tax PKR.</strong></td>
-                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">+ {{ order.tax | number: "1.2-2" }}</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">+ {{ order.finaltotalTax | number: "1.2-2" }}</strong></td>
                   </tr>
                   <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
                     <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
@@ -227,7 +234,9 @@
                       <strong class="font-primary font-medium">Total PKR.</strong>
                     </td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-black dark:bg-neutral-800 text-white dark:text-white">
-                      <strong class="font-primary font-medium">{{ order.total | number: "1.2-2" }}</strong>
+                      <strong class="font-primary font-medium">{{
+                        order.totalPKRBill + order.frieght_price | number : "1.2-2"
+                      }}</strong>
                     </td>
                   </tr>
                 </tbody>

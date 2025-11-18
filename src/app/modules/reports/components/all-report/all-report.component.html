@@ -18,155 +18,34 @@
           </div>
           <input type="text" id="filter-text-box-header" placeholder="Search Reports..." autocomplete="off"
             class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
-            (input)="onQuickFilterChanged($event)" />
+            [(ngModel)]="searchTerm" (input)="onQuickFilterChanged($event)" />
         </div>
       </div>
     </div>
   </div>
 
   <div>
-    <div class="w-full">
-      <h2 class="text-[18px] text-secondary dark:text-neutral-300 font-medium font-primary mb-[15px]">
-        Retail<span class="font-light"> Reports</span>
-      </h2>
-    </div>
+    <ng-container *ngFor="let section of sections">
+      <div class="w-full">
+        <h2 class="text-[18px] text-secondary dark:text-neutral-300 font-medium font-primary mb-[15px] border-b border-gray-200 dark:border-[#2b2b2b] pb-2">
+          <span *ngIf="section.title === 'Retail Reports'">Retail<span class="font-light"> Reports</span></span>
+          <span *ngIf="section.title === 'Sales Report'">Sales<span class="font-light"> Report</span></span>
+          <span *ngIf="section.title === 'Inventory Reports'">Inventory<span class="font-light"> Reports</span></span>
+        </h2>
+      </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-4 mb-5">
-      <a
-        [routerLink]="['../../retailer/list']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img src="../../../../../assets/images/retailers-report.svg" alt="" class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200" />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Retailers</h2>
-      </a>
-
-      <a
-        [routerLink]="['/reports/invoice-aging-report']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img src="../../../../../assets/images/credit-aging.svg" alt="" class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200" />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Credit Aging</h2>
-      </a>
-
-      <a
-        [routerLink]="['/retailer/ledger']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img src="../../../../../assets/images/retailer-ledger.svg" alt="" class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200" />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Retailer Ledger</h2>
-      </a>
-
-      <a
-        [routerLink]="['/retailer/historical-ledger']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img
-            src="../../../../../assets/images/historical-retailer-ledger.svg"
-            alt=""
-            class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200"
-          />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Historical Ledgers</h2>
-      </a>
-    </div>
-
-    <div class="w-full">
-      <h2 class="text-[18px] text-secondary dark:text-neutral-300 font-medium font-primary mb-[15px]">
-        Sales<span class="font-normal"> Report</span>
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-4 mb-5">
-      <a
-        [routerLink]="['/reports/dsr']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img
-            src="../../../../../assets/images/day-wise-sales-report.svg"
-            alt=""
-            class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200"
-          />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Daily Sales Reports</h2>
-      </a>
-
-      <a
-        [routerLink]="['/reports/sale-order-history']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img
-            src="../../../../../assets/images/sale-order-history.svg"
-            alt=""
-            class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200"
-          />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Sale Order History</h2>
-      </a>
-    </div>
-
-    <div class="w-full">
-      <h2 class="text-[18px] text-secondary dark:text-neutral-300 font-medium font-primary mb-[15px]">
-        Inventory<span class="font-normal"> Reports</span>
-      </h2>
-    </div>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-4 mb-5">
-      <a
-        [routerLink]="['/reports/stock-report']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img
-            src="../../../../../assets/images/product-coverage-report.svg"
-            alt=""
-            class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200"
-          />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Stock Report</h2>
-      </a>
-
-      <a
-        [routerLink]="['/reports/purchase-history']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img
-            src="../../../../../assets/images/daily-booking-report.svg"
-            alt=""
-            class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200"
-          />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Purchase History</h2>
-      </a>
-
-      <a
-        [routerLink]="['/reports/export-rate-list']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img src="../../../../../assets/images/product-rate.svg" alt="" class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200" />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Product Rate List</h2>
-      </a>
-
-      <a
-        [routerLink]="['/reports/allocated-stock-report']"
-        class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
-      >
-        <span class="w-full">
-          <img src="../../../../../assets/images/product-coverage-report.svg" alt="" class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200" />
-        </span>
-        <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">Allocated Stock Report</h2>
-      </a>
-    </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-6 lg:grid-cols-6 xl:grid-cols-6 gap-4 mb-5">
+        <a
+          *ngFor="let report of section.reports"
+          [routerLink]="report.route"
+          class="bg-white dark:bg-[#1a1a1a] rounded-lg bg-[url('/assets/images/dash-card-bg.png')] dark:bg-[url('/assets/images/dash-card-bg.png')] bg-[position:top_right] bg-no-repeat bg-[length:70%] p-4  min-h-[140px] text-center text-base font-primary text-[#898f95] dark:text-gray-400 dark:hover:text-neutral-100 transition-all duration-200 hover:bg-gradient-to-r hover:from-[#1e54d3] hover:to-[#0038ba] hover:bg-[length:contain] hover:text-white  shadow-[0_0_5px_#0000001a] hover:shadow-[0_0_10px_#0000001a] flex flex-wrap content-center justify-center group"
+        >
+          <span class="w-full">
+            <img [src]="report.image" alt="" class="w-10 mx-auto block mb-4 group-hover:invert group-hover:brightness-[1.2] group-hover:grayscale dark:brightness-0 dark:invert transition-all duration-200" />
+          </span>
+          <h2 class="text-sm text-center overflow-hidden text-ellipsis line-clamp-2 relative m-0 w-full group-hover:text-white dark:text-neutral-400 dark:group-hover:text-white">{{ report.title }}</h2>
+        </a>
+      </div>
+    </ng-container>
   </div>
 </div>

@@ -69,7 +69,7 @@
   >
     <!-- Mobile Menu (visible when isMobileMenuOpen is true and xl:hidden) -->
     <div
-      [class]="isMobileMenuOpen ? 'flex flex-col h-full w-[185px] transition-[width] duration-500 bg-gradient-to-r from-[#1E54D3] to-[#0038BA] rounded-tr-lg rounded-br-lg' : 'hidden xl:flex flex-col h-full w-[185px] transition-[width] duration-500 bg-gradient-to-r from-[#1E54D3] to-[#0038BA] rounded-tr-lg rounded-br-lg'"
+      [class]="isMobileMenuOpen ? 'flex flex-col h-full w-[185px] transition-[width] duration-500 bg-gradient-to-r from-[#1E54D3] to-[#0038BA] dark:bg-gradient-to-r dark:from-[#353535] dark:to-[#242424] rounded-tr-lg rounded-br-lg' : 'hidden xl:flex flex-col h-full w-[185px] transition-[width] duration-500 bg-gradient-to-r from-[#1E54D3] to-[#0038BA]  dark:bg-gradient-to-r dark:from-[#353535] dark:to-[#242424] rounded-tr-lg rounded-br-lg'"
     >
       <div class="flex justify-between p-[15px] relative">
         <a routerLink="/home" (click)="closeMobileMenu()">
@@ -130,7 +130,7 @@
           <li *ngIf="permissions?.Tabs?.primary_orders">
             <a
               (click)="openSubmenu($event, 'primaryOrders')"
-              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] dark:hover:bg-[#1f1f1f] hover:no-underline"
             >
               <span class="mr-2.5 mt-0.5">
                 <img
@@ -145,7 +145,7 @@
           <li *ngIf="permissions?.Tabs?.secondary_orders">
             <a
               (click)="openSubmenu($event, 'orders')"
-              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] dark:hover:bg-[#1f1f1f] hover:no-underline"
             >
               <span class="mr-2.5 mt-0.5">
                 <img
@@ -160,7 +160,7 @@
           <li>
             <a
               (click)="openSubmenu($event, 'salesmen')"
-              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] dark:hover:bg-[#1f1f1f] hover:no-underline"
             >
               <span class="mr-2.5 mt-0.5">
                 <img
@@ -175,7 +175,7 @@
           <li>
             <a
               (click)="openSubmenu($event, 'inventory')"
-              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] dark:hover:bg-[#1f1f1f] hover:no-underline"
             >
               <span class="mr-2.5 mt-0.5">
                 <img
@@ -191,7 +191,7 @@
             <a
               [routerLink]="['distributor']"
               (click)="closeMobileMenu()"
-              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] dark:hover:bg-[#1f1f1f] hover:no-underline"
             >
               <span class="mr-2.5 mt-0.5">
                 <img
@@ -206,7 +206,7 @@
           <li>
             <a
               (click)="openSubmenu($event, 'retailer')"
-              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] dark:hover:bg-[#1f1f1f] hover:no-underline"
             >
               <span class="mr-2.5 mt-0.5">
                 <img
@@ -221,7 +221,7 @@
           <li>
             <a
               (click)="openSubmenu($event, 'reports')"
-              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+              class="flex cursor-pointer text-[14px] font-primary text-bodybg px-[15px] py-[6px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] dark:hover:bg-[#1f1f1f] hover:no-underline"
             >
               <span class="mr-2.5 mt-0.5">
                 <img
@@ -283,13 +283,30 @@
                 </a>
               </div> -->
         <!-- Sidebar -->
-        <div class="w-full">
+        <div class="w-full rounded-br-[8px] overflow-hidden">
           <ul class="list-none w-full mb-0">
-            <!-- Logout -->
-            <li class="relative block w-full whitespace-nowrap text-left">
+            <!-- Settings -->
+            <li class="relative block w-full whitespace-nowrap text-left border-t border-[#0635a5] dark:border-[#1c1c1c] border-opacity-80">
+              <a
+                [routerLink]="['settings']"
+                (click)="closeMobileMenu()"
+                class="flex cursor-pointer text-[14px] font-secondary text-bodybg px-[15px] py-[8px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] dark:hover:bg-[#1f1f1f] hover:no-underline"
+              >
+                <span class="mr-2.5 mt-0.5">
+                  <img
+                    src="/assets/images/setting-icon.svg"
+                    alt="settings"
+                    class="h-4 w-4"
+                  />
+                </span>
+                Settings
+              </a>
+            </li>
+                <!-- Logout -->
+            <li class="relative block w-full whitespace-nowrap text-left border-t border-[#0635a5] dark:border-[#1c1c1c] border-opacity-80">
               <a
                 (click)="logout()"
-                class="flex cursor-pointer text-[14px] font-secondary text-bodybg px-[15px] py-[8px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] hover:no-underline"
+                class="flex cursor-pointer text-[14px] font-secondary text-bodybg px-[15px] py-[8px] transition-colors duration-200 ease-linear text-white text-opacity-75 hover:text-white hover:bg-[#0038BA] dark:hover:bg-[#1f1f1f] hover:no-underline"
               >
                 <span class="mr-2.5 mt-0.5">
                   <img
@@ -313,7 +330,7 @@
       > <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="w-[28px] h-[28px]" viewBox="0 0 16 16">
         <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
       </svg></a>
-    <h2>{{ selectedSubMenu.title }}</h2>
+    <h2 class="dark:text-neutral-300">{{ selectedSubMenu.title }}</h2>
     <ul>
       <li *ngFor="let menu of selectedSubMenu.subMenu">
         <a [routerLink]="[menu.link]" (click)="closeSubMenu()"
@@ -399,7 +416,7 @@
   </div>
 
     <footer
-      class="bg-[#e9ecef] pl-[185px] dark:bg-stone-800 p-[10px] fixed flex justify-center bottom-0 w-full" [ngClass]="isSideNavHidden ? 'hidden' : ''"
+      class="bg-[#e9ecef] pl-[185px] dark:bg-neutral-800 p-[10px] fixed flex justify-center bottom-0 w-full" [ngClass]="isSideNavHidden ? 'hidden' : ''"
     >
       <div class="container mx-auto px-4 text-center text-opacity-60 text-[13px] text-secondary  dark:text-gray-400 font-primary">
         2021 Sell3sixty All rights reserved

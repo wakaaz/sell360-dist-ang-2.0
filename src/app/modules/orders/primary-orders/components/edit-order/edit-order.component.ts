@@ -104,6 +104,7 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       this.getDistributorsEmployees(this.distributor.id);
     }
   }
+
   getDistributorsEmployees(id: number) {
     const sub = this.primarySrvc.getSubDistributors().subscribe((emp) => {
       this.subDistributors = emp.data || [];
@@ -173,6 +174,9 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         this.order.order_total_without_frieght_price =
           orderRes.order_total_without_frieght_price;
         this.order.order_total = orderRes.order_total;
+
+        console.log('asdsa: ', this.allProducts);
+
         this.order.orderContent = this.primarySrvc.getPrimaryOrderItem([
           ...x.data.content,
         ]);

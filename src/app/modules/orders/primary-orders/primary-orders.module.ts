@@ -16,10 +16,9 @@ import { PrimaryOrdersComponent } from './primary-orders.component';
 import { ClickOutsideModule } from 'ng-click-outside';
 import { OrdersService } from '../services/orders.service';
 import { SharedModule } from '../../shared/shared.module';
-import { ReceivedOrderComponent } from './components/received-order/received-order.component';
 
 @NgModule({
-  declarations: [PrimaryOrdersComponent, ListComponent, EditOrderComponent, ReceivedOrderComponent],
+  declarations: [PrimaryOrdersComponent, ListComponent, EditOrderComponent],
   imports: [
     CommonModule,
     PrimaryOrdersRoutingModule,

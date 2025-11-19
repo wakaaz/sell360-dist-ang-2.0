@@ -100,6 +100,7 @@ export interface ICreatePrimaryOrderPayload {
   parent_id: number | string;
   is_distributor_request: number | string;
   approved?: number | string;
+  is_receivable_order: string;
 }
 
 /**
@@ -296,8 +297,9 @@ export function buildCreateOrderPayloadFromPrimaryOrder(
     approved: 1,
     order_type: 5,
     order_fulfilment_by: 2,
-    status: 'completed',
+    status: (order as any)?.is_receivable_order ? 'processed' : 'completed',
     frieght_price: order.frieght_price || 0,
+    is_receivable_order: (order as any)?.is_receivable_order || 'no',
   };
 
   return payload;

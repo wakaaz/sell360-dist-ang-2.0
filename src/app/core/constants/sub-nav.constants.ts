@@ -74,13 +74,9 @@ export const primaryOrderSubMenu = {
       link: `/primaryOrders/order/${PRIMARY_ORDER.RETURN_ORDER}`,
       icon: '/assets/images/order-return.svg',
     },
-    {
-      title: 'Order Received',
-      link: `/primaryOrders/${PRIMARY_ORDER.RECEIVED}`,
-      icon: '/assets/images/order-icon-b.svg',
-    },
   ],
 };
+
 export const salesmanSubMenu = {
   title: 'Salesmen',
   subMenu: [
@@ -118,6 +114,11 @@ export const inventorySubMenu = {
       title: 'Stock',
       link: '/inventory/stock',
       icon: '/assets/images/stock.svg',
+    },
+    {
+      title: 'Order Received',
+      link: `/inventory/received-order`,
+      icon: '/assets/images/order-icon-b.svg',
     },
   ],
 };

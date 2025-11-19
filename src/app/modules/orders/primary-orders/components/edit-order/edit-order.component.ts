@@ -681,6 +681,10 @@ export class EditOrderComponent implements OnInit, OnDestroy {
           }
         );
     } else {
+      const selectedSubDistributor = this.subDistributors.find(
+        (sub) => sub.id === this.selectedSubDistributor
+      );
+
       if (
         this.selectedSubDistributor &&
         this.order.orderContent &&
@@ -689,6 +693,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         this.order.distributor_id = this.selectedSubDistributor;
         this.order.employee_id = this.subDistributor.tsm_id;
         this.order.distributor_id = this.selectedSubDistributor;
+        (this.order as any).is_receivable_order =
+          selectedSubDistributor?.can_receive_orders || 'no';
         // TODO: fields needs to be remove from order model too
 
         // this.order.status = 'completed';

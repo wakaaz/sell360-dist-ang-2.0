@@ -16,33 +16,32 @@ import { GalleryComponent } from './components/gallery/gallery.component';
 import { DistributorPurchaseComponent } from './components/distributor-purchase/distributor-purchase.component';
 import { StockComponent } from './components/stock/stock.component';
 import { AddStockComponent } from './components/add-stock/add-stock.component';
+import { ReceivedOrderComponent } from './components/received-order/received-order.component';
 
 import { InventoryService } from './services/inventory.service';
 
 @NgModule({
-    imports: [
-        CommonModule,
-        FormsModule,
-        ClickOutsideModule,
-        DataTablesModule,
-        NgSelectModule,
-        AgGridModule,
-        NzDatePickerModule,
-        NzSelectModule,
-        InvenotryRoutingModule,
-        SharedModule,
-    ],
-    exports: [
-    ],
-    declarations: [
-        InventoryComponent,
-        GalleryComponent,
-        StockComponent,
-        DistributorPurchaseComponent,
-        AddStockComponent
-    ],
-    providers: [
-        InventoryService,
-    ],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ClickOutsideModule,
+    DataTablesModule,
+    NgSelectModule,
+    AgGridModule,
+    NzDatePickerModule,
+    NzSelectModule,
+    InvenotryRoutingModule,
+    SharedModule,
+  ],
+  exports: [],
+  declarations: [
+    InventoryComponent,
+    GalleryComponent,
+    StockComponent,
+    DistributorPurchaseComponent,
+    AddStockComponent,
+    ReceivedOrderComponent,
+  ],
+  providers: [InventoryService],
 })
-export class InventoryModule { }
+export class InventoryModule {}

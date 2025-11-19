@@ -1,6 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { ColDef, GridApi, GridReadyEvent, ModuleRegistry, AllCommunityModule } from 'ag-grid-community';
-import { PrimaryOrdersService } from '../../services/primary-orders.service';
+import {
+  ColDef,
+  GridApi,
+  GridReadyEvent,
+  ModuleRegistry,
+  AllCommunityModule,
+} from 'ag-grid-community';
+import { PrimaryOrdersService } from '../../../orders/primary-orders/services/primary-orders.service';
 import { ToasterService } from 'src/app/core/services/toaster.service';
 
 // Register AG Grid modules
@@ -10,11 +16,11 @@ ModuleRegistry.registerModules([AllCommunityModule]);
   selector: 'app-received-order',
   standalone: false,
   templateUrl: './received-order.component.html',
-  styleUrl: './received-order.component.css'
+  styleUrl: './received-order.component.css',
 })
 export class ReceivedOrderComponent implements OnInit {
   private gridApi!: GridApi;
-  
+
   loading: boolean = false;
   receivedOrders: Array<any> = [];
   showReceivedSidebar: boolean = false;
@@ -30,11 +36,11 @@ export class ReceivedOrderComponent implements OnInit {
   defaultColDef: ColDef = {
     resizable: true,
     sortable: true,
-    filter: true
+    filter: true,
   };
 
   constructor(
-    private primaryOrderService: PrimaryOrdersService,
+    // private primaryOrderService: PrimaryOrdersService,
     private toastService: ToasterService,
     private cdr: ChangeDetectorRef
   ) {
@@ -49,60 +55,63 @@ export class ReceivedOrderComponent implements OnInit {
 
   getColumnDefs(): ColDef[] {
     const component = this;
-    
+
     return [
-      { 
-        field: 'id', 
-        headerName: 'Order ID', 
-        sortable: true, 
-        filter: true, 
-        width: 120 
+      {
+        field: 'id',
+        headerName: 'Order ID',
+        sortable: true,
+        filter: true,
+        width: 120,
       },
-      { 
-        field: 'date', 
-        headerName: 'Date', 
-        sortable: true, 
-        filter: true, 
-        width: 150 
+      {
+        field: 'date',
+        headerName: 'Date',
+        sortable: true,
+        filter: true,
+        width: 150,
       },
-      { 
-        field: 'distributor_name', 
-        headerName: 'Distributor', 
-        sortable: true, 
-        filter: true, 
-        flex: 1 
+      {
+        field: 'distributor_name',
+        headerName: 'Distributor',
+        sortable: true,
+        filter: true,
+        flex: 1,
       },
-      { 
-        field: 'employee_name', 
-        headerName: 'Employee', 
-        sortable: true, 
-        filter: true, 
-        flex: 1 
+      {
+        field: 'employee_name',
+        headerName: 'Employee',
+        sortable: true,
+        filter: true,
+        flex: 1,
       },
-      { 
-        field: 'total_products', 
-        headerName: 'Total Products', 
-        sortable: true, 
-        filter: true, 
-        width: 150 
+      {
+        field: 'total_products',
+        headerName: 'Total Products',
+        sortable: true,
+        filter: true,
+        width: 150,
       },
-      { 
-        field: 'order_total', 
-        headerName: 'Order Total', 
-        sortable: true, 
-        filter: true, 
+      {
+        field: 'order_total',
+        headerName: 'Order Total',
+        sortable: true,
+        filter: true,
         width: 150,
         valueFormatter: (params) => {
           if (params.value == null) return '';
-          return params.value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
+          return params.value.toLocaleString('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          });
+        },
       },
       {
         field: 'actions',
         headerName: 'Action',
         cellRenderer: (params: any) => {
           const order = params.data;
-          
+
           return `
             <div class="flex gap-1 flex-wrap">
               <button onclick="window.viewDetailsClick('${order.id}')" 
@@ -117,8 +126,8 @@ export class ReceivedOrderComponent implements OnInit {
         width: 150,
         sortable: false,
         filter: false,
-        pinned: 'right'
-      }
+        pinned: 'right',
+      },
     ];
   }
 
@@ -148,7 +157,7 @@ export class ReceivedOrderComponent implements OnInit {
         distributor_name: 'ABC Distributors',
         employee_name: 'John Doe',
         total_products: 25,
-        order_total: 125000.50
+        order_total: 125000.5,
       },
       {
         id: 1002,
@@ -156,7 +165,7 @@ export class ReceivedOrderComponent implements OnInit {
         distributor_name: 'XYZ Trading Co.',
         employee_name: 'Jane Smith',
         total_products: 18,
-        order_total: 87500.75
+        order_total: 87500.75,
       },
       {
         id: 1003,
@@ -164,7 +173,7 @@ export class ReceivedOrderComponent implements OnInit {
         distributor_name: 'Global Supplies Ltd.',
         employee_name: 'Mike Johnson',
         total_products: 32,
-        order_total: 156750.00
+        order_total: 156750.0,
       },
       {
         id: 1004,
@@ -172,7 +181,7 @@ export class ReceivedOrderComponent implements OnInit {
         distributor_name: 'Prime Distributors',
         employee_name: 'Sarah Williams',
         total_products: 15,
-        order_total: 67500.25
+        order_total: 67500.25,
       },
       {
         id: 1005,
@@ -180,8 +189,8 @@ export class ReceivedOrderComponent implements OnInit {
         distributor_name: 'Elite Trading',
         employee_name: 'David Brown',
         total_products: 28,
-        order_total: 142300.80
-      }
+        order_total: 142300.8,
+      },
     ];
   }
 
@@ -191,10 +200,10 @@ export class ReceivedOrderComponent implements OnInit {
     this.showReceivedSidebar = true;
     document.body.classList.add('no-scroll');
     this.cdr.detectChanges();
-    
+
     // Static data - will be replaced with API call later
     this.loadOrderProductsStatic(orderId);
-    
+
     // Allow click-outside after a delay
     setTimeout(() => {
       this.sidebarJustOpened = false;
@@ -215,7 +224,7 @@ export class ReceivedOrderComponent implements OnInit {
         received_primary_qty: 0,
         received_unit_quantity: 0,
         item_sku: 'SKU-001',
-        updateLoading: false
+        updateLoading: false,
       },
       {
         id: 2,
@@ -227,7 +236,7 @@ export class ReceivedOrderComponent implements OnInit {
         received_primary_qty: 0,
         received_unit_quantity: 0,
         item_sku: 'SKU-002',
-        updateLoading: false
+        updateLoading: false,
       },
       {
         id: 3,
@@ -239,7 +248,7 @@ export class ReceivedOrderComponent implements OnInit {
         received_primary_qty: 0,
         received_unit_quantity: 0,
         item_sku: 'SKU-003',
-        updateLoading: false
+        updateLoading: false,
       },
       {
         id: 4,
@@ -251,7 +260,7 @@ export class ReceivedOrderComponent implements OnInit {
         received_primary_qty: 0,
         received_unit_quantity: 0,
         item_sku: 'SKU-004',
-        updateLoading: false
+        updateLoading: false,
       },
       {
         id: 5,
@@ -263,10 +272,10 @@ export class ReceivedOrderComponent implements OnInit {
         received_primary_qty: 0,
         received_unit_quantity: 0,
         item_sku: 'SKU-005',
-        updateLoading: false
-      }
+        updateLoading: false,
+      },
     ];
-    
+
     // Initialize filtered products
     this.filteredOrderProducts = [...this.orderProducts];
     this.productSearchText = '';
@@ -310,13 +319,13 @@ export class ReceivedOrderComponent implements OnInit {
     if (!this.showReceivedSidebar) {
       return;
     }
-    
+
     if (this.sidebarJustOpened) {
       return;
     }
-    
+
     const target = event.target as HTMLElement;
-    
+
     if (
       target.classList.contains('dont-close-received') ||
       target.closest('.dont-close-received') ||
@@ -324,9 +333,12 @@ export class ReceivedOrderComponent implements OnInit {
     ) {
       return;
     }
-    
+
     const sidebarElement = document.getElementById('received-sidebar');
-    if (sidebarElement && (target === sidebarElement || target === event.currentTarget)) {
+    if (
+      sidebarElement &&
+      (target === sidebarElement || target === event.currentTarget)
+    ) {
       this.closeReceivedSidebar();
     }
   }
@@ -334,18 +346,23 @@ export class ReceivedOrderComponent implements OnInit {
   isNumber(event: KeyboardEvent): boolean {
     const charCode = event.which ? event.which : event.keyCode;
     // Allow: backspace, delete, tab, escape, enter
-    if ([46, 8, 9, 27, 13].indexOf(charCode) !== -1 ||
-        // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
-        (charCode === 65 && event.ctrlKey === true) ||
-        (charCode === 67 && event.ctrlKey === true) ||
-        (charCode === 86 && event.ctrlKey === true) ||
-        (charCode === 88 && event.ctrlKey === true) ||
-        // Allow: home, end, left, right
-        (charCode >= 35 && charCode <= 39)) {
+    if (
+      [46, 8, 9, 27, 13].indexOf(charCode) !== -1 ||
+      // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (charCode === 65 && event.ctrlKey === true) ||
+      (charCode === 67 && event.ctrlKey === true) ||
+      (charCode === 86 && event.ctrlKey === true) ||
+      (charCode === 88 && event.ctrlKey === true) ||
+      // Allow: home, end, left, right
+      (charCode >= 35 && charCode <= 39)
+    ) {
       return true;
     }
     // Ensure that it is a number and stop the keypress
-    if ((event.shiftKey || (charCode < 48 || charCode > 57)) && (charCode < 96 || charCode > 105)) {
+    if (
+      (event.shiftKey || charCode < 48 || charCode > 57) &&
+      (charCode < 96 || charCode > 105)
+    ) {
       event.preventDefault();
       return false;
     }
@@ -359,7 +376,8 @@ export class ReceivedOrderComponent implements OnInit {
       product.received_primary_qty = maxPrimaryQty;
       this.toastService.showToaster({
         type: 'error',
-        message: 'Received primary quantity cannot exceed ordered primary quantity',
+        message:
+          'Received primary quantity cannot exceed ordered primary quantity',
         title: 'Error:',
       });
     }
@@ -382,7 +400,7 @@ export class ReceivedOrderComponent implements OnInit {
     // TODO: Implement API call to save received order
     this.savingReceived = true;
     this.cdr.detectChanges();
-    
+
     // Simulate API call
     setTimeout(() => {
       this.savingReceived = false;

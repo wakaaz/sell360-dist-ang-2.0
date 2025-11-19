@@ -6,6 +6,7 @@ import { GalleryComponent } from './components/gallery/gallery.component';
 import { DistributorPurchaseComponent } from './components/distributor-purchase/distributor-purchase.component';
 import { StockComponent } from './components/stock/stock.component';
 import { AddStockComponent } from './components/add-stock/add-stock.component';
+import { ReceivedOrderComponent } from './components/received-order/received-order.component';
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'gallery',
+        pathMatch: 'full',
       },
       {
         path: 'gallery',
@@ -35,6 +37,11 @@ const routes: Routes = [
         path: 'add-stock',
         pathMatch: 'full',
         component: AddStockComponent,
+      },
+      {
+        path: 'received-order',
+        pathMatch: 'full',
+        component: ReceivedOrderComponent,
       },
     ],
   },

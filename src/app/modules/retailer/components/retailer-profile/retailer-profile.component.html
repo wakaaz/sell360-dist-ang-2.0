@@ -1,817 +1,1121 @@
 <!-- Report of Sales and Products -->
-<div id="product-cl-sec" [ngClass]="openReport ? 'active' : ''" (clickOutside)="clickedOutSide($event)"
-    class="width_950">
-    <div class="RB_bar">
-        <a *ngIf="!openReport" id="sales-products" (click)="openSalesAndProductsReport($event)" class="open-Report"><i
-                class="fa fa-arrow-left"></i></a>
-        <a *ngIf="openReport" id="sales-products" (click)="closeSalesAndProductsReport()" class="open-Report"><i
-                class="fa fa-arrow-right"></i></a>
-        <h1 class="R-Heading">Reports</h1>
-    </div>
-    <div class="pc-cartlist pb-0">
-        <div class="overflow-plist">
-            <div class="plist-content">
-                <div class="_left-filter _reportSide">
+<div
+  id="product-cl-sec"
+  [ngClass]="openReport ? 'active' : ''"
+  (clickOutside)="clickedOutSide($event)"
+  class="width_950"
+>
+  <div class="RB_bar">
+    <a
+      *ngIf="!openReport"
+      id="sales-products"
+      (click)="openSalesAndProductsReport($event)"
+      class="open-Report"
+      ><i class="fa fa-arrow-left"></i
+    ></a>
+    <a
+      *ngIf="openReport"
+      id="sales-products"
+      (click)="closeSalesAndProductsReport()"
+      class="open-Report"
+      ><i class="fa fa-arrow-right"></i
+    ></a>
+    <h1 class="R-Heading">Reports</h1>
+  </div>
+  <div class="pc-cartlist pb-0">
+    <div class="overflow-plist">
+      <div class="plist-content">
+        <div class="_left-filter _reportSide">
+          <div class="_report-DIV">
+            <div class="_report-Head">
+              <div class="row m-0">
+                <div class="col-12">
+                  <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item">
+                      <a
+                        class="nav-link active"
+                        id="pills-home-tab"
+                        data-toggle="pill"
+                        data-target="#pills-home"
+                        role="tab"
+                        aria-controls="pills-home"
+                        aria-selected="true"
+                        >Sales</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a
+                        class="nav-link"
+                        id="pills-contact-tab"
+                        data-toggle="pill"
+                        data-target="#pills-contact"
+                        role="tab"
+                        aria-controls="pills-contact"
+                        aria-selected="false"
+                        >Products</a
+                      >
+                    </li>
+                  </ul>
 
-                    <div class="_report-DIV">
-                        <div class="_report-Head">
-                            <div class="row m-0">
-
-                                <div class="col-12">
-                                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link active" id="pills-home-tab" data-toggle="pill"
-                                                data-target="#pills-home" role="tab" aria-controls="pills-home"
-                                                aria-selected="true">Sales</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-contact-tab" data-toggle="pill"
-                                                data-target="#pills-contact" role="tab" aria-controls="pills-contact"
-                                                aria-selected="false">Products</a>
-                                        </li>
-                                    </ul>
-
-                                    <a class="report-filters" href="#" id="dropdownMenuButton" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false"><img
-                                            src="/assets/images/report-filters.svg" alt="" /></a>
-                                    <div class="_more-action">
-                                        <div class="dropdown">
-                                            <form class="dropdown-menu dropdown-menu-right"
-                                                aria-labelledby="dropdownMenuButton">
-                                                <div class="col-12">
-                                                    <select class="custom-select">
-                                                        <option selected="">Current Month</option>
-                                                        <option value="1">Last Month</option>
-                                                        <option value="2">Overall</option>
-                                                        <option value="2">Custom</option>
-                                                    </select>
-                                                </div>
-                                                <div class="row m-0 mt-15">
-                                                    <div class="col-12">
-                                                        <h3 class="p-0 border-0">Select Date</h3>
-                                                    </div>
-                                                    <div class="col-6 pr-5"><input type="text" id="datepicker2"
-                                                            class="form-control" placeholder="" style="font-size: 13px">
-                                                    </div>
-                                                    <div class="col-6 pl-5"><input type="text" id="datepicker2"
-                                                            class="form-control" placeholder="" style="font-size: 13px">
-                                                    </div>
-                                                </div>
-                                            </form>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                  <a
+                    class="report-filters"
+                    href="#"
+                    id="dropdownMenuButton"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    ><img src="/assets/images/report-filters.svg" alt=""
+                  /></a>
+                  <div class="_more-action">
+                    <div class="dropdown">
+                      <form
+                        class="dropdown-menu dropdown-menu-right"
+                        aria-labelledby="dropdownMenuButton"
+                      >
+                        <div class="col-12">
+                          <select class="custom-select">
+                            <option selected="">Current Month</option>
+                            <option value="1">Last Month</option>
+                            <option value="2">Overall</option>
+                            <option value="2">Custom</option>
+                          </select>
                         </div>
+                        <div class="row m-0 mt-15">
+                          <div class="col-12">
+                            <h3 class="p-0 border-0">Select Date</h3>
+                          </div>
+                          <div class="col-6 pr-5">
+                            <input
+                              type="text"
+                              id="datepicker2"
+                              class="form-control"
+                              placeholder=""
+                              style="font-size: 13px"
+                            />
+                          </div>
+                          <div class="col-6 pl-5">
+                            <input
+                              type="text"
+                              id="datepicker2"
+                              class="form-control"
+                              placeholder=""
+                              style="font-size: 13px"
+                            />
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-                        <div class="report-state">
-                            <div class="col-12">
-                                <div class="tab-content" id="pills-tabContent">
-                                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
-                                        aria-labelledby="pills-home-tab">
-                                        <h2 class="_head01">Overall <span>Revenue</span></h2>
+            <div class="report-state">
+              <div class="col-12">
+                <div class="tab-content" id="pills-tabContent">
+                  <div
+                    class="tab-pane fade show active"
+                    id="pills-home"
+                    role="tabpanel"
+                    aria-labelledby="pills-home-tab"
+                  >
+                    <h2 class="_head01">Overall <span>Revenue</span></h2>
 
-                                        <div class="row mb-10">
+                    <div class="row mb-10">
+                      <div class="col-12">
+                        <div class="card card-report rav-bg">
+                          <h4>Total <span>Revenue</span></h4>
+                          <h2 class="digit Rev-pos">PKR. 5,222,542</h2>
+                        </div>
+                      </div>
 
-                                            <div class="col-12">
-                                                <div class="card card-report rav-bg">
-                                                    <h4>Total <span>Revenue</span></h4>
-                                                    <h2 class="digit Rev-pos">PKR. 5,222,542 </h2>
-                                                </div>
-                                            </div>
+                      <div class="col-12">
+                        <div class="row">
+                          <div class="col-6">
+                            <div class="card card-report CH50">
+                              <h4>Current <span>Month</span></h4>
+                              <h2 class="digit">PKR. 5,432</h2>
+                              <img
+                                class="gra-icon"
+                                src="/assets/images/gra-month-icon.svg"
+                                alt=""
+                              />
+                            </div>
+                          </div>
+                          <div class="col-6">
+                            <div class="card card-report CH50">
+                              <h4>Avg. <span>Rev/Month</span></h4>
+                              <h2 class="digit">PKR. 8,692</h2>
+                              <img
+                                class="gra-icon"
+                                src="/assets/images/quarter-icon.svg"
+                                alt=""
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <h2 class="_head01">Payments History <span></span></h2>
+                    <div class="row m-0">
+                      <div class="col p-0">
+                        <div class="card card-report CH50 bottomBG bg-states">
+                          <h4>Total<span> Outstanding Payment</span></h4>
+                          <h2 class="digit">5425</h2>
+                        </div>
+                      </div>
 
-                                            <div class="col-12">
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <div class="card card-report CH50">
-                                                            <h4>Current <span>Month</span></h4>
-                                                            <h2 class="digit">PKR. 5,432 </h2>
-                                                            <img class="gra-icon"
-                                                                src="/assets/images/gra-month-icon.svg" alt="" />
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-6">
-                                                        <div class="card card-report CH50">
-                                                            <h4>Avg. <span>Rev/Month</span></h4>
-                                                            <h2 class="digit">PKR. 8,692 </h2>
-                                                            <img class="gra-icon" src="/assets/images/quarter-icon.svg"
-                                                                alt="" />
-                                                        </div>
+                      <div class="col">
+                        <div
+                          class="card card-report CH50 bottomBB bg-states"
+                          style="background-position: bottom center"
+                        >
+                          <h4>AVG <span> Payment Days</span></h4>
+                          <h2 class="digit">35</h2>
+                        </div>
+                      </div>
 
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <h2 class="_head01">Payments History <span></span></h2>
-                                        <div class="row m-0">
-
-                                            <div class="col p-0">
-                                                <div class="card card-report CH50 bottomBG bg-states">
-                                                    <h4>Total<span> Outstanding Payment</span></h4>
-                                                    <h2 class="digit">5425 </h2>
-                                                </div>
-                                            </div>
-
-                                            <div class="col">
-                                                <div class="card card-report CH50 bottomBB bg-states"
-                                                    style="background-position:bottom center">
-                                                    <h4>AVG <span> Payment Days</span></h4>
-                                                    <h2 class="digit">35 </h2>
-                                                </div>
-                                            </div>
-
-                                            <div class="col p-0">
-                                                <div class="card card-report CH50 bottomBGR bg-states"
-                                                    style="background-position:top right">
-                                                    <h4>Last <span> Payment Received</span></h4>
-                                                    <!--<span class="dateLPR">12/11/2019</span>-->
-                                                    <h2 class="digit">PKR.8,692 </h2>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="row mb-10">
-                                            <div class="col-6">
-                                                <div class="card card-report">
-                                                    <h4>Payment <span>Mode</span></h4>
-                                                    <div class="PaymentMode-graph" style="display: block;">
-                                                        <canvas id="PaymentMode" baseChart [data]="paymentChartData"
+                      <div class="col p-0">
+                        <div
+                          class="card card-report CH50 bottomBGR bg-states"
+                          style="background-position: top right"
+                        >
+                          <h4>Last <span> Payment Received</span></h4>
+                          <!--<span class="dateLPR">12/11/2019</span>-->
+                          <h2 class="digit">PKR.8,692</h2>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row mb-10">
+                      <div class="col-6">
+                        <div class="card card-report">
+                          <h4>Payment <span>Mode</span></h4>
+                          <div class="PaymentMode-graph" style="display: block">
+                            <!-- <canvas id="PaymentMode" baseChart [data]="paymentChartData"
                                                             [labels]="paymentChartLabels" [type]="paymentChartType"
                                                             [options]="paymentChartOptions"
                                                             [plugins]="paymentChartPlugins"
-                                                            [legend]="paymentChartLegend"></canvas>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-6">
-                                                <div class="card card-report">
-                                                    <h4>Invoices<span></span></h4>
-                                                    <h2 class="digit text-right" style="right: 20px"><span
-                                                            class="TI-head">Total:</span><br>700 </h2>
-                                                    <div>
-                                                        <div id="chart" style="display: block;">
-                                                            <canvas id="invoicechart"></canvas>
-                                                        </div>
-                                                        <div id="legend"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <h2 class="_head01">Order History <span></span></h2>
-                                        <div class="row m-0">
-                                            <div class="col p-0">
-                                                <div class="card card-report CH50 bottomBB bg-states">
-                                                    <h4>Total<span> Orders</span></h4>
-                                                    <h2 class="digit">87982 </h2>
-                                                </div>
-                                            </div>
-
-                                            <div class="col">
-                                                <div class="card card-report CH50 bottomRED bg-states"
-                                                    style="background-position:bottom center">
-                                                    <h4>Cancel <span> Orders</span></h4>
-                                                    <h2 class="digit">4574 </h2>
-                                                </div>
-                                            </div>
-
-                                            <div class="col p-0">
-                                                <div class="card card-report CH50 bottomBO bg-states"
-                                                    style="background-position:top right">
-                                                    <h4>Pending <span> Orders</span></h4>
-                                                    <h2 class="digit">1245 </h2>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row m-0">
-                                            <div class="col p-0">
-                                                <div class="card card-report CH50">
-                                                    <h4>Avg. <span> Orders Value</span></h4>
-                                                    <h2 class="digit">PKR. 5782 </h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-ord-value-icon.svg"
-                                                        alt="">
-                                                </div>
-                                            </div>
-
-                                            <div class="col">
-                                                <div class="card card-report CH50">
-                                                    <h4>AVG.<span> Products/Orders</span></h4>
-                                                    <h2 class="digit">457 </h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-products-ord-icon.svg"
-                                                        alt="">
-                                                </div>
-                                            </div>
-
-                                            <div class="col p-0">
-                                                <div class="card card-report CH50">
-                                                    <h4>AVG.<span> QTY./Orders</span></h4>
-                                                    <h2 class="digit">4574 CTNS </h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-qty-ord-icon.svg"
-                                                        alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row m-0">
-
-                                            <div class="col p-0">
-                                                <div class="card card-report CH50">
-                                                    <h4>AVG<span> Orders/Month</span></h4>
-                                                    <h2 class="digit">457 </h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-month-ord-icon.svg"
-                                                        alt="">
-                                                </div>
-                                            </div>
-
-                                            <div class="col">
-                                                <div class="card card-report CH50">
-                                                    <h4>AVG<span> Visits/Month</span></h4>
-                                                    <h2 class="digit">4574 </h2>
-                                                    <img class="gra-icon" src="/assets/images/visit-month-icon.svg"
-                                                        alt="">
-                                                </div>
-                                            </div>
-
-                                            <div class="col p-0">
-                                                <div class="card card-report CH50">
-                                                    <h4>Productivity <span> Ratio</span></h4>
-                                                    <h2 class="digit">25</h2>
-                                                    <img class="gra-icon" src="/assets/images/ord-dispatch-ord-icon.svg"
-                                                        alt="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="tab-pane fade" id="pills-contact" role="tabpanel"
-                                        aria-labelledby="pills-contact-tab">
-                                        <h2 class="_head01">Product <span>Wise </span></h2>
-                                        <div id="e_chart_1" style="display: block;" class="e_chart"></div>
-
-
-                                        <h2 class="_head01">Category <span>Wise </span></h2>
-                                        <canvas id="myChart" class="CategoryChart" baseChart [data]="categoryChartData"
-                                            [labels]="categoryChartLabels" [type]="categoryChartType"
-                                            [options]="categoryChartOptions"></canvas>
-                                    </div>
-
-                                </div>
-                            </div>
+                                                            [legend]="paymentChartLegend"></canvas> -->
+                            <canvas id="PaymentMode"></canvas>
+                          </div>
                         </div>
+                      </div>
 
-
+                      <div class="col-6">
+                        <div class="card card-report">
+                          <h4>Invoices<span></span></h4>
+                          <h2 class="digit text-right" style="right: 20px">
+                            <span class="TI-head">Total:</span><br />700
+                          </h2>
+                          <div>
+                            <div id="chart" style="display: block">
+                              <canvas id="invoicechart"></canvas>
+                            </div>
+                            <div id="legend"></div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+                    <h2 class="_head01">Order History <span></span></h2>
+                    <div class="row m-0">
+                      <div class="col p-0">
+                        <div class="card card-report CH50 bottomBB bg-states">
+                          <h4>Total<span> Orders</span></h4>
+                          <h2 class="digit">87982</h2>
+                        </div>
+                      </div>
+
+                      <div class="col">
+                        <div
+                          class="card card-report CH50 bottomRED bg-states"
+                          style="background-position: bottom center"
+                        >
+                          <h4>Cancel <span> Orders</span></h4>
+                          <h2 class="digit">4574</h2>
+                        </div>
+                      </div>
+
+                      <div class="col p-0">
+                        <div
+                          class="card card-report CH50 bottomBO bg-states"
+                          style="background-position: top right"
+                        >
+                          <h4>Pending <span> Orders</span></h4>
+                          <h2 class="digit">1245</h2>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row m-0">
+                      <div class="col p-0">
+                        <div class="card card-report CH50">
+                          <h4>Avg. <span> Orders Value</span></h4>
+                          <h2 class="digit">PKR. 5782</h2>
+                          <img
+                            class="gra-icon"
+                            src="/assets/images/ord-ord-value-icon.svg"
+                            alt=""
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col">
+                        <div class="card card-report CH50">
+                          <h4>AVG.<span> Products/Orders</span></h4>
+                          <h2 class="digit">457</h2>
+                          <img
+                            class="gra-icon"
+                            src="/assets/images/ord-products-ord-icon.svg"
+                            alt=""
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col p-0">
+                        <div class="card card-report CH50">
+                          <h4>AVG.<span> QTY./Orders</span></h4>
+                          <h2 class="digit">4574 CTNS</h2>
+                          <img
+                            class="gra-icon"
+                            src="/assets/images/ord-qty-ord-icon.svg"
+                            alt=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    <div class="row m-0">
+                      <div class="col p-0">
+                        <div class="card card-report CH50">
+                          <h4>AVG<span> Orders/Month</span></h4>
+                          <h2 class="digit">457</h2>
+                          <img
+                            class="gra-icon"
+                            src="/assets/images/ord-month-ord-icon.svg"
+                            alt=""
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col">
+                        <div class="card card-report CH50">
+                          <h4>AVG<span> Visits/Month</span></h4>
+                          <h2 class="digit">4574</h2>
+                          <img
+                            class="gra-icon"
+                            src="/assets/images/visit-month-icon.svg"
+                            alt=""
+                          />
+                        </div>
+                      </div>
+
+                      <div class="col p-0">
+                        <div class="card card-report CH50">
+                          <h4>Productivity <span> Ratio</span></h4>
+                          <h2 class="digit">25</h2>
+                          <img
+                            class="gra-icon"
+                            src="/assets/images/ord-dispatch-ord-icon.svg"
+                            alt=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div
+                    class="tab-pane fade"
+                    id="pills-contact"
+                    role="tabpanel"
+                    aria-labelledby="pills-contact-tab"
+                  >
+                    <h2 class="_head01">Product <span>Wise </span></h2>
+                    <div
+                      id="e_chart_1"
+                      style="display: block"
+                      class="e_chart"
+                    ></div>
+
+                    <h2 class="_head01">Category <span>Wise </span></h2>
+                    <!-- <canvas id="myChart" class="CategoryChart" baseChart [data]="categoryChartData"
+                                            [labels]="categoryChartLabels" [type]="categoryChartType"
+                                            [options]="categoryChartOptions"></canvas> -->
+                    <canvas id="CategoryChart"></canvas>
+                  </div>
                 </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Track Retailer on Map -->
-<div class="modal fade" id="DistributorOnmap" tabindex="-1" role="dialog" aria-labelledby="DetailModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content top_border">
-            <div class="modal-header">
-                <h5 class="modal-title" id="DetailModalLabel">Distributors <span> Location</span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
-                        aria-hidden="true">&times;</span> </button>
-            </div>
-            <div id="floating-label" class="modal-body">
-                <div class="row">
-                    <div class="col-md-12">
-                        <!-- Map Start -->
-                        <div class="mapouter">
-                            <div class="gmap_canvas" id="map">
-                                <!-- <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0"
+<div
+  class="modal fade"
+  id="DistributorOnmap"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="DetailModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content top_border">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DetailModalLabel">
+          Distributors <span> Location</span>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="floating-label" class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <!-- Map Start -->
+            <div class="mapouter">
+              <div class="gmap_canvas" id="map">
+                <!-- <iframe class="gmap_iframe" frameborder="0" scrolling="no" marginheight="0"
                                     marginwidth="0"
                                     src="https://www.google.com/maps/search/?api=1&query=28.6139,77.2090"></iframe> -->
-                            </div>
-                        </div>
-                        <!-- Map End -->
-                    </div>
-                </div>
+              </div>
             </div>
-            <div class="modal-footer border-0 pt-0">
-                <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">Close</button>
-            </div>
+            <!-- Map End -->
+          </div>
         </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button
+          type="submit"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- View Retailer CNIC -->
-<div class="modal fade" id="ViewCNICimg" tabindex="-1" role="dialog" aria-labelledby="DetailModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content top_border">
-            <div class="modal-header">
-                <h5 class="modal-title" id="DetailModalLabel">Saif Ali Khan <span> CNIC Image</span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
-                        aria-hidden="true">&times;</span> </button>
-            </div>
-            <div class="modal-body">
-                <div class="col-md-12"> <strong>Frontside</strong> <img class="cnicCardimg"
-                        src="/assets/images/idcard.jpg" alt="" /> <strong>Backside</strong> <img
-                        class="cnicCardimg mb-0" src="/assets/images/idcard.jpg" alt="" /> </div>
-            </div>
-            <div class="modal-footer border-0 pt-0">
-                <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">Close</button>
-            </div>
+<div
+  class="modal fade"
+  id="ViewCNICimg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="DetailModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content top_border">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DetailModalLabel">
+          Saif Ali Khan <span> CNIC Image</span>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="col-md-12">
+          <strong>Frontside</strong>
+          <img class="cnicCardimg" src="/assets/images/idcard.jpg" alt="" />
+          <strong>Backside</strong>
+          <img
+            class="cnicCardimg mb-0"
+            src="/assets/images/idcard.jpg"
+            alt=""
+          />
         </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button
+          type="submit"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- View visit image -->
-<div class="modal fade" id="ViewVISITimg" tabindex="-1" role="dialog" aria-labelledby="DetailModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content top_border">
-            <div class="modal-header">
-                <h5 class="modal-title" id="DetailModalLabel">Visit <span> Picture</span></h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> <span
-                        aria-hidden="true">&times;</span> </button>
-            </div>
-            <div id="floating-label" class="modal-body">
-                <div class="row">
-                    <div class="col-md-12"> <img class="Visit-img" [src]="visitIamge" alt="" /> </div>
-                </div>
-            </div>
-            <div class="modal-footer border-0 pt-0">
-                <button type="submit" class="btn btn-cancel" data-dismiss="modal" aria-label="Close">Close</button>
-            </div>
+<div
+  class="modal fade"
+  id="ViewVISITimg"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="DetailModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content top_border">
+      <div class="modal-header">
+        <h5 class="modal-title" id="DetailModalLabel">
+          Visit <span> Picture</span>
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div id="floating-label" class="modal-body">
+        <div class="row">
+          <div class="col-md-12">
+            <img class="Visit-img" [src]="visitIamge" alt="" />
+          </div>
         </div>
+      </div>
+      <div class="modal-footer border-0 pt-0">
+        <button
+          type="submit"
+          class="btn btn-cancel"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Order Detail Modal -->
-<div class="modal fade" id="OrderDetailModal" tabindex="-1" role="dialog" aria-labelledby="OrderDetailModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-full modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                    style="font-size:30px">×</button>
-            </div>
-            <div class="modal-body p-0">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card mb-20">
-                                <div class="p-10" style="border-bottom: solid 2px #000">
-                                    <div class="row m-0">
-                                        <div class="col-8 OrderLogo"> <img src="/assets/images/sell-360.svg" alt="" />
-                                        </div>
-                                        <div class="col-4 ord-no"> Invoice#
-                                            <strong>{{orderDetail?.invoice_number}}</strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="body" style="padding:15px 20px">
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="form-body">
-                                                <div class="row OrderInfo">
-                                                    <div class="col-md-9">
-                                                        <span>Retailer Name: </span>
-                                                        <strong>
-                                                            {{retailer?.retailer_name}}
-                                                        </strong><br>
-                                                        <span>Segment: </span> <strong>{{retailer?.segment}}</strong><br>
-                                                        <span>Phone No: </span> <strong>{{retailer?.retailer_phone}}</strong><br>
-                                                        <span>Address: </span> <strong>{{retailer?.retailer_address}}
-                                                            </strong>
-                                                    </div>
-                                                    <div class="col-md-3 p-0">
-                                                        <span>Status: </span> <strong>{{orderDetail?.status}}</strong><br>
-                                                        <span>Date: </span> <strong>{{orderDetail?.date}}</strong><br>
-                                                        <span>Order Booker: </span> <strong>{{orderDetail?.order_booker}}</strong><br>
-                                                        <span>Salesman: </span> <strong>{{orderDetail?.salesman}}</strong>
-                                                    </div>
-                                                </div>
-                                                <div class="seprator-block"></div>
-                                                <div class="Order-Detail-table mt-20">
-                                                    <table class="table">
-                                                        <thead>
-                                                            <tr>
-                                                                <th><strong>Code</strong></th>
-                                                                <th><strong>Product Name</strong></th>
-                                                                <th><strong>B.QTY.</strong></th>
-                                                                <th><strong>D.QTY.</strong></th>
-                                                                <th><strong>E.QTY.</strong></th>
-                                                                <th><strong>T.P</strong></th>
-                                                                <th><strong>GR.AMNT.</strong></th>
-                                                                <th><strong>T.O</strong></th>
-                                                                <th><strong>T.Disc</strong></th>
-                                                                <th><strong>SPC.Disc</strong></th>
-                                                                <th><strong>Extra.Disc</strong></th>
-                                                                <th><strong>TAX %</strong></th>
-                                                                <th><strong>TAX AMNT.</strong></th>
-                                                                <th><strong>Net.AMNT</strong></th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody class="order_items_body">
-                                                            <tr *ngFor="let item of orderDetail?.items">
-                                                                <td>{{item.pref_id}}</td>
-                                                                <td>{{item.item_name}}</td>
-                                                                <td>{{item.booked_qty}}</td>
-                                                                <td>{{item.delivered_qty}}</td>
-                                                                <td>{{item.executed_qty}}</td>
-                                                                <td>{{item.tax_in_percentage > 0 ? item.tax_in_percentage : 0}}</td>
-                                                                <td>{{item.gr_amount}}</td>
-                                                                <td>{{item.trade_offer}}</td>
-                                                                <td>{{item.trade_discount}}</td>
-                                                                <td>{{item.special_discount}}</td>
-                                                                <td>{{item.extra_discount}}</td>
-                                                                <td>{{item.tax_in_percentage > 0 ? item.tax_in_percentage : 0}}</td>
-                                                                <td>{{item.tax_in_value > 0 ? item.tax_in_value : 0}}</td>
-                                                                <td>{{item.final_price | decimal}}</td>
-                                                            </tr>
-                                                            
-                                                            <tr>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td><strong>G.AMNT</strong></td>
-                                                                <td><strong>{{ getGrAmount(orderDetail?.items) | decimal}}</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td><strong>T.O.Disc.</strong></td>
-                                                                <td><strong>1115.20</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td><strong>Trade Disc.</strong></td>
-                                                                <td><strong>{{ getToAmount(orderDetail?.items) | decimal}}</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td><strong>Spc. Disc.</strong></td>
-                                                                <td><strong>{{ getSpcDiscAmount(orderDetail?.items) | decimal}}</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td><strong>Extra. Disc.</strong></td>
-                                                                <td><strong>{{ getExtraDiscAmount(orderDetail?.items) | decimal}}</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td><strong>Discount PKR.</strong></td>
-                                                                <td><strong>-{{ getExtraDiscAmount(orderDetail?.items) | decimal}}</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td><strong>Total TAX</strong></td>
-                                                                <td><strong>1115.20</strong></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td style="background-color:#dfdfdf; color:#000">
-                                                                    <strong>Total AMNT.</strong>
-                                                                </td>
-                                                                <td style="background-color:#dfdfdf; color:#000">
-                                                                    <strong>1075.02</strong>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td class="border-0"></td>
-                                                                <td style="background-color:#dfdfdf; color:#000">
-                                                                    <strong>Recovery AMNT.</strong>
-                                                                </td>
-                                                                <td style="background-color:#d3d3d3; color:#000">
-                                                                    <strong>1075.02</strong>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-
-                                                    </table>
-                                                    <div class="clearfix"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row justify-content-end">
-                                        <div class="col-4 Order-Detail-table">
-                                            <h3 class="font16">Payment Details</h3>
-                                            <table class="table mb-0">
-                                                <tbody class="order_items_body">
-                                                    <tr>
-                                                        <td><strong>Cash</strong></td>
-                                                        <td><strong>2545</strong></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><strong>Cheque</strong></td>
-                                                        <td><strong>2545</strong></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><strong>Total Payment</strong></td>
-                                                        <td><strong>2545</strong></td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td><strong>Credit</strong></td>
-                                                        <td><strong>2545</strong></td>
-                                                    </tr>
-                                                </tbody>
-
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+<div
+  class="modal fade"
+  id="OrderDetailModal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="OrderDetailModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-full modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+          style="font-size: 30px"
+        >
+          ×
+        </button>
+      </div>
+      <div class="modal-body p-0">
+        <div class="container">
+          <div class="row">
+            <div class="col-12">
+              <div class="card mb-20">
+                <div class="p-10" style="border-bottom: solid 2px #000">
+                  <div class="row m-0">
+                    <div class="col-8 OrderLogo">
+                      <img src="/assets/images/sell-360.svg" alt="" />
                     </div>
+                    <div class="col-4 ord-no">
+                      Invoice#
+                      <strong>{{ orderDetail?.invoice_number }}</strong>
+                    </div>
+                  </div>
                 </div>
+                <div class="body" style="padding: 15px 20px">
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="form-body">
+                        <div class="row OrderInfo">
+                          <div class="col-md-9">
+                            <span>Retailer Name: </span>
+                            <strong>
+                              {{ retailer?.retailer_name }} </strong
+                            ><br />
+                            <span>Segment: </span>
+                            <strong>{{ retailer?.segment }}</strong
+                            ><br />
+                            <span>Phone No: </span>
+                            <strong>{{ retailer?.retailer_phone }}</strong
+                            ><br />
+                            <span>Address: </span>
+                            <strong>{{ retailer?.retailer_address }} </strong>
+                          </div>
+                          <div class="col-md-3 p-0">
+                            <span>Status: </span>
+                            <strong>{{ orderDetail?.status }}</strong
+                            ><br />
+                            <span>Date: </span>
+                            <strong>{{ orderDetail?.date }}</strong
+                            ><br />
+                            <span>Order Booker: </span>
+                            <strong>{{ orderDetail?.order_booker }}</strong
+                            ><br />
+                            <span>Salesman: </span>
+                            <strong>{{ orderDetail?.salesman }}</strong>
+                          </div>
+                        </div>
+                        <div class="seprator-block"></div>
+                        <div class="Order-Detail-table mt-20">
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th><strong>Code</strong></th>
+                                <th><strong>Product Name</strong></th>
+                                <th><strong>B.QTY.</strong></th>
+                                <th><strong>D.QTY.</strong></th>
+                                <th><strong>E.QTY.</strong></th>
+                                <th><strong>T.P</strong></th>
+                                <th><strong>GR.AMNT.</strong></th>
+                                <th><strong>T.O</strong></th>
+                                <th><strong>T.Disc</strong></th>
+                                <th><strong>SPC.Disc</strong></th>
+                                <th><strong>Extra.Disc</strong></th>
+                                <th><strong>TAX %</strong></th>
+                                <th><strong>TAX AMNT.</strong></th>
+                                <th><strong>Net.AMNT</strong></th>
+                              </tr>
+                            </thead>
+                            <tbody class="order_items_body">
+                              <tr *ngFor="let item of orderDetail?.items">
+                                <td>{{ item.pref_id }}</td>
+                                <td>{{ item.item_name }}</td>
+                                <td>{{ item.booked_qty }}</td>
+                                <td>{{ item.delivered_qty }}</td>
+                                <td>{{ item.executed_qty }}</td>
+                                <td>
+                                  {{
+                                    item.tax_in_percentage > 0
+                                      ? item.tax_in_percentage
+                                      : 0
+                                  }}
+                                </td>
+                                <td>{{ item.gr_amount }}</td>
+                                <td>{{ item.trade_offer }}</td>
+                                <td>{{ item.trade_discount }}</td>
+                                <td>{{ item.special_discount }}</td>
+                                <td>{{ item.extra_discount }}</td>
+                                <td>
+                                  {{
+                                    item.tax_in_percentage > 0
+                                      ? item.tax_in_percentage
+                                      : 0
+                                  }}
+                                </td>
+                                <td>
+                                  {{
+                                    item.tax_in_value > 0
+                                      ? item.tax_in_value
+                                      : 0
+                                  }}
+                                </td>
+                                <td>{{ item.final_price | decimal }}</td>
+                              </tr>
+
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td><strong>G.AMNT</strong></td>
+                                <td>
+                                  <strong>{{
+                                    getGrAmount(orderDetail?.items) | decimal
+                                  }}</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td><strong>T.O.Disc.</strong></td>
+                                <td><strong>1115.20</strong></td>
+                              </tr>
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td><strong>Trade Disc.</strong></td>
+                                <td>
+                                  <strong>{{
+                                    getToAmount(orderDetail?.items) | decimal
+                                  }}</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td><strong>Spc. Disc.</strong></td>
+                                <td>
+                                  <strong>{{
+                                    getSpcDiscAmount(orderDetail?.items)
+                                      | decimal
+                                  }}</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td><strong>Extra. Disc.</strong></td>
+                                <td>
+                                  <strong>{{
+                                    getExtraDiscAmount(orderDetail?.items)
+                                      | decimal
+                                  }}</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td><strong>Discount PKR.</strong></td>
+                                <td>
+                                  <strong
+                                    >-{{
+                                      getExtraDiscAmount(orderDetail?.items)
+                                        | decimal
+                                    }}</strong
+                                  >
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td><strong>Total TAX</strong></td>
+                                <td><strong>1115.20</strong></td>
+                              </tr>
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td
+                                  style="background-color: #dfdfdf; color: #000"
+                                >
+                                  <strong>Total AMNT.</strong>
+                                </td>
+                                <td
+                                  style="background-color: #dfdfdf; color: #000"
+                                >
+                                  <strong>1075.02</strong>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td class="border-0"></td>
+                                <td
+                                  style="background-color: #dfdfdf; color: #000"
+                                >
+                                  <strong>Recovery AMNT.</strong>
+                                </td>
+                                <td
+                                  style="background-color: #d3d3d3; color: #000"
+                                >
+                                  <strong>1075.02</strong>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                          <div class="clearfix"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row justify-content-end">
+                    <div class="col-4 Order-Detail-table">
+                      <h3 class="font16">Payment Details</h3>
+                      <table class="table mb-0">
+                        <tbody class="order_items_body">
+                          <tr>
+                            <td><strong>Cash</strong></td>
+                            <td><strong>2545</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Cheque</strong></td>
+                            <td><strong>2545</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Total Payment</strong></td>
+                            <td><strong>2545</strong></td>
+                          </tr>
+                          <tr>
+                            <td><strong>Credit</strong></td>
+                            <td><strong>2545</strong></td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <!-- Retailer Details -->
 <div class="container" id="profile">
-    <div class="row mt-2 mb-2">
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <h2 class="_head01">Retailer: <span> {{retailer?.retailer_name}}</span></h2>
-        </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
-            <ol class="breadcrumb">
-                <li><a><span>Retailer Management </span></a></li>
-                <li><span>Profile</span></li>
-            </ol>
-        </div>
+  <div class="row mt-2 mb-2">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <h2 class="_head01">
+        Retailer: <span> {{ retailer?.retailer_name }}</span>
+      </h2>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card mb-30">
-                <div class="body pt-0">
-                    <div class="row">
-
-                        <div class="col-12 p-0 PB-15">
-                            <div class="topstats">
-                                <div class="row m-0">
-                                    <div class="col-3 pr-0">
-                                        <div class="gary-box"><strong>Segment:</strong>
-                                            <span>{{retailer?.segment}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-3 pr-0">
-                                        <div class="gary-box"><strong>Channel:</strong>
-                                            <span>{{retailer?.channel}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-3 pr-0">
-                                        <div class="gary-box"><strong>Added By:</strong>
-                                            <span>{{retailer?.added_by}}</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="gary-box"><strong>Added Date:</strong>
-                                            <span>{{retailer?.added_date}}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-4 pr-0">
-                            <div class="row">
-
-                                <div class="col-md-12 POCDetail">
-                                    <p><strong>Phone:</strong> {{retailer?.retailer_phone}}</p>
-                                    <p><strong>POC Name:</strong> {{retailer?.poc}}</p>
-                                    <p><strong>CNIC:</strong> {{retailer?.cnic}}</p>
-                                    <p><strong>NTN:</strong> {{retailer?.ntn}}</p>
-                                    <p><strong>STRN:</strong> {{retailer?.strn}}</p>
-                                    <p><strong>Email:</strong> {{retailer?.retailer_email}}</p>
-                                    <p><strong>Address:</strong> {{retailer?.retailer_address}}</p>
-                                    <p><strong>Locallity:</strong> {{retailer?.locality}}</p>
-                                    <p><strong>Neighbourhood:</strong> {{retailer?.neighbourhood}}</p>
-                                </div>
-
-                                <div class="col-12">
-                                    <button data-toggle="modal" data-target="#DistributorOnmap" class="btn btn-blue"><i
-                                            class="fa fa-map-marker-alt"></i> View On Map</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="row">
-                                <div class="col">
-                                </div>
-                                <div class="col-md-12">
-                                    <img class="Warehouse-img" [src]="retailer?.retailer_image" alt="" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12">
-            <div class="card distTabs">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="header-tabs">
-                                    <div class="nav nav-tabs" id="nav-tab" role="tablist"> <a
-                                            class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab"
-                                            href="#nav-home" role="tab" aria-controls="nav-home"
-                                            aria-selected="true">VISITS <span class="_cus-val"> {{visits?.length}}
-                                            </span></a> <a (click)="getRetailerOrders()" class="nav-item nav-link"
-                                            id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab"
-                                            aria-controls="nav-profile" aria-selected="false">ORDERS<span
-                                                class="_cus-val"> {{orders?.length}}
-                                            </span></a> </div>
-                                </div>
-                                <div class="tab-content" id="nav-tabContent">
-                                    <div class="tab-pane fade show active body_sales_agants" id="nav-home"
-                                        role="tabpanel" aria-labelledby="nav-home-tab">
-                                        <table *ngIf="!loading" datatable [dtOptions]="dtOptions"
-                                            class="table table-hover dt-responsive nowrap" id="visitsTable"
-                                            style="width:100%">
-                                            <thead>
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>Start Time</th>
-                                                    <th>End Time</th>
-                                                    <th>Order Booker</th>
-                                                    <th>Visit Reason</th>
-                                                    <th>Distance</th>
-                                                    <th>Deviation</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let visit of visits">
-                                                    <td>{{visit.date}}</td>
-                                                    <td>{{visit.visit_start_time}} </td>
-                                                    <td>{{visit.visit_end_time}} </td>
-                                                    <td>{{visit.order_booker}}</td>
-                                                    <td>{{visit.reason ? visit.reason : '-'}}</td>
-                                                    <td>{{visit.distance}}</td>
-                                                    <td>{{visit.deviation}}</td>
-                                                    <td>
-                                                        <button data-toggle="modal" (click)="showVisitStorePicture(visit.id)" data-target="#ViewVISITimg"
-                                                            class="btn btn-default mb-0">
-                                                            <i class="fa fa-image"></i> View Picture</button>
-                                                        <button class="btn btn-default mb-0"><i
-                                                                class="fa fa-map-marker-alt"></i> View Map</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                        <div *ngIf="loading" class="col-md-12">
-                                            <app-loader-white></app-loader-white>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade body_emp_staff" id="nav-profile" role="tabpanel"
-                                        aria-labelledby="nav-profile-tab">
-                                        <div class="tblLoader">
-                                            <table *ngIf="!loadingOrders" datatable [dtOptions]="dtOptionsOrders"
-                                                class="table table-hover dt-responsive nowrap" id="ordersTable"
-                                                style="width:100%">
-                                                <thead>
-                                                    <tr>
-                                                      <th>Date</th>
-                                                      <th>Invoice#</th>
-                                                      <th>Shop ID</th>
-                                                      <th>Shop Name</th>
-                                                      <th>Segment </th>
-                                                      <th>Order Booker</th>
-                                                      <th>Salesman</th>
-                                                      <th>Invoice Total</th>
-                                                      <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <tr *ngFor="let order of orders">
-                                                        <td>{{order.date}}</td>
-                                                        <td>{{order.invoice_number}}</td>
-                                                        <td>{{retailer.id}}</td>
-                                                        <td>{{retailer.retailer_name}}</td>
-                                                        <td>{{retailer.channel}}</td>
-                                                        <td>{{order.order_booker}}</td>
-                                                        <td>{{order.salesman}}</td>
-                                                        <td>{{order.invoice_total | number: '1.2-2'}}</td>
-                                                        <td><button data-toggle="modal" data-target="#OrderDetailModal"
-                                                                class="btn btn-default btn-line"
-                                                                (click)="getOrderDetail(order.order_id, order.order_booker, order.salesman, order.date, order.invoice_number, order.status)">Order
-                                                                Detail</button>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <div *ngIf="loadingOrders" class="col-md-12">
-                                                <app-loader-white></app-loader-white>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <ol class="breadcrumb">
+        <li>
+          <a><span>Retailer Management </span></a>
+        </li>
+        <li><span>Profile</span></li>
+      </ol>
     </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card mb-30">
+        <div class="body pt-0">
+          <div class="row">
+            <div class="col-12 p-0 PB-15">
+              <div class="topstats">
+                <div class="row m-0">
+                  <div class="col-3 pr-0">
+                    <div class="gary-box">
+                      <strong>Segment:</strong>
+                      <span>{{ retailer?.segment }}</span>
+                    </div>
+                  </div>
+                  <div class="col-3 pr-0">
+                    <div class="gary-box">
+                      <strong>Channel:</strong>
+                      <span>{{ retailer?.channel }}</span>
+                    </div>
+                  </div>
+                  <div class="col-3 pr-0">
+                    <div class="gary-box">
+                      <strong>Added By:</strong>
+                      <span>{{ retailer?.added_by }}</span>
+                    </div>
+                  </div>
+                  <div class="col-3">
+                    <div class="gary-box">
+                      <strong>Added Date:</strong>
+                      <span>{{ retailer?.added_date }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4 pr-0">
+              <div class="row">
+                <div class="col-md-12 POCDetail">
+                  <p><strong>Phone:</strong> {{ retailer?.retailer_phone }}</p>
+                  <p><strong>POC Name:</strong> {{ retailer?.poc }}</p>
+                  <p><strong>CNIC:</strong> {{ retailer?.cnic }}</p>
+                  <p><strong>NTN:</strong> {{ retailer?.ntn }}</p>
+                  <p><strong>STRN:</strong> {{ retailer?.strn }}</p>
+                  <p><strong>Email:</strong> {{ retailer?.retailer_email }}</p>
+                  <p>
+                    <strong>Address:</strong> {{ retailer?.retailer_address }}
+                  </p>
+                  <p><strong>Locallity:</strong> {{ retailer?.locality }}</p>
+                  <p>
+                    <strong>Neighbourhood:</strong>
+                    {{ retailer?.neighbourhood }}
+                  </p>
+                </div>
+
+                <div class="col-12">
+                  <button
+                    data-toggle="modal"
+                    data-target="#DistributorOnmap"
+                    class="btn btn-blue"
+                  >
+                    <i class="fa fa-map-marker-alt"></i> View On Map
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-8">
+              <div class="row">
+                <div class="col"></div>
+                <div class="col-md-12">
+                  <img
+                    class="Warehouse-img"
+                    [src]="retailer?.retailer_image"
+                    alt=""
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-12">
+      <div class="card distTabs">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="header-tabs">
+                  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    <a
+                      class="nav-item nav-link active"
+                      id="nav-home-tab"
+                      data-toggle="tab"
+                      href="#nav-home"
+                      role="tab"
+                      aria-controls="nav-home"
+                      aria-selected="true"
+                      >VISITS
+                      <span class="_cus-val"> {{ visits?.length }} </span></a
+                    >
+                    <a
+                      (click)="getRetailerOrders()"
+                      class="nav-item nav-link"
+                      id="nav-profile-tab"
+                      data-toggle="tab"
+                      href="#nav-profile"
+                      role="tab"
+                      aria-controls="nav-profile"
+                      aria-selected="false"
+                      >ORDERS<span class="_cus-val">
+                        {{ orders?.length }}
+                      </span></a
+                    >
+                  </div>
+                </div>
+                <div class="tab-content" id="nav-tabContent">
+                  <div
+                    class="tab-pane fade show active body_sales_agants"
+                    id="nav-home"
+                    role="tabpanel"
+                    aria-labelledby="nav-home-tab"
+                  >
+                    <table
+                      *ngIf="!loading"
+                      datatable
+                      [dtOptions]="dtOptions"
+                      class="table table-hover dt-responsive nowrap"
+                      id="visitsTable"
+                      style="width: 100%"
+                    >
+                      <thead>
+                        <tr>
+                          <th>Date</th>
+                          <th>Start Time</th>
+                          <th>End Time</th>
+                          <th>Order Booker</th>
+                          <th>Visit Reason</th>
+                          <th>Distance</th>
+                          <th>Deviation</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let visit of visits">
+                          <td>{{ visit.date }}</td>
+                          <td>{{ visit.visit_start_time }}</td>
+                          <td>{{ visit.visit_end_time }}</td>
+                          <td>{{ visit.order_booker }}</td>
+                          <td>{{ visit.reason ? visit.reason : "-" }}</td>
+                          <td>{{ visit.distance }}</td>
+                          <td>{{ visit.deviation }}</td>
+                          <td>
+                            <button
+                              data-toggle="modal"
+                              (click)="showVisitStorePicture(visit.id)"
+                              data-target="#ViewVISITimg"
+                              class="btn btn-default mb-0"
+                            >
+                              <i class="fa fa-image"></i> View Picture
+                            </button>
+                            <button class="btn btn-default mb-0">
+                              <i class="fa fa-map-marker-alt"></i> View Map
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div *ngIf="loading" class="col-md-12">
+                      <app-loader-white></app-loader-white>
+                    </div>
+                  </div>
+                  <div
+                    class="tab-pane fade body_emp_staff"
+                    id="nav-profile"
+                    role="tabpanel"
+                    aria-labelledby="nav-profile-tab"
+                  >
+                    <div class="tblLoader">
+                      <table
+                        *ngIf="!loadingOrders"
+                        datatable
+                        [dtOptions]="dtOptionsOrders"
+                        class="table table-hover dt-responsive nowrap"
+                        id="ordersTable"
+                        style="width: 100%"
+                      >
+                        <thead>
+                          <tr>
+                            <th>Date</th>
+                            <th>Invoice#</th>
+                            <th>Shop ID</th>
+                            <th>Shop Name</th>
+                            <th>Segment</th>
+                            <th>Order Booker</th>
+                            <th>Salesman</th>
+                            <th>Invoice Total</th>
+                            <th>Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let order of orders">
+                            <td>{{ order.date }}</td>
+                            <td>{{ order.invoice_number }}</td>
+                            <td>{{ retailer.id }}</td>
+                            <td>{{ retailer.retailer_name }}</td>
+                            <td>{{ retailer.channel }}</td>
+                            <td>{{ order.order_booker }}</td>
+                            <td>{{ order.salesman }}</td>
+                            <td>
+                              {{ order.invoice_total | number : "1.2-2" }}
+                            </td>
+                            <td>
+                              <button
+                                data-toggle="modal"
+                                data-target="#OrderDetailModal"
+                                class="btn btn-default btn-line"
+                                (click)="
+                                  getOrderDetail(
+                                    order.order_id,
+                                    order.order_booker,
+                                    order.salesman,
+                                    order.date,
+                                    order.invoice_number,
+                                    order.status
+                                  )
+                                "
+                              >
+                                Order Detail
+                              </button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div *ngIf="loadingOrders" class="col-md-12">
+                        <app-loader-white></app-loader-white>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

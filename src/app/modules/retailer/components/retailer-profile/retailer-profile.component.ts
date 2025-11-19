@@ -199,6 +199,64 @@ export class RetailerProfileComponent implements OnInit {
     document.getElementById('profile').classList.add('blur-div');
     this.createInvoiceCharts();
     this.createProductWiseChart();
+    this.createPaymentChart();
+    this.createCategoryChart();
+  }
+
+  createPaymentChart(): void {
+    const ctx = (
+      document.getElementById('PaymentMode') as HTMLCanvasElement
+    )?.getContext('2d');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+      type: this.paymentChartType,
+      data: {
+        labels: this.paymentChartLabels,
+        datasets: [
+          {
+            data: this.paymentChartData,
+            backgroundColor: this.paymentChartColors[0].backgroundColor,
+            borderColor: this.paymentChartColors[0].borderColor,
+            borderWidth: this.paymentChartColors[0].borderWidth || 1,
+          },
+        ],
+      },
+      options: {
+        ...this.paymentChartOptions,
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: this.paymentChartLegend },
+        },
+      },
+    });
+  }
+
+  createCategoryChart(): void {
+    const ctx = (
+      document.getElementById('CategoryChart') as HTMLCanvasElement
+    )?.getContext('2d');
+    if (!ctx) return;
+
+    new Chart(ctx, {
+      type: this.categoryChartType,
+      data: {
+        labels: this.categoryChartLabels,
+        datasets: [
+          {
+            data: this.categoryChartData,
+            backgroundColor: this.categoryChartColors[0].backgroundColor,
+            borderWidth: this.categoryChartColors[0].borderWidth || 1,
+          },
+        ],
+      },
+      options: {
+        ...this.categoryChartOptions,
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    });
   }
 
   createInvoiceCharts(): void {

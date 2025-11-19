@@ -159,7 +159,8 @@
                     <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Dist.Disc%</strong></th>
                     <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">SPC.Disc</strong></th>
                     <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">B.Disc</strong></th>
-                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Tax</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">GST</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">AIT</strong></th>
                     <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Net.Amt</strong></th>
                   </tr>
                 </thead>
@@ -188,7 +189,8 @@
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.distributor_discount | number: "1.2-2" }}</td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item?.specialDiscount | number: "1.2-2" }}</td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.booker_discount }}</td>
-                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.gst_tax + item.advance_income_tax | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.gst_tax | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.advance_income_tax | number: "1.2-2" }}</td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.TotalBill | number: "1.2-2" }}</td>
                   </tr>
                   <tr class="bg-gray-200 dark:bg-[#333333] text-gray-900 dark:text-white">

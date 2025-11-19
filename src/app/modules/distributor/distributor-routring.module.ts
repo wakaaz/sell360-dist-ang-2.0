@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ListComponent } from './components/list/list.component';
 import { DistributorComponent } from './distributor.component';
-
+import { DistributorDetailsComponent } from './distributor-details/distributor-details.component';
 const routes: Routes = [
   {
     path: '',
@@ -16,6 +16,11 @@ const routes: Routes = [
         path: 'list',
         pathMatch: 'full',
         component: ListComponent,
+      },
+      {
+        path: 'distributor-details',
+        pathMatch: 'full',
+        component: DistributorDetailsComponent, 
       },
     ],
   },

@@ -50,6 +50,14 @@ const routes: Routes = [
         (m) => m.DistributorModule
       ),
   },
+  {
+    path: 'distributors',
+    canActivate: [AuthGuard],
+    loadChildren: () =>
+      import('./modules/distributor/distributor.module').then(
+        (m) => m.DistributorModule
+      ),
+  },
 
   {
     path: 'product',

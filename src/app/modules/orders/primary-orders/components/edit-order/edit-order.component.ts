@@ -168,7 +168,8 @@ export class EditOrderComponent implements OnInit, OnDestroy {
         this.order.gross_sale_amount = orderRes.gross_sale_amount;
         this.order.total_discount = orderRes.total_discount;
         this.order.total_tax_amount = orderRes.total_tax_amount;
-        this.order.total_amount_after_tax = orderRes.total_amount_after_tax;
+        this.order.total_amount_after_tax =
+          orderRes.total_amount_after_tax - orderRes.frieght_price;
         this.order.order_total_without_frieght_price =
           orderRes.order_total_without_frieght_price;
         this.order.order_total = orderRes.order_total;

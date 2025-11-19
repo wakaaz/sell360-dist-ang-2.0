@@ -67,22 +67,22 @@ export function setPrimarOrderItem(
   // Component expects:
   // - primary_qty_sold = packs
   // - parent_qty_sold = total units
-  primOrderItem.primary_qty_sold = primaryOrderItem.parent_qty_sold;
-  primOrderItem.parent_qty_sold =
+  const updatedUnits = +primaryOrderItem.item_quantity_updated || 0;
+  const bookedUnits = +primaryOrderItem.item_quantity_booker || 0;
+  let effectiveUnits = updatedUnits > 0 ? updatedUnits : bookedUnits;
+
+  if (
     primaryOrderItem?.scheme_type === 'free_product' &&
     primaryOrderItem?.scheme_rule === 4
-      ? primaryOrderItem.item_quantity_updated > 0
-        ? primaryOrderItem.item_quantity_updated -
-          primaryOrderItem.scheme_quantity_free
-        : primaryOrderItem.item_quantity_booker > 0
-        ? primaryOrderItem.item_quantity_booker -
-          primaryOrderItem.scheme_quantity_free
-        : 0
-      : primaryOrderItem.item_quantity_updated > 0
-      ? primaryOrderItem.item_quantity_updated
-      : primaryOrderItem.item_quantity_booker > 0
-      ? primaryOrderItem.item_quantity_booker
-      : 0;
+  ) {
+    const freeUnits = +primaryOrderItem.scheme_quantity_free || 0;
+    effectiveUnits = Math.max(0, effectiveUnits - freeUnits);
+  }
+
+  primOrderItem.parent_qty_sold = effectiveUnits;
+
+  primOrderItem.primary_qty_sold = effectiveUnits / unitsPerPack;
+
   primOrderItem.parent_tp = primaryOrderItem.parent_tp; // one qty ammount
   // Unit retail price (per unit)
   primOrderItem.unit_item_retail_price = primaryOrderItem.item_retail_price;

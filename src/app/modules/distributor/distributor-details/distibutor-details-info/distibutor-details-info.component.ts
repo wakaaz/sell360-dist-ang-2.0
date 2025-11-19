@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { IDistributor } from '../distributor-details.utils';
 
 @Component({
   selector: 'app-distibutor-details-info',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './distibutor-details-info.component.css',
 })
 export class DistibutorDetailsInfoComponent {
-
+  @Input() distributor: IDistributor | null = null;
 }

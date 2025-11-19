@@ -1,1 +1,158 @@
-<p>distibutor-details-info works!</p>
+<div *ngIf="distributor">
+    <div
+      class="bg-white border-1 border-gray-200 dark:bg-[#1f1f1f] dark:border-[#333333] p-3 xl:p-5 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)] mb-5"
+    >
+      <div class="gap-3 grid grid-cols-4 mb-5">
+        <div
+          class="flex justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+        >
+          <strong
+            class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+            >Region:
+          </strong>
+          <span
+            class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]"
+            >{{ distributor.region_name || 'N/A' }}</span
+          >
+        </div>
+        <div
+          class="flex justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+        >
+          <strong
+            class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+            >Area:
+          </strong>
+          <span
+            class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]"
+            >{{ distributor.area_name || 'N/A' }}</span
+          >
+        </div>
+        <div
+          class="flex justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+        >
+          <strong
+            class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+            >Territory:
+          </strong>
+          <span
+            class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]"
+            >{{ distributor.territory_name || 'N/A' }}</span
+          >
+        </div>
+        <div
+          class="flex justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+        >
+          <strong
+            class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+            >City:
+          </strong>
+          <span
+            class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]"
+            >{{ distributor.city_name || 'N/A' }}</span
+          >
+        </div>
+        
+      </div>
+      <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 md:col-span-4">
+          <div class="flex flex-col h-full justify-center gap-4">
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              Phone:
+              <span class="text-[14px] font-light">{{ distributor.distributor_phone || 'N/A' }}</span>
+            </div>
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              TSM:
+              <span class="text-[14px] font-light">{{ distributor.tsm || 'N/A' }}</span>
+            </div>
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              Distributor Code:
+              <span class="text-[14px] font-light">{{ distributor.distributor_code || 'N/A' }}</span>
+            </div>
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              NTN:
+              <span class="text-[14px] font-light">{{ distributor.ntn || 'N/A' }}</span>
+            </div>
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              STRN:
+              <span class="text-[14px] font-light">{{ distributor.strn || 'N/A' }}</span>
+            </div>
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              Email:
+              <span class="text-[14px] font-light">
+                <a
+                  *ngIf="distributor.distributor_email"
+                  [href]="'mailto:' + distributor.distributor_email"
+                  class="text-[#0038ba] dark:text-neutral-200"
+                  >{{ distributor.distributor_email }}</a
+                >
+                <span *ngIf="!distributor.distributor_email">N/A</span>
+              </span>
+            </div>
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              Address:
+              <span class="text-[14px] font-light">{{ distributor.distributor_address || 'N/A' }}</span>
+            </div>
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              Locality:
+              <span class="text-[14px] font-light">{{ distributor.area_name || 'N/A' }}</span>
+            </div>
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              Status:
+              <span class="text-[14px] font-light">{{ distributor.filer_status == 1 ? 'Filer' : 'Non-Filer' }}</span>
+            </div>
+            <div
+              class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+            >
+              Neighbourhood:
+              <span class="text-[14px] font-light">
+                {{ distributor.city_name || 'N/A' }}</span
+              >
+            </div>
+            <button
+              type="button"
+              class="px-6 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none transition-all duration-200"
+            >
+              <span class="flex flex-row justify-center items-center gap-1">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  fill="currentColor"
+                  class="bi bi-geo-alt-fill h-4 w-4"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
+                  />
+                </svg>
+                View On Map</span
+              >
+            </button>
+          </div>
+        </div>
+        <div class="col-span-12 md:col-span-8">
+            <div class="">
+              <img class="m-auto w-auto h-auto rounded-lg object-cover transition-all duration-300" src="{{ distributor?.distributor_image || 'assets/images/avatar.svg' }}" alt="">
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>

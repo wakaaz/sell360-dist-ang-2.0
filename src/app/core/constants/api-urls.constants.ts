@@ -126,4 +126,6 @@ export const API_URLS = {
 
   // Settings
   CHANGE_PASSWORD: '/change-password',
+
+  DISTRIBUTOR_DETAILS: '/sub-distributor-detail/',
 };

@@ -12,4 +12,9 @@ export class DistributorService {
     const url = `${API_URLS.SUB_DISTRIBUTORS}`;
     return this.httpBaseService.get(url);
   }
+
+  getDistributorDetails(distributorId: string): Observable<any> {
+    const url = `${API_URLS.DISTRIBUTOR_DETAILS}${distributorId}`;
+    return this.httpBaseService.get(url);
+  }
 }

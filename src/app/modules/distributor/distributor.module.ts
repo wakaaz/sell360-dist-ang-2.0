@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DistributorComponent } from './distributor.component';
 import { ListComponent } from './components/list/list.component';
+import { DistributorDetailsComponent } from './distributor-details/distributor-details.component';
 import { DistributorRoutingModule } from './distributor-routring.module';
 import { DistributorService } from './services/distributor.service';
 import { SharedModule } from '../shared/shared.module';
@@ -9,7 +10,7 @@ import { DataTablesModule } from 'angular-datatables';
 import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
-  declarations: [DistributorComponent, ListComponent],
+  declarations: [DistributorComponent, ListComponent, DistributorDetailsComponent],
   imports: [
     CommonModule,
     SharedModule,

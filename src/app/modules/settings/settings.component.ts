@@ -17,7 +17,10 @@ export class SettingsComponent implements OnInit {
   passwordForm: FormGroup;
   showNewPassword: boolean = false;
   showConfirmPassword: boolean = false;
+  showOldPassword: boolean = false;
   loading: boolean = false;
+  activeTab: string = 'distributor-info'; // 'distributor-info', 'change-password', 'invoices-details'
+  oldPasswordVerified: boolean = false;
 
   constructor(
     private storageService: LocalStorageService,
@@ -26,6 +29,7 @@ export class SettingsComponent implements OnInit {
     private toasterService: ToasterService
   ) {
     this.passwordForm = this.fb.group({
+      oldPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
     }, { validators: this.passwordMatchValidator });
@@ -53,6 +57,10 @@ export class SettingsComponent implements OnInit {
     } else {
       this.locations = ['Location 1', 'Location 2'];
     }
+
+    // Disable new password fields initially until old password is verified
+    this.passwordForm.get('newPassword')?.disable();
+    this.passwordForm.get('confirmPassword')?.disable();
   }
 
   passwordMatchValidator(formGroup: FormGroup) {
@@ -60,10 +68,18 @@ export class SettingsComponent implements OnInit {
     const confirmPassword = formGroup.get('confirmPassword');
     
     if (newPassword && confirmPassword) {
-      if (newPassword.value !== confirmPassword.value) {
-        confirmPassword.setErrors({ passwordMismatch: true });
-      } else {
-        confirmPassword.setErrors(null);
+      // Only validate if both fields are enabled and have values
+      if (!newPassword.disabled && !confirmPassword.disabled) {
+        if (newPassword.value && confirmPassword.value && newPassword.value !== confirmPassword.value) {
+          confirmPassword.setErrors({ passwordMismatch: true });
+          return { passwordMismatch: true };
+        } else {
+          const errors = confirmPassword.errors;
+          if (errors) {
+            delete errors['passwordMismatch'];
+            confirmPassword.setErrors(Object.keys(errors).length > 0 ? errors : null);
+          }
+        }
       }
     }
     return null;
@@ -77,6 +93,67 @@ export class SettingsComponent implements OnInit {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
 
+  toggleOldPasswordVisibility(): void {
+    this.showOldPassword = !this.showOldPassword;
+  }
+
+  setActiveTab(tab: string): void {
+    this.activeTab = tab;
+    if (tab !== 'change-password') {
+      // Reset password form when switching away from change password tab
+      this.oldPasswordVerified = false;
+      this.passwordForm.reset();
+      // Disable new password fields
+      this.passwordForm.get('newPassword')?.disable();
+      this.passwordForm.get('confirmPassword')?.disable();
+    }
+  }
+
+  verifyOldPassword(): void {
+    const oldPassword = this.passwordForm.get('oldPassword')?.value;
+    if (!oldPassword) {
+      this.passwordForm.get('oldPassword')?.markAsTouched();
+      return;
+    }
+
+    this.loading = true;
+    // Call service to verify old password
+    this.settingsService.verifyOldPassword(oldPassword).subscribe(
+      (response) => {
+        this.loading = false;
+        this.oldPasswordVerified = true;
+        // Enable new password fields and update validators
+        const newPasswordControl = this.passwordForm.get('newPassword');
+        const confirmPasswordControl = this.passwordForm.get('confirmPassword');
+        
+        if (newPasswordControl) {
+          newPasswordControl.enable();
+          newPasswordControl.setValidators([Validators.required, Validators.minLength(6)]);
+          newPasswordControl.updateValueAndValidity();
+        }
+        
+        if (confirmPasswordControl) {
+          confirmPasswordControl.enable();
+          confirmPasswordControl.setValidators([Validators.required]);
+          confirmPasswordControl.updateValueAndValidity();
+        }
+        
+        // Trigger password match validation
+        this.passwordForm.updateValueAndValidity();
+      },
+      (error) => {
+        this.loading = false;
+        this.toasterService.showToaster({
+          title: 'Error',
+          message: 'Old password is incorrect. Please try again.',
+          type: 'error'
+        });
+        this.passwordForm.get('oldPassword')?.setErrors({ incorrect: true });
+        console.error('Password verification error:', error);
+      }
+    );
+  }
+
   onChangePassword(): void {
     if (this.passwordForm.invalid) {
       // Mark all fields as touched to show validation errors
@@ -86,11 +163,17 @@ export class SettingsComponent implements OnInit {
       return;
     }
 
+    if (!this.oldPasswordVerified) {
+      this.verifyOldPassword();
+      return;
+    }
+
     this.loading = true;
+    const oldPassword = this.passwordForm.get('oldPassword')?.value;
     const newPassword = this.passwordForm.get('newPassword')?.value;
     
     // Call service to change password
-    this.settingsService.changePassword(newPassword).subscribe(
+    this.settingsService.changePassword(oldPassword, newPassword).subscribe(
       (response) => {
         this.loading = false;
         this.toasterService.showToaster({
@@ -99,6 +182,10 @@ export class SettingsComponent implements OnInit {
           type: 'success'
         });
         this.passwordForm.reset();
+        this.oldPasswordVerified = false;
+        // Disable new password fields until old password is verified again
+        this.passwordForm.get('newPassword')?.disable();
+        this.passwordForm.get('confirmPassword')?.disable();
       },
       (error) => {
         this.loading = false;

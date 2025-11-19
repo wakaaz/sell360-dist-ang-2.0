@@ -1,223 +1,419 @@
 <div class="container mx-auto px-4 py-4 !max-w-4xl">
-    <!-- Page Title -->
-    <h1 class="text-lg text-secondary dark:text-gray-200 font-primary font-medium mb-4">
-      Settings
-    </h1>
+  <!-- Page Title -->
+  <h1 class="text-lg text-secondary dark:text-gray-200 font-primary font-medium mb-4">
+    Settings <span class="font-light">Management</span>
+  </h1>
 
-<div class="flex-1">
-  <!-- Profile Information Card -->
-  <div class="relative bg-white dark:bg-[#1d1d1d] p-0 rounded-lg shadow-[0_0_5px_#0000001a] space-y-4 mb-6">
-    <div class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-[#1d1d1d] dark:from-transparent dark:to-transparent shadow-none">
-      <h2 class="relative pl-0 mb-0 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
-        Profile <span class="font-light">Information</span>
-      </h2>
-    </div>
-    
-    <div class="space-y-4 p-5 !mt-0">
-      <div class="grid grid-cols-2 gap-4">
-        <!-- Distributor Name -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
-            Distributor Name
-          </label>
-          <input
-            type="text"
-            [value]="distributorName"
-            readonly
-            class="w-full !h-[32px] px-3 border border-neutral-100 dark:border-[#141414] rounded-[5px] bg-gray-50 dark:bg-[#141414] text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none font-primary text-sm cursor-not-allowed"
-          />
+  <div class="flex-1">
+    <!-- Main Card Container -->
+    <div class="relative bg-white dark:bg-[#1d1d1d] p-0 rounded-lg shadow-[0_0_5px_#0000001a]">
+      <!-- Card Header -->
+      <div class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-[#1d1d1d] dark:from-transparent dark:to-transparent shadow-none">
+        <div class="flex gap-0">
+          <!-- Distributor Info Tab -->
+          <div class="relative">
+            <button
+              type="button"
+              (click)="setActiveTab('distributor-info')"
+              class="flex items-center px-4 py-3 text-[16px] font-primary font-medium transition-colors relative bg-transparent"
+              [ngClass]="{
+                'text-primary dark:text-[#a0a0a0] font-medium':
+                  activeTab === 'distributor-info',
+                'text-gray-600 dark:text-gray-400 font-medium':
+                  activeTab !== 'distributor-info'
+              }"
+            >
+              <span>Distributor Info</span>
+            </button>
+            <!-- Active tab bottom border (blue) -->
+            <div
+              *ngIf="activeTab === 'distributor-info'"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"
+            ></div>
+            <!-- Inactive tab bottom border (gray) -->
+            <div
+              *ngIf="activeTab !== 'distributor-info'"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
+            ></div>
+          </div>
+
+          <!-- Change Password Tab -->
+          <div class="relative">
+            <button
+              type="button"
+              (click)="setActiveTab('change-password')"
+              class="flex items-center px-4 py-3 text-[16px] font-primary font-medium transition-colors relative bg-transparent"
+              [ngClass]="{
+                'text-primary dark:text-[#a0a0a0] font-medium':
+                  activeTab === 'change-password',
+                'text-gray-600 dark:text-gray-400 font-medium':
+                  activeTab !== 'change-password'
+              }"
+            >
+              <span>Change Password</span>
+            </button>
+            <!-- Active tab bottom border (blue) -->
+            <div
+              *ngIf="activeTab === 'change-password'"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"
+            ></div>
+            <!-- Inactive tab bottom border (gray) -->
+            <div
+              *ngIf="activeTab !== 'change-password'"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
+            ></div>
+          </div>
+
+          <!-- Invoices Details Tab -->
+          <div class="relative">
+            <button
+              type="button"
+              (click)="setActiveTab('invoices-details')"
+              class="flex items-center px-4 py-3 text-[16px] font-primary font-medium transition-colors relative bg-transparent"
+              [ngClass]="{
+                'text-primary dark:text-[#a0a0a0] font-medium':
+                  activeTab === 'invoices-details',
+                'text-gray-600 dark:text-gray-400 font-medium':
+                  activeTab !== 'invoices-details'
+              }"
+            >
+              <span>Invoices Details</span>
+            </button>
+            <!-- Active tab bottom border (blue) -->
+            <div
+              *ngIf="activeTab === 'invoices-details'"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-primary dark:bg-[#a0a0a0] transition-all duration-200"
+            ></div>
+            <!-- Inactive tab bottom border (gray) -->
+            <div
+              *ngIf="activeTab !== 'invoices-details'"
+              class="absolute bottom-0 left-0 right-0 h-[2px] bg-gray-300 dark:bg-[#444444] transition-all duration-200"
+            ></div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Tab Content -->
+      <div class="p-5">
+        <!-- Distributor Info Tab Content -->
+        <div *ngIf="activeTab === 'distributor-info'" class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Distributor Name -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
+                Distributor Name
+              </label>
+              <input
+                type="text"
+                [value]="distributorName"
+                readonly
+                class="w-full !h-[32px] px-3 border border-neutral-100 dark:border-[#141414] rounded-[5px] bg-gray-50 dark:bg-[#141414] text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none font-primary text-sm cursor-not-allowed"
+              />
+            </div>
+
+            <!-- Location -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
+                Location
+              </label>
+              <input
+                type="text"
+                [value]="locations[0] || 'N/A'"
+                readonly
+                class="w-full !h-[32px] px-3 border border-neutral-100 dark:border-[#141414] rounded-[5px] bg-gray-50 dark:bg-[#141414] text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none font-primary text-sm cursor-not-allowed"
+              />
+            </div>
+          </div>
         </div>
 
-        <!-- Location 1 -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
-            Location
-          </label>
-          <input
-            type="text"
-            [value]="locations[0] || 'N/A'"
-            readonly
-            class="w-full !h-[32px] px-3 border border-neutral-100 dark:border-[#141414] rounded-[5px] bg-gray-50 dark:bg-[#141414] text-gray-700 dark:text-gray-300 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none font-primary text-sm cursor-not-allowed"
-          />
+        <!-- Change Password Tab Content -->
+        <div *ngIf="activeTab === 'change-password'" class="space-y-4">
+          <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="space-y-4">
+            <!-- Old Password -->
+            <div class="w-[50%]">
+              <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
+                <span class="text-red-500">*</span> Old Password
+              </label>
+              <div class="relative">
+                <input
+                  [type]="showOldPassword ? 'text' : 'password'"
+                  formControlName="oldPassword"
+                  placeholder="Enter old password"
+                  [disabled]="oldPasswordVerified"
+                  class="w-full !h-[32px] px-3 pr-10 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary dark:focus:border-primary font-primary text-sm disabled:bg-gray-50 disabled:dark:bg-[#1a1a1a] disabled:cursor-not-allowed"
+                  [class.border-red-500]="passwordForm.get('oldPassword')?.invalid && passwordForm.get('oldPassword')?.touched"
+                />
+                <button
+                  type="button"
+                  (click)="toggleOldPasswordVisibility()"
+                  [disabled]="oldPasswordVerified"
+                  class="absolute top-[8px] right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none disabled:opacity-50"
+                >
+                  <svg
+                    *ngIf="!showOldPassword"
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                    />
+                  </svg>
+                  <svg
+                    *ngIf="showOldPassword"
+                    class="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                    />
+                  </svg>
+                </button>
+              </div>
+              <div
+                *ngIf="passwordForm.get('oldPassword')?.invalid && passwordForm.get('oldPassword')?.touched"
+                class="input-error mt-1"
+              >
+                <span
+                  *ngIf="passwordForm.get('oldPassword')?.errors?.['required']"
+                  class="text-red-500 text-xs"
+                >
+                  Old password is required
+                </span>
+                <span
+                  *ngIf="passwordForm.get('oldPassword')?.errors?.['incorrect']"
+                  class="text-red-500 text-xs"
+                >
+                  Old password is incorrect
+                </span>
+              </div>
+              <div *ngIf="!oldPasswordVerified" class="mt-2">
+                <button
+                  type="button"
+                  (click)="verifyOldPassword()"
+                  [disabled]="loading || !passwordForm.get('oldPassword')?.value"
+                  class="px-4 py-1.5 leading-none text-sm border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <span *ngIf="!loading">Verify Password</span>
+                  <span *ngIf="loading" class="flex items-center justify-center">
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Verifying...
+                  </span>
+                </button>
+              </div>
+            </div>
+
+            <!-- New Password (shown only after old password is verified) -->
+
+            <!-- Add condition for below div -----   *ngIf="oldPasswordVerified" -->
+            <div  class="space-y-4">
+              <hr class="dark:border-[#333333] border-t">
+              <div class="w-[50%]">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
+                  <span class="text-red-500">*</span> New Password
+                </label>
+                <div class="relative">
+                  <input
+                    [type]="showNewPassword ? 'text' : 'password'"
+                    formControlName="newPassword"
+                    placeholder="Enter new password"
+                    class="w-full !h-[32px] px-3 pr-10 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary dark:focus:border-primary font-primary text-sm"
+                    [class.border-red-500]="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched"
+                  />
+                  <button
+                    type="button"
+                    (click)="toggleNewPasswordVisibility()"
+                    class="absolute top-[8px] right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
+                  >
+                    <svg
+                      *ngIf="!showNewPassword"
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
+                    </svg>
+                    <svg
+                      *ngIf="showNewPassword"
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div
+                  *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched"
+                  class="input-error mt-1"
+                >
+                  <span
+                    *ngIf="passwordForm.get('newPassword')?.errors?.['required']"
+                    class="text-red-500 text-xs"
+                  >
+                    New password is required
+                  </span>
+                  <span
+                    *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']"
+                    class="text-red-500 text-xs"
+                  >
+                    Password must be at least 6 characters
+                  </span>
+                </div>
+              </div>
+
+              <!-- Confirm New Password -->
+              <div class="w-[50%]">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
+                  <span class="text-red-500">*</span> Confirm New Password
+                </label>
+                <div class="relative">
+                  <input
+                    [type]="showConfirmPassword ? 'text' : 'password'"
+                    formControlName="confirmPassword"
+                    placeholder="Confirm new password"
+                    class="w-full !h-[32px] px-3 pr-10 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary dark:focus:border-primary font-primary text-sm"
+                    [class.border-red-500]="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched"
+                  />
+                  <button
+                    type="button"
+                    (click)="toggleConfirmPasswordVisibility()"
+                    class="absolute top-[8px] right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
+                  >
+                    <svg
+                      *ngIf="!showConfirmPassword"
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+                      />
+                    </svg>
+                    <svg
+                      *ngIf="showConfirmPassword"
+                      class="w-4 h-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+                <div
+                  *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched"
+                  class="input-error mt-1"
+                >
+                  <span
+                    *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']"
+                    class="text-red-500 text-xs"
+                  >
+                    Please confirm your password
+                  </span>
+                  <span
+                    *ngIf="passwordForm.get('confirmPassword')?.errors?.['passwordMismatch']"
+                    class="text-red-500 text-xs"
+                  >
+                    Passwords do not match
+                  </span>
+                </div>
+              </div>
+
+              <!-- Change Password Button -->
+              <div>
+                <button
+                  type="submit"
+                  [disabled]="loading || passwordForm.invalid"
+                  class="px-6 py-2 leading-none text-sm border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <span *ngIf="!loading">Change Password</span>
+                  <span *ngIf="loading" class="flex items-center justify-center">
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Changing...
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Invoices Details Tab Content -->
+        <div *ngIf="activeTab === 'invoices-details'" class="space-y-4">
+          <div class="flex flex-col items-center justify-center py-12">
+            <svg
+              class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            <p class="text-gray-500 dark:text-gray-400 font-primary text-center">
+              Invoice details will be displayed here
+            </p>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- Change Password Card -->
-  <div class="relative bg-white dark:bg-[#1d1d1d] p-0 rounded-lg shadow-[0_0_5px_#0000001a] space-y-4 mb-6">
-    <div class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-[#1d1d1d] dark:from-transparent dark:to-transparent shadow-none">
-      <h2 class="relative pl-0 mb-0 text-secondary dark:text-gray-300 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
-        Change <span class="font-light">Password</span>
-      </h2>
-    </div>
-    
-    <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="space-y-4 p-5 !mt-0">
-      <!-- New Password -->
-      <div class="w-[50%]">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
-          <span class="text-red-500">*</span> New Password
-        </label>
-        <div class="relative">
-          <input
-            [type]="showNewPassword ? 'text' : 'password'"
-            formControlName="newPassword"
-            placeholder="Enter new password"
-            class="w-full !h-[32px] px-3 pr-10 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary dark:focus:border-primary font-primary text-sm"
-            [class.border-red-500]="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched"
-          />
-          <button
-            type="button"
-            (click)="toggleNewPasswordVisibility()"
-            class="absolute top-[8px] right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
-          >
-            <svg
-              *ngIf="!showNewPassword"
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-              />
-            </svg>
-            <svg
-              *ngIf="showNewPassword"
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
-          </button>
-        </div>
-        <div
-          *ngIf="passwordForm.get('newPassword')?.invalid && passwordForm.get('newPassword')?.touched"
-          class="input-error mt-1"
-        >
-          <span
-            *ngIf="passwordForm.get('newPassword')?.errors?.['required']"
-            class="text-red-500 text-xs"
-          >
-            New password is required
-          </span>
-          <span
-            *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']"
-            class="text-red-500 text-xs"
-          >
-            Password must be at least 6 characters
-          </span>
-        </div>
-      </div>
-
-      <!-- Confirm New Password -->
-      <div class="w-[50%]">
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-400 mb-2">
-          <span class="text-red-500">*</span> Confirm New Password
-        </label>
-        <div class="relative">
-          <input
-            [type]="showConfirmPassword ? 'text' : 'password'"
-            formControlName="confirmPassword"
-            placeholder="Confirm new password"
-            class="w-full !h-[32px] px-3 pr-10 border border-gray-300 dark:border-[#333333] rounded-[5px] bg-white dark:bg-[#141414] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none hover:border-primary focus:border-primary dark:focus:border-primary font-primary text-sm"
-            [class.border-red-500]="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched"
-          />
-          <button
-            type="button"
-            (click)="toggleConfirmPasswordVisibility()"
-            class="absolute top-[8px] right-0 flex items-center pr-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
-          >
-            <svg
-              *ngIf="!showConfirmPassword"
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
-              />
-            </svg>
-            <svg
-              *ngIf="showConfirmPassword"
-              class="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-              />
-            </svg>
-          </button>
-        </div>
-        <div
-          *ngIf="passwordForm.get('confirmPassword')?.invalid && passwordForm.get('confirmPassword')?.touched"
-          class="input-error mt-1"
-        >
-          <span
-            *ngIf="passwordForm.get('confirmPassword')?.errors?.['required']"
-            class="text-red-500 text-xs"
-          >
-            Please confirm your password
-          </span>
-          <span
-            *ngIf="passwordForm.get('confirmPassword')?.errors?.['passwordMismatch']"
-            class="text-red-500 text-xs"
-          >
-            Passwords do not match
-          </span>
-        </div>
-      </div>
-
-      <!-- Change Password Button -->
-      <div class="pt-2">
-        <button
-          type="submit"
-          [disabled]="loading || passwordForm.invalid"
-          class="px-6 py-2 leading-none text-sm border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-primary hover:text-white focus:bg-primary focus:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-        >
-          <span *ngIf="!loading">Change Password</span>
-          <span *ngIf="loading" class="flex items-center justify-center">
-            <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Changing...
-          </span>
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-
 </div>

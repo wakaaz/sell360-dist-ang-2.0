@@ -128,4 +128,6 @@ export const API_URLS = {
   CHANGE_PASSWORD: '/change-password',
 
   DISTRIBUTOR_DETAILS: '/sub-distributor-detail/',
+
+  DISTRIBUTOR_INVOICE_PDF: '/primary-order-bill-detail',
 };

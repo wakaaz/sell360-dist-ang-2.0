@@ -15,6 +15,8 @@ import {
   ModuleRegistry,
   AllCommunityModule,
 } from 'ag-grid-community';
+import { environment } from 'src/environments/environment';
+import { API_URLS } from 'src/app/core/constants/api-urls.constants';
 
 // Register AG Grid modules
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -159,8 +161,19 @@ export class DistributorDetailsComponent implements OnInit {
   }
 
   setupGlobalFunctions(): void {
-    (window as any).viewInvoiceDetail = (invoiceId: string) => {
-      console.log('View invoice detail:', invoiceId);
+    const self = this;
+    (window as any).viewInvoiceDetail = (orderId: string) => {
+      if (!orderId) {
+        self.toastService.showToaster({
+          title: 'Error:',
+          message: 'Order ID is missing.',
+          type: 'error',
+        });
+        return;
+      }
+      
+      const url = `${environment.apiDomain}${API_URLS.DISTRIBUTOR_INVOICE_PDF}?order_id=${orderId}`;
+      window.open(url, '_blank');
     };
   }
 
@@ -192,7 +205,7 @@ export class DistributorDetailsComponent implements OnInit {
 
         if (res && res.data) {
           this.distributor = res.data.distributor;
-
+          
           this.invoices = res.data.invoices || [];
         } else {
           this.invoices = [];

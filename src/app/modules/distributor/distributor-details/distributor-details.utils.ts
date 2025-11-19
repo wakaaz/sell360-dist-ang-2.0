@@ -42,6 +42,7 @@ export interface IDistributor {
   area_name: string;
   territory_name: string;
   city_name: string;
+  distributor_profile_picture: string | null;
 }
 
 export interface IDistributorDetailsData {

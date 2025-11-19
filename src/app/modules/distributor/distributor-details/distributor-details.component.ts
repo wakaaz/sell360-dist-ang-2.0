@@ -192,7 +192,7 @@ export class DistributorDetailsComponent implements OnInit {
 
         if (res && res.data) {
           this.distributor = res.data.distributor;
-
+          
           this.invoices = res.data.invoices || [];
         } else {
           this.invoices = [];

@@ -4,7 +4,9 @@
   <div class="mt-3 mb-3">
     <div class="flex justify-between items-center text-left">
       <div>
-        <h1 class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0">
+        <h1
+          class="text-lg text-secondary dark:text-gray-400 font-primary font-medium mb-0"
+        >
           Distributor <span class="font-light"> Details</span>
         </h1>
       </div>
@@ -13,49 +15,243 @@
   </div>
 
   <div
-    class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a]">
-
+    class="bg-white dark:bg-black dark:border-[#333333] border p-0 rounded-lg relative shadow-[0_0_5px_#0000001a]"
+  >
     <div *ngIf="loading" class="flex justify-center items-center p-8">
       <app-loader-white></app-loader-white>
     </div>
 
     <div *ngIf="!loading">
-
-      <div
-      class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-black dark:from-transparent dark:to-transparent shadow-none">
-      <div>
-        <h2
-          class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium">
-          Invoices &nbsp;<span class="font-light">List</span>
-          <div class="ml-2 my-auto flex items-center">
-            <span class="bg-primary text-white text-[9px] p-[4px] leading-[1] rounded font-primary">{{
-              invoices.length }}</span>
+      <div *ngIf="distributor" class="flex-1">
+        <div
+          class="bg-white border-1 border-gray-200 dark:bg-[#1f1f1f] dark:border-[#333333] p-3 xl:p-5 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_rgba(255,255,255,0.05)] mb-5"
+        >
+          <div class="gap-3 grid grid-cols-4 mb-5">
+            <div
+              class="flex justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+            >
+              <strong
+                class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+                >Region:
+              </strong>
+              <span
+                class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]"
+                >{{ distributor.region_name || 'N/A' }}</span
+              >
+            </div>
+            <div
+              class="flex justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+            >
+              <strong
+                class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+                >Area:
+              </strong>
+              <span
+                class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]"
+                >{{ distributor.area_name || 'N/A' }}</span
+              >
+            </div>
+            <div
+              class="flex justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+            >
+              <strong
+                class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+                >Territory:
+              </strong>
+              <span
+                class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]"
+                >{{ distributor.territory_name || 'N/A' }}</span
+              >
+            </div>
+            <div
+              class="flex justify-between items-center bg-[#f9f9f9] dark:bg-[#141414] border-b border-[#d1d1d1] dark:border-[#1d1d1d] px-3 py-2 leading-none rounded-md"
+            >
+              <strong
+                class="text-gray-900 dark:text-gray-300 font-primary font-medium"
+                >City:
+              </strong>
+              <span
+                class="font-[Rationale,sans-serif] text-[#0038ba] dark:text-neutral-200 text-[18px]"
+                >{{ distributor.city_name || 'N/A' }}</span
+              >
+            </div>
+            
           </div>
-        </h2>
-      </div>
-      <div class="text-secondary dark:text-white">
-        <div class="relative">
-          <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg class="h-4 w-4 text-gray-400" width="16" height="16" viewBox="0 0 16 16" fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <path fill-rule="evenodd" clip-rule="evenodd"
-                d="M11.5014 7.00039C11.5014 7.59133 11.385 8.1765 11.1588 8.72246C10.9327 9.26843 10.6012 9.7645 10.1833 10.1824C9.76548 10.6002 9.2694 10.9317 8.72344 11.1578C8.17747 11.384 7.59231 11.5004 7.00136 11.5004C6.41041 11.5004 5.82525 11.384 5.27929 11.1578C4.73332 10.9317 4.23725 10.6002 3.81938 10.1824C3.40152 9.7645 3.07005 9.26843 2.8439 8.72246C2.61776 8.1765 2.50136 7.59133 2.50136 7.00039C2.50136 5.80691 2.97547 4.66232 3.81938 3.81841C4.6633 2.97449 5.80789 2.50039 7.00136 2.50039C8.19484 2.50039 9.33943 2.97449 10.1833 3.81841C11.0273 4.66232 11.5014 5.80691 11.5014 7.00039ZM10.6814 11.7404C9.47574 12.6764 7.95873 13.1177 6.43916 12.9745C4.91959 12.8314 3.51171 12.1145 2.50211 10.9698C1.49252 9.8251 0.957113 8.33868 1.0049 6.81314C1.05268 5.28759 1.68006 3.83759 2.75932 2.75834C3.83857 1.67908 5.28856 1.0517 6.81411 1.00392C8.33966 0.956136 9.82608 1.49154 10.9708 2.50114C12.1154 3.51073 12.8323 4.91862 12.9755 6.43819C13.1187 7.95775 12.6773 9.47476 11.7414 10.6804L14.5314 13.4704C14.605 13.539 14.6642 13.6218 14.7051 13.7138C14.7461 13.8058 14.7682 13.9052 14.77 14.0059C14.7717 14.1066 14.7532 14.2066 14.7155 14.3C14.6778 14.3934 14.6216 14.4782 14.5504 14.5494C14.4792 14.6206 14.3943 14.6768 14.301 14.7145C14.2076 14.7522 14.1075 14.7708 14.0068 14.769C13.9061 14.7672 13.8068 14.7452 13.7148 14.7042C13.6228 14.6632 13.54 14.6041 13.4714 14.5304L10.6814 11.7404Z"
-                fill="currentColor"></path>
-            </svg>
+          <div class="grid grid-cols-12 gap-4">
+            <div class="col-span-12 md:col-span-4">
+              <div class="flex flex-col h-full justify-center gap-4">
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  Phone:
+                  <span class="text-[14px] font-light">{{ distributor.distributor_phone || 'N/A' }}</span>
+                </div>
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  TSM:
+                  <span class="text-[14px] font-light">{{ distributor.tsm || 'N/A' }}</span>
+                </div>
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  Distributor Code:
+                  <span class="text-[14px] font-light">{{ distributor.distributor_code || 'N/A' }}</span>
+                </div>
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  NTN:
+                  <span class="text-[14px] font-light">{{ distributor.ntn || 'N/A' }}</span>
+                </div>
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  STRN:
+                  <span class="text-[14px] font-light">{{ distributor.strn || 'N/A' }}</span>
+                </div>
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  Email:
+                  <span class="text-[14px] font-light">
+                    <a
+                      *ngIf="distributor.distributor_email"
+                      [href]="'mailto:' + distributor.distributor_email"
+                      class="text-[#0038ba] dark:text-neutral-200"
+                      >{{ distributor.distributor_email }}</a
+                    >
+                    <span *ngIf="!distributor.distributor_email">N/A</span>
+                  </span>
+                </div>
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  Address:
+                  <span class="text-[14px] font-light">{{ distributor.distributor_address || 'N/A' }}</span>
+                </div>
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  Locality:
+                  <span class="text-[14px] font-light">{{ distributor.area_name || 'N/A' }}</span>
+                </div>
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  Status:
+                  <span class="text-[14px] font-light">{{ distributor.filer_status == 1 ? 'Filer' : 'Non-Filer' }}</span>
+                </div>
+                <div
+                  class="block text-base text-secondary dark:text-gray-300 font-primary font-medium leading-none"
+                >
+                  Neighbourhood:
+                  <span class="text-[14px] font-light">
+                    {{ distributor.city_name || 'N/A' }}</span
+                  >
+                </div>
+                <button
+                  type="button"
+                  class="px-6 py-2 leading-none text-[14px] border border-primary rounded-[5px] font-primary bg-primary text-white hover:bg-blue-700 hover:border-blue-700 focus:bg-blue-700 focus:border-blue-700 focus:outline-none transition-all duration-200"
+                >
+                  <span class="flex flex-row justify-center items-center gap-1">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="16"
+                      height="16"
+                      fill="currentColor"
+                      class="bi bi-geo-alt-fill h-4 w-4"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
+                      />
+                    </svg>
+                    View On Map</span
+                  >
+                </button>
+              </div>
+            </div>
+            <div class="col-span-12 md:col-span-8">
+              <div class="">
+                
+                <img
+                  *ngIf="!distributor.distributor_warehouse_images && !distributor.distributor_image"
+                  class="m-auto w-auto h-auto rounded-lg object-cover transition-all duration-300"
+                  src="../images/store-img-002.jpg"
+                  [alt]="distributor.distributor_name"
+                />
+              </div>
+            </div>
           </div>
-          <input type="text" id="filter-text-box-header" placeholder="Search Invoices..." autocomplete="off"
-            class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
-            (input)="onQuickFilterChanged($event)" />
         </div>
       </div>
-    </div>
+
+      <div
+        class="flex justify-between items-center text-secondary dark:border-[#333333] border-b rounded-tl-lg rounded-tr-lg text-base py-[10px] px-[15px] relative bg-gradient-to-t from-[#f9f9f9] to-[#ffffff] dark:bg-black dark:from-transparent dark:to-transparent shadow-none"
+      >
+        <div>
+          <h2
+            class="relative flex items-start pl-0 mb-0 text-secondary dark:text-gray-400 before:content-[''] before:absolute before:w-[2px] before:h-[18px] before:bg-primary before:left-[-16px] before:top-[5px] font-primary font-medium"
+          >
+            Invoices &nbsp;<span class="font-light">List</span>
+            <div class="ml-2 my-auto flex items-center">
+              <span
+                class="bg-primary text-white text-[9px] p-[4px] leading-[1] rounded font-primary"
+                >{{ invoices.length }}</span
+              >
+            </div>
+          </h2>
+        </div>
+        <div class="text-secondary dark:text-white">
+          <div class="relative">
+            <div
+              class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+            >
+              <svg
+                class="h-4 w-4 text-gray-400"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M11.5014 7.00039C11.5014 7.59133 11.385 8.1765 11.1588 8.72246C10.9327 9.26843 10.6012 9.7645 10.1833 10.1824C9.76548 10.6002 9.2694 10.9317 8.72344 11.1578C8.17747 11.384 7.59231 11.5004 7.00136 11.5004C6.41041 11.5004 5.82525 11.384 5.27929 11.1578C4.73332 10.9317 4.23725 10.6002 3.81938 10.1824C3.40152 9.7645 3.07005 9.26843 2.8439 8.72246C2.61776 8.1765 2.50136 7.59133 2.50136 7.00039C2.50136 5.80691 2.97547 4.66232 3.81938 3.81841C4.6633 2.97449 5.80789 2.50039 7.00136 2.50039C8.19484 2.50039 9.33943 2.97449 10.1833 3.81841C11.0273 4.66232 11.5014 5.80691 11.5014 7.00039ZM10.6814 11.7404C9.47574 12.6764 7.95873 13.1177 6.43916 12.9745C4.91959 12.8314 3.51171 12.1145 2.50211 10.9698C1.49252 9.8251 0.957113 8.33868 1.0049 6.81314C1.05268 5.28759 1.68006 3.83759 2.75932 2.75834C3.83857 1.67908 5.28856 1.0517 6.81411 1.00392C8.33966 0.956136 9.82608 1.49154 10.9708 2.50114C12.1154 3.51073 12.8323 4.91862 12.9755 6.43819C13.1187 7.95775 12.6773 9.47476 11.7414 10.6804L14.5314 13.4704C14.605 13.539 14.6642 13.6218 14.7051 13.7138C14.7461 13.8058 14.7682 13.9052 14.77 14.0059C14.7717 14.1066 14.7532 14.2066 14.7155 14.3C14.6778 14.3934 14.6216 14.4782 14.5504 14.5494C14.4792 14.6206 14.3943 14.6768 14.301 14.7145C14.2076 14.7522 14.1075 14.7708 14.0068 14.769C13.9061 14.7672 13.8068 14.7452 13.7148 14.7042C13.6228 14.6632 13.54 14.6041 13.4714 14.5304L10.6814 11.7404Z"
+                  fill="currentColor"
+                ></path>
+              </svg>
+            </div>
+            <input
+              type="text"
+              id="filter-text-box-header"
+              placeholder="Search Invoices..."
+              autocomplete="off"
+              class="w-56 pl-[34px] pr-4 py-2 h-[32px] border outline-none border-gray-300 dark:border-[#333333] rounded-lg bg-white dark:bg-[#1a1a1a] text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:focus:border-primary focus:border-primary font-primary text-sm"
+              (input)="onQuickFilterChanged($event)"
+            />
+          </div>
+        </div>
+      </div>
 
       <!-- AG Grid -->
       <div *ngIf="!loading" class="ag-theme-quartz ag-grid-container">
-        <ag-grid-angular [rowData]="invoices" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
-          [pagination]="true" [paginationPageSize]="10" [paginationPageSizeSelector]="[10, 20, 50, 100]"
-          [suppressPaginationPanel]="false" [domLayout]="'autoHeight'" [animateRows]="true"
-          [rowSelection]="{ type: 'single' }" [theme]="'legacy'" (gridReady)="onGridReady($event)">
+        <ag-grid-angular
+          [rowData]="invoices"
+          [columnDefs]="columnDefs"
+          [defaultColDef]="defaultColDef"
+          [pagination]="true"
+          [paginationPageSize]="10"
+          [paginationPageSizeSelector]="[10, 20, 50, 100]"
+          [suppressPaginationPanel]="false"
+          [domLayout]="'autoHeight'"
+          [animateRows]="true"
+          [rowSelection]="{ type: 'single' }"
+          [theme]="'legacy'"
+          (gridReady)="onGridReady($event)"
+        >
         </ag-grid-angular>
       </div>
     </div>

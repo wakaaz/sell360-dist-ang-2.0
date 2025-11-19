@@ -9,6 +9,7 @@ export const environment = {
   // apiUrl: 'https://matco.sell360.app/distributor-api',
   apiDomain: 'https://marketer.sell360.app',
   apiUrl: 'https://marketer.sell360.app/distributor-api',
+  googleMapsApiKey: 'AIzaSyAPx6ZyRZ1B8SoBCDMZ89LQ5TyQTr-pgN8',
   // apiDomain: 'https://demo.sell360.app',
   // apiUrl: 'https://demo.sell360.app/distributor-api',
 

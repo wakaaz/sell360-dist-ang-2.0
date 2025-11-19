@@ -6,18 +6,18 @@ import { ActivatedRoute } from '@angular/router';
 import { RetailerService } from '../../services/retailer.service';
 import { ToasterService } from 'src/app/core/services/toaster.service';
 import { DomSanitizer } from '@angular/platform-browser';
-
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-retailer-profile',
   templateUrl: './retailer-profile.component.html',
   styleUrls: ['./retailer-profile.component.css'],
-  standalone: false,
+  standalone: false,  
 })
 export class RetailerProfileComponent implements OnInit {
   options: LoaderOptions = {
     /* todo */
   };
-  loader = new Loader('AIzaSyAPx6ZyRZ1B8SoBCDMZ89LQ5TyQTr-pgN8', this.options);
+  loader = new Loader(environment.googleMapsApiKey, this.options);
   dtOptions: DataTables.Settings = {};
   dtOptionsOrders: DataTables.Settings = {};
   openReport: boolean;

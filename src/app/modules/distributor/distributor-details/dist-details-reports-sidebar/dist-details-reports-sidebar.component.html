@@ -5,15 +5,28 @@
   (clickOutside)="clickedOutSide($event)"
   class="width_950 bg-white dark:bg-darkprimary"
 >
-  <div class="RB_bar bg-gradient-to-r from-[#1E54D3] to-[#0038BA] dark:bg-gradient-to-r dark:from-[#353535] dark:to-[#242424]">
+  <div
+    class="RB_bar bg-gradient-to-r from-[#1E54D3] to-[#0038BA] dark:bg-gradient-to-r dark:from-[#353535] dark:to-[#242424]"
+  >
     <a
       *ngIf="!openReport"
       id="sales-products"
       (click)="openSalesAndProductsReport($event)"
       class="open-Report"
     >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"
+        ></path>
       </svg>
     </a>
     <a
@@ -22,8 +35,19 @@
       (click)="closeSalesAndProductsReport()"
       class="open-Report"
     >
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      <svg
+        class="w-5 h-5"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"
+        ></path>
       </svg>
     </a>
     <h1 class="R-Heading text-white">Reports</h1>
@@ -34,7 +58,98 @@
         <div class="_left-filter _reportSide">
           <div class="_report-DIV">
             <!-- Content will be added manually here -->
-             <p class="text-gray-900 dark:text-white">Content will be added manually here</p>
+            <p class="text-gray-900 dark:text-white">
+              Content will be added manually here
+            </p>
+            <div
+              class="flex-1 overflow-auto p-4 bg-[#f6f6f6] dark:bg-darkprimary"
+            >
+              <div class="grid grid-cols-12 gap-4">
+                <div class="col-span-12 mb-3">
+                  <div
+                    class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative overflow-hidden shadow-[0_0_5px_#0000001a] h-[120px]"
+                  >
+                    <div
+                      class="relative z-10 flex flex-col justify-between h-full"
+                    >
+                      <div
+                        class="relative overflow-hidden [background-image:url(/assets/images/kpi-achive-img.jpg)] dark:[background-image:url(/assets/images/kpi-achive-img-dark.jpg)] bg-[length:auto] bg-[position:right_bottom] bg-no-repeat"
+                      >
+                        <h2
+                          class="text-base tracking-wide font-primary font-medium text-gray-900 dark:text-white relative pl-4"
+                        >
+                          <span
+                            class="absolute left-0 top-[6px] w-0.5 h-4 bg-primary dark:bg-neutral-200"
+                          ></span>
+                          Total <span class="font-light dark:text-neutral-200">Revenue</span>
+                        </h2>
+                      </div>
+                      <div
+                        class="px-4 text-[24px] text-primary dark:text-neutral-200 font-['Rationale',sans-serif]"
+                      >
+                        <span class="text-secondary dark:text-gray-300"
+                          >PKR.</span
+                        >
+                        5,222,542
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-span-12 md:col-span-6 mb-3">
+                  <div
+                    class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative overflow-hidden shadow-[0_0_5px_#0000001a] h-[120px]"
+                  >
+                    <div
+                      class="relative z-10 flex flex-col justify-between h-full"
+                    >
+                      <h2
+                        class="text-base tracking-wide font-primary font-medium text-gray-900 dark:text-white relative pl-4"
+                      >
+                        <span
+                          class="absolute left-0 top-[6px] w-0.5 h-4 bg-primary"
+                        ></span>
+                        Current <span class="font-light">Month</span>
+                      </h2>
+                      <div
+                        class="px-4 text-[24px] text-primary dark:text-neutral-200 font-['Rationale',sans-serif]"
+                      >
+                        <span class="text-secondary dark:text-gray-300"
+                          >PKR.</span
+                        >
+                        5,432
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-span-12 md:col-span-6 mb-3">
+                  <div
+                    class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative overflow-hidden shadow-[0_0_5px_#0000001a] h-[120px]"
+                  >
+                    <div
+                      class="relative z-10 flex flex-col justify-between h-full"
+                    >
+                      <h2
+                        class="text-base tracking-wide font-primary font-medium text-gray-900 dark:text-white relative pl-4"
+                      >
+                        <span
+                          class="absolute left-0 top-[6px] w-0.5 h-4 bg-primary"
+                        ></span>
+                        Current <span class="font-light">Month</span>
+                      </h2>
+                      <div
+                        class="px-4 text-[24px] text-primary dark:text-neutral-200 font-['Rationale',sans-serif]"
+                      >
+                        <span class="text-secondary dark:text-gray-300"
+                          >PKR.</span
+                        >
+                        5,432
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

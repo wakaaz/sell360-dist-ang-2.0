@@ -9,6 +9,7 @@ import { DistributorService } from './services/distributor.service';
 import { SharedModule } from '../shared/shared.module';
 import { DataTablesModule } from 'angular-datatables';
 import { AgGridModule } from 'ag-grid-angular';
+import { PrimaryOrdersService } from '../orders/primary-orders/services/primary-orders.service';
 
 @NgModule({
   declarations: [DistributorComponent, ListComponent, DistributorDetailsComponent, DistibutorDetailsInfoComponent],
@@ -19,6 +20,6 @@ import { AgGridModule } from 'ag-grid-angular';
     DataTablesModule,
     AgGridModule,
   ],
-  providers: [DistributorService],
+  providers: [DistributorService, PrimaryOrdersService],
 })
 export class DistributorModule {}

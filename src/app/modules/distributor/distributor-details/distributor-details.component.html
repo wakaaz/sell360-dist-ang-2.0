@@ -1,3 +1,177 @@
+<!-- Order details Popup - Full Screen -->
+<div *ngIf="showOrderDetailModal" class="fixed inset-0 z-[1100]">
+  <!-- Full screen modal container -->
+  <div class="w-full h-full bg-white dark:bg-gray-900 flex flex-col">
+    <button
+      type="button"
+      class="absolute top-2 right-2 z-[1101] rounded-md bg-white dark:bg-black text-gray-500 hover:text-gray-800 dark:hover:text-white focus:outline-none focus:ring-primary"
+      (click)="closeOrderDetailModal()"
+      aria-label="Close"
+    >
+      <span class="sr-only">Close</span>
+      <svg class="h-[28px] w-[28px]" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Modal body - Scrollable content -->
+    <div class="bg-white dark:bg-black px-4 py-8 flex-1 overflow-y-auto">
+      <div class="w-full h-full">
+        <div class="container mx-auto px-4 max-w-7xl">
+          <div *ngIf="orderDetailLoading" class="flex justify-center items-center p-8">
+            <app-loader-white></app-loader-white>
+          </div>
+
+          <div *ngIf="!orderDetailLoading && order" class="bg-white dark:bg-black dark:border-[#333333] border p-6 rounded-lg relative shadow-[0_0_5px_#0000001a] dark:shadow-[0_0_5px_#ffffff1a]">
+            <div class="flex mb-5 pb-2 border-b border-gray-300 dark:border-[#333333] font-primary">
+              <div class="w-2/3 flex items-center OrderLogo">
+                <img src="assets/images/sell-360.svg" alt="" class="max-h-10 dark:hidden" />
+                <img src="assets/images/logo-w.svg" alt="" class="max-h-10 hidden dark:block" />
+              </div>
+              <div class="w-1/3 text-right flex items-center justify-end my-au to text-gray-900 dark:text-white">
+                Order # <strong class="ml-1 font-medium">{{ order.id }}</strong>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap OrderInfo font-primary text-gray-900 dark:text-white">
+              <!-- Left column -->
+              <div class="w-full md:w-3/4 mb-2 md:mb-0">
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Dist Name:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.distributor_name }}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Phone No:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.distributor_phone }}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Location:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.distributor_address }}</strong>
+                </p>
+              </div>
+
+              <!-- Right column -->
+              <div class="w-full md:w-1/4 md:p-0">
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Status:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.status ? order?.status : "--" }}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Booking Date:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.date }}</strong>
+                </p>
+                <p>
+                  <span class="text-gray-600 dark:text-gray-300">Employee:</span>
+                  <strong class="ml-1 font-medium dark:text-white">{{ order.employee_name }}</strong>
+                </p>
+              </div>
+            </div>
+
+            <div class="w-full Order-Detail-table mt-6">
+              <table class="table font-primary w-full border-collapse">
+                <thead>
+                  <tr class="bg-black dark:bg-[#252525] text-white">
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Code</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Product Name</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Qty</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">T.P</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">GR Amt</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">T.O</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Dist.Disc%</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">SPC.Disc</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">B.Disc</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">GST</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">AIT</strong></th>
+                    <th class="border border-neutral-700 dark:border-[#333333] p-2 text-xs text-white"><strong class="font-primary font-medium">Net.Amt</strong></th>
+                  </tr>
+                </thead>
+                <tbody class="order_items_body">
+                  <tr *ngFor="let item of order.orderContent" class="text-gray-900 dark:text-white">
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.item_sku }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.item_name }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">
+                      {{ item.parent_qty_sold }}
+                      {{
+                        item.schemeFreeProdsCount
+                          ? "+" + item.schemeFreeProdsCount
+                          : ""
+                      }}
+                    </td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.unit_item_trade_price | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.grossPrice1 | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{
+                      item.scheme_id && item.scheme_type == "free_product" && item.scheme_quantity_free > 0 && item.scheme_rule === 4
+                        ? `(${item.scheme_quantity_free})`
+                        : ""
+                      }}
+                      {{item.scheme_id && item.scheme_type == "free_product" && item.scheme_rule === 1 ? `${item.trade_offer | number : "1.2-2"}` : ""}}
+                      {{item.scheme_id && item.scheme_type == "dotp" ? `${item.trade_offer | number : "1.2-2"}` : ""}}
+                    </td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.distributor_discount | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item?.specialDiscount | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.booker_discount }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.gst_tax | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.advance_income_tax | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs dark:text-gray-200">{{ item.TotalBill | number: "1.2-2" }}</td>
+                  </tr>
+                  <tr class="bg-gray-200 dark:bg-[#333333] text-gray-900 dark:text-white">
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200" colspan="2">Total:</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">{{ order.totalItemsQty }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">{{ order.totalGrossPrice | number: "1.2-2" }}</td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Gross PKR.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ order.totalGrossPrice | number: "1.2-2" }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Discount PKR.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">
+                      <strong class="font-primary font-medium">
+                        {{ order.totalDiscount > 0 ? "-" : "" }}
+                        {{ order.totalDiscount | number: "1.2-2" }}
+                      </strong>
+                    </td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Frieght Price PKR.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">+ {{ order.frieght_price }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Tax PKR.</strong></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">+ {{ order.finaltotalTax | number: "1.2-2" }}</strong></td>
+                  </tr>
+                  <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-black dark:bg-neutral-800 text-white dark:text-white">
+                      <strong class="font-primary font-medium">Total PKR.</strong>
+                    </td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-black dark:bg-neutral-800 text-white dark:text-white">
+                      <strong class="font-primary font-medium">{{
+                        order.totalPKRBill + order.frieght_price | number : "1.2-2"
+                      }}</strong>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Distributor Details - Invoices -->
 
 <div class="container mx-auto px-4 pb-24">

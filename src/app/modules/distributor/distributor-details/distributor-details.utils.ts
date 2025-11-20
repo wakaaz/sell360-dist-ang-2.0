@@ -43,6 +43,11 @@ export interface IDistributor {
   territory_name: string;
   city_name: string;
   distributor_profile_picture: string | null;
+  opening_balance: number;
+  parent_id: number;
+  current_balance: number;
+  total_debit: number;
+  total_credit: number;
 }
 
 export interface IDistributorDetailsData {

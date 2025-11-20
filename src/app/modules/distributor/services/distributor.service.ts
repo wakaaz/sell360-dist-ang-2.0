@@ -17,4 +17,14 @@ export class DistributorService {
     const url = `${API_URLS.DISTRIBUTOR_DETAILS}${distributorId}`;
     return this.httpBaseService.get(url);
   }
+
+  addOpeningBalance(payload: {
+    distributor_id: number;
+    new_balance_amount: number;
+    parent_distributor_id: number;
+    balance_type: string;
+  }): Observable<any> {
+    const url = `${API_URLS.ADD_OPENING_BALANCE_DISTRIBUTOR}`;
+    return this.httpBaseService.post(url, payload);
+  }
 }

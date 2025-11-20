@@ -130,4 +130,7 @@ export const API_URLS = {
   DISTRIBUTOR_DETAILS: '/sub-distributor-detail/',
 
   DISTRIBUTOR_INVOICE_PDF: '/primary-order-bill-detail',
+
+  ADD_OPENING_BALANCE_DISTRIBUTOR: '/add-distributor-opening-balances',
+  
 };

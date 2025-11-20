@@ -1,0 +1,43 @@
+<!-- Report of Sales and Products -->
+<div
+  id="product-cl-sec"
+  [ngClass]="openReport ? 'active' : ''"
+  (clickOutside)="clickedOutSide($event)"
+  class="width_950 bg-white dark:bg-darkprimary"
+>
+  <div class="RB_bar bg-gradient-to-r from-[#1E54D3] to-[#0038BA] dark:bg-gradient-to-r dark:from-[#353535] dark:to-[#242424]">
+    <a
+      *ngIf="!openReport"
+      id="sales-products"
+      (click)="openSalesAndProductsReport($event)"
+      class="open-Report"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+      </svg>
+    </a>
+    <a
+      *ngIf="openReport"
+      id="sales-products"
+      (click)="closeSalesAndProductsReport()"
+      class="open-Report"
+    >
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+      </svg>
+    </a>
+    <h1 class="R-Heading text-white">Reports</h1>
+  </div>
+  <div class="pc-cartlist pb-0 bg-white dark:bg-darkprimary">
+    <div class="overflow-plist">
+      <div class="plist-content bg-[#f6f6f6] dark:bg-darkprimary">
+        <div class="_left-filter _reportSide">
+          <div class="_report-DIV">
+            <!-- Content will be added manually here -->
+             <p class="text-gray-900 dark:text-white">Content will be added manually here</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

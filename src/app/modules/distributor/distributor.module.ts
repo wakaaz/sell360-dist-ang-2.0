@@ -4,6 +4,7 @@ import { DistributorComponent } from './distributor.component';
 import { ListComponent } from './components/list/list.component';
 import { DistributorDetailsComponent } from './distributor-details/distributor-details.component';
 import { DistibutorDetailsInfoComponent } from './distributor-details/distibutor-details-info/distibutor-details-info.component';
+import { DistDetailsReportsSidebarComponent } from './distributor-details/dist-details-reports-sidebar/dist-details-reports-sidebar.component';
 import { DistributorRoutingModule } from './distributor-routring.module';
 import { DistributorService } from './services/distributor.service';
 import { SharedModule } from '../shared/shared.module';
@@ -12,7 +13,7 @@ import { AgGridModule } from 'ag-grid-angular';
 import { PrimaryOrdersService } from '../orders/primary-orders/services/primary-orders.service';
 
 @NgModule({
-  declarations: [DistributorComponent, ListComponent, DistributorDetailsComponent, DistibutorDetailsInfoComponent],
+  declarations: [DistributorComponent, ListComponent, DistributorDetailsComponent, DistibutorDetailsInfoComponent, DistDetailsReportsSidebarComponent],
   imports: [
     CommonModule,
     SharedModule,

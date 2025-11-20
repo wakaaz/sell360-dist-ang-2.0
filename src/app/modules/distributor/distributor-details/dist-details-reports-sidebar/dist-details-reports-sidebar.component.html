@@ -244,9 +244,44 @@
                     </div>
                   </div>
                 </div>
+
+                <div class="col-span-12 mb-3">
+                  <div
+                    class="bg-white dark:bg-[#141414] dark:border-[#1e1e1e] border rounded-lg pt-4 pb-4 relative overflow-hidden shadow-[0_0_5px_#0000001a] h-[120px]"
+                  >
+                    <div
+                      class="relative z-10 flex flex-col justify-between h-full"
+                    >
+                      <div
+                        class="relative overflow-hidden [background-image:url(/assets/images/kpi-achive-img.jpg)] dark:[background-image:url(/assets/images/kpi-achive-img-dark.jpg)] bg-[length:auto] bg-[position:right_bottom] bg-no-repeat"
+                      >
+                        <h2
+                          class="text-base tracking-wide font-primary font-medium text-gray-900 dark:text-white relative pl-4"
+                        >
+                          <span
+                            class="absolute left-0 top-[6px] w-0.5 h-4 bg-primary dark:bg-neutral-200"
+                          ></span>
+                          Total
+                          <span class="font-light dark:text-neutral-200"
+                            >Amount Due</span
+                          >
+                        </h2>
+                      </div>
+                      <div
+                        class="px-4 text-[24px] text-primary dark:text-neutral-200 font-['Rationale',sans-serif]"
+                      >
+                        <span class="text-secondary dark:text-gray-300"
+                          >PKR.</span
+                        >
+                        {{ getTotalAmountDue() | number : "1.2-2" }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+          <
         </div>
       </div>
     </div>

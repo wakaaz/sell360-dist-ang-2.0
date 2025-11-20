@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, Inject } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   ColDef,
   GridApi,
@@ -7,7 +8,9 @@ import {
   AllCommunityModule,
 } from 'ag-grid-community';
 import { PrimaryOrdersService } from '../../../orders/primary-orders/services/primary-orders.service';
-import { ToasterService } from 'src/app/core/services/toaster.service';
+import { Toaster, ToasterService } from 'src/app/core/services/toaster.service';
+import { LocalStorageService } from 'src/app/core/services/storage.service';
+import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 
 // Register AG Grid modules
 ModuleRegistry.registerModules([AllCommunityModule]);
@@ -40,16 +43,17 @@ export class ReceivedOrderComponent implements OnInit {
   };
 
   constructor(
-    // private primaryOrderService: PrimaryOrdersService,
+    private primaryOrderService: PrimaryOrdersService,
     private toastService: ToasterService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    @Inject(LocalStorageService) private storageService: LocalStorageService,
+    private router: Router
   ) {
     this.columnDefs = this.getColumnDefs();
     this.setupGlobalFunctions();
   }
 
   ngOnInit(): void {
-    // Load static data
     this.loadReceivedOrders();
   }
 
@@ -91,9 +95,18 @@ export class ReceivedOrderComponent implements OnInit {
         sortable: true,
         filter: true,
         width: 150,
+        valueFormatter: (params) => {
+          const { data } = params || {};
+          const { contents } = data || {};
+          if (contents && contents.length > 0) {
+            return contents.length;
+          }
+
+          return 0;
+        },
       },
       {
-        field: 'order_total',
+        field: 'total_amount_after_tax',
         headerName: 'Order Total',
         sortable: true,
         filter: true,
@@ -114,8 +127,8 @@ export class ReceivedOrderComponent implements OnInit {
 
           return `
             <div class="flex gap-1 flex-wrap">
-              <button onclick="window.viewDetailsClick('${order.id}')" 
-                      class="h-auto leading-none py-[4px] px-[5px] text-secondary hover:text-white hover:bg-primary dark:text-white text-[11px] border border-primary dark:border-primary font-primary rounded-[5px] ml-0.5 inline-block" title="Add Received">Add Received</button>
+              <button onclick="window.receivedEditClick('${order.id}')"
+                      class="h-auto leading-none py-[4px] px-[5px] text-secondary hover:text-white hover:bg-primary dark:text-white text-[11px] border border-primary dark:border-primary font-primary rounded-[5px] ml-0.5 inline-block" title="Edit Received">Edit</button>
             </div>
           `;
         },
@@ -132,8 +145,11 @@ export class ReceivedOrderComponent implements OnInit {
   }
 
   setupGlobalFunctions(): void {
-    (window as any).viewDetailsClick = (orderId: string) => {
-      this.viewOrderDetails(parseInt(orderId));
+    (window as any).receivedEditClick = (orderId: string) => {
+      const id = parseInt(orderId, 10);
+      if (!isNaN(id)) {
+        this.router.navigate(['/inventory/received-order/edit', id]);
+      }
     };
   }
 
@@ -149,49 +165,58 @@ export class ReceivedOrderComponent implements OnInit {
   }
 
   loadReceivedOrders(): void {
-    // Static data - will be replaced with API call later
-    this.receivedOrders = [
-      {
-        id: 1001,
-        date: '2024-01-15',
-        distributor_name: 'ABC Distributors',
-        employee_name: 'John Doe',
-        total_products: 25,
-        order_total: 125000.5,
+    this.loading = true;
+    const distributor = this.storageService.getItem(
+      localStorageKeys.distributor
+    );
+    const distributorId = distributor?.id;
+
+    if (!distributorId) {
+      this.loading = false;
+      this.receivedOrders = [];
+      this.showToastMessage(
+        'Error:',
+        'No distributor found for current session',
+        'error'
+      );
+
+      return;
+    }
+
+    this.primaryOrderService.getReceivableOrders(distributorId).subscribe(
+      (res: any) => {
+        const { status, data, message } = res || {};
+        if (status === 200) {
+          this.showToastMessage(
+            'Success:',
+            'Receivable orders fetched successfully',
+            'success'
+          );
+          this.receivedOrders = data || [];
+        } else {
+          this.receivedOrders = [];
+          this.showToastMessage(
+            'Error:',
+            message || 'Failed to fetch receivable orders',
+            'error'
+          );
+        }
+        this.loading = false;
+        this.cdr.detectChanges();
       },
-      {
-        id: 1002,
-        date: '2024-01-16',
-        distributor_name: 'XYZ Trading Co.',
-        employee_name: 'Jane Smith',
-        total_products: 18,
-        order_total: 87500.75,
-      },
-      {
-        id: 1003,
-        date: '2024-01-17',
-        distributor_name: 'Global Supplies Ltd.',
-        employee_name: 'Mike Johnson',
-        total_products: 32,
-        order_total: 156750.0,
-      },
-      {
-        id: 1004,
-        date: '2024-01-18',
-        distributor_name: 'Prime Distributors',
-        employee_name: 'Sarah Williams',
-        total_products: 15,
-        order_total: 67500.25,
-      },
-      {
-        id: 1005,
-        date: '2024-01-19',
-        distributor_name: 'Elite Trading',
-        employee_name: 'David Brown',
-        total_products: 28,
-        order_total: 142300.8,
-      },
-    ];
+      (error) => {
+        this.loading = false;
+        this.receivedOrders = [];
+        if (error.status !== 1 && error.status !== 401) {
+          this.showToastMessage(
+            'Error:',
+            'Cannot fetch receivable orders. Please try again',
+            'error'
+          );
+        }
+        this.cdr.detectChanges();
+      }
+    );
   }
 
   viewOrderDetails(orderId: number): void {
@@ -201,82 +226,51 @@ export class ReceivedOrderComponent implements OnInit {
     document.body.classList.add('no-scroll');
     this.cdr.detectChanges();
 
-    // Static data - will be replaced with API call later
     this.loadOrderProductsStatic(orderId);
 
-    // Allow click-outside after a delay
     setTimeout(() => {
       this.sidebarJustOpened = false;
     }, 500);
   }
 
   loadOrderProductsStatic(orderId: number): void {
-    // Static product data - will be replaced with API call later
-    // TODO: Replace with API call: this.primaryOrderService.getOderDetailById(orderId)
-    this.orderProducts = [
-      {
-        id: 1,
-        product_name: 'Product A - Premium Quality',
-        qty: 25,
-        primary_qty: 10,
-        unit_quantity: 25,
-        unit_name: 'Box',
-        received_primary_qty: 0,
-        received_unit_quantity: 0,
-        item_sku: 'SKU-001',
-        updateLoading: false,
-      },
-      {
-        id: 2,
-        product_name: 'Product B - Standard Pack',
-        qty: 18,
-        primary_qty: 6,
-        unit_quantity: 18,
-        unit_name: 'Piece',
-        received_primary_qty: 0,
-        received_unit_quantity: 0,
-        item_sku: 'SKU-002',
-        updateLoading: false,
-      },
-      {
-        id: 3,
-        product_name: 'Product C - Deluxe Edition',
-        qty: 32,
-        primary_qty: 8,
-        unit_quantity: 32,
-        unit_name: 'Carton',
-        received_primary_qty: 0,
-        received_unit_quantity: 0,
-        item_sku: 'SKU-003',
-        updateLoading: false,
-      },
-      {
-        id: 4,
-        product_name: 'Product D - Economy Size',
-        qty: 15,
-        primary_qty: 5,
-        unit_quantity: 15,
-        unit_name: 'Pack',
-        received_primary_qty: 0,
-        received_unit_quantity: 0,
-        item_sku: 'SKU-004',
-        updateLoading: false,
-      },
-      {
-        id: 5,
-        product_name: 'Product E - Professional Grade',
-        qty: 28,
-        primary_qty: 7,
-        unit_quantity: 28,
-        unit_name: 'Unit',
-        received_primary_qty: 0,
-        received_unit_quantity: 0,
-        item_sku: 'SKU-005',
-        updateLoading: false,
-      },
-    ];
+    // Find order by id from already fetched receivedOrders
+    const order =
+      this.receivedOrders?.find((o: any) => +o?.id === +orderId) || null;
 
-    // Initialize filtered products
+    if (!order) {
+      this.orderProducts = [];
+      this.filteredOrderProducts = [];
+      this.productSearchText = '';
+      this.showToastMessage('Error:', 'Order not found', 'error');
+      this.cdr.detectChanges();
+      return;
+    }
+
+    const contents = order?.contents;
+
+    this.orderProducts = (contents as any[]).map((c: any) => {
+      const primaryQty =
+        c?.primary_qty_sold ?? c?.parent_qty_sold ?? c?.primary_qty ?? 0;
+      const unitQty =
+        [c?.unit_quantity, c?.item_quantity_booker, c?.quantity, c?.qty].find(
+          (v) => v !== null && v !== undefined
+        ) ?? 0;
+
+      return {
+        id: c?.id ?? c?.item_id,
+        product_name: c?.item_name ?? c?.product_name ?? c?.name ?? '',
+        qty: unitQty,
+        primary_qty: primaryQty,
+        unit_quantity: unitQty,
+        unit_name: c?.unit_name ?? c?.unit ?? '',
+        received_primary_qty: 0,
+        received_unit_quantity: 0,
+        item_sku: c?.item_sku ?? c?.sku ?? '',
+        updateLoading: false,
+      };
+    });
+
     this.filteredOrderProducts = [...this.orderProducts];
     this.productSearchText = '';
     this.cdr.detectChanges();
@@ -413,5 +407,20 @@ export class ReceivedOrderComponent implements OnInit {
       // Refresh orders list
       this.loadReceivedOrders();
     }, 1000);
+  }
+
+  showToastMessage(
+    title: string = 'Error:',
+    message: string,
+    type: 'error' | 'success' = 'error'
+  ): void {
+    const toast: Toaster = {
+      title: title,
+      message: message,
+      type: type,
+    };
+    this.toastService.showToaster(toast);
+
+    return;
   }
 }

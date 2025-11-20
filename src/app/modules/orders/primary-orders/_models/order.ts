@@ -29,6 +29,7 @@ export interface IPrimaryOrder {
   status: string;
   territory_name: string;
   within_radius: number;
+  parent_id: number;
 }
 
 export class PrimaryOrder {
@@ -71,6 +72,14 @@ export class PrimaryOrder {
   }
   public set order_total_without_frieght_price(v: number) {
     this._order_total_without_frieght_price = v;
+  }
+
+  private _parent_id: number;
+  public get parent_id(): number {
+    return this._parent_id;
+  }
+  public set parent_id(v: number) {
+    this._parent_id = v;
   }
 
   private _order_total?: number;
@@ -376,7 +385,6 @@ export class PrimaryOrder {
       : 0;
   }
 
-  
   public clearBackendTotals(): void {
     this._gross_sale_amount = undefined;
     this._total_discount = undefined;

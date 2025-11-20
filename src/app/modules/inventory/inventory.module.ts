@@ -19,6 +19,8 @@ import { AddStockComponent } from './components/add-stock/add-stock.component';
 import { ReceivedOrderComponent } from './components/received-order/received-order.component';
 
 import { InventoryService } from './services/inventory.service';
+import { PrimaryOrdersService } from '../orders/primary-orders/services/primary-orders.service';
+import { ReceivedOrderEditComponent } from './components/received-order-edit/received-order-edit.component';
 
 @NgModule({
   imports: [
@@ -41,7 +43,8 @@ import { InventoryService } from './services/inventory.service';
     DistributorPurchaseComponent,
     AddStockComponent,
     ReceivedOrderComponent,
+    ReceivedOrderEditComponent,
   ],
-  providers: [InventoryService],
+  providers: [InventoryService, PrimaryOrdersService],
 })
 export class InventoryModule {}

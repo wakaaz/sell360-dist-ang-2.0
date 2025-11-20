@@ -83,6 +83,9 @@ export interface IOrderContentItemPayload {
   isDistributorRequest?: number | string;
   status?: string;
   within_radius: number | string;
+  // Received quantities (for receivable-orders flow)
+  received_unit_quantity?: number | string;
+  received_parent_quantity?: number | string;
 }
 
 export interface ICreatePrimaryOrderPayload {
@@ -151,6 +154,14 @@ export function mapPrimaryOrderItemToPayload(
   const taxClass = taxClasses?.find(
     (tax_class) => tax_class.tax_class_id === item.tax_class_id
   );
+
+  // Received quantities (optional; default to 0)
+  const receivedUnits: number =
+    (item as any)?.received_unit_quantity != null
+      ? Number((item as any).received_unit_quantity) || 0
+      : 0;
+  const unitsPerPack = Number(item.unit_quantity) || 0;
+  const receivedPacks = unitsPerPack > 0 ? receivedUnits / unitsPerPack : 0;
 
   return {
     pref_id: item.pref_id,
@@ -265,6 +276,9 @@ export function mapPrimaryOrderItemToPayload(
     // Optional per your backend contract
     secondary_items: item?.unit_quantity || 0,
     item_status: 1,
+    // Include received quantities if provided by UI
+    received_unit_quantity: receivedUnits,
+    received_parent_quantity: receivedPacks,
   };
 }
 
@@ -276,7 +290,8 @@ export function buildCreateOrderPayloadFromPrimaryOrder(
   order: PrimaryOrder,
   distributor: any,
   employeeId: number,
-  taxClasses: any[]
+  taxClasses: any[],
+  isReceivedOrder: boolean = false
 ): ICreatePrimaryOrderPayload {
   const dateStr = order?.date
     ? moment(order.date).format('YYYY-MM-DD')
@@ -289,7 +304,7 @@ export function buildCreateOrderPayloadFromPrimaryOrder(
   const payload: ICreatePrimaryOrderPayload = {
     date: dateStr,
     distributor_id: order.distributor_id,
-    parent_id: distributor?.id,
+    parent_id: isReceivedOrder ? order.parent_id : distributor?.id,
     employee_id: employeeId,
     type: 'primary',
     is_distributor_request: 1,
@@ -297,7 +312,10 @@ export function buildCreateOrderPayloadFromPrimaryOrder(
     approved: 1,
     order_type: 5,
     order_fulfilment_by: 2,
-    status: (order as any)?.is_receivable_order ? 'processed' : 'completed',
+    status:
+      (order as any)?.is_receivable_order && !isReceivedOrder
+        ? 'processed'
+        : 'completed',
     frieght_price: order.frieght_price || 0,
     is_receivable_order: (order as any)?.is_receivable_order || 'no',
   };

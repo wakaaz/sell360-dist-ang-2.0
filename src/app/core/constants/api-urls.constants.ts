@@ -117,6 +117,7 @@ export const API_URLS = {
   RETURN_PRIMARY_ORDER: '/return-order',
 
   UPDATE_ORDER_STATUS: '/update-order-status/',
+  RECEIVABLE_ORDERS_LIST: '/receivable-orders-list',
 
   // SUB DISTRIBUTORS
   SUB_DISTRIBUTORS: '/sub-distributors',

@@ -62,6 +62,12 @@ export class PrimaryOrdersService {
     return this.baseService.get(API_URLS.SUB_DISTRIBUTORS);
   }
 
+  getReceivableOrders(distributorId: number): Observable<any> {
+    return this.baseService.get(
+      `${API_URLS.RECEIVABLE_ORDERS_LIST}/${distributorId}`
+    );
+  }
+
   updateOrderStatus(orderId: number, orderStatus: string): Observable<any> {
     return this.baseService.put(`${API_URLS.UPDATE_ORDER_STATUS}${orderId}`, {
       status: orderStatus,
@@ -84,14 +90,16 @@ export class PrimaryOrdersService {
     primaryOrder: PrimaryOrder,
     distributor: any,
     employeeId: number,
-    taxClasses: any[]
+    taxClasses: any[],
+    isReceivedOrder: boolean = false
   ): Observable<any> {
     let payload: ICreatePrimaryOrderPayload =
       buildCreateOrderPayloadFromPrimaryOrder(
         primaryOrder,
         distributor,
         employeeId,
-        taxClasses
+        taxClasses,
+        isReceivedOrder
       );
 
     if (primaryOrder.id) {
@@ -195,6 +203,7 @@ export class PrimaryOrdersService {
       (primary_order_item as any).selectedScheme = items[i]?.schemes?.find(
         (scheme: any) => scheme.id === items[i]?.scheme_id
       );
+
       primaryOrderItems.push(primary_order_item);
     }
     return primaryOrderItems;

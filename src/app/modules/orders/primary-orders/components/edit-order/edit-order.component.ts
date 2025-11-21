@@ -148,12 +148,28 @@ export class EditOrderComponent implements OnInit, OnDestroy {
 
       if (this.order.orderContent && this.order.orderContent.length > 0) {
         this.order.orderContent.forEach((item) => {
-          item.distributor_discount = item.distributor_discount;
+          if (this.subDistributor.discount_type !== 2) {
+            item.distributor_discount = this.subDistributor.discount || 0;
+          } else if (this.subDistributor.discount_type === 2) {
+            const productMargin = this.subDistributor.product_margins?.find(
+              (margin: any) => margin.item_id === item.item_id
+            );
+            item.distributor_discount = productMargin?.discount || 0;
+          } else {
+            item.distributor_discount = 0;
+          }
           this.setQuantity(item, true);
         });
       }
     } else {
       this.subDistributorDiscount = 0;
+      // Reset discounts if no subdistributor selected
+      if (this.order.orderContent && this.order.orderContent.length > 0) {
+        this.order.orderContent.forEach((item) => {
+          item.distributor_discount = 0;
+          this.setQuantity(item, true);
+        });
+      }
     }
   }
 

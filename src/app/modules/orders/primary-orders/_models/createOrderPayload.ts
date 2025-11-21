@@ -333,6 +333,8 @@ export function buildCreateOrderPayloadFromPrimaryOrder(
       )
   );
 
+  console.log('content: ', order, isReceivedOrder);
+
   const payload: ICreatePrimaryOrderPayload = {
     date: dateStr,
     distributor_id: order.distributor_id,
@@ -345,7 +347,7 @@ export function buildCreateOrderPayloadFromPrimaryOrder(
     order_type: 5,
     order_fulfilment_by: 2,
     status:
-      (order as any)?.is_receivable_order && !isReceivedOrder
+      (order as any)?.is_receivable_order === 'yes' && !isReceivedOrder
         ? 'processed'
         : 'completed',
     frieght_price: order.frieght_price || 0,

@@ -24,6 +24,7 @@ export interface IPrimaryOrderItem extends IorderItems {
   adv_inc_tax_amount?: number; // optional per-unit/rate meta
   schemes?: any[];
   selectedScheme?: any;
+  quantity_free?: number;
 }
 
 //#region set primnaryorderItem from get order by Id
@@ -54,6 +55,7 @@ export function setPrimarOrderItem(
   primOrderItem.item_quantity_booker = primaryOrderItem.item_quantity_booker; // current
   primOrderItem.item_quantity_updated = primaryOrderItem.item_quantity_updated; // updated
   primOrderItem.item_retail_price = primaryOrderItem.item_retail_price;
+  primOrderItem.quantity_free = primaryOrderItem.quantity_free;
   primOrderItem.item_sku = primaryOrderItem.item_sku;
   // Unit trade price (per unit) in backend payload is original_price
   primOrderItem.original_price = primaryOrderItem.original_price;
@@ -196,6 +198,7 @@ export function getNewPrimaryOderItem(selectedProduct: any): PrimaryOrderItem {
     selectedProduct.item_retail_price;
   primOrderItem.parent_unit_id = selectedProduct.parent.unit_id;
   primOrderItem.pref_id = selectedProduct.pref_id;
+  primOrderItem.quantity_free = selectedProduct.quantity_free;
   if (selectedProduct.selectedScheme) {
     // primOrderItem.product_image = selectedProduct.product_image;
     // primOrderItem.scheme_discount = selectedProduct.scheme_discount;
@@ -265,6 +268,14 @@ export class PrimaryOrderItem implements IPrimaryOrderItem {
   }
   public set main_cat(v: number) {
     this._main_cat = v;
+  }
+
+  private _quantity_free: number;
+  public get quantity_free(): number {
+    return this._quantity_free;
+  }
+  public set quantity_free(v: number) {
+    this._quantity_free = v;
   }
 
   private _sub_cat: number;

@@ -7,6 +7,7 @@ import { DistributorPurchaseComponent } from './components/distributor-purchase/
 import { StockComponent } from './components/stock/stock.component';
 import { AddStockComponent } from './components/add-stock/add-stock.component';
 import { ReceivedOrderComponent } from './components/received-order/received-order.component';
+import { ReceivedOrderEditComponent } from './components/received-order-edit/received-order-edit.component';
 
 const routes: Routes = [
   {
@@ -42,6 +43,11 @@ const routes: Routes = [
         path: 'received-order',
         pathMatch: 'full',
         component: ReceivedOrderComponent,
+      },
+      {
+        path: 'received-order/edit/:orderId',
+        pathMatch: 'full',
+        component: ReceivedOrderEditComponent,
       },
     ],
   },

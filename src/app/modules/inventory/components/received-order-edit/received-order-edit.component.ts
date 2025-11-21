@@ -85,7 +85,6 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
           });
         }
 
-        console.log('this.items: ', this.items);
         if (this.metaReady) {
           this.loading = false;
         }
@@ -295,13 +294,6 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
             const freeQtyInterval = Math.floor(
               quantityToUseForSchemes / min_qty
             );
-
-            console.log({
-              freeQtyInterval,
-              quantity_free,
-              quantityToUseForSchemes,
-              min_qty,
-            });
 
             const orderFreeQty = freeQtyInterval * quantity_free;
             createdPrimaryOrder['scheme_quantity_free'] = orderFreeQty;

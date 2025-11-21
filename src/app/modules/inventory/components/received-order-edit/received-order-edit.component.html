@@ -137,11 +137,11 @@
               >
                 Total Bill
               </th>
-              <th
+              <!-- <th
                 class="text-[13px] font-primary font-medium text-neutral-900 dark:text-gray-200 px-1.5 py-1.5 text-left"
               >
                 Action
-              </th>
+              </th> -->
             </tr>
           </thead>
 
@@ -165,7 +165,6 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
-              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th
                 class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
@@ -179,7 +178,6 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
             <tr class="border-t border-gray-200 dark:border-[#333333]">
-              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
@@ -213,7 +211,6 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
-              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th
                 class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
@@ -237,7 +234,6 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
-              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th
                 class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
@@ -250,7 +246,6 @@
             </tr>
 
             <tr class="border-t border-gray-200 dark:border-[#333333]">
-              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
@@ -284,7 +279,6 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
-              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th
                 class="font-primary font-medium text-gray-800 dark:text-gray-300 px-1.5 py-1.5 text-left"
               >
@@ -298,7 +292,6 @@
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
             </tr>
             <tr class="border-t border-gray-200 dark:border-[#333333]">
-              <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
               <th class="font-primary font-medium px-1.5 py-1.5"></th>
@@ -447,7 +440,7 @@
               >
                 {{ item._calc_total_bill || 0 | number : "1.2-2" }}
               </td>
-              <td class="px-1.5 py-1.5">
+              <!-- <td class="px-1.5 py-1.5">
                 <button
                   type="button"
                   (click)="deleteOrderItem(item.item_id)"
@@ -455,7 +448,7 @@
                 >
                   Delete
                 </button>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </table>

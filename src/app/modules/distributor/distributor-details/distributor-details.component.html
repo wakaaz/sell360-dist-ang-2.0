@@ -125,14 +125,15 @@
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
+                    <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"></td>
                   </tr>
                   <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
-                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="10"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Gross PKR.</strong></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">{{ order.totalGrossPrice | number: "1.2-2" }}</strong></td>
                   </tr>
                   <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
-                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="10"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Discount PKR.</strong></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200">
                       <strong class="font-primary font-medium">
@@ -142,17 +143,17 @@
                     </td>
                   </tr>
                   <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
-                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="10"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Frieght Price PKR.</strong></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">+ {{ order.frieght_price }}</strong></td>
                   </tr>
                   <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
-                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="10"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">Tax PKR.</strong></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold dark:text-gray-200"><strong class="font-primary font-medium">+ {{ order.finaltotalTax | number: "1.2-2" }}</strong></td>
                   </tr>
                   <tr class="bg-white dark:bg-black text-gray-900 dark:text-white">
-                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="9"></td>
+                    <td class="border-0 border-right-1 border-neutral-700 dark:border-[#333333] p-2 text-xs" colspan="10"></td>
                     <td class="border border-neutral-700 dark:border-[#333333] p-2 text-xs font-bold bg-black dark:bg-neutral-800 text-white dark:text-white">
                       <strong class="font-primary font-medium">Total PKR.</strong>
                     </td>
@@ -160,7 +161,7 @@
                       <strong class="font-primary font-medium">{{
                         order.totalPKRBill + order.frieght_price | number : "1.2-2"
                       }}</strong>
-                    </td>
+                    </td> 
                   </tr>
                 </tbody>
               </table>

@@ -139,14 +139,18 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       (x) => x.id === this.selectedSubDistributor
     );
     if (this.subDistributor) {
-      this.subDistributorDiscount = this.subDistributor.discount || 0;
+      
+      if (this.subDistributor.discount_type !== 2) {
+        this.subDistributorDiscount = this.subDistributor.discount || 0;
+      } else {
+        this.subDistributorDiscount = 0; 
+      }
 
       if (this.order.orderContent && this.order.orderContent.length > 0) {
         this.order.orderContent.forEach((item) => {
-          item.distributor_discount = this.subDistributorDiscount;
+          item.distributor_discount = item.distributor_discount;
           this.setQuantity(item, true);
         });
-      } else {
       }
     } else {
       this.subDistributorDiscount = 0;
@@ -380,13 +384,11 @@ export class EditOrderComponent implements OnInit, OnDestroy {
       this.order.orderContent = new Array<PrimaryOrderItem>();
     }
 
-    let primary_order = getNewPrimaryOderItem(this.selectedProduct);
-    if (this.subDistributor) {
-      primary_order.distributor_discount =
-        this.subDistributor.discount_type !== 2
-          ? this.subDistributor.discount
-          : this.selectedProduct.dist_discount;
-    }
+    // Pass subDistributor to getNewPrimaryOderItem to apply discount logic
+    let primary_order = getNewPrimaryOderItem(
+      this.selectedProduct,
+      this.subDistributor
+    );
 
     if (primary_order.scheme_id) {
       primary_order = this.applySchemesNew(this.selectedProduct, primary_order);

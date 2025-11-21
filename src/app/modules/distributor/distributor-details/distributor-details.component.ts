@@ -462,11 +462,14 @@ export class DistributorDetailsComponent implements OnInit {
       Math.round((recoveryAmount + discountAmount) * 100) / 100;
 
     if (totalRecovery > amountDue) {
-      this.toastService.showToaster({
-        title: 'Error:',
-        message: 'Recovery and discount amounts cannot exceed the amount due.',
-        type: 'error',
-      });
+      setTimeout(() => {
+        this.toastService.showToaster({
+          title: 'Error:',
+          message: 'Recovery and discount amounts cannot exceed the amount due.',
+          type: 'error',
+        });
+        this.cdr.detectChanges();
+      }, 0);
       return;
     }
 
@@ -474,46 +477,61 @@ export class DistributorDetailsComponent implements OnInit {
     const balance =
       Math.round((amountDue - recoveryAmount - discountAmount) * 100) / 100;
     if (balance < 0) {
-      this.toastService.showToaster({
-        title: 'Error:',
-        message: 'Balance cannot be negative. Please adjust the amounts.',
-        type: 'error',
-      });
+      setTimeout(() => {
+        this.toastService.showToaster({
+          title: 'Error:',
+          message: 'Balance cannot be negative. Please adjust the amounts.',
+          type: 'error',
+        });
+        this.cdr.detectChanges();
+      }, 0);
       return;
     }
 
     if (recoveryAmount === 0 && discountAmount === 0) {
-      this.toastService.showToaster({
-        title: 'Error:',
-        message: 'Please enter at least one amount (recovery or discount).',
-        type: 'error',
-      });
+      setTimeout(() => {
+        this.toastService.showToaster({
+          title: 'Error:',
+          message: 'Please enter at least one amount (recovery or discount).',
+          type: 'error',
+        });
+        this.cdr.detectChanges();
+      }, 0);
       return;
     }
 
     if(discountAmount > recoveryAmount) {
-      this.toastService.showToaster({
-        title: 'Error:',
-        message: 'Discount amount cannot be greater than recovery amount.',
-        type: 'error',
-      });
+      setTimeout(() => {
+        this.toastService.showToaster({
+          title: 'Error:',
+          message: 'Discount amount cannot be greater than recovery amount.',
+          type: 'error',
+        });
+        this.cdr.detectChanges();
+      }, 0);
       return;
     }
 
     if(recoveryAmount< 0){
-      this.toastService.showToaster({
-        title: 'Error:',
-        message: 'Recovery amount cannot be negative.',
-        type: 'error',
-      });
+      setTimeout(() => {
+        this.toastService.showToaster({
+          title: 'Error:',
+          message: 'Recovery amount cannot be negative.',
+          type: 'error',
+        });
+        this.cdr.detectChanges();
+      }, 0);
       return;
     }
     if(discountAmount< 0){
-      this.toastService.showToaster({
-        title: 'Error:',
-        message: 'Discount amount cannot be negative.',
-        type: 'error',
-      });
+      setTimeout(() => {
+        this.toastService.showToaster({
+          title: 'Error:',
+          message: 'Discount amount cannot be negative.',
+          type: 'error',
+        });
+        this.cdr.detectChanges();
+      }, 0);
       return;
     }
 
@@ -549,17 +567,22 @@ export class DistributorDetailsComponent implements OnInit {
       payload
     ).subscribe({
       next: (res) => {
+        this.paymentLoading = false;
         console.log('Payment added successfully:', res);
         this.toastService.showToaster({
           title: 'Success:',
           message: 'Payment added successfully.',
           type: 'success',
         });
+        this.cdr.detectChanges();
 
-        this.closePaymentModal();        
-        if (this.distributorId) {
-          this.getInvoices();
-        }
+        // Use setTimeout to ensure toast is shown before closing modal
+        setTimeout(() => {
+          this.closePaymentModal();        
+          if (this.distributorId) {
+            this.getInvoices();
+          }
+        }, 100);
       },
       error: (error) => {
         this.paymentLoading = false;

@@ -1,7 +1,6 @@
 import { DistributorService } from '../services/distributor.service';
 import { Observable } from 'rxjs';
 
-
 export interface IDistributorInvoice {
   order_id: number;
   invoice_number: string;
@@ -62,8 +61,19 @@ export interface IDistributorDetailsResponse {
   data: IDistributorDetailsData;
 }
 
+export interface IPaymentDetail extends IDistributorInvoice {
+  recovery_amount: number;
+  discount_amount: number;
+}
+
+export interface IAddInvoicePayload {
+  distributor_id: number;
+  order_id: number;
+  recovery_amount: number;
+  discount_amount: number;
+}
+
 export class DistributorDetailsUtils {
-  
   /**
    * Get distributor details by ID
    * @param distributorService - The distributor service instance
@@ -76,5 +86,11 @@ export class DistributorDetailsUtils {
   ): Observable<IDistributorDetailsResponse> {
     return distributorService.getDistributorDetails(distributorId);
   }
-}
 
+  static addInvoiceRecovery(
+    distributorService: DistributorService,
+    payload: IAddInvoicePayload
+  ): Observable<any> {
+    return distributorService.addInvoiceRecovery(payload);
+  }
+}

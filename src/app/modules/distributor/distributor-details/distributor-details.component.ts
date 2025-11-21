@@ -1,12 +1,16 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToasterService } from 'src/app/core/services/toaster.service';
+import { LocalStorageService } from 'src/app/core/services/storage.service';
+import { localStorageKeys } from 'src/app/core/constants/localstorage.constants';
 import { DistributorService } from '../services/distributor.service';
 import {
   DistributorDetailsUtils,
   IDistributorDetailsResponse,
   IDistributorInvoice,
   IDistributor,
+  IPaymentDetail,
+  IAddInvoicePayload,
 } from './distributor-details.utils';
 import {
   ColDef,
@@ -53,9 +57,9 @@ export class DistributorDetailsComponent implements OnInit {
         const date = new Date(params.value);
 
         const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
         const day = date.getDate().toString().padStart(2, '0');
-      
+
         return `${year}-${month}-${day}`;
       },
     },
@@ -129,6 +133,13 @@ export class DistributorDetailsComponent implements OnInit {
             <button onclick="window.viewOrderDetail('${orderId}')" 
                     class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px]" 
                     title="View Order">View Order</button>
+            ${
+              invoice.amount_due > 0
+                ? `<button onclick="window.PayNow('${orderId}')" 
+                    class="bg-transparent h-auto leading-none py-[4px] px-[5px] text-primary text-[11px] border border-primary hover:bg-primary hover:text-white font-primary rounded-[5px]" 
+                    title="View Payment">Pay Now</button>`
+                : ''
+            }
           </div>
         `;
       },
@@ -158,12 +169,16 @@ export class DistributorDetailsComponent implements OnInit {
   showOrderDetailModal: boolean = false;
   orderDetailLoading: boolean = false;
   order: PrimaryOrder | null = null;
+  showPaymentModal: boolean = false;
+  selectedInvoice: IDistributorInvoice | null = null;
+  paymentDetail: IPaymentDetail | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private toastService: ToasterService,
     private distributorService: DistributorService,
     private primaryOrderService: PrimaryOrdersService,
+    private storageService: LocalStorageService,
     private cdr: ChangeDetectorRef
   ) {}
 
@@ -189,7 +204,7 @@ export class DistributorDetailsComponent implements OnInit {
         });
         return;
       }
-      
+
       const url = `${environment.apiDomain}${API_URLS.DISTRIBUTOR_INVOICE_PDF}?order_id=${orderId}`;
       window.open(url, '_blank');
     };
@@ -204,6 +219,16 @@ export class DistributorDetailsComponent implements OnInit {
         return;
       }
       self.openOrderDetailModal(parseInt(orderId));
+    };
+    (window as any).PayNow = (orderId: string) => {
+      if (!orderId) {
+        self.toastService.showToaster({
+          title: 'Error:',
+          message: 'Order ID is missing.',
+          type: 'error',
+        });
+      }
+      self.openPaymentModal(parseInt(orderId));
     };
   }
 
@@ -235,7 +260,7 @@ export class DistributorDetailsComponent implements OnInit {
 
         if (res && res.data) {
           this.distributor = res.data.distributor;
-          
+
           this.invoices = res.data.invoices || [];
         } else {
           this.invoices = [];
@@ -266,7 +291,253 @@ export class DistributorDetailsComponent implements OnInit {
     this.cdr.detectChanges();
     this.getOrderDetail(id);
   }
+  openPaymentModal(id: number): void {
+    this.selectedInvoice =
+      this.invoices.find((inv) => inv.order_id === id) || null;
+    if (this.selectedInvoice) {
+      this.paymentDetail = {
+        ...this.selectedInvoice,
+        recovery_amount: 0,
+        discount_amount: 0,
+      };
+      this.showPaymentModal = true;
+      document.body.classList.add('no-scroll');
+      this.cdr.detectChanges();
+    } else {
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Invoice not found.',
+        type: 'error',
+      });
+    }
+  }
 
+  closePaymentModal(): void {
+    this.showPaymentModal = false;
+    this.selectedInvoice = null;
+    this.paymentDetail = null;
+    document.body.classList.remove('no-scroll');
+  }
+
+  onRecoveryAmountChange(): void {
+    if (!this.paymentDetail || !this.selectedInvoice) {
+      return;
+    }
+
+    const amountDue = Math.round(this.selectedInvoice.amount_due * 100) / 100; // Round to 2 decimal places
+    let recoveryAmount = this.paymentDetail.recovery_amount;
+    let discountAmount = this.paymentDetail.discount_amount;
+
+    if (
+      recoveryAmount === null ||
+      recoveryAmount === undefined ||
+      isNaN(recoveryAmount)
+    ) {
+      recoveryAmount = 0;
+    }
+
+    recoveryAmount = Math.round(recoveryAmount * 100) / 100;
+    discountAmount = Math.round(discountAmount * 100) / 100;
+
+    if (recoveryAmount < 0) {
+      recoveryAmount = 0;
+    }
+
+    if (recoveryAmount > amountDue) {
+      recoveryAmount = amountDue;
+    }
+
+    const total = Math.round((recoveryAmount + discountAmount) * 100) / 100;
+    if (total > amountDue) {
+      discountAmount = Math.max(
+        0,
+        Math.round((amountDue - recoveryAmount) * 100) / 100
+      );
+    }
+
+    const balance =
+      Math.round((amountDue - recoveryAmount - discountAmount) * 100) / 100;
+    if (balance < 0) {
+      discountAmount = Math.max(
+        0,
+        Math.round((amountDue - recoveryAmount) * 100) / 100
+      );
+    }
+
+    recoveryAmount = Math.round(recoveryAmount * 100) / 100;
+    discountAmount = Math.round(discountAmount * 100) / 100;
+
+    this.paymentDetail.recovery_amount = recoveryAmount;
+    this.paymentDetail.discount_amount = discountAmount;
+
+    this.cdr.detectChanges();
+  }
+
+  onDiscountAmountChange(): void {
+    if (!this.paymentDetail || !this.selectedInvoice) {
+      return;
+    }
+
+    const amountDue = Math.round(this.selectedInvoice.amount_due * 100) / 100; // Round to 2 decimal places
+    let recoveryAmount = this.paymentDetail.recovery_amount;
+    let discountAmount = this.paymentDetail.discount_amount;
+
+    if (
+      discountAmount === null ||
+      discountAmount === undefined ||
+      isNaN(discountAmount)
+    ) {
+      discountAmount = 0;
+    }
+
+    recoveryAmount = Math.round(recoveryAmount * 100) / 100;
+    discountAmount = Math.round(discountAmount * 100) / 100;
+
+    if (discountAmount < 0) {
+      discountAmount = 0;
+    }
+
+    if (discountAmount > amountDue) {
+      discountAmount = amountDue;
+    }
+
+    const total = Math.round((recoveryAmount + discountAmount) * 100) / 100;
+    if (total > amountDue) {
+      recoveryAmount = Math.max(
+        0,
+        Math.round((amountDue - discountAmount) * 100) / 100
+      );
+    }
+
+    const balance =
+      Math.round((amountDue - recoveryAmount - discountAmount) * 100) / 100;
+    if (balance < 0) {
+      recoveryAmount = Math.max(
+        0,
+        Math.round((amountDue - discountAmount) * 100) / 100
+      );
+    }
+
+    recoveryAmount = Math.round(recoveryAmount * 100) / 100;
+    discountAmount = Math.round(discountAmount * 100) / 100;
+
+    this.paymentDetail.recovery_amount = recoveryAmount;
+    this.paymentDetail.discount_amount = discountAmount;
+
+    this.cdr.detectChanges();
+  }
+
+  addPayment(): void {
+    if (!this.selectedInvoice || !this.paymentDetail) {
+      return;
+    }
+
+    this.onRecoveryAmountChange();
+    this.onDiscountAmountChange();
+
+    const amountDue = Math.round(this.selectedInvoice.amount_due * 100) / 100;
+    const recoveryAmount =
+      Math.round(this.paymentDetail.recovery_amount * 100) / 100;
+    const discountAmount =
+      Math.round(this.paymentDetail.discount_amount * 100) / 100;
+    const totalRecovery =
+      Math.round((recoveryAmount + discountAmount) * 100) / 100;
+
+    if (totalRecovery > amountDue) {
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Recovery and discount amounts cannot exceed the amount due.',
+        type: 'error',
+      });
+      return;
+    }
+
+    if (recoveryAmount < 0 || discountAmount < 0) {
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Amounts cannot be negative.',
+        type: 'error',
+      });
+      return;
+    }
+
+    const balance =
+      Math.round((amountDue - recoveryAmount - discountAmount) * 100) / 100;
+    if (balance < 0) {
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Balance cannot be negative. Please adjust the amounts.',
+        type: 'error',
+      });
+      return;
+    }
+
+    if (recoveryAmount === 0 && discountAmount === 0) {
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Please enter at least one amount (recovery or discount).',
+        type: 'error',
+      });
+      return;
+    }
+
+    this.loading = true;
+
+    const loggedInDistributor = this.storageService.getItem(
+      localStorageKeys.distributor
+    );
+    if (!loggedInDistributor || !loggedInDistributor.id) {
+      this.loading = false;
+      this.toastService.showToaster({
+        title: 'Error:',
+        message:
+          'Unable to get logged-in user information. Please login again.',
+        type: 'error',
+      });
+      return;
+    }
+
+    const payload: IAddInvoicePayload = {
+      distributor_id: parseInt(loggedInDistributor.id as string),
+      order_id: this.selectedInvoice.order_id,
+      recovery_amount:
+        Math.round(this.paymentDetail.recovery_amount * 100) / 100,
+      discount_amount:
+        Math.round(this.paymentDetail.discount_amount * 100) / 100,
+    };
+
+    DistributorDetailsUtils.addInvoiceRecovery(
+      this.distributorService,
+      payload
+    ).subscribe(
+      (res) => {
+        this.loading = false;
+        console.log('Payment added successfully:', res);
+        this.toastService.showToaster({
+          title: 'Success:',
+          message: 'Payment added successfully.',
+          type: 'success',
+        });
+        this.closePaymentModal();
+        if (this.distributorId) {
+          this.getInvoices();
+        }
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        this.loading = false;
+        console.error('Error adding payment:', error);
+        this.toastService.showToaster({
+          title: 'Error:',
+          message:
+            error?.error?.message ||
+            'Error adding payment. Please try again later.',
+          type: 'error',
+        });
+        this.cdr.detectChanges();
+      }
+    );
+  }
   getOrderDetail(id: number): void {
     this.orderDetailLoading = true;
     this.primaryOrderService.getOderDetailById(id).subscribe(
@@ -288,13 +559,11 @@ export class DistributorDetailsComponent implements OnInit {
             this.primaryOrderService.getPrimaryOrderItem([...res.data.content]);
 
           this.orderDetailLoading = false;
-          // Trigger change detection to update the view
           this.cdr.detectChanges();
         }
       },
       (error) => {
         this.orderDetailLoading = false;
-        // Trigger change detection even on error
         this.cdr.detectChanges();
       }
     );

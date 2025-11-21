@@ -25,6 +25,8 @@ export interface IPrimaryOrderItem extends IorderItems {
   schemes?: any[];
   selectedScheme?: any;
   quantity_free?: number;
+  main_cat?: number;
+  sub_cat?: number;
 }
 
 //#region set primnaryorderItem from get order by Id
@@ -63,6 +65,8 @@ export function setPrimarOrderItem(
   primOrderItem.parent_item_retail_price =
     primaryOrderItem.parent_item_retail_price;
   primOrderItem.parent_pref_id = primaryOrderItem.parent_pref_id;
+  primOrderItem.main_cat = primaryOrderItem.main_cat;
+  primOrderItem.sub_cat = primaryOrderItem.sub_cat;
   // Quantities:
   // - Backend parent_qty_sold = packs count
   // - Backend item_quantity_booker = total units

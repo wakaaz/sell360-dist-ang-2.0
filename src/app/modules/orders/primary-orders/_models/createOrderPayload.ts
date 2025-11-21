@@ -113,7 +113,8 @@ export interface ICreatePrimaryOrderPayload {
 export function mapPrimaryOrderItemToPayload(
   item: PrimaryOrderItem,
   distributor: any,
-  taxClasses: any[]
+  taxClasses: any[],
+  isReceivedOrder: boolean
 ): IOrderContentItemPayload {
   // Pull known runtime-only fields that may be attached during calculations
   const tradeOffer: number = (item as any).trade_offer || 0;
@@ -163,6 +164,16 @@ export function mapPrimaryOrderItemToPayload(
   const unitsPerPack = Number(item.unit_quantity) || 0;
   const receivedPacks = unitsPerPack > 0 ? receivedUnits / unitsPerPack : 0;
 
+  // Determine per-line item status for received orders
+  const computedItemStatus: number = isReceivedOrder
+    ? receivedUnits > 0
+      ? 1
+      : 0
+    : 1;
+  const computedItemStatusStr: string =
+    isReceivedOrder && computedItemStatus === 0 ? '0' : 'completed';
+  const isZero = isReceivedOrder && receivedUnits === 0;
+
   return {
     pref_id: item.pref_id,
     item_id: item.item_id,
@@ -170,9 +181,10 @@ export function mapPrimaryOrderItemToPayload(
     item_sku: item.item_sku,
     unit_id: item.unit_id,
     is_tax: isTax,
-    item_retail_price:
-      item.unit_item_retail_price * item.unit_quantity ||
-      item.item_retail_price,
+    item_retail_price: isZero
+      ? 0
+      : item.unit_item_retail_price * item.unit_quantity ||
+        item.item_retail_price,
     tax_class_id: item.tax_class_id,
     distributor_id: distributor?.id,
     main_category_id: item.main_cat,
@@ -180,64 +192,74 @@ export function mapPrimaryOrderItemToPayload(
     item_quantity_updated: 0,
     booked_total_qty: 0,
     booked_order_value: 0,
-    parent_qty_sold: item.primary_qty_sold,
-    quantity: item.primary_qty_sold,
-    trade_price:
-      +item?.unit_item_trade_price * +item?.unit_quantity ||
-      item.parent_tp ||
-      0,
-    grass_amount: grossAmount,
-    scheme_id: item.scheme_id || 0,
+    parent_qty_sold: isZero ? 0 : item.primary_qty_sold,
+    quantity: isZero ? 0 : item.primary_qty_sold,
+    trade_price: isZero
+      ? 0
+      : +item?.unit_item_trade_price * +item?.unit_quantity ||
+        item.parent_tp ||
+        0,
+    grass_amount: isZero ? 0 : grossAmount,
+    scheme_id: isZero ? 0 : item.scheme_id || 0,
     scheme_title: schemeTitle,
-    scheme_applied: item.scheme_id ? 1 : 0,
+    scheme_applied: isZero ? 0 : item.scheme_id ? 1 : 0,
     scheme_type: item.scheme_type || 'free_product',
-    scheme_rule: item.scheme_rule || 0,
+    scheme_rule: isZero ? 0 : item.scheme_rule || 0,
     // scheme_datatype: 'product',
-    scheme_discount: tradeOffer || 0,
-    Grs_Amt_Af_TO: grossAfterTO,
-    dist_discount: distDiscountPct,
-    dist_discount_val: distDiscountVal,
-    Grs_Amt_Af_TO_DD: Math.max(0, grossAfterTO - distDiscountVal),
-    special_discount: item.special_discount * item?.parent_qty_sold || 0,
-    special_discount_val: specialDiscountVal,
-    booker_discount: item?.booker_discount,
-    booker_discount_val: item.booker_discount * item?.parent_qty_sold || 0,
-    Grs_Amt_Af_TO_DD_SD_BD: grossAfterAllDisc,
-    unit_tax:
-      taxClass?.tax_class_id == 2
-        ? (+item?.advance_income_tax + +item?.gst_tax) / +item?.parent_qty_sold
-        : (+item?.advance_income_tax + +item?.gst_tax) /
-          (item?.parent_qty_sold + item?.scheme_quantity_free),
-    total_tax: totalTax,
-    unit_price: unitPriceBeforeTax,
-    final_price: grossAfterAllDisc,
-    gst_tax_amount:
-      taxClass?.tax_class_id == 2
-        ? item.gst_tax / item?.parent_qty_sold || 0
-        : item.gst_tax / (item?.parent_qty_sold + item?.scheme_quantity_free) ||
-          0,
-    adv_inc_tax_amount:
-      taxClass?.tax_class_id == 2
-        ? item?.advance_income_tax / item?.parent_qty_sold || 0
-        : item?.advance_income_tax /
-            (item?.parent_qty_sold + item?.scheme_quantity_free) || 0,
+    scheme_discount: isZero ? 0 : tradeOffer || 0,
+    Grs_Amt_Af_TO: isZero ? 0 : grossAfterTO,
+    dist_discount: isZero ? 0 : distDiscountPct,
+    dist_discount_val: isZero ? 0 : distDiscountVal,
+    Grs_Amt_Af_TO_DD: isZero ? 0 : Math.max(0, grossAfterTO - distDiscountVal),
+    special_discount: 0,
+    special_discount_val: isZero ? 0 : specialDiscountVal,
+    booker_discount: isZero ? 0 : item?.booker_discount,
+    booker_discount_val: isZero
+      ? 0
+      : item.booker_discount * item?.parent_qty_sold || 0,
+    Grs_Amt_Af_TO_DD_SD_BD: isZero ? 0 : grossAfterAllDisc,
+    unit_tax: isZero
+      ? 0
+      : taxClass?.tax_class_id == 2
+      ? (+item?.advance_income_tax + +item?.gst_tax) / +item?.parent_qty_sold
+      : (+item?.advance_income_tax + +item?.gst_tax) /
+        (item?.parent_qty_sold + item?.scheme_quantity_free),
+    total_tax: isZero ? 0 : totalTax,
+    unit_price: isZero ? 0 : unitPriceBeforeTax,
+    final_price: isZero ? 0 : grossAfterAllDisc,
+    gst_tax_amount: isZero
+      ? 0
+      : taxClass?.tax_class_id == 2
+      ? item.gst_tax / item?.parent_qty_sold || 0
+      : item.gst_tax / (item?.parent_qty_sold + item?.scheme_quantity_free) ||
+        0,
+    adv_inc_tax_amount: isZero
+      ? 0
+      : taxClass?.tax_class_id == 2
+      ? item?.advance_income_tax / item?.parent_qty_sold || 0
+      : item?.advance_income_tax /
+          (item?.parent_qty_sold + item?.scheme_quantity_free) || 0,
     tax_type: distributor?.filer_status ? 1 : 2,
-    tax_in_percentage: distributor?.filer_status
+    tax_in_percentage: isZero
+      ? 0
+      : distributor?.filer_status
       ? taxClass?.gst_filer_distributor_value
       : taxClass?.gst_nonfiler_distributor_value,
-    adv_inc_tax_in_percentage: distributor?.filer_status
+    adv_inc_tax_in_percentage: isZero
+      ? 0
+      : distributor?.filer_status
       ? taxClass?.adv_inc_filer_distributor_value
       : taxClass?.adv_inc_nonfiler_distributor_value,
-    total_gst: totalGst,
-    total_adv_inc_tax: totalAdvIncTax,
-    ttl_amnt_aftr_tax: grossAfterAllDisc + totalTax,
+    total_gst: isZero ? 0 : totalGst,
+    total_adv_inc_tax: isZero ? 0 : totalAdvIncTax,
+    ttl_amnt_aftr_tax: isZero ? 0 : grossAfterAllDisc + totalTax,
     dispatch_qty: 0,
     dispatch_amount: 0,
     isDistributorRequest: 1,
-    status: 'completed',
+    status: computedItemStatusStr,
     within_radius: 0,
     // scheme_quantity_free: (item as any)?.selectedScheme?.quantity_free || 0,
-    scheme_quantity_free: item.scheme_quantity_free || 0,
+    scheme_quantity_free: isZero ? 0 : item.scheme_quantity_free || 0,
     // Backends commonly accept either scheme_free_items or detailed schemeItems; set if needed:
     schemeItems:
       (item as any)?.selectedScheme &&
@@ -274,11 +296,15 @@ export function mapPrimaryOrderItemToPayload(
           ]
         : undefined,
     // Optional per your backend contract
-    secondary_items: item?.unit_quantity || 0,
-    item_status: 1,
+    secondary_items: isZero ? 0 : item?.unit_quantity || 0,
+    item_status: computedItemStatus,
     // Include received quantities if provided by UI
-    received_unit_quantity: receivedUnits,
-    received_parent_quantity: receivedPacks,
+    ...(isReceivedOrder
+      ? {
+          received_unit_quantity: receivedUnits,
+          received_parent_quantity: receivedPacks,
+        }
+      : {}),
   };
 }
 
@@ -298,7 +324,13 @@ export function buildCreateOrderPayloadFromPrimaryOrder(
     : moment().format('YYYY-MM-DD');
 
   const content: IOrderContentItemPayload[] = (order.orderContent || []).map(
-    (item) => mapPrimaryOrderItemToPayload(item, distributor, taxClasses)
+    (item) =>
+      mapPrimaryOrderItemToPayload(
+        item,
+        distributor,
+        taxClasses,
+        isReceivedOrder
+      )
   );
 
   const payload: ICreatePrimaryOrderPayload = {

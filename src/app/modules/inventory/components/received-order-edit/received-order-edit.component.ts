@@ -24,6 +24,7 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
   taxClasses: any[];
   productsMetaDataDistributor: any;
   distributor: any;
+  private metaReady: boolean = false;
 
   constructor(
     private actr: ActivatedRoute,
@@ -54,6 +55,7 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
         if (status === 200) {
           const orderRes = { ...(data?.order || {}) };
           this.order.id = orderRes.id;
+
           this.order.distributor_name = orderRes.distributor_name;
           this.order.employee_name = orderRes.employee_name;
           this.order.employee_id = orderRes.employee_id;
@@ -69,8 +71,11 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
           this.items = this.order.orderContent;
           // Initialize received quantities to 0 for UI (does not affect calculations)
           this.items.forEach((it: any) => {
-            it.received_primary_qty = 0;
-            it.received_unit_quantity = 0;
+            it.received_unit_quantity = it.parent_qty_sold || 0;
+
+            if (this.metaReady) {
+              this.onReceivedUnitChange(it);
+            }
           });
         } else {
           this.toastService.showToaster({
@@ -80,7 +85,10 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
           });
         }
 
-        this.loading = false;
+        console.log('this.items: ', this.items);
+        if (this.metaReady) {
+          this.loading = false;
+        }
       },
       (error) => {
         this.loading = false;
@@ -125,8 +133,8 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
         (event.target as HTMLInputElement).value = String(maxUnits);
       }
     }
-    const effectiveUnits =
-      receivedUnits > 0 ? receivedUnits : +item.parent_qty_sold || 0;
+    // Effective units should follow exactly what user entered (including 0)
+    const effectiveUnits = receivedUnits;
     const effectivePacks = unitsPerPack ? effectiveUnits / unitsPerPack : 0;
 
     // Build selectedScheme from existing scheme fields if any
@@ -182,8 +190,6 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
         : null,
     };
 
-    console.log('item: ', item);
-
     // Apply schemes and taxes using the same flow as edit-order (update mode)
     const afterScheme = this.applySchemesNew(
       null,
@@ -229,8 +235,22 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
             .subscribe((tax_classes: any) => {
               if (tax_classes?.status === 200) {
                 this.taxClasses = tax_classes.data;
+                this.metaReady = true;
+                if (this.items?.length) {
+                  this.items.forEach((it: any) =>
+                    this.onReceivedUnitChange(it)
+                  );
+                }
+                this.loading = false;
               }
             });
+        } else {
+          // No province -> still allow calculations (may default to 0 if no classes)
+          this.metaReady = true;
+          if (this.items?.length) {
+            this.items.forEach((it: any) => this.onReceivedUnitChange(it));
+          }
+          this.loading = false;
         }
       }
     });
@@ -441,27 +461,20 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
     return this.order?.orderContent?.length || 0;
   }
   get totalGrossAmount(): number {
-    return (this.items || []).reduce((acc: number, it: any) => {
-      const hasReceived = +it.received_unit_quantity > 0;
-      const gross = hasReceived
-        ? +it._calc_gross_amount || 0
-        : +it.grossPrice1 || 0;
-      return (acc += gross);
-    }, 0);
+    return (this.items || []).reduce(
+      (acc: number, it: any) => acc + (+it._calc_gross_amount || 0),
+      0
+    );
   }
   get totalDiscount(): number {
-    return (this.items || []).reduce((acc: number, it: any) => {
-      const hasReceived = +it.received_unit_quantity > 0;
-      if (hasReceived) {
-        return (
-          acc +
-          (+it._calc_trade_offer || 0) +
-          (+it._calc_dist_discount_value || 0) +
-          (+it._calc_booker_discount_value || 0)
-        );
-      }
-      return acc + (+it.TotalDiscount || 0);
-    }, 0);
+    return (this.items || []).reduce(
+      (acc: number, it: any) =>
+        acc +
+        (+it._calc_trade_offer || 0) +
+        (+it._calc_dist_discount_value || 0) +
+        (+it._calc_booker_discount_value || 0),
+      0
+    );
   }
   get subTotal(): number {
     return this.totalGrossAmount - this.totalDiscount;
@@ -470,22 +483,17 @@ export class ReceivedOrderEditComponent implements OnInit, OnDestroy {
     return this.subTotal + (+this.freight_price || 0);
   }
   get totalTax(): number {
-    return (this.items || []).reduce((acc: number, it: any) => {
-      const hasReceived = +it.received_unit_quantity > 0;
-      if (hasReceived) {
-        return acc + (+it._calc_gst_tax || 0) + (+it._calc_ait_tax || 0);
-      }
-      return acc + (+it.TotalTax || 0);
-    }, 0);
+    return (this.items || []).reduce(
+      (acc: number, it: any) =>
+        acc + (+it._calc_gst_tax || 0) + (+it._calc_ait_tax || 0),
+      0
+    );
   }
   get totalPKR(): number {
-    const itemsTotal = (this.items || []).reduce((acc: number, it: any) => {
-      const hasReceived = +it.received_unit_quantity > 0;
-      const total = hasReceived
-        ? +it._calc_total_bill || 0
-        : +it.TotalBill || 0;
-      return acc + total;
-    }, 0);
+    const itemsTotal = (this.items || []).reduce(
+      (acc: number, it: any) => acc + (+it._calc_total_bill || 0),
+      0
+    );
     return itemsTotal + (+this.freight_price || 0);
   }
 

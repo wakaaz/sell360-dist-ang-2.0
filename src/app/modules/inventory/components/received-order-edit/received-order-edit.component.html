@@ -390,12 +390,7 @@
               <td
                 class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
               >
-                {{
-                  (item.received_unit_quantity > 0
-                    ? item._calc_gross_amount || 0
-                    : item.grossPrice1 || 0
-                  ) | number : "1.2-2"
-                }}
+                {{ item._calc_gross_amount || 0 | number : "1.2-2" }}
               </td>
               <td
                 class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
@@ -409,33 +404,21 @@
                 {{
                   item.scheme_id &&
                   item.scheme_type == "free_product" &&
-                  (item.received_unit_quantity > 0
-                    ? item._calc_scheme_free || 0
-                    : item.scheme_quantity_free || 0) > 0 &&
+                  (item._calc_scheme_free || 0) > 0 &&
                   item.scheme_rule === 4
-                    ? "(" +
-                      (item.received_unit_quantity > 0
-                        ? item._calc_scheme_free || 0
-                        : item.scheme_quantity_free || 0) +
-                      ")"
+                    ? "(" + (item._calc_scheme_free || 0) + ")"
                     : ""
                 }}
                 {{
                   item.scheme_id &&
                   item.scheme_type == "free_product" &&
                   item.scheme_rule === 1
-                    ? ((item.received_unit_quantity > 0
-                        ? item._calc_trade_offer || 0
-                        : item.trade_offer || 0
-                      ) | number : "1.2-2")
+                    ? (item._calc_trade_offer || 0 | number : "1.2-2")
                     : ""
                 }}
                 {{
                   item.scheme_id && item.scheme_type == "dotp"
-                    ? ((item.received_unit_quantity > 0
-                        ? item._calc_trade_offer || 0
-                        : item.trade_offer || 0
-                      ) | number : "1.2-2")
+                    ? (item._calc_trade_offer || 0 | number : "1.2-2")
                     : ""
                 }}
               </td>
@@ -452,32 +435,17 @@
               <td
                 class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5"
               >
-                {{
-                  (item.received_unit_quantity > 0
-                    ? item._calc_gst_tax || 0
-                    : item.gst_tax || 0
-                  ) | number : "1.2-2"
-                }}
+                {{ item._calc_gst_tax || 0 | number : "1.2-2" }}
               </td>
               <td
                 class="text-[13px] text-gray-300 dark:text-gray-300 px-1.5 py-1.5"
               >
-                {{
-                  (item.received_unit_quantity > 0
-                    ? item._calc_ait_tax || 0
-                    : item.advance_income_tax || 0
-                  ) | number : "1.2-2"
-                }}
+                {{ item._calc_ait_tax || 0 | number : "1.2-2" }}
               </td>
               <td
                 class="text-[13px] text-gray-800 dark:text-gray-300 px-1.5 py-1.5 font-medium"
               >
-                {{
-                  (item.received_unit_quantity > 0
-                    ? item._calc_total_bill || 0
-                    : item.TotalBill || 0
-                  ) | number : "1.2-2"
-                }}
+                {{ item._calc_total_bill || 0 | number : "1.2-2" }}
               </td>
               <td class="px-1.5 py-1.5">
                 <button

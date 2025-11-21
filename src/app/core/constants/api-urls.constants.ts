@@ -135,9 +135,4 @@ export const API_URLS = {
   ADD_OPENING_BALANCE_DISTRIBUTOR: '/add-distributor-opening-balances',
   ADD_INVOICE_RECOVERY: '/add-invoice-recovery',
 
-
-
-
-
-
 };

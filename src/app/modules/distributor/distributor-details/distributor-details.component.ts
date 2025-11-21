@@ -57,9 +57,9 @@ export class DistributorDetailsComponent implements OnInit {
         const date = new Date(params.value);
 
         const year = date.getFullYear();
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const month = (date.getMonth() + 1).toString().padStart(2, '0'); 
         const day = date.getDate().toString().padStart(2, '0');
-
+      
         return `${year}-${month}-${day}`;
       },
     },
@@ -150,7 +150,7 @@ export class DistributorDetailsComponent implements OnInit {
         height: '100%',
         padding: '8px 4px',
       },
-      width: 200,
+      width: 300,
       sortable: false,
       filter: false,
     },
@@ -170,6 +170,7 @@ export class DistributorDetailsComponent implements OnInit {
   orderDetailLoading: boolean = false;
   order: PrimaryOrder | null = null;
   showPaymentModal: boolean = false;
+  paymentLoading: boolean = false;
   selectedInvoice: IDistributorInvoice | null = null;
   paymentDetail: IPaymentDetail | null = null;
 
@@ -204,7 +205,7 @@ export class DistributorDetailsComponent implements OnInit {
         });
         return;
       }
-
+      
       const url = `${environment.apiDomain}${API_URLS.DISTRIBUTOR_INVOICE_PDF}?order_id=${orderId}`;
       window.open(url, '_blank');
     };
@@ -249,6 +250,7 @@ export class DistributorDetailsComponent implements OnInit {
     }
 
     this.loading = true;
+    this.cdr.detectChanges();
 
     // Get distributor details using utils
     DistributorDetailsUtils.getDistributorDetails(
@@ -260,11 +262,13 @@ export class DistributorDetailsComponent implements OnInit {
 
         if (res && res.data) {
           this.distributor = res.data.distributor;
-
+          
           this.invoices = res.data.invoices || [];
         } else {
           this.invoices = [];
         }
+        this.cdr.detectChanges();
+
       },
       (error) => {
         this.loading = false;
@@ -280,6 +284,8 @@ export class DistributorDetailsComponent implements OnInit {
             type: 'error',
           });
         }
+        this.cdr.detectChanges();
+
       }
     );
   }
@@ -300,9 +306,9 @@ export class DistributorDetailsComponent implements OnInit {
         recovery_amount: 0,
         discount_amount: 0,
       };
-      this.showPaymentModal = true;
-      document.body.classList.add('no-scroll');
-      this.cdr.detectChanges();
+    this.showPaymentModal = true;
+    document.body.classList.add('no-scroll');
+    this.cdr.detectChanges();
     } else {
       this.toastService.showToaster({
         title: 'Error:',
@@ -314,9 +320,11 @@ export class DistributorDetailsComponent implements OnInit {
 
   closePaymentModal(): void {
     this.showPaymentModal = false;
+    this.paymentLoading = false;
     this.selectedInvoice = null;
     this.paymentDetail = null;
     document.body.classList.remove('no-scroll');
+    this.cdr.detectChanges();
   }
 
   onRecoveryAmountChange(): void {
@@ -340,6 +348,11 @@ export class DistributorDetailsComponent implements OnInit {
     discountAmount = Math.round(discountAmount * 100) / 100;
 
     if (recoveryAmount < 0) {
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Recovery amount cannot be negative.',
+        type: 'error',
+      });
       recoveryAmount = 0;
     }
 
@@ -394,6 +407,11 @@ export class DistributorDetailsComponent implements OnInit {
     discountAmount = Math.round(discountAmount * 100) / 100;
 
     if (discountAmount < 0) {
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Discount amount cannot be negative.',
+        type: 'error',
+      });
       discountAmount = 0;
     }
 
@@ -452,14 +470,6 @@ export class DistributorDetailsComponent implements OnInit {
       return;
     }
 
-    if (recoveryAmount < 0 || discountAmount < 0) {
-      this.toastService.showToaster({
-        title: 'Error:',
-        message: 'Amounts cannot be negative.',
-        type: 'error',
-      });
-      return;
-    }
 
     const balance =
       Math.round((amountDue - recoveryAmount - discountAmount) * 100) / 100;
@@ -481,13 +491,41 @@ export class DistributorDetailsComponent implements OnInit {
       return;
     }
 
-    this.loading = true;
+    if(discountAmount > recoveryAmount) {
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Discount amount cannot be greater than recovery amount.',
+        type: 'error',
+      });
+      return;
+    }
+
+    if(recoveryAmount< 0){
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Recovery amount cannot be negative.',
+        type: 'error',
+      });
+      return;
+    }
+    if(discountAmount< 0){
+      this.toastService.showToaster({
+        title: 'Error:',
+        message: 'Discount amount cannot be negative.',
+        type: 'error',
+      });
+      return;
+    }
+
+    this.paymentLoading = true;
+    this.cdr.detectChanges();
 
     const loggedInDistributor = this.storageService.getItem(
       localStorageKeys.distributor
     );
     if (!loggedInDistributor || !loggedInDistributor.id) {
-      this.loading = false;
+      this.paymentLoading = false;
+      this.cdr.detectChanges();
       this.toastService.showToaster({
         title: 'Error:',
         message:
@@ -509,23 +547,22 @@ export class DistributorDetailsComponent implements OnInit {
     DistributorDetailsUtils.addInvoiceRecovery(
       this.distributorService,
       payload
-    ).subscribe(
-      (res) => {
-        this.loading = false;
+    ).subscribe({
+      next: (res) => {
         console.log('Payment added successfully:', res);
         this.toastService.showToaster({
           title: 'Success:',
           message: 'Payment added successfully.',
           type: 'success',
         });
-        this.closePaymentModal();
+
+        this.closePaymentModal();        
         if (this.distributorId) {
           this.getInvoices();
         }
-        this.cdr.detectChanges();
       },
-      (error) => {
-        this.loading = false;
+      error: (error) => {
+        this.paymentLoading = false;
         console.error('Error adding payment:', error);
         this.toastService.showToaster({
           title: 'Error:',
@@ -535,8 +572,9 @@ export class DistributorDetailsComponent implements OnInit {
           type: 'error',
         });
         this.cdr.detectChanges();
-      }
-    );
+      },
+      
+    });
   }
   getOrderDetail(id: number): void {
     this.orderDetailLoading = true;
